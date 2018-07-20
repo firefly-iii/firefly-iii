@@ -42,7 +42,7 @@ class PrerequisitesControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -66,8 +66,8 @@ class PrerequisitesControllerTest extends TestCase
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
-        $prereq->shouldReceive('setUser')->once();
-        $prereq->shouldReceive('isComplete')->once()->andReturn(false);
+        $prereq->shouldReceive('setUser')->times(2);
+        $prereq->shouldReceive('isComplete')->times(2)->andReturn(false);
         $prereq->shouldReceive('getView')->once()->andReturn('import.fake.prerequisites');
         $prereq->shouldReceive('getViewParameters')->once()->andReturn(['api_key' => '']);
 
@@ -117,8 +117,8 @@ class PrerequisitesControllerTest extends TestCase
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'has_prereq']);
-        $prereq->shouldReceive('setUser')->once();
-        $prereq->shouldReceive('isComplete')->once()->andReturn(true);
+        $prereq->shouldReceive('setUser')->times(2);
+        $prereq->shouldReceive('isComplete')->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('import.prerequisites.index', ['fake', $job->key]));
@@ -147,9 +147,10 @@ class PrerequisitesControllerTest extends TestCase
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
-        $prereq->shouldReceive('setUser')->once();
+        $prereq->shouldReceive('setUser')->times(2);
         $prereq->shouldReceive('storePrerequisites')->once()->andReturn(new MessageBag);
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'has_prereq']);
+        $prereq->shouldReceive('isComplete')->times(1)->andReturn(false);
 
         $this->be($this->user());
         $response = $this->post(route('import.prerequisites.post', ['fake', $job->key]));
@@ -177,6 +178,9 @@ class PrerequisitesControllerTest extends TestCase
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
+        $prereq->shouldReceive('setUser')->times(1);
+        $prereq->shouldReceive('isComplete')->times(1)->andReturn(false);
+
         $this->be($this->user());
         $response = $this->post(route('import.prerequisites.post', ['fake', $job->key]));
         $response->assertStatus(302);
@@ -197,6 +201,9 @@ class PrerequisitesControllerTest extends TestCase
 
         $prereq->shouldReceive('setUser')->once();
         $prereq->shouldReceive('storePrerequisites')->once()->andReturn(new MessageBag);
+
+        $prereq->shouldReceive('setUser')->times(1);
+        $prereq->shouldReceive('isComplete')->times(1)->andReturn(false);
 
         $this->be($this->user());
         $response = $this->post(route('import.prerequisites.post', ['fake']));
@@ -226,6 +233,9 @@ class PrerequisitesControllerTest extends TestCase
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $prereq->shouldReceive('setUser')->times(1);
+        $prereq->shouldReceive('isComplete')->times(1)->andReturn(false);
 
         $prereq->shouldReceive('setUser')->once();
         $prereq->shouldReceive('storePrerequisites')->once()->andReturn($messages);

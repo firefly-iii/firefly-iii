@@ -264,7 +264,7 @@ class ReportController extends Controller
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {
-            Log::debug('Not important error message: %s', $e->getMessage());
+            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
             $date = new Carbon;
             $date->startOfMonth();
             $attributes['startDate'] = $date;

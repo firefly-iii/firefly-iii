@@ -104,7 +104,7 @@ class HomeController extends Controller
         }
         $subTitle     = (string)trans('firefly.welcomeBack');
         $transactions = [];
-        $frontPage    = app('preferences')->get('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
+        $frontPage    = app('preferences')->get('frontPageAccounts', $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray());
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */

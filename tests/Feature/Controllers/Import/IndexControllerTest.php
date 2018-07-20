@@ -80,10 +80,7 @@ class IndexControllerTest extends TestCase
 
         $this->be($this->user());
         $response = $this->get(route('import.create', ['bad']));
-        $response->assertStatus(302);
-        // expect a redirect to index
-        $response->assertSessionHas('warning', 'Firefly III cannot create a job for the "bad"-provider.');
-        $response->assertRedirect(route('import.index'));
+        $response->assertStatus(404);
     }
 
     /**
@@ -106,10 +103,10 @@ class IndexControllerTest extends TestCase
         $importJob->user_id  = 1;
 
         // mock calls
-        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->once();
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->times(2);
         $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
-        $fakePrerequisites->shouldReceive('isComplete')->twice()->andReturn(false);
-        $fakePrerequisites->shouldReceive('setUser')->twice();
+        $fakePrerequisites->shouldReceive('isComplete')->times(3)->andReturn(false);
+        $fakePrerequisites->shouldReceive('setUser')->times(3);
 
 
         $this->be($this->user());
@@ -139,10 +136,10 @@ class IndexControllerTest extends TestCase
         $importJob->user_id  = 1;
 
         // mock call:
-        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->once();
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->times(2);
         $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
-        $fakePrerequisites->shouldReceive('isComplete')->twice()->andReturn(true);
-        $fakePrerequisites->shouldReceive('setUser')->twice();
+        $fakePrerequisites->shouldReceive('isComplete')->times(3)->andReturn(true);
+        $fakePrerequisites->shouldReceive('setUser')->times(3);
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'has_prereq'])->andReturn($importJob)->once();
 
 
@@ -173,17 +170,16 @@ class IndexControllerTest extends TestCase
         $importJob->user_id =1;
 
         // mock calls
-        $fakePrerequisites->shouldReceive('setUser')->once();
-        $bunqPrerequisites->shouldReceive('setUser')->once();
-        $spectrePrerequisites->shouldReceive('setUser')->once();
+        $fakePrerequisites->shouldReceive('setUser')->times(2);
+        $bunqPrerequisites->shouldReceive('setUser')->times(2);
+        $spectrePrerequisites->shouldReceive('setUser')->times(2);
 
-        $fakePrerequisites->shouldReceive('isComplete')->once()->andReturn(true);
-        $bunqPrerequisites->shouldReceive('isComplete')->once()->andReturn(true);
-        $spectrePrerequisites->shouldReceive('isComplete')->once()->andReturn(true);
+        $fakePrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
+        $bunqPrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
+        $spectrePrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
 
-        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->once();
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->times(2);
         $repository->shouldReceive('create')->withArgs(['file'])->andReturn($importJob);
-
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'has_prereq'])->andReturn($importJob)->once();
 
 
@@ -224,6 +220,17 @@ class IndexControllerTest extends TestCase
         ];
 
         $repository->shouldReceive('getConfiguration')->andReturn($fakeConfig)->once();
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
+
+        $fakePrerequisites->shouldReceive('setUser')->times(1);
+        $bunqPrerequisites->shouldReceive('setUser')->times(1);
+        $spectrePrerequisites->shouldReceive('setUser')->times(1);
+        //$filePrerequisites->shouldReceive('setUser')->times(1);
+
+        $fakePrerequisites->shouldReceive('isComplete')->times(1)->andReturn(true);
+        $bunqPrerequisites->shouldReceive('isComplete')->times(1)->andReturn(true);
+        $spectrePrerequisites->shouldReceive('isComplete')->times(1)->andReturn(true);
+        //$filePrerequisites->shouldReceive('isComplete')->times(1)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('import.job.download', [$job->key]));
