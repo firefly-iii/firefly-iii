@@ -68,6 +68,8 @@ class HelpController extends Controller
      * @param string $language
      *
      * @return string
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getHelpText(string $route, string $language): string
     {

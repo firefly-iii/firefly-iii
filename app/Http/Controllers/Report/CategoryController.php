@@ -28,6 +28,8 @@ use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class CategoryController.
@@ -41,7 +43,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -60,7 +61,12 @@ class CategoryController extends Controller
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
         $periods    = app('navigation')->listOfPeriods($start, $end);
-        $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
+        try {
+            $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
 
         $cache->store($result);
 
@@ -75,7 +81,6 @@ class CategoryController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \Throwable
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -94,8 +99,12 @@ class CategoryController extends Controller
         $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
         $report     = $this->filterReport($data);
         $periods    = app('navigation')->listOfPeriods($start, $end);
-        $result     = view('reports.partials.category-period', compact('report', 'periods'))->render();
-
+        try {
+            $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
         $cache->store($result);
 
         return $result;
@@ -109,8 +118,7 @@ class CategoryController extends Controller
      *
      * @return mixed|string
      *
-     * @throws \Throwable
-     * @internal param ReportHelperInterface $helper
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -136,17 +144,18 @@ class CategoryController extends Controller
                 $report[$category->id] = ['name' => $category->name, 'spent' => $spent, 'earned' => $earned, 'id' => $category->id];
             }
         }
-        // sort the result
-        // Obtain a list of columns
         $sum = [];
         foreach ($report as $categoryId => $row) {
             $sum[$categoryId] = (float)$row['spent'];
         }
-
         array_multisort($sum, SORT_ASC, $report);
-
-        $result = view('reports.partials.categories', compact('report'))->render();
-        $cache->store($result);
+        try {
+            $result = view('reports.partials.categories', compact('report'))->render();
+            $cache->store($result);
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
 
         return $result;
     }

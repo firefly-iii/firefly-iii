@@ -87,6 +87,8 @@ class BulkController extends Controller
      * @param BulkEditJournalRequest $request
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(BulkEditJournalRequest $request)
     {

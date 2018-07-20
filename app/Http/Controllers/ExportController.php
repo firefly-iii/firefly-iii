@@ -130,6 +130,8 @@ class ExportController extends Controller
      * @param ExportJobRepositoryInterface $jobs
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function postIndex(ExportFormRequest $request, AccountRepositoryInterface $repository, ExportJobRepositoryInterface $jobs): JsonResponse
     {

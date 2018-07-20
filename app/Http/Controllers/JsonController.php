@@ -34,7 +34,7 @@ class JsonController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+
      */
     public function action(Request $request): JsonResponse
     {
@@ -53,7 +53,7 @@ class JsonController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \Throwable
+
      */
     public function trigger(Request $request): JsonResponse
     {

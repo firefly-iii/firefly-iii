@@ -66,11 +66,13 @@ class JobConfigurationController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function index(ImportJob $importJob)
     {
         Log::debug('Now in JobConfigurationController::index()');
-        // catch impossible status:
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::debug(sprintf('Job has state "%s", but we only accept %s', $importJob->status, json_encode($allowed)));
@@ -91,10 +93,7 @@ class JobConfigurationController extends Controller
             // @codeCoverageIgnoreEnd
         }
 
-        // create configuration class:
         $configurator = $this->makeConfigurator($importJob);
-
-        // is the job already configured?
         if ($configurator->configurationComplete()) {
             Log::debug('Config is complete, set status to ready_to_run.');
             $this->repository->updateStatus($importJob, 'ready_to_run');
@@ -119,6 +118,8 @@ class JobConfigurationController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function post(Request $request, ImportJob $importJob)
     {

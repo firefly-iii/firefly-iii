@@ -19,7 +19,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 /** @noinspection CallableParameterUseCaseInTypeContextInspection */
-/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
@@ -40,6 +39,7 @@ use Log;
 
 /**
  * Class ReportController.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportController extends Controller
 {
@@ -68,7 +68,7 @@ class ReportController extends Controller
             }
         );
     }
-
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $expense
@@ -133,6 +133,7 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $budgets
@@ -168,6 +169,7 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $categories
@@ -259,8 +261,7 @@ class ReportController extends Controller
      * @param string $reportType
      *
      * @return mixed
-     *
-     * @throws \Throwable
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function options(string $reportType)
     {
@@ -291,6 +292,10 @@ class ReportController extends Controller
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function postIndex(ReportFormRequest $request)
     {
@@ -358,6 +363,7 @@ class ReportController extends Controller
         return redirect($uri);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $accounts
      * @param Collection $tags
@@ -395,7 +401,6 @@ class ReportController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
      */
     private function accountReportOptions(): string
     {
@@ -416,7 +421,6 @@ class ReportController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
      */
     private function budgetReportOptions(): string
     {
@@ -429,7 +433,6 @@ class ReportController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
      */
     private function categoryReportOptions(): string
     {
@@ -442,7 +445,6 @@ class ReportController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
      */
     private function noReportOptions(): string
     {
@@ -451,7 +453,6 @@ class ReportController extends Controller
 
     /**
      * @return string
-     * @throws \Throwable
      */
     private function tagReportOptions(): string
     {

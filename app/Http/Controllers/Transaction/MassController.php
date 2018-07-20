@@ -42,6 +42,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class MassController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MassController extends Controller
 {
@@ -85,29 +87,24 @@ class MassController extends Controller
      * @param MassDeleteJournalRequest $request
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function destroy(MassDeleteJournalRequest $request)
     {
-        $ids = $request->get('confirm_mass_delete');
-        $set = new Collection;
+        $ids   = $request->get('confirm_mass_delete');
+        $count = 0;
         if (\is_array($ids)) {
             /** @var string $journalId */
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
                 $journal = $this->repository->findNull((int)$journalId);
                 if (null !== $journal && (int)$journalId === $journal->id) {
-                    $set->push($journal);
+                    $this->repository->destroy($journal);
+                    ++$count;
                 }
             }
         }
-        unset($journal);
-        $count = 0;
 
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $this->repository->destroy($journal);
-            ++$count;
-        }
 
         app('preferences')->mark();
         session()->flash('success', (string)trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
@@ -127,20 +124,16 @@ class MassController extends Controller
         $user     = auth()->user();
         $subTitle = (string)trans('firefly.mass_edit_journals');
 
-
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
-        // get budgets
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budgets          = $budgetRepository->getBudgets();
 
-        // put previous url in session
         $this->rememberPreviousUri('transactions.mass-edit.uri');
 
-        // use the collector to get them.
         $transformer = new TransactionTransformer(new ParameterBag);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -148,12 +141,7 @@ class MassController extends Controller
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
         $collector->addFilter(TransactionViewFilter::class);
-        $collection = $collector->getJournals();
-
-        // add some filters:
-
-
-        // transform to array
+        $collection   = $collector->getJournals();
         $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {
                 $transformed = $transformer->transform($transaction);
@@ -173,6 +161,8 @@ class MassController extends Controller
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(MassEditJournalRequest $request, JournalRepositoryInterface $repository)
     {

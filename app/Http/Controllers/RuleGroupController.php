@@ -35,6 +35,8 @@ use Illuminate\Http\Request;
 
 /**
  * Class RuleGroupController.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleGroupController extends Controller
 {
@@ -231,6 +233,8 @@ class RuleGroupController extends Controller
      * @param RuleGroup                    $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {

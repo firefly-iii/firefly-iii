@@ -42,6 +42,8 @@ use Illuminate\Support\Collection;
 /**
  *
  * Class ReconcileController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
 {
@@ -84,7 +86,10 @@ class ReconcileController extends Controller
      * @return JsonResponse
      *
      * @throws FireflyException
-     * @throws \Throwable
+
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -140,7 +145,7 @@ class ReconcileController extends Controller
      * @return mixed
      *
      * @throws FireflyException
-     * @throws \Throwable
+
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {

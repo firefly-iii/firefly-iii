@@ -158,6 +158,7 @@ class IntroController
      * @param string $specificPage
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getSpecificSteps(string $route, string $specificPage): array
     {

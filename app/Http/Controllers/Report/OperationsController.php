@@ -61,7 +61,7 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
+
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -88,7 +88,7 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \Throwable
+
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -116,7 +116,7 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
+
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {

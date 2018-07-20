@@ -166,7 +166,12 @@ class TagController extends Controller
      * @param Tag         $tag
      * @param string|null $moment
      *
+     * TODO will be cleaned up and separated
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function show(Request $request, Tag $tag, string $moment = null)
     {
@@ -286,6 +291,8 @@ class TagController extends Controller
      * @param Tag $tag
      *
      * @return Collection
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getPeriodOverview(Tag $tag): Collection
     {

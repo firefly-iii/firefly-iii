@@ -27,6 +27,8 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class Request.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Request extends FormRequest
 {
@@ -71,6 +73,8 @@ class Request extends FormRequest
      * @param string $field
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function string(string $field): string
     {

@@ -29,7 +29,6 @@ use Log;
 /**
  * Trait DateCalculation
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait DateCalculation
 {

@@ -45,6 +45,8 @@ class JournalFormRequest extends Request
      * Returns and validates the data required to store a new journal. Can handle both single transaction journals and split journals.
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getJournalData(): array
     {
@@ -240,61 +242,79 @@ class JournalFormRequest extends Request
         $type = $data['what'] ?? 'invalid';
         Log::debug(sprintf('Type is %s', $type));
         if ('withdrawal' === $type) {
-
-            $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
-            $accountCurrency  = (int)($data['source_account_currency'] ?? 0);
-            Log::debug(sprintf('Selected currency is %d, account currency is %d', $selectedCurrency, $accountCurrency));
-            $nativeAmount = (string)($data['native_amount'] ?? '');
-            if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount
-                && 0 !== $selectedCurrency
-                && 0 !== $accountCurrency
-            ) {
-                Log::debug('ADD validation error on native_amount');
-                $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
-
-                return;
-            }
+            $this->validateWithdrawal($validator);
         }
 
         // same thing for deposits:
         if ('deposit' === $type) {
-            $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
-            $accountCurrency  = (int)($data['destination_account_currency'] ?? 0);
-            $nativeAmount     = (string)($data['native_amount'] ?? '');
-            if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount
-                && 0 !== $selectedCurrency
-                && 0 !== $accountCurrency
-            ) {
-                $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
-
-                return;
-            }
+            $this->validateDeposit($validator);
         }
 
         // and for transfers
         if ('transfer' === $type) {
+            $this->validateTransfer($validator);
+        }
+    }
 
-            $sourceCurrency      = (int)($data['source_account_currency'] ?? 0);
-            $destinationCurrency = (int)($data['destination_account_currency'] ?? 0);
-            $sourceAmount        = (string)($data['source_amount'] ?? '');
-            $destinationAmount   = (string)($data['destination_amount'] ?? '');
+    /**
+     * @param Validator $validator
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function validateDeposit(Validator $validator): void
+    {
+        $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
+        $accountCurrency  = (int)($data['destination_account_currency'] ?? 0);
+        $nativeAmount     = (string)($data['native_amount'] ?? '');
+        if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount && 0 !== $selectedCurrency && 0 !== $accountCurrency) {
+            $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
 
-            Log::debug(sprintf('Source currency is %d, destination currency is %d', $sourceCurrency, $destinationCurrency));
+            return;
+        }
+    }
 
-            if ($sourceCurrency !== $destinationCurrency && '' === $sourceAmount
-                && 0 !== $sourceCurrency
-                && 0 !== $destinationCurrency
-            ) {
-                $validator->errors()->add('source_amount', (string)trans('validation.numeric_source'));
-            }
+    /**
+     * @param Validator $validator
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function validateTransfer(Validator $validator): void
+    {
+        $sourceCurrency      = (int)($data['source_account_currency'] ?? 0);
+        $destinationCurrency = (int)($data['destination_account_currency'] ?? 0);
+        $sourceAmount        = (string)($data['source_amount'] ?? '');
+        $destinationAmount   = (string)($data['destination_amount'] ?? '');
 
-            if ($sourceCurrency !== $destinationCurrency && '' === $destinationAmount
-                && 0 !== $sourceCurrency
-                && 0 !== $destinationCurrency
-            ) {
-                $validator->errors()->add('destination_amount', (string)trans('validation.numeric_destination'));
-                $validator->errors()->add('destination_amount', (string)trans('validation.numeric', ['attribute' => 'destination_amount']));
-            }
+        Log::debug(sprintf('Source currency is %d, destination currency is %d', $sourceCurrency, $destinationCurrency));
+
+        if ($sourceCurrency !== $destinationCurrency && '' === $sourceAmount && 0 !== $sourceCurrency && 0 !== $destinationCurrency) {
+            $validator->errors()->add('source_amount', (string)trans('validation.numeric_source'));
+        }
+
+        if ($sourceCurrency !== $destinationCurrency && '' === $destinationAmount && 0 !== $sourceCurrency && 0 !== $destinationCurrency) {
+            $validator->errors()->add('destination_amount', (string)trans('validation.numeric_destination'));
+            $validator->errors()->add('destination_amount', (string)trans('validation.numeric', ['attribute' => 'destination_amount']));
+        }
+
+    }
+
+    /**
+     * @param Validator $validator
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function validateWithdrawal(Validator $validator): void
+    {
+        $data             = $validator->getData();
+        $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
+        $accountCurrency  = (int)($data['source_account_currency'] ?? 0);
+        Log::debug(sprintf('Selected currency is %d, account currency is %d', $selectedCurrency, $accountCurrency));
+        $nativeAmount = (string)($data['native_amount'] ?? '');
+        if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount
+            && 0 !== $selectedCurrency
+            && 0 !== $accountCurrency
+        ) {
+            Log::debug('ADD validation error on native_amount');
+            $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
 
             return;
         }

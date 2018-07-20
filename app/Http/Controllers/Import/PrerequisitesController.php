@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
@@ -68,7 +67,8 @@ class PrerequisitesController extends Controller
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
@@ -83,9 +83,6 @@ class PrerequisitesController extends Controller
 
         app('view')->share('subTitle', (string)trans('import.prerequisites_breadcrumb_' . $importProvider));
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
-        }
         /** @var User $user */
         $user = auth()->user();
         /** @var PrerequisitesInterface $object */
@@ -121,8 +118,8 @@ class PrerequisitesController extends Controller
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function post(Request $request, string $importProvider, ImportJob $importJob = null)
     {
@@ -139,9 +136,6 @@ class PrerequisitesController extends Controller
 
 
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Cannot find class %s', $class)); // @codeCoverageIgnore
-        }
         /** @var User $user */
         $user = auth()->user();
         /** @var PrerequisitesInterface $object */

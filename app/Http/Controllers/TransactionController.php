@@ -45,6 +45,8 @@ use View;
 
 /**
  * Class TransactionController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionController extends Controller
 {
@@ -174,6 +176,7 @@ class TransactionController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function reorder(Request $request): JsonResponse
     {
@@ -241,6 +244,9 @@ class TransactionController extends Controller
      * @param Carbon $date
      *
      * @return Collection
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getPeriodOverview(string $what, Carbon $date): Collection
     {
@@ -277,7 +283,6 @@ class TransactionController extends Controller
                         'name' => $dateName,
                         'sums' => $sums,
                         'sum'  => $sum,
-
                         'start' => $currentDate['start']->format('Y-m-d'),
                         'end'   => $currentDate['end']->format('Y-m-d'),
                     ]

@@ -49,6 +49,8 @@ use phpseclib\Crypt\RSA;
  * Class ProfileController.
  *
  * @method Guard guard()
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ProfileController extends Controller
 {
@@ -185,10 +187,10 @@ class ProfileController extends Controller
         if ($repository->hasRole($user, 'demo')) {
             return redirect(route('profile.index'));
         }
-        $hasTwoFactorAuthSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
+        $hasSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
 
         // if we don't have a valid secret yet, redirect to the code page to get one.
-        if (!$hasTwoFactorAuthSecret) {
+        if (!$hasSecret) {
             return redirect(route('profile.code'));
         }
 
@@ -308,6 +310,8 @@ class ProfileController extends Controller
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function postCode(TokenFormRequest $request)
     {
@@ -316,7 +320,6 @@ class ProfileController extends Controller
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
-
         return redirect(route('profile.index'));
     }
 
@@ -366,6 +369,8 @@ class ProfileController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function undoEmailChange(UserRepositoryInterface $repository, string $token, string $hash)
     {
@@ -382,8 +387,7 @@ class ProfileController extends Controller
             throw new FireflyException('Invalid token.');
         }
 
-        // found user.
-        // which email address to return to?
+        // found user.which email address to return to?
         $set = app('preferences')->beginsWith($user, 'previous_email_');
         /** @var string $match */
         $match = null;

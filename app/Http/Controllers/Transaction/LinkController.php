@@ -101,13 +101,7 @@ class LinkController extends Controller
 
         Log::debug('We are here (store)');
         $linkInfo = $request->getLinkInfo();
-        if (0 === $linkInfo['transaction_journal_id']) {
-            session()->flash('error', (string)trans('firefly.invalid_link_selection'));
-
-            return redirect(route('transactions.show', [$journal->id]));
-        }
-        $other = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
-
+        $other    = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
         if (null === $other) {
             session()->flash('error', (string)trans('firefly.invalid_link_selection'));
 

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Popup;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -35,9 +34,13 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use InvalidArgumentException;
+use Log;
+use Throwable;
 
 /**
  * Class ReportController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportController extends Controller
 {
@@ -79,9 +82,7 @@ class ReportController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     *
-     * @throws FireflyException
-     * @throws \Throwable
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function general(Request $request): JsonResponse
     {
@@ -93,7 +94,8 @@ class ReportController extends Controller
 
         switch ($attributes['location']) {
             default:
-                throw new FireflyException('Firefly cannot handle "' . e($attributes['location']) . '" ');
+                $html = sprintf('Firefly III cannot handle "%s"-popups.', $attributes['location']);
+                break;
             case 'budget-spent-amount':
                 $html = $this->budgetSpentAmount($attributes);
                 break;
@@ -119,8 +121,7 @@ class ReportController extends Controller
      *
      * @return string
      *
-     * @throws FireflyException
-     * @throws \Throwable
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function balanceAmount(array $attributes): string
     {
@@ -141,51 +142,60 @@ class ReportController extends Controller
                 break;
             case BalanceLine::ROLE_TAGROLE === $role:
                 // row with tag info.
-                throw new FireflyException('Firefly cannot handle this type of info-button (BalanceLine::TagRole)');
+                return 'Firefly cannot handle this type of info-button (BalanceLine::TagRole)';
         }
-        $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
+        try {
+            $view = view('popup.report.balance-amount', compact('journals', 'budget', 'account'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
 
         return $view;
     }
 
     /**
-     * Returns all expenses inside the given budget for the given accounts.
-     *
      * @param array $attributes
      *
      * @return string
-     * @throws \Throwable
      */
     private function budgetSpentAmount(array $attributes): string
     {
         $budget = $this->budgetRepository->findNull((int)$attributes['budgetId']);
         if (null === $budget) {
-            throw new FireflyException('This is an unknown budget. Apologies.');
+            return 'This is an unknown budget. Apologies.';
         }
         $journals = $this->popupHelper->byBudget($budget, $attributes);
-        $view     = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
+        try {
+            $view = view('popup.report.budget-spent-amount', compact('journals', 'budget'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
 
         return $view;
     }
 
     /**
-     * Returns all expenses in category in range.
-     *
      * @param array $attributes
      *
      * @return string
-     * @throws \Throwable
      */
     private function categoryEntry(array $attributes): string
     {
         $category = $this->categoryRepository->findNull((int)$attributes['categoryId']);
 
         if (null === $category) {
-            throw new FireflyException('This is an unknown category. Apologies.');
+            return 'This is an unknown category. Apologies.';
         }
 
         $journals = $this->popupHelper->byCategory($category, $attributes);
-        $view     = view('popup.report.category-entry', compact('journals', 'category'))->render();
+        try {
+            $view = view('popup.report.category-entry', compact('journals', 'category'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
 
         return $view;
     }
@@ -196,18 +206,22 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
-     * @throws \Throwable
      */
     private function expenseEntry(array $attributes): string
     {
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
         if (null === $account) {
-            throw new FireflyException('This is an unknown account. Apologies.');
+            return 'This is an unknown account. Apologies.';
         }
 
         $journals = $this->popupHelper->byExpenses($account, $attributes);
-        $view     = view('popup.report.expense-entry', compact('journals', 'account'))->render();
+        try {
+            $view = view('popup.report.expense-entry', compact('journals', 'account'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
 
         return $view;
     }
@@ -218,18 +232,22 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return string
-     * @throws \Throwable
      */
     private function incomeEntry(array $attributes): string
     {
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
         if (null === $account) {
-            throw new FireflyException('This is an unknown category. Apologies.');
+            return 'This is an unknown category. Apologies.';
         }
 
         $journals = $this->popupHelper->byIncome($account, $attributes);
-        $view     = view('popup.report.income-entry', compact('journals', 'account'))->render();
+        try {
+            $view = view('popup.report.income-entry', compact('journals', 'account'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render: %s', $e->getMessage()));
+            $view = 'Firefly III could not render the view. Please see the log files.';
+        }
 
         return $view;
     }
@@ -238,8 +256,6 @@ class ReportController extends Controller
      * @param array $attributes
      *
      * @return array
-     *
-     * @throws FireflyException
      */
     private function parseAttributes(array $attributes): array
     {
@@ -248,13 +264,19 @@ class ReportController extends Controller
         try {
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {
-            throw new FireflyException(sprintf('Could not parse start date "%s": %s', $attributes['startDate'], $e->getMessage()));
+            Log::debug('Not important error message: %s', $e->getMessage());
+            $date = new Carbon;
+            $date->startOfMonth();
+            $attributes['startDate'] = $date;
         }
 
         try {
             $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate']);
         } catch (InvalidArgumentException $e) {
-            throw new FireflyException(sprintf('Could not parse end date "%s": %s', $attributes['endDate'], $e->getMessage()));
+            Log::debug('Not important error message: %s', $e->getMessage());
+            $date = new Carbon;
+            $date->startOfMonth();
+            $attributes['endDate'] = $date;
         }
 
         return $attributes;

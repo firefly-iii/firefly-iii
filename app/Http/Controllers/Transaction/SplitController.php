@@ -42,6 +42,7 @@ use View;
 
 /**
  * Class SplitController.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SplitController extends Controller
 {
@@ -122,6 +123,9 @@ class SplitController extends Controller
      * @param TransactionJournal      $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
@@ -216,6 +220,8 @@ class SplitController extends Controller
      *
      * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getTransactionDataFromJournal(TransactionJournal $journal): array
     {
@@ -253,6 +259,9 @@ class SplitController extends Controller
      * @param $old
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function updateWithPrevious($array, $old): array
     {

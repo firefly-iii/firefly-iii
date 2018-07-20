@@ -97,31 +97,17 @@ class NewUserController extends Controller
             $currency = $currencyRepository->findByCodeNull('EUR');
         }
 
-        // create normal asset account:
-        $this->createAssetAccount($request, $currency);
-
-        // create savings account
-        $this->createSavingsAccount($request, $currency, $language);
-
-        // create cash wallet account
-        $this->createCashWalletAccount($currency, $language);
+        $this->createAssetAccount($request, $currency); // create normal asset account
+        $this->createSavingsAccount($request, $currency, $language); // create savings account
+        $this->createCashWalletAccount($currency, $language); // create cash wallet account
 
         // store currency preference:
         app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
         // set default optional fields:
-        $visibleFields = [
-            'interest_date'      => true,
-            'book_date'          => false,
-            'process_date'       => false,
-            'due_date'           => false,
-            'payment_date'       => false,
-            'invoice_date'       => false,
-            'internal_reference' => false,
-            'notes'              => true,
-            'attachments'        => true,
-        ];
+        $visibleFields = ['interest_date' => true, 'book_date' => false, 'process_date' => false, 'due_date' => false, 'payment_date' => false,
+                          'invoice_date'  => false, 'internal_reference' => false, 'notes' => true, 'attachments' => true,];
         app('preferences')->set('transaction_journal_optional_fields', $visibleFields);
 
         session()->flash('success', (string)trans('firefly.stored_new_accounts_new_user'));

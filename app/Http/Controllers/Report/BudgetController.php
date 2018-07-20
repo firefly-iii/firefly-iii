@@ -41,7 +41,7 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
+
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -70,7 +70,7 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
+
      */
     public function period(Collection $accounts, Carbon $start, Carbon $end)
     {

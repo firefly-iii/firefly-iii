@@ -40,6 +40,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class PiggyBankController.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class PiggyBankController extends Controller
 {
@@ -174,6 +177,8 @@ class PiggyBankController extends Controller
      * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function edit(PiggyBank $piggyBank)
     {
@@ -212,6 +217,8 @@ class PiggyBankController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function index(Request $request)
     {

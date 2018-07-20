@@ -39,6 +39,9 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class AutoCompleteController.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AutoCompleteController extends Controller
 {

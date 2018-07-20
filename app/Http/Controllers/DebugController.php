@@ -177,6 +177,8 @@ class DebugController extends Controller
 
     /**
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function routes(): string
     {

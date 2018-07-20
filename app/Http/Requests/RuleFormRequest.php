@@ -40,6 +40,9 @@ class RuleFormRequest extends Request
 
     /**
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getRuleData(): array
     {

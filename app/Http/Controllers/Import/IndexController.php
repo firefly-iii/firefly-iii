@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\User;
+use FireflyIII\Support\Binder\ImportProvider;
 use Illuminate\Http\Response as LaravelResponse;
 use Log;
 
@@ -37,9 +36,10 @@ use Log;
  */
 class IndexController extends Controller
 {
+    /** @var array */
+    public $providers;
     /** @var ImportJobRepositoryInterface */
     public $repository;
-
     /** @var UserRepositoryInterface */
     public $userRepository;
 
@@ -56,6 +56,7 @@ class IndexController extends Controller
                 app('view')->share('title', (string)trans('firefly.import_index_title'));
                 $this->repository     = app(ImportJobRepositoryInterface::class);
                 $this->userRepository = app(UserRepositoryInterface::class);
+                $this->providers      = ImportProvider::getProviders();
 
                 return $next($request);
             }
@@ -69,57 +70,44 @@ class IndexController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function create(string $importProvider)
     {
         Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
-        // can only create "fake" for demo user.
-        $providers = array_keys($this->getProviders());
-        if (!\in_array($importProvider, $providers, true)) {
-            Log::error(sprintf('%s-provider is disabled. Cannot create job.', $importProvider));
-            session()->flash('warning', (string)trans('import.cannot_create_for_provider', ['provider' => $importProvider]));
-
-            return redirect(route('import.index'));
-        }
 
         $importJob = $this->repository->create($importProvider);
-        Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
-
         $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
         $hasConfig = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
-        // if job provider has no prerequisites:
-        if (false === $hasPreReq) {
+
+        Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
+
+        // no prerequisites and no config:
+        if (false === $hasPreReq && false === $hasConfig) {
+            Log::debug('Provider needs no configuration for job. Job is ready to start.');
+            $this->repository->updateStatus($importJob, 'ready_to_run');
+            Log::debug('Redirect to status-page.');
+
+            return redirect(route('import.job.status.index', [$importJob->key]));
+        }
+
+        // no prerequisites but job has config:
+        if (false === $hasPreReq && false !== $hasConfig) {
             Log::debug('Provider has no prerequisites. Continue.');
-            // if job provider also has no configuration:
-            if (false === $hasConfig) {
-                // @codeCoverageIgnoreStart
-                Log::debug('Provider needs no configuration for job. Job is ready to start.');
-                $this->repository->updateStatus($importJob, 'ready_to_run');
-                Log::debug('Redirect to status-page.');
-
-                return redirect(route('import.job.status.index', [$importJob->key]));
-                // @codeCoverageIgnoreEnd
-            }
-
-            // update job to say "has_prereq".
             $this->repository->setStatus($importJob, 'has_prereq');
-
-            // redirect to job configuration.
             Log::debug('Redirect to configuration.');
 
             return redirect(route('import.job.configuration.index', [$importJob->key]));
         }
+
+        // job has prerequisites:
         Log::debug('Job provider has prerequisites.');
-        // if need to set prerequisites, do that first.
-        $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
-        }
         /** @var PrerequisitesInterface $providerPre */
-        $providerPre = app($class);
+        $providerPre = app((string)config(sprintf('import.prerequisites.%s', $importProvider)));
         $providerPre->setUser($importJob->user);
 
+        // and are not filled in:
         if (!$providerPre->isComplete()) {
             Log::debug('Job provider prerequisites are not yet filled in. Redirect to prerequisites-page.');
 
@@ -128,8 +116,10 @@ class IndexController extends Controller
         }
         Log::debug('Prerequisites are complete.');
 
-        // update job to say "has_prereq".
+        // but are filled in:
         $this->repository->setStatus($importJob, 'has_prereq');
+
+        // and has no config:
         if (false === $hasConfig) {
             // @codeCoverageIgnoreStart
             Log::debug('Provider has no configuration. Job is ready to start.');
@@ -139,6 +129,8 @@ class IndexController extends Controller
             return redirect(route('import.job.status.index', [$importJob->key]));
             // @codeCoverageIgnoreEnd
         }
+
+        // but also needs config:
         Log::debug('Job has configuration. Redirect to job-config.');
 
         // Otherwise just redirect to job configuration.
@@ -184,62 +176,10 @@ class IndexController extends Controller
      */
     public function index()
     {
-        $providers    = $this->getProviders();
+        $providers    = $this->providers;
         $subTitle     = (string)trans('import.index_breadcrumb');
         $subTitleIcon = 'fa-home';
 
         return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));
-    }
-
-    /**
-     * @return array
-     */
-    private function getProviders(): array
-    {
-        // get and filter all import routines:
-        /** @var User $user */
-        $user = auth()->user();
-        /** @var array $config */
-        $providerNames = array_keys(config('import.enabled'));
-        $providers     = [];
-        $isDemoUser    = $this->userRepository->hasRole($user, 'demo');
-        $isDebug       = (bool)config('app.debug');
-        foreach ($providerNames as $providerName) {
-            //Log::debug(sprintf('Now with provider %s', $providerName));
-            // only consider enabled providers
-            $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
-            $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
-            $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
-            if (false === $enabled) {
-                //Log::debug('Provider is not enabled. NEXT!');
-                continue;
-            }
-
-            if (true === $isDemoUser && false === $allowedForDemo) {
-                //Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
-                continue;
-            }
-            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
-                //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
-                continue; // @codeCoverageIgnore
-            }
-
-            $providers[$providerName] = [
-                'has_prereq' => (bool)config('import.has_prereq.' . $providerName),
-            ];
-            $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
-            $result                   = false;
-            if ('' !== $class && class_exists($class)) {
-                //Log::debug('Will not check prerequisites.');
-                /** @var PrerequisitesInterface $object */
-                $object = app($class);
-                $object->setUser($user);
-                $result = $object->isComplete();
-            }
-            $providers[$providerName]['prereq_complete'] = $result;
-        }
-        Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
-
-        return $providers;
     }
 }

@@ -32,7 +32,6 @@ use Log;
 /**
  * Trait UpdateTrait
  *
- * @package FireflyIII\Helpers\Update
  */
 trait UpdateTrait
 {

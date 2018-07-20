@@ -41,6 +41,8 @@ use View;
 
 /**
  * Class SingleController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SingleController extends Controller
 {
@@ -82,6 +84,8 @@ class SingleController extends Controller
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function cloneTransaction(TransactionJournal $journal)
     {
@@ -137,6 +141,8 @@ class SingleController extends Controller
      * @param string|null $what
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request, string $what = null)
     {
@@ -203,8 +209,6 @@ class SingleController extends Controller
      * @param TransactionJournal $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
-     *
-     * @internal param JournalRepositoryInterface $repository
      */
     public function destroy(TransactionJournal $transactionJournal): RedirectResponse
     {
@@ -229,6 +233,9 @@ class SingleController extends Controller
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function edit(TransactionJournal $journal, JournalRepositoryInterface $repository)
     {
@@ -319,6 +326,10 @@ class SingleController extends Controller
      *
      * @return RedirectResponse
      * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository): RedirectResponse
     {
@@ -377,6 +388,9 @@ class SingleController extends Controller
      * @param TransactionJournal         $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {

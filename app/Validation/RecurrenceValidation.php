@@ -33,7 +33,6 @@ use InvalidArgumentException;
  *
  * Contains advanced validation rules used in validation of new and existing recurrences.
  *
- * @package FireflyIII\Validation
  */
 trait RecurrenceValidation
 {

@@ -40,6 +40,9 @@ class SplitJournalFormRequest extends Request
 
     /**
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getAll(): array
     {
@@ -147,6 +150,8 @@ class SplitJournalFormRequest extends Request
 
     /**
      * @param Validator $validator
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function sameAccounts(Validator $validator): void
     {

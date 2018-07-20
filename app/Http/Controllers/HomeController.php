@@ -26,8 +26,6 @@ use Carbon\Carbon;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
-use FireflyIII\Http\Middleware\IsDemoUser;
-use FireflyIII\Http\Middleware\IsSandStormUser;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -36,7 +34,6 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use View;
 
 /**
  * Class HomeController.
@@ -52,9 +49,6 @@ class HomeController extends Controller
         app('view')->share('title', 'Firefly III');
         app('view')->share('mainTitleIcon', 'fa-fire');
         $this->middleware(Installer::class);
-        $this->middleware(IsDemoUser::class)->except(['dateRange', 'index']);
-        $this->middleware(IsSandStormUser::class)->only('routes');
-
     }
 
     /**
@@ -98,7 +92,7 @@ class HomeController extends Controller
     /**
      * @param AccountRepositoryInterface $repository
      *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
     {
@@ -110,10 +104,7 @@ class HomeController extends Controller
         }
         $subTitle     = (string)trans('firefly.welcomeBack');
         $transactions = [];
-        $frontPage    = app('preferences')->get(
-            'frontPageAccounts',
-            $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray()
-        );
+        $frontPage    = app('preferences')->get('frontPageAccounts', $repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray());
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
@@ -122,7 +113,6 @@ class HomeController extends Controller
         $accounts = $repository->getAccountsById($frontPage->data);
         $today    = new Carbon;
 
-        // zero bills? Hide some elements from view.
         /** @var BillRepositoryInterface $billRepository */
         $billRepository = app(BillRepositoryInterface::class);
         $billCount      = $billRepository->getBills()->count();
@@ -134,15 +124,11 @@ class HomeController extends Controller
             $transactions[] = [$set, $account];
         }
 
-        // fire check update event:
         /** @var User $user */
         $user = auth()->user();
         event(new RequestedVersionCheckStatus($user));
 
-        return view(
-            'index',
-            compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today')
-        );
+        return view('index', compact('count', 'subTitle', 'transactions', 'billCount', 'start', 'end', 'today'));
     }
 
 }

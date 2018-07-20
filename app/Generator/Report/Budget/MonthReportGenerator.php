@@ -64,7 +64,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
-     * @throws \Throwable
+
      */
     public function generate(): string
     {

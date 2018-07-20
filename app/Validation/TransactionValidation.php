@@ -33,8 +33,6 @@ use Log;
 
 /**
  * Trait TransactionValidation
- *
- * @package FireflyIII\Validation
  */
 trait TransactionValidation
 {

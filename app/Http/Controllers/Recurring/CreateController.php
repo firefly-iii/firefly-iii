@@ -69,6 +69,7 @@ class CreateController extends Controller
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request)
     {
@@ -83,14 +84,11 @@ class CreateController extends Controller
             $this->rememberPreviousUri('recurring.create.uri');
         }
         $request->session()->forget('recurring.create.fromStore');
-
-        // when will it end?
         $repetitionEnds = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
         ];
-        // what to do in the weekend?
         $weekendResponses = [
             RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
             RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
@@ -98,8 +96,8 @@ class CreateController extends Controller
             RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-        // flash some data:
-        $hasOldInput = null !== $request->old('_token');
+
+        $hasOldInput = null !== $request->old('_token'); // flash some data
         $preFilled   = [
             'first_date'       => $tomorrow->format('Y-m-d'),
             'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',

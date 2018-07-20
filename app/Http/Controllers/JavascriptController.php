@@ -136,6 +136,7 @@ class JavascriptController extends Controller
 
     /**
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getDateRangeConfig(): array
     {

@@ -36,7 +36,6 @@ use Illuminate\Support\Collection;
 /**
  * Interface RecurringRepositoryInterface
  *
- * @package FireflyIII\Repositories\Recurring
  */
 interface RecurringRepositoryInterface
 {

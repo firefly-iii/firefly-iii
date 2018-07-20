@@ -41,7 +41,6 @@ use Log;
 /**
  * Trait RecurringTransactionTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait RecurringTransactionTrait
 {

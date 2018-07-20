@@ -48,6 +48,9 @@ class RecurrenceFormRequest extends Request
     /**
      * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getAll(): array
     {
@@ -132,6 +135,10 @@ class RecurrenceFormRequest extends Request
     /**
      * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function rules(): array
     {
@@ -222,6 +229,8 @@ class RecurrenceFormRequest extends Request
 
     /**
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function parseRepetitionData(): array
     {
