@@ -36,7 +36,7 @@ use URL;
  */
 class LinkController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepository;
     /** @var LinkTypeRepositoryInterface */
     private $repository;

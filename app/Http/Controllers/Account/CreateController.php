@@ -36,11 +36,11 @@ use Illuminate\Http\Request;
  */
 class CreateController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
-     *
+     * CreateController constructor.
      */
     public function __construct()
     {
@@ -60,6 +60,8 @@ class CreateController extends Controller
     }
 
     /**
+     * Create a new account.
+     *
      * @param Request     $request
      * @param string|null $what
      *
@@ -90,6 +92,8 @@ class CreateController extends Controller
 
 
     /**
+     * Store the new account.
+     *
      * @param AccountFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

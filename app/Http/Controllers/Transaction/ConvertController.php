@@ -38,7 +38,7 @@ use View;
  */
 class ConvertController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**

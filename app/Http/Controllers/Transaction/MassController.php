@@ -47,7 +47,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class MassController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**

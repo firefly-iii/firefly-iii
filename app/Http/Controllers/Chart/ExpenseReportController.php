@@ -43,7 +43,7 @@ use Illuminate\Support\Collection;
  */
 class ExpenseReportController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
     /** @var GeneratorInterface */
     protected $generator;

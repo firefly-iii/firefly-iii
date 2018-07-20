@@ -50,9 +50,9 @@ class ReconcileController extends Controller
 
     /** @var CurrencyUpdateService */
     private $accountRepos;
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $currencyRepos;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**

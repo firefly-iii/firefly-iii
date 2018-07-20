@@ -36,11 +36,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class IndexController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
-     *
+     * IndexController constructor.
      */
     public function __construct()
     {
@@ -60,6 +60,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Show list of accounts.
+     *
      * @param Request $request
      * @param string  $what
      *
@@ -106,6 +108,8 @@ class IndexController extends Controller
 
 
     /**
+     * Find the ID in a given array. Return '0' of not there (amount).
+     *
      * @param array $array
      * @param int   $entryId
      *

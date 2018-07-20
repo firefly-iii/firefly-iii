@@ -34,7 +34,7 @@ use View;
  */
 class NewUserController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**

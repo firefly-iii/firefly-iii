@@ -52,9 +52,9 @@ class SplitController extends Controller
     /** @var BudgetRepositoryInterface */
     private $budgets;
 
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencies;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**

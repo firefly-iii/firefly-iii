@@ -47,9 +47,9 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class PiggyBankController extends Controller
 {
 
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var PiggyBankRepositoryInterface */
     private $piggyRepos;

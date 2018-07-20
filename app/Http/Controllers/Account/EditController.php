@@ -37,13 +37,13 @@ use Illuminate\Http\Request;
  */
 class EditController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
-     *
+     * EditController constructor.
      */
     public function __construct()
     {
@@ -64,6 +64,8 @@ class EditController extends Controller
     }
 
     /**
+     * Edit account overview.
+     *
      * @param Request                    $request
      * @param Account                    $account
      * @param AccountRepositoryInterface $repository
@@ -120,6 +122,8 @@ class EditController extends Controller
 
 
     /**
+     * Update the account.
+     *
      * @param AccountFormRequest $request
      * @param Account            $account
      *

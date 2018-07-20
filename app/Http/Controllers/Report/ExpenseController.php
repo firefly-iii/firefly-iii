@@ -42,7 +42,7 @@ use Throwable;
  */
 class ExpenseController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
 
     /**

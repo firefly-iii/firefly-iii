@@ -44,7 +44,7 @@ use Throwable;
  */
 class ReportController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $accountRepository;
     /** @var BudgetRepositoryInterface */
     private $budgetRepository;

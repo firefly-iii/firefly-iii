@@ -38,7 +38,7 @@ use View;
  */
 class CurrencyController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     protected $repository;
 
     /** @var UserRepositoryInterface */

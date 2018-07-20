@@ -50,7 +50,7 @@ class SingleController extends Controller
     private $attachments;
     /** @var BudgetRepositoryInterface */
     private $budgets;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**

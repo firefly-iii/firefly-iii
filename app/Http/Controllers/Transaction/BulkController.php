@@ -37,7 +37,7 @@ use Log;
  */
 class BulkController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
 

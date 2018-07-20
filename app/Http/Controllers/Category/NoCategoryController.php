@@ -43,7 +43,7 @@ use Log;
 class NoCategoryController extends Controller
 {
 
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepos;
     /** @var CategoryRepositoryInterface */
     private $repository;

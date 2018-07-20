@@ -45,13 +45,13 @@ use View;
  */
 class ShowController extends Controller
 {
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
-     *
+     * ShowController constructor.
      */
     public function __construct()
     {
@@ -241,6 +241,8 @@ class ShowController extends Controller
     }
 
     /**
+     * Redirect to the original account.
+     *
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

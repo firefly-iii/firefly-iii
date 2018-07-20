@@ -42,7 +42,7 @@ class ToAccountIsTest extends TestCase
             /** @var TransactionJournal $journal */
             $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
+            $account     = null === $transaction ? null : $transaction->account;
             $count       = $journal->transactions()->count();
 
             Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
@@ -69,7 +69,7 @@ class ToAccountIsTest extends TestCase
             /** @var TransactionJournal $journal */
             $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
+            $account     = null === $transaction ? null : $transaction->account;
             $count       = $journal->transactions()->count();
 
             Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));

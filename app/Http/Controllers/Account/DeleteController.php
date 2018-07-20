@@ -30,16 +30,15 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 
 /**
- *
  * Class DeleteController
  */
 class DeleteController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
-     *
+     * DeleteController constructor.
      */
     public function __construct()
     {
@@ -59,6 +58,8 @@ class DeleteController extends Controller
     }
 
     /**
+     * Delete account screen.
+     *
      * @param Account $account
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -77,6 +78,8 @@ class DeleteController extends Controller
     }
 
     /**
+     * Delete the account.
+     *
      * @param Request $request
      * @param Account $account
      *

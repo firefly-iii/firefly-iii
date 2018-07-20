@@ -52,7 +52,7 @@ class FromAccountStartsTest extends TestCase
             /** @var TransactionJournal $journal */
             $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-            $account     = $transaction->account;
+            $account     = null === $transaction ? null : $transaction->account;
             $count       = $journal->transactions()->count();
             $name        = $account->name ?? '';
 
@@ -83,7 +83,7 @@ class FromAccountStartsTest extends TestCase
             /** @var TransactionJournal $journal */
             $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
             $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-            $account     = $transaction->account;
+            $account     = null === $transaction ? null : $transaction->account;
             $count       = $journal->transactions()->count();
             $name        = $account->name ?? '';
 

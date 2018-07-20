@@ -48,7 +48,7 @@ use Throwable;
 class SelectController extends Controller
 {
     use RuleManagement;
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
 
     /**

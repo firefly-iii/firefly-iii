@@ -47,9 +47,9 @@ use Illuminate\Support\Collection;
 class ShowController extends Controller
 {
 
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepos;
     /** @var CategoryRepositoryInterface */
     private $repository;
