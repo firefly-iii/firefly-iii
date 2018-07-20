@@ -651,19 +651,22 @@ Route::group(
  * Recurring Transactions Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Recurring', 'prefix' => 'recurring', 'as' => 'recurring.'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'recurring', 'as' => 'recurring.'], function () {
 
-    Route::get('', ['uses' => 'IndexController@index', 'as' => 'index']);
-    Route::get('suggest', ['uses' => 'IndexController@suggest', 'as' => 'suggest']);
-    Route::get('events', ['uses' => 'IndexController@events', 'as' => 'events']);
-    Route::get('show/{recurrence}', ['uses' => 'IndexController@show', 'as' => 'show']);
-    Route::get('create', ['uses' => 'CreateController@create', 'as' => 'create']);
-    Route::get('edit/{recurrence}', ['uses' => 'EditController@edit', 'as' => 'edit']);
-    Route::get('delete/{recurrence}', ['uses' => 'DeleteController@delete', 'as' => 'delete']);
+    Route::get('', ['uses' => 'Recurring\IndexController@index', 'as' => 'index']);
 
-    Route::post('store', ['uses' => 'CreateController@store', 'as' => 'store']);
-    Route::post('update/{recurrence}', ['uses' => 'EditController@update', 'as' => 'update']);
-    Route::post('destroy/{recurrence}', ['uses' => 'DeleteController@destroy', 'as' => 'destroy']);
+    Route::get('show/{recurrence}', ['uses' => 'Recurring\IndexController@show', 'as' => 'show']);
+    Route::get('create', ['uses' => 'Recurring\CreateController@create', 'as' => 'create']);
+    Route::get('edit/{recurrence}', ['uses' => 'Recurring\EditController@edit', 'as' => 'edit']);
+    Route::get('delete/{recurrence}', ['uses' => 'Recurring\DeleteController@delete', 'as' => 'delete']);
+
+    Route::post('store', ['uses' => 'Recurring\CreateController@store', 'as' => 'store']);
+    Route::post('update/{recurrence}', ['uses' => 'Recurring\EditController@update', 'as' => 'update']);
+    Route::post('destroy/{recurrence}', ['uses' => 'Recurring\DeleteController@destroy', 'as' => 'destroy']);
+
+    // JSON routes:
+    Route::get('events', ['uses' => 'Json\RecurrenceController@events', 'as' => 'events']);
+    Route::get('suggest', ['uses' => 'Json\RecurrenceController@suggest', 'as' => 'suggest']);
 }
 );
 
@@ -773,22 +776,32 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rules', 'as' => 'rules.'], function () {
 
-    Route::get('', ['uses' => 'RuleController@index', 'as' => 'index']);
-    Route::get('create/{ruleGroup?}', ['uses' => 'RuleController@create', 'as' => 'create']);
-    Route::get('up/{rule}', ['uses' => 'RuleController@up', 'as' => 'up']);
-    Route::get('down/{rule}', ['uses' => 'RuleController@down', 'as' => 'down']);
-    Route::get('edit/{rule}', ['uses' => 'RuleController@edit', 'as' => 'edit']);
-    Route::get('delete/{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
-    Route::get('test', ['uses' => 'RuleController@testTriggers', 'as' => 'test-triggers']);
-    Route::get('test-rule/{rule}', ['uses' => 'RuleController@testTriggersByRule', 'as' => 'test-triggers-rule']);
-    Route::get('select/{rule}', ['uses' => 'RuleController@selectTransactions', 'as' => 'select-transactions']);
+    // create controller
+    Route::get('create/{ruleGroup?}', ['uses' => 'Rule\CreateController@create', 'as' => 'create']);
+    Route::post('store', ['uses' => 'Rule\CreateController@store', 'as' => 'store']);
 
-    Route::post('trigger/order/{rule}', ['uses' => 'RuleController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
-    Route::post('action/order/{rule}', ['uses' => 'RuleController@reorderRuleActions', 'as' => 'reorder-actions']);
-    Route::post('store', ['uses' => 'RuleController@store', 'as' => 'store']);
-    Route::post('update/{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
-    Route::post('destroy/{rule}', ['uses' => 'RuleController@destroy', 'as' => 'destroy']);
-    Route::post('execute/{rule}', ['uses' => 'RuleController@execute', 'as' => 'execute']);
+    // delete controller
+    Route::get('delete/{rule}', ['uses' => 'Rule\DeleteController@delete', 'as' => 'delete']);
+    Route::post('destroy/{rule}', ['uses' => 'Rule\DeleteController@destroy', 'as' => 'destroy']);
+
+    // index controller
+    Route::get('', ['uses' => 'Rule\IndexController@index', 'as' => 'index']);
+    Route::get('up/{rule}', ['uses' => 'Rule\IndexController@up', 'as' => 'up']);
+    Route::get('down/{rule}', ['uses' => 'Rule\IndexController@down', 'as' => 'down']);
+    Route::post('trigger/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleTriggers', 'as' => 'reorder-triggers']);
+    Route::post('action/order/{rule}', ['uses' => 'Rule\IndexController@reorderRuleActions', 'as' => 'reorder-actions']);
+
+    // select controller
+    Route::get('test', ['uses' => 'Rule\SelectController@testTriggers', 'as' => 'test-triggers']);
+    Route::get('test-rule/{rule}', ['uses' => 'Rule\SelectController@testTriggersByRule', 'as' => 'test-triggers-rule']);
+    Route::get('select/{rule}', ['uses' => 'Rule\SelectController@selectTransactions', 'as' => 'select-transactions']);
+    Route::post('execute/{rule}', ['uses' => 'Rule\SelectController@execute', 'as' => 'execute']);
+
+    // edit controller
+    Route::get('edit/{rule}', ['uses' => 'Rule\EditController@edit', 'as' => 'edit']);
+    Route::post('update/{rule}', ['uses' => 'Rule\EditController@update', 'as' => 'update']);
+
+
 
 }
 );
