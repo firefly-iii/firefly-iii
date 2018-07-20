@@ -98,7 +98,7 @@
             </div>
         </div>
     </div>
-    {% if note %}
+    {% if piggy.note %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -106,7 +106,7 @@
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ trans('form.notes') }}</h3>
                     </div>
-                    <div class="box-body markdown">{{ note.text|markdown }}
+                    <div class="box-body markdown">{{ piggy.note|markdown }}
                     </div>
                 </div>
 
