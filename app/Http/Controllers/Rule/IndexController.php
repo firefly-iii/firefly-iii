@@ -38,9 +38,9 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     use RuleManagement;
-    /** @var RuleGroupRepositoryInterface */
+    /** @var RuleGroupRepositoryInterface Rule group repository */
     private $ruleGroupRepos;
-    /** @var RuleRepositoryInterface */
+    /** @var RuleRepositoryInterface Rule repository. */
     private $ruleRepos;
 
     /**
@@ -62,6 +62,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Move rule down in list.
+     *
      * @param Rule $rule
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
@@ -74,6 +76,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Index of all rules and groups.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -88,6 +92,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Stop action for reordering of rule actions.
+     *
      * @param Request $request
      * @param Rule    $rule
      *
@@ -104,6 +110,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Stop action for reordering of rule triggers.
+     *
      * @param Request $request
      * @param Rule    $rule
      *
@@ -121,6 +129,8 @@ class IndexController extends Controller
 
 
     /**
+     * Move rule ip.
+     * 
      * @param Rule $rule
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector

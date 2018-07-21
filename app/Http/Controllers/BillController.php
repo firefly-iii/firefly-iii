@@ -48,9 +48,9 @@ class BillController extends Controller
 {
     /** @var AttachmentHelperInterface Helper for attachments. */
     private $attachments;
-    /** @var BillRepositoryInterface */
+    /** @var BillRepositoryInterface Bill repository */
     private $billRepository;
-    /** @var RuleGroupRepositoryInterface */
+    /** @var RuleGroupRepositoryInterface Rule group repository */
     private $ruleGroupRepos;
 
     /**

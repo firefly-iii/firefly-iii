@@ -38,6 +38,8 @@ class CategoryController extends Controller
 {
 
     /**
+     * Show overview of expenses in category.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -75,6 +77,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Show overview of income in category.
+     *
      * @param Collection $accounts
      *
      * @param Carbon     $start
@@ -112,6 +116,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Show overview of operations.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

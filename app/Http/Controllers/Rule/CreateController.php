@@ -43,9 +43,9 @@ use Throwable;
 class CreateController extends Controller
 {
     use RuleManagement;
-    /** @var BillRepositoryInterface */
+    /** @var BillRepositoryInterface Bill repository */
     private $billRepos;
-    /** @var RuleGroupRepositoryInterface */
+    /** @var RuleRepositoryInterface Rule repository */
     private $ruleRepos;
 
     /**
@@ -143,6 +143,8 @@ class CreateController extends Controller
     }
 
     /**
+     * Store the new rule.
+     *
      * @param RuleFormRequest $request
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
@@ -178,6 +180,8 @@ class CreateController extends Controller
     }
 
     /**
+     * Get actions based on a bill.
+     *
      * @param Bill $bill
      *
      * @return array

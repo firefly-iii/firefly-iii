@@ -34,7 +34,7 @@ use Illuminate\Http\RedirectResponse;
  */
 class DeleteController extends Controller
 {
-    /** @var RuleRepositoryInterface */
+    /** @var RuleRepositoryInterface Rule repository */
     private $ruleRepos;
 
     /**

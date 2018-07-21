@@ -35,13 +35,15 @@ class AccountController extends Controller
 {
 
     /**
+     * Show partial overview for account balances.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return mixed|string
      *
-
+     * @throws \Throwable
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {

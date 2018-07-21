@@ -180,7 +180,7 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * Overview of spending
+     * Overview of spending.
      *
      * @param Collection $accounts
      * @param Collection $expense
@@ -231,6 +231,8 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * List of top expenses.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
@@ -278,6 +280,8 @@ class ExpenseController extends Controller
     }
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * List of top income.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
@@ -325,6 +329,8 @@ class ExpenseController extends Controller
     }
 
     /**
+     * Combine accounts into a single list.
+     *
      * @param Collection $accounts
      *
      * @return array
@@ -349,6 +355,8 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Group by category (earnings).
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
@@ -414,6 +422,8 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Earned in period for accounts.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
@@ -457,6 +467,8 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Spent by budget.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
@@ -521,6 +533,8 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Spent by category.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
@@ -586,6 +600,8 @@ class ExpenseController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Spent in a period.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start

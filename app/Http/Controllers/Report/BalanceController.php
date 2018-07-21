@@ -35,12 +35,14 @@ class BalanceController extends Controller
 {
 
     /**
+     * Show overview of budget balances.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return mixed|string
-
+     * @throws \Throwable
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {

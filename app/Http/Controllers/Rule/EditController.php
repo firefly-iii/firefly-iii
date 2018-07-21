@@ -43,7 +43,7 @@ class EditController extends Controller
 {
     use RuleManagement;
 
-    /** @var RuleRepositoryInterface */
+    /** @var RuleRepositoryInterface Rule repository */
     private $ruleRepos;
 
     /**
@@ -66,6 +66,8 @@ class EditController extends Controller
     }
 
     /**
+     * Edit a rule.
+     *
      * @param Request $request
      * @param Rule    $rule
      *
@@ -119,6 +121,8 @@ class EditController extends Controller
     }
 
     /**
+     * Update the rule.
+     *
      * @param RuleFormRequest $request
      * @param Rule            $rule
      *
@@ -144,10 +148,11 @@ class EditController extends Controller
     }
 
     /**
+     * Get current (from system) rule actions.
+     *
      * @param Rule $rule
      *
      * @return array
-     *
      */
     private function getCurrentActions(Rule $rule): array
     {
@@ -180,6 +185,8 @@ class EditController extends Controller
     }
 
     /**
+     * Get current (from DB) rule triggers.
+     *
      * @param Rule $rule
      *
      * @return array
