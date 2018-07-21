@@ -282,16 +282,19 @@ class RecurrenceTransformer extends TransformerAbstract
         // get all transactions:
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transactionArray = [
+
+            $sourceAccount      = $transaction->sourceAccount;
+            $destinationAccount = $transaction->destinationAccount;
+            $transactionArray   = [
                 'currency_id'         => $transaction->transaction_currency_id,
                 'currency_code'       => $transaction->transactionCurrency->code,
                 'currency_symbol'     => $transaction->transactionCurrency->symbol,
                 'currency_dp'         => $transaction->transactionCurrency->decimal_places,
                 'foreign_currency_id' => $transaction->foreign_currency_id,
                 'source_id'           => $transaction->source_id,
-                'source_name'         => $transaction->sourceAccount->name,
+                'source_name'         => null === $sourceAccount ? '' : $sourceAccount->name,
                 'destination_id'      => $transaction->destination_id,
-                'destination_name'    => $transaction->destinationAccount->name,
+                'destination_name'    => null === $destinationAccount ? '' : $destinationAccount->name,
                 'amount'              => $transaction->amount,
                 'foreign_amount'      => $transaction->foreign_amount,
                 'description'         => $transaction->description,
