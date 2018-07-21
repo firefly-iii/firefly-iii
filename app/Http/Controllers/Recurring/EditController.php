@@ -40,13 +40,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class EditController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * EditController constructor.
      */
     public function __construct()
     {
@@ -68,6 +68,8 @@ class EditController extends Controller
     }
 
     /**
+     * Edit a recurring transaction.
+     *
      * todo move to repository
      * todo handle old repetition type as well.
      *
@@ -133,6 +135,8 @@ class EditController extends Controller
     }
 
     /**
+     * Update the recurring transaction.
+     *
      * @param RecurrenceFormRequest $request
      * @param Recurrence            $recurrence
      *

@@ -45,7 +45,7 @@ class NoCategoryController extends Controller
 
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepos;
-    /** @var CategoryRepositoryInterface */
+    /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
     /**
@@ -68,6 +68,8 @@ class NoCategoryController extends Controller
     }
 
     /**
+     * Show transactions without a category.
+     *
      * @param Request     $request
      * @param string|null $moment
      *

@@ -56,6 +56,8 @@ class UpdateController extends Controller
     }
 
     /**
+     * Show page with update options.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
@@ -76,6 +78,8 @@ class UpdateController extends Controller
     }
 
     /**
+     * Post new settings.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

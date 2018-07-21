@@ -66,6 +66,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List of all journals.
+     *
      * @param JournalCollectorInterface $collector
      *
      * @return JsonResponse
@@ -97,6 +99,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List of budgets.
+     *
      * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -125,6 +129,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List of currency names.
+     *
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -165,6 +171,8 @@ class AutoCompleteController extends Controller
 
 
     /**
+     * List of journals with their ID.
+     *
      * @param JournalCollectorInterface $collector
      * @param TransactionJournal        $except
      *
@@ -198,6 +206,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List of revenue accounts.
+     *
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -236,6 +246,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List of journals by type.
+     *
      * @param JournalCollectorInterface $collector
      * @param string                    $what
      *
@@ -254,6 +266,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List if transaction types.
+     *
      * @param JournalRepositoryInterface $repository
      *
      * @return JsonResponse

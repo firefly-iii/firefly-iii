@@ -37,11 +37,11 @@ use Log;
  */
 class JobConfigurationController extends Controller
 {
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface The import job repository */
     public $repository;
 
     /**
-     *
+     * JobConfigurationController constructor.
      */
     public function __construct()
     {
@@ -162,6 +162,8 @@ class JobConfigurationController extends Controller
     }
 
     /**
+     * Make a configurator object.
+     *
      * @param ImportJob $importJob
      *
      * @return JobConfigurationInterface

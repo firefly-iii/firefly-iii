@@ -36,11 +36,11 @@ use Log;
 class PrerequisitesController extends Controller
 {
 
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface The import job repository */
     private $repository;
 
     /**
-     *
+     * PrerequisitesController constructor.
      */
     public function __construct()
     {

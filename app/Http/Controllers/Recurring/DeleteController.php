@@ -34,11 +34,11 @@ use Illuminate\Http\Request;
  */
 class DeleteController extends Controller
 {
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * DeleteController constructor.
      */
     public function __construct()
     {
@@ -58,6 +58,8 @@ class DeleteController extends Controller
     }
 
     /**
+     * Delete a recurring transaction form.
+     *
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -68,13 +70,14 @@ class DeleteController extends Controller
         // put previous url in session
         $this->rememberPreviousUri('recurrences.delete.uri');
 
-        // todo actual number.
         $journalsCreated = $this->recurring->getTransactions($recurrence)->count();
 
         return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
     }
 
     /**
+     * Destroy the recurring transaction.
+     *
      * @param RecurringRepositoryInterface $repository
      * @param Request                      $request
      * @param Recurrence                   $recurrence

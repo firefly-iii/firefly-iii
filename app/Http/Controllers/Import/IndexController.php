@@ -32,19 +32,20 @@ use Illuminate\Http\Response as LaravelResponse;
 use Log;
 
 /**
- * Class FileController.
+ *
+ * Class IndexController
  */
 class IndexController extends Controller
 {
     /** @var array */
     public $providers;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface The import job repository */
     public $repository;
     /** @var UserRepositoryInterface */
     public $userRepository;
 
     /**
-     *
+     * IndexController constructor.
      */
     public function __construct()
     {

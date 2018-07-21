@@ -38,11 +38,11 @@ use Illuminate\Support\Collection;
  */
 class BillController extends Controller
 {
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     * checked.
+     * BillController constructor.
      */
     public function __construct()
     {
@@ -85,6 +85,8 @@ class BillController extends Controller
 
 
     /**
+     * Shows history for a single bill.
+     *
      * @param JournalCollectorInterface $collector
      * @param Bill                      $bill
      *

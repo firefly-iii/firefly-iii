@@ -44,6 +44,8 @@ class BoxController extends Controller
 {
 
     /**
+     * How much money user has available.
+     *
      * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -98,6 +100,8 @@ class BoxController extends Controller
 
 
     /**
+     * Current total balance.
+     *
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -183,6 +187,8 @@ class BoxController extends Controller
 
 
     /**
+     * Bills to pay and paid.
+     *
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -219,6 +225,8 @@ class BoxController extends Controller
 
 
     /**
+     * Total user net worth.
+     *
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -282,6 +290,8 @@ class BoxController extends Controller
     }
 
     /**
+     * Get a currency or return default currency.
+     *
      * @param Account $account
      *
      * @return TransactionCurrency
@@ -307,6 +317,8 @@ class BoxController extends Controller
     }
 
     /**
+     * Check if date is outside session range.
+     *
      * @param Carbon $date
      *
      * @return bool

@@ -36,7 +36,7 @@ use View;
 class LinkController extends Controller
 {
     /**
-     *
+     * LinkController constructor.
      */
     public function __construct()
     {
@@ -54,6 +54,7 @@ class LinkController extends Controller
     }
 
     /**
+     * Make a new link form.
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
@@ -70,6 +71,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Delete a link form.
+     *
      * @param Request                     $request
      * @param LinkTypeRepositoryInterface $repository
      * @param LinkType                    $linkType
@@ -102,6 +105,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Actually destroy the link.
+     *
      * @param Request                     $request
      * @param LinkTypeRepositoryInterface $repository
      * @param LinkType                    $linkType
@@ -121,6 +126,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Edit a link form.
+     *
      * @param Request  $request
      * @param LinkType $linkType
      *
@@ -146,6 +153,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Show index of all links.
+     *
      * @param LinkTypeRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -165,6 +174,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Show a single link.
+     *
      * @param LinkType $linkType
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -179,6 +190,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Store the new link.
+     *
      * @param LinkTypeFormRequest         $request
      * @param LinkTypeRepositoryInterface $repository
      *
@@ -206,6 +219,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Update an existing link.
+     *
      * @param LinkTypeFormRequest         $request
      * @param LinkTypeRepositoryInterface $repository
      * @param LinkType                    $linkType

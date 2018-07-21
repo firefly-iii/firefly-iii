@@ -37,11 +37,11 @@ use Illuminate\Http\Request;
  */
 class RecurrenceController extends Controller
 {
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface The recurring repository. */
     private $recurring;
 
     /**
-     *
+     * RecurrenceController constructor.
      */
     public function __construct()
     {
@@ -58,6 +58,8 @@ class RecurrenceController extends Controller
     }
 
     /**
+     * Shows all events for a repetition. Used in calendar.
+     *
      * @param Request $request
      *
      * @throws FireflyException
@@ -139,6 +141,8 @@ class RecurrenceController extends Controller
     }
 
     /**
+     * Suggests repetition moments.
+     *
      * @param Request $request
      *
      * @return JsonResponse

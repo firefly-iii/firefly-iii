@@ -52,11 +52,11 @@ class AccountController extends Controller
 {
     use DateCalculation;
 
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * AccountController constructor.
      */
     public function __construct()
     {
@@ -109,6 +109,8 @@ class AccountController extends Controller
 
 
     /**
+     * Expenses per budget, as shown on account overview.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -152,6 +154,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Expenses per budget for all time, as shown on account overview.
+     *
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
@@ -167,6 +171,8 @@ class AccountController extends Controller
 
 
     /**
+     * Expenses per category for one single account.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -210,6 +216,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Expenses grouped by category for account.
+     *
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
@@ -253,6 +261,8 @@ class AccountController extends Controller
 
 
     /**
+     * Shows all income per account for each category.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -296,6 +306,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Shows the income grouped by category for an account, in all time.
+     *
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
@@ -311,6 +323,8 @@ class AccountController extends Controller
 
 
     /**
+     * Shows overview of account during a single period.
+     *
      * @param Account $account
      * @param Carbon  $start
      *
@@ -427,6 +441,8 @@ class AccountController extends Controller
 
 
     /**
+     * Shows an overview of the account balances for a set of accounts.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -484,6 +500,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Get the budget names from a set of budget ID's.
+     *
      * @param array $budgetIds
      *
      * @return array
@@ -506,7 +524,7 @@ class AccountController extends Controller
     }
 
     /**
-     * Small helper function for some of the charts.
+     * Get the category names from a set of category ID's. Small helper function for some of the charts.
      *
      * @param array $categoryIds
      *

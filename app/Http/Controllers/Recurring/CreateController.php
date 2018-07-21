@@ -38,13 +38,13 @@ use Illuminate\Http\Request;
  */
 class CreateController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * CreateController constructor.
      */
     public function __construct()
     {
@@ -66,6 +66,8 @@ class CreateController extends Controller
     }
 
     /**
+     * Create a new recurring transaction.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -113,6 +115,8 @@ class CreateController extends Controller
 
 
     /**
+     * Store a recurring transaction.
+     *
      * @param RecurrenceFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

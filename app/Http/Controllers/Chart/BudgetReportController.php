@@ -48,13 +48,13 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgetRepository;
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     private $generator;
 
     /**
-     *
+     * BudgetReportController constructor.
      */
     public function __construct()
     {
@@ -71,6 +71,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart that groups expenses by the account.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -98,6 +100,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart that groups the expenses by budget.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -125,6 +129,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Main overview of a budget in the budget report.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -242,6 +248,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Helper function that collects expenses for the given budgets.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -264,6 +272,8 @@ class BudgetReportController extends Controller
     }
 
     /**
+     * Helper function that groups expenses.
+     *
      * @param Collection $set
      *
      * @return array

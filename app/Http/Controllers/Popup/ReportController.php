@@ -46,15 +46,15 @@ class ReportController extends Controller
 {
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepository;
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgetRepository;
-    /** @var CategoryRepositoryInterface */
+    /** @var CategoryRepositoryInterface The category repository */
     private $categoryRepository;
-    /** @var PopupReportInterface */
+    /** @var PopupReportInterface Various helper functions. */
     private $popupHelper;
 
     /**
-     *
+     * ReportController constructor.
      */
     public function __construct()
     {
@@ -79,6 +79,7 @@ class ReportController extends Controller
     }
 
     /**
+     * Generate popup view.
      * @param Request $request
      *
      * @return JsonResponse
@@ -117,6 +118,8 @@ class ReportController extends Controller
     }
 
     /**
+     * View for balance row.
+     *
      * @param array $attributes
      *
      * @return string
@@ -155,6 +158,8 @@ class ReportController extends Controller
     }
 
     /**
+     * View for spent in a single budget.
+     *
      * @param array $attributes
      *
      * @return string
@@ -177,6 +182,8 @@ class ReportController extends Controller
     }
 
     /**
+     * View for transactions in a category.
+     *
      * @param array $attributes
      *
      * @return string
@@ -253,6 +260,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Parses attributes from URI.
+     *
      * @param array $attributes
      *
      * @return array

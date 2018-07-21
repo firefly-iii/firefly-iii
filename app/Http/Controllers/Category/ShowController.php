@@ -51,7 +51,7 @@ class ShowController extends Controller
     private $accountRepos;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepos;
-    /** @var CategoryRepositoryInterface */
+    /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
     /**
@@ -77,6 +77,8 @@ class ShowController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Show a single category.
+     *
      * @param Request     $request
      * @param Category    $category
      * @param Carbon|null $start
@@ -114,6 +116,8 @@ class ShowController extends Controller
     }
 
     /**
+     * Show all transactions within a category.
+     *
      * @param Request  $request
      * @param Category $category
      *
@@ -150,6 +154,8 @@ class ShowController extends Controller
     }
 
     /**
+     * Get a period overview for category.
+     *
      * @param Category $category
      *
      * @param Carbon   $date

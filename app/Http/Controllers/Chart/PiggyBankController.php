@@ -39,11 +39,11 @@ use Illuminate\Support\Collection;
 class PiggyBankController extends Controller
 {
     use DateCalculation;
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * PiggyBankController constructor.
      */
     public function __construct()
     {

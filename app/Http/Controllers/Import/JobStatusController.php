@@ -37,11 +37,11 @@ use Log;
  */
 class JobStatusController extends Controller
 {
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface The import job repository */
     private $repository;
 
     /**
-     *
+     * JobStatusController constructor.
      */
     public function __construct()
     {
@@ -59,6 +59,8 @@ class JobStatusController extends Controller
     }
 
     /**
+     * Index for job status.
+     *
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -72,6 +74,8 @@ class JobStatusController extends Controller
     }
 
     /**
+     * JSON overview of job status.
+     *
      * @param ImportJob $importJob
      *
      * @return JsonResponse
@@ -120,6 +124,8 @@ class JobStatusController extends Controller
     }
 
     /**
+     * Calls to start the job.
+     *
      * @param ImportJob $importJob
      *
      * @return JsonResponse
@@ -214,6 +220,8 @@ class JobStatusController extends Controller
     }
 
     /**
+     * Store the transactions.
+     *
      * @param ImportJob $importJob
      *
      * @throws FireflyException

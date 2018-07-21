@@ -49,7 +49,7 @@ class SplitController extends Controller
     /** @var AttachmentHelperInterface */
     private $attachments;
 
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
 
     /** @var CurrencyRepositoryInterface The currency repository */

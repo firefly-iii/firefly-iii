@@ -34,7 +34,7 @@ use Illuminate\Support\Collection;
  */
 class CategoryController extends Controller
 {
-    /** @var CategoryRepositoryInterface */
+    /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
     /**

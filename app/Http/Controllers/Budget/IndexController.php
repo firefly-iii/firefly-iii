@@ -41,11 +41,11 @@ class IndexController extends Controller
 {
 
     use DateCalculation;
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
-     *
+     * IndexController constructor.
      */
     public function __construct()
     {
@@ -66,6 +66,10 @@ class IndexController extends Controller
 
 
     /**
+     * Show all budgets.
+     *
+     * TODO remove moment routine.
+     *
      * @param Request     $request
      * @param string|null $moment
      *

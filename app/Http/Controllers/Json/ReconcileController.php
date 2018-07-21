@@ -34,7 +34,6 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -48,15 +47,15 @@ use Illuminate\Support\Collection;
 class ReconcileController extends Controller
 {
 
-    /** @var CurrencyUpdateService */
-    private $accountRepos;
     /** @var AccountRepositoryInterface The account repository */
+    private $accountRepos;
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**
-     *
+     * ReconcileController constructor.
      */
     public function __construct()
     {
@@ -78,6 +77,8 @@ class ReconcileController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Overview of reconciliation.
+     *
      * @param Request $request
      * @param Account $account
      * @param Carbon  $start
@@ -86,10 +87,10 @@ class ReconcileController extends Controller
      * @return JsonResponse
      *
      * @throws FireflyException
-
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @throws \Throwable
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -138,6 +139,8 @@ class ReconcileController extends Controller
 
 
     /**
+     * Returns a list of transactions in a modal.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -145,7 +148,7 @@ class ReconcileController extends Controller
      * @return mixed
      *
      * @throws FireflyException
-
+     * @throws \Throwable
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
@@ -185,6 +188,8 @@ class ReconcileController extends Controller
     }
 
     /**
+     * Redirect to actual account.
+     *
      * @param Account $account
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

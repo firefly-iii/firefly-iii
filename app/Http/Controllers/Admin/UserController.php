@@ -36,7 +36,7 @@ use Log;
 class UserController extends Controller
 {
     /**
-     *
+     * UserController constructor.
      */
     public function __construct()
     {
@@ -55,6 +55,8 @@ class UserController extends Controller
     }
 
     /**
+     * Delete a user.
+     *
      * @param User $user
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -67,6 +69,8 @@ class UserController extends Controller
     }
 
     /**
+     * Destroy a user.
+     *
      * @param User                    $user
      * @param UserRepositoryInterface $repository
      *
@@ -81,6 +85,8 @@ class UserController extends Controller
     }
 
     /**
+     * Edit user form.
+     *
      * @param User $user
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -106,6 +112,8 @@ class UserController extends Controller
     }
 
     /**
+     * Show index of user manager.
+     *
      * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -133,6 +141,8 @@ class UserController extends Controller
     }
 
     /**
+     * Show single user.
+     *
      * @param UserRepositoryInterface $repository
      * @param User                    $user
      *
@@ -154,6 +164,8 @@ class UserController extends Controller
     }
 
     /**
+     * Update single user.
+     *
      * @param UserFormRequest         $request
      * @param User                    $user
      * @param UserRepositoryInterface $repository

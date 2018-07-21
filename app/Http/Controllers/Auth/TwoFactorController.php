@@ -36,6 +36,8 @@ use Log;
 class TwoFactorController extends Controller
 {
     /**
+     * Show 2FA screen.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
@@ -67,6 +69,8 @@ class TwoFactorController extends Controller
     }
 
     /**
+     * What to do if 2FA lost?
+     *
      * @return mixed
      */
     public function lostTwoFactor()
@@ -86,6 +90,8 @@ class TwoFactorController extends Controller
     }
 
     /**
+     * Submit 2FA code.
+     *
      * @param TokenFormRequest $request
      * @param CookieJar        $cookieJar
      *

@@ -45,11 +45,11 @@ use Illuminate\Support\Collection;
  */
 class CategoryReportController extends Controller
 {
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     private $generator;
 
     /**
-     *
+     * CategoryReportController constructor.
      */
     public function __construct()
     {
@@ -65,6 +65,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart for expenses grouped by expense account.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -89,6 +91,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart for income grouped by revenue account.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -116,6 +120,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart for expenses grouped by expense account.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -143,6 +149,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Piechart for income grouped by account.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -170,6 +178,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Main report category chart.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -281,6 +291,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Get all expenses in a period for categories.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -306,6 +318,8 @@ class CategoryReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Get all income for a period and a bunch of categories.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -327,6 +341,8 @@ class CategoryReportController extends Controller
     }
 
     /**
+     * Group transactions by category.
+     *
      * @param Collection $set
      *
      * @return array

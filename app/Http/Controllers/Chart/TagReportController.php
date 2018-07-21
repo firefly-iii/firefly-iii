@@ -44,11 +44,11 @@ use Illuminate\Support\Collection;
  */
 class TagReportController extends Controller
 {
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * TagReportController constructor.
      */
     public function __construct()
     {
@@ -59,6 +59,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Generate expenses for tags grouped on account.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -86,6 +88,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Generate income for tag grouped by account.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -113,6 +117,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Generate expense for tag grouped on budget.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -139,6 +145,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Generate expense for tag grouped on category.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -165,6 +173,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Generate main tag overview chart.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -276,6 +286,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Show expense grouped by expense account.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -303,6 +315,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Show income grouped by tag.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -330,6 +344,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Get all expenses by tags.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -355,6 +371,8 @@ class TagReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Get all income by tag.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -378,6 +396,8 @@ class TagReportController extends Controller
     }
 
     /**
+     * Group transactions by tag.
+     *
      * @param Collection $set
      *
      * @return array

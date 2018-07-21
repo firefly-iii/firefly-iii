@@ -37,11 +37,11 @@ use Illuminate\Http\Request;
  */
 class EditController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
-     *
+     * EditController constructor.
      */
     public function __construct()
     {
@@ -61,6 +61,8 @@ class EditController extends Controller
     }
 
     /**
+     * Budget edit form.
+     *
      * @param Request $request
      * @param Budget  $budget
      *
@@ -87,6 +89,8 @@ class EditController extends Controller
     }
 
     /**
+     * Budget update routine.
+     *
      * @param BudgetFormRequest $request
      * @param Budget            $budget
      *

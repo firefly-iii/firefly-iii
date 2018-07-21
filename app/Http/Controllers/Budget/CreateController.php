@@ -35,11 +35,11 @@ use Illuminate\Http\Request;
  */
 class CreateController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
-     *
+     * CreateController constructor.
      */
     public function __construct()
     {
@@ -60,6 +60,8 @@ class CreateController extends Controller
 
 
     /**
+     * Form to create a budget.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -78,6 +80,8 @@ class CreateController extends Controller
 
 
     /**
+     * Stores a budget.
+     *
      * @param BudgetFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse

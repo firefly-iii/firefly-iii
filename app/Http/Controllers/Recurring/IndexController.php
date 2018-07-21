@@ -39,11 +39,11 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class IndexController extends Controller
 {
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * IndexController constructor.
      */
     public function __construct()
     {
@@ -63,6 +63,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Show all recurring transactions.
+     *
      * TODO: split collection into pages
      *
      * @param Request $request
@@ -93,6 +95,8 @@ class IndexController extends Controller
     }
 
     /**
+     * Show a single recurring transaction.
+     *
      * @param Request    $request
      * @param Recurrence $recurrence
      *

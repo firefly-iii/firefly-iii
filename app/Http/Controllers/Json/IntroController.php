@@ -31,6 +31,8 @@ use Log;
 class IntroController
 {
     /**
+     * Returns the introduction wizard for a page.
+     *
      * @param string      $route
      * @param string|null $specificPage
      *
@@ -66,6 +68,8 @@ class IntroController
     }
 
     /**
+     * Returns true if there is a general outro step.
+     *
      * @param string $route
      *
      * @return bool
@@ -89,6 +93,8 @@ class IntroController
     }
 
     /**
+     * Enable the boxes for a specific page again.
+     *
      * @param string      $route
      * @param string|null $specialPage
      *
@@ -109,6 +115,8 @@ class IntroController
     }
 
     /**
+     * Set that you saw them.
+     *
      * @param string      $route
      * @param string|null $specialPage
      *
@@ -128,6 +136,8 @@ class IntroController
     }
 
     /**
+     * Get the basic steps from config.
+     *
      * @param string $route
      *
      * @return array
@@ -154,6 +164,8 @@ class IntroController
     }
 
     /**
+     * Get specific info for special routes.
+     *
      * @param string $route
      * @param string $specificPage
      *

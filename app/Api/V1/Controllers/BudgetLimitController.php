@@ -97,35 +97,15 @@ class BudgetLimitController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $budgetId = (int)($request->get('budget_id') ?? 0);
         $budget   = $this->repository->findNull($budgetId);
-        $start    = null;
-        $end      = null;
-        $this->parameters->set('budget_id', $budgetId);
-
-
-        try {
-            $start = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-            $this->parameters->set('start', $start->format('Y-m-d'));
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Invalid date: %s', $e->getMessage()));
-        }
-
-        try {
-            $end = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-            $this->parameters->set('end', $end->format('Y-m-d'));
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Invalid date: %s', $e->getMessage()));
-        }
-
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $this->parameters->set('budget_id', $budgetId);
 
         $collection = new Collection;
         if (null === $budget) {
-            /** @noinspection PhpUndefinedVariableInspection */
-            $collection = $this->repository->getAllBudgetLimits($start, $end);
+            $collection = $this->repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
         }
         if (null !== $budget) {
-            /** @noinspection PhpUndefinedVariableInspection */
-            $collection = $this->repository->getBudgetLimits($budget, $start, $end);
+            $collection = $this->repository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
         }
 
         $count        = $collection->count();

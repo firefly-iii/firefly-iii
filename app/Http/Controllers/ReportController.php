@@ -46,7 +46,7 @@ class ReportController extends Controller
     /** @var ReportHelperInterface */
     protected $helper;
 
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**

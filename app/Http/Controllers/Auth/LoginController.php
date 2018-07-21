@@ -60,6 +60,8 @@ class LoginController extends Controller
     }
 
     /**
+     * Log in a user.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void

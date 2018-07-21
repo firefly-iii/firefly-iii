@@ -35,11 +35,11 @@ use Illuminate\Http\Request;
  */
 class DeleteController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
-     *
+     * DeleteController constructor.
      */
     public function __construct()
     {
@@ -60,6 +60,8 @@ class DeleteController extends Controller
 
 
     /**
+     * Deletes a budget.
+     *
      * @param Budget $budget
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -75,6 +77,8 @@ class DeleteController extends Controller
     }
 
     /**
+     * Destroys a budget.
+     *
      * @param Request $request
      * @param Budget  $budget
      *

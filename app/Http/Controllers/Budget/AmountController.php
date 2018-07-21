@@ -38,17 +38,16 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**
- *
  * Class AmountController
  */
 class AmountController extends Controller
 {
     use DateCalculation;
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
-     *
+     * AmountController constructor.
      */
     public function __construct()
     {
@@ -69,6 +68,8 @@ class AmountController extends Controller
 
 
     /**
+     * Set the amount for a single budget in a specific period. Shows a waring when its a lot.
+     *
      * @param Request                   $request
      * @param BudgetRepositoryInterface $repository
      * @param Budget                    $budget
@@ -122,6 +123,8 @@ class AmountController extends Controller
 
 
     /**
+     * Shows some basic info about the income and the suggested budget.
+     *
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -169,6 +172,8 @@ class AmountController extends Controller
 
 
     /**
+     * Store an available budget for the current period.
+     *
      * @param BudgetIncomeRequest $request
      *
      * @return RedirectResponse
@@ -188,6 +193,8 @@ class AmountController extends Controller
     }
 
     /**
+     * Shows the form to update available budget.
+     *
      * @param Request $request
      * @param Carbon  $start
      * @param Carbon  $end
