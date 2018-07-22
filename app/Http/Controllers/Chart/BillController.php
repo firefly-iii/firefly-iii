@@ -85,7 +85,7 @@ class BillController extends Controller
 
 
     /**
-     * Shows history for a single bill.
+     * Shows overview for a single bill.
      *
      * @param JournalCollectorInterface $collector
      * @param Bill                      $bill
@@ -101,8 +101,8 @@ class BillController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        $results   = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
-        $results   = $results->sortBy(
+        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
+        $results = $results->sortBy(
             function (Transaction $transaction) {
                 return $transaction->date->format('U');
             }
@@ -118,7 +118,13 @@ class BillController extends Controller
             $date                           = $entry->date->formatLocalized((string)trans('config.month_and_day'));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
-            $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1'); // amount of journal
+
+            // append amount because there are more than one per moment:
+            if (!isset($chartData[2]['entries'][$date])) {
+                $chartData[2]['entries'][$date] = '0';
+            }
+            $amount                         = bcmul($entry->transaction_amount, '-1');
+            $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal
         }
 
         $data = $this->generator->multiSet($chartData);
