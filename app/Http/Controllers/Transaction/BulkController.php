@@ -60,6 +60,8 @@ class BulkController extends Controller
     }
 
     /**
+     * Edit a set of journals in bulk.
+     *
      * @param Collection $journals
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -84,6 +86,8 @@ class BulkController extends Controller
 
 
     /**
+     * Update all journals.
+     *
      * @param BulkEditJournalRequest $request
      *
      * @return mixed

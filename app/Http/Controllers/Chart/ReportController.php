@@ -147,9 +147,9 @@ class ReportController extends Controller
     /**
      * Shows sum income and expense, debit/credit: operations.
      *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
      *

@@ -39,11 +39,11 @@ use Illuminate\Support\Collection;
  */
 class TagController extends Controller
 {
-    /** @var TagRepositoryInterface */
+    /** @var TagRepositoryInterface The tag repository. */
     protected $repository;
 
     /**
-     *
+     * TagController constructor.
      */
     public function __construct()
     {
@@ -63,6 +63,8 @@ class TagController extends Controller
     }
 
     /**
+     * Create a new tag.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
@@ -97,6 +99,8 @@ class TagController extends Controller
     }
 
     /**
+     * Destroy a tag.
+     *
      * @param Tag $tag
      *
      * @return RedirectResponse
@@ -162,6 +166,8 @@ class TagController extends Controller
     }
 
     /**
+     * Show a single tag.
+     *
      * @param Request     $request
      * @param Tag         $tag
      * @param string|null $moment
@@ -235,6 +241,8 @@ class TagController extends Controller
     }
 
     /**
+     * Store a tag.
+     *
      * @param TagFormRequest $request
      *
      * @return RedirectResponse
@@ -261,6 +269,8 @@ class TagController extends Controller
     }
 
     /**
+     * Update a tag.
+     *
      * @param TagFormRequest $request
      * @param Tag            $tag
      *
@@ -288,6 +298,8 @@ class TagController extends Controller
     }
 
     /**
+     * Get overview of periods for tag.
+     *
      * @param Tag $tag
      *
      * @return Collection

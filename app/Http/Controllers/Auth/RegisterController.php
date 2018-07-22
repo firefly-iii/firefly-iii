@@ -33,12 +33,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 /**
- * @codeCoverageIgnore
  * Class RegisterController
  *
  * This controller handles the registration of new users as well as their
  * validation and creation. By default this controller uses a trait to
  * provide this functionality without requiring any additional code.
+ *
+ * @codeCoverageIgnore
  */
 class RegisterController extends Controller
 {

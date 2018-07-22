@@ -28,6 +28,8 @@ namespace FireflyIII\Http\Requests;
 class CurrencyFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -37,6 +39,8 @@ class CurrencyFormRequest extends Request
     }
 
     /**
+     * Returns the data required by the controller.
+     *
      * @return array
      */
     public function getCurrencyData(): array
@@ -50,6 +54,8 @@ class CurrencyFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

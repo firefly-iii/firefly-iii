@@ -58,6 +58,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Create a new rule group.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
@@ -75,6 +77,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Delege a rule group.
+     *
      * @param RuleGroup $ruleGroup
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -90,6 +94,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Actually destroy the rule group.
+     *
      * @param Request                      $request
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
@@ -114,6 +120,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Move a rule group down.
+     *
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
      *
@@ -127,6 +135,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Edit a rule group.
+     *
      * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
@@ -189,6 +199,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Select transactions to apply the group on.
+     *
      * @param RuleGroup $ruleGroup
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -203,6 +215,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Store the rule group.
+     *
      * @param RuleGroupFormRequest         $request
      * @param RuleGroupRepositoryInterface $repository
      *
@@ -229,6 +243,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Move the rule group up.
+     *
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
      *
@@ -244,6 +260,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Update the rule group.
+     *
      * @param RuleGroupFormRequest         $request
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup

@@ -28,7 +28,7 @@ use Illuminate\Contracts\Auth\Factory as Auth;
 use Illuminate\Routing\Route;
 
 /**
- * Class HttpBinder
+ * Class Binder
  */
 class Binder
 {
@@ -39,6 +39,8 @@ class Binder
      */
     protected $auth;
     /**
+     * The binders.
+     *
      * @var array
      */
     protected $binders = [];
@@ -77,6 +79,8 @@ class Binder
     }
 
     /**
+     * Do the binding.
+     *
      * @param $key
      * @param $value
      * @param $route

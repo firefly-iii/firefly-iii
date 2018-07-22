@@ -46,7 +46,7 @@ use View;
  */
 class SingleController extends Controller
 {
-    /** @var AttachmentHelperInterface */
+    /** @var AttachmentHelperInterface The attachment helper. */
     private $attachments;
     /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
@@ -54,7 +54,7 @@ class SingleController extends Controller
     private $repository;
 
     /**
-     *
+     * SingleController constructor.
      */
     public function __construct()
     {
@@ -81,6 +81,8 @@ class SingleController extends Controller
     }
 
     /**
+     * CLone a transaction.
+     *
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -137,6 +139,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Create a new journal.
+     *
      * @param Request     $request
      * @param string|null $what
      *
@@ -206,6 +210,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Actually destroys the journal.
+     *
      * @param TransactionJournal $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
@@ -228,6 +234,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Edit a journal.
+     *
      * @param TransactionJournal         $journal
      *
      * @param JournalRepositoryInterface $repository
@@ -321,6 +329,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Stores a new journal.
+     *
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
@@ -383,6 +393,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Update a journal.
+     *
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
@@ -439,6 +451,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Checks if journal is split.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

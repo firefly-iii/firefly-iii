@@ -42,11 +42,12 @@ use View;
 
 /**
  * Class SplitController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SplitController extends Controller
 {
-    /** @var AttachmentHelperInterface */
+    /** @var AttachmentHelperInterface Attachment helper */
     private $attachments;
 
     /** @var BudgetRepositoryInterface The budget repository */
@@ -58,7 +59,7 @@ class SplitController extends Controller
     private $repository;
 
     /**
-     *
+     * SplitController constructor.
      */
     public function __construct()
     {
@@ -80,6 +81,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Edit a split.
+     *
      * @param Request            $request
      * @param TransactionJournal $journal
      *
@@ -119,6 +122,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Store new split journal.
+     *
      * @param SplitJournalFormRequest $request
      * @param TransactionJournal      $journal
      *
@@ -169,6 +174,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Create data-array from a journal.
+     *
      * @param SplitJournalFormRequest|Request $request
      * @param TransactionJournal              $journal
      *
@@ -216,6 +223,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Get transaction overview from journal.
+     *
      * @param TransactionJournal $journal
      *
      * @return array
@@ -255,6 +264,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Get info from old input.
+     *
      * @param $array
      * @param $old
      *

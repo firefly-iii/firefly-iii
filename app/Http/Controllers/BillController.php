@@ -54,7 +54,7 @@ class BillController extends Controller
     private $ruleGroupRepos;
 
     /**
-     *
+     * BillController constructor.
      */
     public function __construct()
     {
@@ -79,6 +79,8 @@ class BillController extends Controller
     }
 
     /**
+     * Create a new bill.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -104,6 +106,8 @@ class BillController extends Controller
     }
 
     /**
+     * Delete a bill.
+     *
      * @param Bill $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -118,6 +122,8 @@ class BillController extends Controller
     }
 
     /**
+     * Destroy a bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -135,6 +141,8 @@ class BillController extends Controller
     }
 
     /**
+     * Edit a bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -178,6 +186,8 @@ class BillController extends Controller
     }
 
     /**
+     * Show all bills.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -218,6 +228,8 @@ class BillController extends Controller
     }
 
     /**
+     * Rescan bills for transactions.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -253,6 +265,8 @@ class BillController extends Controller
     }
 
     /**
+     * Show a bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -295,6 +309,8 @@ class BillController extends Controller
 
 
     /**
+     * Store a new bill.
+     *
      * @param BillFormRequest $request
      *
      * @return RedirectResponse
@@ -350,6 +366,8 @@ class BillController extends Controller
     }
 
     /**
+     * Update a bill.
+     *
      * @param BillFormRequest $request
      * @param Bill            $bill
      *

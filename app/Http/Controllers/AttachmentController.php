@@ -36,11 +36,11 @@ use Illuminate\Http\Response as LaravelResponse;
  */
 class AttachmentController extends Controller
 {
-    /** @var AttachmentRepositoryInterface */
+    /** @var AttachmentRepositoryInterface Attachment repository */
     private $repository;
 
     /**
-     *
+     * AttachmentController constructor.
      */
     public function __construct()
     {
@@ -59,6 +59,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Form to delete an attachment.
+     *
      * @param Attachment $attachment
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -74,6 +76,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Destroy attachment.
+     *
      * @param Request    $request
      * @param Attachment $attachment
      *
@@ -92,6 +96,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Download attachment to PC.
+     *
      * @param Attachment $attachment
      *
      * @return mixed
@@ -123,6 +129,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Edit an attachment.
+     *
      * @param Request    $request
      * @param Attachment $attachment
      *
@@ -146,6 +154,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Index of all attachments.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -164,6 +174,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Update attachment.
+     *
      * @param AttachmentFormRequest $request
      * @param Attachment            $attachment
      *
@@ -191,6 +203,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * View attachment in browser.
+     *
      * @param Attachment $attachment
      *
      * @return LaravelResponse

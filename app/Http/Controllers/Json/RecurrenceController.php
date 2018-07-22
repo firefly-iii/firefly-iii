@@ -88,13 +88,13 @@ class RecurrenceController extends Controller
         // if $firstDate is beyond start, use that one:
         $actualStart = clone $firstDate;
 
-        if ($repetitionType === 'weekly' || $repetitionType === 'monthly') {
+        if ('weekly' === $repetitionType || 'monthly' === $repetitionType) {
             $repetitionMoment = explode(',', $request->get('type'))[1] ?? '1';
         }
-        if ($repetitionType === 'ndom') {
+        if ('ndom' === $repetitionType) {
             $repetitionMoment = str_ireplace('ndom,', '', $request->get('type'));
         }
-        if ($repetitionType === 'yearly') {
+        if ('yearly' === $repetitionType) {
             $repetitionMoment = explode(',', $request->get('type'))[1] ?? '2018-01-01';
         }
         $repetition                    = new RecurrenceRepetition;

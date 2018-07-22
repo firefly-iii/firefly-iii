@@ -74,6 +74,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Change your email address.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changeEmail()
@@ -87,6 +89,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Change your password.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changePassword()
@@ -115,6 +119,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Screen to confirm email change.
+     *
      * @param UserRepositoryInterface $repository
      * @param string                  $token
      *
@@ -151,6 +157,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Delete your account view.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function deleteAccount()
@@ -163,6 +171,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Delete 2FA routine.
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function deleteCode()
@@ -176,6 +186,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Enable 2FA screen.
+     *
      * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -203,6 +215,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Index for profile.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -236,6 +250,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Submit the change email form.
+     *
      * @param EmailFormRequest        $request
      * @param UserRepositoryInterface $repository
      *
@@ -279,6 +295,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Submit change password form.
+     *
      * @param ProfileFormRequest      $request
      * @param UserRepositoryInterface $repository
      *
@@ -307,6 +325,8 @@ class ProfileController extends Controller
 
     /** @noinspection PhpUnusedParameterInspection */
     /**
+     * Submit 2FA for the first time.
+     *
      * @param TokenFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -324,6 +344,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Submit delete account.
+     *
      * @param UserRepositoryInterface  $repository
      * @param DeleteAccountFormRequest $request
      *
@@ -348,6 +370,7 @@ class ProfileController extends Controller
     }
 
     /**
+     * Regenerate access token.
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function regenerate()
@@ -362,6 +385,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Undo change of user email address.
+     *
      * @param UserRepositoryInterface $repository
      * @param string                  $token
      * @param string                  $hash
@@ -413,6 +438,8 @@ class ProfileController extends Controller
     }
 
     /**
+     * Validate users new password.
+     *
      * @param User   $user
      * @param string $current
      * @param string $new
@@ -435,7 +462,7 @@ class ProfileController extends Controller
     }
 
     /**
-     *
+     * Create new RSA keys.
      */
     private function createOAuthKeys(): void
     {
@@ -459,6 +486,8 @@ class ProfileController extends Controller
     // @codeCoverageIgnoreEnd
 
     /**
+     * Get the domain of FF system.
+     *
      * @return string
      */
     private function getDomain(): string

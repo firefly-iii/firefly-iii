@@ -99,6 +99,8 @@ class Installer
     }
 
     /**
+     * Is access denied error.
+     *
      * @param string $message
      *
      * @return bool
@@ -109,6 +111,8 @@ class Installer
     }
 
     /**
+     * Is no tables exist error.
+     *
      * @param string $message
      *
      * @return bool

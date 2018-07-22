@@ -27,12 +27,13 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
 
 /**
- * @codeCoverageIgnore
  * Class TrustProxies
+ *
+ * @codeCoverageIgnore
  */
 class TrustProxies extends Middleware
 {
-    /** @var int */
+    /** @var int The headers to check. */
     protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
     /**

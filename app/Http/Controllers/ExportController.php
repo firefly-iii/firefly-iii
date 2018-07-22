@@ -39,7 +39,7 @@ use Illuminate\Http\Response as LaravelResponse;
 class ExportController extends Controller
 {
     /**
-     *
+     * ExportController constructor.
      */
     public function __construct()
     {
@@ -57,6 +57,8 @@ class ExportController extends Controller
     }
 
     /**
+     * Download exported file.
+     *
      * @param ExportJobRepositoryInterface $repository
      * @param ExportJob                    $job
      *
@@ -94,6 +96,8 @@ class ExportController extends Controller
     }
 
     /**
+     * Get current export status.
+     *
      * @param ExportJob $job
      *
      * @return \Illuminate\Http\JsonResponse
@@ -104,6 +108,8 @@ class ExportController extends Controller
     }
 
     /**
+     * Index of export routine.
+     *
      * @param ExportJobRepositoryInterface $jobs
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -125,6 +131,8 @@ class ExportController extends Controller
     }
 
     /**
+     * Submit the job.
+     *
      * @param ExportFormRequest            $request
      * @param AccountRepositoryInterface   $repository
      * @param ExportJobRepositoryInterface $jobs

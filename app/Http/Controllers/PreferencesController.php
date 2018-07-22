@@ -32,7 +32,7 @@ use Illuminate\Http\Request;
 class PreferencesController extends Controller
 {
     /**
-     *
+     * PreferencesController constructor.
      */
     public function __construct()
     {
@@ -49,6 +49,8 @@ class PreferencesController extends Controller
     }
 
     /**
+     * Show overview of preferences.
+     *
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -83,6 +85,8 @@ class PreferencesController extends Controller
     }
 
     /**
+     * Store new preferences.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

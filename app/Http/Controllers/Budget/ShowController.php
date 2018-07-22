@@ -127,7 +127,7 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
+        return view('budgets.no-budget', compact('transactions', 'subTitle', 'moment',  'start', 'end'));
     }
 
 

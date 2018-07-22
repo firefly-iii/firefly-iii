@@ -38,6 +38,8 @@ use Log;
 class JavascriptController extends Controller
 {
     /**
+     * Show info about accounts.
+     *
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
      *
@@ -68,6 +70,8 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Get info about currencies.
+     *
      * @param CurrencyRepositoryInterface $repository
      *
      * @return Response
@@ -89,6 +93,8 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Show some common variables to be used in scripts.
+     *
      * @param Request                     $request
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
@@ -135,6 +141,8 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Get config for date range.
+     *
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */

@@ -71,6 +71,7 @@ class ShowController extends Controller
         );
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Show an account.
      *

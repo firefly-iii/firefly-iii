@@ -60,7 +60,7 @@ class Sandstorm
             $repository = app(UserRepositoryInterface::class);
             $userId     = (string)$request->header('X-Sandstorm-User-Id');
             // catch anonymous:
-            $userId = $userId === '' ? 'anonymous' : $userId;
+            $userId = '' === $userId ? 'anonymous' : $userId;
             $email  = $userId . '@firefly';
             $user   = $repository->findByEmail($email) ?? $this->createUser($email);
             Log::debug(sprintf('Sandstorm user email is "%s"', $email));
@@ -75,6 +75,8 @@ class Sandstorm
 
 
     /**
+     * Create a user.
+     *
      * @param string $email
      *
      * @return User

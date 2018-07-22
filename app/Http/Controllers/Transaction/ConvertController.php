@@ -63,6 +63,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Show overview of a to be converted transaction.
+     *
      * @param TransactionType    $destinationType
      * @param TransactionJournal $journal
      *
@@ -110,6 +112,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Do the conversion.
+     *
      * @param Request            $request
      * @param TransactionType    $destinationType
      * @param TransactionJournal $journal
@@ -164,6 +168,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Get the destination account. Is complex.
+     *
      * @param TransactionJournal $journal
      * @param TransactionType    $destinationType
      * @param array              $data
@@ -223,6 +229,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Get the source account.
+     *
      * @param TransactionJournal $journal
      * @param TransactionType    $destinationType
      * @param array              $data

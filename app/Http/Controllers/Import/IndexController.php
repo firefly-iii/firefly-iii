@@ -41,7 +41,7 @@ class IndexController extends Controller
     public $providers;
     /** @var ImportJobRepositoryInterface The import job repository */
     public $repository;
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     public $userRepository;
 
     /**

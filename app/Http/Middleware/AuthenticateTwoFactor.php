@@ -53,6 +53,8 @@ class AuthenticateTwoFactor
 
 
     /**
+     * Handle 2FA request.
+     *
      * @param         $request
      * @param Closure $next
      *

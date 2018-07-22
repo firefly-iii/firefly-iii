@@ -38,11 +38,11 @@ class LinkController extends Controller
 {
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepository;
-    /** @var LinkTypeRepositoryInterface */
+    /** @var LinkTypeRepositoryInterface Link repository. */
     private $repository;
 
     /**
-     *
+     * LinkController constructor.
      */
     public function __construct()
     {
@@ -62,6 +62,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Delete a link.
+     *
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -76,6 +78,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Actually destroy it.
+     *
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -91,6 +95,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Store a new link.
+     *
      * @param JournalLinkRequest $request
      * @param TransactionJournal $journal
      *
@@ -129,6 +135,7 @@ class LinkController extends Controller
     }
 
     /**
+     * Switch link from A <> B to B <> A.
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

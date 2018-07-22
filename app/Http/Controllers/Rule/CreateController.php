@@ -30,7 +30,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -188,7 +188,6 @@ class CreateController extends Controller
      */
     private function getActionsForBill(Bill $bill): array
     {
-        $result = '';
         try {
             $result = view(
                 'rules.partials.action',

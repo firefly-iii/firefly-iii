@@ -49,7 +49,7 @@ class ExpenseReportController extends Controller
     protected $generator;
 
     /**
-     *
+     * ExpenseReportController constructor.
      */
     public function __construct()
     {

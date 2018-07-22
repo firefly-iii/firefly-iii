@@ -31,7 +31,7 @@ use Log;
  */
 class HelpController extends Controller
 {
-    /** @var HelpInterface */
+    /** @var HelpInterface Help interface. */
     private $help;
 
     /**
@@ -51,6 +51,8 @@ class HelpController extends Controller
     }
 
     /**
+     * Show help for a route.
+     *
      * @param   $route
      *
      * @return JsonResponse
@@ -64,6 +66,10 @@ class HelpController extends Controller
     }
 
     /**
+     * Gets the help text.
+     *
+     * TODO move to repos or trait.
+     *
      * @param string $route
      * @param string $language
      *

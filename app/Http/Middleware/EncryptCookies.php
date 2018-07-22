@@ -25,8 +25,9 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Cookie\Middleware\EncryptCookies as Middleware;
 
 /**
- * @codeCoverageIgnore
  * Class EncryptCookies
+ *
+ * @codeCoverageIgnore
  */
 class EncryptCookies extends Middleware
 {

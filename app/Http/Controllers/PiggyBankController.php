@@ -51,11 +51,11 @@ class PiggyBankController extends Controller
     private $accountRepos;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
-    /** @var PiggyBankRepositoryInterface */
+    /** @var PiggyBankRepositoryInterface Piggy bank repository. */
     private $piggyRepos;
 
     /**
-     *
+     * PiggyBankController constructor.
      */
     public function __construct()
     {
@@ -128,6 +128,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Create a piggy bank.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
@@ -145,6 +147,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Delete a piggy bank.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -160,6 +164,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Destroy the piggy bank.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return RedirectResponse
@@ -174,6 +180,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Edit a piggy bank.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -214,6 +222,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Show overview of all piggy banks.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -270,6 +280,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Add money to piggy bank.
+     *
      * @param Request   $request
      * @param PiggyBank $piggyBank
      *
@@ -310,6 +322,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Remove money from piggy bank.
+     *
      * @param Request   $request
      * @param PiggyBank $piggyBank
      *
@@ -351,6 +365,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Remove money from piggy bank form.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -390,6 +406,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Set the order of a piggy bank.
+     *
      * @param Request   $request
      * @param PiggyBank $piggyBank
      *
@@ -404,6 +422,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Show a single piggy bank.
+     *
      * @param PiggyBank $piggyBank
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -424,6 +444,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Store a new piggy bank.
+     *
      * @param PiggyBankFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -453,6 +475,8 @@ class PiggyBankController extends Controller
     }
 
     /**
+     * Update a piggy bank.
+     *
      * @param PiggyBankFormRequest $request
      * @param PiggyBank            $piggyBank
      *

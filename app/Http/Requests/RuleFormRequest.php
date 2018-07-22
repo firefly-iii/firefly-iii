@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 class RuleFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class RuleFormRequest extends Request
     }
 
     /**
+     * Get all data for controller.
+     *
      * @return array
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -89,6 +93,8 @@ class RuleFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

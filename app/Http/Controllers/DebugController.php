@@ -52,6 +52,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Show all possible errors.
+     *
      * @throws FireflyException
      */
     public function displayError(): void
@@ -68,6 +70,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Clear log and session.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -99,6 +103,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Show debug info.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -176,6 +182,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Return all possible routes.
+     *
      * @return string
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -217,6 +225,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Flash all types of messages.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -258,6 +268,8 @@ class DebugController extends Controller
     }
 
     /**
+     * All packages that are installed.
+     *
      * @return array
      */
     private function collectPackages(): array

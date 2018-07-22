@@ -33,16 +33,16 @@ use Log;
 use phpseclib\Crypt\RSA;
 
 /**
- * @codeCoverageIgnore
  * Class InstallController
+ * @codeCoverageIgnore
  */
 class InstallController extends Controller
 {
-    /** @var string */
+    /** @var string Forbidden error */
     public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
-    /** @var string */
+    /** @var string Basedir error */
     public const BASEDIR_ERROR = 'Firefly III cannot execute the upgrade commands. It is not allowed to because of an open_basedir restriction.';
-    /** @var string */
+    /** @var string Other errors */
     public const OTHER_ERROR = 'An unknown error prevented Firefly III from executing the upgrade commands. Sorry.';
     /** @noinspection MagicMethodsValidityInspection */
     /** @noinspection PhpMissingParentConstructorInspection */
@@ -55,6 +55,8 @@ class InstallController extends Controller
     }
 
     /**
+     * Show index.
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function index()
@@ -63,6 +65,8 @@ class InstallController extends Controller
     }
 
     /**
+     * Create specific RSA keys.
+     *
      * @return \Illuminate\Http\JsonResponse|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function keys()
@@ -91,6 +95,8 @@ class InstallController extends Controller
     }
 
     /**
+     * Run migration commands.
+     *
      * @return JsonResponse
      */
     public function migrate(): JsonResponse
@@ -118,6 +124,8 @@ class InstallController extends Controller
     }
 
     /**
+     * Do database upgrade.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function upgrade(): JsonResponse
@@ -143,6 +151,8 @@ class InstallController extends Controller
     }
 
     /**
+     * Do database verification.
+     *
      * @return \Illuminate\Http\JsonResponse
      */
     public function verify(): JsonResponse
@@ -168,6 +178,8 @@ class InstallController extends Controller
     }
 
     /**
+     * Check if forbidden functions are set.
+     *
      * @return bool
      */
     private function hasForbiddenFunctions(): bool

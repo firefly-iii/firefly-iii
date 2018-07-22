@@ -42,7 +42,8 @@ use Log;
 use Throwable;
 
 /**
- * Class SelectController
+ * Class SelectController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SelectController extends Controller
@@ -107,6 +108,8 @@ class SelectController extends Controller
 
 
     /**
+     * View to select transactions by a rule.
+     *
      * @param Rule $rule
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -255,6 +258,8 @@ class SelectController extends Controller
 
 
     /**
+     * Get a list of triggers.
+     *
      * @param TestRuleFormRequest $request
      *
      * @return array

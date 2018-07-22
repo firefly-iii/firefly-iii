@@ -37,6 +37,8 @@ class RecurrenceFormRequest extends Request
 {
 
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -46,6 +48,8 @@ class RecurrenceFormRequest extends Request
     }
 
     /**
+     * Get the data required by the controller.
+     *
      * @return array
      * @throws FireflyException
      *
@@ -133,6 +137,8 @@ class RecurrenceFormRequest extends Request
     }
 
     /**
+     * The rules for this request.
+     *
      * @return array
      * @throws FireflyException
      *
@@ -228,6 +234,8 @@ class RecurrenceFormRequest extends Request
     }
 
     /**
+     * Parses repetition data.
+     *
      * @return array
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

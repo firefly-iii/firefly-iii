@@ -51,6 +51,8 @@ class SearchController extends Controller
     }
 
     /**
+     * Do the search.
+     *
      * @param Request         $request
      * @param SearchInterface $searcher
      *
@@ -69,11 +71,13 @@ class SearchController extends Controller
     }
 
     /**
+     * JSON request that does the work.
+     *
      * @param Request         $request
      * @param SearchInterface $searcher
      *
      * @return \Illuminate\Http\JsonResponse
-
+     * @throws \Throwable
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {

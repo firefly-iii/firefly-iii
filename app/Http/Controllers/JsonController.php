@@ -31,10 +31,12 @@ use Illuminate\Http\Request;
 class JsonController extends Controller
 {
     /**
+     * Render HTML form for rule action.
+     *
      * @param Request $request
      *
      * @return JsonResponse
-
+     * @throws \Throwable
      */
     public function action(Request $request): JsonResponse
     {
@@ -50,10 +52,12 @@ class JsonController extends Controller
     }
 
     /**
+     * Render HTML for rule trigger.
+     *
      * @param Request $request
      *
      * @return JsonResponse
-
+     * @throws \Throwable
      */
     public function trigger(Request $request): JsonResponse
     {

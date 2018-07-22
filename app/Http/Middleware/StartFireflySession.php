@@ -26,8 +26,9 @@ use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 
 /**
- * @codeCoverageIgnore
  * Class StartFireflySession.
+ *
+ * @codeCoverageIgnore
  */
 class StartFireflySession extends StartSession
 {

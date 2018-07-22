@@ -56,6 +56,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Create category.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -72,6 +74,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Delete a category.
+     *
      * @param Category $category
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -87,6 +91,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Destroy a category.
+     *
      * @param Request  $request
      * @param Category $category
      *
@@ -104,6 +110,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Edit a category.
+     *
      * @param Request  $request
      * @param Category $category
      *
@@ -123,6 +131,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Show all categories.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -150,6 +160,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Store new category.
+     *
      * @param CategoryFormRequest         $request
      * @param CategoryRepositoryInterface $repository
      *
@@ -177,6 +189,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Update category.
+     *
      * @param CategoryFormRequest         $request
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category

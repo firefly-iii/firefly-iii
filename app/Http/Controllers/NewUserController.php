@@ -54,6 +54,8 @@ class NewUserController extends Controller
     }
 
     /**
+     * Form the user gets when he has no data in the system.
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      */
     public function index()
@@ -74,6 +76,8 @@ class NewUserController extends Controller
     }
 
     /**
+     * Store his new settings.
+     *
      * @param NewUserFormRequest          $request
      * @param CurrencyRepositoryInterface $currencyRepository
      *
@@ -117,6 +121,8 @@ class NewUserController extends Controller
     }
 
     /**
+     * Creates an asset account.
+     *
      * @param NewUserFormRequest  $request
      * @param TransactionCurrency $currency
      *
@@ -143,6 +149,8 @@ class NewUserController extends Controller
     }
 
     /**
+     * Creates a cash wallet.
+     *
      * @param TransactionCurrency $currency
      * @param string              $language
      *
@@ -169,6 +177,8 @@ class NewUserController extends Controller
     }
 
     /**
+     * Create a savings account.
+     *
      * @param NewUserFormRequest  $request
      * @param TransactionCurrency $currency
      * @param string              $language

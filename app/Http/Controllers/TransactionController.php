@@ -121,6 +121,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Index for ALL transactions.
+     *
      * @param Request $request
      * @param string  $what
      *
@@ -153,6 +155,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Do a reconciliation.
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -173,6 +177,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Reorder transactions.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\JsonResponse
@@ -199,6 +205,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Show a transaction.
+     *
      * @param TransactionJournal          $journal
      * @param LinkTypeRepositoryInterface $linkTypeRepository
      *
@@ -239,6 +247,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Get period overview for index.
+     *
      * @param string $what
      *
      * @param Carbon $date
@@ -294,6 +304,8 @@ class TransactionController extends Controller
     }
 
     /**
+     * Collect the sum per currency.
+     *
      * @param Collection $collection
      *
      * @return array

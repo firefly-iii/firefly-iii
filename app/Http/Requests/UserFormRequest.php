@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 /**
- * @codeCoverageIgnore
  * Class UserFormRequest.
+ *
+ * @codeCoverageIgnore
  */
 class UserFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -38,6 +41,8 @@ class UserFormRequest extends Request
     }
 
     /**
+     * Get data for controller.
+     *
      * @return array
      */
     public function getUserData(): array
@@ -51,6 +56,8 @@ class UserFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

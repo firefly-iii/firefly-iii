@@ -51,7 +51,7 @@ class MassController extends Controller
     private $repository;
 
     /**
-     *
+     * MassController constructor.
      */
     public function __construct()
     {
@@ -69,6 +69,8 @@ class MassController extends Controller
     }
 
     /**
+     * Mass delete transactions.
+     *
      * @param Collection $journals
      *
      * @return IlluminateView
@@ -84,6 +86,8 @@ class MassController extends Controller
     }
 
     /**
+     * Do the mass delete.
+     *
      * @param MassDeleteJournalRequest $request
      *
      * @return mixed
@@ -114,6 +118,8 @@ class MassController extends Controller
     }
 
     /**
+     * Mass edit of journals.
+     *
      * @param Collection $journals
      *
      * @return IlluminateView
@@ -157,6 +163,8 @@ class MassController extends Controller
     }
 
     /**
+     * Mass update of journals.
+     *
      * @param MassEditJournalRequest     $request
      * @param JournalRepositoryInterface $repository
      *

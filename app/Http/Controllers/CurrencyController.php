@@ -41,11 +41,11 @@ class CurrencyController extends Controller
     /** @var CurrencyRepositoryInterface The currency repository */
     protected $repository;
 
-    /** @var UserRepositoryInterface */
+    /** @var UserRepositoryInterface The user repository */
     protected $userRepository;
 
     /**
-     *
+     * CurrencyController constructor.
      */
     public function __construct()
     {
@@ -65,6 +65,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Create a currency.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
@@ -92,6 +94,8 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Make currency the default currency.
+     *
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
@@ -103,7 +107,7 @@ class CurrencyController extends Controller
         app('preferences')->mark();
 
         $request->session()->flash('success', (string)trans('firefly.new_default_currency', ['name' => $currency->name]));
-        Cache::forget('FFCURRENCYSYMBOL');
+        Cache::forget('FFCURRENCYSYMBOL'); // todo are these even used?
         Cache::forget('FFCURRENCYCODE');
 
         return redirect(route('currencies.index'));
@@ -111,6 +115,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Deletes a currency.
+     *
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
@@ -143,6 +149,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Destroys a currency.
+     *
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
@@ -174,6 +182,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Edit a currency.
+     *
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
@@ -205,6 +215,8 @@ class CurrencyController extends Controller
     }
 
     /**
+     * Show overview of currencies.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -238,6 +250,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Store new currency.
+     *
      * @param CurrencyFormRequest $request
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -279,6 +293,8 @@ class CurrencyController extends Controller
 
 
     /**
+     * Updates a currency.
+     *
      * @param CurrencyFormRequest $request
      * @param TransactionCurrency $currency
      *

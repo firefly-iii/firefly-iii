@@ -28,6 +28,8 @@ namespace FireflyIII\Http\Requests;
 class BillFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -37,6 +39,8 @@ class BillFormRequest extends Request
     }
 
     /**
+     * Returns the data required by the controller.
+     *
      * @return array
      */
     public function getBillData(): array
@@ -55,6 +59,8 @@ class BillFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

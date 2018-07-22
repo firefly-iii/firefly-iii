@@ -39,18 +39,19 @@ use Log;
 
 /**
  * Class ReportController.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReportController extends Controller
 {
-    /** @var ReportHelperInterface */
+    /** @var ReportHelperInterface Helper interface. */
     protected $helper;
 
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
     /**
-     *
+     * ReportController constructor.
      */
     public function __construct()
     {
@@ -70,6 +71,8 @@ class ReportController extends Controller
     }
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Show account report.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
@@ -101,6 +104,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Show audit report.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -135,6 +140,8 @@ class ReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Show budget report.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -171,6 +178,8 @@ class ReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Show category report.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -206,6 +215,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Show default report.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -240,6 +251,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Show index.
+     *
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -258,10 +271,13 @@ class ReportController extends Controller
     }
 
     /**
+     * Show options for reports.
+     *
      * @param string $reportType
      *
      * @return mixed
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @throws \Throwable
      */
     public function options(string $reportType)
     {
@@ -287,6 +303,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Process the submit of report.
+     *
      * @param ReportFormRequest $request
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
@@ -365,6 +383,8 @@ class ReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Get a tag report.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -400,7 +420,10 @@ class ReportController extends Controller
     }
 
     /**
+     * Get options for account report.
+     *
      * @return string
+     * @throws \Throwable
      */
     private function accountReportOptions(): string
     {
@@ -420,7 +443,9 @@ class ReportController extends Controller
     }
 
     /**
+     * Get options for budget report.
      * @return string
+     * @throws \Throwable
      */
     private function budgetReportOptions(): string
     {
@@ -432,7 +457,9 @@ class ReportController extends Controller
     }
 
     /**
+     * Get options for category report.
      * @return string
+     * @throws \Throwable
      */
     private function categoryReportOptions(): string
     {
@@ -444,7 +471,9 @@ class ReportController extends Controller
     }
 
     /**
+     * Get options for default report.
      * @return string
+     * @throws \Throwable
      */
     private function noReportOptions(): string
     {
@@ -452,7 +481,9 @@ class ReportController extends Controller
     }
 
     /**
+     * Get options for tag report.
      * @return string
+     * @throws \Throwable
      */
     private function tagReportOptions(): string
     {

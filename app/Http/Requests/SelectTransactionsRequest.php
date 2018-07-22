@@ -25,12 +25,15 @@ namespace FireflyIII\Http\Requests;
 use Carbon\Carbon;
 
 /**
- * @codeCoverageIgnore
  * Class ExportFormRequest.
+ *
+ * @codeCoverageIgnore
  */
 class SelectTransactionsRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -40,6 +43,8 @@ class SelectTransactionsRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

@@ -30,6 +30,8 @@ use Illuminate\Validation\Validator;
 class SplitJournalFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
+     * Get all info for the controller.
+     *
      * @return array
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
@@ -107,6 +111,8 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array
@@ -149,6 +155,8 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
+     * Verify that source and destination are not the same.
+     *
      * @param Validator $validator
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

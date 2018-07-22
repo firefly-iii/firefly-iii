@@ -30,6 +30,8 @@ use Carbon\Carbon;
 class ExportFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class ExportFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

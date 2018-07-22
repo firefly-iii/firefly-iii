@@ -31,6 +31,8 @@ use FireflyIII\Rules\UniqueIban;
 class AccountFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -40,6 +42,8 @@ class AccountFormRequest extends Request
     }
 
     /**
+     * Get all data.
+     *
      * @return array
      */
     public function getAccountData(): array
@@ -64,6 +68,8 @@ class AccountFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

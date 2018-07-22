@@ -33,6 +33,8 @@ use Log;
 class JournalFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -140,8 +142,9 @@ class JournalFormRequest extends Request
     }
 
     /**
-     * @return array
+     * Rules for this request.
      *
+     * @return array
      * @throws FireflyException
      */
     public function rules(): array
@@ -234,6 +237,8 @@ class JournalFormRequest extends Request
     }
 
     /**
+     * Check if amounts are valid.
+     *
      * @param Validator $validator
      */
     private function validNativeAmount(Validator $validator): void
@@ -257,6 +262,8 @@ class JournalFormRequest extends Request
     }
 
     /**
+     * Check if deposit amount is valid.
+     *
      * @param Validator $validator
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -274,6 +281,8 @@ class JournalFormRequest extends Request
     }
 
     /**
+     * Check if transfer amount is valid.
+     *
      * @param Validator $validator
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -299,6 +308,8 @@ class JournalFormRequest extends Request
     }
 
     /**
+     * Check if withdrawal amount is valid.
+     *
      * @param Validator $validator
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
