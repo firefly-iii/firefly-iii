@@ -23,19 +23,21 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class CreateRecurringTransactions
+ * Class CreateRecurringTransactions.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CreateRecurringTransactions implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-    /** @var Carbon */
+    /** @var Carbon The current date */
     private $date;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journal repository  */
     private $journalRepository;
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring transactions repository. */
     private $repository;
-    /** @var array */
+    /** @var array The users rules. */
     private $rules = [];
 
     /**
@@ -61,9 +63,8 @@ class CreateRecurringTransactions implements ShouldQueue
     {
         Log::debug(sprintf('Now at start of CreateRecurringTransactions() job for %s.', $this->date->format('D d M Y')));
         $recurrences = $this->repository->getAll();
+        $result      = [];
         Log::debug(sprintf('Count of collection is %d', $recurrences->count()));
-
-        $result = [];
 
         /** @var Collection $filtered */
         $filtered = $recurrences->filter(
@@ -78,7 +79,6 @@ class CreateRecurringTransactions implements ShouldQueue
             if (!isset($result[$recurrence->user_id])) {
                 $result[$recurrence->user_id] = new Collection;
             }
-
             $this->repository->setUser($recurrence->user);
             $this->journalRepository->setUser($recurrence->user);
             Log::debug(sprintf('Now at recurrence #%d', $recurrence->id));
@@ -112,8 +112,12 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Apply the users rules to newly created journals.
+     *
      * @param User       $user
      * @param Collection $journals
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function applyRules(User $user, Collection $journals): void
     {
@@ -140,6 +144,8 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Helper function for debug information.
+     *
      * @param array $occurrences
      *
      * @return array
@@ -155,6 +161,8 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Get the users rules.
+     *
      * @param User $user
      *
      * @return Collection
@@ -172,6 +180,8 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Get the start date of a recurrence.
+     *
      * @param Recurrence $recurrence
      *
      * @return Carbon
@@ -187,6 +197,8 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Get transaction information from a recurring transaction.
+     *
      * @param Recurrence $recurrence
      *
      * @return array
@@ -223,11 +235,15 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Check if the occurences should be executed.
+     *
      * @param Recurrence $recurrence
      * @param array      $occurrences
      *
      * @return Collection
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function handleOccurrences(Recurrence $recurrence, array $occurrences): Collection
     {
@@ -256,7 +272,6 @@ class CreateRecurringTransactions implements ShouldQueue
                 'tags'            => $this->repository->getTags($recurrence),
                 'user'            => $recurrence->user_id,
                 'notes'           => (string)trans('firefly.created_from_recurrence', ['id' => $recurrence->id, 'title' => $recurrence->title]),
-
                 // journal data:
                 'description'     => $recurrence->recurrenceTransactions()->first()->description,
                 'piggy_bank_id'   => null,
@@ -264,7 +279,6 @@ class CreateRecurringTransactions implements ShouldQueue
                 'bill_id'         => null,
                 'bill_name'       => null,
                 'recurrence_id'   => (int)$recurrence->id,
-
                 // transaction data:
                 'transactions'    => $this->getTransactionData($recurrence),
             ];
@@ -325,6 +339,8 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Has the recurrence fired today.
+     *
      * @param Recurrence $recurrence
      *
      * @return bool
@@ -335,6 +351,8 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Has the reuccrence started yet.
+     *
      * @param $recurrence
      *
      * @return bool
@@ -360,9 +378,13 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * Is the info in the recurrence valid?
+     *
      * @param Recurrence $recurrence
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function validRecurrence(Recurrence $recurrence): bool
     {
@@ -375,7 +397,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
         // has repeated X times.
         $journals = $this->repository->getJournals($recurrence, null, null);
-        if ($recurrence->repetitions !== 0 && $journals->count() >= $recurrence->repetitions) {
+        if (0 !== $recurrence->repetitions && $journals->count() >= $recurrence->repetitions) {
             Log::info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
 
             return false;
