@@ -28,8 +28,10 @@ namespace FireflyIII\Import\Specifics;
 class PresidentsChoice implements SpecificInterface
 {
     /**
-     * @codeCoverageIgnore
+     * Description of specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getDescription(): string
     {
@@ -37,8 +39,10 @@ class PresidentsChoice implements SpecificInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Name of specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getName(): string
     {
@@ -46,6 +50,8 @@ class PresidentsChoice implements SpecificInterface
     }
 
     /**
+     * Run this specific.
+     *
      * @param array $row
      *
      * @return array

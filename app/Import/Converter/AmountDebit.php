@@ -28,6 +28,8 @@ namespace FireflyIII\Import\Converter;
 class AmountDebit implements ConverterInterface
 {
     /**
+     * Convert amount, always return positive.
+     *
      * @param $value
      *
      * @return string

@@ -32,10 +32,10 @@ use Illuminate\Support\MessageBag;
  */
 class FakeJobConfiguration implements JobConfigurationInterface
 {
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
 
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -69,6 +69,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
      * @param array $data
      *
      * @return MessageBag
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function configureJob(array $data): MessageBag
     {
@@ -125,6 +127,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
      * Returns the view of the next step in the job configuration.
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getNextView(): string
     {
@@ -151,6 +155,8 @@ class FakeJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Set import job.
+     *
      * @param ImportJob $importJob
      */
     public function setImportJob(ImportJob $importJob): void

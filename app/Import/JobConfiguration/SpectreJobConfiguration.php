@@ -26,14 +26,10 @@ namespace FireflyIII\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedConfigHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticateHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccount;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\DoAuthenticateHandler;
-use FireflyIII\Support\Import\JobConfiguration\Spectre\NewConfig;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\NewSpectreJobHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\SpectreJobConfigurationInterface;
 use Illuminate\Support\MessageBag;
@@ -44,11 +40,11 @@ use Log;
  */
 class SpectreJobConfiguration implements JobConfigurationInterface
 {
-    /** @var SpectreJobConfigurationInterface */
+    /** @var SpectreJobConfigurationInterface The job handler. */
     private $handler;
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -95,6 +91,8 @@ class SpectreJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
      * @throws FireflyException
@@ -108,8 +106,12 @@ class SpectreJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Get correct handler.
+     *
      * @return SpectreJobConfigurationInterface
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getHandler(): SpectreJobConfigurationInterface
     {

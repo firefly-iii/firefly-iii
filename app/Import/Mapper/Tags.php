@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 class Tags implements MapperInterface
 {
     /**
+     * Get map of tags.
+     *
      * @return array
      */
     public function getMap(): array

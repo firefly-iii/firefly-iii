@@ -37,11 +37,11 @@ use Log;
  */
 class BunqJobConfiguration implements JobConfigurationInterface
 {
-    /** @var BunqJobConfigurationInterface */
+    /** @var BunqJobConfigurationInterface Bunq job interface */
     private $handler;
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -88,6 +88,8 @@ class BunqJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Set import job.
+     *
      * @param ImportJob $importJob
      *
      * @throws FireflyException
@@ -101,6 +103,8 @@ class BunqJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Get correct handler.
+     *
      * @return BunqJobConfigurationInterface
      * @throws FireflyException
      */

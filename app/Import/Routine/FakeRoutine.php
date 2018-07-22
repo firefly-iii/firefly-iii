@@ -36,9 +36,9 @@ use Log;
  */
 class FakeRoutine implements RoutineInterface
 {
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -51,6 +51,9 @@ class FakeRoutine implements RoutineInterface
      *
      * @return void
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function run(): void
     {
@@ -93,6 +96,8 @@ class FakeRoutine implements RoutineInterface
     }
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
      */

@@ -34,12 +34,14 @@ namespace FireflyIII\Import\Specifics;
  */
 class IngDescription implements SpecificInterface
 {
-    /** @var array */
+    /** @var array The current row. */
     public $row;
 
     /**
-     * @codeCoverageIgnore
+     * Description of the current specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getDescription(): string
     {
@@ -47,8 +49,10 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Name of the current specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getName(): string
     {
@@ -56,9 +60,13 @@ class IngDescription implements SpecificInterface
     }
 
     /**
+     * Run the specific code.
+     *
      * @param array $row
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function run(array $row): array
     {
@@ -112,7 +120,7 @@ class IngDescription implements SpecificInterface
     }
 
     /**
-     *
+     * Copy description to name of opposite account.
      */
     private function copyDescriptionToOpposite(): void
     {

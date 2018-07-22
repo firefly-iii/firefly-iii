@@ -28,6 +28,8 @@ namespace FireflyIII\Import\MapperPreProcess;
 class TagsSpace implements PreProcessorInterface
 {
     /**
+     * Explode and filter list of space separated tags.
+     *
      * @param string $value
      *
      * @return array

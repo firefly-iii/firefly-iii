@@ -46,18 +46,20 @@ use Log;
  * Creates new transactions based upon arrays. Will first check the array for duplicates.
  *
  * Class ImportArrayStorage
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ImportArrayStorage
 {
-    /** @var bool */
+    /** @var bool Check for transfers during import. */
     private $checkForTransfers = false;
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
     /** @var JournalRepositoryInterface */
     private $journalRepos;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
-    /** @var Collection */
+    /** @var Collection The transfers. */
     private $transfers;
 
     /**
@@ -142,6 +144,8 @@ class ImportArrayStorage
 
     /**
      * Count the number of transfers in the array. If this is zero, don't bother checking for double transfers.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function countTransfers(): void
     {
@@ -156,10 +160,10 @@ class ImportArrayStorage
             }
         }
         if (0 === $count) {
-            Log::debug('Count is zero.');
+            Log::debug('Count is zero, will not check for duplicate transfers.');
         }
         if ($count > 0) {
-            Log::debug(sprintf('Count is %d', $count));
+            Log::debug(sprintf('Count is %d, will check for duplicate transfers.', $count));
             $this->checkForTransfers = true;
 
             // get users transfers. Needed for comparison.
@@ -169,6 +173,8 @@ class ImportArrayStorage
     }
 
     /**
+     * Get hash of transaction.
+     *
      * @param array $transaction
      *
      * @throws FireflyException
@@ -339,6 +345,9 @@ class ImportArrayStorage
      *
      * @return Collection
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function storeArray(): Collection
     {
@@ -431,6 +440,10 @@ class ImportArrayStorage
      * @param $transaction
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     private function transferExists(array $transaction): bool
     {

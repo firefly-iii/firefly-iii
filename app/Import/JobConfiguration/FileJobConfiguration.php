@@ -40,9 +40,9 @@ use Illuminate\Support\MessageBag;
  */
 class FileJobConfiguration implements JobConfigurationInterface
 {
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -91,6 +91,8 @@ class FileJobConfiguration implements JobConfigurationInterface
      *
      * @throws FireflyException
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getNextView(): string
     {
@@ -116,6 +118,8 @@ class FileJobConfiguration implements JobConfigurationInterface
     }
 
     /**
+     * Set import job.
+     *
      * @param ImportJob $importJob
      */
     public function setImportJob(ImportJob $importJob): void
@@ -130,6 +134,8 @@ class FileJobConfiguration implements JobConfigurationInterface
      *
      * @return FileConfigurationInterface
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getConfigurationObject(): FileConfigurationInterface
     {

@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 class Bills implements MapperInterface
 {
     /**
+     * Get map of bills.
+     *
      * @return array
      */
     public function getMap(): array

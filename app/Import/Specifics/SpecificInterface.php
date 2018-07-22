@@ -28,16 +28,22 @@ namespace FireflyIII\Import\Specifics;
 interface SpecificInterface
 {
     /**
+     * Get description.
+     *
      * @return string
      */
     public static function getDescription(): string;
 
     /**
+     * Get name.
+     *
      * @return string
      */
     public static function getName(): string;
 
     /**
+     * Run specific.
+     *
      * @param array $row
      *
      * @return array

@@ -32,7 +32,7 @@ use Illuminate\Support\MessageBag;
  */
 class FakePrerequisites implements PrerequisitesInterface
 {
-    /** @var User */
+    /** @var User The current user */
     private $user;
 
     /**
@@ -87,6 +87,8 @@ class FakePrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Store fake prerequisites.
+     *
      * @param array $data
      *
      * @return MessageBag
@@ -107,6 +109,8 @@ class FakePrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Check if we have an API key.
+     *
      * @return bool
      */
     private function hasApiKey(): bool

@@ -26,12 +26,17 @@ use Log;
 
 /**
  * Class RabobankDescription.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class RabobankDescription implements SpecificInterface
 {
     /**
-     * @codeCoverageIgnore
+     * Description of this specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getDescription(): string
     {
@@ -39,8 +44,10 @@ class RabobankDescription implements SpecificInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Name of this specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getName(): string
     {
@@ -48,9 +55,13 @@ class RabobankDescription implements SpecificInterface
     }
 
     /**
+     * Run the specific.
+     *
      * @param array $row
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function run(array $row): array
     {

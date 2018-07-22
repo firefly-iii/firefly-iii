@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 class Categories implements MapperInterface
 {
     /**
+     * Get map of categories.
+     *
      * @return array
      */
     public function getMap(): array

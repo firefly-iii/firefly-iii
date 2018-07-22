@@ -32,6 +32,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 class AssetAccounts implements MapperInterface
 {
     /**
+     * Get map of asset accounts.
+     *
      * @return array
      */
     public function getMap(): array

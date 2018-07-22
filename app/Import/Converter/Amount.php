@@ -183,6 +183,9 @@ class Amount implements ConverterInterface
     }
 
     /**
+     * Replaces other characters like thousand separators with nothing to make the decimal separator the only special
+     * character in the string.
+     *
      * @param string $decimal
      * @param string $value
      *

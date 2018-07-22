@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 class TransactionCurrencies implements MapperInterface
 {
     /**
+     * Get map of currencies.
+     *
      * @return array
      */
     public function getMap(): array

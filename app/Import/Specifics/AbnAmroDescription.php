@@ -32,12 +32,14 @@ namespace FireflyIII\Import\Specifics;
  */
 class AbnAmroDescription implements SpecificInterface
 {
-    /** @var array */
+    /** @var array The current row. */
     public $row;
 
     /**
-     * @codeCoverageIgnore
+     * Description of this specific fix.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getDescription(): string
     {
@@ -45,8 +47,10 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Name of specific fix.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getName(): string
     {
@@ -54,9 +58,13 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
+     * Run the fix.
+     *
      * @param array $row
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function run(array $row): array
     {
@@ -123,6 +131,9 @@ class AbnAmroDescription implements SpecificInterface
      * Parses the current description in SEPA format.
      *
      * @return bool true if the description is SEPA format, false otherwise
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function parseSepaDescription(): bool
     {
@@ -177,6 +188,9 @@ class AbnAmroDescription implements SpecificInterface
      * Parses the current description in TRTP format.
      *
      * @return bool true if the description is TRTP format, false otherwise
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function parseTRTPDescription(): bool
     {

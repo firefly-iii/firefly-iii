@@ -167,8 +167,8 @@ class JournalRepository implements JournalRepositoryInterface
         Log::debug(sprintf('JSON encoded hash is: %s', $jsonEncode));
         Log::debug(sprintf('Hash of hash is: %s', $hashOfHash));
 
-        $result = TransactionJournalMeta
-            ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+        $result = TransactionJournalMeta::withTrashed()
+            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
             ->where('hash', $hashOfHash)
             ->where('name', 'importHashV2')
             ->first(['journal_meta.*']);

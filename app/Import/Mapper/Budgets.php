@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 class Budgets implements MapperInterface
 {
     /**
+     * Get map of budgets.
+     *
      * @return array
      */
     public function getMap(): array
