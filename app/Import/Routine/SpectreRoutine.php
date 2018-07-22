@@ -66,7 +66,7 @@ class SpectreRoutine implements RoutineInterface
                     $handler->run();
 
                     // if count logins is zero, go to authenticate stage
-                    if ($handler->getCountLogins() === 0) {
+                    if (0 === $handler->getCountLogins()) {
                         $this->repository->setStage($this->importJob, 'do-authenticate');
                         $this->repository->setStatus($this->importJob, 'ready_to_run');
 

@@ -52,7 +52,7 @@ class FileJobConfiguration implements JobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        return $this->importJob->stage === 'ready_to_run';
+        return 'ready_to_run' === $this->importJob->stage;
     }
 
     /**

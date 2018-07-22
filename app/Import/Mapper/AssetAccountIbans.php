@@ -49,7 +49,7 @@ class AssetAccountIbans implements MapperInterface
             if (\strlen($iban) > 0) {
                 $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
             }
-            if (0 === \strlen($iban)) {
+            if ('' === $iban) {
                 $list[$accountId] = $account->name;
             }
         }

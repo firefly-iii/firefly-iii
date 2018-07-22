@@ -102,7 +102,7 @@ class ImportArrayStorage
 
         // run rules, if configured to.
         $config = $this->importJob->configuration;
-        if (isset($config['apply-rules']) && $config['apply-rules'] === true) {
+        if (isset($config['apply-rules']) && true === $config['apply-rules']) {
             $this->setStatus('applying_rules');
             $this->applyRules($collection);
             $this->setStatus('rules_applied');
@@ -118,7 +118,6 @@ class ImportArrayStorage
      *
      * @param Collection $collection
      *
-     * @throws FireflyException
      */
     private function applyRules(Collection $collection): void
     {
@@ -153,7 +152,7 @@ class ImportArrayStorage
         foreach ($array as $index => $transaction) {
             if (strtolower(TransactionType::TRANSFER) === $transaction['type']) {
                 $count++;
-                Log::debug(sprintf('Row #%d is a transfer, increase count to %d', ($index + 1), $count));
+                Log::debug(sprintf('Row #%d is a transfer, increase count to %d', $index + 1, $count));
             }
         }
         if (0 === $count) {
@@ -179,7 +178,7 @@ class ImportArrayStorage
     {
         unset($transaction['importHashV2']);
         $json = json_encode($transaction);
-        if ($json === false) {
+        if (false === $json) {
             throw new FireflyException('Could not encode import array. Please see the logs.', $transaction); // @codeCoverageIgnore
         }
         $hash = hash('sha256', $json, false);
@@ -231,7 +230,6 @@ class ImportArrayStorage
      * @param string $hash
      *
      * @return int|null
-     * @throws FireflyException
      */
     private function hashExists(string $hash): ?int
     {
@@ -253,7 +251,7 @@ class ImportArrayStorage
      */
     private function linkToTag(Collection $collection): void
     {
-        if ($collection->count() === 0) {
+        if (0 === $collection->count()) {
             return;
         }
         /** @var TagRepositoryInterface $repository */
@@ -321,7 +319,7 @@ class ImportArrayStorage
             [
                 'description' => $transaction['description'] ?? '',
                 'amount'      => $transaction['transactions'][0]['amount'] ?? 0,
-                'date'        => isset($transaction['date']) ? $transaction['date'] : '',
+                'date'        => $transaction['date'] ?? '',
             ]
         );
     }
@@ -365,24 +363,22 @@ class ImportArrayStorage
                 );
                 continue;
             }
-            if ($this->checkForTransfers) {
-                if ($this->transferExists($transaction)) {
-                    $this->logDuplicateTransfer($transaction);
-                    $this->repository->addErrorMessage(
-                        $this->importJob, sprintf(
-                                            'Row #%d ("%s") could not be imported. Such a transfer already exists.',
-                                            $index,
-                                            $transaction['description']
-                                        )
-                    );
-                    continue;
-                }
+            if ($this->checkForTransfers && $this->transferExists($transaction)) {
+                $this->logDuplicateTransfer($transaction);
+                $this->repository->addErrorMessage(
+                    $this->importJob, sprintf(
+                                        'Row #%d ("%s") could not be imported. Such a transfer already exists.',
+                                        $index,
+                                        $transaction['description']
+                                    )
+                );
+                continue;
             }
             $transaction['importHashV2'] = $hash;
             $toStore[]                   = $transaction;
         }
         $count = \count($toStore);
-        if ($count === 0) {
+        if (0 === $count) {
             Log::info('No transactions to store left!');
 
             return new Collection;
@@ -411,7 +407,7 @@ class ImportArrayStorage
             Log::debug(sprintf('Going to store entry %d of %d', $index + 1, $count));
             // convert the date to an object:
             $store['date']        = Carbon::createFromFormat('Y-m-d', $store['date']);
-            $store['description'] = $store['description'] === '' ? '(empty description)' : $store['description'];
+            $store['description'] = '' === $store['description'] ? '(empty description)' : $store['description'];
             // store the journal.
             try {
                 $journal = $this->journalRepos->store($store);
@@ -445,7 +441,7 @@ class ImportArrayStorage
             return false;
         }
         // how many hits do we need?
-        $requiredHits = count($transaction['transactions']) * 4;
+        $requiredHits = \count($transaction['transactions']) * 4;
         $totalHits    = 0;
         Log::debug(sprintf('Required hits for transfer comparison is %d', $requiredHits));
         Log::debug(sprintf('Array has %d transactions.', \count($transaction['transactions'])));
@@ -504,6 +500,7 @@ class ImportArrayStorage
                 // compare source and destination id's
                 $transferSourceIDs = [(int)$transfer->account_id, (int)$transfer->opposing_account_id];
                 sort($transferSourceIDs);
+                /** @noinspection DisconnectedForeachInstructionInspection */
                 Log::debug('Comparing current transaction source+dest IDs', $currentSourceIDs);
                 Log::debug('.. with current transfer source+dest IDs', $transferSourceIDs);
                 if ($currentSourceIDs === $transferSourceIDs) {
@@ -515,6 +512,7 @@ class ImportArrayStorage
                 // compare source and destination names
                 $transferSource = [(string)$transfer->account_name, (int)$transfer->opposing_account_name];
                 sort($transferSource);
+                /** @noinspection DisconnectedForeachInstructionInspection */
                 Log::debug('Comparing current transaction source+dest names', $currentSourceNames);
                 Log::debug('.. with current transfer source+dest names', $transferSource);
                 if ($currentSourceNames === $transferSource) {

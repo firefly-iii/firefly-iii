@@ -55,7 +55,7 @@ class FakeRoutine implements RoutineInterface
     public function run(): void
     {
         Log::debug(sprintf('Now in run() for fake routine with status: %s', $this->importJob->status));
-        if ($this->importJob->status !== 'ready_to_run') {
+        if ('ready_to_run' !== $this->importJob->status) {
             throw new FireflyException(sprintf('Fake job should have status "ready_to_run", not "%s"', $this->importJob->status)); // @codeCoverageIgnore
         }
 
@@ -95,7 +95,6 @@ class FakeRoutine implements RoutineInterface
     /**
      * @param ImportJob $importJob
      *
-     * @return
      */
     public function setImportJob(ImportJob $importJob): void
     {

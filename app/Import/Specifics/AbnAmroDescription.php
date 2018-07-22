@@ -122,8 +122,6 @@ class AbnAmroDescription implements SpecificInterface
     /**
      * Parses the current description in SEPA format.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      * @return bool true if the description is SEPA format, false otherwise
      */
     protected function parseSepaDescription(): bool
@@ -165,7 +163,7 @@ class AbnAmroDescription implements SpecificInterface
             // Set a new description for the current transaction. If none was given
             // set the description to type, name and reference
             $this->row[7] = $newDescription;
-            if (0 === \strlen($newDescription)) {
+            if ('' === $newDescription) {
                 $this->row[7] = sprintf('%s - %s (%s)', $type, $name, $reference);
             }
 
@@ -220,7 +218,7 @@ class AbnAmroDescription implements SpecificInterface
                 // Set a new description for the current transaction. If none was given
                 // set the description to type, name and reference
                 $this->row[7] = $newDescription;
-                if (0 === \strlen($newDescription)) {
+                if ('' === $newDescription) {
                     $this->row[7] = sprintf('%s - %s (%s)', $type, $name, $reference);
                 }
             }

@@ -40,20 +40,22 @@ class FakeJobConfiguration implements JobConfigurationInterface
 
     /**
      * Returns true when the initial configuration for this job is complete.
+     *  configuration array of job must have two values:
+     * 'artist' must be 'david bowie', case insensitive
+     * 'song' must be 'golden years', case insensitive.
+     * if stage is not "new", then album must be 'station to station'
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function configurationComplete(): bool
     {
-        // configuration array of job must have two values:
-        // 'artist' must be 'david bowie', case insensitive
-        // 'song' must be 'golden years', case insensitive.
-        // if stage is not "new", then album must be 'station to station'
         $config = $this->importJob->configuration;
-        if ($this->importJob->stage === 'new') {
-            return (isset($config['artist']) && 'david bowie' === strtolower($config['artist']))
-                   && (isset($config['song']) && 'golden years' === strtolower($config['song']))
-                   && isset($config['apply-rules']);
+        if ('new' === $this->importJob->stage) {
+            return
+                isset($config['artist'], $config['song'], $config['apply-rules'])
+                && 'david bowie' === strtolower($config['artist'])
+                && 'golden years' === strtolower($config['song']);
         }
 
         return isset($config['album']) && 'station to station' === strtolower($config['album']);
@@ -80,12 +82,12 @@ class FakeJobConfiguration implements JobConfigurationInterface
             $configuration['artist'] = $artist;
         }
 
-        if ($song === 'golden years') {
+        if ('golden years' === $song) {
             // store song
             $configuration['song'] = $song;
         }
 
-        if ($album === 'station to station') {
+        if ('station to station' === $album) {
             // store album
             $configuration['album'] = $album;
         }
@@ -96,8 +98,7 @@ class FakeJobConfiguration implements JobConfigurationInterface
         $this->repository->setConfiguration($this->importJob, $configuration);
         $messages = new MessageBag();
 
-        if (\count($configuration) !== 3) {
-
+        if (3 !== \count($configuration)) {
             $messages->add('some_key', 'Ignore this error: ' . \count($configuration));
         }
 
@@ -136,13 +137,13 @@ class FakeJobConfiguration implements JobConfigurationInterface
         if (null === $applyRules) {
             return 'import.fake.apply-rules';
         }
-        if (strtolower($artist) !== 'david bowie') {
+        if ('david bowie' !== strtolower($artist)) {
             return 'import.fake.enter-artist';
         }
-        if (strtolower($song) !== 'golden years') {
+        if ('golden years' !== strtolower($song)) {
             return 'import.fake.enter-song';
         }
-        if (strtolower($album) !== 'station to station' && $this->importJob->stage !== 'new') {
+        if ('new' !== $this->importJob->stage && 'station to station' !== strtolower($album)) {
             return 'import.fake.enter-album';
         }
 

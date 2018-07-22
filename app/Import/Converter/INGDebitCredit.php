@@ -34,7 +34,7 @@ class INGDebitCredit implements ConverterInterface
      *
      * @return int
      */
-    public function convert($value)
+    public function convert($value): int
     {
         Log::debug('Going to convert ing debit credit', ['value' => $value]);
 

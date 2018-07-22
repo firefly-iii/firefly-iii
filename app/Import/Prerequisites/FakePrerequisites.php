@@ -58,7 +58,7 @@ class FakePrerequisites implements PrerequisitesInterface
             $apiKey = app('preferences')->getForUser($this->user, 'fake_api_key', null)->data;
         }
         $oldKey = (string)\request()->old('api_key');
-        if ($oldKey !== '') {
+        if ('' !== $oldKey) {
             $apiKey = \request()->old('api_key'); // @codeCoverageIgnore
         }
 
@@ -118,7 +118,7 @@ class FakePrerequisites implements PrerequisitesInterface
         if (null === $apiKey->data) {
             return false;
         }
-        if (\strlen((string)$apiKey->data) === 32) {
+        if (32 === \strlen((string)$apiKey->data)) {
             return true;
         }
 
