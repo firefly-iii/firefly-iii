@@ -71,7 +71,7 @@ class TransactionJournalMeta extends Model
      *
      * @param $value
      */
-    public function setDataAttribute($value)
+    public function setDataAttribute($value): void
     {
         $data                     = json_encode($value);
         $this->attributes['data'] = $data;

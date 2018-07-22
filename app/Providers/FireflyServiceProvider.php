@@ -64,7 +64,6 @@ use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\Loader\AccountLoader;
 use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
 use FireflyIII\Support\Twig\Loader\TransactionLoader;
-use FireflyIII\Support\Twig\PiggyBank;
 use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
@@ -96,7 +95,6 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addRuntimeLoader(new TransactionLoader);
         Twig::addRuntimeLoader(new AccountLoader);
         Twig::addRuntimeLoader(new TransactionJournalLoader);
-        Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);
         Twig::addExtension(new Journal);
         Twig::addExtension(new Translation);

@@ -81,7 +81,7 @@ class LinkType extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactionJournalLinks()
+    public function transactionJournalLinks(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TransactionJournalLink::class);
     }

@@ -54,7 +54,10 @@ class ExportJob extends Model
     {
         if (auth()->check()) {
             $key       = trim($value);
-            $exportJob = auth()->user()->exportJobs()->where('key', $key)->first();
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var ExportJob $exportJob */
+            $exportJob = $user->exportJobs()->where('key', $key)->first();
             if (null !== $exportJob) {
                 return $exportJob;
             }
@@ -67,7 +70,7 @@ class ExportJob extends Model
      *
      * @param $status
      */
-    public function change($status)
+    public function change($status): void
     {
         $this->status = $status;
         $this->save();
@@ -77,7 +80,7 @@ class ExportJob extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

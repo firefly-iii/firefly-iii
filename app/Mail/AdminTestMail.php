@@ -57,7 +57,7 @@ class AdminTestMail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): self
     {
         return $this->view('emails.admin-test-html')->text('emails.admin-test-text')
                     ->subject('A test message from your Firefly III installation');

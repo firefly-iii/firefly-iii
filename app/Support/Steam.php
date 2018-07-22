@@ -101,8 +101,11 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyId = (int)$account->getMeta('currency_id');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($account->user);
 
+        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
         $nativeBalance = (string)$account->transactions()
                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
@@ -152,8 +155,12 @@ class Steam
         $formatted    = $start->format('Y-m-d');
         $startBalance = $this->balance($account, $start);
 
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($account->user);
+
         $balances[$formatted] = $startBalance;
-        $currencyId           = (int)$account->getMeta('currency_id');
+        $currencyId           = (int)$repository->getMetaValue($account, 'currency_id');
         $start->addDay();
 
         // query!

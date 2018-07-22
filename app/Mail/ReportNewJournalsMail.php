@@ -65,7 +65,7 @@ class ReportNewJournalsMail extends Mailable
      */
     public function build(): self
     {
-        $subject = $this->journals->count() === 1
+        $subject = 1 === $this->journals->count()
             ? 'Firefly III has created a new transaction'
             : sprintf(
                 'Firefly III has created new %d transactions', $this->journals->count()

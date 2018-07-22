@@ -52,7 +52,6 @@ class ExpandedForm
      * @param null   $options
      *
      * @return string
-
      */
     public function activeAssetAccountList(string $name, $value = null, array $options = []): string
     {
@@ -69,9 +68,9 @@ class ExpandedForm
         /** @var Account $account */
         foreach ($assetAccounts as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$account->getMeta('currency_id');
+            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $account->getMeta('accountRole');
+            $role       = $repository->getMetaValue($account, 'accountRole');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -93,7 +92,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-
      */
     public function amount(string $name, $value = null, array $options = []): string
     {
@@ -106,7 +104,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function amountNoCurrency(string $name, $value = null, array $options = []): string
     {
@@ -145,7 +142,6 @@ class ExpandedForm
      * @param null   $options
      *
      * @return string
-
      */
     public function assetAccountCheckList(string $name, $options = null): string
     {
@@ -183,7 +179,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function assetAccountList(string $name, $value = null, array $options = []): string
     {
@@ -200,9 +195,9 @@ class ExpandedForm
         /** @var Account $account */
         foreach ($assetAccounts as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$account->getMeta('currency_id');
+            $currencyId = (int)$repository->getMetaValue($account,'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $account->getMeta('accountRole');
+            $role       = $repository->getMetaValue($account,'accountRole');
             if (0 === \strlen($role)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -225,7 +220,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-
      */
     public function balance(string $name, $value = null, array $options = []): string
     {
@@ -239,7 +233,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
     {
@@ -268,7 +261,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function currencyList(string $name, $value = null, array $options = []): string
     {
@@ -293,7 +285,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function currencyListEmpty(string $name, $value = null, array $options = []): string
     {
@@ -320,7 +311,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function date(string $name, $value = null, array $options = []): string
     {
@@ -339,7 +329,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function file(string $name, array $options = []): string
     {
@@ -357,7 +346,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function integer(string $name, $value = null, array $options = []): string
     {
@@ -377,7 +365,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function location(string $name, $value = null, array $options = []): string
     {
@@ -450,7 +437,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function multiRadio(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -472,7 +458,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = []): string
     {
@@ -501,7 +486,6 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-
      */
     public function nonSelectableBalance(string $name, $value = null, array $options = []): string
     {
@@ -530,7 +514,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function number(string $name, $value = null, array $options = []): string
     {
@@ -551,7 +534,6 @@ class ExpandedForm
      * @param string $name
      *
      * @return string
-
      */
     public function optionsList(string $type, string $name): string
     {
@@ -565,7 +547,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function password(string $name, array $options = null): string
     {
@@ -584,7 +565,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function piggyBankList(string $name, $value = null, array $options = null): string
     {
@@ -610,7 +590,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function ruleGroupList(string $name, $value = null, array $options = []): string
     {
@@ -664,7 +643,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function select(string $name, array $list = [], $selected = null, array $options = []): string
     {
@@ -684,7 +662,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function staticText(string $name, $value, array $options = []): string
     {
@@ -702,7 +679,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function tags(string $name, $value = null, array $options = []): string
     {
@@ -722,7 +698,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function text(string $name, $value = null, array $options = []): string
     {
@@ -741,7 +716,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-
      */
     public function textarea(string $name, $value = null, array $options = []): string
     {
@@ -843,7 +817,6 @@ class ExpandedForm
      * @return string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
-
      */
     private function currencyField(string $name, string $view, $value = null, array $options = []): string
     {

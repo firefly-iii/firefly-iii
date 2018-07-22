@@ -40,8 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property Carbon $created_at
  * @property int    $id
- * @property mixed  user
- * @property mixed  user
+ * @property User  user
  */
 class Preference extends Model
 {
@@ -62,14 +61,17 @@ class Preference extends Model
     /**
      * @param string $value
      *
-     * @return Account
+     * @return Preference
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
      */
     public static function routeBinder(string $value): Preference
     {
         if (auth()->check()) {
             $preferenceId = (int)$value;
-            $preference   = auth()->user()->preferences()->find($preferenceId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Preference $preference */
+            $preference   = $user->preferences()->find($preferenceId);
             if (null !== $preference) {
                 return $preference;
             }
@@ -84,6 +86,7 @@ class Preference extends Model
      * @return mixed
      *
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getDataAttribute($value)
     {
@@ -91,7 +94,7 @@ class Preference extends Model
         try {
             $data = Crypt::decrypt($value);
         } catch (DecryptException $e) {
-            Log::error('Could not decrypt preference.', ['id' => $this->id, 'name' => $this->name, 'data' => $value]);
+            Log::error(sprintf('Could not decrypt preference: %s', $e->getMessage()), ['id' => $this->id, 'name' => $this->name, 'data' => $value]);
             throw new FireflyException(
                 sprintf('Could not decrypt preference #%d. If this error persists, please run "php artisan cache:clear" on the command line.', $this->id)
             );
@@ -119,7 +122,7 @@ class Preference extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setDataAttribute($value)
+    public function setDataAttribute($value): void
     {
         $this->attributes['data'] = Crypt::encrypt(json_encode($value));
     }
@@ -128,7 +131,7 @@ class Preference extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

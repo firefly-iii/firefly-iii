@@ -86,8 +86,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $leftOnAccount = $piggyBank->leftOnAccount(new Carbon);
-        $savedSoFar    = (string)$piggyBank->currentRelevantRep()->currentamount;
+        $leftOnAccount = $this->leftOnAccount($piggyBank, new Carbon);
+        $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = (string)min(round($leftOnAccount, 12), round($leftToSave, 12));
 
@@ -415,7 +415,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function removeAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $repetition                = $piggyBank->currentRelevantRep();
+        $repetition                = $this->getRepetition($piggyBank);
         $repetition->currentamount = bcsub($repetition->currentamount, $amount);
         $repetition->save();
 

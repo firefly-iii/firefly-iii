@@ -77,7 +77,7 @@ class TransactionJournalLink extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function destination()
+    public function destination(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class, 'destination_id');
     }
@@ -137,7 +137,7 @@ class TransactionJournalLink extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function source()
+    public function source(): BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class, 'source_id');
     }

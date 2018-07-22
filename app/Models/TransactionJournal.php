@@ -24,7 +24,6 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Crypt;
-use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Models\TransactionJournalTrait;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -33,7 +32,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,6 +52,10 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon              interest_date
  * @property Carbon              book_date
  * @property Carbon              process_date
+ * @property bool                encrypted
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionJournal extends Model
 {
@@ -97,8 +99,11 @@ class TransactionJournal extends Model
     {
         if (auth()->check()) {
             $journalId = (int)$value;
-            $journal   = auth()->user()->transactionJournals()->where('transaction_journals.id', $journalId)
-                               ->first(['transaction_journals.*']);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var TransactionJournal $journal */
+            $journal = $user->transactionJournals()->where('transaction_journals.id', $journalId)
+                            ->first(['transaction_journals.*']);
             if (null !== $journal) {
                 return $journal;
             }
@@ -111,7 +116,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function attachments()
+    public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
@@ -120,7 +125,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function bill()
+    public function bill(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Bill::class);
     }
@@ -145,94 +150,19 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @deprecated
-     *
-     * @param string $name
-     *
-     * @return bool
-     */
-    public function deleteMeta(string $name): bool
-    {
-        $this->transactionJournalMeta()->where('name', $name)->delete();
-
-        return true;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @return HasMany
-     */
-    public function destinationJournalLinks(): HasMany
-    {
-        return $this->hasMany(TransactionJournalLink::class, 'destination_id');
-    }
-
-    /**
-     * @codeCoverageIgnore
      *
      * @param $value
      *
      * @return string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getDescriptionAttribute($value)
+    public function getDescriptionAttribute($value): string
     {
         if ($this->encrypted) {
             return Crypt::decrypt($value);
         }
 
         return $value;
-    }
-
-    /**
-     *
-     * @param string $name
-     *
-     * @deprecated
-     * @return string
-     */
-    public function getMeta(string $name)
-    {
-        $value = null;
-        $cache = new CacheProperties;
-        $cache->addProperty('journal-meta');
-        $cache->addProperty($this->id);
-        $cache->addProperty($name);
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        Log::debug(sprintf('Looking for journal #%d meta field "%s".', $this->id, $name));
-        $entry = $this->transactionJournalMeta()->where('name', $name)->first();
-        if (null !== $entry) {
-            $value = $entry->data;
-            // cache:
-            $cache->store($value);
-        }
-
-        // convert to Carbon if name is _date
-        if (null !== $value && '_date' === substr($name, -5)) {
-            $value = new Carbon($value);
-            // cache:
-            $cache->store($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $name
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function hasMeta(string $name): bool
-    {
-        return null !== $this->getMeta($name);
     }
 
     /**
@@ -313,7 +243,7 @@ class TransactionJournal extends Model
      *
      * @return EloquentBuilder
      */
-    public function scopeAfter(EloquentBuilder $query, Carbon $date)
+    public function scopeAfter(EloquentBuilder $query, Carbon $date): EloquentBuilder
     {
         return $query->where('transaction_journals.date', '>=', $date->format('Y-m-d 00:00:00'));
     }
@@ -326,7 +256,7 @@ class TransactionJournal extends Model
      *
      * @return EloquentBuilder
      */
-    public function scopeBefore(EloquentBuilder $query, Carbon $date)
+    public function scopeBefore(EloquentBuilder $query, Carbon $date): EloquentBuilder
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
     }
@@ -337,7 +267,7 @@ class TransactionJournal extends Model
      * @param EloquentBuilder $query
      * @param array           $types
      */
-    public function scopeTransactionTypes(EloquentBuilder $query, array $types)
+    public function scopeTransactionTypes(EloquentBuilder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_types')) {
             $query->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id');
@@ -354,50 +284,11 @@ class TransactionJournal extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setDescriptionAttribute($value)
+    public function setDescriptionAttribute($value): void
     {
         $encrypt                         = config('firefly.encryption');
         $this->attributes['description'] = $encrypt ? Crypt::encrypt($value) : $value;
         $this->attributes['encrypted']   = $encrypt;
-    }
-
-    /**
-     * @deprecated
-     *
-     * @param string $name
-     * @param        $value
-     *
-     * @return TransactionJournalMeta
-     */
-    public function setMeta(string $name, $value): TransactionJournalMeta
-    {
-        if (null === $value) {
-            $this->deleteMeta($name);
-
-            return new TransactionJournalMeta();
-        }
-        if (\is_string($value) && 0 === \strlen($value)) {
-            $this->deleteMeta($name);
-
-            return new TransactionJournalMeta();
-        }
-
-        if ($value instanceof Carbon) {
-            $value = $value->toW3cString();
-        }
-
-        Log::debug(sprintf('Going to set "%s" with value "%s"', $name, json_encode($value)));
-        $entry = $this->transactionJournalMeta()->where('name', $name)->first();
-        if (null === $entry) {
-            $entry = new TransactionJournalMeta();
-            $entry->transactionJournal()->associate($this);
-            $entry->name = $name;
-        }
-        $entry->data = $value;
-        $entry->save();
-        app('preferences')->mark();
-
-        return $entry;
     }
 
     /**
@@ -413,7 +304,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function tags()
+    public function tags(): BelongsToMany
     {
         return $this->belongsToMany(Tag::class);
     }
@@ -422,7 +313,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transactionCurrency()
+    public function transactionCurrency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
@@ -440,7 +331,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transactionType()
+    public function transactionType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
     }
@@ -458,7 +349,7 @@ class TransactionJournal extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

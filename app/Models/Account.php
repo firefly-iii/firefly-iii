@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\JoinClause;
+use Illuminate\Support\Collection;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -45,12 +46,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool        $active
  * @property string      $virtual_balance
  * @property User        $user
- * @property mixed|null  startBalance
- * @property mixed|null  endBalance
+ * @property string      startBalance
+ * @property string      endBalance
  * @property string      difference
- * @property mixed|null  endBalance
- * @property mixed|null  startBalance
- * @property mixed|null  lastActivityDate
+ * @property Carbon      lastActivityDate
+ * @property Collection  accountMeta
+ * @property bool        encrypted
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Account extends Model
 {
@@ -77,48 +80,6 @@ class Account extends Model
     private $joinedAccountTypes;
 
     /**
-     * @param array $fields
-     *
-     * @return Account
-     *
-     * @deprecated
-     *
-     * @throws FireflyException
-     */
-    public static function firstOrCreateEncrypted(array $fields)
-    {
-        if (!isset($fields['user_id'])) {
-            throw new FireflyException('Missing required field "user_id".');
-        }
-        // everything but the name:
-        $query  = self::orderBy('id');
-        $search = $fields;
-        unset($search['name'], $search['iban']);
-
-        foreach ($search as $name => $value) {
-            $query->where($name, $value);
-        }
-        $set = $query->get(['accounts.*']);
-
-        // account must have a name. If not set, use IBAN.
-        if (!isset($fields['name'])) {
-            $fields['name'] = $fields['iban'];
-        }
-
-        /** @var Account $account */
-        foreach ($set as $account) {
-            if ($account->name === $fields['name']) {
-                return $account;
-            }
-        }
-
-        // create it!
-        $account = self::create($fields);
-
-        return $account;
-    }
-
-    /**
      * @param string $value
      *
      * @return Account
@@ -128,7 +89,10 @@ class Account extends Model
     {
         if (auth()->check()) {
             $accountId = (int)$value;
-            $account   = auth()->user()->accounts()->find($accountId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Account $account */
+            $account = $user->accounts()->find($accountId);
             if (null !== $account) {
                 return $account;
             }
@@ -178,7 +142,7 @@ class Account extends Model
      */
     public function getIbanAttribute($value): string
     {
-        if (null === $value || '' === (string)$value) {
+        if ('' === (string)$value) {
             return '';
         }
         try {
@@ -193,25 +157,6 @@ class Account extends Model
         }
 
         return $result;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $fieldName
-     *
-     * @deprecated
-     * @return string
-     */
-    public function getMeta(string $fieldName): string
-    {
-        foreach ($this->accountMeta as $meta) {
-            if ($meta->name === $fieldName) {
-                return (string)$meta->data;
-            }
-        }
-
-        return '';
     }
 
     /**
@@ -273,7 +218,7 @@ class Account extends Model
      * @param EloquentBuilder $query
      * @param array           $types
      */
-    public function scopeAccountTypeIn(EloquentBuilder $query, array $types)
+    public function scopeAccountTypeIn(EloquentBuilder $query, array $types): void
     {
         if (null === $this->joinedAccountTypes) {
             $query->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id');
@@ -283,35 +228,12 @@ class Account extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @deprecated
-     *
-     * @param EloquentBuilder $query
-     * @param string          $name
-     * @param string          $value
-     *
-     */
-    public function scopeHasMetaValue(EloquentBuilder $query, $name, $value)
-    {
-        $joinName = str_replace('.', '_', $name);
-        $query->leftJoin(
-            'account_meta as ' . $joinName,
-            function (JoinClause $join) use ($joinName, $name) {
-                $join->on($joinName . '.account_id', '=', 'accounts.id')->where($joinName . '.name', '=', $name);
-            }
-        );
-        $query->where($joinName . '.data', json_encode($value));
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
      * @param $value
      *
      * @codeCoverageIgnore
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setIbanAttribute($value)
+    public function setIbanAttribute($value): void
     {
         $this->attributes['iban'] = Crypt::encrypt($value);
     }
@@ -323,7 +245,7 @@ class Account extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setNameAttribute($value)
+    public function setNameAttribute($value): void
     {
         $encrypt                       = config('firefly.encryption');
         $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
@@ -337,7 +259,7 @@ class Account extends Model
      *
      * @codeCoverageIgnore
      */
-    public function setVirtualBalanceAttribute($value)
+    public function setVirtualBalanceAttribute($value): void
     {
         $this->attributes['virtual_balance'] = (string)$value;
     }

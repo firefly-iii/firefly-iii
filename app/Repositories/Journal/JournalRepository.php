@@ -168,10 +168,10 @@ class JournalRepository implements JournalRepositoryInterface
         Log::debug(sprintf('Hash of hash is: %s', $hashOfHash));
 
         $result = TransactionJournalMeta::withTrashed()
-            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-            ->where('hash', $hashOfHash)
-            ->where('name', 'importHashV2')
-            ->first(['journal_meta.*']);
+                                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                        ->where('hash', $hashOfHash)
+                                        ->where('name', 'importHashV2')
+                                        ->first(['journal_meta.*']);
         if (null === $result) {
             Log::debug('Result is null');
         }
@@ -350,16 +350,14 @@ class JournalRepository implements JournalRepositoryInterface
             $journal->save();
 
             // create meta entry
-            $journal->setMeta($field, $carbon);
+            $this->setMetaDate($journal, $field, $carbon);
 
             // return that one instead.
             return $carbon->format('Y-m-d');
         }
-        $metaField = $journal->getMeta($field);
+        $metaField = $this->getMetaDate($journal, $field);
         if (null !== $metaField) {
-            $carbon = new Carbon($metaField);
-
-            return $carbon->format('Y-m-d');
+            return $metaField->format('Y-m-d');
         }
 
         return '';

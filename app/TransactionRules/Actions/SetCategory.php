@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules\Actions;
 
-use FireflyIII\Models\Category;
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -55,8 +55,12 @@ class SetCategory implements ActionInterface
      */
     public function act(TransactionJournal $journal): bool
     {
-        $name     = $this->action->action_value;
-        $category = Category::firstOrCreateEncrypted(['name' => $name, 'user_id' => $journal->user->id]);
+        $name = $this->action->action_value;
+
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($journal->user);
+        $category = $factory->findOrCreate(null, $name);
 
         $journal->categories()->detach();
         // set category on transactions:

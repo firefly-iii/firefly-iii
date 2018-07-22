@@ -66,7 +66,7 @@ class Note extends Model
     /**
      * @param $value
      */
-    public function setTextAttribute($value)
+    public function setTextAttribute($value): void
     {
         $this->attributes['text'] = e($value);
     }
