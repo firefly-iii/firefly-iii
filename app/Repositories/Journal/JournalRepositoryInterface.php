@@ -67,17 +67,6 @@ interface JournalRepositoryInterface
     public function destroy(TransactionJournal $journal): bool;
 
     /**
-     * Find a specific journal.
-     *
-     * @param int $journalId
-     *
-     * @deprecated
-     *
-     * @return TransactionJournal
-     */
-    public function find(int $journalId): TransactionJournal;
-
-    /**
      * Find a journal by its hash.
      *
      * @param string $hash
@@ -108,14 +97,6 @@ interface JournalRepositoryInterface
      * @return Transaction|null
      */
     public function findTransaction(int $transactionid): ?Transaction;
-
-    /**
-     * Get users very first transaction journal.
-     *
-     * @deprecated
-     * @return TransactionJournal
-     */
-    public function first(): TransactionJournal;
 
     /**
      * Get users very first transaction journal.
@@ -217,13 +198,6 @@ interface JournalRepositoryInterface
     public function getMetaField(TransactionJournal $journal, string $field): ?string;
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Note|null
-     */
-    public function getNote(TransactionJournal $journal): ?Note;
-
-    /**
      * Return text of a note attached to journal, or NULL
      *
      * @param TransactionJournal $journal
@@ -302,15 +276,6 @@ interface JournalRepositoryInterface
      * @return void
      */
     public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void;
-
-    /**
-     * Set meta field for journal that contains string.
-     *
-     * @param TransactionJournal $journal
-     * @param string             $name
-     * @param string             $value
-     */
-    public function setMetaString(TransactionJournal $journal, string $name, string $value): void;
 
     /**
      * @param TransactionJournal $journal

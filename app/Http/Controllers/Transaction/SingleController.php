@@ -28,7 +28,6 @@ use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -124,14 +123,8 @@ class SingleController extends Controller
             'payment_date'              => $this->repository->getMetaField($journal, 'payment_date'),
             'invoice_date'              => $this->repository->getMetaField($journal, 'invoice_date'),
             'internal_reference'        => $this->repository->getMetaField($journal, 'internal_reference'),
-            'notes'                     => '',
+            'notes'                     => $this->repository->getNoteText($journal),
         ];
-
-        /** @var Note $note */
-        $note = $this->repository->getNote($journal);
-        if (null !== $note) {
-            $preFilled['notes'] = $note->text;
-        }
 
         session()->flash('preFilled', $preFilled);
 

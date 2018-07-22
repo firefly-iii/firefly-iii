@@ -176,22 +176,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param int $piggyBankid
-     *
-     * @deprecated
-     * @return PiggyBank
-     */
-    public function find(int $piggyBankid): PiggyBank
-    {
-        $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankid)->first(['piggy_banks.*']);
-        if (null !== $piggyBank) {
-            return $piggyBank;
-        }
-
-        return new PiggyBank();
-    }
-
-    /**
      * Find by name or return NULL.
      *
      * @param string $name
@@ -421,24 +405,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         // create event
         $this->createEvent($piggyBank, bcmul($amount, '-1'));
-
-        return true;
-    }
-
-    /**
-     * Set all piggy banks to order 0.
-     *
-     * @return bool
-     */
-    public function reset(): bool
-    {
-        // split query to make it work in sqlite:
-        $set = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
-                        ->where('accounts.user_id', $this->user->id)->get(['piggy_banks.*']);
-        foreach ($set as $e) {
-            $e->order = 0;
-            $e->save();
-        }
 
         return true;
     }

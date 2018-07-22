@@ -56,27 +56,6 @@ interface CurrencyRepositoryInterface
     public function destroy(TransactionCurrency $currency): bool;
 
     /**
-     * Find by ID.
-     *
-     * @param int $currencyId
-     *
-     * @deprecated
-     * @return TransactionCurrency
-     */
-    public function find(int $currencyId): TransactionCurrency;
-
-    /**
-     * Find by currency code.
-     *
-     * @deprecated
-     *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency
-     */
-    public function findByCode(string $currencyCode): TransactionCurrency;
-
-    /**
      * Find by currency code, return NULL if unfound.
      *
      * @param string $currencyCode
@@ -88,33 +67,11 @@ interface CurrencyRepositoryInterface
     /**
      * Find by currency name.
      *
-     * @deprecated
-     *
-     * @param string $currencyName
-     *
-     * @return TransactionCurrency
-     */
-    public function findByName(string $currencyName): TransactionCurrency;
-
-    /**
-     * Find by currency name.
-     *
      * @param string $currencyName
      *
      * @return TransactionCurrency
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency;
-
-    /**
-     * Find by currency symbol.
-     *
-     * @deprecated
-     *
-     * @param string $currencySymbol
-     *
-     * @return TransactionCurrency
-     */
-    public function findBySymbol(string $currencySymbol): TransactionCurrency;
 
     /**
      * Find by currency symbol.

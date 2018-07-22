@@ -68,13 +68,13 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param int $ruleId
      *
-     * @return Rule
+     * @return Rule|null
      */
-    public function find(int $ruleId): Rule
+    public function find(int $ruleId): ?Rule
     {
         $rule = $this->user->rules()->find($ruleId);
         if (null === $rule) {
-            return new Rule;
+            return null;
         }
 
         return $rule;

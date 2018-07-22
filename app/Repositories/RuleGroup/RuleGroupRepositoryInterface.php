@@ -47,9 +47,9 @@ interface RuleGroupRepositoryInterface
     /**
      * @param int $ruleGroupId
      *
-     * @return RuleGroup
+     * @return RuleGroup|null
      */
-    public function find(int $ruleGroupId): RuleGroup;
+    public function find(int $ruleGroupId): ?RuleGroup;
 
     /**
      * Get all rule groups.

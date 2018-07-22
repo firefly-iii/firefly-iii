@@ -42,8 +42,6 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
@@ -174,7 +172,6 @@ class FireflyServiceProvider extends ServiceProvider
         // export:
         $this->app->bind(ProcessorInterface::class, ExpandedProcessor::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
         // more generators:

@@ -82,24 +82,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * Find a category.
      *
-     * @param int $categoryId
-     *
-     * @return Category
-     * @deprecated
-     */
-    public function find(int $categoryId): Category
-    {
-        $category = $this->user->categories()->find($categoryId);
-        if (null === $category) {
-            $category = new Category;
-        }
-
-        return $category;
-    }
-
-    /**
-     * Find a category.
-     *
      * @param string $name
      *
      * @return Category|null

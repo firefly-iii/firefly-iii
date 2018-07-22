@@ -57,21 +57,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
-     * @param ImportJob $job
-     * @param int       $index
-     * @param string    $error
-     *
-     * @return ImportJob
-     */
-    public function addError(ImportJob $job, int $index, string $error): ImportJob
-    {
-        $extended                     = $this->getExtendedStatus($job);
-        $extended['errors'][$index][] = $error;
-
-        return $this->setExtendedStatus($job, $extended);
-    }
-
-    /**
      * Add message to job.
      *
      * @param ImportJob $job
@@ -87,58 +72,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->save();
 
         return $job;
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param int       $steps
-     *
-     * @return ImportJob
-     */
-    public function addStepsDone(ImportJob $job, int $steps = null): ImportJob
-    {
-        $steps          = $steps ?? 1;
-        $status         = $this->getExtendedStatus($job);
-        $status['done'] += $steps;
-        Log::debug(sprintf('Add %d to steps done for job "%s" making steps done %d', $steps, $job->key, $status['done']));
-
-        return $this->setExtendedStatus($job, $status);
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param int       $steps
-     *
-     * @return ImportJob
-     */
-    public function addTotalSteps(ImportJob $job, int $steps = null): ImportJob
-    {
-        $steps             = $steps ?? 1;
-        $extended          = $this->getExtendedStatus($job);
-        $total             = (int)($extended['steps'] ?? 0);
-        $total             += $steps;
-        $extended['steps'] = $total;
-
-        return $this->setExtendedStatus($job, $extended);
-
-    }
-
-    /**
-     * Return number of imported rows with this hash value.
-     *
-     * @param string $hash
-     *
-     * @return int
-     */
-    public function countByHash(string $hash): int
-    {
-        $json  = json_encode($hash);
-        $count = TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
-                                       ->where('data', $json)
-                                       ->where('name', 'importHash')
-                                       ->count();
-
-        return $count;
     }
 
     /**
@@ -245,111 +178,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
-     *
-     * @return string
-     */
-    public function getStatus(ImportJob $job): string
-    {
-        return $job->status;
-    }
-
-    /**
-     * @param ImportJob    $job
-     * @param UploadedFile $file
-     *
-     * @return bool
-     */
-    public function processConfiguration(ImportJob $job, UploadedFile $file): bool
-    {
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        // demo user's configuration upload is ignored completely.
-        if (!$repository->hasRole($this->user, 'demo')) {
-            Log::debug(
-                'Uploaded configuration file',
-                ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]
-            );
-
-            $configFileObject = new SplFileObject($file->getRealPath());
-            $configRaw        = $configFileObject->fread($configFileObject->getSize());
-            $configuration    = json_decode($configRaw, true);
-            Log::debug(sprintf('Raw configuration is %s', $configRaw));
-            if (null !== $configuration && \is_array($configuration)) {
-                Log::debug('Found configuration', $configuration);
-                $this->setConfiguration($job, $configuration);
-            }
-            if (null === $configuration) {
-                Log::error('Uploaded configuration is NULL');
-            }
-            if (false === $configuration) {
-                Log::error('Uploaded configuration is FALSE');
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param ImportJob         $job
-     * @param null|UploadedFile $file
-     *
-     * @return bool
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
-     */
-    public function processFile(ImportJob $job, ?UploadedFile $file): bool
-    {
-        if (null === $file) {
-            return false;
-        }
-        /** @var UserRepositoryInterface $repository */
-        $repository = app(UserRepositoryInterface::class);
-        $newName    = sprintf('%s.upload', $job->key);
-        $uploaded   = new SplFileObject($file->getRealPath());
-        $content    = trim($uploaded->fread($uploaded->getSize()));
-
-        // verify content:
-        $result = mb_detect_encoding($content, 'UTF-8', true);
-        if (false === $result) {
-            Log::error(sprintf('Cannot detect encoding for uploaded import file "%s".', $file->getClientOriginalName()));
-
-            return false;
-        }
-        if ('ASCII' !== $result && 'UTF-8' !== $result) {
-            Log::error(sprintf('Uploaded import file is %s instead of UTF8!', var_export($result, true)));
-
-            return false;
-        }
-
-        $contentEncrypted = Crypt::encrypt($content);
-        $disk             = Storage::disk('upload');
-
-        // user is demo user, replace upload with prepared file.
-        if ($repository->hasRole($this->user, 'demo')) {
-            $stubsDisk        = Storage::disk('stubs');
-            $content          = $stubsDisk->get('demo-import.csv');
-            $contentEncrypted = Crypt::encrypt($content);
-            $disk->put($newName, $contentEncrypted);
-            Log::debug('Replaced upload with demo file.');
-
-            // also set up prepared configuration.
-            $configuration = json_decode($stubsDisk->get('demo-configuration.json'), true);
-            $this->setConfiguration($job, $configuration);
-            Log::debug('Set configuration for demo user', $configuration);
-        }
-
-        if (!$repository->hasRole($this->user, 'demo')) {
-            // user is not demo, process original upload:
-            $disk->put($newName, $contentEncrypted);
-            Log::debug('Uploaded file', ['name' => $file->getClientOriginalName(), 'size' => $file->getSize(), 'mime' => $file->getClientMimeType()]);
-        }
-
-        return true;
-    }
-
-    /**
-     * @param ImportJob $job
      * @param array     $configuration
      *
      * @return ImportJob
@@ -364,22 +192,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->save();
 
         //Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
-
-        return $job;
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param array     $array
-     *
-     * @return ImportJob
-     */
-    public function setExtendedStatus(ImportJob $job, array $array): ImportJob
-    {
-        $currentStatus        = $job->extended_status;
-        $newStatus            = array_merge($currentStatus, $array);
-        $job->extended_status = $newStatus;
-        $job->save();
 
         return $job;
     }
@@ -415,21 +227,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
     /**
      * @param ImportJob $job
-     * @param int       $steps
-     *
-     * @return ImportJob
-     */
-    public function setStepsDone(ImportJob $job, int $steps): ImportJob
-    {
-        $status         = $this->getExtendedStatus($job);
-        $status['done'] = $steps;
-        Log::debug(sprintf('Set steps done for job "%s" to %d', $job->key, $steps));
-
-        return $this->setExtendedStatus($job, $status);
-    }
-
-    /**
-     * @param ImportJob $job
      * @param Tag       $tag
      *
      * @return ImportJob
@@ -440,21 +237,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->save();
 
         return $job;
-    }
-
-    /**
-     * @param ImportJob $job
-     * @param int       $count
-     *
-     * @return ImportJob
-     */
-    public function setTotalSteps(ImportJob $job, int $count): ImportJob
-    {
-        $status          = $this->getExtendedStatus($job);
-        $status['steps'] = $count;
-        Log::debug(sprintf('Set total steps for job "%s" to %d', $job->key, $count));
-
-        return $this->setExtendedStatus($job, $status);
     }
 
     /**
@@ -597,20 +379,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $job->save();
 
         return $job;
-    }
-
-    /**
-     * Return import file content.
-     *
-     * @deprecated
-     *
-     * @param ImportJob $job
-     *
-     * @return string
-     */
-    public function uploadFileContents(ImportJob $job): string
-    {
-        return $job->uploadFileContents();
     }
 
     /**

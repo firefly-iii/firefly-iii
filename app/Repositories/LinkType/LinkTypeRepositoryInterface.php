@@ -56,14 +56,6 @@ interface LinkTypeRepositoryInterface
     public function destroyLink(TransactionJournalLink $link): bool;
 
     /**
-     * @param int $id
-     *
-     * @deprecated
-     * @return LinkType
-     */
-    public function find(int $id): LinkType;
-
-    /**
      * Find link type by name.
      *
      * @param string|null $name

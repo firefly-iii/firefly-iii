@@ -34,16 +34,6 @@ use Illuminate\Support\Collection;
 interface TagRepositoryInterface
 {
     /**
-     * This method will connect a journal with a tag.
-     *
-     * @param TransactionJournal $journal
-     * @param Tag                $tag
-     *
-     * @return bool
-     */
-    public function connect(TransactionJournal $journal, Tag $tag): bool;
-
-    /**
      * @return int
      */
     public function count(): int;
@@ -103,13 +93,6 @@ interface TagRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param string $type
-     *
-     * @return Collection
-     */
-    public function getByType(string $type): Collection;
-
-    /**
      * @param Tag $tag
      *
      * @return Carbon
@@ -152,15 +135,6 @@ interface TagRepositoryInterface
      * @return Tag
      */
     public function store(array $data): Tag;
-
-    /**
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return string
-     */
-    public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string;
 
     /**
      * Calculates various amounts in tag.

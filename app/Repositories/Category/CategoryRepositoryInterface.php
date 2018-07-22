@@ -54,16 +54,6 @@ interface CategoryRepositoryInterface
     /**
      * Find a category.
      *
-     * @param int $categoryId
-     *
-     * @deprecated
-     * @return Category
-     */
-    public function find(int $categoryId): Category;
-
-    /**
-     * Find a category.
-     *
      * @param string $name
      *
      * @return Category

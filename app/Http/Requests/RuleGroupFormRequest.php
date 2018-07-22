@@ -64,7 +64,7 @@ class RuleGroupFormRequest extends Request
         /** @var RuleGroupRepositoryInterface $repository */
         $repository = app(RuleGroupRepositoryInterface::class);
         $titleRule  = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
-        if (null !== $repository->find((int)$this->get('id'))->id) {
+        if (null !== $repository->find((int)$this->get('id'))) {
             $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . (int)$this->get('id');
         }
 

@@ -139,23 +139,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param int $journalId
-     *
-     * @return TransactionJournal
-     * @deprecated
-     */
-    public function find(int $journalId): TransactionJournal
-    {
-        /** @var TransactionJournal $journal */
-        $journal = $this->user->transactionJournals()->where('id', $journalId)->first();
-        if (null === $journal) {
-            return new TransactionJournal;
-        }
-
-        return $journal;
-    }
-
-    /**
      * Find a journal by its hash.
      *
      * @param string $hash
@@ -223,24 +206,6 @@ class JournalRepository implements JournalRepositoryInterface
                                   ->first(['transactions.*']);
 
         return $transaction;
-    }
-
-    /**
-     * Get users first transaction journal.
-     *
-     * @deprecated
-     * @return TransactionJournal
-     */
-    public function first(): TransactionJournal
-    {
-        /** @var TransactionJournal $entry */
-        $entry = $this->user->transactionJournals()->orderBy('date', 'ASC')->first(['transaction_journals.*']);
-
-        if (null === $entry) {
-            return new TransactionJournal;
-        }
-
-        return $entry;
     }
 
     /**
@@ -523,16 +488,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param TransactionJournal $journal
-     *
-     * @return Note|null
-     */
-    public function getNote(TransactionJournal $journal): ?Note
-    {
-        return $journal->notes()->first();
-    }
-
-    /**
      * Return text of a note attached to journal, or NULL
      *
      * @param TransactionJournal $journal
@@ -691,27 +646,6 @@ class JournalRepository implements JournalRepositoryInterface
         $factory->updateOrCreate(
             [
                 'data'    => $date,
-                'journal' => $journal,
-                'name'    => $name,
-            ]
-        );
-
-    }
-
-    /**
-     * Set meta field for journal that contains string.
-     *
-     * @param TransactionJournal $journal
-     * @param string             $name
-     * @param string             $value
-     */
-    public function setMetaString(TransactionJournal $journal, string $name, string $value): void
-    {
-        /** @var TransactionJournalMetaFactory $factory */
-        $factory = app(TransactionJournalMetaFactory::class);
-        $factory->updateOrCreate(
-            [
-                'data'    => $value,
                 'journal' => $journal,
                 'name'    => $name,
             ]

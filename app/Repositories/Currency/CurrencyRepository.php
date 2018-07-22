@@ -108,44 +108,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by ID.
-     *
-     * @param int $currencyId
-     *
-     * @deprecated
-     *
-     * @return TransactionCurrency
-     */
-    public function find(int $currencyId): TransactionCurrency
-    {
-        $currency = TransactionCurrency::find($currencyId);
-        if (null === $currency) {
-            $currency = new TransactionCurrency;
-        }
-
-        return $currency;
-    }
-
-    /**
-     * Find by currency code.
-     *
-     * @deprecated
-     *
-     * @param string $currencyCode
-     *
-     * @return TransactionCurrency
-     */
-    public function findByCode(string $currencyCode): TransactionCurrency
-    {
-        $currency = TransactionCurrency::where('code', $currencyCode)->first();
-        if (null === $currency) {
-            $currency = new TransactionCurrency;
-        }
-
-        return $currency;
-    }
-
-    /**
      * Find by currency code, return NULL if unfound.
      * Used in Import Currency!
      *
@@ -159,25 +121,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
-     * Find by currency name.
-     *
-     * @param string $currencyName
-     *
-     * @deprecated
-     *
-     * @return TransactionCurrency
-     */
-    public function findByName(string $currencyName): TransactionCurrency
-    {
-        $preferred = TransactionCurrency::whereName($currencyName)->first();
-        if (null === $preferred) {
-            $preferred = new TransactionCurrency;
-        }
-
-        return $preferred;
-    }
-
-    /**
      * Find by currency name or return null.
      * Used in Import Currency!
      *
@@ -188,25 +131,6 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     public function findByNameNull(string $currencyName): ?TransactionCurrency
     {
         return TransactionCurrency::whereName($currencyName)->first();
-    }
-
-    /**
-     * Find by currency symbol.
-     *
-     * @deprecated
-     *
-     * @param string $currencySymbol
-     *
-     * @return TransactionCurrency
-     */
-    public function findBySymbol(string $currencySymbol): TransactionCurrency
-    {
-        $currency = TransactionCurrency::whereSymbol($currencySymbol)->first();
-        if (null === $currency) {
-            $currency = new TransactionCurrency;
-        }
-
-        return $currency;
     }
 
     /**

@@ -81,22 +81,6 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
-     * @param int $id
-     *
-     * @return LinkType
-     * @deprecated
-     */
-    public function find(int $id): LinkType
-    {
-        $linkType = LinkType::find($id);
-        if (null === $linkType) {
-            return new LinkType;
-        }
-
-        return $linkType;
-    }
-
-    /**
      * @param string|null $name
      *
      * @return LinkType|null

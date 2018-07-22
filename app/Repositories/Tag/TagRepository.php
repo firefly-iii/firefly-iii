@@ -43,27 +43,6 @@ class TagRepository implements TagRepositoryInterface
     private $user;
 
     /**
-     * @param TransactionJournal $journal
-     * @param Tag                $tag
-     *
-     * @return bool
-     */
-    public function connect(TransactionJournal $journal, Tag $tag): bool
-    {
-        // Already connected:
-        if ($journal->tags()->find($tag->id)) {
-            Log::info(sprintf('Tag #%d is already connected to journal #%d.', $tag->id, $journal->id));
-
-            return false;
-        }
-        Log::debug(sprintf('Tag #%d connected', $tag->id));
-        $journal->tags()->save($tag);
-        $journal->save();
-
-        return true;
-    }
-
-    /**
      * @return int
      */
     public function count(): int
@@ -178,16 +157,6 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param string $type
-     *
-     * @return Collection
-     */
-    public function getByType(string $type): Collection
-    {
-        return $this->user->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
-    }
-
-    /**
      * @param Tag $tag
      *
      * @return Carbon
@@ -265,32 +234,6 @@ class TagRepository implements TagRepositoryInterface
         $tag->save();
 
         return $tag;
-    }
-
-    /**
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
-     * @return string
-     */
-    public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-
-        if (null !== $start && null !== $end) {
-            $collector->setRange($start, $end);
-        }
-
-        $collector->setAllAssetAccounts()->setTag($tag);
-        $journals = $collector->getJournals();
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd($sum, app('steam')->positive((string)$journal->transaction_amount));
-        }
-
-        return $sum;
     }
 
     /**
