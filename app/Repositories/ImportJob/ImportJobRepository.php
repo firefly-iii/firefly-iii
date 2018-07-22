@@ -300,7 +300,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->filename = $name;
         $attachment->mime     = 'plain/txt';
         $attachment->size     = \strlen($content);
-        $attachment->uploaded = 0;
+        $attachment->uploaded = false;
         $attachment->save();
         $encrypted = Crypt::encrypt($content);
 
@@ -351,7 +351,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->filename = $name;
         $attachment->mime     = $file->getMimeType();
         $attachment->size     = $file->getSize();
-        $attachment->uploaded = 0;
+        $attachment->uploaded = false;
         $attachment->save();
         $fileObject = $file->openFile('r');
         $fileObject->rewind();

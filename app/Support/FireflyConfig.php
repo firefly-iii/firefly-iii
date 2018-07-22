@@ -51,7 +51,7 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param null   $default
+     * @param mixed   $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */
@@ -79,7 +79,7 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param null   $default
+     * @param mixed   $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */

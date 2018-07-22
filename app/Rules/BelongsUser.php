@@ -52,7 +52,7 @@ class BelongsUser implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return (string)trans('validation.belongs_user');
     }

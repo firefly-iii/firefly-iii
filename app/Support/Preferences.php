@@ -80,7 +80,7 @@ class Preferences
 
     /**
      * @param string $name
-     * @param null   $default
+     * @param mixed   $default
      *
      * @return \FireflyIII\Models\Preference|null
      */

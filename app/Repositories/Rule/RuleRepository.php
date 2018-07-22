@@ -288,7 +288,7 @@ class RuleRepository implements RuleRepositoryInterface
 
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
-        $rule->active          = 1;
+        $rule->active          = true;
         $rule->strict          = $data['strict'] ?? false;
         $rule->stop_processing = 1 === (int)$data['stop-processing'];
         $rule->title           = $data['title'];
@@ -316,7 +316,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleAction = new RuleAction;
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = $values['order'];
-        $ruleAction->active          = 1;
+        $ruleAction->active          = true;
         $ruleAction->stop_processing = $values['stopProcessing'];
         $ruleAction->action_type     = $values['action'];
         $ruleAction->action_value    = $values['value'] ?? '';
@@ -336,7 +336,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = $values['order'];
-        $ruleTrigger->active          = 1;
+        $ruleTrigger->active          = true;
         $ruleTrigger->stop_processing = $values['stopProcessing'];
         $ruleTrigger->trigger_type    = $values['action'];
         $ruleTrigger->trigger_value   = $values['value'] ?? '';
