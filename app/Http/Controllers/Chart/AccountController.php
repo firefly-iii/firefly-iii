@@ -467,10 +467,14 @@ class AccountController extends Controller
 
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $default    = app('amount')->getDefaultCurrency();
-        $chartData  = [];
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+
+        $default   = app('amount')->getDefaultCurrency();
+        $chartData = [];
+        /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency = $repository->findNull((int)$account->getMeta('currency_id'));
+            $currency = $repository->findNull((int)$accountRepos->getMetaValue($account, 'currency_id'));
             if (null === $currency) {
                 $currency = $default;
             }

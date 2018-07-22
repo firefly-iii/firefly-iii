@@ -85,10 +85,10 @@ class Tag extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getDescriptionAttribute($value): string
+    public function getDescriptionAttribute($value): ?string
     {
         if (null === $value) {
             return $value;

@@ -1,6 +1,6 @@
 <?php
 
-namespace FireflyIII\Rules;
+namespace FireflyIII\TransactionRules\Triggers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;

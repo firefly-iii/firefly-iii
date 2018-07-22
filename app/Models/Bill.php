@@ -139,10 +139,10 @@ class Bill extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getNameAttribute($value): string
+    public function getNameAttribute($value): ?string
     {
         if (1 === (int)$this->name_encrypted) {
             return Crypt::decrypt($value);

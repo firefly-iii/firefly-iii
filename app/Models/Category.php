@@ -85,10 +85,10 @@ class Category extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getNameAttribute($value): string
+    public function getNameAttribute($value): ?string
     {
         if ($this->encrypted) {
             return Crypt::decrypt($value);
