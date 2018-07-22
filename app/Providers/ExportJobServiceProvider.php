@@ -38,14 +38,14 @@ class ExportJobServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
     }
 
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->exportJob();
         $this->importJob();
@@ -54,7 +54,7 @@ class ExportJobServiceProvider extends ServiceProvider
     /**
      * Register export job.
      */
-    private function exportJob()
+    private function exportJob(): void
     {
         $this->app->bind(
             ExportJobRepositoryInterface::class,
@@ -73,7 +73,7 @@ class ExportJobServiceProvider extends ServiceProvider
     /**
      * Register import job.
      */
-    private function importJob()
+    private function importJob(): void
     {
         $this->app->bind(
             ImportJobRepositoryInterface::class,

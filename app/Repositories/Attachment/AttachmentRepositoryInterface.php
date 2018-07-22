@@ -53,13 +53,6 @@ interface AttachmentRepositoryInterface
      *
      * @return Attachment
      */
-    public function find(int $id): Attachment;
-
-    /**
-     * @param int $id
-     *
-     * @return Attachment
-     */
     public function findWithoutUser(int $id): Attachment;
 
     /**

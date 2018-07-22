@@ -59,7 +59,6 @@ interface BudgetRepositoryInterface
      * @param Carbon     $end
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array;
 
@@ -186,6 +185,7 @@ interface BudgetRepositoryInterface
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -224,6 +224,7 @@ interface BudgetRepositoryInterface
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
@@ -239,6 +240,7 @@ interface BudgetRepositoryInterface
      */
     public function setUser(User $user);
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -296,6 +298,7 @@ interface BudgetRepositoryInterface
      */
     public function updateBudgetLimit(BudgetLimit $budgetLimit, array $data): BudgetLimit;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Budget $budget
      * @param Carbon $start

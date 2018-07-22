@@ -223,7 +223,7 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -290,7 +290,7 @@ class TagRepository implements TagRepositoryInterface
             $sum = bcadd($sum, app('steam')->positive((string)$journal->transaction_amount));
         }
 
-        return (string)$sum;
+        return $sum;
     }
 
     /**
@@ -373,7 +373,7 @@ class TagRepository implements TagRepositoryInterface
         /** @var Tag $tag */
         foreach ($result as $tag) {
             $tagsWithAmounts[$tag->id] = (string)$tag->amount_sum;
-            $amount                    = \strlen($tagsWithAmounts[$tag->id]) ? $tagsWithAmounts[$tag->id] : '0';
+            $amount                    = '' !== $tagsWithAmounts[$tag->id] ? $tagsWithAmounts[$tag->id] : '0';
             if (null === $min) {
                 $min = $amount;
             }
@@ -396,17 +396,16 @@ class TagRepository implements TagRepositoryInterface
         Log::debug(sprintf('The range is: %s', $range));
 
         // each euro difference is this step in the scale:
-        $step = (float)$range !== 0.0 ? 8 / (float)$range : 0;
+        $step = 0.0 !== (float)$range ? 8 / (float)$range : 0;
         Log::debug(sprintf('The step is: %f', $step));
-        $return = [];
-
+        $size = 12;
 
         foreach ($result as $tag) {
-            if ($step === 0) {
+            if (0 === $step) {
                 // easy: size is 12:
                 $size = 12;
             }
-            if ($step !== 0) {
+            if (0 !== $step) {
                 $amount = bcsub((string)$tag->amount_sum, $min);
                 Log::debug(sprintf('Work with amount %s for tag %s', $amount, $tag->tag));
                 $size = ((int)(float)$amount * $step) + 12;
@@ -441,36 +440,5 @@ class TagRepository implements TagRepositoryInterface
         $tag->save();
 
         return $tag;
-    }
-
-    /**
-     * @param array $range
-     * @param float $amount
-     * @param float $min
-     * @param float $max
-     *
-     * @return int
-     */
-    private function cloudScale(array $range, float $amount, float $min, float $max): int
-    {
-        $amountDiff = $max - $min;
-
-        // no difference? Every tag same range:
-        if (0.0 === $amountDiff) {
-            return $range[0];
-        }
-
-        $diff = $range[1] - $range[0];
-        $step = 1;
-        if (0.0 !== $diff) {
-            $step = $amountDiff / $diff;
-        }
-        if (0.0 === $step) {
-            $step = 1;
-        }
-
-        $extra = $step / $amount;
-
-        return (int)($range[0] + $extra);
     }
 }

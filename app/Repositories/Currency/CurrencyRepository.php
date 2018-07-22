@@ -27,6 +27,7 @@ use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
@@ -93,7 +94,11 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function destroy(TransactionCurrency $currency): bool
     {
-        if ($this->user->hasRole('owner')) {
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
+
+        if ($repository->hasRole($this->user, 'owner')) {
             /** @var CurrencyDestroyService $service */
             $service = app(CurrencyDestroyService::class);
             $service->destroy($currency);
@@ -298,7 +303,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

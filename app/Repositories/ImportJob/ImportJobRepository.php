@@ -95,8 +95,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      *
      * @return ImportJob
      */
-    public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob
+    public function addStepsDone(ImportJob $job, int $steps = null): ImportJob
     {
+        $steps          = $steps ?? 1;
         $status         = $this->getExtendedStatus($job);
         $status['done'] += $steps;
         Log::debug(sprintf('Add %d to steps done for job "%s" making steps done %d', $steps, $job->key, $status['done']));
@@ -110,8 +111,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      *
      * @return ImportJob
      */
-    public function addTotalSteps(ImportJob $job, int $steps = 1): ImportJob
+    public function addTotalSteps(ImportJob $job, int $steps = null): ImportJob
     {
+        $steps             = $steps ?? 1;
         $extended          = $this->getExtendedStatus($job);
         $total             = (int)($extended['steps'] ?? 0);
         $total             += $steps;
@@ -136,7 +138,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                                        ->where('name', 'importHash')
                                        ->count();
 
-        return (int)$count;
+        return $count;
     }
 
     /**
@@ -309,12 +311,12 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
         // verify content:
         $result = mb_detect_encoding($content, 'UTF-8', true);
-        if ($result === false) {
+        if (false === $result) {
             Log::error(sprintf('Cannot detect encoding for uploaded import file "%s".', $file->getClientOriginalName()));
 
             return false;
         }
-        if ($result !== 'ASCII' && $result !== 'UTF-8') {
+        if ('ASCII' !== $result && 'UTF-8' !== $result) {
             Log::error(sprintf('Uploaded import file is %s instead of UTF8!', var_export($result, true)));
 
             return false;
@@ -472,7 +474,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -480,12 +482,11 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     /**
      * Handle upload for job.
      *
-     * @param ImportJob    $job
-     * @param string       $name
-     * @param UploadedFile $file
+     * @param ImportJob $job
+     * @param string    $name
+     * @param string    $fileName
      *
      * @return MessageBag
-     * @throws FireflyException
      */
     public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag
     {
@@ -538,7 +539,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param UploadedFile $file
      *
      * @return MessageBag
-     * @throws FireflyException
      */
     public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag
     {
@@ -607,7 +607,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param ImportJob $job
      *
      * @return string
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function uploadFileContents(ImportJob $job): string
     {

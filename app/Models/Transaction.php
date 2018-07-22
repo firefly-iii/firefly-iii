@@ -89,6 +89,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $after       // used in audit reports.
  * @property int                 $opposing_id // ID of the opposing transaction, used in collector
  * @property bool                $encrypted   // is the journal encrypted
+ * @property bool                reconciled
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Transaction extends Model

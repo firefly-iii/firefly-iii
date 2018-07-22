@@ -75,17 +75,21 @@ use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
- * @codeCoverageIgnore
+ *
  * Class FireflyServiceProvider.
+ *
+ * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FireflyServiceProvider extends ServiceProvider
 {
     /**
      * Start provider.
      */
-    public function boot()
+    public function boot(): void
     {
         Validator::resolver(
+        /** @noinspection MoreThanThreeArgumentsInspection */
             function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
@@ -105,8 +109,10 @@ class FireflyServiceProvider extends ServiceProvider
 
     /**
      * Register stuff.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(
             'preferences',

@@ -89,7 +89,11 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function cleanupBudgets(): bool
     {
         // delete limits with amount 0:
-        BudgetLimit::where('amount', 0)->delete();
+        try {
+            BudgetLimit::where('amount', 0)->delete();
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+        }
 
         // do the clean up by hand because Sqlite can be tricky with this.
         $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
@@ -99,7 +103,11 @@ class BudgetRepository implements BudgetRepositoryInterface
             $key = $budgetLimit->budget_id . '-' . $budgetLimit->start_date->format('Y-m-d') . $budgetLimit->end_date->format('Y-m-d');
             if (isset($count[$key])) {
                 // delete it!
-                BudgetLimit::find($budgetLimit->id)->delete();
+                try {
+                    BudgetLimit::find($budgetLimit->id)->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+                }
             }
             $count[$key] = true;
         }
@@ -115,7 +123,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon     $end
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
@@ -249,6 +256,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param int $budgetId
      *
      * @return Budget
+     * @deprecated
      */
     public function find(int $budgetId): Budget
     {
@@ -467,9 +475,8 @@ class BudgetRepository implements BudgetRepositoryInterface
             $total = bcadd($availableBudget->amount, $total);
             $days  += $availableBudget->start_date->diffInDays($availableBudget->end_date);
         }
-        $avg = bcdiv($total, (string)$days);
 
-        return $avg;
+        return bcdiv($total, (string)$days);
     }
 
     /**
@@ -535,6 +542,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
@@ -658,6 +666,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $result;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
@@ -688,11 +697,12 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -842,17 +852,17 @@ class BudgetRepository implements BudgetRepositoryInterface
 
 
         // find any rule actions related to budgets, with this budget name, and update them accordingly.
-        $types    = [
+        $types   = [
             'set_budget',
         ];
         $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
-                               ->where('rules.user_id', $this->user->id)
-                               ->whereIn('rule_actions.action_type', $types)
-                               ->where('rule_actions.action_value', $oldName)
-                               ->get(['rule_actions.*']);
+                             ->where('rules.user_id', $this->user->id)
+                             ->whereIn('rule_actions.action_type', $types)
+                             ->where('rule_actions.action_value', $oldName)
+                             ->get(['rule_actions.*']);
         Log::debug(sprintf('Found %d actions to update.', $actions->count()));
         /** @var RuleAction $action */
-        foreach($actions as $action) {
+        foreach ($actions as $action) {
             $action->action_value = $data['name'];
             $action->save();
             Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
@@ -915,6 +925,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $budgetLimit;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Budget $budget
      * @param Carbon $start

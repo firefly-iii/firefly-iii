@@ -38,22 +38,6 @@ use Log;
  */
 trait FindAccountsTrait
 {
-    /**
-     * @param $accountId
-     *
-     * @deprecated
-     * @return Account
-     */
-    public function find(int $accountId): Account
-    {
-        /** @var Account $account */
-        $account = $this->user->accounts()->find($accountId);
-        if (null === $account) {
-            return new Account;
-        }
-
-        return $account;
-    }
 
     /**
      * @param string $number
@@ -80,33 +64,6 @@ trait FindAccountsTrait
         }
 
         return null;
-    }
-
-    /**
-     * @param string $iban
-     * @param array  $types
-     *
-     * @deprecated
-     * @return Account
-     */
-    public function findByIban(string $iban, array $types): Account
-    {
-        $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
-
-        if (\count($types) > 0) {
-            $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
-            $query->whereIn('account_types.type', $types);
-        }
-
-        $accounts = $query->get(['accounts.*']);
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            if ($account->iban === $iban) {
-                return $account;
-            }
-        }
-
-        return new Account;
     }
 
     /**
@@ -158,7 +115,8 @@ trait FindAccountsTrait
                 Log::debug(sprintf('Found #%d (%s) with type id %d', $account->id, $account->name, $account->account_type_id));
 
                 return $account;
-            } else {
+            }
+            if ($account->name !== $name) {
                 Log::debug(sprintf('"%s" does not equal "%s"', $account->name, $name));
             }
         }
@@ -244,9 +202,11 @@ trait FindAccountsTrait
     /**
      * @return Account
      *
+     * @throws FireflyException
      */
     public function getCashAccount(): Account
     {
+        /** @var AccountType $type */
         $type = AccountType::where('type', AccountType::CASH)->first();
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
@@ -267,7 +227,8 @@ trait FindAccountsTrait
         if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('%s is not an asset account.', $account->name));
         }
-        $name     = $account->name . ' reconciliation';
+        $name = $account->name . ' reconciliation';
+        /** @var AccountType $type */
         $type     = AccountType::where('type', AccountType::RECONCILIATION)->first();
         $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get();
         /** @var Account $current */

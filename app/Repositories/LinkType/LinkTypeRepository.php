@@ -84,6 +84,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param int $id
      *
      * @return LinkType
+     * @deprecated
      */
     public function find(int $id): LinkType
     {

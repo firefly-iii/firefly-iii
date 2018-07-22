@@ -44,6 +44,7 @@ class AccountTasker implements AccountTaskerInterface
      * @param Carbon     $end
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -182,7 +183,7 @@ class AccountTasker implements AccountTaskerInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -191,6 +192,7 @@ class AccountTasker implements AccountTaskerInterface
      * @param Collection $transactions
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function groupByOpposing(Collection $transactions): array
     {

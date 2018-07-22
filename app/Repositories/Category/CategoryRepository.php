@@ -59,6 +59,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return true;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -84,6 +85,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param int $categoryId
      *
      * @return Category
+     * @deprecated
      */
     public function find(int $categoryId): Category
     {
@@ -211,6 +213,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $lastJournalDate;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -294,6 +297,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -383,11 +387,12 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts

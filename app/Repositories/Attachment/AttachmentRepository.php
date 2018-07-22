@@ -37,6 +37,7 @@ use Storage;
 
 /**
  * Class AttachmentRepository.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
@@ -58,7 +59,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         try {
             unlink($file);
         } catch (Exception $e) {
-            Log::error(sprintf('Could not delete file for attachment %d.', $attachment->id));
+            Log::error(sprintf('Could not delete file for attachment %d: %s', $attachment->id, $e->getMessage()));
         }
         $attachment->delete();
 
@@ -83,23 +84,9 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      *
      * @return Attachment
      */
-    public function find(int $id): Attachment
-    {
-        $attachment = $this->user->attachments()->find($id);
-        if (null === $attachment) {
-            return new Attachment;
-        }
-
-        return $attachment;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Attachment
-     */
     public function findWithoutUser(int $id): Attachment
     {
+
         $attachment = Attachment::find($id);
         if (null === $attachment) {
             return new Attachment;

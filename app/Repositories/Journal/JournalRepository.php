@@ -51,6 +51,7 @@ class JournalRepository implements JournalRepositoryInterface
     /** @var User */
     private $user;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -141,6 +142,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param int $journalId
      *
      * @return TransactionJournal
+     * @deprecated
      */
     public function find(int $journalId): TransactionJournal
     {
@@ -300,6 +302,7 @@ class JournalRepository implements JournalRepositoryInterface
         if (null !== $budget) {
             return $budget->id;
         }
+        /** @noinspection NullPointerExceptionInspection */
         $budget = $journal->transactions()->first()->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
@@ -321,6 +324,7 @@ class JournalRepository implements JournalRepositoryInterface
         if (null !== $category) {
             return $category->name;
         }
+        /** @noinspection NullPointerExceptionInspection */
         $category = $journal->transactions()->first()->categories()->first();
         if (null !== $category) {
             return $category->name;
@@ -343,6 +347,7 @@ class JournalRepository implements JournalRepositoryInterface
         if (null === $field) {
             return $journal->date->format('Y-m-d');
         }
+        /** @noinspection NotOptimalIfConditionsInspection */
         if (null !== $journal->$field && $journal->$field instanceof Carbon) {
             // make field NULL
             $carbon          = clone $journal->$field;
@@ -731,7 +736,7 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

@@ -107,12 +107,12 @@ class RecurringRepository implements RecurringRepositoryInterface
         $return = 0;
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recurrenceTransaction->recurrenceTransactionMeta as $meta) {
-            if ($meta->name === 'budget_id') {
+            if ('budget_id' === $meta->name) {
                 $return = (int)$meta->value;
             }
         }
 
-        return $return === 0 ? null : $return;
+        return 0 === $return ? null : $return;
     }
 
     /**
@@ -127,12 +127,12 @@ class RecurringRepository implements RecurringRepositoryInterface
         $return = '';
         /** @var RecurrenceTransactionMeta $meta */
         foreach ($recurrenceTransaction->recurrenceTransactionMeta as $meta) {
-            if ($meta->name === 'category_name') {
+            if ('category_name' === $meta->name) {
                 $return = (string)$meta->value;
             }
         }
 
-        return $return === '' ? null : $return;
+        return '' === $return ? null : $return;
     }
 
     /**
@@ -158,9 +158,8 @@ class RecurringRepository implements RecurringRepositoryInterface
         if (null !== $end) {
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
         }
-        $result = $query->get(['transaction_journals.*']);
 
-        return $result;
+        return $query->get(['transaction_journals.*']);
     }
 
     /**
@@ -210,7 +209,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 Log::debug('Rep is daily. Start of loop.');
                 while ($mutator <= $end) {
                     Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-                    if ($attempts % $skipMod === 0) {
+                    if (0 === $attempts % $skipMod) {
                         Log::debug(sprintf('Attempts modulo skipmod is zero, include %s', $mutator->format('Y-m-d')));
                         $return[] = clone $mutator;
                     }
@@ -236,7 +235,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 $mutator->addDays($dayDifference);
                 Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
                 while ($mutator <= $end) {
-                    if ($attempts % $skipMod === 0 && $start->lte($mutator) && $end->gte($mutator)) {
+                    if (0 === $attempts % $skipMod && $start->lte($mutator) && $end->gte($mutator)) {
                         Log::debug('Date is in range of start+end, add to set.');
                         $return[] = clone $mutator;
                     }
@@ -263,10 +262,10 @@ class RecurringRepository implements RecurringRepositoryInterface
                     Log::debug(sprintf('DoM corrected is %d', $domCorrected));
                     $mutator->day = $domCorrected;
                     Log::debug(sprintf('Mutator is now %s.', $mutator->format('Y-m-d')));
-                    Log::debug(sprintf('$attempts %% $skipMod === 0 is %s', var_export($attempts % $skipMod === 0, true)));
+                    Log::debug(sprintf('$attempts %% $skipMod === 0 is %s', var_export(0 === $attempts % $skipMod, true)));
                     Log::debug(sprintf('$start->lte($mutator) is %s', var_export($start->lte($mutator), true)));
                     Log::debug(sprintf('$end->gte($mutator) is %s', var_export($end->gte($mutator), true)));
-                    if ($attempts % $skipMod === 0 && $start->lte($mutator) && $end->gte($mutator)) {
+                    if (0 === $attempts % $skipMod && $start->lte($mutator) && $end->gte($mutator)) {
                         Log::debug(sprintf('ADD %s to return!', $mutator->format('Y-m-d')));
                         $return[] = clone $mutator;
                     }
@@ -324,7 +323,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         $tags = [];
         /** @var RecurrenceMeta $meta */
         foreach ($recurrence->recurrenceMeta as $meta) {
-            if ($meta->name === 'tags' && '' !== $meta->value) {
+            if ('tags' === $meta->name && '' !== $meta->value) {
                 $tags = explode(',', $meta->value);
             }
         }
@@ -417,7 +416,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             case 'daily':
                 while ($total < $count) {
                     $mutator->addDay();
-                    if ($attempts % $skipMod === 0) {
+                    if (0 === $attempts % $skipMod) {
                         $return[] = clone $mutator;
                         $total++;
                     }
@@ -439,7 +438,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 $mutator->addDays($dayDifference);
 
                 while ($total < $count) {
-                    if ($attempts % $skipMod === 0) {
+                    if (0 === $attempts % $skipMod) {
                         $return[] = clone $mutator;
                         $total++;
                     }
@@ -458,7 +457,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 while ($total < $count) {
                     $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
                     $mutator->day = $domCorrected;
-                    if ($attempts % $skipMod === 0) {
+                    if (0 === $attempts % $skipMod) {
                         $return[] = clone $mutator;
                         $total++;
                     }
@@ -477,7 +476,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 while ($total < $count) {
                     $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
                     $newCarbon = new Carbon($string);
-                    if ($attempts % $skipMod === 0) {
+                    if (0 === $attempts % $skipMod) {
                         $return[] = clone $newCarbon;
                         $total++;
                     }
@@ -493,7 +492,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 }
                 $obj = clone $date;
                 while ($total < $count) {
-                    if ($attempts % $skipMod === 0) {
+                    if (0 === $attempts % $skipMod) {
                         $return[] = clone $obj;
                         $total++;
                     }

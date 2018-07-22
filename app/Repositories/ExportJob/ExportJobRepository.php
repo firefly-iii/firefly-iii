@@ -66,11 +66,10 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         /** @var ExportJob $entry */
         foreach ($set as $entry) {
             $key   = $entry->key;
-            $len   = \strlen($key);
             $files = scandir(storage_path('export'), SCANDIR_SORT_NONE);
             /** @var string $file */
             foreach ($files as $file) {
-                if (substr($file, 0, $len) === $key) {
+                if (0 === strpos($file, $key)) {
                     unlink(storage_path('export') . DIRECTORY_SEPARATOR . $file);
                 }
             }
@@ -121,11 +120,12 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @param string $key
-     *
+     * @deprecated
      * @return ExportJob
      */
     public function findByKey(string $key): ExportJob
     {
+        /** @var ExportJob $result */
         $result = $this->user->exportJobs()->where('key', $key)->first(['export_jobs.*']);
         if (null === $result) {
             return new ExportJob;
@@ -152,7 +152,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

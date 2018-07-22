@@ -36,6 +36,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string         $tag
  * @property int            $id
  * @property \Carbon\Carbon $date
+ * @property int            zoomLevel
+ * @property float          longitude
+ * @property float          latitude
+ * @property string         description
+ * @property string         amount_sum
+ * @property string         tagMode
  */
 class Tag extends Model
 {

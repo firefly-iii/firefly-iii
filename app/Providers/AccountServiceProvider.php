@@ -38,14 +38,14 @@ class AccountServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
     }
 
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->registerRepository();
         $this->registerTasker();
@@ -54,7 +54,7 @@ class AccountServiceProvider extends ServiceProvider
     /**
      * Register account repository
      */
-    private function registerRepository()
+    private function registerRepository(): void
     {
         $this->app->bind(
             AccountRepositoryInterface::class,
@@ -74,7 +74,7 @@ class AccountServiceProvider extends ServiceProvider
     /**
      * Register the tasker.
      */
-    private function registerTasker()
+    private function registerTasker(): void
     {
         $this->app->bind(
             AccountTaskerInterface::class,

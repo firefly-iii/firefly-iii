@@ -32,7 +32,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User   $user
  * @property string $key
  * @property int    $user_id
- * @property mixed  status
+ * @property string status
+ * @property int    id
  */
 class ExportJob extends Model
 {
@@ -53,7 +54,7 @@ class ExportJob extends Model
     public static function routeBinder(string $value): ExportJob
     {
         if (auth()->check()) {
-            $key       = trim($value);
+            $key = trim($value);
             /** @var User $user */
             $user = auth()->user();
             /** @var ExportJob $exportJob */

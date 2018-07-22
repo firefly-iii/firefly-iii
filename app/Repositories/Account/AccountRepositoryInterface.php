@@ -55,29 +55,14 @@ interface AccountRepositoryInterface
     public function destroy(Account $account, ?Account $moveTo): bool;
 
     /**
-     * @param int $accountId
+     * Find by account number. Is used.
      *
-     * @deprecated
-     * @return Account
-     */
-    public function find(int $accountId): Account;
-
-    /**
      * @param string $number
      * @param array  $types
      *
      * @return Account|null
      */
     public function findByAccountNumber(string $number, array $types): ?Account;
-
-    /**
-     * @param string $iban
-     * @param array  $types
-     *
-     * @deprecated
-     * @return Account
-     */
-    public function findByIban(string $iban, array $types): Account;
 
     /**
      * @param string $iban
@@ -101,15 +86,6 @@ interface AccountRepositoryInterface
      * @return Account|null
      */
     public function findNull(int $accountId): ?Account;
-
-    /**
-     * Return account type by string.
-     *
-     * @param string $type
-     *
-     * @return AccountType|null
-     */
-    public function getAccountType(string $type): ?AccountType;
 
     /**
      * @param array $accountIds
@@ -146,13 +122,6 @@ interface AccountRepositoryInterface
      * @return null|string
      */
     public function getMetaValue(Account $account, string $field): ?string;
-
-    /**
-     * @param Account $account
-     *
-     * @return Note|null
-     */
-    public function getNote(Account $account): ?Note;
 
     /**
      * Get note text or null.
@@ -192,15 +161,6 @@ interface AccountRepositoryInterface
     public function getReconciliation(Account $account): ?Account;
 
     /**
-     * Returns the date of the very last transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon
-     */
-    public function newestJournalDate(Account $account): Carbon;
-
-    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
@@ -237,12 +197,4 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function update(Account $account, array $data): Account;
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     */
-    public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal;
 }

@@ -39,6 +39,7 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type

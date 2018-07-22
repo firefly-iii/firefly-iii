@@ -53,6 +53,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon              book_date
  * @property Carbon              process_date
  * @property bool                encrypted
+ * @property int                 order
+ * @property int                 budget_id
+ * @property string              period_marker
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

@@ -83,18 +83,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Return account type by string.
-     *
-     * @param string $type
-     *
-     * @return AccountType|null
-     */
-    public function getAccountType(string $type): ?AccountType
-    {
-        return AccountType::whereType($type)->first();
-    }
-
-    /**
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
@@ -111,16 +99,6 @@ class AccountRepository implements AccountRepositoryInterface
         }
 
         return null;
-    }
-
-    /**
-     * @param Account $account
-     *
-     * @return Note|null
-     */
-    public function getNote(Account $account): ?Note
-    {
-        return $account->notes()->first();
     }
 
     /**
@@ -186,29 +164,6 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
-     * Returns the date of the very last transaction in this account.
-     *
-     * @param Account $account
-     *
-     * @return Carbon
-     */
-    public function newestJournalDate(Account $account): Carbon
-    {
-        $last = new Carbon;
-        $date = $account->transactions()
-                        ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                        ->orderBy('transaction_journals.date', 'DESC')
-                        ->orderBy('transaction_journals.order', 'ASC')
-                        ->orderBy('transaction_journals.id', 'DESC')
-                        ->first(['transaction_journals.date']);
-        if (null !== $date) {
-            $last = new Carbon($date->date);
-        }
-
-        return $last;
-    }
-
-    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
@@ -253,7 +208,7 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -262,6 +217,7 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function store(array $data): Account
     {
@@ -286,20 +242,4 @@ class AccountRepository implements AccountRepositoryInterface
 
         return $account;
     }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     */
-    public function updateReconciliation(TransactionJournal $journal, array $data): TransactionJournal
-    {
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-        $journal = $service->update($journal, $data);
-
-        return $journal;
-    }
-
 }

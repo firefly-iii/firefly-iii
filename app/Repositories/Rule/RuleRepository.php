@@ -264,7 +264,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

@@ -27,6 +27,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,7 +38,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool        $active
  * @property int         $user_id
  * @property-read string $email
- * @property bool encrypted
+ * @property bool        encrypted
+ * @property Collection       budgetlimits
  */
 class Budget extends Model
 {

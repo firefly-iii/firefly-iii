@@ -60,7 +60,7 @@ interface ImportJobRepositoryInterface
      *
      * @return ImportJob
      */
-    public function addStepsDone(ImportJob $job, int $steps = 1): ImportJob;
+    public function addStepsDone(ImportJob $job, int $steps = null): ImportJob;
 
     /**
      * @param ImportJob $job
@@ -68,7 +68,7 @@ interface ImportJobRepositoryInterface
      *
      * @return ImportJob
      */
-    public function addTotalSteps(ImportJob $job, int $steps = 1): ImportJob;
+    public function addTotalSteps(ImportJob $job, int $steps = null): ImportJob;
 
     /**
      * Return number of imported rows with this hash value.
@@ -125,7 +125,7 @@ interface ImportJobRepositoryInterface
      *
      * @return string
      */
-    public function getStatus(ImportJob $job);
+    public function getStatus(ImportJob $job): string;
 
     /**
      * @param ImportJob    $job

@@ -52,6 +52,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon      lastActivityDate
  * @property Collection  accountMeta
  * @property bool        encrypted
+ * @property int       account_type_id
+ * @property Collection piggyBanks
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */

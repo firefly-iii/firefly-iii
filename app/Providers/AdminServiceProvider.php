@@ -36,14 +36,14 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
     }
 
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->linkType();
     }
@@ -51,7 +51,7 @@ class AdminServiceProvider extends ServiceProvider
     /**
      * Register link type repository
      */
-    private function linkType()
+    private function linkType(): void
     {
         $this->app->bind(
             LinkTypeRepositoryInterface::class,
