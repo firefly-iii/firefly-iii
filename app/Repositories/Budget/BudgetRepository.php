@@ -30,6 +30,8 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -815,10 +817,48 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function update(Budget $budget, array $data): Budget
     {
-        // update the account:
+        $oldName = $budget->name;
+        // update the budget:
         $budget->name   = $data['name'];
         $budget->active = $data['active'];
         $budget->save();
+
+        // find any rule triggers related to budgets, with this budget name, and update them accordingly.
+        $types    = [
+            'budget_is',
+        ];
+        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
+                               ->where('rules.user_id', $this->user->id)
+                               ->whereIn('rule_triggers.trigger_type', $types)
+                               ->where('rule_triggers.trigger_value', $oldName)
+                               ->get(['rule_triggers.*']);
+        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $trigger->trigger_value = $data['name'];
+            $trigger->save();
+            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+        }
+
+        
+        // find any rule actions related to budgets, with this budget name, and update them accordingly.
+        $types    = [
+            'set_budget',
+        ];
+        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
+                               ->where('rules.user_id', $this->user->id)
+                               ->whereIn('rule_actions.action_type', $types)
+                               ->where('rule_actions.action_value', $oldName)
+                               ->get(['rule_actions.*']);
+        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        /** @var RuleAction $action */
+        foreach($actions as $action) {
+            $action->action_value = $data['name'];
+            $action->save();
+            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+        }
+
+        app('preferences')->mark();
 
         return $budget;
     }
