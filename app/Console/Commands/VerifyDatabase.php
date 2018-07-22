@@ -69,11 +69,11 @@ class VerifyDatabase extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
-            return;
+            return 1;
         }
 
         $this->reportEmptyBudgets();
@@ -94,6 +94,8 @@ class VerifyDatabase extends Command
         $this->fixDoubleAmounts();
         $this->fixBadMeta();
         $this->removeBills();
+
+        return 0;
     }
 
     /**

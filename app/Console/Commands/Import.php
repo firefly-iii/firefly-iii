@@ -59,7 +59,7 @@ class Import extends Command
      *
      * @throws FireflyException
      */
-    public function handle(): void
+    public function handle(): int
     {
         Log::debug('Start start-import command');
         $jobKey = $this->argument('key');
@@ -67,12 +67,12 @@ class Import extends Command
         if (null === $job) {
             $this->errorLine(sprintf('No job found with key "%s"', $jobKey));
 
-            return;
+            return 1;
         }
         if (!$this->isValid($job)) {
             $this->errorLine('Job is not valid for some reason. Exit.');
 
-            return;
+            return 1;
         }
 
         $this->infoLine(sprintf('Going to import job with key "%s" of type "%s"', $job->key, $job->file_type));
@@ -106,6 +106,8 @@ class Import extends Command
         }
 
         $this->infoLine(sprintf('The import has finished. %d transactions have been imported.', $count));
+
+        return 0;
     }
 
     /**

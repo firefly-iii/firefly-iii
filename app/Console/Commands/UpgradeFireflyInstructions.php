@@ -46,7 +46,7 @@ class UpgradeFireflyInstructions extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         if ('update' === $this->argument('task')) {
             $this->updateInstructions();
@@ -54,6 +54,7 @@ class UpgradeFireflyInstructions extends Command
         if ('install' === $this->argument('task')) {
             $this->installInstructions();
         }
+        return 0;
     }
 
     /**

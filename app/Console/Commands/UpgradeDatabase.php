@@ -82,7 +82,7 @@ class UpgradeDatabase extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         $this->setTransactionIdentifier();
         $this->updateAccountCurrencies();
@@ -96,6 +96,8 @@ class UpgradeDatabase extends Command
         $this->migrateBillsToRules();
 
         $this->info('Firefly III database is up to date.');
+
+        return 0;
     }
 
     /**
