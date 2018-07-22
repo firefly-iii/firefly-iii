@@ -65,7 +65,7 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        <a href="{{ route('budgets.no-budget') }}">
+                        <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
                             {{ trans('firefly.transactions_no_budget', {start: periodStart, end: periodEnd }) }}
                         </a>
                     </p>
