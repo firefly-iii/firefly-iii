@@ -840,7 +840,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
         }
 
-        
+
         // find any rule actions related to budgets, with this budget name, and update them accordingly.
         $types    = [
             'set_budget',
