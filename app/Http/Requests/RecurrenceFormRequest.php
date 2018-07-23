@@ -149,8 +149,7 @@ class RecurrenceFormRequest extends Request
     public function rules(): array
     {
         $today    = new Carbon;
-        $tomorrow = clone $today;
-        $tomorrow->addDay();
+        $tomorrow = Carbon::create()->addDay();
         $rules = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',

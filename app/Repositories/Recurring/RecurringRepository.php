@@ -193,122 +193,34 @@ class RecurringRepository implements RecurringRepositoryInterface
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
-        $return  = [];
-        $mutator = clone $start;
+        $occurrences = [];
+        $mutator     = clone $start;
         $mutator->startOfDay();
-        $skipMod  = $repetition->repetition_skip + 1;
-        $attempts = 0;
+        $skipMod = $repetition->repetition_skip + 1;
         Log::debug(sprintf('Calculating occurrences for rep type "%s"', $repetition->repetition_type));
         Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-        switch ($repetition->repetition_type) {
-            default:
-                throw new FireflyException(
-                    sprintf('Cannot calculate occurrences for recurring transaction repetition type "%s"', $repetition->repetition_type)
-                );
-            case 'daily':
-                Log::debug('Rep is daily. Start of loop.');
-                while ($mutator <= $end) {
-                    Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-                    if (0 === $attempts % $skipMod) {
-                        Log::debug(sprintf('Attempts modulo skipmod is zero, include %s', $mutator->format('Y-m-d')));
-                        $return[] = clone $mutator;
-                    }
-                    $mutator->addDay();
-                    $attempts++;
-                }
-                break;
-            case 'weekly':
-                Log::debug('Rep is weekly.');
-                // monday = 1
-                // sunday = 7
-                $dayOfWeek = (int)$repetition->repetition_moment;
-                Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $mutator->dayOfWeekIso));
-                if ($mutator->dayOfWeekIso > $dayOfWeek) {
-                    // day has already passed this week, add one week:
-                    $mutator->addWeek();
-                    Log::debug(sprintf('Jump to next week, so mutator is now: %s', $mutator->format('Y-m-d')));
-                }
-                // today is wednesday (3), expected is friday (5): add two days.
-                // today is friday (5), expected is monday (1), subtract four days.
-                Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-                $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
-                $mutator->addDays($dayDifference);
-                Log::debug(sprintf('Mutator is now: %s', $mutator->format('Y-m-d')));
-                while ($mutator <= $end) {
-                    if (0 === $attempts % $skipMod && $start->lte($mutator) && $end->gte($mutator)) {
-                        Log::debug('Date is in range of start+end, add to set.');
-                        $return[] = clone $mutator;
-                    }
-                    $attempts++;
-                    $mutator->addWeek();
-                    Log::debug(sprintf('Mutator is now (end of loop): %s', $mutator->format('Y-m-d')));
-                }
-                break;
-            case 'monthly':
-                $dayOfMonth = (int)$repetition->repetition_moment;
-                Log::debug(sprintf('Day of month in repetition is %d', $dayOfMonth));
-                Log::debug(sprintf('Start is %s.', $start->format('Y-m-d')));
-                Log::debug(sprintf('End is %s.', $end->format('Y-m-d')));
-                if ($mutator->day > $dayOfMonth) {
-                    Log::debug('Add a month.');
-                    // day has passed already, add a month.
-                    $mutator->addMonth();
-                }
-                Log::debug(sprintf('Start is now %s.', $mutator->format('Y-m-d')));
-                Log::debug('Start loop.');
-                while ($mutator < $end) {
-                    Log::debug(sprintf('Mutator is now %s.', $mutator->format('Y-m-d')));
-                    $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
-                    Log::debug(sprintf('DoM corrected is %d', $domCorrected));
-                    $mutator->day = $domCorrected;
-                    Log::debug(sprintf('Mutator is now %s.', $mutator->format('Y-m-d')));
-                    Log::debug(sprintf('$attempts %% $skipMod === 0 is %s', var_export(0 === $attempts % $skipMod, true)));
-                    Log::debug(sprintf('$start->lte($mutator) is %s', var_export($start->lte($mutator), true)));
-                    Log::debug(sprintf('$end->gte($mutator) is %s', var_export($end->gte($mutator), true)));
-                    if (0 === $attempts % $skipMod && $start->lte($mutator) && $end->gte($mutator)) {
-                        Log::debug(sprintf('ADD %s to return!', $mutator->format('Y-m-d')));
-                        $return[] = clone $mutator;
-                    }
-                    $attempts++;
-                    $mutator->endOfMonth()->startOfDay()->addDay();
-                }
-                break;
-            case 'ndom':
-                $mutator->startOfMonth();
-                // this feels a bit like a cop out but why reinvent the wheel?
-                $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
-                $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
-                $parts      = explode(',', $repetition->repetition_moment);
-                while ($mutator <= $end) {
-                    $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
-                    $newCarbon = new Carbon($string);
-                    $return[]  = clone $newCarbon;
-                    $mutator->endOfMonth()->addDay();
-                }
-                break;
-            case 'yearly':
-                $date       = new Carbon($repetition->repetition_moment);
-                $date->year = $mutator->year;
-                if ($mutator > $date) {
-                    $date->addYear();
 
-                }
-
-                // is $date between $start and $end?
-                $obj   = clone $date;
-                $count = 0;
-                while ($obj <= $end && $obj >= $mutator && $count < 10) {
-
-                    $return[] = clone $obj;
-                    $obj->addYears(1);
-                    $count++;
-                }
-                break;
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getDailyInRange($mutator, $end, $skipMod);
         }
-        // filter out all the weekend days:
-        $return = $this->filterWeekends($repetition, $return);
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getWeeklyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getMonthlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getNdomInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getYearlyInRange($mutator, $end, $skipMod, $repetition->repetition_moment);
+        }
 
-        return $return;
+
+        // filter out all the weekend days:
+        $occurrences = $this->filterWeekends($repetition, $occurrences);
+
+        return $occurrences;
     }
 
     /**
@@ -399,112 +311,31 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param int                  $count
      *
      * @return array
-     * @throws FireflyException
      */
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
-        $return   = [];
-        $mutator  = clone $date;
-        $skipMod  = $repetition->repetition_skip + 1;
-        $total    = 0;
-        $attempts = 0;
-        switch ($repetition->repetition_type) {
-            default:
-                throw new FireflyException(
-                    sprintf('Cannot calculate occurrences for recurring transaction repetition type "%s"', $repetition->repetition_type)
-                );
-            case 'daily':
-                while ($total < $count) {
-                    $mutator->addDay();
-                    if (0 === $attempts % $skipMod) {
-                        $return[] = clone $mutator;
-                        $total++;
-                    }
-                    $attempts++;
-                }
-                break;
-            case 'weekly':
-                // monday = 1
-                // sunday = 7
-                $mutator->addDay(); // always assume today has passed.
-                $dayOfWeek = (int)$repetition->repetition_moment;
-                if ($mutator->dayOfWeekIso > $dayOfWeek) {
-                    // day has already passed this week, add one week:
-                    $mutator->addWeek();
-                }
-                // today is wednesday (3), expected is friday (5): add two days.
-                // today is friday (5), expected is monday (1), subtract four days.
-                $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
-                $mutator->addDays($dayDifference);
-
-                while ($total < $count) {
-                    if (0 === $attempts % $skipMod) {
-                        $return[] = clone $mutator;
-                        $total++;
-                    }
-                    $attempts++;
-                    $mutator->addWeek();
-                }
-                break;
-            case 'monthly':
-                $mutator->addDay(); // always assume today has passed.
-                $dayOfMonth = (int)$repetition->repetition_moment;
-                if ($mutator->day > $dayOfMonth) {
-                    // day has passed already, add a month.
-                    $mutator->addMonth();
-                }
-
-                while ($total < $count) {
-                    $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
-                    $mutator->day = $domCorrected;
-                    if (0 === $attempts % $skipMod) {
-                        $return[] = clone $mutator;
-                        $total++;
-                    }
-                    $attempts++;
-                    $mutator->endOfMonth()->addDay();
-                }
-                break;
-            case 'ndom':
-                $mutator->addDay(); // always assume today has passed.
-                $mutator->startOfMonth();
-                // this feels a bit like a cop out but why reinvent the wheel?
-                $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
-                $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
-                $parts      = explode(',', $repetition->repetition_moment);
-
-                while ($total < $count) {
-                    $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
-                    $newCarbon = new Carbon($string);
-                    if (0 === $attempts % $skipMod) {
-                        $return[] = clone $newCarbon;
-                        $total++;
-                    }
-                    $attempts++;
-                    $mutator->endOfMonth()->addDay();
-                }
-                break;
-            case 'yearly':
-                $date       = new Carbon($repetition->repetition_moment);
-                $date->year = $mutator->year;
-                if ($mutator > $date) {
-                    $date->addYear();
-                }
-                $obj = clone $date;
-                while ($total < $count) {
-                    if (0 === $attempts % $skipMod) {
-                        $return[] = clone $obj;
-                        $total++;
-                    }
-                    $obj->addYears(1);
-                    $attempts++;
-                }
-                break;
+        $skipMod     = $repetition->repetition_skip + 1;
+        $occurrences = [];
+        if ('daily' === $repetition->repetition_type) {
+            $occurrences = $this->getXDailyOccurrences($date, $count, $skipMod);
         }
-        // filter out all the weekend days:
-        $return = $this->filterWeekends($repetition, $return);
+        if ('weekly' === $repetition->repetition_type) {
+            $occurrences = $this->getXWeeklyOccurrences($date, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            $occurrences = $this->getXMonthlyOccurrences($date, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $occurrences = $this->getXNDomOccurrences($date, $count, $skipMod, $repetition->repetition_moment);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            $occurrences = $this->getXYearlyOccurrences($date, $count, $skipMod, $repetition->repetition_moment);
+        }
 
-        return $return;
+        // filter out all the weekend days:
+        $occurrences = $this->filterWeekends($repetition, $occurrences);
+
+        return $occurrences;
     }
 
     /**
@@ -545,8 +376,7 @@ class RecurringRepository implements RecurringRepositoryInterface
                 break;
             case 'yearly':
                 //
-                $today = new Carbon;
-                $today->endOfYear();
+                $today       = Carbon::create()->endOfYear();
                 $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
                 $diffInYears = $today->diffInYears($repDate);
                 $repDate->addYears($diffInYears); // technically not necessary.
@@ -657,5 +487,379 @@ class RecurringRepository implements RecurringRepositoryInterface
         Log::debug(sprintf('Count after filtering: %d', \count($return)));
 
         return $return;
+    }
+
+    /**
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     *
+     * @return array
+     */
+    private function getDailyInRange(Carbon $start, Carbon $end, int $skipMod): array
+    {
+        $return   = [];
+        $attempts = 0;
+        Log::debug('Rep is daily. Start of loop.');
+        while ($start <= $end) {
+            Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+            if (0 === $attempts % $skipMod) {
+                Log::debug(sprintf('Attempts modulo skipmod is zero, include %s', $start->format('Y-m-d')));
+                $return[] = clone $start;
+            }
+            $start->addDay();
+            $attempts++;
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getMonthlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
+    {
+        $return     = [];
+        $attempts   = 0;
+        $dayOfMonth = (int)$moment;
+        Log::debug(sprintf('Day of month in repetition is %d', $dayOfMonth));
+        Log::debug(sprintf('Start is %s.', $start->format('Y-m-d')));
+        Log::debug(sprintf('End is %s.', $end->format('Y-m-d')));
+        if ($start->day > $dayOfMonth) {
+            Log::debug('Add a month.');
+            // day has passed already, add a month.
+            $start->addMonth();
+        }
+        Log::debug(sprintf('Start is now %s.', $start->format('Y-m-d')));
+        Log::debug('Start loop.');
+        while ($start < $end) {
+            Log::debug(sprintf('Mutator is now %s.', $start->format('Y-m-d')));
+            $domCorrected = min($dayOfMonth, $start->daysInMonth);
+            Log::debug(sprintf('DoM corrected is %d', $domCorrected));
+            $start->day = $domCorrected;
+            Log::debug(sprintf('Mutator is now %s.', $start->format('Y-m-d')));
+            Log::debug(sprintf('$attempts %% $skipMod === 0 is %s', var_export(0 === $attempts % $skipMod, true)));
+            Log::debug(sprintf('$start->lte($mutator) is %s', var_export($start->lte($start), true)));
+            Log::debug(sprintf('$end->gte($mutator) is %s', var_export($end->gte($start), true)));
+            if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
+                Log::debug(sprintf('ADD %s to return!', $start->format('Y-m-d')));
+                $return[] = clone $start;
+            }
+            $attempts++;
+            $start->endOfMonth()->startOfDay()->addDay();
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getNdomInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
+    {
+        $return   = [];
+        $attempts = 0;
+        $start->startOfMonth();
+        // this feels a bit like a cop out but why reinvent the wheel?
+        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
+        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
+        $parts      = explode(',', $moment);
+        while ($start <= $end) {
+            $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $start->format('F'), $start->format('Y'));
+            $newCarbon = new Carbon($string);
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $newCarbon;
+            }
+            $attempts++;
+            $start->endOfMonth()->addDay();
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getWeeklyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
+    {
+        $return   = [];
+        $attempts = 0;
+        Log::debug('Rep is weekly.');
+        // monday = 1
+        // sunday = 7
+        $dayOfWeek = (int)$moment;
+        Log::debug(sprintf('DoW in repetition is %d, in mutator is %d', $dayOfWeek, $start->dayOfWeekIso));
+        if ($start->dayOfWeekIso > $dayOfWeek) {
+            // day has already passed this week, add one week:
+            $start->addWeek();
+            Log::debug(sprintf('Jump to next week, so mutator is now: %s', $start->format('Y-m-d')));
+        }
+        // today is wednesday (3), expected is friday (5): add two days.
+        // today is friday (5), expected is monday (1), subtract four days.
+        Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+        $dayDifference = $dayOfWeek - $start->dayOfWeekIso;
+        $start->addDays($dayDifference);
+        Log::debug(sprintf('Mutator is now: %s', $start->format('Y-m-d')));
+        while ($start <= $end) {
+            if (0 === $attempts % $skipMod && $start->lte($start) && $end->gte($start)) {
+                Log::debug('Date is in range of start+end, add to set.');
+                $return[] = clone $start;
+            }
+            $attempts++;
+            $start->addWeek();
+            Log::debug(sprintf('Mutator is now (end of loop): %s', $start->format('Y-m-d')));
+        }
+
+        return $return;
+    }
+
+    /**
+     * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
+     * over $skipMod -1 recurrences.
+     *
+     * @param Carbon $date
+     * @param int    $count
+     * @param int    $skipMod
+     *
+     * @return array
+     */
+    private function getXDailyOccurrences(Carbon $date, int $count, int $skipMod): array
+    {
+        $return   = [];
+        $mutator  = clone $date;
+        $total    = 0;
+        $attempts = 0;
+        while ($total < $count) {
+            $mutator->addDay();
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $mutator;
+                $total++;
+            }
+            $attempts++;
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
+     * over $skipMod -1 recurrences.
+     *
+     * @param Carbon $date
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getXMonthlyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
+    {
+        $return   = [];
+        $mutator  = clone $date;
+        $total    = 0;
+        $attempts = 0;
+        $mutator->addDay(); // always assume today has passed.
+        $dayOfMonth = (int)$moment;
+        if ($mutator->day > $dayOfMonth) {
+            // day has passed already, add a month.
+            $mutator->addMonth();
+        }
+
+        while ($total < $count) {
+            $domCorrected = min($dayOfMonth, $mutator->daysInMonth);
+            $mutator->day = $domCorrected;
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $mutator;
+                $total++;
+            }
+            $attempts++;
+            $mutator->endOfMonth()->addDay();
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
+     * over $skipMod -1 recurrences.
+     *
+     * @param Carbon $date
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getXNDomOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
+    {
+        $return   = [];
+        $total    = 0;
+        $attempts = 0;
+        $mutator  = clone $date;
+        $mutator->addDay(); // always assume today has passed.
+        $mutator->startOfMonth();
+        // this feels a bit like a cop out but why reinvent the wheel?
+        $counters   = [1 => 'first', 2 => 'second', 3 => 'third', 4 => 'fourth', 5 => 'fifth',];
+        $daysOfWeek = [1 => 'Monday', 2 => 'Tuesday', 3 => 'Wednesday', 4 => 'Thursday', 5 => 'Friday', 6 => 'Saturday', 7 => 'Sunday',];
+        $parts      = explode(',', $moment);
+
+        while ($total < $count) {
+            $string    = sprintf('%s %s of %s %s', $counters[$parts[0]], $daysOfWeek[$parts[1]], $mutator->format('F'), $mutator->format('Y'));
+            $newCarbon = new Carbon($string);
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $newCarbon;
+                $total++;
+            }
+            $attempts++;
+            $mutator->endOfMonth()->addDay();
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
+     * over $skipMod -1 recurrences.
+     *
+     * @param Carbon $date
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getXWeeklyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
+    {
+        $return   = [];
+        $total    = 0;
+        $attempts = 0;
+        $mutator  = clone $date;
+        // monday = 1
+        // sunday = 7
+        $mutator->addDay(); // always assume today has passed.
+        $dayOfWeek = (int)$moment;
+        if ($mutator->dayOfWeekIso > $dayOfWeek) {
+            // day has already passed this week, add one week:
+            $mutator->addWeek();
+        }
+        // today is wednesday (3), expected is friday (5): add two days.
+        // today is friday (5), expected is monday (1), subtract four days.
+        $dayDifference = $dayOfWeek - $mutator->dayOfWeekIso;
+        $mutator->addDays($dayDifference);
+
+        while ($total < $count) {
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $mutator;
+                $total++;
+            }
+            $attempts++;
+            $mutator->addWeek();
+        }
+
+        return $return;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
+     * over $skipMod -1 recurrences.
+     *
+     * @param Carbon $date
+     * @param int    $count
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getXYearlyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
+    {
+        $return     = [];
+        $mutator    = clone $date;
+        $total      = 0;
+        $attempts   = 0;
+        $date       = new Carbon($moment);
+        $date->year = $mutator->year;
+        if ($mutator > $date) {
+            $date->addYear();
+        }
+        $obj = clone $date;
+        while ($total < $count) {
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $obj;
+                $total++;
+            }
+            $obj->addYears(1);
+            $attempts++;
+        }
+
+        return $return;
+
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     * @param int    $skipMod
+     * @param string $moment
+     *
+     * @return array
+     */
+    private function getYearlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
+    {
+        $attempts   = 0;
+        $date       = new Carbon($moment);
+        $date->year = $start->year;
+        $return     = [];
+        if ($start > $date) {
+            $date->addYear();
+
+        }
+
+        // is $date between $start and $end?
+        $obj   = clone $date;
+        $count = 0;
+        while ($obj <= $end && $obj >= $start && $count < 10) {
+            if (0 === $attempts % $skipMod) {
+                $return[] = clone $obj;
+            }
+            $obj->addYears(1);
+            $count++;
+            $attempts++;
+        }
+
+        return $return;
+
     }
 }

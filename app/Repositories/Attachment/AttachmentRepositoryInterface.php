@@ -49,11 +49,11 @@ interface AttachmentRepositoryInterface
     public function exists(Attachment $attachment): bool;
 
     /**
-     * @param int $id
-     *
+     * @param int $attachmentId
+     * @deprecated
      * @return Attachment
      */
-    public function findWithoutUser(int $id): Attachment;
+    public function findWithoutUser(int $attachmentId): Attachment;
 
     /**
      * @return Collection

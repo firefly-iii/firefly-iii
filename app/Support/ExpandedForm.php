@@ -49,12 +49,14 @@ class ExpandedForm
 {
     /**
      * @param string $name
-     * @param null   $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return string
      */
-    public function activeAssetAccountList(string $name, $value = null, array $options = []): string
+    public function activeAssetAccountList(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -87,26 +89,28 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function amount(string $name, $value = null, array $options = []): string
+    public function amount(string $name, $value = null, array $options = null): string
     {
         return $this->currencyField($name, 'amount', $value, $options);
     }
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function amountNoCurrency(string $name, $value = null, array $options = []): string
+    public function amountNoCurrency(string $name, $value = null, array $options = null): string
     {
+        $options         = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -126,24 +130,25 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function amountSmall(string $name, $value = null, array $options = []): string
+    public function amountSmall(string $name, $value = null, array $options = null): string
     {
         return $this->currencyField($name, 'amount-small', $value, $options);
     }
 
     /**
      * @param string $name
-     * @param null   $options
+     * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function assetAccountCheckList(string $name, $options = null): string
+    public function assetAccountCheckList(string $name, array $options = null): string
     {
         $options  = $options ?? [];
         $label    = $this->label($name, $options);
@@ -175,13 +180,14 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      */
-    public function assetAccountList(string $name, $value = null, array $options = []): string
+    public function assetAccountList(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -195,9 +201,9 @@ class ExpandedForm
         /** @var Account $account */
         foreach ($assetAccounts as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$repository->getMetaValue($account,'currency_id');
+            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $repository->getMetaValue($account,'accountRole');
+            $role       = $repository->getMetaValue($account, 'accountRole');
             if (0 === \strlen($role)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -215,27 +221,31 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function balance(string $name, $value = null, array $options = []): string
+    public function balance(string $name, $value = null, array $options = null): string
     {
         return $this->currencyField($name, 'balance', $value, $options);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param int    $value
-     * @param null   $checked
+     * @param mixed  $checked
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function checkbox(string $name, $value = 1, $checked = null, $options = []): string
+    public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
     {
+        $options            = $options ?? [];
+        $value              = $value ?? 1;
         $options['checked'] = true === $checked ? true : false;
 
         if (Session::has('preFilled')) {
@@ -257,13 +267,14 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      */
-    public function currencyList(string $name, $value = null, array $options = []): string
+    public function currencyList(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
@@ -274,20 +285,20 @@ class ExpandedForm
         foreach ($list as $currency) {
             $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
         }
-        $res = $this->select($name, $array, $value, $options);
 
-        return $res;
+        return $this->select($name, $array, $value, $options);
     }
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      */
-    public function currencyListEmpty(string $name, $value = null, array $options = []): string
+    public function currencyListEmpty(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
@@ -307,13 +318,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function date(string $name, $value = null, array $options = []): string
+    public function date(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -329,9 +342,11 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function file(string $name, array $options = []): string
+    public function file(string $name, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -342,13 +357,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function integer(string $name, $value = null, array $options = []): string
+    public function integer(string $name, $value = null, array $options = null): string
     {
+        $options         = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -361,13 +378,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function location(string $name, $value = null, array $options = []): string
+    public function location(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -430,16 +449,21 @@ class ExpandedForm
         return $selectList;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param string $name
      * @param array  $list
-     * @param null   $selected
+     * @param mixed  $selected
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function multiRadio(string $name, array $list = [], $selected = null, array $options = []): string
+    public function multiRadio(string $name, array $list = null, $selected = null, array $options = null): string
     {
+        $options  = $options ?? [];
+        $list     = $list ?? [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -453,14 +477,16 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
-    public function nonSelectableAmount(string $name, $value = null, array $options = []): string
+    public function nonSelectableAmount(string $name, $value = null, array $options = null): string
     {
+        $options          = $options ?? [];
         $label            = $this->label($name, $options);
         $options          = $this->expandOptionArray($name, $label, $options);
         $classes          = $this->getHolderClasses($name);
@@ -481,14 +507,16 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
-    public function nonSelectableBalance(string $name, $value = null, array $options = []): string
+    public function nonSelectableBalance(string $name, $value = null, array $options = null): string
     {
+        $options          = $options ?? [];
         $label            = $this->label($name, $options);
         $options          = $this->expandOptionArray($name, $label, $options);
         $classes          = $this->getHolderClasses($name);
@@ -510,13 +538,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function number(string $name, $value = null, array $options = []): string
+    public function number(string $name, $value = null, array $options = null): string
     {
+        $options         = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -534,12 +564,11 @@ class ExpandedForm
      * @param string $name
      *
      * @return string
+     * @throws \Throwable
      */
     public function optionsList(string $type, string $name): string
     {
-        $html = view('form.options', compact('type', 'name'))->render();
-
-        return $html;
+        return view('form.options', compact('type', 'name'))->render();
     }
 
     /**
@@ -547,9 +576,11 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
     public function password(string $name, array $options = null): string
     {
+
         $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
@@ -561,7 +592,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
@@ -586,13 +617,14 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      */
-    public function ruleGroupList(string $name, $value = null, array $options = []): string
+    public function ruleGroupList(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);
 
@@ -609,12 +641,12 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
-     * @param null   $options
+     * @param mixed   $value
+     * @param array   $options
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function ruleGroupListWithEmpty(string $name, $value = null, $options = null)
+    public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null)
     {
         $options          = $options ?? [];
         $options['class'] = 'form-control';
@@ -636,16 +668,20 @@ class ExpandedForm
         return Form::select($name, $array, $value, $options);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param array  $list
-     * @param null   $selected
+     * @param mixed   $selected
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function select(string $name, array $list = [], $selected = null, array $options = []): string
+    public function select(string $name, array $list = null, $selected = null, array $options = null): string
     {
+        $list     = $list ?? [];
+        $options  = $options ?? [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
@@ -658,13 +694,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function staticText(string $name, $value, array $options = []): string
+    public function staticText(string $name, $value, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -675,13 +713,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function tags(string $name, $value = null, array $options = []): string
+    public function tags(string $name, $value = null, array $options = null): string
     {
+        $options              = $options ?? [];
         $label                = $this->label($name, $options);
         $options              = $this->expandOptionArray($name, $label, $options);
         $classes              = $this->getHolderClasses($name);
@@ -694,13 +734,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function text(string $name, $value = null, array $options = []): string
+    public function text(string $name, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
@@ -712,13 +754,15 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
+     * @throws \Throwable
      */
-    public function textarea(string $name, $value = null, array $options = []): string
+    public function textarea(string $name, $value = null, array $options = null): string
     {
+        $options         = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -736,8 +780,9 @@ class ExpandedForm
      *
      * @return array
      */
-    protected function expandOptionArray(string $name, $label, array $options): array
+    protected function expandOptionArray(string $name, $label, array $options = null): array
     {
+        $options                 = $options ?? [];
         $name                    = str_replace('[]', '', $name);
         $options['class']        = 'form-control';
         $options['id']           = 'ffInput_' . $name;
@@ -808,18 +853,21 @@ class ExpandedForm
         return (string)trans('form.' . $name);
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param string $view
-     * @param null   $value
+     * @param mixed  $value
      * @param array  $options
      *
      * @return string
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \Throwable
      */
-    private function currencyField(string $name, string $view, $value = null, array $options = []): string
+    private function currencyField(string $name, string $view, $value = null, array $options = null): string
     {
+        $options = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);

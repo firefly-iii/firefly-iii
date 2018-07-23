@@ -81,6 +81,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @return ExportJob
+     * @deprecated
      */
     public function create(): ExportJob
     {
@@ -120,6 +121,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @param string $key
+     *
      * @deprecated
      * @return ExportJob
      */

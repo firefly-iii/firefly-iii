@@ -85,6 +85,7 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     /**
      * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
      */
     public function cleanupBudgets(): bool
     {
@@ -123,6 +124,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
     {
@@ -138,7 +141,6 @@ class BudgetRepository implements BudgetRepositoryInterface
             $return[$budgetId] = [
                 'spent'      => $this->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
                 'budgeted'   => '0',
-                'currentRep' => false,
             ];
             $budgetLimits      = $this->getBudgetLimits($budget, $start, $end);
             $otherLimits       = new Collection;
@@ -244,12 +246,11 @@ class BudgetRepository implements BudgetRepositoryInterface
      * Will cache result.
      *
      * @param Budget $budget
-     *
      * @return Carbon
      */
-    public function firstUseDate(Budget $budget): Carbon
+    public function firstUseDate(Budget $budget): ?Carbon
     {
-        $oldest  = Carbon::create()->startOfYear();
+        $oldest  = null;
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
         if (null !== $journal) {
             $oldest = $journal->date < $oldest ? $journal->date : $oldest;

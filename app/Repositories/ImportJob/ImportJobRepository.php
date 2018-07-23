@@ -27,14 +27,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournalMeta;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Illuminate\Support\Str;
 use Log;
-use SplFileObject;
 use Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -118,6 +115,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param string $key
      *
      * @return ImportJob
+     * @deprecated
      */
     public function findByKey(string $key): ImportJob
     {

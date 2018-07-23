@@ -80,13 +80,6 @@ class VersionCheckEventHandler
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
 
-        // have actual permission?
-        if ($permission->data === -1) {
-            // never asked before.
-            //session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
-            //return;
-        }
-
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
         $resultString = $this->parseResult($latestRelease, $versionCheck);

@@ -164,7 +164,7 @@ interface AccountRepositoryInterface
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
-     *
+     * @deprecated
      * @return TransactionJournal
      */
     public function oldestJournal(Account $account): TransactionJournal;

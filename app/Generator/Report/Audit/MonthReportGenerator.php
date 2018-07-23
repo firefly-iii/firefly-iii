@@ -51,7 +51,8 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
-
+     * @throws FireflyException
+     * @throws \Throwable
      */
     public function generate(): string
     {

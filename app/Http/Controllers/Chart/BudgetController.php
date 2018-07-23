@@ -83,7 +83,8 @@ class BudgetController extends Controller
      */
     public function budget(Budget $budget): JsonResponse
     {
-        $start = $this->repository->firstUseDate($budget);
+        /** @var Carbon $start */
+        $start = $this->repository->firstUseDate($budget) ?? session('start', new Carbon);
         /** @var Carbon $end */
         $end   = session('end', new Carbon);
         $cache = new CacheProperties();

@@ -56,6 +56,7 @@ interface ImportJobRepositoryInterface
      * @param string $key
      *
      * @return ImportJob
+     * @deprecated
      */
     public function findByKey(string $key): ImportJob;
 

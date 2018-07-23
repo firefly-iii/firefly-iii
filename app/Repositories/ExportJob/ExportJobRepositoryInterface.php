@@ -45,6 +45,7 @@ interface ExportJobRepositoryInterface
 
     /**
      * @return ExportJob
+     * @deprecated
      */
     public function create(): ExportJob;
 
@@ -57,6 +58,7 @@ interface ExportJobRepositoryInterface
 
     /**
      * @param string $key
+     *
      * @deprecated
      * @return ExportJob
      */

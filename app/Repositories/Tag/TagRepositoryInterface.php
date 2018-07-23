@@ -24,7 +24,6 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
@@ -68,6 +67,7 @@ interface TagRepositoryInterface
      * @param string $tag
      *
      * @return Tag
+     * @deprecated
      */
     public function findByTag(string $tag): Tag;
 
@@ -82,6 +82,7 @@ interface TagRepositoryInterface
      * @param Tag $tag
      *
      * @return Carbon
+     * @deprecated
      */
     public function firstUseDate(Tag $tag): Carbon;
 
@@ -96,6 +97,7 @@ interface TagRepositoryInterface
      * @param Tag $tag
      *
      * @return Carbon
+     * @deprecated
      */
     public function lastUseDate(Tag $tag): Carbon;
 

@@ -124,8 +124,7 @@ class Range
         // ignore preference. set the range to be the current month:
         if (!app('session')->has('start') && !app('session')->has('end')) {
             $viewRange = app('preferences')->get('viewRange', '1M')->data;
-            $start     = new Carbon;
-            $start     = app('navigation')->updateStartDate($viewRange, $start);
+            $start     = app('navigation')->updateStartDate($viewRange, new Carbon);
             $end       = app('navigation')->updateEndDate($viewRange, $start);
 
             app('session')->put('start', $start);

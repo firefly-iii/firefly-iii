@@ -87,10 +87,7 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getMetaField')->andReturnNull();
 
 
-        $note       = new Note();
-        $note->id   = 5;
-        $note->text = 'I see you...';
-        $journalRepos->shouldReceive('getNote')->andReturn($note)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('I see you...')->once();
 
 
         $this->be($this->user());

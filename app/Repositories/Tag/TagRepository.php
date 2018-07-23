@@ -27,7 +27,6 @@ use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -101,6 +100,7 @@ class TagRepository implements TagRepositoryInterface
      * @param string $tag
      *
      * @return Tag
+     * @deprecated
      */
     public function findByTag(string $tag): Tag
     {
@@ -129,6 +129,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Tag $tag
      *
      * @return Carbon
+     * @deprecated
      */
     public function firstUseDate(Tag $tag): Carbon
     {
@@ -160,6 +161,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Tag $tag
      *
      * @return Carbon
+     * @deprecated
      */
     public function lastUseDate(Tag $tag): Carbon
     {
@@ -306,9 +308,7 @@ class TagRepository implements TagRepositoryInterface
         }
         if (null !== $year) {
             Log::debug(sprintf('Get tags with year %s.', $year));
-            $start = $year . '-01-01 00:00:00';
-            $end   = $year . '-12-31 23:59:59';
-            $tagQuery->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
+            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
 
         $result = $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);

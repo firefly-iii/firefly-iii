@@ -105,7 +105,7 @@ interface BudgetRepositoryInterface
      *
      * @return Carbon
      */
-    public function firstUseDate(Budget $budget): Carbon;
+    public function firstUseDate(Budget $budget): ?Carbon;
 
     /**
      * @return Collection
