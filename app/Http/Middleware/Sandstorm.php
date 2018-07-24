@@ -59,12 +59,19 @@ class Sandstorm
             /** @var UserRepositoryInterface $repository */
             $repository = app(UserRepositoryInterface::class);
             $userId     = (string)$request->header('X-Sandstorm-User-Id');
+
             // catch anonymous:
             $userId = '' === $userId ? 'anonymous' : $userId;
             $email  = $userId . '@firefly';
-            $user   = $repository->findByEmail($email) ?? $this->createUser($email);
-            Log::debug(sprintf('Sandstorm user email is "%s"', $email));
 
+            // always grab the first user in the Sandstorm DB:
+            $user = $repository->findByEmail($email) ?? $repository->first();
+            // or create somebody if necessary.
+            $user = $user ?? $this->createUser($email);
+
+            // then log this user in:
+            Log::info(sprintf('Sandstorm user ID is "%s"', $userId));
+            Log::info(sprintf('Access to database under "%s"', $email));
             Auth::guard($guard)->login($user);
             $repository->attachRole($user, 'owner');
             app('view')->share('SANDSTORM_ANON', false);

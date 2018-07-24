@@ -205,7 +205,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function first(): ?User
     {
-        return User::first();
+        return User::orderBy('id', 'ASC')->first();
     }
 
     /**
