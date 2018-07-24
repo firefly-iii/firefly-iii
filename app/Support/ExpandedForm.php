@@ -40,6 +40,7 @@ use Illuminate\Support\MessageBag;
 use Log;
 use RuntimeException;
 use Session;
+use Throwable;
 
 /**
  * Class ExpandedForm.
@@ -56,7 +57,6 @@ class ExpandedForm
      */
     public function activeAssetAccountList(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -93,7 +93,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function amount(string $name, $value = null, array $options = null): string
     {
@@ -106,7 +105,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function amountNoCurrency(string $name, $value = null, array $options = null): string
     {
@@ -122,8 +121,12 @@ class ExpandedForm
         if (null !== $value && '' !== $value) {
             $value = round($value, 8);
         }
-
-        $html = view('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.amount-no-currency', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render amountNoCurrency(): %s', $e->getMessage()));
+            $html = 'Could not render amountNoCurrency.';
+        }
 
         return $html;
     }
@@ -146,7 +149,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function assetAccountCheckList(string $name, array $options = null): string
     {
@@ -173,7 +176,12 @@ class ExpandedForm
         }
 
         unset($options['class']);
-        $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+        try {
+            $html = view('form.assetAccountCheckList', compact('classes', 'selected', 'name', 'label', 'options', 'grouped'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render assetAccountCheckList(): %s', $e->getMessage()));
+            $html = 'Could not render assetAccountCheckList.';
+        }
 
         return $html;
     }
@@ -187,7 +195,6 @@ class ExpandedForm
      */
     public function assetAccountList(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -203,8 +210,8 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $repository->getMetaValue($account, 'accountRole');
-            if (0 === \strlen($role)) {
+            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
             if (null === $currency) {
@@ -214,9 +221,8 @@ class ExpandedForm
             $key                         = (string)trans('firefly.opt_group_' . $role);
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
         }
-        $res = $this->select($name, $grouped, $value, $options);
 
-        return $res;
+        return $this->select($name, $grouped, $value, $options);
     }
 
     /**
@@ -225,7 +231,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function balance(string $name, $value = null, array $options = null): string
     {
@@ -240,7 +245,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function checkbox(string $name, int $value = null, $checked = null, array $options = null): string
     {
@@ -259,8 +264,12 @@ class ExpandedForm
         $value   = $this->fillFieldValue($name, $value);
 
         unset($options['placeholder'], $options['autocomplete'], $options['class']);
-
-        $html = view('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.checkbox', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render checkbox(): %s', $e->getMessage()));
+            $html = 'Could not render checkbox.';
+        }
 
         return $html;
     }
@@ -274,7 +283,6 @@ class ExpandedForm
      */
     public function currencyList(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
@@ -298,7 +306,6 @@ class ExpandedForm
      */
     public function currencyListEmpty(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
@@ -311,9 +318,8 @@ class ExpandedForm
         foreach ($list as $currency) {
             $array[$currency->id] = $currency->name . ' (' . $currency->symbol . ')';
         }
-        $res = $this->select($name, $array, $value, $options);
 
-        return $res;
+        return $this->select($name, $array, $value, $options);
     }
 
     /**
@@ -322,17 +328,21 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function date(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
         unset($options['placeholder']);
-        $html = view('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.date', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render date(): %s', $e->getMessage()));
+            $html = 'Could not render date.';
+        }
 
         return $html;
     }
@@ -342,7 +352,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function file(string $name, array $options = null): string
     {
@@ -350,7 +360,12 @@ class ExpandedForm
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $html    = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
+        try {
+            $html = view('form.file', compact('classes', 'name', 'label', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render file(): %s', $e->getMessage()));
+            $html = 'Could not render file.';
+        }
 
         return $html;
     }
@@ -361,7 +376,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function integer(string $name, $value = null, array $options = null): string
     {
@@ -371,7 +386,12 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = '1';
-        $html            = view('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.integer', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render integer(): %s', $e->getMessage()));
+            $html = 'Could not render integer.';
+        }
 
         return $html;
     }
@@ -382,7 +402,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function location(string $name, $value = null, array $options = null): string
     {
@@ -391,7 +411,12 @@ class ExpandedForm
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
-        $html    = view('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.location', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render location(): %s', $e->getMessage()));
+            $html = 'Could not render location.';
+        }
 
         return $html;
     }
@@ -458,11 +483,10 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function multiRadio(string $name, array $list = null, $selected = null, array $options = null): string
     {
-        $options  = $options ?? [];
         $list     = $list ?? [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
@@ -470,7 +494,12 @@ class ExpandedForm
         $selected = $this->fillFieldValue($name, $selected);
 
         unset($options['class']);
-        $html = view('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        try {
+            $html = view('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render multiRadio(): %s', $e->getMessage()));
+            $html = 'Could not render multiRadio.';
+        }
 
         return $html;
     }
@@ -482,11 +511,10 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
+     *
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = null): string
     {
-        $options          = $options ?? [];
         $label            = $this->label($name, $options);
         $options          = $this->expandOptionArray($name, $label, $options);
         $classes          = $this->getHolderClasses($name);
@@ -499,8 +527,12 @@ class ExpandedForm
         if (null !== $value && '' !== $value) {
             $value = round($value, $selectedCurrency->decimal_places);
         }
-
-        $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render nonSelectableAmount(): %s', $e->getMessage()));
+            $html = 'Could not render nonSelectableAmount.';
+        }
 
         return $html;
     }
@@ -512,11 +544,10 @@ class ExpandedForm
      *
      * @return string
      * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
+     *
      */
     public function nonSelectableBalance(string $name, $value = null, array $options = null): string
     {
-        $options          = $options ?? [];
         $label            = $this->label($name, $options);
         $options          = $this->expandOptionArray($name, $label, $options);
         $classes          = $this->getHolderClasses($name);
@@ -530,8 +561,12 @@ class ExpandedForm
             $decimals = $selectedCurrency->decimal_places ?? 2;
             $value    = round($value, $decimals);
         }
-
-        $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render nonSelectableBalance(): %s', $e->getMessage()));
+            $html = 'Could not render nonSelectableBalance.';
+        }
 
         return $html;
     }
@@ -542,19 +577,22 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function number(string $name, $value = null, array $options = null): string
     {
-        $options         = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['step'] = 'any';
         unset($options['placeholder']);
-
-        $html = view('form.number', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.number', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render number(): %s', $e->getMessage()));
+            $html = 'Could not render number.';
+        }
 
         return $html;
     }
@@ -564,11 +602,18 @@ class ExpandedForm
      * @param string $name
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function optionsList(string $type, string $name): string
     {
-        return view('form.options', compact('type', 'name'))->render();
+        try {
+            $html = view('form.options', compact('type', 'name'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            $html = 'Could not render optionsList.';
+        }
+
+        return $html;
     }
 
     /**
@@ -576,16 +621,20 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function password(string $name, array $options = null): string
     {
 
-        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $html    = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
+        try {
+            $html = view('form.password', compact('classes', 'name', 'label', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
+            $html = 'Could not render password.';
+        }
 
         return $html;
     }
@@ -599,7 +648,7 @@ class ExpandedForm
      */
     public function piggyBankList(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
+
         // make repositories
         /** @var PiggyBankRepositoryInterface $repository */
         $repository = app(PiggyBankRepositoryInterface::class);
@@ -624,7 +673,6 @@ class ExpandedForm
      */
     public function ruleGroupList(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         /** @var RuleGroupRepositoryInterface $groupRepos */
         $groupRepos = app(RuleGroupRepositoryInterface::class);
 
@@ -641,8 +689,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed   $value
-     * @param array   $options
+     * @param mixed  $value
+     * @param array  $options
      *
      * @return \Illuminate\Support\HtmlString
      */
@@ -672,22 +720,25 @@ class ExpandedForm
     /**
      * @param string $name
      * @param array  $list
-     * @param mixed   $selected
+     * @param mixed  $selected
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
      */
     public function select(string $name, array $list = null, $selected = null, array $options = null): string
     {
         $list     = $list ?? [];
-        $options  = $options ?? [];
         $label    = $this->label($name, $options);
         $options  = $this->expandOptionArray($name, $label, $options);
         $classes  = $this->getHolderClasses($name);
         $selected = $this->fillFieldValue($name, $selected);
         unset($options['autocomplete'], $options['placeholder']);
-        $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        try {
+            $html = view('form.select', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render select(): %s', $e->getMessage()));
+            $html = 'Could not render select.';
+        }
 
         return $html;
     }
@@ -698,15 +749,19 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function staticText(string $name, $value, array $options = null): string
     {
-        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
-        $html    = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.static', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render staticText(): %s', $e->getMessage()));
+            $html = 'Could not render staticText.';
+        }
 
         return $html;
     }
@@ -717,17 +772,21 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function tags(string $name, $value = null, array $options = null): string
     {
-        $options              = $options ?? [];
         $label                = $this->label($name, $options);
         $options              = $this->expandOptionArray($name, $label, $options);
         $classes              = $this->getHolderClasses($name);
         $value                = $this->fillFieldValue($name, $value);
         $options['data-role'] = 'tagsinput';
-        $html                 = view('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.tags', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render tags(): %s', $e->getMessage()));
+            $html = 'Could not render tags.';
+        }
 
         return $html;
     }
@@ -738,16 +797,20 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function text(string $name, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         $label   = $this->label($name, $options);
         $options = $this->expandOptionArray($name, $label, $options);
         $classes = $this->getHolderClasses($name);
         $value   = $this->fillFieldValue($name, $value);
-        $html    = view('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.text', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render text(): %s', $e->getMessage()));
+            $html = 'Could not render text.';
+        }
 
         return $html;
     }
@@ -758,17 +821,21 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \Throwable
+     *
      */
     public function textarea(string $name, $value = null, array $options = null): string
     {
-        $options         = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
-        $html            = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render textarea(): %s', $e->getMessage()));
+            $html = 'Could not render textarea.';
+        }
 
         return $html;
     }
@@ -793,8 +860,8 @@ class ExpandedForm
     }
 
     /**
-     * @param $name
-     * @param $value
+     * @param string $name
+     * @param        $value
      *
      * @return mixed
      */
@@ -843,8 +910,9 @@ class ExpandedForm
      *
      * @return mixed
      */
-    protected function label(string $name, array $options): string
+    protected function label(string $name, array $options = null): string
     {
+        $options = $options ?? [];
         if (isset($options['label'])) {
             return $options['label'];
         }
@@ -861,13 +929,9 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \Throwable
      */
     private function currencyField(string $name, string $view, $value = null, array $options = null): string
     {
-        $options = $options ?? [];
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -897,8 +961,12 @@ class ExpandedForm
         if (null !== $value && '' !== $value) {
             $value = round($value, $defaultCurrency->decimal_places);
         }
-
-        $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        try {
+            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+        }
 
         return $html;
     }

@@ -496,7 +496,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getNoteText(TransactionJournal $journal): ?string
     {
-        $note = $this->getNote($journal);
+        $note = $journal->notes()->first();
         if (null === $note) {
             return null;
         }

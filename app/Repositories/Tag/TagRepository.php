@@ -301,6 +301,7 @@ class TagRepository implements TagRepositoryInterface
                                    }
                                )
                                ->groupBy(['tags.id', 'tags.tag']);
+
         // add date range (or not):
         if (null === $year) {
             Log::debug('Get tags without a date.');
@@ -312,6 +313,8 @@ class TagRepository implements TagRepositoryInterface
         }
 
         $result = $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
+        var_dump($result->toArray());
+        exit;
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
