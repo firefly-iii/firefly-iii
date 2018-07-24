@@ -127,7 +127,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @return string
      *
      * @throws \Illuminate\Contracts\Encryption\DecryptException
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(Attachment $attachment): string
     {

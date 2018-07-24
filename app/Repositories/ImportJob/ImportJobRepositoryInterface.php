@@ -54,11 +54,9 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param string $key
-     *
-     * @return ImportJob
-     * @deprecated
+     * @return ImportJob|null
      */
-    public function findByKey(string $key): ImportJob;
+    public function findByKey(string $key): ?ImportJob;
 
     /**
      * Return all attachments for job.

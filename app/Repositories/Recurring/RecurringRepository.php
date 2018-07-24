@@ -187,7 +187,6 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param Carbon               $start
      * @param Carbon               $end
      *
-     * @throws FireflyException
      *
      * @return array
      */

@@ -86,7 +86,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
-            if (null === $existing->id) {
+            if (null === $existing) {
                 $importJob = ImportJob::create(
                     [
                         'user_id'         => $this->user->id,
@@ -114,15 +114,14 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     /**
      * @param string $key
      *
-     * @return ImportJob
-     * @deprecated
+     * @return ImportJob|null
      */
-    public function findByKey(string $key): ImportJob
+    public function findByKey(string $key): ?ImportJob
     {
         /** @var ImportJob $result */
         $result = $this->user->importJobs()->where('key', $key)->first(['import_jobs.*']);
         if (null === $result) {
-            return new ImportJob;
+            return null;
         }
 
         return $result;

@@ -371,10 +371,9 @@ class AccountRepository implements AccountRepositoryInterface
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
-     * @deprecated
-     * @return TransactionJournal
+     * @return TransactionJournal|null
      */
-    public function oldestJournal(Account $account): TransactionJournal
+    public function oldestJournal(Account $account): ?TransactionJournal
     {
         $first = $account->transactions()
                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
@@ -387,7 +386,7 @@ class AccountRepository implements AccountRepositoryInterface
             return TransactionJournal::find((int)$first->id);
         }
 
-        return new TransactionJournal();
+        return null;
     }
 
     /**
@@ -402,7 +401,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $result  = new Carbon;
         $journal = $this->oldestJournal($account);
-        if (null !== $journal->id) {
+        if (null !== $journal) {
             $result = $journal->date;
         }
 

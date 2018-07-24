@@ -58,11 +58,9 @@ interface ExportJobRepositoryInterface
 
     /**
      * @param string $key
-     *
-     * @deprecated
-     * @return ExportJob
+     * @return ExportJob|null
      */
-    public function findByKey(string $key): ExportJob;
+    public function findByKey(string $key): ?ExportJob;
 
     /**
      * @param ExportJob $job

@@ -89,7 +89,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
-            if (null === $existing->id) {
+            if (null === $existing) {
                 $exportJob = new ExportJob;
                 $exportJob->user()->associate($this->user);
                 $exportJob->key    = Str::random(12);
@@ -121,16 +121,14 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @param string $key
-     *
-     * @deprecated
-     * @return ExportJob
+     * @return ExportJob|null
      */
-    public function findByKey(string $key): ExportJob
+    public function findByKey(string $key): ?ExportJob
     {
         /** @var ExportJob $result */
         $result = $this->user->exportJobs()->where('key', $key)->first(['export_jobs.*']);
         if (null === $result) {
-            return new ExportJob;
+            return null;
         }
 
         return $result;
@@ -141,7 +139,6 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      *
      * @return string
      *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(ExportJob $job): string
     {
