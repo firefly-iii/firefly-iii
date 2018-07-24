@@ -209,13 +209,6 @@ opt/app/.env.sandstorm
 opt/app/.gitattributes
 opt/app/.htaccess
 opt/app/.sandstorm/.gitattributes
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/action_provision
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/action_set_name
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/creator_uid
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/id
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/index_uuid
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/private_key
-opt/app/.sandstorm/.vagrant/machines/default/virtualbox/synced_folders
 opt/app/.sandstorm/.vagrant/machines/default/virtualbox/vagrant_cwd
 opt/app/.sandstorm/Vagrantfile
 opt/app/.sandstorm/app-graphics/firefly-iii-128.png
@@ -450,6 +443,7 @@ opt/app/app/Http/Controllers/Json/ExchangeController.php
 opt/app/app/Http/Controllers/Json/FrontpageController.php
 opt/app/app/Http/Controllers/Json/IntroController.php
 opt/app/app/Http/Controllers/Json/ReconcileController.php
+opt/app/app/Http/Controllers/Json/RecurrenceController.php
 opt/app/app/Http/Controllers/JsonController.php
 opt/app/app/Http/Controllers/NewUserController.php
 opt/app/app/Http/Controllers/PiggyBankController.php
@@ -467,7 +461,11 @@ opt/app/app/Http/Controllers/Report/CategoryController.php
 opt/app/app/Http/Controllers/Report/ExpenseController.php
 opt/app/app/Http/Controllers/Report/OperationsController.php
 opt/app/app/Http/Controllers/ReportController.php
-opt/app/app/Http/Controllers/RuleController.php
+opt/app/app/Http/Controllers/Rule/CreateController.php
+opt/app/app/Http/Controllers/Rule/DeleteController.php
+opt/app/app/Http/Controllers/Rule/EditController.php
+opt/app/app/Http/Controllers/Rule/IndexController.php
+opt/app/app/Http/Controllers/Rule/SelectController.php
 opt/app/app/Http/Controllers/RuleGroupController.php
 opt/app/app/Http/Controllers/SearchController.php
 opt/app/app/Http/Controllers/System/InstallController.php
@@ -635,7 +633,6 @@ opt/app/app/Providers/ExportJobServiceProvider.php
 opt/app/app/Providers/FireflyServiceProvider.php
 opt/app/app/Providers/FireflySessionProvider.php
 opt/app/app/Providers/JournalServiceProvider.php
-opt/app/app/Providers/LogServiceProvider.php
 opt/app/app/Providers/PiggyBankServiceProvider.php
 opt/app/app/Providers/RecurringServiceProvider.php
 opt/app/app/Providers/RouteServiceProvider.php
@@ -648,7 +645,6 @@ opt/app/app/Repositories/Account/AccountRepository.php
 opt/app/app/Repositories/Account/AccountRepositoryInterface.php
 opt/app/app/Repositories/Account/AccountTasker.php
 opt/app/app/Repositories/Account/AccountTaskerInterface.php
-opt/app/app/Repositories/Account/FindAccountsTrait.php
 opt/app/app/Repositories/Attachment/AttachmentRepository.php
 opt/app/app/Repositories/Attachment/AttachmentRepositoryInterface.php
 opt/app/app/Repositories/Bill/BillRepository.php
@@ -677,8 +673,6 @@ opt/app/app/Repositories/RuleGroup/RuleGroupRepository.php
 opt/app/app/Repositories/RuleGroup/RuleGroupRepositoryInterface.php
 opt/app/app/Repositories/Tag/TagRepository.php
 opt/app/app/Repositories/Tag/TagRepositoryInterface.php
-opt/app/app/Repositories/TransactionType/TransactionTypeRepository.php
-opt/app/app/Repositories/TransactionType/TransactionTypeRepositoryInterface.php
 opt/app/app/Repositories/User/UserRepository.php
 opt/app/app/Repositories/User/UserRepositoryInterface.php
 opt/app/app/Rules/BelongsUser.php
@@ -764,6 +758,7 @@ opt/app/app/Support/Facades/Preferences.php
 opt/app/app/Support/Facades/Steam.php
 opt/app/app/Support/FireflyConfig.php
 opt/app/app/Support/Http/Controllers/DateCalculation.php
+opt/app/app/Support/Http/Controllers/RuleManagement.php
 opt/app/app/Support/Import/Information/BunqInformation.php
 opt/app/app/Support/Import/Information/GetSpectreCustomerTrait.php
 opt/app/app/Support/Import/Information/GetSpectreTokenTrait.php
@@ -818,7 +813,6 @@ opt/app/app/Support/Twig/Journal.php
 opt/app/app/Support/Twig/Loader/AccountLoader.php
 opt/app/app/Support/Twig/Loader/TransactionJournalLoader.php
 opt/app/app/Support/Twig/Loader/TransactionLoader.php
-opt/app/app/Support/Twig/PiggyBank.php
 opt/app/app/Support/Twig/Rule.php
 opt/app/app/Support/Twig/Transaction.php
 opt/app/app/Support/Twig/Translation.php
@@ -915,7 +909,6 @@ opt/app/bootstrap/cache/services.php
 opt/app/changelog.md
 opt/app/composer.json
 opt/app/composer.lock
-opt/app/composer.phar
 opt/app/config/app.php
 opt/app/config/auth.php
 opt/app/config/breadcrumbs.php
@@ -4435,9 +4428,6 @@ opt/app/vendor/ramsey/uuid/CONTRIBUTING.md
 opt/app/vendor/ramsey/uuid/LICENSE
 opt/app/vendor/ramsey/uuid/README.md
 opt/app/vendor/ramsey/uuid/composer.json
-opt/app/vendor/ramsey/uuid/docs/Makefile
-opt/app/vendor/ramsey/uuid/docs/conf.py
-opt/app/vendor/ramsey/uuid/docs/index.rst
 opt/app/vendor/ramsey/uuid/src/BinaryUtils.php
 opt/app/vendor/ramsey/uuid/src/Builder/DefaultUuidBuilder.php
 opt/app/vendor/ramsey/uuid/src/Builder/DegradedUuidBuilder.php
