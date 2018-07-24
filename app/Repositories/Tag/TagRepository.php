@@ -313,8 +313,6 @@ class TagRepository implements TagRepositoryInterface
         }
 
         $result = $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
-        var_dump($result->toArray());
-        exit;
 
         /** @var Tag $tag */
         foreach ($result as $tag) {
