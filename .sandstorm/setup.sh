@@ -32,7 +32,7 @@ apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E9C74FEEA2098A6E
 add-apt-repository "deb http://packages.dotdeb.org jessie all"
 
 # add another repos
-apt-get install apt-transport-https lsb-release ca-certificates
+apt-get install -y apt-transport-https lsb-release ca-certificates
 wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 
