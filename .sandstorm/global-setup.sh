@@ -9,6 +9,10 @@ CURL_OPTS="--silent --show-error"
 echo localhost > /etc/hostname
 hostname localhost
 
+# Install curl that is needed below.
+apt-get update
+apt-get install -y curl
+
 # The following line copies stderr through stderr to cat without accidentally leaving it in the
 # output file. Be careful when changing. See: https://github.com/sandstorm-io/vagrant-spk/pull/159
 curl $CURL_OPTS https://install.sandstorm.io/ 2>&1 > /host-dot-sandstorm/caches/install.sh | cat
