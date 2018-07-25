@@ -262,7 +262,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             // store it:
             $this->uploadDisk->put($attachment->fileName(), $encrypted);
-            $attachment->uploaded = 1; // update attachment
+            $attachment->uploaded = true; // update attachment
             $attachment->save();
             $this->attachments->push($attachment);
 

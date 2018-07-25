@@ -340,6 +340,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
     {

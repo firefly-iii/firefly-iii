@@ -221,28 +221,6 @@ class User extends Authenticatable
 
     /**
      * @codeCoverageIgnore
-     * Checks if the user has a role by its name.
-     *
-     * Full credit goes to: https://github.com/Zizaco/entrust
-     *
-     * @param string $name
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function hasRole(string $name): bool
-    {
-        foreach ($this->roles as $role) {
-            if ($role->name === $name) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    /**
-     * @codeCoverageIgnore
      * Link to import jobs.
      *
      * @return HasMany

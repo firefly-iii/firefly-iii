@@ -196,7 +196,7 @@ class TagController extends Controller
         // prep for "all" view.
         if ('all' === $moment) {
             $subTitle = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
-            $start    = $this->repository->firstUseDate($tag);
+            $start    = $this->repository->firstUseDate($tag) ?? new Carbon;
             $end      = new Carbon;
             $path     = route('tags.show', [$tag->id, 'all']);
         }
@@ -311,8 +311,8 @@ class TagController extends Controller
         // get first and last tag date from tag:
         $range = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $end */
-        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag), $range, null);
-        $start = $this->repository->firstUseDate($tag);
+        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag) ?? new Carbon, $range, null);
+        $start = $this->repository->firstUseDate($tag) ?? new Carbon;
 
 
         // properties for entries with their amounts.

@@ -33,6 +33,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Illuminate\Database\Eloquent\Builder;
+
 
 /**
  * Class TransactionJournal.
@@ -62,7 +64,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournal extends Model
 {
-    use SoftDeletes, TransactionJournalTrait;
+    use SoftDeletes;
 
     /**
      * The attributes that should be casted to native types.
@@ -262,6 +264,27 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date): EloquentBuilder
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
+    }
+
+    /**
+     * @param Builder $query
+     * @param string  $table
+     *
+     * @return bool
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        if (null === $joins) {
+            return false;
+        }
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

@@ -921,8 +921,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date = $start->format('Y-m-d 00:00:00');
-        $limit->end_date   = $end->format('Y-m-d 00:00:00');
+        $limit->start_date = $start->startOfDay();
+        $limit->end_date   = $end->startOfDay();
         $limit->amount     = $amount;
         $limit->save();
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));

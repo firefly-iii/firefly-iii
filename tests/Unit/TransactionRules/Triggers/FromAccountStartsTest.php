@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\FromAccountStarts;
 use Log;
 use Tests\TestCase;
@@ -46,6 +47,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggered(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         Log::debug('In testTriggered()');
         $loops = 0; // FINAL LOOP METHOD.
         do {
@@ -77,6 +79,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         Log::debug('In testTriggeredLonger()');
         $loops = 0; // FINAL LOOP METHOD.
         do {
@@ -108,6 +111,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
 
         $trigger = FromAccountStarts::makeFromStrings('some name' . random_int(1, 234), false);
@@ -120,6 +124,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingEmpty(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = '';
         $result = FromAccountStarts::willMatchEverything($value);
         $this->assertTrue($result);
@@ -130,6 +135,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingNotNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = 'x';
         $result = FromAccountStarts::willMatchEverything($value);
         $this->assertFalse($result);
@@ -140,6 +146,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = null;
         $result = FromAccountStarts::willMatchEverything($value);
         $this->assertTrue($result);

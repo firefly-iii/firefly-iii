@@ -56,20 +56,11 @@ interface TagRepositoryInterface
     public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string;
 
     /**
-     * @param int $tagId
-     *
-     * @deprecated
-     * @return Tag
-     */
-    public function find(int $tagId): Tag;
-
-    /**
      * @param string $tag
      *
-     * @return Tag
-     * @deprecated
+     * @return Tag|null
      */
-    public function findByTag(string $tag): Tag;
+    public function findByTag(string $tag):?Tag;
 
     /**
      * @param int $tagId
@@ -82,9 +73,8 @@ interface TagRepositoryInterface
      * @param Tag $tag
      *
      * @return Carbon
-     * @deprecated
      */
-    public function firstUseDate(Tag $tag): Carbon;
+    public function firstUseDate(Tag $tag): ?Carbon;
 
     /**
      * This method returns all the user's tags.
@@ -96,10 +86,9 @@ interface TagRepositoryInterface
     /**
      * @param Tag $tag
      *
-     * @return Carbon
-     * @deprecated
+     * @return Carbon|null
      */
-    public function lastUseDate(Tag $tag): Carbon;
+    public function lastUseDate(Tag $tag): ?Carbon;
 
     /**
      * Will return the newest tag (if known) or NULL.

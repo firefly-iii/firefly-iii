@@ -81,18 +81,12 @@ class AttachmentRepository implements AttachmentRepositoryInterface
 
     /**
      * @param int $attachmentId
-     * @deprecated
-     * @return Attachment
+     * @return Attachment|null
      */
-    public function findWithoutUser(int $attachmentId): Attachment
+    public function findWithoutUser(int $attachmentId): ?Attachment
     {
 
-        $attachment = Attachment::find($attachmentId);
-        if (null === $attachment) {
-            return new Attachment;
-        }
-
-        return $attachment;
+        return Attachment::find($attachmentId);
     }
 
     /**

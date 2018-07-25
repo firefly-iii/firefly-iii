@@ -81,28 +81,11 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param int $tagId
-     *
-     * @deprecated
-     * @return Tag
-     */
-    public function find(int $tagId): Tag
-    {
-        $tag = $this->user->tags()->find($tagId);
-        if (null === $tag) {
-            $tag = new Tag;
-        }
-
-        return $tag;
-    }
-
-    /**
      * @param string $tag
      *
-     * @return Tag
-     * @deprecated
+     * @return Tag|null
      */
-    public function findByTag(string $tag): Tag
+    public function findByTag(string $tag): ?Tag
     {
         $tags = $this->user->tags()->get();
         /** @var Tag $databaseTag */
@@ -112,7 +95,7 @@ class TagRepository implements TagRepositoryInterface
             }
         }
 
-        return new Tag;
+        return null;
     }
 
     /**
@@ -128,17 +111,16 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param Tag $tag
      *
-     * @return Carbon
-     * @deprecated
+     * @return Carbon|null
      */
-    public function firstUseDate(Tag $tag): Carbon
+    public function firstUseDate(Tag $tag): ?Carbon
     {
         $journal = $tag->transactionJournals()->orderBy('date', 'ASC')->first();
         if (null !== $journal) {
             return $journal->date;
         }
 
-        return new Carbon;
+        return null;
     }
 
     /**
@@ -160,17 +142,16 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param Tag $tag
      *
-     * @return Carbon
-     * @deprecated
+     * @return Carbon|null
      */
-    public function lastUseDate(Tag $tag): Carbon
+    public function lastUseDate(Tag $tag): ?Carbon
     {
         $journal = $tag->transactionJournals()->orderBy('date', 'DESC')->first();
         if (null !== $journal) {
             return $journal->date;
         }
 
-        return new Carbon;
+        return null;
     }
 
     /**

@@ -211,7 +211,7 @@ class ReportFormRequest extends Request
         if (\is_array($set)) {
             foreach ($set as $tagTag) {
                 $tag = $repository->findByTag($tagTag);
-                if (null !== $tag->id) {
+                if (null !== $tag) {
                     $collection->push($tag);
                 }
             }

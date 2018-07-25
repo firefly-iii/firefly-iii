@@ -303,7 +303,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
         // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);
-        $attachment->uploaded = 1; // update attachment
+        $attachment->uploaded = true; // update attachment
         $attachment->save();
 
         // return it.
@@ -357,7 +357,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
 
         // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);
-        $attachment->uploaded = 1; // update attachment
+        $attachment->uploaded = true; // update attachment
         $attachment->save();
 
         // return it.

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountIs;
 use Tests\TestCase;
 use Log;
@@ -37,6 +38,7 @@ class ToAccountIsTest extends TestCase
      */
     public function testTriggered(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $loops = 0; // FINAL LOOP METHOD.
         do {
             /** @var TransactionJournal $journal */
@@ -64,6 +66,7 @@ class ToAccountIsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $loops = 0; // FINAL LOOP METHOD.
         do {
             /** @var TransactionJournal $journal */
@@ -89,6 +92,7 @@ class ToAccountIsTest extends TestCase
      */
     public function testWillMatchEverythingEmpty(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = '';
         $result = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
@@ -99,6 +103,7 @@ class ToAccountIsTest extends TestCase
      */
     public function testWillMatchEverythingNotNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = 'x';
         $result = ToAccountIs::willMatchEverything($value);
         $this->assertFalse($result);
@@ -109,6 +114,7 @@ class ToAccountIsTest extends TestCase
      */
     public function testWillMatchEverythingNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = null;
         $result = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);

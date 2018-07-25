@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountContains;
 use Tests\TestCase;
 
@@ -36,6 +37,8 @@ class ToAccountContainsTest extends TestCase
      */
     public function testTriggered(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
         $count = 0;
         do {
             $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
@@ -56,6 +59,7 @@ class ToAccountContainsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $count = 0;
         do {
             $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
@@ -76,6 +80,7 @@ class ToAccountContainsTest extends TestCase
      */
     public function testWillMatchEverythingEmpty(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = '';
         $result = ToAccountContains::willMatchEverything($value);
         $this->assertTrue($result);
@@ -86,6 +91,7 @@ class ToAccountContainsTest extends TestCase
      */
     public function testWillMatchEverythingNotNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = 'x';
         $result = ToAccountContains::willMatchEverything($value);
         $this->assertFalse($result);
@@ -96,6 +102,7 @@ class ToAccountContainsTest extends TestCase
      */
     public function testWillMatchEverythingNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = null;
         $result = ToAccountContains::willMatchEverything($value);
         $this->assertTrue($result);

@@ -80,10 +80,9 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
-     * @return ExportJob
-     * @deprecated
+     * @return ExportJob|null
      */
-    public function create(): ExportJob
+    public function create(): ?ExportJob
     {
         $count = 0;
         while ($count < 30) {
@@ -103,7 +102,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
             ++$count;
         }
 
-        return new ExportJob;
+        return null;
     }
 
     /**

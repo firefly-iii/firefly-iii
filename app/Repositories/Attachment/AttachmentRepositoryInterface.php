@@ -50,10 +50,9 @@ interface AttachmentRepositoryInterface
 
     /**
      * @param int $attachmentId
-     * @deprecated
-     * @return Attachment
+     * @return Attachment|null
      */
-    public function findWithoutUser(int $attachmentId): Attachment;
+    public function findWithoutUser(int $attachmentId): ?Attachment;
 
     /**
      * @return Collection

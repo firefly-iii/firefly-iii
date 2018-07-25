@@ -24,6 +24,7 @@ namespace FireflyIII\TransactionRules\Triggers;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 
 /**
@@ -73,8 +74,11 @@ final class FromAccountEnds extends AbstractTrigger implements TriggerInterface
     {
         $name = '';
 
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+
         /** @var Account $account */
-        foreach ($journal->sourceAccountList() as $account) {
+        foreach ($repository->getJournalSourceAccounts($journal) as $account) {
             $name .= strtolower($account->name);
         }
 

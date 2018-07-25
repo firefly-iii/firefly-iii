@@ -29,7 +29,6 @@ use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -59,6 +58,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param Account            $destination
      *
      * @return MessageBag
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag
     {
@@ -73,9 +74,9 @@ class JournalRepository implements JournalRepositoryInterface
             return $messages;
         }
 
-        $sourceTransaction      = $journal->transactions()->where('amount', '<', 0)->first();
-        $destinationTransaction = $journal->transactions()->where('amount', '>', 0)->first();
-        if (null === $sourceTransaction || null === $destinationTransaction) {
+        $srcTransaction = $journal->transactions()->where('amount', '<', 0)->first();
+        $dstTransaction = $journal->transactions()->where('amount', '>', 0)->first();
+        if (null === $srcTransaction || null === $dstTransaction) {
             // default message bag that shows errors for everything.
 
             $messages = new MessageBag;
@@ -86,15 +87,18 @@ class JournalRepository implements JournalRepositoryInterface
 
             return $messages;
         }
-        $sourceTransaction->account_id = $source->id;
-        $sourceTransaction->save();
-        $destinationTransaction->account_id = $destination->id;
-        $destinationTransaction->save();
+        // update transactions, and update journal:
+
+        $srcTransaction->account_id   = $source->id;
+        $dstTransaction->account_id   = $destination->id;
         $journal->transaction_type_id = $type->id;
+        $dstTransaction->save();
+        $srcTransaction->save();
         $journal->save();
 
         // if journal is a transfer now, remove budget:
         if (TransactionType::TRANSFER === $type->type) {
+
             $journal->budgets()->detach();
             // also from transactions:
             foreach ($journal->transactions as $transaction) {

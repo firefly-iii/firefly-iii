@@ -65,7 +65,7 @@ class DecryptAttachment extends Command
         $attachment     = $repository->findWithoutUser($attachmentId);
         $attachmentName = trim($this->argument('name'));
         $storagePath    = realpath(trim($this->argument('directory')));
-        if (null === $attachment->id) {
+        if (null === $attachment) {
             $this->error(sprintf('No attachment with id #%d', $attachmentId));
             Log::error(sprintf('DecryptAttachment: No attachment with id #%d', $attachmentId));
 

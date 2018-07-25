@@ -44,10 +44,9 @@ interface ExportJobRepositoryInterface
     public function cleanup(): bool;
 
     /**
-     * @return ExportJob
-     * @deprecated
+     * @return ExportJob|null
      */
-    public function create(): ExportJob;
+    public function create(): ?ExportJob;
 
     /**
      * @param ExportJob $job
