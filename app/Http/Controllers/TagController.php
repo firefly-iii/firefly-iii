@@ -172,8 +172,6 @@ class TagController extends Controller
      * @param Tag         $tag
      * @param string|null $moment
      *
-     * TODO will be cleaned up and separated
-     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)

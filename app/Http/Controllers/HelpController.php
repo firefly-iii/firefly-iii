@@ -68,8 +68,6 @@ class HelpController extends Controller
     /**
      * Gets the help text.
      *
-     * TODO move to repos or trait.
-     *
      * @param string $route
      * @param string $language
      *

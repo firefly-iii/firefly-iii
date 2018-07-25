@@ -65,7 +65,6 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         $importAccounts = $config['account_mapping'] ?? [];
         $complete       = \count($importAccounts) > 0 && $importAccounts !== [0 => 0];
         if ($complete) {
-            // todo also actually validate content.
             Log::debug('Looks like user has mapped import accounts to Firefly III accounts', $importAccounts);
             $this->repository->setStage($this->importJob, 'go-for-import');
         }

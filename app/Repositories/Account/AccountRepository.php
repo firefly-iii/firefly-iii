@@ -38,6 +38,7 @@ use Log;
 
 /**
  * Class AccountRepository.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountRepository implements AccountRepositoryInterface
 {
@@ -392,7 +393,6 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * Returns the date of the very first transaction in this account.
-     * TODO refactor to nullable.
      *
      * @param Account $account
      *

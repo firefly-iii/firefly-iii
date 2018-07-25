@@ -32,6 +32,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class RuleRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleRepository implements RuleRepositoryInterface
 {
@@ -386,7 +388,7 @@ class RuleRepository implements RuleRepositoryInterface
     private function storeActions(Rule $rule, array $data): bool
     {
         $order = 1;
-        foreach ($data['rule-actions'] as $index => $action) {
+        foreach ($data['rule-actions'] as $action) {
             $value          = $action['value'] ?? '';
             $stopProcessing = $action['stop-processing'] ?? false;
 
@@ -422,7 +424,7 @@ class RuleRepository implements RuleRepositoryInterface
         ];
 
         $this->storeTrigger($rule, $triggerValues);
-        foreach ($data['rule-triggers'] as $index => $trigger) {
+        foreach ($data['rule-triggers'] as $trigger) {
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop-processing'] ?? false;
 

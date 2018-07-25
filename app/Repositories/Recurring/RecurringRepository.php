@@ -47,6 +47,9 @@ use Log;
 /**
  *
  * Class RecurringRepository
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class RecurringRepository implements RecurringRepositoryInterface
 {
@@ -98,15 +101,15 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Get the budget ID from a recurring transaction transaction.
      *
-     * @param RecurrenceTransaction $recurrenceTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|int
      */
-    public function getBudget(RecurrenceTransaction $recurrenceTransaction): ?int
+    public function getBudget(RecurrenceTransaction $recTransaction): ?int
     {
         $return = 0;
         /** @var RecurrenceTransactionMeta $meta */
-        foreach ($recurrenceTransaction->recurrenceTransactionMeta as $meta) {
+        foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
             if ('budget_id' === $meta->name) {
                 $return = (int)$meta->value;
             }
@@ -118,15 +121,15 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Get the category from a recurring transaction transaction.
      *
-     * @param RecurrenceTransaction $recurrenceTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|string
      */
-    public function getCategory(RecurrenceTransaction $recurrenceTransaction): ?string
+    public function getCategory(RecurrenceTransaction $recTransaction): ?string
     {
         $return = '';
         /** @var RecurrenceTransactionMeta $meta */
-        foreach ($recurrenceTransaction->recurrenceTransactionMeta as $meta) {
+        foreach ($recTransaction->recurrenceTransactionMeta as $meta) {
             if ('category_name' === $meta->name) {
                 $return = (string)$meta->value;
             }
@@ -189,6 +192,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      *
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getOccurrencesInRange(RecurrenceRepetition $repetition, Carbon $start, Carbon $end): array
     {
@@ -310,6 +314,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param int                  $count
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getXOccurrences(RecurrenceRepetition $repetition, Carbon $date, int $count): array
     {
@@ -343,48 +348,43 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param RecurrenceRepetition $repetition
      *
      * @return string
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function repetitionDescription(RecurrenceRepetition $repetition): string
     {
         /** @var Preference $pref */
         $pref     = app('preferences')->getForUser($this->user, 'language', config('firefly.default_language', 'en_US'));
         $language = $pref->data;
-        switch ($repetition->repetition_type) {
-            default:
-                throw new FireflyException(sprintf('Cannot translate recurring transaction repetition type "%s"', $repetition->repetition_type));
-                break;
-            case 'daily':
-                return (string)trans('firefly.recurring_daily', [], $language);
-                break;
-            case 'weekly':
-                $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
-
-                return (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
-                break;
-            case 'monthly':
-                // format a date:
-                return (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment], $language);
-                break;
-            case 'ndom':
-                $parts = explode(',', $repetition->repetition_moment);
-                // first part is number of week, second is weekday.
-                $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
-
-                return (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
-                break;
-            case 'yearly':
-                //
-                $today       = Carbon::create()->endOfYear();
-                $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
-                $diffInYears = $today->diffInYears($repDate);
-                $repDate->addYears($diffInYears); // technically not necessary.
-                $string = $repDate->formatLocalized(trans('config.month_and_day_no_year'));
-
-                return (string)trans('firefly.recurring_yearly', ['date' => $string], $language);
-                break;
-
+        if ('daily' === $repetition->repetition_type) {
+            return (string)trans('firefly.recurring_daily', [], $language);
         }
+        if ('weekly' === $repetition->repetition_type) {
+            $dayOfWeek = trans(sprintf('config.dow_%s', $repetition->repetition_moment), [], $language);
+
+            return (string)trans('firefly.recurring_weekly', ['weekday' => $dayOfWeek], $language);
+        }
+        if ('monthly' === $repetition->repetition_type) {
+            return (string)trans('firefly.recurring_monthly', ['dayOfMonth' => $repetition->repetition_moment], $language);
+        }
+        if ('ndom' === $repetition->repetition_type) {
+            $parts = explode(',', $repetition->repetition_moment);
+            // first part is number of week, second is weekday.
+            $dayOfWeek = trans(sprintf('config.dow_%s', $parts[1]), [], $language);
+
+            return (string)trans('firefly.recurring_ndom', ['weekday' => $dayOfWeek, 'dayOfMonth' => $parts[0]], $language);
+        }
+        if ('yearly' === $repetition->repetition_type) {
+            //
+            $today       = Carbon::create()->endOfYear();
+            $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
+            $diffInYears = $today->diffInYears($repDate);
+            $repDate->addYears($diffInYears); // technically not necessary.
+            $string = $repDate->formatLocalized(trans('config.month_and_day_no_year'));
+
+            return (string)trans('firefly.recurring_yearly', ['date' => $string], $language);
+        }
+
+        return '';
 
     }
 
@@ -435,8 +435,10 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param array                $dates
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
+    private function filterWeekends(RecurrenceRepetition $repetition, array $dates): array
     {
         if ((int)$repetition->weekend === RecurrenceRepetition::WEEKEND_DO_NOTHING) {
             Log::debug('Repetition will not be filtered on weekend days.');
@@ -525,6 +527,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getMonthlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
@@ -604,6 +607,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getWeeklyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {
@@ -834,6 +838,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param string $moment
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getYearlyInRange(Carbon $start, Carbon $end, int $skipMod, string $moment): array
     {

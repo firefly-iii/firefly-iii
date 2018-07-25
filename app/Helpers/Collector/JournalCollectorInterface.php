@@ -82,7 +82,6 @@ interface JournalCollectorInterface
 
     /**
      * Get all journals.
-     * TODO rename me.
      *
      * @return Collection
      */

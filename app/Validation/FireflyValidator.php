@@ -242,8 +242,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO lots of if-else because of API calls.
-     *
      * @param $attribute
      *
      * @return bool
@@ -305,8 +303,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO This method uses a lot of if-then to handle the API calls as well. Fix.
-     *
      * @param $attribute
      *
      * @return bool
@@ -450,19 +446,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO fill me.
-     *
-     * @param $attribute
-     * @param $value
-     * @param $parameters
-     *
-     * @return bool
-     */
-    public function validateRepetitionMoment($attribute, $value, $parameters): bool {
-
-    }
-
-    /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      *
      * @param $attribute
@@ -578,8 +561,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
-     *
      * @param int $index
      *
      * @return string
@@ -595,8 +576,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
-     *
      * @param int $index
      *
      * @return string
@@ -612,8 +591,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
-     *
      * @param int $index
      *
      * @return string
@@ -629,8 +606,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * TODO this method needs a lot of logic to be able to handle API calls. Fix that.
-     *
      * @param int $index
      *
      * @return string

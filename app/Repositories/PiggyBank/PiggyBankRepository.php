@@ -35,6 +35,9 @@ use Log;
 
 /**
  * Class PiggyBankRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
@@ -245,6 +248,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param TransactionJournal  $journal
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
@@ -256,7 +260,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $sources = $repos->getJournalSourceAccounts($journal)->pluck('id')->toArray();
         $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
-
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if piggy account matches source account, the amount is positive
@@ -448,7 +451,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $piggyBank */
         $piggyBank = PiggyBank::create($data);
 
-        $this->updateNote($piggyBank, $data['note']); // todo rename to 'notes'
+        $this->updateNote($piggyBank, $data['note']);
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);

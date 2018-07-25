@@ -53,7 +53,6 @@ trait GetSpectreCustomerTrait
             $request->setUser($importJob->user);
             $request->call();
 
-            // todo what if customer is still null?
             $customer = $request->getCustomer();
 
         }

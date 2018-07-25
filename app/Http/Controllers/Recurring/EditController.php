@@ -70,9 +70,6 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * todo move to repository
-     * todo handle old repetition type as well.
-     *
      * @param Request    $request
      * @param Recurrence $recurrence
      *

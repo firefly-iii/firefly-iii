@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\LinkType;
 
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
@@ -34,6 +32,8 @@ use Log;
 
 /**
  * Class LinkTypeRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkTypeRepository implements LinkTypeRepositoryInterface
 {
@@ -111,13 +111,13 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
-     * @param int $id
+     * @param int $linkTypeId
      *
      * @return LinkType|null
      */
-    public function findNull(int $id): ?LinkType
+    public function findNull(int $linkTypeId): ?LinkType
     {
-        return LinkType::find($id);
+        return LinkType::find($linkTypeId);
     }
 
     /**
@@ -224,14 +224,14 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param TransactionJournal $inward
      * @param TransactionJournal $outward
      *
-     * @return mixed
-     * @throws FireflyException
+     * @return TransactionJournalLink|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): TransactionJournalLink
+    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
         $linkType = $this->findNull((int)($information['link_type_id'] ?? 0));
         if (null === $linkType) {
-            throw new FireflyException(sprintf('Link type #%d cannot be resolved to an actual link type', $information['link_type_id'] ?? 0));
+            return null;
         }
 
         // might exist already:
@@ -256,15 +256,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $link->save();
 
         // make note in noteable:
-        if (\strlen((string)$information['notes']) > 0) {
-            $dbNote = $link->notes()->first();
-            if (null === $dbNote) {
-                $dbNote = new Note();
-                $dbNote->noteable()->associate($link);
-            }
-            $dbNote->text = trim($information['notes']);
-            $dbNote->save();
-        }
+        $this->setNoteText($link, (string)$information['notes']);
 
         return $link;
     }
@@ -314,27 +306,33 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
         $journalLink->destination_id = $data['outward']->id;
         $journalLink->link_type_id   = $data['link_type_id'];
         $journalLink->save();
-        /** @var Note $note */
-        $note = $journalLink->notes()->first();
-        // delete note:
-        if (null !== $note && '' === $data['notes']) {
-            try {
-                $note->delete();
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete note for journal link: %s', $e->getMessage()));
-            }
-        }
-        // create note:
-        if (null === $note && '' !== $data['notes']) {
-            $note = new Note;
-            $note->noteable()->associate($journalLink);
-        }
-        // update note
-        if ('' !== $data['notes']) {
-            $note->text = $data['notes'];
-            $note->save();
-        }
+        $this->setNoteText($journalLink, $data['notes']);
 
         return $journalLink;
+    }
+
+    /**
+     * @param TransactionJournalLink $link
+     * @param string                 $text
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function setNoteText(TransactionJournalLink $link, string $text): void
+    {
+        $dbNote = $link->notes()->first();
+        if ('' !== $text) {
+            if (null === $dbNote) {
+                $dbNote = new Note();
+                $dbNote->noteable()->associate($link);
+            }
+            $dbNote->text = trim($text);
+            $dbNote->save();
+
+            return;
+        }
+        if (null !== $dbNote && '' === $text) {
+            $dbNote->delete();
+        }
+
     }
 }

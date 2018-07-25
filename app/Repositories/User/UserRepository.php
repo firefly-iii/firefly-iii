@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class UserRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UserRepository implements UserRepositoryInterface
 {

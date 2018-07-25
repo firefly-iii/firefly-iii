@@ -65,8 +65,6 @@ class IndexController extends Controller
     /**
      * Show all recurring transactions.
      *
-     * TODO: split collection into pages
-     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

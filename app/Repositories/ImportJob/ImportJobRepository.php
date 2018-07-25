@@ -37,6 +37,8 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
  * Class ImportJobRepository.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ImportJobRepository implements ImportJobRepositoryInterface
 {
@@ -270,7 +272,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function storeCLIUpload(ImportJob $job, string $name, string $fileName): MessageBag
     {
         $messages = new MessageBag;
-
         if (!file_exists($fileName)) {
             $messages->add('notfound', sprintf('File not found: %s', $fileName));
 
@@ -283,8 +284,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
             }
         )->count();
 
-        if ($count > 0) {
-            // don't upload, but also don't complain about it.
+        if ($count > 0) {// don't upload, but also don't complain about it.
             Log::error(sprintf('Detected duplicate upload. Will ignore second "%s" file.', $name));
 
             return new MessageBag;
@@ -301,12 +301,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->save();
         $encrypted = Crypt::encrypt($content);
 
-        // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);
         $attachment->uploaded = true; // update attachment
         $attachment->save();
 
-        // return it.
         return new MessageBag;
     }
 
@@ -333,9 +331,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
                 return $att->filename === $name;
             }
         )->count();
-
-        if ($count > 0) {
-            // don't upload, but also don't complain about it.
+        if ($count > 0) { // don't upload, but also don't complain about it.
             Log::error(sprintf('Detected duplicate upload. Will ignore second "%s" file.', $name));
 
             return new MessageBag;
@@ -354,13 +350,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $fileObject->rewind();
         $content   = $fileObject->fread($file->getSize());
         $encrypted = Crypt::encrypt($content);
-
-        // store it:
         $this->uploadDisk->put($attachment->fileName(), $encrypted);
         $attachment->uploaded = true; // update attachment
         $attachment->save();
 
-        // return it.
         return new MessageBag;
     }
 

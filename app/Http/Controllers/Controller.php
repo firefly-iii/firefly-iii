@@ -121,8 +121,6 @@ class Controller extends BaseController
     /**
      * Is transaction opening balance?
      *
-     * TODO move to trait.
-     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -135,8 +133,6 @@ class Controller extends BaseController
 
     /**
      * Redirect to asset account that transaction belongs to.
-     *
-     * TODO move to trait.
      *
      * @param TransactionJournal $journal
      *
@@ -172,9 +168,6 @@ class Controller extends BaseController
 
     /**
      * Get user's language.
-     *
-     * TODO pretty sure nobody uses this.
-     *
      * @return string
      */
     private function getLanguage(): string
@@ -196,8 +189,6 @@ class Controller extends BaseController
     /**
      * Get the specific name of a page for intro.
      *
-     * TODO move to trait.
-     *
      * @return string
      */
     private function getSpecificPageName(): string
@@ -207,8 +198,6 @@ class Controller extends BaseController
 
     /**
      * Returns if user has seen demo.
-     *
-     * TODO move to trait.
      *
      * @return bool
      */

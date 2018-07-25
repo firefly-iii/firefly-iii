@@ -107,8 +107,6 @@ class CurrencyController extends Controller
         app('preferences')->mark();
 
         $request->session()->flash('success', (string)trans('firefly.new_default_currency', ['name' => $currency->name]));
-        Cache::forget('FFCURRENCYSYMBOL'); // todo are these even used?
-        Cache::forget('FFCURRENCYCODE');
 
         return redirect(route('currencies.index'));
     }

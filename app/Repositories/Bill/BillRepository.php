@@ -41,6 +41,7 @@ use Log;
 
 /**
  * Class BillRepository.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillRepository implements BillRepositoryInterface
 {

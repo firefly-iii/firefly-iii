@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class TagRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagRepository implements TagRepositoryInterface
 {
@@ -225,6 +227,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon|null $end
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
@@ -267,26 +270,22 @@ class TagRepository implements TagRepositoryInterface
     public function tagCloud(?int $year): array
     {
         // Some vars
-        $tags   = $this->getTagsInYear($year);
-        $max    = $this->getMaxAmount($tags);
-        $min    = $this->getMinAmount($tags);
-        $diff   = bcsub($max, $min);
-        $return = [];
-        Log::debug(sprintf('Minimum is %s, maximum is %s, difference is %s', $min, $max, $diff));
-
-        // default scale is from 12 to 24, so 12 points.
-        $minimumFont   = '12';
+        $tags          = $this->getTagsInYear($year);
+        $max           = $this->getMaxAmount($tags);
+        $min           = $this->getMinAmount($tags);
+        $diff          = bcsub($max, $min);
+        $return        = [];
+        $minimumFont   = '12'; // default scale is from 12 to 24, so 12 points.
         $maxPoints     = '12';
         $pointsPerCoin = '0';
 
-        // for each full coin in tag, add so many points:
-        if (0 !== bccomp($diff, '0')) {
+        Log::debug(sprintf('Minimum is %s, maximum is %s, difference is %s', $min, $max, $diff));
+
+        if (0 !== bccomp($diff, '0')) {// for each full coin in tag, add so many points
             $pointsPerCoin = bcdiv($maxPoints, $diff);
         }
 
-
         Log::debug(sprintf('Each coin in a tag earns it %s points', $pointsPerCoin));
-
         /** @var Tag $tag */
         foreach ($tags as $tag) {
             $amount       = (string)$tag->amount_sum;
@@ -349,6 +348,7 @@ class TagRepository implements TagRepositoryInterface
      * @param Collection $tags
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getMinAmount(Collection $tags): string
     {

@@ -44,6 +44,10 @@ use Log;
 
 /**
  * Class JournalRepository.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class JournalRepository implements JournalRepositoryInterface
 {
@@ -310,6 +314,8 @@ class JournalRepository implements JournalRepositoryInterface
      * @param null|string        $field
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getJournalDate(TransactionJournal $journal, ?string $field): string
     {
@@ -451,6 +457,7 @@ class JournalRepository implements JournalRepositoryInterface
      * @param string             $field
      *
      * @return null|string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getMetaField(TransactionJournal $journal, string $field): ?string
     {

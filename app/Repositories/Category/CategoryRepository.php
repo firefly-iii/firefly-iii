@@ -37,6 +37,10 @@ use Navigation;
 
 /**
  * Class CategoryRepository.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -114,6 +118,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Category $category
      *
      * @return Carbon|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function firstUseDate(Category $category): ?Carbon
     {
@@ -172,6 +177,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Collection $accounts
      *
      * @return Carbon|null
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {

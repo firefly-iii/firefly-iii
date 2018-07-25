@@ -75,11 +75,11 @@ interface LinkTypeRepositoryInterface
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool;
 
     /**
-     * @param int $id
+     * @param int $linkTypeId
      *
      * @return LinkType|null
      */
-    public function findNull(int $id): ?LinkType;
+    public function findNull(int $linkTypeId): ?LinkType;
 
     /**
      * See if such a link already exists (and get it).
@@ -134,9 +134,9 @@ interface LinkTypeRepositoryInterface
      * @param TransactionJournal $inward
      * @param TransactionJournal $outward
      *
-     * @return mixed
+     * @return TransactionJournalLink|null
      */
-    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): TransactionJournalLink;
+    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink;
 
     /**
      * @param TransactionJournalLink $link

@@ -57,8 +57,6 @@ class JournalLinkRequest extends Request
     }
 
     /**
-     * TODO include link-type name as optional parameter.
-     * TODO be consistent and remove notes from this object.
      *
      * The rules that the incoming request must be matched against.
      *

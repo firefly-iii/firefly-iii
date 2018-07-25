@@ -67,7 +67,6 @@ class BillFormRequest extends Request
     {
         $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
         if ($this->integer('id') > 0) {
-            // todo is a fix to do this better.
             $nameRule .= ',' . $this->integer('id');
         }
         // is OK

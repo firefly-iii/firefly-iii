@@ -518,8 +518,6 @@ class BudgetController extends Controller
     /**
      * Small helper function for some of the charts. Extracts category names from a bunch of ID's.
      *
-     * TODO this method is duplicated and should be in a trait.
-     *
      * @param array $categoryIds
      *
      * @return array

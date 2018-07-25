@@ -386,7 +386,6 @@ class ConfigureRolesHandler implements FileConfigurationInterface
 
     /**
      * Save the column count in the job. It's used in a later stage.
-     * TODO move config out of this method (make it a parameter).
      *
      * @return void
      */

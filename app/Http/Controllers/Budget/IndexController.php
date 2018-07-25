@@ -68,8 +68,6 @@ class IndexController extends Controller
     /**
      * Show all budgets.
      *
-     * TODO remove moment routine.
-     *
      * @param Request     $request
      * @param string|null $moment
      *

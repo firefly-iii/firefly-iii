@@ -71,8 +71,6 @@ class CreateController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
-     * TODO remove bill from this method, move to separate routine.
-     *
      * @param Request   $request
      * @param RuleGroup $ruleGroup
      *

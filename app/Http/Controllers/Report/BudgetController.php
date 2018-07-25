@@ -38,8 +38,6 @@ class BudgetController extends Controller
     /**
      * Show partial overview of budgets.
      *
-     * TODO replace all \Throwable by catch/error and return simple string.
-     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
