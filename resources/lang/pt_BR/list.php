@@ -112,6 +112,7 @@ return [
     'sepa-cc'                 => 'SEPA Código de Compensação',
     'sepa-ep'                 => 'SEPA Finalidade Externa',
     'sepa-ci'                 => 'SEPA Identificador do Credor',
+    'sepa-batch-id'           => 'SEPA Batch ID',
     'external_id'             => 'External ID',
     'account_at_bunq'         => 'Loja com bunq',
     'file_name'               => 'Nome do arquivo',

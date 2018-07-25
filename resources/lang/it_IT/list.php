@@ -112,6 +112,7 @@ return [
     'sepa-cc'                 => 'Codice Compensazione SEPA',
     'sepa-ep'                 => 'SEPA External Purpose',
     'sepa-ci'                 => 'Identificativo Creditore SEPA',
+    'sepa-batch-id'           => 'SEPA Batch ID',
     'external_id'             => 'ID esterno',
     'account_at_bunq'         => 'Conto con Bunq',
     'file_name'               => 'Nome del file',

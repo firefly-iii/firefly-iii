@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Conto attività (IBAN)',
     'column_account-id'                    => 'ID conto attività (mappa FF3)',
     'column_account-name'                  => 'Conto attività (nome)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Importo',
     'column_amount_foreign'                => 'Importo (in altra valuta)',
     'column_amount_debit'                  => 'Importo (colonna debito)',

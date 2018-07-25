@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Счет актива (IBAN)',
     'column_account-id'                    => 'ID основного счёта (соответствующий FF3)',
     'column_account-name'                  => 'Основной счёт (название)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Сумма',
     'column_amount_foreign'                => 'Сумма (в иностранной валюте)',
     'column_amount_debit'                  => 'Сумма (столбец с дебетом)',

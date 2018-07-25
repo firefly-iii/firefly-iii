@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Bienvenue sur la page index de Firefly III. Veuillez prendre le temps de parcourir l\'introduction pour comprendre comment Firefly III fonctionne.',
+    'index_intro'                           => 'Bienvenue sur la page d\'accueil de Firefly III. Veuillez prendre le temps de parcourir l\'introduction pour comprendre comment Firefly III fonctionne.',
     'index_accounts-chart'                  => 'Ce tableau montre le solde actuel de vos comptes d\'actifs. Vous pouvez sélectionner les comptes visibles ici dans vos préférences.',
     'index_box_out_holder'                  => 'Cette petite boîte et les cases à côté de celle-ci vous donneront un rapide aperçu de votre situation financière.',
     'index_help'                            => 'Si vous avez besoin d’aide avec une page ou un formulaire, appuyez sur ce bouton.',
@@ -54,7 +54,7 @@ return [
     'reports_index_extra-options-box'       => 'Selon le rapport que vous avez sélectionné, vous pouvez sélectionner des filtres et options supplémentaires ici. Regardez cette case lorsque vous modifiez les types de rapport.',
 
     // reports (reports)
-    'reports_report_default_intro'          => 'Ce rapport vous donnera un aperçu complet et rapide de vos finances. Si vous souhaitez y voir autre chose, n\'hésitez pas à me contacter!',
+    'reports_report_default_intro'          => 'Ce rapport vous donnera un aperçu rapide et complet de vos finances. Si vous souhaitez y voir autre chose, n\'hésitez pas à me contacter !',
     'reports_report_audit_intro'            => 'Ce rapport vous donnera des informations détaillées sur vos comptes d\'actifs.',
     'reports_report_audit_optionsBox'       => 'Utilisez ces cases à cocher pour afficher ou masquer les colonnes qui vous intéressent.',
 
@@ -62,9 +62,9 @@ return [
     'reports_report_category_pieCharts'              => 'Ces tableaux vous donneront un aperçu des dépenses et du revenu par catégorie ou par compte.',
     'reports_report_category_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par catégorie.',
 
-    'reports_report_tag_intro'                  => 'Ce rapport vous donnera un aperçu d\'une ou de plusieurs étiquettes.',
-    'reports_report_tag_pieCharts'              => 'Ces tableaux vous donneront un aperçu des dépenses et du revenu par étiquette, catégorie, ou budget.',
-    'reports_report_tag_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par étiquette.',
+    'reports_report_tag_intro'                  => 'Ce rapport vous donnera un aperçu d\'un ou plusieurs tags.',
+    'reports_report_tag_pieCharts'              => 'Ces tableaux vous donneront un aperçu des dépenses et du revenu par tag, catégorie, ou budget.',
+    'reports_report_tag_incomeAndExpensesChart' => 'Ce tableau montre vos dépenses et votre revenu par tag.',
 
     'reports_report_budget_intro'                             => 'Ce rapport vous donnera un aperçu d\'un ou plusieurs budgets.',
     'reports_report_budget_pieCharts'                         => 'Ces tableaux vous donneront un aperçu des dépenses par budget ou par compte.',
@@ -104,20 +104,20 @@ return [
 
     // create bill
     'bills_create_intro'                                      => 'Utilisez des factures pour suivre les sommes que vous avez à payer à chaque période. Pensez aux dépenses comme le loyer, l\'assurance ou les remboursements d\'emprunts.',
-    'bills_create_name'                                       => 'Utilisez un nom équivoque tel que "Loyer" ou "Assurance maladie".',
+    'bills_create_name'                                       => 'Utilisez un nom parlant tel que "Loyer" ou "Assurance maladie".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Sélectionnez un montant minimum et maximum pour cette facture.',
     'bills_create_repeat_freq_holder'                         => 'La plupart des factures sont mensuelles, mais vous pouvez définir une autre fréquence ici.',
     'bills_create_skip_holder'                                => 'Si une facture se répète toutes les 2 semaines, le champ "sauter" doit être réglé sur "1" pour sauter une semaine sur deux.',
 
     // rules index
-    'rules_index_intro'                                       => 'Firefly III vous permet de gérer les règles, qui seront automagiquement appliquées à toute transaction que vous créez ou modifiez.',
+    'rules_index_intro'                                       => 'Firefly III vous permet de gérer des règles, qui seront automatiquement appliquées à toute transaction que vous créez ou modifiez.',
     'rules_index_new_rule_group'                              => 'Vous pouvez rassembler les règles en groupes pour une gestion plus facile.',
     'rules_index_new_rule'                                    => 'Créez autant de règles que vous le souhaitez.',
     'rules_index_prio_buttons'                                => 'Mettez-les dans l\'ordre que vous jugez convenable.',
     'rules_index_test_buttons'                                => 'Vous pouvez tester vos règles ou les appliquer aux transactions existantes.',
     'rules_index_rule-triggers'                               => 'Les règles ont des "déclencheurs" et des "actions" que vous pouvez ordonner en glisser-déposer.',
-    'rules_index_outro'                                       => 'Pensez à consulter les pages d\'aide en utilisant l\'icône (?) En haut à droite!',
+    'rules_index_outro'                                       => 'Pensez à consulter les pages d\'aide en utilisant l\'icône (?) en haut à droite !',
 
     // create rule:
     'rules_create_mandatory'                                  => 'Choisissez un titre parlant et définissez quand est-ce que la règle doit être déclenchée.',
@@ -130,7 +130,7 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III prend en charge plusieurs devises, que vous pouvez modifier sur cette page.',
-    'currencies_index_default'                                => 'Firefly III a une devise par défaut. Vous pouvez toujours en changer de l\'aide à ces boutons, bien entendu.',
+    'currencies_index_default'                                => 'Firefly III a une devise par défaut. Vous pouvez toujours en changer à l\'aide de ces boutons, bien entendu.',
 
     // create currency
     'currencies_create_code'                                  => 'Ce code devrait être conforme à l\'ISO (recherchez-le sur google votre nouvelle devise).',

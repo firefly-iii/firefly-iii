@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
-    'source_equals_destination'      => 'Le compte source est égal au compte de destination.',
+    'source_equals_destination'      => 'Le compte source est identique au compte de destination.',
     'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
     'unique_iban_for_user'           => 'Il semble que cet IBAN soit déjà utilisé.',
     'deleted_user'                   => 'Compte tenu des contraintes de sécurité, vous ne pouvez pas vous inscrire en utilisant cette adresse e-mail.',
@@ -40,7 +40,7 @@ return [
     'at_least_one_repetition'        => 'Besoin d\'au moins une répétition.',
     'require_repeat_until'           => 'Besoin d’un certain nombre de répétitions ou d\'une date de fin (repeat_until). Pas les deux.',
     'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
-    'equal_description'              => 'La description de la transaction ne doit pas être égale à la description globale.',
+    'equal_description'              => 'La description de la transaction ne doit pas être identique à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
     'file_too_large'                 => 'Le fichier ":name" est trop grand.',
     'belongs_to_user'                => 'La valeur de :attribute est inconnue.',
@@ -50,7 +50,8 @@ return [
     'at_least_one_action'            => 'Une règle doit avoir au moins une action.',
     'base64'                         => 'Il ne s\'agit pas de données base64 valides.',
     'model_id_invalid'               => 'L’ID fournit ne semble pas valide pour ce modèle.',
-    'more'                           => ':attribute doit être supérieur à zéro.',
+    'more'                           => ':attribute must be larger than :value.',
+    'less'                           => ':attribute must be less than 10,000,000',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
     'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',
     'alpha'                          => 'Le champ :attribute doit seulement contenir des lettres.',

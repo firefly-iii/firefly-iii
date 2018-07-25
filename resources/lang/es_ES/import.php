@@ -24,30 +24,30 @@ declare(strict_types=1);
 
 return [
     // ALL breadcrumbs and subtitles:
-    'index_breadcrumb'                     => 'Import data into Firefly III',
-    'prerequisites_breadcrumb_fake'        => 'Prerequisites for the fake import provider',
-    'prerequisites_breadcrumb_spectre'     => 'Prerequisites for Spectre',
-    'prerequisites_breadcrumb_bunq'        => 'Prerequisites for bunq',
-    'job_configuration_breadcrumb'         => 'Configuration for ":key"',
+    'index_breadcrumb'                     => 'Importar datos a Firefly III',
+    'prerequisites_breadcrumb_fake'        => 'Requisitos para el proveedor de importación falso',
+    'prerequisites_breadcrumb_spectre'     => 'Requisitos previos para Spectre',
+    'prerequisites_breadcrumb_bunq'        => 'Requisitos previos para bunq',
+    'job_configuration_breadcrumb'         => 'Configuración para ":key"',
     'job_status_breadcrumb'                => 'Import status for ":key"',
     'cannot_create_for_provider'           => 'Firefly III cannot create a job for the ":provider"-provider.',
 
     // index page:
-    'general_index_title'                  => 'Import a file',
+    'general_index_title'                  => 'Importar un archivo',
     'general_index_intro'                  => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
     // import provider strings (index):
     'button_fake'                          => 'Fake an import',
-    'button_file'                          => 'Import a file',
-    'button_bunq'                          => 'Import from bunq',
-    'button_spectre'                       => 'Import using Spectre',
-    'button_plaid'                         => 'Import using Plaid',
-    'button_yodlee'                        => 'Import using Yodlee',
-    'button_quovo'                         => 'Import using Quovo',
+    'button_file'                          => 'Importar un archivo',
+    'button_bunq'                          => 'Importar desde bunq',
+    'button_spectre'                       => 'Importar usando Spectre',
+    'button_plaid'                         => 'Importar usando Plaid',
+    'button_yodlee'                        => 'Importar usando Yodlee',
+    'button_quovo'                         => 'Importar usando Quovo',
     // global config box (index)
     'global_config_title'                  => 'Global import configuration',
     'global_config_text'                   => 'In the future, this box will feature preferences that apply to ALL import providers above.',
     // prerequisites box (index)
-    'need_prereq_title'                    => 'Import prerequisites',
+    'need_prereq_title'                    => 'Importar requisitos previos',
     'need_prereq_intro'                    => 'Some import methods need your attention before they can be used. For example, they might require special API keys or application secrets. You can configure them here. The icon indicates if these prerequisites have been met.',
     'do_prereq_fake'                       => 'Prerequisites for the fake provider',
     'do_prereq_file'                       => 'Prerequisites for file imports',
@@ -78,8 +78,8 @@ return [
     'prereq_bunq_ip'                       => 'bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'         => 'Fake API key stored successfully!',
-    'prerequisites_saved_for_spectre'      => 'App ID and secret stored!',
-    'prerequisites_saved_for_bunq'         => 'API key and IP stored!',
+    'prerequisites_saved_for_spectre'      => '¡App ID y secreto guardados!',
+    'prerequisites_saved_for_bunq'         => '¡Clave de API e IP almacenadas!',
 
     // job configuration:
     'job_config_apply_rules_title'         => 'Job configuration - apply your rules?',
@@ -107,7 +107,7 @@ return [
     'job_config_uc_date_help'              => 'Date time format in your file. Follow the format as <a href="https://secure.php.net/manual/en/datetime.createfromformat.php#refsect1-datetime.createfromformat-parameters">this page</a> indicates. The default value will parse dates that look like this: :dateExample.',
     'job_config_uc_delimiter_help'         => 'Choose the field delimiter that is used in your input file. If not sure, comma is the safest option.',
     'job_config_uc_account_help'           => 'If your file does NOT contain information about your asset account(s), use this dropdown to select to which account the transactions in the file belong to.',
-    'job_config_uc_apply_rules_title'      => 'Apply rules',
+    'job_config_uc_apply_rules_title'      => 'Aplicar reglas',
     'job_config_uc_apply_rules_text'       => 'Applies your rules to every imported transaction. Note that this slows the import significantly.',
     'job_config_uc_specifics_title'        => 'Bank-specific options',
     'job_config_uc_specifics_txt'          => 'Some banks deliver badly formatted files. Firefly III can fix those automatically. If your bank delivers such files but it\'s not listed here, please open an issue on GitHub.',
@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Caja de ahorros (IBAN)',
     'column_account-id'                    => 'Identificación de Cuenta de ingresos (coincide con FF3)',
     'column_account-name'                  => 'Caja de ahorros (nombre)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Cantidad',
     'column_amount_foreign'                => 'Monto ( en moneda extranjera)',
     'column_amount_debit'                  => 'Cantidad (columna de débito)',

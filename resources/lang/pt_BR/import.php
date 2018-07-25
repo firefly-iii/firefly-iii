@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Conta de Ativo (IBAN)',
     'column_account-id'                    => 'ID da Conta de Ativo (correspondente FF3)',
     'column_account-name'                  => 'Conta de Ativo (nome)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Montante',
     'column_amount_foreign'                => 'Montante (em moeda estrangeira)',
     'column_amount_debit'                  => 'Montante (coluna de débito)',
