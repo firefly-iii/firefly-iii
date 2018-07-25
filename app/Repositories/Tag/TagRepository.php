@@ -286,9 +286,121 @@ class TagRepository implements TagRepositoryInterface
     public function tagCloud(?int $year): array
     {
         // Some vars
-        $min    = null;
-        $max    = '0';
         $return = [];
+        $tags   = $this->getTagsInYear($year);
+        $max    = $this->getMaxAmount($tags);
+        $min    = $this->getMinAmount($tags);
+        $diff   = bcsub($max, $min);
+        $return = [];
+        Log::debug(sprintf('Minimum is %s, maximum is %s, difference is %s', $min, $max, $diff));
+
+        // default scale is from 12 to 24, so 12 points.
+        $minimumFont   = '12';
+        $maxPoints     = '12';
+        $pointsPerCoin = '0';
+
+        // for each full coin in tag, add so many points:
+        if (0 !== bccomp($diff, '0')) {
+            $pointsPerCoin = bcdiv($maxPoints, $diff);
+        }
+
+
+        Log::debug(sprintf('Each coin in a tag earns it %s points', $pointsPerCoin));
+
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $amount       = (string)$tag->amount_sum;
+            $amount       = '' === $amount ? '0' : $amount;
+            $pointsForTag = bcmul($amount, $pointsPerCoin);
+            $fontSize     = bcadd($minimumFont, $pointsForTag);
+            Log::debug(sprintf('Tag "%s": Amount is %s, so points is %s', $tag->tag, $amount, $fontSize));
+
+            // return value for tag cloud:
+            $return[$tag->id] = [
+                'size' => $fontSize,
+                'tag'  => $tag->tag,
+                'id'   => $tag->id,
+            ];
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Tag   $tag
+     * @param array $data
+     *
+     * @return Tag
+     */
+    public function update(Tag $tag, array $data): Tag
+    {
+        $tag->tag         = $data['tag'];
+        $tag->date        = $data['date'];
+        $tag->description = $data['description'];
+        $tag->latitude    = $data['latitude'];
+        $tag->longitude   = $data['longitude'];
+        $tag->zoomLevel   = $data['zoomLevel'];
+        $tag->save();
+
+        return $tag;
+    }
+
+    /**
+     * @param Collection $tags
+     *
+     * @return string
+     */
+    private function getMaxAmount(Collection $tags): string
+    {
+        $max = '0';
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $amount = (string)$tag->amount_sum;
+            $amount = '' === $amount ? '0' : $amount;
+            $max    = 1 === bccomp($amount, $max) ? $amount : $max;
+
+        }
+        Log::debug(sprintf('Maximum is %s.', $max));
+
+        return $max;
+    }
+
+    /**
+     * @param Collection $tags
+     *
+     * @return string
+     */
+    private function getMinAmount(Collection $tags): string
+    {
+        $min = null;
+
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $amount = (string)$tag->amount_sum;
+            $amount = '' === $amount ? '0' : $amount;
+
+            if (null === $min) {
+                $min = $amount;
+            }
+            $min = -1 === bccomp($amount, $min) ? $amount : $min;
+        }
+
+
+        if (null === $min) {
+            $min = '0';
+        }
+        Log::debug(sprintf('Minimum is %s.', $min));
+
+        return $min;
+    }
+
+    /**
+     * @param int|null $year
+     *
+     * @return Collection
+     */
+    private function getTagsInYear(?int $year): Collection
+    {
         // get all tags in the year (if present):
         $tagQuery = $this->user->tags()
                                ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
@@ -312,77 +424,7 @@ class TagRepository implements TagRepositoryInterface
             $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
 
-        $result = $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
+        return $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
 
-        /** @var Tag $tag */
-        foreach ($result as $tag) {
-            $tagsWithAmounts[$tag->id] = (string)$tag->amount_sum;
-            $amount                    = '' !== $tagsWithAmounts[$tag->id] ? $tagsWithAmounts[$tag->id] : '0';
-            if (null === $min) {
-                $min = $amount;
-            }
-            $max = 1 === bccomp($amount, $max) ? $amount : $max;
-            $min = -1 === bccomp($amount, $min) ? $amount : $min;
-
-            $temporary[] = [
-                'amount' => $amount,
-                'tag'    => [
-                    'id'  => $tag->id,
-                    'tag' => $tag->tag,
-                ],
-            ];
-            Log::debug(sprintf('After tag "%s", max is %s and min is %s.', $tag->tag, $max, $min));
-        }
-        $min = $min ?? '0';
-        Log::debug(sprintf('FINAL max is %s, FINAL min is %s', $max, $min));
-        // the difference between max and min:
-        $range = bcsub($max, $min);
-        Log::debug(sprintf('The range is: %s', $range));
-
-        // each euro difference is this step in the scale:
-        $step = 0.0 !== (float)$range ? 8 / (float)$range : 0;
-        Log::debug(sprintf('The step is: %f', $step));
-        $size = 12;
-
-        foreach ($result as $tag) {
-            if (0 === $step) {
-                // easy: size is 12:
-                $size = 12;
-            }
-            if (0 !== $step) {
-                $amount = bcsub((string)$tag->amount_sum, $min);
-                Log::debug(sprintf('Work with amount %s for tag %s', $amount, $tag->tag));
-                $size = ((int)(float)$amount * $step) + 12;
-            }
-
-            $return[$tag->id] = [
-                'size' => $size,
-                'tag'  => $tag->tag,
-                'id'   => $tag->id,
-            ];
-
-            Log::debug(sprintf('Size is %d', $size));
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param Tag   $tag
-     * @param array $data
-     *
-     * @return Tag
-     */
-    public function update(Tag $tag, array $data): Tag
-    {
-        $tag->tag         = $data['tag'];
-        $tag->date        = $data['date'];
-        $tag->description = $data['description'];
-        $tag->latitude    = $data['latitude'];
-        $tag->longitude   = $data['longitude'];
-        $tag->zoomLevel   = $data['zoomLevel'];
-        $tag->save();
-
-        return $tag;
     }
 }
