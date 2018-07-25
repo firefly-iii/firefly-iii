@@ -223,8 +223,8 @@ class CreateController extends Controller
         $triggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
         $values   = [
             $bill->transactionCurrency()->first()->name,
-            round($bill->amount_min, 12),
-            round($bill->amount_max, 12),
+            round((float)$bill->amount_min, 12),
+            round((float)$bill->amount_max, 12),
             $bill->name,
         ];
         foreach ($triggers as $index => $trigger) {

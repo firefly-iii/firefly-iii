@@ -199,7 +199,7 @@ class UpgradeDatabase extends Command
                             [
                                 'rule_id'         => $rule->id,
                                 'trigger_type'    => 'amount_more',
-                                'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                                'trigger_value'   => round((float)$bill->amount_min, $currency->decimal_places),
                                 'active'          => 1,
                                 'stop_processing' => 0,
                                 'order'           => 4,
@@ -211,7 +211,7 @@ class UpgradeDatabase extends Command
                             [
                                 'rule_id'         => $rule->id,
                                 'trigger_type'    => 'amount_exactly',
-                                'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                                'trigger_value'   => round((float)$bill->amount_min, $currency->decimal_places),
                                 'active'          => 1,
                                 'stop_processing' => 0,
                                 'order'           => 3,

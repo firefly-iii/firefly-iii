@@ -150,6 +150,7 @@ class General extends Twig_Extension
                 if (null === $account) {
                     return 'NULL';
                 }
+                /** @var Carbon $date */
                 $date = session('end', Carbon::now()->endOfMonth());
 
                 return app('steam')->balance($account, $date);

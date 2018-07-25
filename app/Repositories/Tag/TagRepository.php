@@ -267,7 +267,6 @@ class TagRepository implements TagRepositoryInterface
     public function tagCloud(?int $year): array
     {
         // Some vars
-        $return = [];
         $tags   = $this->getTagsInYear($year);
         $max    = $this->getMaxAmount($tags);
         $min    = $this->getMinAmount($tags);

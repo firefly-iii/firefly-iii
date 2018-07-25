@@ -166,8 +166,8 @@ class BillController extends Controller
         }
 
         $currency         = app('amount')->getDefaultCurrency();
-        $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
-        $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
+        $bill->amount_min = round((float)$bill->amount_min, $currency->decimal_places);
+        $bill->amount_max = round((float)$bill->amount_max, $currency->decimal_places);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes

@@ -24,8 +24,8 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Crypt;
-use FireflyIII\Support\Models\TransactionJournalTrait;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -33,7 +33,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Illuminate\Database\Eloquent\Builder;
 
 
 /**
@@ -58,6 +57,8 @@ use Illuminate\Database\Eloquent\Builder;
  * @property int                 order
  * @property int                 budget_id
  * @property string              period_marker
+ * @property Carbon              $date
+ * @property string              $transaction_type_type
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -93,6 +94,27 @@ class TransactionJournal extends Model
            'date', 'rent_date', 'encrypted', 'tag_count',];
     /** @var array */
     protected $hidden = ['encrypted'];
+
+    /**
+     * @param Builder $query
+     * @param string  $table
+     *
+     * @return bool
+     */
+    public static function isJoined(Builder $query, string $table): bool
+    {
+        $joins = $query->getQuery()->joins;
+        if (null === $joins) {
+            return false;
+        }
+        foreach ($joins as $join) {
+            if ($join->table === $table) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     /**
      * @param string $value
@@ -264,27 +286,6 @@ class TransactionJournal extends Model
     public function scopeBefore(EloquentBuilder $query, Carbon $date): EloquentBuilder
     {
         return $query->where('transaction_journals.date', '<=', $date->format('Y-m-d 00:00:00'));
-    }
-
-    /**
-     * @param Builder $query
-     * @param string  $table
-     *
-     * @return bool
-     */
-    public static function isJoined(Builder $query, string $table): bool
-    {
-        $joins = $query->getQuery()->joins;
-        if (null === $joins) {
-            return false;
-        }
-        foreach ($joins as $join) {
-            if ($join->table === $table) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

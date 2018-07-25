@@ -229,8 +229,8 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      */
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): TransactionJournalLink
     {
-        $linkType = $this->find((int)($information['link_type_id'] ?? 0));
-        if (null === $linkType->id) {
+        $linkType = $this->findNull((int)($information['link_type_id'] ?? 0));
+        if (null === $linkType) {
             throw new FireflyException(sprintf('Link type #%d cannot be resolved to an actual link type', $information['link_type_id'] ?? 0));
         }
 

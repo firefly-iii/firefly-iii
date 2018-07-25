@@ -28,8 +28,8 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @codeCoverageIgnore
  * Class Steam.
+ *
  * @method string balance(Account $account, Carbon $date)
  * @method string balanceIgnoreVirtual(Account $account, Carbon $date)
  * @method array balanceInRange(Account $account, Carbon $start, Carbon $end)
@@ -42,6 +42,7 @@ use Illuminate\Support\Facades\Facade;
  * @method tryDecrypt($value)
  * @method string positive(string $amount)
  *
+ * @codeCoverageIgnore
  */
 class Steam extends Facade
 {
