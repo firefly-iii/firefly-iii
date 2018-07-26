@@ -113,7 +113,8 @@ class TransactionFactory
         $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
 
         if (null === $sourceAccount || null === $destinationAccount) {
-            throw new FireflyException('Could not determine source or destination account.', $data);
+            Log::error('Info about source/dest:', $data);
+            throw new FireflyException('Could not determine source or destination account.');
         }
 
         Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
