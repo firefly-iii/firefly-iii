@@ -25,8 +25,6 @@ namespace FireflyIII\Services\Bunq;
 
 use bunq\Context\ApiContext as BunqApiContext;
 use bunq\Context\BunqContext;
-use bunq\Exception\BadRequestException;
-use bunq\Exception\BunqException;
 use bunq\Util\BunqEnumApiEnvironmentType;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
@@ -39,6 +37,7 @@ use Log;
  */
 class ApiContext
 {
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param BunqEnumApiEnvironmentType $environmentType
      * @param string                     $apiKey
@@ -50,11 +49,11 @@ class ApiContext
      * @return BunqApiContext
      */
     public function create(BunqEnumApiEnvironmentType $environmentType, string $apiKey, string $description, array $permittedIps, string $proxyUrl = null
-    ) {
+    ): BunqApiContext {
         $permittedIps = $permittedIps ?? [];
         try {
             $context = BunqApiContext::create($environmentType, $apiKey, $description, $permittedIps, $proxyUrl);
-        } catch (BunqException|BadRequestException|Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             Log::error($message);
             Log::error($e->getTraceAsString());
@@ -78,7 +77,7 @@ class ApiContext
         try {
             $apiContext = BunqApiContext::fromJson($jsonString);
             BunqContext::loadApiContext($apiContext);
-        } catch (BadRequestException|BunqException|Exception $e) {
+        } catch (Exception $e) {
             $message = $e->getMessage();
             Log::error($message);
             Log::error($e->getTraceAsString());

@@ -56,6 +56,8 @@ class PwndVerifierV2 implements Verifier
             $client = new Client();
             $res    = $client->request('GET', $uri, $opt);
         } catch (GuzzleException|Exception $e) {
+            Log::error(sprintf('Could not verify password security: %s', $e->getMessage()));
+
             return true;
         }
         Log::debug(sprintf('Status code returned is %d', $res->getStatusCode()));
@@ -63,7 +65,7 @@ class PwndVerifierV2 implements Verifier
             return true;
         }
         $strpos = stripos($res->getBody()->getContents(), $rest);
-        if ($strpos === false) {
+        if (false === $strpos) {
             Log::debug(sprintf('%s was not found in result body. Return true.', $rest));
 
             return true;

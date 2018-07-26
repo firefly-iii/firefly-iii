@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
@@ -80,7 +81,7 @@ trait AccountServiceTrait
      *
      * @return null|string
      */
-    public function filterIban(?string $iban)
+    public function filterIban(?string $iban): ?string
     {
         if (null === $iban) {
             return null;
@@ -204,7 +205,9 @@ trait AccountServiceTrait
                 'reconciled'          => false,
             ]
         );
-        Log::notice(sprintf('Stored two transactions for new account, #%d and #%d', $one->id, $two->id));
+        if (null !== $one && null !== $two) {
+            Log::notice(sprintf('Stored two transactions for new account, #%d and #%d', $one->id, $two->id));
+        }
 
         return $journal;
     }
@@ -214,6 +217,7 @@ trait AccountServiceTrait
      * @param string $name
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeOpposingAccount(User $user, string $name): Account
     {
@@ -231,6 +235,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateIB(Account $account, array $data): bool
     {
@@ -313,14 +318,14 @@ trait AccountServiceTrait
      * @param Account $account
      * @param array   $data
      */
-    public function updateMetaData(Account $account, array $data)
+    public function updateMetaData(Account $account, array $data): void
     {
         $fields = $this->validFields;
 
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && $data['accountRole'] === 'ccAsset') {
+        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['accountRole']) {
             $fields = $this->validCCFields;
         }
         /** @var AccountMetaFactory $factory */
@@ -346,8 +351,12 @@ trait AccountServiceTrait
                     Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
                 }
             }
-            if (null !== $entry && isset($data[$field]) && \strlen((string)$data[$field]) === 0) {
-                $entry->delete();
+            if (null !== $entry && isset($data[$field]) && '' === (string)$data[$field]) {
+                try {
+                    $entry->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Could not delete entry: %s', $e->getMessage()));
+                }
             }
         }
     }
@@ -360,7 +369,7 @@ trait AccountServiceTrait
      */
     public function updateNote(Account $account, string $note): bool
     {
-        if (0 === \strlen($note)) {
+        if ('' === $note) {
             $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();

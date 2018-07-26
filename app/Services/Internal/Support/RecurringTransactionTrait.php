@@ -205,7 +205,7 @@ trait RecurringTransactionTrait
             $entry->value = implode(',', $tags);
             $entry->save();
         }
-        if (\count($tags) === 0) {
+        if (0 === \count($tags)) {
             // delete if present
             $recurrence->recurrenceMeta()->where('name', 'tags')->delete();
         }

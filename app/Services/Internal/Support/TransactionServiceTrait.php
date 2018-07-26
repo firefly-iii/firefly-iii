@@ -100,6 +100,7 @@ trait TransactionServiceTrait
      * @param string|null $accountName
      *
      * @return Account|null
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account
     {

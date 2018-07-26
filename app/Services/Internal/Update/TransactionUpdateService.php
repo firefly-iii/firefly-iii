@@ -69,6 +69,7 @@ class TransactionUpdateService
      * @param array       $data
      *
      * @return Transaction
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function update(Transaction $transaction, array $data): Transaction
     {
@@ -100,7 +101,7 @@ class TransactionUpdateService
         $transaction->description             = $description;
         $transaction->amount                  = $amount;
         $transaction->foreign_amount          = null;
-        $transaction->transaction_currency_id = $currency->id;
+        $transaction->transaction_currency_id = null === $currency ? $transaction->transaction_currency_id : $currency->id;
         $transaction->account_id              = $account->id;
         $transaction->reconciled              = $data['reconciled'];
         $transaction->save();
@@ -108,11 +109,11 @@ class TransactionUpdateService
         // set foreign currency
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         // set foreign amount:
-        if (null !== $data['foreign_amount'] && null !== $foreign) {
+        if (null !== $foreign && null !== $data['foreign_amount']) {
             $this->setForeignCurrency($transaction, $foreign);
             $this->setForeignAmount($transaction, $foreignAmount);
         }
-        if (null === $data['foreign_amount'] || null === $foreign) {
+        if (null === $foreign && null === $data['foreign_amount']) {
             $this->setForeignCurrency($transaction, null);
             $this->setForeignAmount($transaction, null);
         }

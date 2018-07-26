@@ -52,8 +52,10 @@ trait JournalServiceTrait
         }
         foreach ($data['tags'] as $string) {
             if (\strlen($string) > 0) {
-                $tag   = $factory->findOrCreate($string);
-                $set[] = $tag->id;
+                $tag = $factory->findOrCreate($string);
+                if (null !== $tag) {
+                    $set[] = $tag->id;
+                }
             }
         }
         $journal->tags()->sync($set);

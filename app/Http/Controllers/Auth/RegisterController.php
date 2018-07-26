@@ -88,8 +88,9 @@ class RegisterController extends Controller
 
         session()->flash('success', (string)trans('firefly.registered'));
 
-        return $this->registered($request, $user)
-            ?: redirect($this->redirectPath());
+        $this->registered($request, $user);
+
+        return redirect($this->redirectPath());
     }
 
     /**

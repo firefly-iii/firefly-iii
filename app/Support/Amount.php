@@ -121,7 +121,7 @@ class Amount
         $locale = explode(',', (string)trans('config.locale'));
         $locale = array_map('trim', $locale);
         setlocale(LC_MONETARY, $locale);
-        $float     = round($amount, 12);
+        $float     = round($amount, $format->decimal_places);
         $info      = localeconv();
         $formatted = number_format($float, (int)$format->decimal_places, $info['mon_decimal_point'], $info['mon_thousands_sep']);
 
