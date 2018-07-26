@@ -97,8 +97,8 @@ class JobStatusController extends Controller
         if ('file' === $importJob->provider) {
             $json['download_config'] = true;
             $json['download_config_text']
-                                     = (string)trans('import.should_download_config', ['route' => route('import.job.download', [$importJob->key])]) . ' '
-                                       . (string)trans('import.share_config_file');
+                                     = trans('import.should_download_config', ['route' => route('import.job.download', [$importJob->key])]) . ' '
+                                       . trans('import.share_config_file');
         }
 
         // if count is zero:

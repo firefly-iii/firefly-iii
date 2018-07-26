@@ -124,8 +124,8 @@ class PiggyBankTransformer extends TransformerAbstract
         $accountRepos = app(AccountRepositoryInterface::class);
         $accountRepos->setUser($account->user);
         $currencyId = (int)$accountRepos->getMetaValue($account, 'currency_id');
-
-        if ($currencyId === 0) {
+        $currency   = null;
+        if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrencyByUser($account->user);
         }
 

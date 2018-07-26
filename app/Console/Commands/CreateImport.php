@@ -265,8 +265,8 @@ class CreateImport extends Command
      */
     private function validArguments(): bool
     {
-        $file          = $this->argument('file');
-        $configuration = $this->argument('configuration');
+        $file          = (string)$this->argument('file');
+        $configuration = (string)$this->argument('configuration');
         $cwd           = getcwd();
         $validTypes    = config('import.options.file.import_formats');
         $type          = strtolower($this->option('type'));

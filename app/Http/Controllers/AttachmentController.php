@@ -146,8 +146,9 @@ class AttachmentController extends Controller
             $this->rememberPreviousUri('attachments.edit.uri');
         }
         $request->session()->forget('attachments.edit.fromUpdate');
-
-        $preFilled['notes'] = $this->repository->getNoteText($attachment);
+        $preFilled = [
+            'notes' => $this->repository->getNoteText($attachment),
+        ];
         $request->session()->flash('preFilled', $preFilled);
 
         return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));

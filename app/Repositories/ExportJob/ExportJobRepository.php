@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\ExportJob;
 use Carbon\Carbon;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
 use Log;
 use Storage;
@@ -120,6 +121,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
 
     /**
      * @param string $key
+     *
      * @return ExportJob|null
      */
     public function findByKey(string $key): ?ExportJob
@@ -137,14 +139,19 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      * @param ExportJob $job
      *
      * @return string
-     *
      */
     public function getContent(ExportJob $job): string
     {
-        $disk = Storage::disk('export');
-        $file = $job->key . '.zip';
+        $disk    = Storage::disk('export');
+        $file    = $job->key . '.zip';
+        $content = '';
+        try {
+            $content = $disk->get($file);
+        } catch (FileNotFoundException $e) {
+            Log::warning(sprintf('File not found: %s', $e->getMessage()));
+        }
 
-        return $disk->get($file);
+        return $content;
     }
 
     /**

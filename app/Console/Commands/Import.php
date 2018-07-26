@@ -62,7 +62,7 @@ class Import extends Command
     public function handle(): int
     {
         Log::debug('Start start-import command');
-        $jobKey = $this->argument('key');
+        $jobKey = (string)$this->argument('key');
         $job    = ImportJob::where('key', $jobKey)->first();
         if (null === $job) {
             $this->errorLine(sprintf('No job found with key "%s"', $jobKey));

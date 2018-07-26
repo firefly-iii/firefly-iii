@@ -27,6 +27,7 @@ namespace FireflyIII\Rules;
 use Carbon\Carbon;
 use Illuminate\Contracts\Validation\Rule;
 use InvalidArgumentException;
+use Log;
 
 /**
  * Class ValidRecurrenceRepetitionValue
@@ -51,57 +52,103 @@ class ValidRecurrenceRepetitionValue implements Rule
      * @param  mixed  $value
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function passes($attribute, $value): bool
     {
         $value = (string)$value;
 
-        if ($value === 'daily') {
+        if ('daily' === $value) {
             return true;
         }
 
         if (0 === strpos($value, 'monthly')) {
-            $dayOfMonth = (int)substr($value, 8);
-
-            return $dayOfMonth > 0 && $dayOfMonth < 32;
+            return $this->validateMonthly($value);
         }
 
         //ndom,3,7
         // nth x-day of the month.
         if (0 === strpos($value, 'ndom')) {
-            $parameters = explode(',', substr($value, 5));
-            if (\count($parameters) !== 2) {
-                return false;
-            }
-            $nthDay    = (int)($parameters[0] ?? 0.0);
-            $dayOfWeek = (int)($parameters[1] ?? 0.0);
-            if ($nthDay < 1 || $nthDay > 5) {
-                return false;
-            }
-
-            return $dayOfWeek > 0 && $dayOfWeek < 8;
+            return $this->validateNdom($value);
         }
 
         //weekly,7
         if (0 === strpos($value, 'weekly')) {
-            $dayOfWeek = (int)substr($value, 7);
-
-            return $dayOfWeek > 0 && $dayOfWeek < 8;
+            return $this->validateWeekly($value);
         }
 
         //yearly,2018-01-01
         if (0 === strpos($value, 'yearly')) {
-            // rest of the string must be valid date:
-            $dateString = substr($value, 7);
-            try {
-                $date = Carbon::createFromFormat('Y-m-d', $dateString);
-            } catch (InvalidArgumentException $e) {
-                return false;
-            }
-
-            return true;
+            return $this->validateYearly($value);
         }
 
         return false;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function validateMonthly(string $value): bool
+    {
+        $dayOfMonth = (int)substr($value, 8);
+
+        return $dayOfMonth > 0 && $dayOfMonth < 32;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function validateNdom(string $value): bool
+    {
+        $parameters = explode(',', substr($value, 5));
+        if (2 !== \count($parameters)) {
+            return false;
+        }
+        $nthDay    = (int)($parameters[0] ?? 0.0);
+        $dayOfWeek = (int)($parameters[1] ?? 0.0);
+        if ($nthDay < 1 || $nthDay > 5) {
+            return false;
+        }
+
+        return $dayOfWeek > 0 && $dayOfWeek < 8;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function validateWeekly(string $value): bool
+    {
+        $dayOfWeek = (int)substr($value, 7);
+
+        return $dayOfWeek > 0 && $dayOfWeek < 8;
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    private function validateYearly(string $value): bool
+    {
+        // rest of the string must be valid date:
+        $dateString = substr($value, 7);
+        try {
+            Carbon::createFromFormat('Y-m-d', $dateString);
+        } catch (InvalidArgumentException $e) {
+            Log::debug(sprintf('Could not parse date %s: %s', $dateString, $e->getMessage()));
+
+            return false;
+        }
+
+        return true;
     }
 }

@@ -463,6 +463,7 @@ class ImportArrayStorage
         foreach ($transaction['transactions'] as $current) {
 
             // get the amount:
+            /** @noinspection UnnecessaryCastingInspection */
             $amount = (string)($current['amount'] ?? '0');
             if (bccomp($amount, '0') === -1) {
                 $amount = bcmul($amount, '-1'); // @codeCoverageIgnore

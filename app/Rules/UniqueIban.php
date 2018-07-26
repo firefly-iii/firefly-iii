@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
@@ -57,7 +56,7 @@ class UniqueIban implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
         return (string)trans('validation.unique_iban_for_user');
     }
@@ -69,9 +68,10 @@ class UniqueIban implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         if (!auth()->check()) {
             return true; // @codeCoverageIgnore
@@ -79,50 +79,11 @@ class UniqueIban implements Rule
         if (null === $this->expectedType) {
             return true;
         }
-        $maxCounts = [
-            AccountType::ASSET   => 0,
-            AccountType::EXPENSE => 0,
-            AccountType::REVENUE => 0,
-        ];
-        switch ($this->expectedType) {
-            case 'asset':
-            case AccountType::ASSET:
-                // iban should be unique amongst asset accounts
-                // should not be in use with expense or revenue accounts.
-                // ie: must be totally unique.
-                break;
-            case 'expense':
-            case AccountType::EXPENSE:
-                // should be unique amongst expense and asset accounts.
-                // may appear once in revenue accounts
-                $maxCounts[AccountType::REVENUE] = 1;
-                break;
-            case 'revenue':
-            case AccountType::REVENUE:
-                // should be unique amongst revenue and asset accounts.
-                // may appear once in expense accounts
-                $maxCounts[AccountType::EXPENSE] = 1;
-                break;
-            default:
-
-                throw new FireflyException(sprintf('UniqueIban cannot handle type "%s"', $this->expectedType));
-        }
+        $maxCounts = $this->getMaxOccurrences();
 
         foreach ($maxCounts as $type => $max) {
-            $count = 0;
-            $query = auth()->user()
-                           ->accounts()
-                           ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                           ->where('account_types.type', $type);
-            if (null !== $this->account) {
-                $query->where('accounts.id', '!=', $this->account->id);
-            }
-            $result = $query->get(['accounts.*']);
-            foreach ($result as $account) {
-                if ($account->iban === $value) {
-                    $count++;
-                }
-            }
+            $count = $this->countHits($type, $value);
+
             if ($count > $max) {
                 Log::debug(
                     sprintf(
@@ -136,5 +97,58 @@ class UniqueIban implements Rule
         }
 
         return true;
+    }
+
+    /**
+     * @param string $type
+     * @param string $iban
+     *
+     * @return int
+     */
+    private function countHits(string $type, string $iban): int
+    {
+        $count = 0;
+        /** @noinspection NullPointerExceptionInspection */
+        $query = auth()->user()
+                       ->accounts()
+                       ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                       ->where('account_types.type', $type);
+        if (null !== $this->account) {
+            $query->where('accounts.id', '!=', $this->account->id);
+        }
+        $result = $query->get(['accounts.*']);
+        foreach ($result as $account) {
+            if ($account->iban === $iban) {
+                $count++;
+            }
+        }
+
+        return $count;
+    }
+
+    /**
+     * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function getMaxOccurrences(): array
+    {
+        $maxCounts = [
+            AccountType::ASSET   => 0,
+            AccountType::EXPENSE => 0,
+            AccountType::REVENUE => 0,
+        ];
+
+        if ('expense' === $this->expectedType || AccountType::EXPENSE === $this->expectedType) {
+            // IBAN should be unique amongst expense and asset accounts.
+            // may appear once in revenue accounts
+            $maxCounts[AccountType::REVENUE] = 1;
+        }
+        if ('revenue' === $this->expectedType || AccountType::EXPENSE === $this->expectedType) {
+            // IBAN should be unique amongst revenue and asset accounts.
+            // may appear once in expense accounts
+            $maxCounts[AccountType::EXPENSE] = 1;
+        }
+
+        return $maxCounts;
     }
 }

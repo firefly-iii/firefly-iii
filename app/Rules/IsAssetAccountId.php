@@ -49,6 +49,8 @@ class IsAssetAccountId implements Rule
      * @param  mixed  $value
      *
      * @return bool
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function passes($attribute, $value): bool
     {

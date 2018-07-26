@@ -185,7 +185,7 @@ class ReconcileController extends Controller
         if (TransactionType::RECONCILIATION !== $journal->transactionType->type) {
             return redirect(route('transactions.show', [$journal->id]));
         }
-        $subTitle = (string)trans('firefly.reconciliation') . ' "' . $journal->description . '"';
+        $subTitle = trans('firefly.reconciliation') . ' "' . $journal->description . '"';
 
         // get main transaction:
         $transaction = $this->repository->getAssetTransaction($journal);

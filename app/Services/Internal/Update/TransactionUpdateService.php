@@ -75,7 +75,8 @@ class TransactionUpdateService
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $journal     = $transaction->transactionJournal;
         $description = $journal->description === $data['description'] ? null : $data['description'];
-
+        $amount      = (string)$data['amount'];
+        $account     = null;
         // update description:
         $transaction->description = $description;
         $foreignAmount            = null;
@@ -83,7 +84,7 @@ class TransactionUpdateService
             // this is the source transaction.
             $type          = $this->accountType($journal, 'source');
             $account       = $this->findAccount($type, $data['source_id'], $data['source_name']);
-            $amount        = app('steam')->negative((string)$data['amount']);
+            $amount        = app('steam')->negative($amount);
             $foreignAmount = app('steam')->negative((string)$data['foreign_amount']);
         }
 
@@ -91,7 +92,7 @@ class TransactionUpdateService
             // this is the destination transaction.
             $type          = $this->accountType($journal, 'destination');
             $account       = $this->findAccount($type, $data['destination_id'], $data['destination_name']);
-            $amount        = app('steam')->positive((string)$data['amount']);
+            $amount        = app('steam')->positive($amount);
             $foreignAmount = app('steam')->positive((string)$data['foreign_amount']);
         }
 

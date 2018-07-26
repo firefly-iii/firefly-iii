@@ -106,7 +106,7 @@ class EventServiceProvider extends ServiceProvider
      * @codeCoverageIgnore
      * Register any events for your application.
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
         $this->registerCreateEvents();
