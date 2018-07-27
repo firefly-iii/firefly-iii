@@ -2,6 +2,9 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+Many updated French translations thanks to https://crowdin.com/profile/bubka
+
+
 
 ## [4.7.5.1] - 2018-07-14
 ### Fixed
