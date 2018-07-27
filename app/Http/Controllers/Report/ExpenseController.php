@@ -107,7 +107,7 @@ class ExpenseController extends Controller
         try {
             $result = view('reports.partials.exp-budgets', compact('together'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render category::budget: %s', $e->getMessage()));
             $result = 'An error prevented Firefly III from rendering. Apologies.';
         }
         $cache->store($result);
@@ -271,7 +271,7 @@ class ExpenseController extends Controller
         try {
             $result = view('reports.partials.top-transactions', compact('sorted'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render category::topExpense: %s', $e->getMessage()));
             $result = 'An error prevented Firefly III from rendering. Apologies.';
         }
         $cache->store($result);
@@ -320,7 +320,7 @@ class ExpenseController extends Controller
         try {
             $result = view('reports.partials.top-transactions', compact('sorted'))->render();
         } catch (Throwable $e) {
-            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            Log::error(sprintf('Could not render category::topIncome: %s', $e->getMessage()));
             $result = 'An error prevented Firefly III from rendering. Apologies.';
         }
         $cache->store($result);

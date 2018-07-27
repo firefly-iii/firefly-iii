@@ -176,7 +176,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return response()->json($cache->get());// @codeCoverageIgnore
         }
         $repository = app(CategoryRepositoryInterface::class);
         $expenses   = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
@@ -237,7 +237,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $repository = app(CategoryRepositoryInterface::class);
         $expenses   = $repository->periodExpensesNoCategory($accounts, $start, $end);

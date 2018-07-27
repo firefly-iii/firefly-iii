@@ -176,15 +176,15 @@ class AutoCompleteController extends Controller
      * @param JournalCollectorInterface $collector
      * @param TransactionJournal        $except
      *
-     * @return JsonResponse|mixed
+     * @return JsonResponse
      */
-    public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except)
+    public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('recent-journals-id');
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         $collector->setLimit(400)->setPage(1);

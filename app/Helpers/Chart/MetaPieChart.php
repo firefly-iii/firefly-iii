@@ -359,7 +359,7 @@ class MetaPieChart implements MetaPieChartInterface
         $repository->setUser($this->user);
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
-                $object           = $repository->find((int)$objectId);
+                $object           = $repository->findNull((int)$objectId);
                 $names[$objectId] = $object->name ?? $object->tag;
             }
             $amount                       = app('steam')->positive($amount);
