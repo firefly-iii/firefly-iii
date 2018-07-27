@@ -63,7 +63,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
-        Log::debug('Test show()');
+        Log::debug(sprintf('Test show(%s)', $range));
         $transaction   = factory(Transaction::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -113,7 +113,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowAll(string $range): void
     {
-        Log::debug('Test showAll()');
+        Log::debug(sprintf('Test showAll(%s)', $range));
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -151,7 +151,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowByDate(string $range): void
     {
-        Log::debug('Test showbydate()');
+        Log::debug(sprintf('Test testShowByDate(%s)', $range));
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -199,9 +199,12 @@ class ShowControllerTest extends TestCase
      */
     public function testShowEmpty(string $range): void
     {
-        Log::debug('Test showempty()');
+        $latestJournal = $this->user()->transactionJournals()
+            ->orderBy('date','DESC')->first();
+
+        Log::debug(sprintf('Test testShowEmpty(%s)', $range));
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
+        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($latestJournal);
 
         // mock stuff
         $repository = $this->mock(CategoryRepositoryInterface::class);

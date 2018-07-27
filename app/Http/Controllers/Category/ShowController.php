@@ -36,7 +36,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-
+use Log;
 
 /**
  *
@@ -88,10 +88,11 @@ class ShowController extends Controller
      */
     public function show(Request $request, Category $category, Carbon $start = null, Carbon $end = null)
     {
+        Log::debug('Now in show()');
         /** @var Carbon $start */
-        $start = $start ?? session('start');
+        $start = $start ?? session('start', Carbon::create()->startOfMonth());
         /** @var Carbon $end */
-        $end          = $end ?? session('end');
+        $end          = $end ?? session('end', Carbon::create()->startOfMonth());
         $subTitleIcon = 'fa-bar-chart';
         $moment       = '';
         $page         = (int)$request->get('page');
@@ -111,6 +112,8 @@ class ShowController extends Controller
         $collector->removeFilter(InternalTransferFilter::class);
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath($path);
+
+        Log::debug('End of show()');
 
         return view('categories.show', compact('category', 'transactions', 'moment', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
