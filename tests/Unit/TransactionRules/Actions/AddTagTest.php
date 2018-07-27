@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Actions;
 
+use FireflyIII\Factory\TagFactory;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
@@ -39,7 +40,13 @@ class AddTagTest extends TestCase
      */
     public function testActExistingTag(): void
     {
-        $tag     = $this->user()->tags()->inRandomOrder()->whereNull('deleted_at')->first();
+        $tag = $this->user()->tags()->inRandomOrder()->whereNull('deleted_at')->first();
+
+        $tagFactory = $this->mock(TagFactory::class);
+        $tagFactory->shouldReceive('setUser')->once();
+        $tagFactory->shouldReceive('findOrCreate')->once()->withArgs([$tag->tag])->andReturn($tag);
+
+
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
         $journal->tags()->sync([]);
@@ -59,9 +66,10 @@ class AddTagTest extends TestCase
      */
     public function testActNoTag(): void
     {
+        $newTagName               = 'TestTag-' . random_int(1, 10000);
         $journal                  = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
         $ruleAction               = new RuleAction;
-        $ruleAction->action_value = 'TestTag-' . random_int(1, 10000);
+        $ruleAction->action_value = $newTagName;
         $action                   = new AddTag($ruleAction);
         $result                   = $action->act($journal);
         $this->assertTrue($result);
