@@ -67,18 +67,18 @@ class ValidRecurrenceRepetitionValue implements Rule
             return $this->validateMonthly($value);
         }
 
-        //ndom,3,7
+        // Value is like: ndom,3,7
         // nth x-day of the month.
         if (0 === strpos($value, 'ndom')) {
             return $this->validateNdom($value);
         }
 
-        //weekly,7
+        // Value is like: weekly,7
         if (0 === strpos($value, 'weekly')) {
             return $this->validateWeekly($value);
         }
 
-        //yearly,2018-01-01
+        // Value is like: yearly,2018-01-01
         if (0 === strpos($value, 'yearly')) {
             return $this->validateYearly($value);
         }

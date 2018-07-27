@@ -195,6 +195,7 @@ class ShowController extends Controller
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
+        /** @var Carbon $start */
         $start  = session('first', Carbon::create()->startOfYear());
         $end    = new Carbon;
         $limits = $this->getLimits($budget, $start, $end);

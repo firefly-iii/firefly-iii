@@ -55,7 +55,7 @@ class FireflyConfig
      *
      * @return \FireflyIII\Models\Configuration|null
      */
-    public function get(string $name, $default = null): ?Configuration
+        public function get(string $name, $default = null): ?Configuration
     {
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {

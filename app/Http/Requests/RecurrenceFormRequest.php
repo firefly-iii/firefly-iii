@@ -190,7 +190,7 @@ class RecurrenceFormRequest extends Request
             $rules['repetitions'] = 'required|numeric|between:0,254';
         }
         // if foreign amount, currency must be  different.
-        if (0.0 !== $this->float('foreign_amount')) {
+        if (null !== $this->float('foreign_amount')) {
             $rules['foreign_currency_id'] = 'exists:transaction_currencies,id|different:transaction_currency_id';
         }
 

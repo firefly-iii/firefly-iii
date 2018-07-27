@@ -25,6 +25,7 @@ namespace Tests\Unit\TransactionRules\Triggers;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountContains;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -39,14 +40,11 @@ class ToAccountContainsTest extends TestCase
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
 
-        $count = 0;
-        do {
-            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
-            $transactionCount = $journal->transactions()->count();
-            $account          = null === $transaction ? null : $transaction->account;
-            $count++;
-        } while ($account === null && $count < 30 && $transactionCount !== 2);
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
 
         $trigger = ToAccountContains::makeFromStrings($account->name, false);
@@ -60,14 +58,12 @@ class ToAccountContainsTest extends TestCase
     public function testTriggeredNot(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $count = 0;
-        do {
-            $journal          = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction      = $journal->transactions()->where('amount', '>', 0)->first();
-            $transactionCount = $journal->transactions()->count();
-            $account          = null === $transaction ? null : $transaction->account;
-            $count++;
-        } while ($account === null && $count < 30 && $transactionCount !== 2);
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
 
         $trigger = ToAccountContains::makeFromStrings('some name' . random_int(1, 234), false);

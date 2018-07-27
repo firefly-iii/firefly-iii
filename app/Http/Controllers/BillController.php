@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
@@ -277,7 +278,9 @@ class BillController extends Controller
         // add info about rules:
         $rules          = $this->billRepository->getRulesForBill($bill);
         $subTitle       = $bill->name;
+        /** @var Carbon $start */
         $start          = session('start');
+        /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
         $page           = (int)$request->get('page');

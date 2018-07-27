@@ -29,6 +29,7 @@ use bunq\Util\BunqEnumApiEnvironmentType;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use Log;
+use Tests\Object\FakeApiContext;
 
 /**
  * Special class to hide away bunq's static initialisation methods.
@@ -46,10 +47,10 @@ class ApiContext
      * @param string|null                $proxyUrl
      *
      * @throws FireflyException
-     * @return BunqApiContext
+     * @return BunqApiContext|FakeApiContext
      */
     public function create(BunqEnumApiEnvironmentType $environmentType, string $apiKey, string $description, array $permittedIps, string $proxyUrl = null
-    ): BunqApiContext {
+    ) {
         $permittedIps = $permittedIps ?? [];
         try {
             $context = BunqApiContext::create($environmentType, $apiKey, $description, $permittedIps, $proxyUrl);

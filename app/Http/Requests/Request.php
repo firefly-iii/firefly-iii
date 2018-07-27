@@ -56,11 +56,15 @@ class Request extends FormRequest
      *
      * @param string $field
      *
-     * @return float
+     * @return float|null
      */
-    public function float(string $field): float
+    public function float(string $field): ?float
     {
-        return (float)$this->get($field);
+        $res = $this->get($field);
+        if(null === $res) {
+            return null;
+        }
+        return (float)$res;
     }
 
     /**

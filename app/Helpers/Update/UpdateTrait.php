@@ -66,12 +66,12 @@ trait UpdateTrait
     /**
      * Parses the version check result in a human readable sentence.
      *
-     * @param Release|null $release
      * @param int          $versionCheck
+     * @param Release|null $release
      *
      * @return string
      */
-    public function parseResult(Release $release = null, int $versionCheck): string
+    public function parseResult(int $versionCheck, Release $release = null): string
     {
         $current = (string)config('firefly.version');
         $return  = '';

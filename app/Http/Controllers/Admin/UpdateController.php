@@ -101,7 +101,7 @@ class UpdateController extends Controller
     {
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
-        $resultString  = $this->parseResult($latestRelease, $versionCheck);
+        $resultString  = $this->parseResult($versionCheck, $latestRelease);
 
         if (0 !== $versionCheck && '' !== $resultString) {
             // flash info

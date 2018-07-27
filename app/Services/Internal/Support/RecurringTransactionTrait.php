@@ -28,6 +28,7 @@ use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
@@ -44,6 +45,15 @@ use Log;
  */
 trait RecurringTransactionTrait
 {
+    /**
+     * @param null|string $expectedType
+     * @param int|null    $accountId
+     * @param null|string $accountName
+     *
+     * @return Account|null
+     */
+    abstract public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account;
+
     /**
      * @param Recurrence $recurrence
      * @param array      $repetitions

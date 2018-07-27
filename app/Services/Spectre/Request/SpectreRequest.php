@@ -250,7 +250,7 @@ abstract class SpectreRequest
             $client = new Client;
             $res    = $client->request('POST', $fullUri, ['headers' => $headers, 'body' => $body]);
         } catch (GuzzleException|Exception $e) {
-            throw new FireflyException(sprintf('Request Exception: %s', $e->getMessage()));
+            throw new FireflyException(sprintf('Guzzle Exception: %s', $e->getMessage()));
         }
         $body       = $res->getBody()->getContents();
         $statusCode = $res->getStatusCode();

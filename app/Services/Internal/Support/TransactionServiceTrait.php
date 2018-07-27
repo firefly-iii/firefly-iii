@@ -124,7 +124,6 @@ trait TransactionServiceTrait
 
                 // alternatively, return by name. Validator should catch invalid names.
                 return $repository->findByName($accountName, [AccountType::ASSET]);
-                break;
             case AccountType::EXPENSE:
                 if ($accountId > 0) {
                     // must be able to find it based on ID. Validator should catch invalid ID's.
@@ -140,7 +139,6 @@ trait TransactionServiceTrait
 
                 // return cash account:
                 return $repository->getCashAccount();
-                break;
             case AccountType::REVENUE:
                 if ($accountId > 0) {
                     // must be able to find it based on ID. Validator should catch invalid ID's.

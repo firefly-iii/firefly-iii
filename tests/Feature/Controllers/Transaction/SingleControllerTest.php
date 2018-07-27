@@ -845,6 +845,11 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
 
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
+
+
+
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
         $attRepos->shouldReceive('saveAttachmentsForModel');

@@ -161,7 +161,7 @@ class ReconcileController extends Controller
 
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currency) {
+        if (0 === $currencyId) {
             $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
         }
 

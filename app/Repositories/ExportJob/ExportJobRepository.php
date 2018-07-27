@@ -144,11 +144,12 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     {
         $disk    = Storage::disk('export');
         $file    = $job->key . '.zip';
-        $content = '';
+
         try {
             $content = $disk->get($file);
         } catch (FileNotFoundException $e) {
             Log::warning(sprintf('File not found: %s', $e->getMessage()));
+            $content = '';
         }
 
         return $content;

@@ -101,13 +101,10 @@ class FileJobConfiguration implements JobConfigurationInterface
                 return 'import.file.new';
             case 'configure-upload':
                 return 'import.file.configure-upload';
-                break;
             case 'roles':
                 return 'import.file.roles';
-                break;
             case 'map':
                 return 'import.file.map';
-                break;
             default:
                 // @codeCoverageIgnoreStart
                 throw new FireflyException(

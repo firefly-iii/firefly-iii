@@ -77,11 +77,12 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentContent(Attachment $attachment): string
     {
-        $content = '';
+
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
         } catch (DecryptException|FileNotFoundException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+            $content = '';
         }
 
         return $content;

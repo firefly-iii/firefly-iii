@@ -31,6 +31,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Collector\AttachmentCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
+use FireflyIII\Export\Exporter\ExporterInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\AccountMeta;
@@ -220,6 +221,7 @@ class ExpandedProcessor implements ProcessorInterface
     public function exportJournals(): bool
     {
         $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
+        /** @var ExporterInterface $exporter */
         $exporter      = app($exporterClass);
         $exporter->setJob($this->job);
         $exporter->setEntries($this->exportEntries);

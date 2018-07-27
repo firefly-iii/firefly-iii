@@ -66,22 +66,18 @@ class ImportProvider implements BinderInterface
         $isDemoUser    = $repository->hasRole($user, 'demo');
         $isDebug       = (bool)config('app.debug');
         foreach ($providerNames as $providerName) {
-            //Log::debug(sprintf('Now with provider %s', $providerName));
             // only consider enabled providers
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
             $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
             if (false === $enabled) {
-                //Log::debug('Provider is not enabled. NEXT!');
                 continue;
             }
 
             if (true === $isDemoUser && false === $allowedForDemo) {
-                //Log::debug('User is demo and this provider is not allowed for demo user. NEXT!');
                 continue;
             }
             if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
-                //Log::debug('User is not demo and this provider is not allowed for such users. NEXT!');
                 continue; // @codeCoverageIgnore
             }
 

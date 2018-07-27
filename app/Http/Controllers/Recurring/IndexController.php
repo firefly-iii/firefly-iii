@@ -95,19 +95,16 @@ class IndexController extends Controller
     /**
      * Show a single recurring transaction.
      *
-     * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws FireflyException
      */
-    public function show(Request $request, Recurrence $recurrence)
+    public function show(Recurrence $recurrence)
     {
         $transformer  = new RecurrenceTransformer(new ParameterBag);
         $array        = $transformer->transform($recurrence);
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $transactions = $this->recurring->getTransactions($recurrence, $page, $pageSize);
+        $transactions = $this->recurring->getTransactions($recurrence);
 
         // transform dates back to Carbon objects:
         foreach ($array['recurrence_repetitions'] as $index => $repetition) {

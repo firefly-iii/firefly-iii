@@ -149,8 +149,11 @@ class JavascriptController extends Controller
     private function getDateRangeConfig(): array
     {
         $viewRange = app('preferences')->get('viewRange', '1M')->data;
+        /** @var Carbon $start */
         $start     = session('start');
+        /** @var Carbon $end */
         $end       = session('end');
+        /** @var Carbon $first */
         $first     = session('first');
         $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
         $isCustom  = true === session('is_custom_range', false);

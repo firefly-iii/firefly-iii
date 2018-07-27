@@ -276,7 +276,7 @@ class DebugController extends Controller
     {
         $packages = [];
         $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
-        if (!(false === $file) && file_exists($file)) {
+        if (file_exists($file)) {
             // file exists!
             $content = file_get_contents($file);
             $json    = json_decode($content, true);

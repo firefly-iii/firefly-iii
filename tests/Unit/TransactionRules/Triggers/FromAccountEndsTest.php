@@ -25,6 +25,7 @@ namespace Tests\Unit\TransactionRules\Triggers;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\FromAccountEnds;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 /**
@@ -38,13 +39,11 @@ class FromAccountEndsTest extends TestCase
     public function testTriggered(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $count = 0;
-        while ($count === 0) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->where('amount', '<', 0)->count();
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-        }
-        $account     = $transaction->account;
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalSourceAccounts')->once()->andReturn($collection);
 
         $trigger = FromAccountEnds::makeFromStrings(substr($account->name, -3), false);
         $result  = $trigger->triggered($journal);
@@ -57,13 +56,12 @@ class FromAccountEndsTest extends TestCase
     public function testTriggeredLonger(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $count = 0;
-        while ($count === 0) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->where('amount', '<', 0)->count();
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-        }
-        $account     = $transaction->account;
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalSourceAccounts')->once()->andReturn($collection);
 
         $trigger = FromAccountEnds::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
@@ -76,7 +74,12 @@ class FromAccountEndsTest extends TestCase
     public function testTriggeredNot(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalSourceAccounts')->once()->andReturn($collection);
 
         $trigger = FromAccountEnds::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);

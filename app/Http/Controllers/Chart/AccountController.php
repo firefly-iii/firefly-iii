@@ -74,7 +74,9 @@ class AccountController extends Controller
      */
     public function expenseAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
+        /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = clone session('end', Carbon::now()->endOfMonth());
         $cache = new CacheProperties;
         $cache->addProperty($start);

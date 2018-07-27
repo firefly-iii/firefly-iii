@@ -161,7 +161,7 @@ class BillRepository implements BillRepositoryInterface
 
         $set = $set->sortBy(
             function (Bill $bill) {
-                $int = 1 === $bill->active ? 0 : 1;
+                $int = $bill->active ? 0 : 1;
 
                 return $int . strtolower($bill->name);
             }

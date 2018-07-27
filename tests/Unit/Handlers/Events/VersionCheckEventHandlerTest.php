@@ -57,7 +57,6 @@ class VersionCheckEventHandlerTest extends TestCase
         $repos->shouldReceive('hasRole')->andReturn(true)->once();
 
         // report on config variables:
-        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
@@ -91,7 +90,6 @@ class VersionCheckEventHandlerTest extends TestCase
         $version = config('firefly.version');
         $first   = new Release(['id' => '1', 'title' => $version . '.1', 'updated' => '2017-05-01', 'content' => '']);
         // report on config variables:
-        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
@@ -139,7 +137,6 @@ class VersionCheckEventHandlerTest extends TestCase
         $repos->shouldReceive('hasRole')->andReturn(true)->once();
 
         // report on config variables:
-        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
@@ -164,7 +161,6 @@ class VersionCheckEventHandlerTest extends TestCase
 
 
         // report on config variables:
-        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($updateConfig);
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 

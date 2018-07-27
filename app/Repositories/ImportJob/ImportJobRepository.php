@@ -150,12 +150,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      */
     public function getConfiguration(ImportJob $job): array
     {
-        $config = $job->configuration;
-        if (\is_array($config)) {
-            return $config;
-        }
-
-        return [];
+        return $job->configuration;
     }
 
     /**

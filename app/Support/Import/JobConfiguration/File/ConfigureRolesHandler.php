@@ -63,7 +63,6 @@ class ConfigureRolesHandler implements FileConfigurationInterface
     {
         /** @var array $roles */
         $roles    = $config['column-roles'];
-        $count    = $config['column-count'];
         $assigned = 0;
 
         // check if data actually contains amount column (foreign amount does not count)

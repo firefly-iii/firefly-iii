@@ -41,7 +41,6 @@ class IpifyOrg implements IPRetrievalInterface
      */
     public function getIP(): ?string
     {
-        $result = null;
         try {
             $client = new Client;
             $res    = $client->request('GET', 'https://api.ipify.org');

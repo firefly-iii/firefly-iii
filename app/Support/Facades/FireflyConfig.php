@@ -28,8 +28,11 @@ use Illuminate\Support\Facades\Facade;
 /**
  * @codeCoverageIgnore
  * Class FireflyConfig.
- * @method ?Configuration get($name, $default = null)
+ * @method null|Configuration get($name, $default = null)
  * @method Configuration set(string $name, $value)
+ * @method delete(string $name)
+ * @method Configuration|null getFresh(string $name, $default = null)
+ * @method Configuration put(string $name, $value)
  */
 class FireflyConfig extends Facade
 {

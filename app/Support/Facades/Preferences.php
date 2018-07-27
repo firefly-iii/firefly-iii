@@ -34,7 +34,7 @@ use Illuminate\Support\Facades\Facade;
  * @method Collection beginsWith(User $user, string $search)
  * @method bool delete(string $name)
  * @method Collection findByName(string $name)
- * @method Preference get(string $name, $value)
+ * @method Preference get(string $name, $value = null)
  * @method array getArrayForUser(User $user, array $list)
  * @method Preference|null getForUser(User $user, string $name, $default = null)
  * @method string lastActivity()

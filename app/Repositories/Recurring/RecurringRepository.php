@@ -379,7 +379,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.
-            $string = $repDate->formatLocalized(trans('config.month_and_day_no_year'));
+            $string = $repDate->formatLocalized((string)trans('config.month_and_day_no_year'));
 
             return (string)trans('firefly.recurring_yearly', ['date' => $string], $language);
         }

@@ -77,6 +77,7 @@ class IndexController extends Controller
      */
     public function index(Request $request, string $moment = null)
     {
+        /** @var string $range */
         $range    = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $start */
         $start    = session('start', new Carbon);

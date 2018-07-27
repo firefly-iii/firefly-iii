@@ -113,7 +113,7 @@ class BunqJobConfiguration implements JobConfigurationInterface
         Log::debug(sprintf('Now in BunqJobConfiguration::getHandler() with stage "%s"', $this->importJob->stage));
         $handler = null;
         switch ($this->importJob->stage) {
-            case 'new';
+            case 'new':
                 $handler = app(NewBunqJobHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;

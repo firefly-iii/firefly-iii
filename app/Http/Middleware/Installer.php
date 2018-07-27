@@ -61,8 +61,6 @@ class Installer
 
             return $next($request);
         }
-        // Log::debug(sprintf('URL is %s, will run installer middleware', $url));
-
         // no tables present?
         try {
             DB::table('users')->count();

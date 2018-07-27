@@ -43,7 +43,6 @@ class TransactionCurrencyFactory
      */
     public function create(array $data): ?TransactionCurrency
     {
-        $result = null;
         try {
             /** @var TransactionCurrency $currency */
             $result = TransactionCurrency::create(
@@ -55,6 +54,7 @@ class TransactionCurrencyFactory
                 ]
             );
         } catch (QueryException $e) {
+            $result = null;
             Log::error(sprintf('Could not create new currency: %s', $e->getMessage()));
         }
 

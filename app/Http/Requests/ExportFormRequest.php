@@ -47,6 +47,7 @@ class ExportFormRequest extends Request
      */
     public function rules(): array
     {
+        /** @var Carbon $sessionFirst */
         $sessionFirst = clone session('first');
         $first        = $sessionFirst->subDay()->format('Y-m-d');
         $today        = Carbon::create()->addDay()->format('Y-m-d');

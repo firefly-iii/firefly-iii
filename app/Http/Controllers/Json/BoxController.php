@@ -54,7 +54,9 @@ class BoxController extends Controller
      */
     public function available(BudgetRepositoryInterface $repository): JsonResponse
     {
+        /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
         $today = new Carbon;
         $cache = new CacheProperties;
@@ -111,7 +113,9 @@ class BoxController extends Controller
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
         // Cache result, return cache if present.
+        /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -195,7 +199,9 @@ class BoxController extends Controller
      */
     public function bills(BillRepositoryInterface $repository): JsonResponse
     {
+        /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
 
         $cache = new CacheProperties;

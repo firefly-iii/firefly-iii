@@ -50,6 +50,7 @@ class SelectTransactionsRequest extends Request
     public function rules(): array
     {
         // fixed
+        /** @var Carbon $sessionFirst */
         $sessionFirst = clone session('first');
         $first        = $sessionFirst->subDay()->format('Y-m-d');
         $today        = Carbon::create()->addDay()->format('Y-m-d');
