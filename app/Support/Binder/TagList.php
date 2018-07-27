@@ -50,7 +50,7 @@ class TagList implements BinderInterface
                 $list[] = strtolower(trim($entry));
             }
             $list = array_unique($list);
-            if (\count($list) === 0) {
+            if (0 === \count($list)) {
                 Log::error('Tag list is empty.');
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }
@@ -61,7 +61,7 @@ class TagList implements BinderInterface
 
             $collection = $allTags->filter(
                 function (Tag $tag) use ($list) {
-                    return \in_array(strtolower($tag->tag), $list);
+                    return \in_array(strtolower($tag->tag), $list, true);
                 }
             );
 

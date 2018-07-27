@@ -36,6 +36,7 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use Form;
 use Illuminate\Support\Collection;
+use Illuminate\Support\HtmlString;
 use Illuminate\Support\MessageBag;
 use Log;
 use RuntimeException;
@@ -251,7 +252,7 @@ class ExpandedForm
     {
         $options            = $options ?? [];
         $value              = $value ?? 1;
-        $options['checked'] = true === $checked ? true : false;
+        $options['checked'] = true === $checked;
 
         if (Session::has('preFilled')) {
             $preFilled          = session('preFilled');
@@ -688,13 +689,13 @@ class ExpandedForm
     }
 
     /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param string     $name
+     * @param null       $value
+     * @param array|null $options
      *
-     * @return \Illuminate\Support\HtmlString
+     * @return HtmlString
      */
-    public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null)
+    public function ruleGroupListWithEmpty(string $name, $value = null, array $options = null): HtmlString
     {
         $options          = $options ?? [];
         $options['class'] = 'form-control';
@@ -877,6 +878,7 @@ class ExpandedForm
             }
         } catch (RuntimeException $e) {
             // don't care about session errors.
+            Log::debug(sprintf('Run time: %s', $e->getMessage()));
         }
         if ($value instanceof Carbon) {
             $value = $value->format('Y-m-d');
@@ -929,6 +931,8 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function currencyField(string $name, string $view, $value = null, array $options = null): string
     {

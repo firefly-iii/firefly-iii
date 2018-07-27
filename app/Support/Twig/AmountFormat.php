@@ -83,7 +83,8 @@ class AmountFormat extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'formatAmountByAccount',
-            function (AccountModel $account, string $amount, bool $coloured = true): string {
+            function (AccountModel $account, string $amount, bool $coloured = null): string {
+                $coloured = $coloured ?? true;
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
                 /** @var CurrencyRepositoryInterface $currencyRepos */
@@ -113,7 +114,9 @@ class AmountFormat extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'formatAmountByCurrency',
-            function (TransactionCurrency $currency, string $amount, bool $coloured = true): string {
+            function (TransactionCurrency $currency, string $amount, bool $coloured = null): string {
+                $coloured = $coloured ?? true;
+
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },
             ['is_safe' => ['html']]
@@ -129,7 +132,9 @@ class AmountFormat extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'formatAmountBySymbol',
-            function (string $amount, string $symbol, int $decimalPlaces = 2, bool $coloured = true): string {
+            function (string $amount, string $symbol, int $decimalPlaces = null, bool $coloured = null): string {
+                $decimalPlaces            = $decimalPlaces ?? 2;
+                $coloured                 = $coloured ?? true;
                 $currency                 = new TransactionCurrency;
                 $currency->symbol         = $symbol;
                 $currency->decimal_places = $decimalPlaces;

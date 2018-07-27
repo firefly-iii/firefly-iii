@@ -57,10 +57,10 @@ class ConfigureUploadHandler implements FileConfigurationInterface
         // collect values:
         $importId              = isset($data['csv_import_account']) ? (int)$data['csv_import_account'] : 0;
         $delimiter             = (string)$data['csv_delimiter'];
-        $config['has-headers'] = (int)($data['has_headers'] ?? 0.0) === 1;
+        $config['has-headers'] = 1 === (int)($data['has_headers'] ?? 0.0);
         $config['date-format'] = (string)$data['date_format'];
         $config['delimiter']   = 'tab' === $delimiter ? "\t" : $delimiter;
-        $config['apply-rules'] = (int)($data['apply_rules'] ?? 0.0) === 1;
+        $config['apply-rules'] = 1 === (int)($data['apply_rules'] ?? 0.0);
         $config['specifics']   = $this->getSpecifics($data);
         // validate values:
         $account = $this->accountRepos->findNull($importId);

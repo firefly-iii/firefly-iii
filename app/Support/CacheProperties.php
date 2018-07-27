@@ -50,7 +50,7 @@ class CacheProperties
     /**
      * @param $property
      */
-    public function addProperty($property)
+    public function addProperty($property): void
     {
         $this->properties->push($property);
     }
@@ -87,14 +87,14 @@ class CacheProperties
     /**
      * @param $data
      */
-    public function store($data)
+    public function store($data): void
     {
         Cache::forever($this->hash, $data);
     }
 
     /**
      */
-    private function hash()
+    private function hash(): void
     {
         $content = '';
         foreach ($this->properties as $property) {

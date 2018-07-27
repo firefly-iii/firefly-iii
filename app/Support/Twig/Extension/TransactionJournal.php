@@ -83,7 +83,7 @@ class TransactionJournal extends Twig_Extension
         if (null === $result) {
             return false;
         }
-        if (\strlen((string)$result) === 0) {
+        if ('' === (string)$result) {
             return false;
         }
 

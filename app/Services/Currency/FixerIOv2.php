@@ -72,7 +72,6 @@ class FixerIOv2 implements ExchangeRateInterface
             'http://data.fixer.io/api/%s?access_key=%s&base=%s&symbols=%s',
             $date->format('Y-m-d'), $apiKey, $fromCurrency->code, $toCurrency->code
         );
-        $statusCode = -1;
         Log::debug(sprintf('Going to request exchange rate using URI %s', str_replace($apiKey, 'xxxx', $uri)));
         $client = new Client;
         try {

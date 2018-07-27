@@ -73,7 +73,7 @@ class Navigation
         // if period is 1M and diff in month is 2 and new DOM = 1, sub a day:
         $months     = ['1M', 'month', 'monthly'];
         $difference = $date->month - $theDate->month;
-        if (\in_array($repeatFreq, $months) && 2 === $difference && 1 === $date->day) {
+        if (2 === $difference && 1 === $date->day && \in_array($repeatFreq, $months, true)) {
             $date->subDay();
         }
 
@@ -199,14 +199,14 @@ class Navigation
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
 
-            if (\in_array($repeatFreq, $subDay)) {
+            if (\in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
 
             return $currentEnd;
         }
         $currentEnd->$function();
-        if (\in_array($repeatFreq, $subDay)) {
+        if (\in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
         }
 

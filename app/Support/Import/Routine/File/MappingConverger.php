@@ -195,7 +195,7 @@ class MappingConverger
             $value        = trim($value);
             $originalRole = $this->roles[$columnIndex] ?? '_ignore';
             Log::debug(sprintf('Now at column #%d (%s), value "%s"', $columnIndex, $originalRole, $value));
-            if ($originalRole !== '_ignore' && \strlen($value) > 0) {
+            if ('_ignore' !== $originalRole && \strlen($value) > 0) {
 
                 // is a mapped value present?
                 $mapped = $this->mapping[$columnIndex][$value] ?? 0;

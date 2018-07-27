@@ -47,14 +47,14 @@ class AccountList implements BinderInterface
         if (auth()->check()) {
 
             $collection = new Collection;
-            if ($value === 'allAssetAccounts') {
+            if ('allAssetAccounts' === $value) {
                 /** @var \Illuminate\Support\Collection $collection */
                 $collection = auth()->user()->accounts()
                                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                     ->where('account_types.type', AccountType::ASSET)
                                     ->get(['accounts.*']);
             }
-            if ($value !== 'allAssetAccounts') {
+            if ('allAssetAccounts' !== $value) {
 
                 $list     = [];
                 $incoming = explode(',', $value);
@@ -62,7 +62,7 @@ class AccountList implements BinderInterface
                     $list[] = (int)$entry;
                 }
                 $list = array_unique($list);
-                if (\count($list) === 0) {
+                if (0 === \count($list)) {
                     Log::error('Account list is empty.');
                     throw new NotFoundHttpException; // @codeCoverageIgnore
                 }

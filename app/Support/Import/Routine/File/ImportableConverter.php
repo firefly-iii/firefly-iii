@@ -205,7 +205,7 @@ class ImportableConverter
         $transactionType = $this->getTransactionType($source->accountType->type, $destination->accountType->type);
         $currency        = $currency ?? $this->getCurrency($source, $destination);
 
-        if ($transactionType === 'unknown') {
+        if ('unknown' === $transactionType) {
             $message = sprintf(
                 'Cannot determine transaction type. Source account is a %s, destination is a %s', $source->accountType->type, $destination->accountType->type
             );
@@ -282,14 +282,14 @@ class ImportableConverter
         if ($destination->accountType->type === AccountType::ASSET) {
             // destination is asset, might have currency preference:
             $destinationCurrencyId = (int)$this->accountRepository->getMetaValue($destination, 'currency_id');
-            $currency              = $destinationCurrencyId === 0 ? $this->defaultCurrency : $this->currencyMapper->map($destinationCurrencyId, []);
+            $currency              = 0 === $destinationCurrencyId ? $this->defaultCurrency : $this->currencyMapper->map($destinationCurrencyId, []);
             Log::debug(sprintf('Destination is an asset account, and has currency preference %s', $currency->code));
         }
 
         if ($source->accountType->type === AccountType::ASSET) {
             // source is asset, might have currency preference:
             $sourceCurrencyId = (int)$this->accountRepository->getMetaValue($source, 'currency_id');
-            $currency         = $sourceCurrencyId === 0 ? $this->defaultCurrency : $this->currencyMapper->map($sourceCurrencyId, []);
+            $currency         = 0 === $sourceCurrencyId ? $this->defaultCurrency : $this->currencyMapper->map($sourceCurrencyId, []);
             Log::debug(sprintf('Source is an asset account, and has currency preference %s', $currency->code));
         }
         if (null === $currency) {

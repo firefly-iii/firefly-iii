@@ -33,6 +33,7 @@ use Preferences as Prefs;
  */
 class Amount
 {
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
@@ -116,10 +117,11 @@ class Amount
      *
      * @return string
      */
-    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
+    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        $locale = explode(',', (string)trans('config.locale'));
-        $locale = array_map('trim', $locale);
+        $coloured = $coloured ?? true;
+        $locale   = explode(',', (string)trans('config.locale'));
+        $locale   = array_map('trim', $locale);
         setlocale(LC_MONETARY, $locale);
         $float     = round($amount, 12);
         $info      = localeconv();
@@ -205,6 +207,7 @@ class Amount
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
+        /** @var User $user */
         $user = auth()->user();
 
         return $this->getDefaultCurrencyByUser($user);

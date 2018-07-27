@@ -45,7 +45,7 @@ class Rule extends Twig_Extension
                 foreach ($ruleActions as $key) {
                     $possibleActions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
                 }
-                unset($key, $ruleActions);
+                unset($ruleActions);
                 asort($possibleActions);
 
                 return $possibleActions;
@@ -84,7 +84,7 @@ class Rule extends Twig_Extension
                         $possibleTriggers[$key] = (string)trans('firefly.rule_trigger_' . $key . '_choice');
                     }
                 }
-                unset($key, $ruleTriggers);
+                unset($ruleTriggers);
                 asort($possibleTriggers);
 
                 return $possibleTriggers;

@@ -50,18 +50,19 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Collection          $tags
  * @property mixed               user_id
  * @property mixed               transactions
- * @property int                 transaction_count
- * @property Carbon              interest_date
- * @property Carbon              book_date
- * @property Carbon              process_date
- * @property bool                encrypted
- * @property int                 order
- * @property int                 budget_id
- * @property string              period_marker
- * @property Carbon              $date
- * @property string              $transaction_type_type
- * @property int                 $id
+ * @property int             transaction_count
+ * @property Carbon          interest_date
+ * @property Carbon          book_date
+ * @property Carbon          process_date
+ * @property bool            encrypted
+ * @property int             order
+ * @property int             budget_id
+ * @property string          period_marker
+ * @property Carbon          $date
+ * @property string          $transaction_type_type
+ * @property int             $id
  * @property TransactionType $transactionType
+ * @property Collection           budgets
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

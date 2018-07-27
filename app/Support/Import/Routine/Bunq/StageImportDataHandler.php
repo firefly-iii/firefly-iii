@@ -80,7 +80,7 @@ class StageImportDataHandler
             $bunqAccountId = $bunqAccount['id'] ?? 0;
             $localId       = $mapping[$bunqAccountId] ?? 0;
             Log::debug(sprintf('Looping accounts, now at bunq account #%d and local account #%d', $bunqAccountId, $localId));
-            if ($localId !== 0 && $bunqAccountId !== 0) {
+            if (0 !== $localId && 0 !== $bunqAccountId) {
                 $localAccount = $this->getLocalAccount((int)$localId);
                 $collection[] = $this->getTransactionsFromBunq($bunqAccountId, $localAccount);
             }
@@ -122,7 +122,7 @@ class StageImportDataHandler
 
         Log::debug(sprintf('Amount is %s %s', $amount->getCurrency(), $amount->getValue()));
         $expected = AccountType::EXPENSE;
-        if (bccomp($amount->getValue(), '0') === 1) {
+        if (1 === bccomp($amount->getValue(), '0')) {
             // amount + means that its a deposit.
             $expected = AccountType::REVENUE;
             $type     = TransactionType::DEPOSIT;
@@ -131,7 +131,7 @@ class StageImportDataHandler
         $destination = $this->convertToAccount($counterParty, $expected);
 
         // switch source and destination if necessary.
-        if (bccomp($amount->getValue(), '0') === 1) {
+        if (1 === bccomp($amount->getValue(), '0')) {
             Log::debug('Will make it a deposit.');
             [$source, $destination] = [$destination, $source];
         }
@@ -187,11 +187,12 @@ class StageImportDataHandler
      * @param string               $expectedType
      *
      * @return LocalAccount
+     * @throws FireflyException
      */
     private function convertToAccount(LabelMonetaryAccount $party, string $expectedType): LocalAccount
     {
         Log::debug('in convertToAccount()');
-        if ($party->getIban() !== null) {
+        if (null !== $party->getIban()) {
             // find opposing party by IBAN first.
             $result = $this->accountRepository->findByIbanNull($party->getIban(), [$expectedType]);
             if (null !== $result) {

@@ -48,7 +48,7 @@ class CategoryList implements BinderInterface
                 $list[] = (int)$entry;
             }
             $list = array_unique($list);
-            if (\count($list) === 0) {
+            if (0 === \count($list)) {
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }
 
@@ -58,7 +58,7 @@ class CategoryList implements BinderInterface
                                 ->get();
 
             // add empty category if applicable.
-            if (\in_array(0, $list)) {
+            if (\in_array(0, $list, true)) {
                 $collection->push(new Category);
             }
 

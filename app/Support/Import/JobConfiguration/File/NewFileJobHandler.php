@@ -123,7 +123,7 @@ class NewFileJobHandler implements FileConfigurationInterface
         /** @var Attachment $attachment */
         foreach ($attachments as $attachment) {
             // if file is configuration file, store it into the job.
-            if ($attachment->filename === 'configuration_file') {
+            if ('configuration_file' === $attachment->filename) {
                 $this->storeConfig($attachment);
             }
         }
@@ -162,7 +162,7 @@ class NewFileJobHandler implements FileConfigurationInterface
             }
 
             // if file is configuration file, store it into the job.
-            if ($attachment->filename === 'configuration_file') {
+            if ('configuration_file' === $attachment->filename) {
                 $this->storeConfig($attachment);
             }
         }
@@ -179,10 +179,10 @@ class NewFileJobHandler implements FileConfigurationInterface
     {
         $content = $this->attachments->getAttachmentContent($attachment);
         $result  = mb_detect_encoding($content, 'UTF-8', true);
-        if ($result === false) {
+        if (false === $result) {
             return false;
         }
-        if ($result !== 'ASCII' && $result !== 'UTF-8') {
+        if ('ASCII' !== $result && 'UTF-8' !== $result) {
             return false; // @codeCoverageIgnore
         }
 
@@ -194,7 +194,6 @@ class NewFileJobHandler implements FileConfigurationInterface
      *
      * @param Attachment $attachment
      *
-     * @throws FireflyException
      */
     private function storeConfig(Attachment $attachment): void
     {

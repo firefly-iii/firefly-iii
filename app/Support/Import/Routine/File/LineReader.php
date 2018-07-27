@@ -123,7 +123,7 @@ class LineReader
         /** @var array $config */
         $config = $this->importJob->configuration;
         Log::debug('now in getLines()');
-        $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
+        $offset = isset($config['has-headers']) && true === $config['has-headers'] ? 1 : 0;
         try {
             $stmt = (new Statement)->offset($offset);
             // @codeCoverageIgnoreStart
@@ -151,7 +151,7 @@ class LineReader
         $collection = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($collection as $attachment) {
-            if ($attachment->filename === 'import_file') {
+            if ('import_file' === $attachment->filename) {
                 $content = $this->attachments->getAttachmentContent($attachment);
                 break;
             }

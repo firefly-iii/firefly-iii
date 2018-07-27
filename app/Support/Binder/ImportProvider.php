@@ -27,30 +27,14 @@ use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Routing\Route;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Log;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class ImportProvider.
  */
 class ImportProvider implements BinderInterface
 {
-    /**
-     * @param string $value
-     * @param Route  $route
-     *
-     * @return Carbon
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
-     */
-    public static function routeBinder(string $value, Route $route): string
-    {
-        $providers = array_keys(self::getProviders());
-        if (\in_array($value, $providers, true)) {
-            return $value;
-        }
-        throw new NotFoundHttpException;
-    }
-
     /**
      * @return array
      */
@@ -98,5 +82,21 @@ class ImportProvider implements BinderInterface
         Log::debug(sprintf('Enabled providers: %s', json_encode(array_keys($providers))));
 
         return $providers;
+    }
+
+    /**
+     * @param string $value
+     * @param Route  $route
+     *
+     * @return Carbon
+     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     */
+    public static function routeBinder(string $value, Route $route): string
+    {
+        $providers = array_keys(self::getProviders());
+        if (\in_array($value, $providers, true)) {
+            return $value;
+        }
+        throw new NotFoundHttpException;
     }
 }

@@ -62,6 +62,7 @@ class Preferences
         try {
             Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
         } catch (Exception $e) {
+            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
             // don't care.
         }
 
@@ -80,7 +81,7 @@ class Preferences
 
     /**
      * @param string $name
-     * @param mixed   $default
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
@@ -137,7 +138,7 @@ class Preferences
             try {
                 $preference->delete();
             } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete preference #%d', $preference->id));
+                Log::debug(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()));
             }
             $preference = null;
         }

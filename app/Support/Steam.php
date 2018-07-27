@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class Steam.
@@ -249,7 +250,7 @@ class Steam
      * @return string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function decrypt(int $isEncrypted, string $value)
+    public function decrypt(int $isEncrypted, string $value): string
     {
         if (1 === $isEncrypted) {
             return Crypt::decrypt($value);
@@ -366,6 +367,7 @@ class Steam
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             // do not care.
+            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
         }
 
         return $value;

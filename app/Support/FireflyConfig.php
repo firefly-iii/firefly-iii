@@ -51,11 +51,11 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed   $default
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */
-        public function get(string $name, $default = null): ?Configuration
+    public function get(string $name, $default = null): ?Configuration
     {
         $fullName = 'ff-config-' . $name;
         if (Cache::has($fullName)) {
@@ -79,7 +79,7 @@ class FireflyConfig
 
     /**
      * @param string $name
-     * @param mixed   $default
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Configuration|null
      */

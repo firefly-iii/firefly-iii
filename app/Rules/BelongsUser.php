@@ -155,7 +155,7 @@ class BelongsUser implements Rule
      */
     private function validateAccountId(int $value): bool
     {
-        $count = Account::where('id', '=', (int)$value)->where('user_id', '=', auth()->user()->id)->count();
+        $count = Account::where('id', '=', $value)->where('user_id', '=', auth()->user()->id)->count();
 
         return 1 === $count;
     }

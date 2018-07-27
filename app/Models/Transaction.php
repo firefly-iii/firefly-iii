@@ -90,6 +90,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                 $opposing_id // ID of the opposing transaction, used in collector
  * @property bool                $encrypted   // is the journal encrypted
  * @property bool                reconciled
+ * @property string              transaction_category_encrypted
+ * @property string              transaction_journal_category_encrypted
+ * @property string              transaction_budget_encrypted
+ * @property string              transaction_journal_budget_encrypted
+ * @property string              type
+ * @property string              name
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Transaction extends Model
