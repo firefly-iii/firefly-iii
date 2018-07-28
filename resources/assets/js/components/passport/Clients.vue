@@ -288,7 +288,7 @@
              */
             store() {
                 this.persistClient(
-                    'post', './oauth/clients',
+                    'post', './oauth/clients' + '?_token=' + window.Laravel,
                     this.createForm, '#modal-create-client'
                 );
             },
@@ -309,7 +309,7 @@
              */
             update() {
                 this.persistClient(
-                    'put', './oauth/clients/' + this.editForm.id,
+                    'put', './oauth/clients/' + this.editForm.id + '?_token=' + window.Laravel,
                     this.editForm, '#modal-edit-client'
                 );
             },

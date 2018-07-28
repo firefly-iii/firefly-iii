@@ -156,6 +156,9 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+    window.Laravel = "{{ csrf_token()  }}";
+</script>
 <script src="js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="js/ff/moment/{{ language }}.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript"></script>
