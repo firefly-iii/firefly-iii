@@ -25,6 +25,7 @@ namespace FireflyIII\Support;
 use Amount as Amt;
 use Carbon\Carbon;
 use Eloquent;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
@@ -46,6 +47,8 @@ use Throwable;
 /**
  * Class ExpandedForm.
  *
+ * @SuppressWarnings(PHPMD.TooManyMethods)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ExpandedForm
 {
@@ -94,6 +97,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function amount(string $name, $value = null, array $options = null): string
     {
@@ -130,19 +134,6 @@ class ExpandedForm
         }
 
         return $html;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    public function amountSmall(string $name, $value = null, array $options = null): string
-    {
-        return $this->currencyField($name, 'amount-small', $value, $options);
     }
 
     /**
@@ -232,6 +223,7 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
+     * @throws FireflyException
      */
     public function balance(string $name, $value = null, array $options = null): string
     {
@@ -428,6 +420,7 @@ class ExpandedForm
      * @param \Illuminate\Support\Collection $set
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function makeSelectList(Collection $set): array
     {
@@ -453,6 +446,7 @@ class ExpandedForm
      * @param \Illuminate\Support\Collection $set
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function makeSelectListWithEmpty(Collection $set): array
     {
@@ -473,36 +467,6 @@ class ExpandedForm
         }
 
         return $selectList;
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * @param string $name
-     * @param array  $list
-     * @param mixed  $selected
-     * @param array  $options
-     *
-     * @return string
-     *
-     */
-    public function multiRadio(string $name, array $list = null, $selected = null, array $options = null): string
-    {
-        $list     = $list ?? [];
-        $label    = $this->label($name, $options);
-        $options  = $this->expandOptionArray($name, $label, $options);
-        $classes  = $this->getHolderClasses($name);
-        $selected = $this->fillFieldValue($name, $selected);
-
-        unset($options['class']);
-        try {
-            $html = view('form.multiRadio', compact('classes', 'name', 'label', 'selected', 'options', 'list'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render multiRadio(): %s', $e->getMessage()));
-            $html = 'Could not render multiRadio.';
-        }
-
-        return $html;
     }
 
     /**
@@ -533,40 +497,6 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render nonSelectableAmount(): %s', $e->getMessage()));
             $html = 'Could not render nonSelectableAmount.';
-        }
-
-        return $html;
-    }
-
-    /**
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
-     *
-     */
-    public function nonSelectableBalance(string $name, $value = null, array $options = null): string
-    {
-        $label            = $this->label($name, $options);
-        $options          = $this->expandOptionArray($name, $label, $options);
-        $classes          = $this->getHolderClasses($name);
-        $value            = $this->fillFieldValue($name, $value);
-        $options['step']  = 'any';
-        $selectedCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
-        unset($options['currency'], $options['placeholder']);
-
-        // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $decimals = $selectedCurrency->decimal_places ?? 2;
-            $value    = round($value, $decimals);
-        }
-        try {
-            $html = view('form.non-selectable-amount', compact('selectedCurrency', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render nonSelectableBalance(): %s', $e->getMessage()));
-            $html = 'Could not render nonSelectableBalance.';
         }
 
         return $html;
@@ -842,6 +772,59 @@ class ExpandedForm
     }
 
     /**
+     * @param string $name
+     * @param string $view
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function currencyField(string $name, string $view, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
+        /** @var Collection $currencies */
+        $currencies      = app('amount')->getAllCurrencies();
+        unset($options['currency'], $options['placeholder']);
+
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled      = session('preFilled');
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
+
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $defaultCurrency = $currency;
+                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
+                break;
+            }
+        }
+
+        // make sure value is formatted nicely:
+        if (null !== $value && '' !== $value) {
+            $value = round($value, $defaultCurrency->decimal_places);
+        }
+        try {
+            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+        }
+
+        return $html;
+    }
+
+    /**
      * @param       $name
      * @param       $label
      * @param array $options
@@ -865,6 +848,7 @@ class ExpandedForm
      * @param        $value
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function fillFieldValue(string $name, $value)
     {
@@ -906,6 +890,8 @@ class ExpandedForm
         return $classes;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param $name
      * @param $options
@@ -921,57 +907,5 @@ class ExpandedForm
         $name = str_replace('[]', '', $name);
 
         return (string)trans('form.' . $name);
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * @param string $name
-     * @param string $view
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    private function currencyField(string $name, string $view, $value = null, array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
-        $currencies      = app('amount')->getAllCurrencies();
-        unset($options['currency'], $options['placeholder']);
-
-        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
-        $preFilled      = session('preFilled');
-        $key            = 'amount_currency_id_' . $name;
-        $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
-
-        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
-
-        // find this currency in set of currencies:
-        foreach ($currencies as $currency) {
-            if ($currency->id === $sentCurrencyId) {
-                $defaultCurrency = $currency;
-                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
-                break;
-            }
-        }
-
-        // make sure value is formatted nicely:
-        if (null !== $value && '' !== $value) {
-            $value = round($value, $defaultCurrency->decimal_places);
-        }
-        try {
-            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
-            $html = 'Could not render currencyField.';
-        }
-
-        return $html;
     }
 }

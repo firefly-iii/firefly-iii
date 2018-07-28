@@ -271,6 +271,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
      *
      * @return array
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getValuesForMapping(Reader $reader, array $config, array $columnConfig): array
     {

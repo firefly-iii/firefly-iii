@@ -28,6 +28,7 @@ use FireflyIII\User;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Log;
+use RuntimeException;
 
 /**
  * Class SpectreRequest
@@ -208,7 +209,12 @@ abstract class SpectreRequest
             throw new FireflyException(sprintf('Guzzle Exception: %s', $e->getMessage()));
         }
         $statusCode = $res->getStatusCode();
-        $returnBody = $res->getBody()->getContents();
+        try {
+            $returnBody = $res->getBody()->getContents();
+        } catch (RunTimeException $e) {
+            Log::error(sprintf('Could not get body from SpectreRequest::GET result: %s', $e->getMessage()));
+            $returnBody = '';
+        }
         $this->detectError($returnBody, $statusCode);
 
         $array                       = json_decode($returnBody, true);
@@ -252,7 +258,14 @@ abstract class SpectreRequest
         } catch (GuzzleException|Exception $e) {
             throw new FireflyException(sprintf('Guzzle Exception: %s', $e->getMessage()));
         }
-        $body       = $res->getBody()->getContents();
+
+        try {
+            $body = $res->getBody()->getContents();
+        } catch (RunTimeException $e) {
+            Log::error(sprintf('Could not get body from SpectreRequest::POST result: %s', $e->getMessage()));
+            $body = '';
+        }
+
         $statusCode = $res->getStatusCode();
         $this->detectError($body, $statusCode);
 

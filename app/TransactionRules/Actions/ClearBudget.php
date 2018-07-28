@@ -32,9 +32,6 @@ use Log;
  */
 class ClearBudget implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
-
     /**
      * TriggerInterface constructor.
      *
@@ -42,7 +39,6 @@ class ClearBudget implements ActionInterface
      */
     public function __construct(RuleAction $action)
     {
-        $this->action = $action;
     }
 
     /**

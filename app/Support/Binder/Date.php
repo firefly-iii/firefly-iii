@@ -46,28 +46,25 @@ class Date implements BinderInterface
         /** @var FiscalHelperInterface $fiscalHelper */
         $fiscalHelper = app(FiscalHelperInterface::class);
 
-        switch ($value) {
-            default:
-                try {
-                    $date = new Carbon($value);
-                } catch (Exception $e) {
-                    Log::error(sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage()));
-                    throw new NotFoundHttpException;
-                }
-
-                return $date;
-            case 'currentMonthStart':
-                return Carbon::now()->startOfMonth();
-            case 'currentMonthEnd':
-                return Carbon::now()->endOfMonth();
-            case 'currentYearStart':
-                return Carbon::now()->startOfYear();
-            case 'currentYearEnd':
-                return Carbon::now()->endOfYear();
-            case 'currentFiscalYearStart':
-                return $fiscalHelper->startOfFiscalYear(Carbon::now());
-            case 'currentFiscalYearEnd':
-                return $fiscalHelper->endOfFiscalYear(Carbon::now());
+        $magicWords = [
+            'currentMonthStart'      => Carbon::now()->startOfMonth(),
+            'currentMonthEnd'        => Carbon::now()->endOfMonth(),
+            'currentYearStart'       => Carbon::now()->startOfYear(),
+            'currentYearEnd'         => Carbon::now()->endOfYear(),
+            'currentFiscalYearStart' => $fiscalHelper->startOfFiscalYear(Carbon::now()),
+            'currentFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(Carbon::now()),
+        ];
+        if (isset($magicWords[$value])) {
+            return $magicWords[$value];
         }
+
+        try {
+            $result = new Carbon($value);
+        } catch (Exception $e) {
+            Log::error(sprintf('Could not parse date "%s" for user #%d: %s', $value, auth()->user()->id, $e->getMessage()));
+            throw new NotFoundHttpException;
+        }
+
+        return $result;
     }
 }

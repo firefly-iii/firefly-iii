@@ -61,7 +61,11 @@ class SetCategory implements ActionInterface
         $factory = app(CategoryFactory::class);
         $factory->setUser($journal->user);
         $category = $factory->findOrCreate(null, $name);
+        if (null === $category) {
+            Log::error(sprintf('Action SetCategory did not fire because "%s" did not result in a valid category.', $name));
 
+            return true;
+        }
         $journal->categories()->detach();
         // set category on transactions:
         /** @var Transaction $transaction */

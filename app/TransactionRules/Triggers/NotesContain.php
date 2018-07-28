@@ -74,7 +74,7 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
     {
         $search = strtolower(trim($this->triggerValue));
 
-        if (0 === \strlen($search)) {
+        if ('' === $search) {
             Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" is empty, return false.', $journal->id, $search));
 
             return false;

@@ -29,6 +29,7 @@ use FireflyIII\Services\Github\Object\Release;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Log;
+use RuntimeException;
 use SimpleXMLElement;
 
 /**
@@ -55,10 +56,14 @@ class UpdateRequest implements GithubRequest
         }
 
         if (200 !== $res->getStatusCode()) {
-            throw new FireflyException(sprintf('Returned code %d, error: %s', $res->getStatusCode(), $res->getBody()->getContents()));
+            throw new FireflyException(sprintf('Returned code %d.', $res->getStatusCode()));
         }
-
-        $releaseXml = new SimpleXMLElement($res->getBody()->getContents(), LIBXML_NOCDATA);
+        try {
+            $releaseXml = new SimpleXMLElement($res->getBody()->getContents(), LIBXML_NOCDATA);
+        } catch (RunTimeException $e) {
+            Log::error(sprintf('Could not get body from github updat result: %s', $e->getMessage()));
+            $releaseXml = new SimpleXMLElement('');
+        }
 
         //fetch the products for each category
         if (isset($releaseXml->entry)) {

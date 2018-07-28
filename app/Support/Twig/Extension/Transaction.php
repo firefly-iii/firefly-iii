@@ -46,11 +46,11 @@ class Transaction extends Twig_Extension
      */
     public function amount(TransactionModel $transaction): string
     {
+        // at this point amount is always negative.
         $amount   = bcmul(app('steam')->positive((string)$transaction->transaction_amount), '-1');
         $format   = '%s';
         $coloured = true;
 
-        // at this point amount is always negative.
         if (TransactionType::RECONCILIATION === $transaction->transaction_type_type && 1 === bccomp((string)$transaction->transaction_amount, '0')) {
             $amount = bcmul($amount, '-1');
         }

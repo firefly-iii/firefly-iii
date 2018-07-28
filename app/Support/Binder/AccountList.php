@@ -41,11 +41,11 @@ class AccountList implements BinderInterface
      *
      * @return Collection
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-
             $collection = new Collection;
             if ('allAssetAccounts' === $value) {
                 /** @var \Illuminate\Support\Collection $collection */
@@ -55,18 +55,8 @@ class AccountList implements BinderInterface
                                     ->get(['accounts.*']);
             }
             if ('allAssetAccounts' !== $value) {
-
-                $list     = [];
-                $incoming = explode(',', $value);
-                foreach ($incoming as $entry) {
-                    $list[] = (int)$entry;
-                }
-                $list = array_unique($list);
-                if (0 === \count($list)) {
-                    Log::error('Account list is empty.');
-                    throw new NotFoundHttpException; // @codeCoverageIgnore
-                }
-
+                $incoming = array_map('\intval', explode(',', $value));
+                $list     = array_merge(array_unique($incoming), [0]);
                 /** @var \Illuminate\Support\Collection $collection */
                 $collection = auth()->user()->accounts()
                                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')

@@ -37,6 +37,8 @@ class ImportProvider implements BinderInterface
 {
     /**
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function getProviders(): array
     {

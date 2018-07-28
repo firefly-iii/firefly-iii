@@ -38,16 +38,12 @@ class BudgetList implements BinderInterface
      *
      * @return Collection
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $list     = [];
-            $incoming = explode(',', $value);
-            foreach ($incoming as $entry) {
-                $list[] = (int)$entry;
-            }
-            $list = array_unique($list);
+            $list = array_unique(array_map('\intval', explode(',', $value)));
             if (0 === \count($list)) {
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }

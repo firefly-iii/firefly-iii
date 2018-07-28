@@ -31,9 +31,6 @@ use Log;
  */
 class RemoveAllTags implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
-
     /**
      * TriggerInterface constructor.
      *
@@ -41,7 +38,6 @@ class RemoveAllTags implements ActionInterface
      */
     public function __construct(RuleAction $action)
     {
-        $this->action = $action;
     }
 
     /**

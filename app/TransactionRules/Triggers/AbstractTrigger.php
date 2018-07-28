@@ -72,7 +72,7 @@ class AbstractTrigger
      *
      * @return AbstractTrigger
      */
-    public static function makeFromTrigger(RuleTrigger $trigger)
+    public static function makeFromTrigger(RuleTrigger $trigger): AbstractTrigger
     {
         $self                 = new static;
         $self->trigger        = $trigger;
@@ -91,7 +91,7 @@ class AbstractTrigger
      *
      * @return AbstractTrigger
      */
-    public static function makeFromTriggerValue(string $triggerValue)
+    public static function makeFromTriggerValue(string $triggerValue): AbstractTrigger
     {
         $self               = new static;
         $self->triggerValue = $triggerValue;

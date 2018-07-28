@@ -27,6 +27,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Log;
+use RunTimeException;
 
 /**
  * Class IpifyOrg
@@ -51,11 +52,17 @@ class IpifyOrg implements IPRetrievalInterface
             return null;
         }
         if (200 !== $res->getStatusCode()) {
-            Log::warning(sprintf('Could not retrieve external IP: %d %s', $res->getStatusCode(), $res->getBody()->getContents()));
+            Log::warning(sprintf('Could not retrieve external IP: %d', $res->getStatusCode()));
 
             return null;
         }
+        try {
+            $body = (string)$res->getBody()->getContents();
+        } catch (RunTimeException $e) {
+            Log::error(sprintf('Could not get body from ipify.org result: %s', $e->getMessage()));
+            $body = null;
+        }
 
-        return (string)$res->getBody()->getContents();
+        return $body;
     }
 }

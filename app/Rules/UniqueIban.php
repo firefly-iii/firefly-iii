@@ -26,6 +26,7 @@ namespace FireflyIII\Rules;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -116,6 +117,7 @@ class UniqueIban implements Rule
         if (null !== $this->account) {
             $query->where('accounts.id', '!=', $this->account->id);
         }
+        /** @var Collection $result */
         $result = $query->get(['accounts.*']);
         foreach ($result as $account) {
             if ($account->iban === $iban) {

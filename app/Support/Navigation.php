@@ -87,6 +87,7 @@ class Navigation
      *
      * @return array
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
     {

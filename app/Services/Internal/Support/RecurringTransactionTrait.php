@@ -228,7 +228,7 @@ trait RecurringTransactionTrait
 
     /**
      * @param Recurrence $recurrence
-     * @param array      $tagst
+     * @param array      $tags
      */
     protected function updateTags(Recurrence $recurrence, array $tags): void
     {

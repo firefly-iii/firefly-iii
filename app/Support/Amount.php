@@ -46,6 +46,9 @@ class Amount
      * @param bool   $csPrecedes
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
@@ -53,7 +56,7 @@ class Amount
         $space = ' ';
 
         // require space between symbol and amount?
-        if (!$sepBySpace) {
+        if ($sepBySpace === false) {
             $space = ''; // no
         }
 
@@ -116,6 +119,7 @@ class Amount
      * @param bool                                   $coloured
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
@@ -130,12 +134,8 @@ class Amount
         // some complicated switches to format the amount correctly:
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
-        $space     = $separated ? ' ' : '';
-        $result    = $format->symbol . $space . $formatted;
-
-        if (!$precedes) {
-            $result = $formatted . $space . $format->symbol;
-        }
+        $space     = $separated === true ? ' ' : '';
+        $result    = $precedes === true ? $format->symbol . $space . $formatted : $formatted . $space . $format->symbol;
 
         if (true === $coloured) {
             if ($amount > 0) {

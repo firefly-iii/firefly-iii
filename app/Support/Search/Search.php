@@ -188,6 +188,7 @@ class Search implements SearchInterface
      * @param JournalCollectorInterface $collector
      *
      * @return JournalCollectorInterface
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
     {
