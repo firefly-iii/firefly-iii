@@ -225,8 +225,10 @@ return [
     'languages'                => [
         // completed languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
         'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
         'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
+        'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
         'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],

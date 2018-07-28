@@ -323,7 +323,7 @@ trait AccountServiceTrait
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
-            $factory->crud($account, $field, $data[$field] ?? '');
+            $factory->crud($account, $field, (string)($data[$field] ?? ''));
         }
     }
 
