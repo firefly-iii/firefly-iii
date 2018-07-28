@@ -532,6 +532,13 @@ class BinderTest extends TestCase
             return 'date: ' . $date->format('Y-m-d');
         }
         );
+
+        // mock fiscal helper:
+        $date = new Carbon;
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
         $this->be($this->user());
         $response = $this->get('/_test/binder/20170917');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
@@ -549,11 +556,17 @@ class BinderTest extends TestCase
             return 'date: ' . $date->format('Y-m-d');
         }
         );
+        $date = new Carbon;
+        $date->endOfMonth();
+
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
         $this->be($this->user());
         $response = $this->get('/_test/binder/currentMonthEnd');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $date = new Carbon;
-        $date->endOfMonth();
         $response->assertSee('date: ' . $date->format('Y-m-d'));
     }
 
@@ -568,11 +581,17 @@ class BinderTest extends TestCase
             return 'date: ' . $date->format('Y-m-d');
         }
         );
+        $date = new Carbon;
+        $date->startOfMonth();
+
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
         $this->be($this->user());
         $response = $this->get('/_test/binder/currentMonthStart');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $date = new Carbon;
-        $date->startOfMonth();
         $response->assertSee('date: ' . $date->format('Y-m-d'));
     }
 
@@ -587,11 +606,17 @@ class BinderTest extends TestCase
             return 'date: ' . $date->format('Y-m-d');
         }
         );
+        $date = new Carbon;
+        $date->endOfYear();
+
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
         $this->be($this->user());
         $response = $this->get('/_test/binder/currentYearEnd');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $date = new Carbon;
-        $date->endOfYear();
         $response->assertSee('date: ' . $date->format('Y-m-d'));
     }
 
@@ -601,16 +626,22 @@ class BinderTest extends TestCase
      */
     public function testDateCurrentYearStart(): void
     {
+        $date = new Carbon;
+        $date->startOfYear();
         Route::middleware(Binder::class)->any(
             '/_test/binder/{date}', function (Carbon $date) {
             return 'date: ' . $date->format('Y-m-d');
         }
         );
+
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
         $this->be($this->user());
         $response = $this->get('/_test/binder/currentYearStart');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-        $date = new Carbon;
-        $date->startOfYear();
         $response->assertSee('date: ' . $date->format('Y-m-d'));
     }
 
@@ -632,11 +663,11 @@ class BinderTest extends TestCase
         // mock fiscal helper:
         $helper = $this->mock(FiscalHelperInterface::class);
         $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/currentFiscalYearEnd');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-
         $response->assertSee('date: ' . $date->format('Y-m-d'));
     }
 
@@ -657,12 +688,12 @@ class BinderTest extends TestCase
 
         // mock fiscal helper:
         $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
         $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/currentFiscalYearStart');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-
         $response->assertSee('date: ' . $date->format('Y-m-d'));
     }
 
@@ -677,6 +708,12 @@ class BinderTest extends TestCase
             return 'date: ' . $date->format('Y-m-d');
         }
         );
+        $date = new Carbon;
+        // mock fiscal helper:
+        $helper = $this->mock(FiscalHelperInterface::class);
+        $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
+        $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();
+
         $this->be($this->user());
         $response = $this->get('/_test/binder/fakedate');
         $this->assertEquals(Response::HTTP_NOT_FOUND, $response->getStatusCode());

@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\BudgetIs;
 use Illuminate\Support\Collection;
@@ -88,7 +89,9 @@ class BudgetIsTest extends TestCase
         $budget      = $journal->user->budgets()->first();
 
         $journal->budgets()->detach();
+        /** @var Transaction $transaction */
         foreach($transactions as $transaction) {
+            $transaction->budgets()->detach();
             $transaction->budgets()->save($budget);
             $this->assertEquals(1, $transaction->budgets()->count());
         }

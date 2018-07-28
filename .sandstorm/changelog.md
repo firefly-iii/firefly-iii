@@ -1,3 +1,17 @@
+# 4.7.5.2
+- [Issue 1527](https://github.com/firefly-iii/firefly-iii/issues/1527), fixed views for transactions without a budget.
+- [Issue 1553](https://github.com/firefly-iii/firefly-iii/issues/1553), report could not handle transactions before the first one in the system.
+- [Issue 1549](https://github.com/firefly-iii/firefly-iii/issues/1549) update a budget will also update any rules that refer to that budget.
+- [Issue 1530](https://github.com/firefly-iii/firefly-iii/issues/1530), fix issue with bill chart.
+- [Issue 1563](https://github.com/firefly-iii/firefly-iii/issues/1563), fix piggy bank suggested amount
+- [Issue 1571](https://github.com/firefly-iii/firefly-iii/issues/1571), fix OAuth in Sandstorm
+- [Issue 1568](https://github.com/firefly-iii/firefly-iii/issues/1568), bug in Sandstorm user code.
+- [Issue 1569](https://github.com/firefly-iii/firefly-iii/issues/1569), optimized Sandstorm build by [ocdtrekkie](https://github.com/ocdtrekkie)
+- Fixed a bug where transfers would be stored inversely when using the CSV import.
+- Retired the "Rabobank description"-fix, because it is no longer necessary.
+- Fixed a bug where users could not delete budget limits in the API.
+- Piggy bank notes are visible again.
+
 # 4.7.5.1
 - [Issue 1531](https://github.com/firefly-iii/firefly-iii/issues/1531), the database routine incorrectly reports empty categories.
 - [Issue 1532](https://github.com/firefly-iii/firefly-iii/issues/1532), broken dropdown for autosuggest things.

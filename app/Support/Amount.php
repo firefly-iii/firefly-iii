@@ -135,7 +135,7 @@ class Amount
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
         $space     = $separated === true ? ' ' : '';
-        $result    = $precedes === true ? $format->symbol . $space . $formatted : $formatted . $space . $format->symbol;
+        $result    = $precedes === false ? $formatted . $space . $format->symbol : $format->symbol . $space . $formatted;
 
         if (true === $coloured) {
             if ($amount > 0) {

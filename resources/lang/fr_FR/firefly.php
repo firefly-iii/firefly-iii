@@ -1014,7 +1014,7 @@ return [
     'sum_of_piggy_banks'                      => 'Somme des tirelires',
     'saved_so_far'                            => 'Mis de côté jusqu\'à présent',
     'left_to_save'                            => 'Reste à mettre de côté',
-    'suggested_amount'                        => 'Montant mensuel suggéré à enregistrer',
+    'suggested_amount'                        => 'Montant mensuel suggéré à économiser',
     'add_money_to_piggy_title'                => 'Ajouter de l’argent à la tirelire ":name"',
     'remove_money_from_piggy_title'           => 'Retirer l’argent de la tirelire ":name"',
     'add'                                     => 'Ajouter',
