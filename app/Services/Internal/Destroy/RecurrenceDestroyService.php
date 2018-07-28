@@ -35,27 +35,37 @@ use Log;
 class RecurrenceDestroyService
 {
     /**
+     * Delete recurrence.
+     *
      * @param Recurrence $recurrence
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function destroy(Recurrence $recurrence): void
     {
         try {
             // delete all meta data
             $recurrence->recurrenceMeta()->delete();
-
-            // delete all transactions.
-            /** @var RecurrenceTransaction $transaction */
-            foreach($recurrence->recurrenceTransactions as $transaction) {
-                $transaction->recurrenceTransactionMeta()->delete();
+        } catch (Exception $e) { // @codeCoverageIgnore
+            Log::info(sprintf('Could not delete recurrence meta: %s', $e->getMessage())); // @codeCoverageIgnore
+        }
+        // delete all transactions.
+        /** @var RecurrenceTransaction $transaction */
+        foreach ($recurrence->recurrenceTransactions as $transaction) {
+            $transaction->recurrenceTransactionMeta()->delete();
+            try {
                 $transaction->delete();
+            } catch (Exception $e) { // @codeCoverageIgnore
+                Log::info(sprintf('Could not delete recurrence transaction: %s', $e->getMessage())); // @codeCoverageIgnore
             }
-            // delete all repetitions
-            $recurrence->recurrenceRepetitions()->delete();
+        }
+        // delete all repetitions
+        $recurrence->recurrenceRepetitions()->delete();
 
-            // delete recurrence
+        // delete recurrence
+        try {
             $recurrence->delete();
         } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete recurrence: %s', $e->getMessage())); // @codeCoverageIgnore
+            Log::info(sprintf('Could not delete recurrence: %s', $e->getMessage())); // @codeCoverageIgnore
         }
     }
 

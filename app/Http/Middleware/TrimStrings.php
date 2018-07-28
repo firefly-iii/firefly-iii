@@ -25,8 +25,9 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Foundation\Http\Middleware\TrimStrings as Middleware;
 
 /**
- * @codeCoverageIgnore
  * Class TrimStrings
+ *
+ * @codeCoverageIgnore
  */
 class TrimStrings extends Middleware
 {

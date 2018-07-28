@@ -108,7 +108,7 @@ function respondToFirstDateChange() {
     select.prop('disabled', true);
 
     // preselected value:
-    var preSelected = currentRepetitionType;
+    var preSelected = currentRepType;
     if(preSelected === '') {
         preSelected = select.val();
     }

@@ -37,6 +37,8 @@ use Route as RouteFacade;
 
 /**
  * Class DebugController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class DebugController extends Controller
 {
@@ -50,6 +52,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Show all possible errors.
+     *
      * @throws FireflyException
      */
     public function displayError(): void
@@ -66,6 +70,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Clear log and session.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -97,9 +103,14 @@ class DebugController extends Controller
     }
 
     /**
+     * Show debug info.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function index(Request $request)
     {
@@ -130,7 +141,7 @@ class DebugController extends Controller
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
         $localeAttempts = [];
-        $parts          = explode(',', trans('config.locale'));
+        $parts          = explode(',', (string)trans('config.locale'));
         foreach ($parts as $code) {
             $code                  = trim($code);
             $localeAttempts[$code] = var_export(setlocale(LC_ALL, $code), true);
@@ -171,7 +182,11 @@ class DebugController extends Controller
     }
 
     /**
+     * Return all possible routes.
+     *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function routes(): string
     {
@@ -191,9 +206,8 @@ class DebugController extends Controller
         $return = '&nbsp;';
         /** @var Route $route */
         foreach ($set as $route) {
-            $name = $route->getName();
-            if (null !== $name && \strlen($name) > 0 && \in_array('GET', $route->methods(), true)) {
-
+            $name = (string)$route->getName();
+            if (\in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {
                     if (!(false === stripos($name, $string))) {
@@ -211,6 +225,8 @@ class DebugController extends Controller
     }
 
     /**
+     * Flash all types of messages.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -252,13 +268,15 @@ class DebugController extends Controller
     }
 
     /**
+     * All packages that are installed.
+     *
      * @return array
      */
     private function collectPackages(): array
     {
         $packages = [];
         $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
-        if (!(false === $file) && file_exists($file)) {
+        if (file_exists($file)) {
             // file exists!
             $content = file_get_contents($file);
             $json    = json_decode($content, true);

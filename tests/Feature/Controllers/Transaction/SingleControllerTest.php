@@ -87,10 +87,7 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getMetaField')->andReturnNull();
 
 
-        $note       = new Note();
-        $note->id   = 5;
-        $note->text = 'I see you...';
-        $journalRepos->shouldReceive('getNote')->andReturn($note)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('I see you...')->once();
 
 
         $this->be($this->user());
@@ -847,6 +844,11 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
+
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
+
+
 
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);

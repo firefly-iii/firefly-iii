@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Akun aset (IBAN)',
     'column_account-id'                    => 'Asset account ID (matching FF3)',
     'column_account-name'                  => 'Akun aset (nama)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Jumlah',
     'column_amount_foreign'                => 'Amount (in foreign currency)',
     'column_amount_debit'                  => 'Jumlah (kolom debit)',

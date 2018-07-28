@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Object;
 
 /**
- * @codeCoverageIgnore
  * Class Customer
+ *
+ * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class Customer extends SpectreObject
 {

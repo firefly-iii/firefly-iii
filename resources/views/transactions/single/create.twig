@@ -45,7 +45,9 @@
                         {{ ExpandedForm.activeAssetAccountList('destination_id', null, {label: trans('form.asset_destination_account')} ) }}
 
                         {# ALWAYS SHOW AMOUNT #}
+                        <!-- A -->
                         {{ ExpandedForm.amount('amount') }}
+                        <!-- B -->
 
                         {# INSTRUCTIONS FOR EXCHANGE RATES #}
                         {{ ExpandedForm.staticText('exchange_rate_instruction','(here be text)') }}
@@ -86,7 +88,9 @@
                         {{ ExpandedForm.text('tags') }}
 
                         {# RELATE THIS TRANSFER TO A PIGGY BANK #}
-                        {{ ExpandedForm.piggyBankList('piggy_bank_id',0) }}
+                        <!-- C -->
+                        {{ ExpandedForm.piggyBankList('piggy_bank_id', 0) }}
+                        <!-- D -->
                     </div>
                 </div>
 

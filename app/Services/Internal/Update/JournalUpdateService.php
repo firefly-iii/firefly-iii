@@ -44,6 +44,9 @@ class JournalUpdateService
      * @param array              $data
      *
      * @return TransactionJournal
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {

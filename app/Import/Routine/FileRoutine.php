@@ -33,9 +33,9 @@ use Log;
  */
 class FileRoutine implements RoutineInterface
 {
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -66,6 +66,8 @@ class FileRoutine implements RoutineInterface
     }
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
      * @return void

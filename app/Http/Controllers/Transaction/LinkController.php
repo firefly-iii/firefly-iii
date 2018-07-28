@@ -36,13 +36,13 @@ use URL;
  */
 class LinkController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepository;
-    /** @var LinkTypeRepositoryInterface */
+    /** @var LinkTypeRepositoryInterface Link repository. */
     private $repository;
 
     /**
-     *
+     * LinkController constructor.
      */
     public function __construct()
     {
@@ -50,7 +50,7 @@ class LinkController extends Controller
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 $this->journalRepository = app(JournalRepositoryInterface::class);
@@ -62,6 +62,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Delete a link.
+     *
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -69,13 +71,15 @@ class LinkController extends Controller
     public function delete(TransactionJournalLink $link)
     {
         $subTitleIcon = 'fa-link';
-        $subTitle     = trans('breadcrumbs.delete_journal_link');
+        $subTitle     = (string)trans('breadcrumbs.delete_journal_link');
         $this->rememberPreviousUri('journal_links.delete.uri');
 
         return view('transactions.links.delete', compact('link', 'subTitle', 'subTitleIcon'));
     }
 
     /**
+     * Actually destroy it.
+     *
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -91,6 +95,8 @@ class LinkController extends Controller
     }
 
     /**
+     * Store a new link.
+     *
      * @param JournalLinkRequest $request
      * @param TransactionJournal $journal
      *
@@ -101,15 +107,9 @@ class LinkController extends Controller
 
         Log::debug('We are here (store)');
         $linkInfo = $request->getLinkInfo();
-        if (0 === $linkInfo['transaction_journal_id']) {
-            session()->flash('error', trans('firefly.invalid_link_selection'));
-
-            return redirect(route('transactions.show', [$journal->id]));
-        }
-        $other = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
-
+        $other    = $this->journalRepository->findNull($linkInfo['transaction_journal_id']);
         if (null === $other) {
-            session()->flash('error', trans('firefly.invalid_link_selection'));
+            session()->flash('error', (string)trans('firefly.invalid_link_selection'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -117,24 +117,25 @@ class LinkController extends Controller
         $alreadyLinked = $this->repository->findLink($journal, $other);
 
         if ($other->id === $journal->id) {
-            session()->flash('error', trans('firefly.journals_link_to_self'));
+            session()->flash('error', (string)trans('firefly.journals_link_to_self'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($alreadyLinked) {
-            session()->flash('error', trans('firefly.journals_error_linked'));
+            session()->flash('error', (string)trans('firefly.journals_error_linked'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
         Log::debug(sprintf('Journal is %d, opposing is %d', $journal->id, $other->id));
         $this->repository->storeLink($linkInfo, $other, $journal);
-        session()->flash('success', trans('firefly.journals_linked'));
+        session()->flash('success', (string)trans('firefly.journals_linked'));
 
         return redirect(route('transactions.show', [$journal->id]));
     }
 
     /**
+     * Switch link from A <> B to B <> A.
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

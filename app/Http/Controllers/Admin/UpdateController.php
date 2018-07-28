@@ -56,26 +56,30 @@ class UpdateController extends Controller
     }
 
     /**
+     * Show page with update options.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \Psr\Container\NotFoundExceptionInterface
      * @throws \Psr\Container\ContainerExceptionInterface
      */
     public function index()
     {
-        $subTitle     = trans('firefly.update_check_title');
+        $subTitle     = (string)trans('firefly.update_check_title');
         $subTitleIcon = 'fa-star';
         $permission   = app('fireflyconfig')->get('permission_update_check', -1);
         $selected     = $permission->data;
         $options      = [
-            -1 => trans('firefly.updates_ask_me_later'),
-            0  => trans('firefly.updates_do_not_check'),
-            1  => trans('firefly.updates_enable_check'),
+            -1 => (string)trans('firefly.updates_ask_me_later'),
+            0  => (string)trans('firefly.updates_do_not_check'),
+            1  => (string)trans('firefly.updates_enable_check'),
         ];
 
         return view('admin.update.index', compact('subTitle', 'subTitleIcon', 'selected', 'options'));
     }
 
     /**
+     * Post new settings.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -97,7 +101,7 @@ class UpdateController extends Controller
     {
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
-        $resultString  = $this->parseResult($latestRelease, $versionCheck);
+        $resultString  = $this->parseResult($versionCheck, $latestRelease);
 
         if (0 !== $versionCheck && '' !== $resultString) {
             // flash info

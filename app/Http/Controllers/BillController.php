@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
@@ -36,25 +37,25 @@ use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\DataArraySerializer;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use URL;
-use View;
 
 /**
  * Class BillController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillController extends Controller
 {
     /** @var AttachmentHelperInterface Helper for attachments. */
     private $attachments;
-    /** @var BillRepositoryInterface */
+    /** @var BillRepositoryInterface Bill repository */
     private $billRepository;
-    /** @var RuleGroupRepositoryInterface */
+    /** @var RuleGroupRepositoryInterface Rule group repository */
     private $ruleGroupRepos;
 
     /**
-     *
+     * BillController constructor.
      */
     public function __construct()
     {
@@ -63,11 +64,11 @@ class BillController extends Controller
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        View::share('uploadSize', $uploadSize);
+        app('view')->share('uploadSize', $uploadSize);
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.bills'));
+                app('view')->share('title', (string)trans('firefly.bills'));
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
@@ -79,6 +80,8 @@ class BillController extends Controller
     }
 
     /**
+     * Create a new bill.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -91,7 +94,7 @@ class BillController extends Controller
         foreach ($billPeriods as $current) {
             $periods[$current] = strtolower((string)trans('firefly.repeat_freq_' . $current));
         }
-        $subTitle        = trans('firefly.create_new_bill');
+        $subTitle        = (string)trans('firefly.create_new_bill');
         $defaultCurrency = app('amount')->getDefaultCurrency();
 
         // put previous url in session if not redirect from store (not "create another").
@@ -104,6 +107,8 @@ class BillController extends Controller
     }
 
     /**
+     * Delete a bill.
+     *
      * @param Bill $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -112,12 +117,14 @@ class BillController extends Controller
     {
         // put previous url in session
         $this->rememberPreviousUri('bills.delete.uri');
-        $subTitle = trans('firefly.delete_bill', ['name' => $bill->name]);
+        $subTitle = (string)trans('firefly.delete_bill', ['name' => $bill->name]);
 
         return view('bills.delete', compact('bill', 'subTitle'));
     }
 
     /**
+     * Destroy a bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -135,6 +142,8 @@ class BillController extends Controller
     }
 
     /**
+     * Edit a bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -147,10 +156,10 @@ class BillController extends Controller
         $billPeriods = config('firefly.bill_periods');
 
         foreach ($billPeriods as $current) {
-            $periods[$current] = trans('firefly.' . $current);
+            $periods[$current] = (string)trans('firefly.' . $current);
         }
 
-        $subTitle = trans('firefly.edit_bill', ['name' => $bill->name]);
+        $subTitle = (string)trans('firefly.edit_bill', ['name' => $bill->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('bills.edit.fromUpdate')) {
@@ -158,8 +167,8 @@ class BillController extends Controller
         }
 
         $currency         = app('amount')->getDefaultCurrency();
-        $bill->amount_min = round($bill->amount_min, $currency->decimal_places);
-        $bill->amount_max = round($bill->amount_max, $currency->decimal_places);
+        $bill->amount_min = round((float)$bill->amount_min, $currency->decimal_places);
+        $bill->amount_max = round((float)$bill->amount_max, $currency->decimal_places);
         $defaultCurrency  = app('amount')->getDefaultCurrency();
 
         // code to handle active-checkboxes
@@ -178,13 +187,15 @@ class BillController extends Controller
     }
 
     /**
+     * Show all bills.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
     {
         $start      = session('start');
         $end        = session('end');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $paginator  = $this->billRepository->getPaginator($pageSize);
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
@@ -218,6 +229,8 @@ class BillController extends Controller
     }
 
     /**
+     * Rescan bills for transactions.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -253,6 +266,8 @@ class BillController extends Controller
     }
 
     /**
+     * Show a bill.
+     *
      * @param Request $request
      * @param Bill    $bill
      *
@@ -263,11 +278,13 @@ class BillController extends Controller
         // add info about rules:
         $rules          = $this->billRepository->getRulesForBill($bill);
         $subTitle       = $bill->name;
+        /** @var Carbon $start */
         $start          = session('start');
+        /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
         $page           = (int)$request->get('page');
-        $pageSize       = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize       = (int)app('preferences')->get('listPageSize', 50)->data;
         $yearAverage    = $this->billRepository->getYearAverage($bill, $start);
         $overallAverage = $this->billRepository->getOverallAverage($bill);
         $manager        = new Manager();
@@ -295,9 +312,14 @@ class BillController extends Controller
 
 
     /**
+     * Store a new bill.
+     *
      * @param BillFormRequest $request
      *
      * @return RedirectResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function store(BillFormRequest $request): RedirectResponse
     {
@@ -316,7 +338,6 @@ class BillController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
-        // flash messages
         if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
@@ -348,6 +369,8 @@ class BillController extends Controller
     }
 
     /**
+     * Update a bill.
+     *
      * @param BillFormRequest $request
      * @param Bill            $bill
      *

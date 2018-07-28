@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 class CategoryFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class CategoryFormRequest extends Request
     }
 
     /**
+     * Get information for the controller.
+     *
      * @return array
      */
     public function getCategoryData(): array
@@ -49,6 +53,8 @@ class CategoryFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

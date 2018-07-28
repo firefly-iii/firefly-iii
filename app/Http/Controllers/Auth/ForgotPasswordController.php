@@ -36,17 +36,6 @@ use Illuminate\Support\Facades\Password;
  */
 class ForgotPasswordController extends Controller
 {
-    /*
-    |--------------------------------------------------------------------------
-    | Password Reset Controller
-    |--------------------------------------------------------------------------
-    |
-    | This controller is responsible for handling password reset emails and
-    | includes a trait which assists in sending these notifications from
-    | your application to your users. Feel free to explore this trait.
-    |
-    */
-
     use SendsPasswordResetEmails;
 
     /**
@@ -75,7 +64,7 @@ class ForgotPasswordController extends Controller
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {
-            return back()->withErrors(['email' => trans('firefly.cannot_reset_demo_user')]);
+            return back()->withErrors(['email' => (string)trans('firefly.cannot_reset_demo_user')]);
         }
 
         // We will send the password reset link to this user. Once we have attempted
@@ -93,6 +82,8 @@ class ForgotPasswordController extends Controller
     }
 
     /**
+     * Show form for email recovery.
+     *
      * @codeCoverageIgnore
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

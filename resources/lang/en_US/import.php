@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Asset account (IBAN)',
     'column_account-id'                    => 'Asset account ID (matching FF3)',
     'column_account-name'                  => 'Asset account (name)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Amount',
     'column_amount_foreign'                => 'Amount (in foreign currency)',
     'column_amount_debit'                  => 'Amount (debit column)',

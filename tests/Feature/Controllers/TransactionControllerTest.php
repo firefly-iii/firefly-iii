@@ -351,6 +351,9 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
+
 
         $this->be($this->user());
         $response = $this->get(route('transactions.show', [1]));

@@ -29,7 +29,6 @@ use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Http\Request;
 use Log;
-use Preferences;
 
 /**
  * Class TwoFactorController.
@@ -37,24 +36,26 @@ use Preferences;
 class TwoFactorController extends Controller
 {
     /**
+     * Show 2FA screen.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      *
      * @throws FireflyException
-     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(Request $request)
     {
         $user = auth()->user();
 
         // to make sure the validator in the next step gets the secret, we push it in session
-        $secretPreference = Preferences::get('twoFactorAuthSecret', null);
+        $secretPreference = app('preferences')->get('twoFactorAuthSecret', null);
         $secret           = null === $secretPreference ? null : $secretPreference->data;
         $title            = (string)trans('firefly.two_factor_title');
 
         // make sure the user has two factor configured:
-        $has2FA = Preferences::get('twoFactorAuthEnabled', false)->data;
+        $has2FA = app('preferences')->get('twoFactorAuthEnabled', false)->data;
         if (null === $has2FA || false === $has2FA) {
             return redirect(route('index'));
         }
@@ -68,6 +69,8 @@ class TwoFactorController extends Controller
     }
 
     /**
+     * What to do if 2FA lost?
+     *
      * @return mixed
      */
     public function lostTwoFactor()
@@ -87,6 +90,8 @@ class TwoFactorController extends Controller
     }
 
     /**
+     * Submit 2FA code.
+     *
      * @param TokenFormRequest $request
      * @param CookieJar        $cookieJar
      *

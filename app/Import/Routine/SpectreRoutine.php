@@ -36,10 +36,10 @@ use Log;
 class SpectreRoutine implements RoutineInterface
 {
 
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
 
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -48,6 +48,9 @@ class SpectreRoutine implements RoutineInterface
      * The final status of the routine must be "provider_finished".
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function run(): void
     {
@@ -66,7 +69,7 @@ class SpectreRoutine implements RoutineInterface
                     $handler->run();
 
                     // if count logins is zero, go to authenticate stage
-                    if ($handler->getCountLogins() === 0) {
+                    if (0 === $handler->getCountLogins()) {
                         $this->repository->setStage($this->importJob, 'do-authenticate');
                         $this->repository->setStatus($this->importJob, 'ready_to_run');
 
@@ -108,6 +111,8 @@ class SpectreRoutine implements RoutineInterface
     }
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
      * @return void

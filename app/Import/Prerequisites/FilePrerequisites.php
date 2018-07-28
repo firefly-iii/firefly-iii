@@ -26,9 +26,10 @@ use FireflyIII\User;
 use Illuminate\Support\MessageBag;
 
 /**
- * @codeCoverageIgnore
  *
  * This class contains all the routines necessary to import from a file. Hint: there are none.
+ *
+ * @codeCoverageIgnore
  */
 class FilePrerequisites implements PrerequisitesInterface
 {

@@ -142,7 +142,7 @@ class AccountTransformerTest extends TestCase
                 'noteable_id'   => $account->id,
                 'noteable_type' => Account::class,
                 'title'         => null,
-                'text'          => 'I am a note #' . random_int(1, 1000),
+                'text'          => 'I am a note #' . random_int(1, 10000),
             ]
         );
 
@@ -233,7 +233,7 @@ class AccountTransformerTest extends TestCase
                 'noteable_id'   => $account->id,
                 'noteable_type' => Account::class,
                 'title'         => null,
-                'text'          => 'I am a note #' . random_int(1, 1000),
+                'text'          => 'I am a note #' . random_int(1, 10000),
             ]
         );
 
@@ -421,7 +421,7 @@ class AccountTransformerTest extends TestCase
                 'noteable_id'   => $account->id,
                 'noteable_type' => Account::class,
                 'title'         => null,
-                'text'          => 'I am a note #' . random_int(1, 1000),
+                'text'          => 'I am a note #' . random_int(1, 10000),
             ]
         );
 

@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 class TagFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class TagFormRequest extends Request
     }
 
     /**
+     * Get all data for controller.
+     *
      * @return array
      */
     public function collectTagData(): array
@@ -66,6 +70,8 @@ class TagFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

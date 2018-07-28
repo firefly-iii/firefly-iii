@@ -32,7 +32,6 @@ use Log;
 /**
  * Trait GetSpectreTokenTrait
  *
- * @package FireflyIII\Support\Import\Information
  */
 trait GetSpectreTokenTrait
 {

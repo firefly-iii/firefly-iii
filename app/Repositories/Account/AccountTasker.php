@@ -44,6 +44,7 @@ class AccountTasker implements AccountTaskerInterface
      * @param Carbon     $end
      *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getAccountReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -79,7 +80,7 @@ class AccountTasker implements AccountTaskerInterface
             $entry['end_balance']   = $endSet[$account->id] ?? '0';
 
             // first journal exists, and is on start, then this is the actual opening balance:
-            if (null !== $first->id && $first->date->isSameDay($start)) {
+            if (null !== $first && $first->date->isSameDay($start)) {
                 Log::debug(sprintf('Date of first journal for %s is %s', $account->name, $first->date->format('Y-m-d')));
                 $entry['start_balance'] = $first->transactions()->where('account_id', $account->id)->first()->amount;
                 Log::debug(sprintf('Account %s was opened on %s, so opening balance is %f', $account->name, $start->format('Y-m-d'), $entry['start_balance']));
@@ -182,7 +183,7 @@ class AccountTasker implements AccountTaskerInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -191,6 +192,7 @@ class AccountTasker implements AccountTaskerInterface
      * @param Collection $transactions
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function groupByOpposing(Collection $transactions): array
     {

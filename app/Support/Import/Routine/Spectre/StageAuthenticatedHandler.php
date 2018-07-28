@@ -57,7 +57,7 @@ class StageAuthenticatedHandler
         $config = $this->importJob->configuration;
         $logins = $config['all-logins'] ?? [];
         Log::debug(sprintf('%d logins in config', \count($logins)));
-        if (\count($logins) === 0) {
+        if (0 === \count($logins)) {
             // get logins from Spectre.
             $logins               = $this->getLogins();
             $config['all-logins'] = $logins;

@@ -36,6 +36,12 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string         $tag
  * @property int            $id
  * @property \Carbon\Carbon $date
+ * @property int            zoomLevel
+ * @property float          longitude
+ * @property float          latitude
+ * @property string         description
+ * @property string         amount_sum
+ * @property string         tagMode
  */
 class Tag extends Model
 {
@@ -60,38 +66,6 @@ class Tag extends Model
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
 
     /**
-     * @param array $fields
-     *
-     * @deprecated
-     * @return Tag|null
-     */
-    public static function firstOrCreateEncrypted(array $fields)
-    {
-        // everything but the tag:
-        unset($fields['tagMode']);
-        $search = $fields;
-        unset($search['tag']);
-
-        $query = self::orderBy('id');
-        foreach ($search as $name => $value) {
-            $query->where($name, $value);
-        }
-        $set = $query->get(['tags.*']);
-        /** @var Tag $tag */
-        foreach ($set as $tag) {
-            if ($tag->tag === $fields['tag']) {
-                return $tag;
-            }
-        }
-        // create it!
-        $fields['tagMode']     = 'nothing';
-        $fields['description'] = $fields['description'] ?? '';
-        $tag                   = self::create($fields);
-
-        return $tag;
-    }
-
-    /**
      * @param string $value
      *
      * @return Tag
@@ -101,7 +75,10 @@ class Tag extends Model
     {
         if (auth()->check()) {
             $tagId = (int)$value;
-            $tag   = auth()->user()->tags()->find($tagId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Tag $tag */
+            $tag = $user->tags()->find($tagId);
             if (null !== $tag) {
                 return $tag;
             }
@@ -114,10 +91,10 @@ class Tag extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getDescriptionAttribute($value)
+    public function getDescriptionAttribute($value): ?string
     {
         if (null === $value) {
             return $value;
@@ -131,10 +108,10 @@ class Tag extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getTagAttribute($value)
+    public function getTagAttribute($value): ?string
     {
         if (null === $value) {
             return null;
@@ -150,7 +127,7 @@ class Tag extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setDescriptionAttribute($value)
+    public function setDescriptionAttribute($value): void
     {
         $this->attributes['description'] = Crypt::encrypt($value);
     }
@@ -162,7 +139,7 @@ class Tag extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setTagAttribute($value)
+    public function setTagAttribute($value): void
     {
         $this->attributes['tag'] = Crypt::encrypt($value);
     }
@@ -171,7 +148,7 @@ class Tag extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionJournals()
+    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
     }
@@ -180,7 +157,7 @@ class Tag extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

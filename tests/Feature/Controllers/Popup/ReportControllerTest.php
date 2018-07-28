@@ -74,7 +74,7 @@ class ReportControllerTest extends TestCase
         ];
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
-        $response->assertStatus(500);
+        $response->assertStatus(200);
     }
 
     /**
@@ -98,7 +98,7 @@ class ReportControllerTest extends TestCase
         ];
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
-        $response->assertStatus(500);
+        $response->assertStatus(200);
     }
 
     /**
@@ -206,7 +206,7 @@ class ReportControllerTest extends TestCase
 
         $uri      = route('popup.general') . '?' . http_build_query($arguments);
         $response = $this->get($uri);
-        $response->assertStatus(500);
+        $response->assertStatus(200);
     }
 
     /**
@@ -364,6 +364,6 @@ class ReportControllerTest extends TestCase
         ];
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
-        $response->assertStatus(500);
+        $response->assertStatus(200);
     }
 }

@@ -38,7 +38,7 @@ use View;
  */
 class ConvertController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**
@@ -53,7 +53,7 @@ class ConvertController extends Controller
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
 
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
@@ -63,6 +63,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Show overview of a to be converted transaction.
+     *
      * @param TransactionType    $destinationType
      * @param TransactionJournal $journal
      *
@@ -79,21 +81,19 @@ class ConvertController extends Controller
         // @codeCoverageIgnoreEnd
         $positiveAmount = $this->repository->getJournalTotal($journal);
         $sourceType     = $journal->transactionType;
-        $subTitle       = trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
+        $subTitle       = (string)trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]);
         $subTitleIcon   = 'fa-exchange';
 
-        // cannot convert to its own type.
-        if ($sourceType->type === $destinationType->type) {
+        if ($sourceType->type === $destinationType->type) { // cannot convert to its own type.
             Log::debug('This is already a transaction of the expected type..');
-            session()->flash('info', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('info', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
-        // cannot convert split.
-        if ($journal->transactions()->count() > 2) {
+        if ($journal->transactions()->count() > 2) { // cannot convert split.
             Log::info('This journal has more than two transactions.');
-            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', (string)trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -112,6 +112,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Do the conversion.
+     *
      * @param Request            $request
      * @param TransactionType    $destinationType
      * @param TransactionJournal $journal
@@ -119,7 +121,8 @@ class ConvertController extends Controller
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      *
      * @throws FireflyException
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionJournal $journal)
     {
@@ -135,14 +138,14 @@ class ConvertController extends Controller
 
         if ($journal->transactionType->type === $destinationType->type) {
             Log::info('Journal is already of the desired type.');
-            session()->flash('error', trans('firefly.convert_is_already_type_' . $destinationType->type));
+            session()->flash('error', (string)trans('firefly.convert_is_already_type_' . $destinationType->type));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
 
         if ($journal->transactions()->count() > 2) {
             Log::info('Journal has more than two transactions.');
-            session()->flash('error', trans('firefly.cannot_convert_split_journal'));
+            session()->flash('error', (string)trans('firefly.cannot_convert_split_journal'));
 
             return redirect(route('transactions.show', [$journal->id]));
         }
@@ -158,13 +161,15 @@ class ConvertController extends Controller
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 
-        session()->flash('success', trans('firefly.converted_to_' . $destinationType->type));
+        session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
 
         return redirect(route('transactions.show', [$journal->id]));
     }
 
 
     /**
+     * Get the destination account. Is complex.
+     *
      * @param TransactionJournal $journal
      * @param TransactionType    $destinationType
      * @param array              $data
@@ -172,6 +177,9 @@ class ConvertController extends Controller
      * @return Account
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getDestinationAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account
     {
@@ -221,6 +229,8 @@ class ConvertController extends Controller
 
 
     /**
+     * Get the source account.
+     *
      * @param TransactionJournal $journal
      * @param TransactionType    $destinationType
      * @param array              $data
@@ -228,6 +238,9 @@ class ConvertController extends Controller
      * @return Account
      *
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getSourceAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account
     {

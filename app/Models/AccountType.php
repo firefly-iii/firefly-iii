@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  *
  * @property string $type
  * @method whereType(string $type)
- * @property int $id
+ * @property int    $id
  *
  */
 class AccountType extends Model

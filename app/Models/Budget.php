@@ -27,16 +27,19 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Budget.
  *
- * @property int    $id
- * @property string $name
- * @property bool   $active
- * @property int $user_id
+ * @property int         $id
+ * @property string      $name
+ * @property bool        $active
+ * @property int         $user_id
  * @property-read string $email
+ * @property bool        encrypted
+ * @property Collection       budgetlimits
  */
 class Budget extends Model
 {
@@ -61,34 +64,6 @@ class Budget extends Model
     protected $hidden = ['encrypted'];
 
     /**
-     * @param array $fields
-     *
-     * @deprecated
-     * @return Budget
-     */
-    public static function firstOrCreateEncrypted(array $fields)
-    {
-        // everything but the name:
-        $query  = self::orderBy('id');
-        $search = $fields;
-        unset($search['name']);
-        foreach ($search as $name => $value) {
-            $query->where($name, $value);
-        }
-        $set = $query->get(['budgets.*']);
-        /** @var Budget $budget */
-        foreach ($set as $budget) {
-            if ($budget->name === $fields['name']) {
-                return $budget;
-            }
-        }
-        // create it!
-        $budget = self::create($fields);
-
-        return $budget;
-    }
-
-    /**
      * @param string $value
      *
      * @return Budget
@@ -98,7 +73,10 @@ class Budget extends Model
     {
         if (auth()->check()) {
             $budgetId = (int)$value;
-            $budget   = auth()->user()->budgets()->find($budgetId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Budget $budget */
+            $budget   = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
             }
@@ -110,7 +88,7 @@ class Budget extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function budgetlimits()
+    public function budgetlimits(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(BudgetLimit::class);
     }
@@ -120,10 +98,10 @@ class Budget extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getNameAttribute($value)
+    public function getNameAttribute($value): ?string
     {
         if ($this->encrypted) {
             return Crypt::decrypt($value);
@@ -139,7 +117,7 @@ class Budget extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setNameAttribute($value)
+    public function setNameAttribute($value): void
     {
         $encrypt                       = config('firefly.encryption');
         $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
@@ -150,7 +128,7 @@ class Budget extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionJournals()
+    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'budget_transaction_journal', 'budget_id');
     }
@@ -159,7 +137,7 @@ class Budget extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactions()
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }

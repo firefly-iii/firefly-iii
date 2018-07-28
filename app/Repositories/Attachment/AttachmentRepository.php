@@ -31,12 +31,14 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\User;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
 
 /**
  * Class AttachmentRepository.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AttachmentRepository implements AttachmentRepositoryInterface
 {
@@ -58,7 +60,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         try {
             unlink($file);
         } catch (Exception $e) {
-            Log::error(sprintf('Could not delete file for attachment %d.', $attachment->id));
+            Log::error(sprintf('Could not delete file for attachment %d: %s', $attachment->id, $e->getMessage()));
         }
         $attachment->delete();
 
@@ -79,33 +81,14 @@ class AttachmentRepository implements AttachmentRepositoryInterface
     }
 
     /**
-     * @param int $id
+     * @param int $attachmentId
      *
-     * @return Attachment
+     * @return Attachment|null
      */
-    public function find(int $id): Attachment
+    public function findWithoutUser(int $attachmentId): ?Attachment
     {
-        $attachment = $this->user->attachments()->find($id);
-        if (null === $attachment) {
-            return new Attachment;
-        }
 
-        return $attachment;
-    }
-
-    /**
-     * @param int $id
-     *
-     * @return Attachment
-     */
-    public function findWithoutUser(int $id): Attachment
-    {
-        $attachment = Attachment::find($id);
-        if (null === $attachment) {
-            return new Attachment;
-        }
-
-        return $attachment;
+        return Attachment::find($attachmentId);
     }
 
     /**
@@ -138,9 +121,6 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param Attachment $attachment
      *
      * @return string
-     *
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(Attachment $attachment): string
     {
@@ -150,7 +130,12 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         $content = '';
 
         if ($disk->exists($file)) {
-            $content = Crypt::decrypt($disk->get($file));
+            try {
+                $content = Crypt::decrypt($disk->get($file));
+            } catch (FileNotFoundException $e) {
+                Log::debug(sprintf('File not found: %e', $e->getMessage()));
+                $content = false;
+            }
         }
         if (\is_bool($content)) {
             Log::error(sprintf('Attachment #%d may be corrupted: the content could not be decrypted.', $attachment->id));

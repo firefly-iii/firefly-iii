@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\FromAccountStarts;
+use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
 
@@ -35,7 +37,7 @@ class FromAccountStartsTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -46,21 +48,13 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        Log::debug('In testTriggered()');
-        $loops = 0; // FINAL LOOP METHOD.
-        do {
-            /** @var TransactionJournal $journal */
-            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-            $account     = $transaction->account;
-            $count       = $journal->transactions()->count();
+        $repository = $this->mock(JournalRepositoryInterface::class);
 
-            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
-
-            $loops++;
-
-            // do this until:  account is not null, journal has two transactions, loops is below 30
-        } while (!(null !== $account && 2 === $count && $loops < 30));
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalSourceAccounts')->once()->andReturn($collection);
 
         $trigger = FromAccountStarts::makeFromStrings(substr($account->name, 0, -3), false);
         $result  = $trigger->triggered($journal);
@@ -72,21 +66,13 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
-        Log::debug('In testTriggeredLonger()');
-        $loops = 0; // FINAL LOOP METHOD.
-        do {
-            /** @var TransactionJournal $journal */
-            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
-            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
-            $account     = $transaction->account;
-            $count       = $journal->transactions()->count();
+        $repository = $this->mock(JournalRepositoryInterface::class);
 
-            Log::debug(sprintf('Loop: %d, transaction count: %d, account is null: %d', $loops, $count, (int)null===$account));
-
-            $loops++;
-
-            // do this until:  account is not null, journal has two transactions, loops is below 30
-        } while (!(null !== $account && 2 === $count && $loops < 30));
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalSourceAccounts')->once()->andReturn($collection);
 
         $trigger = FromAccountStarts::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
@@ -98,7 +84,13 @@ class FromAccountStartsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalSourceAccounts')->once()->andReturn($collection);
 
         $trigger = FromAccountStarts::makeFromStrings('some name' . random_int(1, 234), false);
         $result  = $trigger->triggered($journal);
@@ -110,6 +102,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingEmpty(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = '';
         $result = FromAccountStarts::willMatchEverything($value);
         $this->assertTrue($result);
@@ -120,6 +113,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingNotNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = 'x';
         $result = FromAccountStarts::willMatchEverything($value);
         $this->assertFalse($result);
@@ -130,6 +124,7 @@ class FromAccountStartsTest extends TestCase
      */
     public function testWillMatchEverythingNull(): void
     {
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $value  = null;
         $result = FromAccountStarts::willMatchEverything($value);
         $this->assertTrue($result);

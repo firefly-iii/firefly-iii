@@ -31,7 +31,7 @@ use Exception;
 use FireflyIII\Jobs\MailError;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
-use Illuminate\Validation\ValidationException;
+use Illuminate\Validation\ValidationException as LaravelValidationException;
 use League\OAuth2\Server\Exception\OAuthServerException;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Exception $exception)
     {
-        if ($exception instanceof ValidationException && $request->expectsJson()) {
+        if ($exception instanceof LaravelValidationException && $request->expectsJson()) {
             // ignore it: controller will handle it.
             return parent::render($request, $exception);
         }

@@ -23,12 +23,15 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 /**
- * @codeCoverageIgnore
  * Class MassEditJournalRequest.
+ *
+ * @codeCoverageIgnore
  */
 class MassEditJournalRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -38,6 +41,8 @@ class MassEditJournalRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

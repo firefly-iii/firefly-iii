@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Report;
@@ -33,13 +32,17 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class ExpenseController
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class ExpenseController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
 
     /**
@@ -60,6 +63,7 @@ class ExpenseController extends Controller
     }
 
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Generates the overview per budget.
      *
@@ -69,7 +73,7 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \Throwable
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function budget(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
@@ -85,7 +89,7 @@ class ExpenseController extends Controller
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
-        foreach ($combined as $name => $combi) {
+        foreach ($combined as $combi) {
             $all = $all->merge($combi);
         }
         // now find spent / earned:
@@ -100,13 +104,19 @@ class ExpenseController extends Controller
             }
             $together[$categoryId]['grand_total'] = bcadd($spentInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-        $result = view('reports.partials.exp-budgets', compact('together'))->render();
+        try {
+            $result = view('reports.partials.exp-budgets', compact('together'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::budget: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
         $cache->store($result);
 
         return $result;
     }
 
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Generates the overview per category (spent and earned).
      *
@@ -116,7 +126,8 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \Throwable
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function category(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
@@ -132,7 +143,7 @@ class ExpenseController extends Controller
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
-        foreach ($combined as $name => $combi) {
+        foreach ($combined as $combi) {
             $all = $all->merge($combi);
         }
         // now find spent / earned:
@@ -156,16 +167,20 @@ class ExpenseController extends Controller
             }
             $together[$categoryId]['grand_total'] = bcadd($earnedInfo['grand_total'], $together[$categoryId]['grand_total']);
         }
-
-        $result = view('reports.partials.exp-categories', compact('together'))->render();
+        try {
+            $result = view('reports.partials.exp-categories', compact('together'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
         $cache->store($result);
 
         return $result;
     }
 
-
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
-     * Overview of spending
+     * Overview of spending.
      *
      * @param Collection $accounts
      * @param Collection $expense
@@ -173,7 +188,6 @@ class ExpenseController extends Controller
      * @param Carbon     $end
      *
      * @return array|mixed|string
-     * @throws \Throwable
      */
     public function spent(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -203,22 +217,28 @@ class ExpenseController extends Controller
                 'earned' => $earned,
             ];
         }
-        $result = view('reports.partials.exp-not-grouped', compact('result'))->render();
+        try {
+            $result = view('reports.partials.exp-not-grouped', compact('result'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
         $cache->store($result);
 
         return $result;
         // for period, get spent and earned for each account (by name)
     }
 
-
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * List of top expenses.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return string
-     * @throws \Throwable
      */
     public function topExpense(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): string
     {
@@ -234,7 +254,7 @@ class ExpenseController extends Controller
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
-        foreach ($combined as $name => $combi) {
+        foreach ($combined as $combi) {
             $all = $all->merge($combi);
         }
         // get all expenses in period:
@@ -248,20 +268,26 @@ class ExpenseController extends Controller
                 return (float)$transaction->transaction_amount;
             }
         );
-        $result = view('reports.partials.top-transactions', compact('sorted'))->render();
+        try {
+            $result = view('reports.partials.top-transactions', compact('sorted'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::topExpense: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
         $cache->store($result);
 
         return $result;
     }
-
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * List of top income.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function topIncome(Collection $accounts, Collection $expense, Carbon $start, Carbon $end)
     {
@@ -277,7 +303,7 @@ class ExpenseController extends Controller
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
-        foreach ($combined as $name => $combi) {
+        foreach ($combined as $combi) {
             $all = $all->merge($combi);
         }
         // get all expenses in period:
@@ -291,13 +317,20 @@ class ExpenseController extends Controller
                 return (float)$transaction->transaction_amount;
             }
         );
-        $result = view('reports.partials.top-transactions', compact('sorted'))->render();
+        try {
+            $result = view('reports.partials.top-transactions', compact('sorted'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Could not render category::topIncome: %s', $e->getMessage()));
+            $result = 'An error prevented Firefly III from rendering. Apologies.';
+        }
         $cache->store($result);
 
         return $result;
     }
 
     /**
+     * Combine accounts into a single list.
+     *
      * @param Collection $accounts
      *
      * @return array
@@ -320,13 +353,19 @@ class ExpenseController extends Controller
         return $combined;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Group by category (earnings).
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
@@ -381,7 +420,10 @@ class ExpenseController extends Controller
         return $sum;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Earned in period for accounts.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
@@ -423,13 +465,18 @@ class ExpenseController extends Controller
         return $sum;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Spent by budget.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
@@ -484,13 +531,19 @@ class ExpenseController extends Controller
         return $sum;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Spent by category.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
     {
@@ -545,7 +598,10 @@ class ExpenseController extends Controller
         return $sum;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Spent in a period.
+     *
      * @param Collection $assets
      * @param Collection $opposing
      * @param Carbon     $start

@@ -34,7 +34,6 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
 use Log;
-use Preferences;
 
 /**
  * Class CreateImport.
@@ -232,7 +231,7 @@ class CreateImport extends Command
             }
         }
         // clear cache for user:
-        Preferences::setForUser($user, 'lastActivity', microtime());
+        app('preferences')->setForUser($user, 'lastActivity', microtime());
 
         return 0;
     }
@@ -266,8 +265,8 @@ class CreateImport extends Command
      */
     private function validArguments(): bool
     {
-        $file          = $this->argument('file');
-        $configuration = $this->argument('configuration');
+        $file          = (string)$this->argument('file');
+        $configuration = (string)$this->argument('configuration');
         $cwd           = getcwd();
         $validTypes    = config('import.options.file.import_formats');
         $type          = strtolower($this->option('type'));

@@ -72,19 +72,20 @@ class FixerIOv2 implements ExchangeRateInterface
             'http://data.fixer.io/api/%s?access_key=%s&base=%s&symbols=%s',
             $date->format('Y-m-d'), $apiKey, $fromCurrency->code, $toCurrency->code
         );
-        $statusCode = -1;
         Log::debug(sprintf('Going to request exchange rate using URI %s', str_replace($apiKey, 'xxxx', $uri)));
+        $client = new Client;
         try {
-            $client     = new Client;
+
             $res        = $client->request('GET', $uri);
             $statusCode = $res->getStatusCode();
             $body       = $res->getBody()->getContents();
-            Log::debug(sprintf('Result status code is %d', $statusCode));
-            Log::debug(sprintf('Result body is: %s', $body));
         } catch (GuzzleException|Exception $e) {
             // don't care about error
-            $body = sprintf('Guzzle exception: %s', $e->getMessage());
+            $body       = sprintf('Guzzle exception: %s', $e->getMessage());
+            $statusCode = 500;
         }
+        Log::debug(sprintf('Result status code is %d', $statusCode));
+        Log::debug(sprintf('Result body is: %s', $body));
 
         $content = null;
         if (200 !== $statusCode) {
@@ -103,7 +104,7 @@ class FixerIOv2 implements ExchangeRateInterface
         }
 
         $exchangeRate->rate = $rate;
-        if ($rate !== 0.0) {
+        if (0.0 !== $rate) {
             Log::debug('Rate is not zero, save it!');
             $exchangeRate->save();
         }

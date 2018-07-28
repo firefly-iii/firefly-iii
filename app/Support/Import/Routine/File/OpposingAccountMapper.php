@@ -45,6 +45,7 @@ class OpposingAccountMapper
      * @param array    $data
      *
      * @return Account
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function map(?int $accountId, string $amount, array $data): Account
     {
@@ -53,7 +54,7 @@ class OpposingAccountMapper
         $expectedType = AccountType::EXPENSE;
         $result       = null;
         Log::debug(sprintf('Going to search for accounts of type %s', $expectedType));
-        if (bccomp($amount, '0') === 1) {
+        if (1 === bccomp($amount, '0')) {
             // more than zero.
             $expectedType = AccountType::REVENUE;
             Log::debug(sprintf('Because amount is %s, will instead search for accounts of type %s', $amount, $expectedType));

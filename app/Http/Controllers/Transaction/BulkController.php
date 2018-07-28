@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 
-use ExpandedForm;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BulkEditJournalRequest;
 use FireflyIII\Models\TransactionJournal;
@@ -38,7 +37,7 @@ use Log;
  */
 class BulkController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
 
@@ -52,7 +51,7 @@ class BulkController extends Controller
         $this->middleware(
             function ($request, $next) {
                 $this->repository = app(JournalRepositoryInterface::class);
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -61,18 +60,20 @@ class BulkController extends Controller
     }
 
     /**
+     * Edit a set of journals in bulk.
+     *
      * @param Collection $journals
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function edit(Collection $journals)
     {
-        $subTitle = trans('firefly.mass_bulk_journals');
+        $subTitle = (string)trans('firefly.mass_bulk_journals');
 
         // get list of budgets:
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
-        $budgetList = ExpandedForm::makeSelectListWithEmpty($repository->getActiveBudgets());
+        $budgetList = app('expandedform')->makeSelectListWithEmpty($repository->getActiveBudgets());
         // collect some useful meta data for the mass edit:
         $journals->each(
             function (TransactionJournal $journal) {
@@ -85,9 +86,13 @@ class BulkController extends Controller
 
 
     /**
+     * Update all journals.
+     *
      * @param BulkEditJournalRequest $request
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(BulkEditJournalRequest $request)
     {
@@ -128,7 +133,7 @@ class BulkController extends Controller
         }
 
         app('preferences')->mark();
-        $request->session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        $request->session()->flash('success', (string)trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.bulk-edit.uri'));

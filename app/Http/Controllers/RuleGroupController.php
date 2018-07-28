@@ -35,6 +35,8 @@ use Illuminate\Http\Request;
 
 /**
  * Class RuleGroupController.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleGroupController extends Controller
 {
@@ -47,7 +49,7 @@ class RuleGroupController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.rules'));
+                app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
                 return $next($request);
@@ -56,12 +58,14 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Create a new rule group.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
         $subTitleIcon = 'fa-clone';
-        $subTitle     = trans('firefly.make_new_rule_group');
+        $subTitle     = (string)trans('firefly.make_new_rule_group');
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('rule-groups.create.fromStore')) {
@@ -73,13 +77,15 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Delege a rule group.
+     *
      * @param RuleGroup $ruleGroup
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(RuleGroup $ruleGroup)
     {
-        $subTitle = trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle = (string)trans('firefly.delete_rule_group', ['title' => $ruleGroup->title]);
 
         // put previous url in session
         $this->rememberPreviousUri('rule-groups.delete.uri');
@@ -88,6 +94,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Actually destroy the rule group.
+     *
      * @param Request                      $request
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
@@ -112,6 +120,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Move a rule group down.
+     *
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
      *
@@ -125,6 +135,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Edit a rule group.
+     *
      * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
@@ -132,7 +144,7 @@ class RuleGroupController extends Controller
      */
     public function edit(Request $request, RuleGroup $ruleGroup)
     {
-        $subTitle = trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
+        $subTitle = (string)trans('firefly.edit_rule_group', ['title' => $ruleGroup->title]);
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
@@ -187,6 +199,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Select transactions to apply the group on.
+     *
      * @param RuleGroup $ruleGroup
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -201,6 +215,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Store the rule group.
+     *
      * @param RuleGroupFormRequest         $request
      * @param RuleGroupRepositoryInterface $repository
      *
@@ -227,10 +243,14 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Move the rule group up.
+     *
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ShortMethodName)
      */
     public function up(RuleGroupRepositoryInterface $repository, RuleGroup $ruleGroup)
     {
@@ -240,6 +260,8 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * Update the rule group.
+     *
      * @param RuleGroupFormRequest         $request
      * @param RuleGroupRepositoryInterface $repository
      * @param RuleGroup                    $ruleGroup

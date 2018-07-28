@@ -30,7 +30,6 @@ use Log;
 /**
  * Trait TransactionTypeTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait TransactionTypeTrait
 {

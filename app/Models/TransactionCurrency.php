@@ -33,14 +33,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $symbol
  * @property int    $decimal_places
  * @property int    $id
- * @property mixed  name
- * @property mixed  name
- * @property mixed  name
- * @property mixed  name
- * @property mixed  name
- * @property mixed  name
- * @property mixed  name
- * @property mixed  name
+ * @property string  name
  *
  */
 class TransactionCurrency extends Model
@@ -86,7 +79,7 @@ class TransactionCurrency extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactionJournals()
+    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TransactionJournal::class);
     }

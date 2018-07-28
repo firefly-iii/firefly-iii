@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  * Class ExpandedForm.
+ *
+ * @method array makeSelectList(Collection $set)
+ * @method array makeSelectListWithEmpty(Collection $set)
  */
 class ExpandedForm extends Facade
 {

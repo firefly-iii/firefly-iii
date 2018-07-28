@@ -41,6 +41,7 @@ use Log;
 
 /**
  * Class BillRepository.
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillRepository implements BillRepositoryInterface
 {
@@ -136,21 +137,8 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getBillsForAccounts(Collection $accounts): Collection
     {
-        $fields = ['bills.id',
-                   'bills.created_at',
-                   'bills.updated_at',
-                   'bills.deleted_at',
-                   'bills.user_id',
-                   'bills.name',
-                   'bills.match',
-                   'bills.amount_min',
-                   'bills.amount_max',
-                   'bills.date',
-                   'bills.repeat_freq',
-                   'bills.skip',
-                   'bills.automatch',
-                   'bills.active',
-                   'bills.name_encrypted',
+        $fields = ['bills.id', 'bills.created_at', 'bills.updated_at', 'bills.deleted_at', 'bills.user_id', 'bills.name', 'bills.match', 'bills.amount_min',
+                   'bills.amount_max', 'bills.date', 'bills.repeat_freq', 'bills.skip', 'bills.automatch', 'bills.active', 'bills.name_encrypted',
                    'bills.match_encrypted',];
         $ids    = $accounts->pluck('id')->toArray();
         $set    = $this->user->bills()
@@ -173,7 +161,7 @@ class BillRepository implements BillRepositoryInterface
 
         $set = $set->sortBy(
             function (Bill $bill) {
-                $int = 1 === $bill->active ? 0 : 1;
+                $int = $bill->active ? 0 : 1;
 
                 return $int . strtolower($bill->name);
             }
@@ -336,28 +324,22 @@ class BillRepository implements BillRepositoryInterface
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
         $set = new Collection;
-        Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
-
-        // Start at 2016-10-01, see when we expect the bill to hit:
         $currentStart = clone $start;
+        Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
         Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));
 
         while ($currentStart <= $end) {
             Log::debug(sprintf('Currentstart is now %s.', $currentStart->format('Y-m-d')));
             $nextExpectedMatch = $this->nextDateMatch($bill, $currentStart);
             Log::debug(sprintf('Next Date match after %s is %s', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
-            // If nextExpectedMatch is after end, we continue:
-            if ($nextExpectedMatch > $end) {
+            if ($nextExpectedMatch > $end) {// If nextExpectedMatch is after end, we continue
                 Log::debug(
                     sprintf('nextExpectedMatch %s is after %s, so we skip this bill now.', $nextExpectedMatch->format('Y-m-d'), $end->format('Y-m-d'))
                 );
                 break;
             }
-            // add to set
             $set->push(clone $nextExpectedMatch);
             Log::debug(sprintf('Now %d dates in set.', $set->count()));
-
-            // add day if necessary.
             $nextExpectedMatch->addDay();
 
             Log::debug(sprintf('Currentstart (%s) has become %s.', $currentStart->format('Y-m-d'), $nextExpectedMatch->format('Y-m-d')));
@@ -553,7 +535,7 @@ class BillRepository implements BillRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

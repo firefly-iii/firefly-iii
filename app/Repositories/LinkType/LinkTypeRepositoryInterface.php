@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\LinkType;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
+use FireflyIII\User;
 use Illuminate\Support\Collection;
 
 /**
@@ -55,14 +56,6 @@ interface LinkTypeRepositoryInterface
     public function destroyLink(TransactionJournalLink $link): bool;
 
     /**
-     * @param int $id
-     *
-     * @deprecated
-     * @return LinkType
-     */
-    public function find(int $id): LinkType;
-
-    /**
      * Find link type by name.
      *
      * @param string|null $name
@@ -82,11 +75,11 @@ interface LinkTypeRepositoryInterface
     public function findLink(TransactionJournal $one, TransactionJournal $two): bool;
 
     /**
-     * @param int $id
+     * @param int $linkTypeId
      *
      * @return LinkType|null
      */
-    public function findNull(int $id): ?LinkType;
+    public function findNull(int $linkTypeId): ?LinkType;
 
     /**
      * See if such a link already exists (and get it).
@@ -121,6 +114,13 @@ interface LinkTypeRepositoryInterface
     public function getLinks(TransactionJournal $journal): Collection;
 
     /**
+     * Set the user for this instance.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void;
+
+    /**
      * @param array $data
      *
      * @return LinkType
@@ -134,9 +134,9 @@ interface LinkTypeRepositoryInterface
      * @param TransactionJournal $inward
      * @param TransactionJournal $outward
      *
-     * @return mixed
+     * @return TransactionJournalLink|null
      */
-    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): TransactionJournalLink;
+    public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink;
 
     /**
      * @param TransactionJournalLink $link

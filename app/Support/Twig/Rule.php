@@ -43,9 +43,9 @@ class Rule extends Twig_Extension
                 $ruleActions     = array_keys(Config::get('firefly.rule-actions'));
                 $possibleActions = [];
                 foreach ($ruleActions as $key) {
-                    $possibleActions[$key] = trans('firefly.rule_action_' . $key . '_choice');
+                    $possibleActions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
                 }
-                unset($key, $ruleActions);
+                unset($ruleActions);
                 asort($possibleActions);
 
                 return $possibleActions;
@@ -62,8 +62,8 @@ class Rule extends Twig_Extension
             'allJournalTriggers',
             function () {
                 return [
-                    'store-journal'  => trans('firefly.rule_trigger_store_journal'),
-                    'update-journal' => trans('firefly.rule_trigger_update_journal'),
+                    'store-journal'  => (string)trans('firefly.rule_trigger_store_journal'),
+                    'update-journal' => (string)trans('firefly.rule_trigger_update_journal'),
                 ];
             }
         );
@@ -81,10 +81,10 @@ class Rule extends Twig_Extension
                 $possibleTriggers = [];
                 foreach ($ruleTriggers as $key) {
                     if ('user_action' !== $key) {
-                        $possibleTriggers[$key] = trans('firefly.rule_trigger_' . $key . '_choice');
+                        $possibleTriggers[$key] = (string)trans('firefly.rule_trigger_' . $key . '_choice');
                     }
                 }
-                unset($key, $ruleTriggers);
+                unset($ruleTriggers);
                 asort($possibleTriggers);
 
                 return $possibleTriggers;

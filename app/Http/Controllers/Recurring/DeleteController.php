@@ -34,11 +34,11 @@ use Illuminate\Http\Request;
  */
 class DeleteController extends Controller
 {
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * DeleteController constructor.
      */
     public function __construct()
     {
@@ -48,7 +48,7 @@ class DeleteController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
 
@@ -58,23 +58,26 @@ class DeleteController extends Controller
     }
 
     /**
+     * Delete a recurring transaction form.
+     *
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Recurrence $recurrence)
     {
-        $subTitle = trans('firefly.delete_recurring', ['title' => $recurrence->title]);
+        $subTitle = (string)trans('firefly.delete_recurring', ['title' => $recurrence->title]);
         // put previous url in session
         $this->rememberPreviousUri('recurrences.delete.uri');
 
-        // todo actual number.
         $journalsCreated = $this->recurring->getTransactions($recurrence)->count();
 
         return view('recurring.delete', compact('recurrence', 'subTitle', 'journalsCreated'));
     }
 
     /**
+     * Destroy the recurring transaction.
+     *
      * @param RecurringRepositoryInterface $repository
      * @param Request                      $request
      * @param Recurrence                   $recurrence

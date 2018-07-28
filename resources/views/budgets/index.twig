@@ -65,7 +65,7 @@
                 </div>
                 <div class="box-body">
                     <p>
-                        <a href="{{ route('budgets.no-budget') }}">
+                        <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
                             {{ trans('firefly.transactions_no_budget', {start: periodStart, end: periodEnd }) }}
                         </a>
                     </p>
@@ -188,13 +188,13 @@
                             <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
                                 data-value="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
-                                ({{ (budgetInformation[budget.id]['spent'] / daysInMonth)|formatAmount }})
+                                ({{ (budgetInformation[budget.id]['spent'] / daysPassed)|formatAmount }})
                             </td>
                             <td class="left" data-id="{{ budget.id }}"
                                 data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                                 {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
-                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / days)|formatAmount }})
+                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / daysPassed)|formatAmount }})
                                 {% endif %}
                             </td>
                         </tr>

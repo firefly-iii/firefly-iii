@@ -35,7 +35,7 @@ class FireflySessionProvider extends ServiceProvider
     /**
      * Register the service provider.
      */
-    public function register()
+    public function register(): void
     {
         $this->registerSessionManager();
 
@@ -47,7 +47,7 @@ class FireflySessionProvider extends ServiceProvider
     /**
      * Register the session driver instance.
      */
-    protected function registerSessionDriver()
+    protected function registerSessionDriver(): void
     {
         $this->app->singleton(
             'session.store',
@@ -63,7 +63,7 @@ class FireflySessionProvider extends ServiceProvider
     /**
      * Register the session manager instance.
      */
-    protected function registerSessionManager()
+    protected function registerSessionManager(): void
     {
         $this->app->singleton(
             'session',

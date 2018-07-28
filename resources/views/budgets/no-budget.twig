@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, moment, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, '', start, end) }}
 {% endblock %}
 
 {% block content %}
@@ -26,7 +26,7 @@
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('budgets.no-budget', ['all']) }}">{{ 'show_all_no_filter'|_ }}</a>
+                            <a href="{{ route('budgets.no-budget-all') }}">{{ 'show_all_no_filter'|_ }}</a>
                         </p>
                     {% else %}
                         <p>
@@ -44,7 +44,7 @@
                     {% if period.count > 0 %}
                         <div class="box {% if period.date == start %}box-solid box-primary{% endif %}">
                             <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('budgets.no-budget',[period.string]) }}">{{ period.name }}</a>
+                                <h3 class="box-title"><a href="{{ route('budgets.no-budget',[period.start.format('Y-m-d'), period.end.format('Y-m-d')]) }}">{{ period.name }}</a>
                                 </h3>
                             </div>
                             <div class="box-body no-padding">
@@ -71,7 +71,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('budgets.no-budget-all') }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}

@@ -36,11 +36,11 @@ use Illuminate\Http\Response as LaravelResponse;
  */
 class AttachmentController extends Controller
 {
-    /** @var AttachmentRepositoryInterface */
+    /** @var AttachmentRepositoryInterface Attachment repository */
     private $repository;
 
     /**
-     *
+     * AttachmentController constructor.
      */
     public function __construct()
     {
@@ -50,7 +50,7 @@ class AttachmentController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paperclip');
-                app('view')->share('title', trans('firefly.attachments'));
+                app('view')->share('title', (string)trans('firefly.attachments'));
                 $this->repository = app(AttachmentRepositoryInterface::class);
 
                 return $next($request);
@@ -59,13 +59,15 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Form to delete an attachment.
+     *
      * @param Attachment $attachment
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Attachment $attachment)
     {
-        $subTitle = trans('firefly.delete_attachment', ['name' => $attachment->filename]);
+        $subTitle = (string)trans('firefly.delete_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session
         $this->rememberPreviousUri('attachments.delete.uri');
@@ -74,6 +76,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Destroy attachment.
+     *
      * @param Request    $request
      * @param Attachment $attachment
      *
@@ -92,6 +96,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Download attachment to PC.
+     *
      * @param Attachment $attachment
      *
      * @return mixed
@@ -123,6 +129,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Edit an attachment.
+     *
      * @param Request    $request
      * @param Attachment $attachment
      *
@@ -131,21 +139,24 @@ class AttachmentController extends Controller
     public function edit(Request $request, Attachment $attachment)
     {
         $subTitleIcon = 'fa-pencil';
-        $subTitle     = trans('firefly.edit_attachment', ['name' => $attachment->filename]);
+        $subTitle     = (string)trans('firefly.edit_attachment', ['name' => $attachment->filename]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('attachments.edit.fromUpdate')) {
             $this->rememberPreviousUri('attachments.edit.uri');
         }
         $request->session()->forget('attachments.edit.fromUpdate');
-
-        $preFilled['notes'] = $this->repository->getNoteText($attachment);
+        $preFilled = [
+            'notes' => $this->repository->getNoteText($attachment),
+        ];
         $request->session()->flash('preFilled', $preFilled);
 
         return view('attachments.edit', compact('attachment', 'subTitleIcon', 'subTitle'));
     }
 
     /**
+     * Index of all attachments.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -164,6 +175,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * Update attachment.
+     *
      * @param AttachmentFormRequest $request
      * @param Attachment            $attachment
      *
@@ -191,6 +204,8 @@ class AttachmentController extends Controller
     }
 
     /**
+     * View attachment in browser.
+     *
      * @param Attachment $attachment
      *
      * @return LaravelResponse

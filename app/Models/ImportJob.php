@@ -40,7 +40,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $file_type
  * @property int    $tag_id
  * @property Tag    $tag
- * @property array $errors
+ * @property array  $errors
+ * @property array  extended_status
+ * @property int  id
  */
 class ImportJob extends Model
 {
@@ -73,7 +75,10 @@ class ImportJob extends Model
     {
         if (auth()->check()) {
             $key       = trim($value);
-            $importJob = auth()->user()->importJobs()->where('key', $key)->first();
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var ImportJob $importJob */
+            $importJob = $user->importJobs()->where('key', $key)->first();
             if (null !== $importJob) {
                 return $importJob;
             }
@@ -85,7 +90,7 @@ class ImportJob extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function attachments()
+    public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
@@ -94,7 +99,7 @@ class ImportJob extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function tag()
+    public function tag(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(Tag::class);
     }
@@ -103,7 +108,7 @@ class ImportJob extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user()
+    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(User::class);
     }

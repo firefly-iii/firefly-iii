@@ -77,13 +77,13 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @param int $ruleGroupId
      *
-     * @return RuleGroup
+     * @return RuleGroup|null
      */
-    public function find(int $ruleGroupId): RuleGroup
+    public function find(int $ruleGroupId): ?RuleGroup
     {
         $group = $this->user->ruleGroups()->find($ruleGroupId);
         if (null === $group) {
-            return new RuleGroup;
+            return null;
         }
 
         return $group;
@@ -265,7 +265,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

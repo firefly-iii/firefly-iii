@@ -32,12 +32,13 @@ use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 
 /**
- * @codeCoverageIgnore
  * Class LoginController
  *
  * This controller handles authenticating users for the application and
  * redirecting them to your home screen. The controller uses a trait
  * to conveniently provide its functionality to your applications.
+ *
+ * @codeCoverageIgnore
  */
 class LoginController extends Controller
 {
@@ -60,6 +61,8 @@ class LoginController extends Controller
     }
 
     /**
+     * Log in a user.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Http\Response|\Symfony\Component\HttpFoundation\Response|void

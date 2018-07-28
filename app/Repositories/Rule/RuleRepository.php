@@ -32,6 +32,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class RuleRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleRepository implements RuleRepositoryInterface
 {
@@ -68,13 +70,13 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param int $ruleId
      *
-     * @return Rule
+     * @return Rule|null
      */
-    public function find(int $ruleId): Rule
+    public function find(int $ruleId): ?Rule
     {
         $rule = $this->user->rules()->find($ruleId);
         if (null === $rule) {
-            return new Rule;
+            return null;
         }
 
         return $rule;
@@ -264,7 +266,7 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -288,7 +290,7 @@ class RuleRepository implements RuleRepositoryInterface
 
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
-        $rule->active          = 1;
+        $rule->active          = true;
         $rule->strict          = $data['strict'] ?? false;
         $rule->stop_processing = 1 === (int)$data['stop-processing'];
         $rule->title           = $data['title'];
@@ -316,7 +318,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleAction = new RuleAction;
         $ruleAction->rule()->associate($rule);
         $ruleAction->order           = $values['order'];
-        $ruleAction->active          = 1;
+        $ruleAction->active          = true;
         $ruleAction->stop_processing = $values['stopProcessing'];
         $ruleAction->action_type     = $values['action'];
         $ruleAction->action_value    = $values['value'] ?? '';
@@ -336,7 +338,7 @@ class RuleRepository implements RuleRepositoryInterface
         $ruleTrigger = new RuleTrigger;
         $ruleTrigger->rule()->associate($rule);
         $ruleTrigger->order           = $values['order'];
-        $ruleTrigger->active          = 1;
+        $ruleTrigger->active          = true;
         $ruleTrigger->stop_processing = $values['stopProcessing'];
         $ruleTrigger->trigger_type    = $values['action'];
         $ruleTrigger->trigger_value   = $values['value'] ?? '';
@@ -386,7 +388,7 @@ class RuleRepository implements RuleRepositoryInterface
     private function storeActions(Rule $rule, array $data): bool
     {
         $order = 1;
-        foreach ($data['rule-actions'] as $index => $action) {
+        foreach ($data['rule-actions'] as $action) {
             $value          = $action['value'] ?? '';
             $stopProcessing = $action['stop-processing'] ?? false;
 
@@ -422,7 +424,7 @@ class RuleRepository implements RuleRepositoryInterface
         ];
 
         $this->storeTrigger($rule, $triggerValues);
-        foreach ($data['rule-triggers'] as $index => $trigger) {
+        foreach ($data['rule-triggers'] as $trigger) {
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop-processing'] ?? false;
 

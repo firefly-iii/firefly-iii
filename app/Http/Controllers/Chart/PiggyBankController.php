@@ -29,6 +29,7 @@ use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -37,11 +38,12 @@ use Illuminate\Support\Collection;
  */
 class PiggyBankController extends Controller
 {
-    /** @var GeneratorInterface */
+    use DateCalculation;
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * PiggyBankController constructor.
      */
     public function __construct()
     {
@@ -57,6 +59,9 @@ class PiggyBankController extends Controller
      * @param PiggyBank                    $piggyBank
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function history(PiggyBankRepositoryInterface $repository, PiggyBank $piggyBank): JsonResponse
     {
@@ -81,17 +86,7 @@ class PiggyBankController extends Controller
         $oldest = $startDate->lt($firstDate) ? $startDate : $firstDate;
         $today  = new Carbon;
         // depending on diff, do something with range of chart.
-        $step   = '1D';
-        $months = $oldest->diffInMonths($today);
-        if ($months > 3) {
-            $step = '1W'; // @codeCoverageIgnore
-        }
-        if ($months > 24) {
-            $step = '1M'; // @codeCoverageIgnore
-        }
-        if ($months > 100) {
-            $step = '1Y'; // @codeCoverageIgnore
-        }
+        $step = $this->calculateStep($oldest, $today);
 
         $chartData = [];
         while ($oldest <= $today) {

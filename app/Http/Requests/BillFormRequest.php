@@ -28,6 +28,8 @@ namespace FireflyIII\Http\Requests;
 class BillFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -37,6 +39,8 @@ class BillFormRequest extends Request
     }
 
     /**
+     * Returns the data required by the controller.
+     *
      * @return array
      */
     public function getBillData(): array
@@ -55,13 +59,14 @@ class BillFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array
     {
         $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
         if ($this->integer('id') > 0) {
-            // todo is a fix to do this better.
             $nameRule .= ',' . $this->integer('id');
         }
         // is OK

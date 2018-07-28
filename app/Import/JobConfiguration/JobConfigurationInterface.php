@@ -62,6 +62,8 @@ interface JobConfigurationInterface
     public function getNextView(): string;
 
     /**
+     * Set import job.
+     *
      * @param ImportJob $importJob
      */
     public function setImportJob(ImportJob $importJob): void;

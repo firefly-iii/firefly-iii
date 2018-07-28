@@ -32,9 +32,6 @@ use Log;
  */
 class ClearCategory implements ActionInterface
 {
-    /** @var RuleAction The rule action */
-    private $action;
-
     /**
      * TriggerInterface constructor.
      *
@@ -42,7 +39,6 @@ class ClearCategory implements ActionInterface
      */
     public function __construct(RuleAction $action)
     {
-        $this->action = $action;
     }
 
     /**

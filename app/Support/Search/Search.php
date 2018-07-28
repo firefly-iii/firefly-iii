@@ -63,7 +63,7 @@ class Search implements SearchInterface
     public function getWordsAsString(): string
     {
         $string = implode(' ', $this->words);
-        if (0 === \strlen($string)) {
+        if ('' === $string) {
             return \is_string($this->originalQuery) ? $this->originalQuery : '';
         }
 
@@ -81,7 +81,7 @@ class Search implements SearchInterface
     /**
      * @param string $query
      */
-    public function parseQuery(string $query)
+    public function parseQuery(string $query): void
     {
         $filteredQuery       = $query;
         $this->originalQuery = $query;
@@ -171,7 +171,7 @@ class Search implements SearchInterface
     /**
      * @param int $limit
      */
-    public function setLimit(int $limit)
+    public function setLimit(int $limit): void
     {
         $this->limit = $limit;
     }
@@ -179,7 +179,7 @@ class Search implements SearchInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -188,6 +188,7 @@ class Search implements SearchInterface
      * @param JournalCollectorInterface $collector
      *
      * @return JournalCollectorInterface
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
     {
@@ -242,13 +243,13 @@ class Search implements SearchInterface
     /**
      * @param string $string
      */
-    private function extractModifier(string $string)
+    private function extractModifier(string $string): void
     {
         $parts = explode(':', $string);
-        if (2 === \count($parts) && \strlen(trim((string)$parts[0])) > 0 && \strlen(trim((string)$parts[1]))) {
+        if (2 === \count($parts) && \strlen(trim((string)$parts[0])) > 0 && '' !== trim((string)$parts[1])) {
             $type  = trim((string)$parts[0]);
             $value = trim((string)$parts[1]);
-            if (\in_array($type, $this->validModifiers)) {
+            if (\in_array($type, $this->validModifiers, true)) {
                 // filter for valid type
                 $this->modifiers->push(['type' => $type, 'value' => $value]);
             }
@@ -292,9 +293,9 @@ class Search implements SearchInterface
      *
      * @return bool
      */
-    private function strposArray(string $haystack, array $needle)
+    private function strposArray(string $haystack, array $needle): bool
     {
-        if (0 === \strlen($haystack)) {
+        if ('' === $haystack) {
             return false;
         }
         foreach ($needle as $what) {

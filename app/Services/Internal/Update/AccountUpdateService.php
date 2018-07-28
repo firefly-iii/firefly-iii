@@ -41,17 +41,20 @@ class AccountUpdateService
      * @param array   $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function update(Account $account, array $data): Account
     {
         // update the account itself:
         $account->name            = $data['name'];
         $account->active          = $data['active'];
-        $account->virtual_balance = trim($data['virtualBalance']) === '' ? '0' : $data['virtualBalance'];
+        $account->virtual_balance = '' === trim($data['virtualBalance']) ? '0' : $data['virtualBalance'];
         $account->iban            = $data['iban'];
         $account->save();
 
-        if (isset($data['currency_id']) && $data['currency_id'] === 0) {
+        if (isset($data['currency_id']) && 0 === $data['currency_id']) {
             unset($data['currency_id']);
         }
 

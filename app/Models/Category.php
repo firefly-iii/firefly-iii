@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -36,6 +37,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int         $id
  * @property float       $spent // used in category reports
  * @property Carbon|null lastActivity
+ * @property bool encrypted
  */
 class Category extends Model
 {
@@ -59,34 +61,6 @@ class Category extends Model
     protected $hidden = ['encrypted'];
 
     /**
-     * @param array $fields
-     *
-     * @deprecated
-     * @return Category
-     */
-    public static function firstOrCreateEncrypted(array $fields)
-    {
-        // everything but the name:
-        $query  = self::orderBy('id');
-        $search = $fields;
-        unset($search['name']);
-        foreach ($search as $name => $value) {
-            $query->where($name, $value);
-        }
-        $set = $query->get(['categories.*']);
-        /** @var Category $category */
-        foreach ($set as $category) {
-            if ($category->name === $fields['name']) {
-                return $category;
-            }
-        }
-        // create it!
-        $category = self::create($fields);
-
-        return $category;
-    }
-
-    /**
      * @param string $value
      *
      * @return Category
@@ -96,7 +70,10 @@ class Category extends Model
     {
         if (auth()->check()) {
             $categoryId = (int)$value;
-            $category   = auth()->user()->categories()->find($categoryId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Category $category */
+            $category   = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
             }
@@ -109,10 +86,10 @@ class Category extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getNameAttribute($value)
+    public function getNameAttribute($value): ?string
     {
         if ($this->encrypted) {
             return Crypt::decrypt($value);
@@ -128,7 +105,7 @@ class Category extends Model
      *
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setNameAttribute($value)
+    public function setNameAttribute($value): void
     {
         $encrypt                       = config('firefly.encryption');
         $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
@@ -139,7 +116,7 @@ class Category extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactionJournals()
+    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
     }
@@ -148,7 +125,7 @@ class Category extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function transactions()
+    public function transactions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }

@@ -79,8 +79,8 @@ class MetaPieChartTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
-        $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($accounts[1]);
+        $accountRepos->shouldReceive('findNull')->withArgs([2])->andReturn($accounts[2]);
 
         $helper = new MetaPieChart();
         $helper->setUser($this->user());
@@ -135,8 +135,8 @@ class MetaPieChartTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
-        $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($accounts[1]);
+        $accountRepos->shouldReceive('findNull')->withArgs([2])->andReturn($accounts[2]);
 
         $helper = new MetaPieChart();
         $helper->setCollectOtherObjects(true);
@@ -190,8 +190,8 @@ class MetaPieChartTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
-        $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($accounts[1]);
+        $accountRepos->shouldReceive('findNull')->withArgs([2])->andReturn($accounts[2]);
 
         $helper = new MetaPieChart();
         $helper->setUser($this->user());
@@ -245,8 +245,8 @@ class MetaPieChartTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('find')->withArgs([1])->andReturn($accounts[1]);
-        $accountRepos->shouldReceive('find')->withArgs([2])->andReturn($accounts[2]);
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($accounts[1]);
+        $accountRepos->shouldReceive('findNull')->withArgs([2])->andReturn($accounts[2]);
 
         $helper = new MetaPieChart();
         $helper->setCollectOtherObjects(true);

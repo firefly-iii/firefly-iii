@@ -102,14 +102,6 @@ interface UserRepositoryInterface
     public function destroy(User $user): bool;
 
     /**
-     * @param int $userId
-     *
-     * @deprecated
-     * @return User
-     */
-    public function find(int $userId): User;
-
-    /**
      * @param string $email
      *
      * @return User|null

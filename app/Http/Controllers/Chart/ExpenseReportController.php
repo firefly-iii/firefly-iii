@@ -43,13 +43,13 @@ use Illuminate\Support\Collection;
  */
 class ExpenseReportController extends Controller
 {
-    /** @var AccountRepositoryInterface */
+    /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * ExpenseReportController constructor.
      */
     public function __construct()
     {
@@ -64,13 +64,20 @@ class ExpenseReportController extends Controller
         );
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Main chart that shows income and expense for a combination of expense/revenue accounts.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public function mainChart(Collection $accounts, Collection $expense, Carbon $start, Carbon $end): JsonResponse
     {
@@ -186,6 +193,8 @@ class ExpenseReportController extends Controller
     }
 
     /**
+     * Searches for the opposing account.
+     *
      * @param Collection $accounts
      *
      * @return array
@@ -209,6 +218,8 @@ class ExpenseReportController extends Controller
     }
 
     /**
+     * Get all expenses for a set of accounts.
+     *
      * @param Collection $accounts
      * @param Collection $opposing
      * @param Carbon     $start
@@ -226,6 +237,8 @@ class ExpenseReportController extends Controller
     }
 
     /**
+     * Get the income for a set of accounts.
+     *
      * @param Collection $accounts
      * @param Collection $opposing
      * @param Carbon     $start
@@ -244,6 +257,8 @@ class ExpenseReportController extends Controller
     }
 
     /**
+     * Group set of transactions by name of opposing account.
+     *
      * @param Collection $set
      *
      * @return array

@@ -36,21 +36,27 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 
-/** checked
+/**
  * Class AccountController.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AccountController extends Controller
 {
-    /** @var GeneratorInterface */
+    use DateCalculation;
+
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * AccountController constructor.
      */
     public function __construct()
     {
@@ -68,7 +74,9 @@ class AccountController extends Controller
      */
     public function expenseAccounts(AccountRepositoryInterface $repository): JsonResponse
     {
+        /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = clone session('end', Carbon::now()->endOfMonth());
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -103,6 +111,8 @@ class AccountController extends Controller
 
 
     /**
+     * Expenses per budget, as shown on account overview.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -146,6 +156,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Expenses per budget for all time, as shown on account overview.
+     *
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
@@ -161,6 +173,8 @@ class AccountController extends Controller
 
 
     /**
+     * Expenses per category for one single account.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -204,6 +218,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Expenses grouped by category for account.
+     *
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
@@ -231,7 +247,7 @@ class AccountController extends Controller
         $end        = clone session('end', Carbon::now()->endOfMonth());
         $defaultSet = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         Log::debug('Default set is ', $defaultSet);
-        $frontPage = Preferences::get('frontPageAccounts', $defaultSet);
+        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
 
 
         Log::debug('Frontpage preference set is ', $frontPage->data);
@@ -247,6 +263,8 @@ class AccountController extends Controller
 
 
     /**
+     * Shows all income per account for each category.
+     *
      * @param Account $account
      * @param Carbon  $start
      * @param Carbon  $end
@@ -290,6 +308,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Shows the income grouped by category for an account, in all time.
+     *
      * @param AccountRepositoryInterface $repository
      * @param Account                    $account
      *
@@ -305,12 +325,16 @@ class AccountController extends Controller
 
 
     /**
+     * Shows overview of account during a single period.
+     *
      * @param Account $account
      * @param Carbon  $start
      *
      * @param Carbon  $end
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function period(Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -322,18 +346,8 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        // depending on diff, do something with range of chart.
-        $step   = '1D';
-        $months = $start->diffInMonths($end);
-        if ($months > 3) {
-            $step = '1W'; // @codeCoverageIgnore
-        }
-        if ($months > 24) {
-            $step = '1M'; // @codeCoverageIgnore
-        }
-        if ($months > 100) {
-            $step = '1Y'; // @codeCoverageIgnore
-        }
+
+        $step      = $this->calculateStep($start, $end);
         $chartData = [];
         $current   = clone $start;
         switch ($step) {
@@ -429,11 +443,16 @@ class AccountController extends Controller
 
 
     /**
+     * Shows an overview of the account balances for a set of accounts.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array
     {
@@ -450,10 +469,14 @@ class AccountController extends Controller
 
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
-        $default    = app('amount')->getDefaultCurrency();
-        $chartData  = [];
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+
+        $default   = app('amount')->getDefaultCurrency();
+        $chartData = [];
+        /** @var Account $account */
         foreach ($accounts as $account) {
-            $currency = $repository->findNull((int)$account->getMeta('currency_id'));
+            $currency = $repository->findNull((int)$accountRepos->getMetaValue($account, 'currency_id'));
             if (null === $currency) {
                 $currency = $default;
             }
@@ -483,6 +506,8 @@ class AccountController extends Controller
     }
 
     /**
+     * Get the budget names from a set of budget ID's.
+     *
      * @param array $budgetIds
      *
      * @return array
@@ -499,13 +524,13 @@ class AccountController extends Controller
                 $return[$budgetId] = $grouped[$budgetId][0]['name'];
             }
         }
-        $return[0] = trans('firefly.no_budget');
+        $return[0] = (string)trans('firefly.no_budget');
 
         return $return;
     }
 
     /**
-     * Small helper function for some of the charts.
+     * Get the category names from a set of category ID's. Small helper function for some of the charts.
      *
      * @param array $categoryIds
      *
@@ -523,7 +548,7 @@ class AccountController extends Controller
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0] = trans('firefly.noCategory');
+        $return[0] = (string)trans('firefly.noCategory');
 
         return $return;
     }

@@ -25,8 +25,9 @@ namespace FireflyIII\Http\Middleware;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken as Middleware;
 
 /**
+ * Class VerifyCsrfToken.
+ *
  * @codeCoverageIgnore
- * Class VerifyCsrfToken
  */
 class VerifyCsrfToken extends Middleware
 {

@@ -26,8 +26,10 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
- * @codeCoverageIgnore
  * Class Account
+ *
+ * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class Account extends SpectreObject
 {

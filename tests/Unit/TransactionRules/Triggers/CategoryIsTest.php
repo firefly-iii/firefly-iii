@@ -39,7 +39,7 @@ class CategoryIsTest extends TestCase
         do {
             $journal      = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $transactions = $journal->transactions()->count();
-        } while ($transactions === 0);
+        } while ($transactions !== 2);
 
         $category = $journal->user->categories()->first();
         $journal->categories()->detach();
@@ -59,7 +59,7 @@ class CategoryIsTest extends TestCase
         do {
             $journal      = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $transactions = $journal->transactions()->count();
-        } while ($transactions === 0);
+        } while ($transactions !== 2);
 
         $category      = $journal->user->categories()->first();
         $otherCategory = $journal->user->categories()->where('id', '!=', $category->id)->first();
@@ -80,7 +80,7 @@ class CategoryIsTest extends TestCase
         do {
             $journal      = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
             $transactions = $journal->transactions()->count();
-        } while ($transactions === 0);
+        } while ($transactions !== 2);
 
         $transaction = $journal->transactions()->first();
         $category    = $journal->user->categories()->first();

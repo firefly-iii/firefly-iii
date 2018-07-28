@@ -26,8 +26,9 @@ use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
 
 /**
- * @codeCoverageIgnore
  * Class StartFireflySession.
+ *
+ * @codeCoverageIgnore
  */
 class StartFireflySession extends StartSession
 {
@@ -41,7 +42,7 @@ class StartFireflySession extends StartSession
     {
         $uri    = $request->fullUrl();
         $strpos = strpos($uri, 'jscript');
-        if (false === $strpos && 'GET' === $request->method() && $request->route() && !$request->ajax()) {
+        if (false === $strpos && 'GET' === $request->method() && !$request->ajax()) {
             $session->setPreviousUrl($uri);
         }
     }

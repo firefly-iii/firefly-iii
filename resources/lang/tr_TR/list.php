@@ -113,6 +113,7 @@ return [
     'sepa-cc'                 => 'SEPA Clearing Code',
     'sepa-ep'                 => 'SEPA External Purpose',
     'sepa-ci'                 => 'SEPA Creditor Identifier',
+    'sepa-batch-id'           => 'SEPA Batch ID',
     'external_id'             => 'External ID',
     'account_at_bunq'         => 'Account with bunq',
     'file_name'               => 'Dosya adı',

@@ -49,9 +49,9 @@ class ValidTransactions implements Rule
      *
      * @return string
      */
-    public function message()
+    public function message(): string
     {
-        return trans('validation.invalid_selection');
+        return (string)trans('validation.invalid_selection');
     }
 
     /**
@@ -61,8 +61,9 @@ class ValidTransactions implements Rule
      * @param  mixed  $value
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
-    public function passes($attribute, $value)
+    public function passes($attribute, $value): bool
     {
         Log::debug('In ValidTransactions::passes');
         if (!\is_array($value)) {
@@ -73,7 +74,7 @@ class ValidTransactions implements Rule
             $count = Transaction::where('transactions.id', $transactionId)
                                 ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                 ->where('accounts.user_id', $userId)->count();
-            if ($count === 0) {
+            if (0 === $count) {
                 Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $transactionId, $userId));
 
                 return false;

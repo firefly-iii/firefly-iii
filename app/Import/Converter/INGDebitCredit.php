@@ -30,11 +30,13 @@ use Log;
 class INGDebitCredit implements ConverterInterface
 {
     /**
+     * Convert Af or Bij to correct integer values.
+     *
      * @param $value
      *
      * @return int
      */
-    public function convert($value)
+    public function convert($value): int
     {
         Log::debug('Going to convert ing debit credit', ['value' => $value]);
 

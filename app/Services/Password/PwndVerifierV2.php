@@ -26,6 +26,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Log;
+use RuntimeException;
 
 /**
  * Class PwndVerifierV2.
@@ -56,14 +57,21 @@ class PwndVerifierV2 implements Verifier
             $client = new Client();
             $res    = $client->request('GET', $uri, $opt);
         } catch (GuzzleException|Exception $e) {
+            Log::error(sprintf('Could not verify password security: %s', $e->getMessage()));
+
             return true;
         }
         Log::debug(sprintf('Status code returned is %d', $res->getStatusCode()));
         if (404 === $res->getStatusCode()) {
             return true;
         }
-        $strpos = stripos($res->getBody()->getContents(), $rest);
-        if ($strpos === false) {
+        try {
+            $strpos = stripos($res->getBody()->getContents(), $rest);
+        } catch (RunTimeException $e) {
+            Log::error(sprintf('Could not get body from Pwnd result: %s', $e->getMessage()));
+            $strpos = false;
+        }
+        if (false === $strpos) {
             Log::debug(sprintf('%s was not found in result body. Return true.', $rest));
 
             return true;

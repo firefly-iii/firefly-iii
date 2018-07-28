@@ -43,11 +43,11 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
      * (even if it will still include 99.9% of the users transactions), this method MUST return
      * false.
      *
-     * @param null $value
+     * @param mixed $value
      *
      * @return bool
      */
-    public static function willMatchEverything($value = null)
+    public static function willMatchEverything($value = null): bool
     {
         if (null !== $value) {
             $res = '' === (string)$value;
@@ -74,7 +74,7 @@ final class NotesContain extends AbstractTrigger implements TriggerInterface
     {
         $search = strtolower(trim($this->triggerValue));
 
-        if (0 === \strlen($search)) {
+        if ('' === $search) {
             Log::debug(sprintf('RuleTrigger NotesContain for journal #%d: "%s" is empty, return false.', $journal->id, $search));
 
             return false;

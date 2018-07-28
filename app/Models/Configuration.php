@@ -67,7 +67,7 @@ class Configuration extends Model
      *
      * @param $value
      */
-    public function setDataAttribute($value)
+    public function setDataAttribute($value): void
     {
         $this->attributes['data'] = json_encode($value);
     }

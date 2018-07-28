@@ -23,7 +23,10 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountEnds;
+use Illuminate\Support\Collection;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -36,14 +39,13 @@ class ToAccountEndsTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $count   = 0;
-        $account = null;
-        while ($count === 0 && $account === null) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->where('amount', '>', 0)->count();
-            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-            $account     = $transaction->account;
-        }
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
         $trigger = ToAccountEnds::makeFromStrings(substr($account->name, -3), false);
         $result  = $trigger->triggered($journal);
@@ -55,13 +57,13 @@ class ToAccountEndsTest extends TestCase
      */
     public function testTriggeredLonger(): void
     {
-        $count = 0;
-        while ($count === 0) {
-            $journal     = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->where('amount', '>', 0)->count();
-            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-        }
-        $account = $transaction->account;
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
         $trigger = ToAccountEnds::makeFromStrings('bla-bla-bla' . $account->name, false);
         $result  = $trigger->triggered($journal);
@@ -73,11 +75,13 @@ class ToAccountEndsTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $count = 0;
-        while ($count === 0) {
-            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->where('amount', '>', 0)->count();
-        }
+        $repository = $this->mock(JournalRepositoryInterface::class);
+
+        /** @var TransactionJournal $journal */
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $account    = $this->user()->accounts()->inRandomOrder()->first();
+        $collection = new Collection([$account]);
+        $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
         $trigger = ToAccountEnds::makeFromStrings((string)random_int(1, 1234), false);
         $result  = $trigger->triggered($journal);
@@ -89,8 +93,9 @@ class ToAccountEndsTest extends TestCase
      */
     public function testWillMatchEverythingEmpty(): void
     {
-        $value  = '';
-        $result = ToAccountEnds::willMatchEverything($value);
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $value      = '';
+        $result     = ToAccountEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
@@ -99,8 +104,9 @@ class ToAccountEndsTest extends TestCase
      */
     public function testWillMatchEverythingNotNull(): void
     {
-        $value  = 'x';
-        $result = ToAccountEnds::willMatchEverything($value);
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $value      = 'x';
+        $result     = ToAccountEnds::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
@@ -109,8 +115,9 @@ class ToAccountEndsTest extends TestCase
      */
     public function testWillMatchEverythingNull(): void
     {
-        $value  = null;
-        $result = ToAccountEnds::willMatchEverything($value);
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $value      = null;
+        $result     = ToAccountEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

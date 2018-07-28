@@ -26,8 +26,10 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
- * @codeCoverageIgnore
  * Class Transaction
+ * @codeCoverageIgnore
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class Transaction extends SpectreObject
 {
@@ -169,7 +171,10 @@ class Transaction extends SpectreObject
     }
 
     /**
+     * Get opposing account data.
+     *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getOpposingAccountData(): array
     {
@@ -186,7 +191,7 @@ class Transaction extends SpectreObject
                 switch ($key) {
                     case 'account_number':
                         $data['number'] = $value;
-                        $data['name']   = $data['name'] ?? trans('import.spectre_account_with_number', ['number' => $value]);
+                        $data['name']   = $data['name'] ?? (string)trans('import.spectre_account_with_number', ['number' => $value]);
                         break;
                     case 'payee':
                         $data['name'] = $value;

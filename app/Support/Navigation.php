@@ -73,7 +73,7 @@ class Navigation
         // if period is 1M and diff in month is 2 and new DOM = 1, sub a day:
         $months     = ['1M', 'month', 'monthly'];
         $difference = $date->month - $theDate->month;
-        if (\in_array($repeatFreq, $months) && 2 === $difference && 1 === $date->day) {
+        if (2 === $difference && 1 === $date->day && \in_array($repeatFreq, $months, true)) {
             $date->subDay();
         }
 
@@ -87,6 +87,7 @@ class Navigation
      *
      * @return array
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function blockPeriods(\Carbon\Carbon $start, \Carbon\Carbon $end, string $range): array
     {
@@ -199,14 +200,14 @@ class Navigation
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
 
-            if (\in_array($repeatFreq, $subDay)) {
+            if (\in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
 
             return $currentEnd;
         }
         $currentEnd->$function();
-        if (\in_array($repeatFreq, $subDay)) {
+        if (\in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
         }
 
@@ -298,23 +299,23 @@ class Navigation
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function periodShow(Carbon $theDate, string $repeatFrequency): string
+    public function periodShow(\Carbon\Carbon $theDate, string $repeatFrequency): string
     {
         $date      = clone $theDate;
         $formatMap = [
-            '1D'      => trans('config.specific_day'),
-            'daily'   => trans('config.specific_day'),
-            'custom'  => trans('config.specific_day'),
-            '1W'      => trans('config.week_in_year'),
-            'week'    => trans('config.week_in_year'),
-            'weekly'  => trans('config.week_in_year'),
-            '1M'      => trans('config.month'),
-            'month'   => trans('config.month'),
-            'monthly' => trans('config.month'),
-            '1Y'      => trans('config.year'),
-            'year'    => trans('config.year'),
-            'yearly'  => trans('config.year'),
-            '6M'      => trans('config.half_year'),
+            '1D'      => (string)trans('config.specific_day'),
+            'daily'   => (string)trans('config.specific_day'),
+            'custom'  => (string)trans('config.specific_day'),
+            '1W'      => (string)trans('config.week_in_year'),
+            'week'    => (string)trans('config.week_in_year'),
+            'weekly'  => (string)trans('config.week_in_year'),
+            '1M'      => (string)trans('config.month'),
+            'month'   => (string)trans('config.month'),
+            'monthly' => (string)trans('config.month'),
+            '1Y'      => (string)trans('config.year'),
+            'year'    => (string)trans('config.year'),
+            'yearly'  => (string)trans('config.year'),
+            '6M'      => (string)trans('config.half_year'),
         ];
 
         if (isset($formatMap[$repeatFrequency])) {
@@ -505,9 +506,10 @@ class Navigation
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = 1): Carbon
+    public function subtractPeriod(Carbon $theDate, string $repeatFreq, int $subtract = null): Carbon
     {
-        $date = clone $theDate;
+        $subtract = $subtract ?? 1;
+        $date     = clone $theDate;
         // 1D 1W 1M 3M 6M 1Y
         Log::debug(sprintf('subtractPeriod: date is %s, repeat frequency is %s and subtract is %d', $date->format('Y-m-d'), $repeatFreq, $subtract));
         $functionMap = [

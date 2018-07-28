@@ -35,10 +35,10 @@ use Log;
  */
 class BunqRoutine implements RoutineInterface
 {
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
 
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -63,7 +63,6 @@ class BunqRoutine implements RoutineInterface
                     $handler = app(StageNewHandler::class);
                     $handler->setImportJob($this->importJob);
                     $handler->run();
-
                     // make user choose accounts to import from.
                     $this->repository->setStage($this->importJob, 'choose-accounts');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
@@ -91,6 +90,8 @@ class BunqRoutine implements RoutineInterface
 
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
      * @return void

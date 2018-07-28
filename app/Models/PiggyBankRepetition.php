@@ -57,7 +57,7 @@ class PiggyBankRepetition extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function piggyBank()
+    public function piggyBank(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(PiggyBank::class);
     }
@@ -71,7 +71,7 @@ class PiggyBankRepetition extends Model
      *
      * @return EloquentBuilder
      */
-    public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target)
+    public function scopeOnDates(EloquentBuilder $query, Carbon $start, Carbon $target): EloquentBuilder
     {
         return $query->where('startdate', $start->format('Y-m-d'))->where('targetdate', $target->format('Y-m-d'));
     }
@@ -105,7 +105,7 @@ class PiggyBankRepetition extends Model
      *
      * @param $value
      */
-    public function setCurrentamountAttribute($value)
+    public function setCurrentamountAttribute($value): void
     {
         $this->attributes['currentamount'] = (string)$value;
     }

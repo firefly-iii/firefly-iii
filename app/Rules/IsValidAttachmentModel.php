@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Contracts\Validation\Rule;
@@ -54,7 +53,7 @@ class IsValidAttachmentModel implements Rule
      */
     public function message(): string
     {
-        return trans('validation.model_id_invalid');
+        return (string)trans('validation.model_id_invalid');
     }
 
     /**
@@ -64,25 +63,25 @@ class IsValidAttachmentModel implements Rule
      * @param  mixed  $value
      *
      * @return bool
-     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function passes($attribute, $value): bool
     {
         if (!auth()->check()) {
             return false;
         }
-        $user = auth()->user();
-        switch ($this->model) {
-            default:
-                throw new FireflyException(sprintf('Model "%s" cannot be validated.', $this->model));
-            case TransactionJournal::class:
-                /** @var JournalRepositoryInterface $repository */
-                $repository = app(JournalRepositoryInterface::class);
-                $repository->setUser($user);
-                $result = $repository->findNull((int)$value);
 
-                return null !== $result;
-                break;
+
+        if (TransactionJournal::class === $this->model) {
+            $repository = app(JournalRepositoryInterface::class);
+            $user       = auth()->user();
+            $repository->setUser($user);
+            $result = $repository->findNull((int)$value);
+
+            return null !== $result;
         }
+
+        return false;
     }
 }

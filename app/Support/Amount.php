@@ -33,6 +33,7 @@ use Preferences as Prefs;
  */
 class Amount
 {
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * bool $sepBySpace is $localeconv['n_sep_by_space']
      * int $signPosn = $localeconv['n_sign_posn']
@@ -45,6 +46,9 @@ class Amount
      * @param bool   $csPrecedes
      *
      * @return string
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public static function getAmountJsConfig(bool $sepBySpace, int $signPosn, string $sign, bool $csPrecedes): string
     {
@@ -52,7 +56,7 @@ class Amount
         $space = ' ';
 
         // require space between symbol and amount?
-        if (!$sepBySpace) {
+        if ($sepBySpace === false) {
             $space = ''; // no
         }
 
@@ -115,11 +119,13 @@ class Amount
      * @param bool                                   $coloured
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true): string
+    public function formatAnything(TransactionCurrency $format, string $amount, bool $coloured = null): string
     {
-        $locale = explode(',', trans('config.locale'));
-        $locale = array_map('trim', $locale);
+        $coloured = $coloured ?? true;
+        $locale   = explode(',', (string)trans('config.locale'));
+        $locale   = array_map('trim', $locale);
         setlocale(LC_MONETARY, $locale);
         $float     = round($amount, 12);
         $info      = localeconv();
@@ -128,12 +134,8 @@ class Amount
         // some complicated switches to format the amount correctly:
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
-        $space     = $separated ? ' ' : '';
-        $result    = $format->symbol . $space . $formatted;
-
-        if (!$precedes) {
-            $result = $formatted . $space . $format->symbol;
-        }
+        $space     = $separated === true ? ' ' : '';
+        $result    = $precedes === false ? $formatted . $space . $format->symbol : $format->symbol . $space . $formatted;
 
         if (true === $coloured) {
             if ($amount > 0) {
@@ -205,6 +207,7 @@ class Amount
      */
     public function getDefaultCurrency(): TransactionCurrency
     {
+        /** @var User $user */
         $user = auth()->user();
 
         return $this->getDefaultCurrencyByUser($user);

@@ -46,7 +46,7 @@ class AccountUpdateServiceTest extends TestCase
     {
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
@@ -67,7 +67,7 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'           => 'Some new name #' . random_int(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 10000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -96,7 +96,7 @@ class AccountUpdateServiceTest extends TestCase
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
-            'name'           => 'Some new name #' . random_int(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 10000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -119,7 +119,7 @@ class AccountUpdateServiceTest extends TestCase
         /** @var Account $account */
         $account = $this->user()->accounts()->first();
         $data    = [
-            'name'           => 'Some new name #' . random_int(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 10000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -149,7 +149,7 @@ class AccountUpdateServiceTest extends TestCase
         $note->save();
 
         $data = [
-            'name'           => 'Some new name #' . random_int(1, 1000),
+            'name'           => 'Some new name #' . random_int(1, 10000),
             'active'         => true,
             'virtualBalance' => '0',
             'iban'           => null,
@@ -174,7 +174,7 @@ class AccountUpdateServiceTest extends TestCase
     {
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
@@ -195,7 +195,7 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'               => 'Some new name #' . random_int(1, 1000),
+            'name'               => 'Some new name #' . random_int(1, 10000),
             'active'             => true,
             'virtualBalance'     => '0',
             'iban'               => null,
@@ -229,7 +229,7 @@ class AccountUpdateServiceTest extends TestCase
 
         /** @var Account $account */
         $account  = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $opposing = $this->user()->accounts()->first();
@@ -250,7 +250,7 @@ class AccountUpdateServiceTest extends TestCase
 
 
         $data = [
-            'name'               => 'Some new name #' . random_int(1, 1000),
+            'name'               => 'Some new name #' . random_int(1, 10000),
             'active'             => true,
             'virtualBalance'     => '0',
             'iban'               => null,
@@ -281,11 +281,11 @@ class AccountUpdateServiceTest extends TestCase
     {
         /** @var Account $account */
         $account = Account::create(
-            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 1000),
+            ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),
              'virtual_balance' => '0', 'iban' => null, 'active' => true]
         );
         $data    = [
-            'name'               => 'Some new name #' . random_int(1, 1000),
+            'name'               => 'Some new name #' . random_int(1, 10000),
             'active'             => true,
             'virtualBalance'     => '0',
             'iban'               => null,

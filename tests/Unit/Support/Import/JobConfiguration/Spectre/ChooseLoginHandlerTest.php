@@ -51,7 +51,7 @@ class ChooseLoginHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-A' . random_int(1, 1000);
+        $job->key           = 'slh-A' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -74,7 +74,7 @@ class ChooseLoginHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-B' . random_int(1, 1000);
+        $job->key           = 'slh-B' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -98,7 +98,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 1000);
+        $job->key           = 'slh-C' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -138,7 +138,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 1000);
+        $job->key           = 'slh-C' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -256,7 +256,7 @@ class ChooseLoginHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'slh-C' . random_int(1, 1000);
+        $job->key           = 'slh-C' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

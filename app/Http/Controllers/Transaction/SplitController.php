@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use ExpandedForm;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
@@ -38,28 +37,29 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use Preferences;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
 /**
  * Class SplitController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SplitController extends Controller
 {
-    /** @var AttachmentHelperInterface */
+    /** @var AttachmentHelperInterface Attachment helper */
     private $attachments;
 
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
 
-    /** @var CurrencyRepositoryInterface */
+    /** @var CurrencyRepositoryInterface The currency repository */
     private $currencies;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**
-     *
+     * SplitController constructor.
      */
     public function __construct()
     {
@@ -73,7 +73,7 @@ class SplitController extends Controller
                 $this->currencies  = app(CurrencyRepositoryInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
                 app('view')->share('mainTitleIcon', 'fa-share-alt');
-                app('view')->share('title', trans('firefly.split-transactions'));
+                app('view')->share('title', (string)trans('firefly.split-transactions'));
 
                 return $next($request);
             }
@@ -81,6 +81,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Edit a split.
+     *
      * @param Request            $request
      * @param TransactionJournal $journal
      *
@@ -94,15 +96,15 @@ class SplitController extends Controller
         }
         // basic fields:
         $uploadSize   = min(app('steam')->phpBytes(ini_get('upload_max_filesize')), app('steam')->phpBytes(ini_get('post_max_size')));
-        $subTitle     = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitle     = (string)trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
         $subTitleIcon = 'fa-pencil';
 
         // lists and collections
         $currencies = $this->currencies->get();
-        $budgets    = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $budgets    = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
         // other fields
-        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $preFilled      = $this->arrayFromJournal($request, $journal);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -120,10 +122,15 @@ class SplitController extends Controller
     }
 
     /**
+     * Store new split journal.
+     *
      * @param SplitJournalFormRequest $request
      * @param TransactionJournal      $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
@@ -167,6 +174,8 @@ class SplitController extends Controller
     }
 
     /**
+     * Create data-array from a journal.
+     *
      * @param SplitJournalFormRequest|Request $request
      * @param TransactionJournal              $journal
      *
@@ -214,10 +223,14 @@ class SplitController extends Controller
     }
 
     /**
+     * Get transaction overview from journal.
+     *
      * @param TransactionJournal $journal
      *
      * @return array
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getTransactionDataFromJournal(TransactionJournal $journal): array
     {
@@ -251,10 +264,15 @@ class SplitController extends Controller
     }
 
     /**
+     * Get info from old input.
+     *
      * @param $array
      * @param $old
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function updateWithPrevious($array, $old): array
     {

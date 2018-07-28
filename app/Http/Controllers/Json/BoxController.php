@@ -22,13 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -44,13 +44,19 @@ class BoxController extends Controller
 {
 
     /**
+     * How much money user has available.
+     *
      * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function available(BudgetRepositoryInterface $repository): JsonResponse
     {
+        /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
         $today = new Carbon;
         $cache = new CacheProperties;
@@ -96,14 +102,20 @@ class BoxController extends Controller
 
 
     /**
+     * Current total balance.
+     *
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function balance(CurrencyRepositoryInterface $repository): JsonResponse
     {
         // Cache result, return cache if present.
+        /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -150,17 +162,18 @@ class BoxController extends Controller
         }
 
         // format amounts:
-        foreach ($sums as $currencyId => $amount) {
+        $keys = array_keys($sums);
+        foreach ($keys as $currencyId) {
             $currency              = $repository->findNull($currencyId);
-            $sums[$currencyId]     = Amount::formatAnything($currency, $sums[$currencyId], false);
-            $incomes[$currencyId]  = Amount::formatAnything($currency, $incomes[$currencyId] ?? '0', false);
-            $expenses[$currencyId] = Amount::formatAnything($currency, $expenses[$currencyId] ?? '0', false);
+            $sums[$currencyId]     = app('amount')->formatAnything($currency, $sums[$currencyId], false);
+            $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
+            $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
         if (0 === \count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
-            $sums[$currency->id]     = Amount::formatAnything($currency, '0', false);
-            $incomes[$currency->id]  = Amount::formatAnything($currency, '0', false);
-            $expenses[$currency->id] = Amount::formatAnything($currency, '0', false);
+            $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
+            $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);
+            $expenses[$currency->id] = app('amount')->formatAnything($currency, '0', false);
         }
 
         $response = [
@@ -178,13 +191,17 @@ class BoxController extends Controller
 
 
     /**
+     * Bills to pay and paid.
+     *
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
      */
     public function bills(BillRepositoryInterface $repository): JsonResponse
     {
+        /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
         $end   = session('end', Carbon::now()->endOfMonth());
 
         $cache = new CacheProperties;
@@ -214,28 +231,25 @@ class BoxController extends Controller
 
 
     /**
-     * @param AccountRepositoryInterface  $repository
+     * Total user net worth.
      *
-     * @param CurrencyRepositoryInterface $currencyRepos
+     * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function netWorth(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepos): JsonResponse
+    public function netWorth(AccountRepositoryInterface $repository): JsonResponse
     {
         $date = new Carbon(date('Y-m-d')); // needed so its per day.
-        /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end = session('end', Carbon::now()->endOfMonth());
 
         // start and end in the future? use $end
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $date = $end;
+        if ($this->notInSessionRange($date)) {
+            /** @var Carbon $date */
+            $date = session('end', Carbon::now()->endOfMonth());
         }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $date = $end;
-        }
+
         // start in the past, end in the future? use $date
         $cache = new CacheProperties;
         $cache->addProperty($date);
@@ -245,20 +259,13 @@ class BoxController extends Controller
         }
         $netWorth = [];
         $accounts = $repository->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $currency = app('amount')->getDefaultCurrency();
+
         $balances = app('steam')->balancesByAccounts($accounts, $date);
 
         /** @var Account $account */
         foreach ($accounts as $account) {
-            $accountCurrency = null;
+            $accountCurrency = $this->getCurrencyOrDefault($account);
             $balance         = $balances[$account->id] ?? '0';
-            $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
-            if (0 !== $currencyId) {
-                $accountCurrency = $currencyRepos->findNull($currencyId);
-            }
-            if (null === $accountCurrency) {
-                $accountCurrency = $currency;
-            }
 
             // if the account is a credit card, subtract the virtual balance from the balance,
             // to better reflect that this is not money that is actually "yours".
@@ -286,5 +293,58 @@ class BoxController extends Controller
         $cache->store($return);
 
         return response()->json($return);
+    }
+
+    /**
+     * Get a currency or return default currency.
+     *
+     * @param Account $account
+     *
+     * @return TransactionCurrency
+     */
+    private function getCurrencyOrDefault(Account $account): TransactionCurrency
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $currency        = app('amount')->getDefaultCurrency();
+        $accountCurrency = null;
+        $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
+        if (0 !== $currencyId) {
+            $accountCurrency = $currencyRepos->findNull($currencyId);
+        }
+        if (null === $accountCurrency) {
+            $accountCurrency = $currency;
+        }
+
+        return $accountCurrency;
+    }
+
+    /**
+     * Check if date is outside session range.
+     *
+     * @param Carbon $date
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function notInSessionRange(Carbon $date): bool
+    {
+        /** @var Carbon $start */
+        $start = session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end    = session('end', Carbon::now()->endOfMonth());
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
     }
 }

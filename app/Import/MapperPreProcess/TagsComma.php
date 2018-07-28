@@ -28,6 +28,8 @@ namespace FireflyIII\Import\MapperPreProcess;
 class TagsComma implements PreProcessorInterface
 {
     /**
+     * Explode and filter list of comma separated tags.
+     *
      * @param string $value
      *
      * @return array

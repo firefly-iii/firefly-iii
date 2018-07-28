@@ -26,6 +26,7 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\PiggyBankEvent;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use League\Fractal\Resource\Item;
@@ -117,8 +118,12 @@ class PiggyBankEventTransformer extends TransformerAbstract
      */
     public function transform(PiggyBankEvent $event): array
     {
-        $account       = $event->piggyBank->account;
-        $currencyId    = (int)$account->getMeta('currency_id');
+        $account = $event->piggyBank->account;
+        /** @var AccountRepositoryInterface $accountRepos */
+        $accountRepos = app(AccountRepositoryInterface::class);
+        $accountRepos->setUser($account->user);
+
+        $currencyId    = (int)$accountRepos->getMetaValue($account, 'currency_id');
         $decimalPlaces = 2;
         if ($currencyId > 0) {
             /** @var CurrencyRepositoryInterface $repository */

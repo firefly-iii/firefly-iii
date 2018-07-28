@@ -27,7 +27,6 @@ namespace FireflyIII\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Laravel\Passport\Token;
 
 /**
  * Class AccessTokenCreatedMail
@@ -47,7 +46,6 @@ class AccessTokenCreatedMail extends Mailable
      *
      * @param string $email
      * @param string $ipAddress
-     * @param Token  $token
      */
     public function __construct(string $email, string $ipAddress)
     {
@@ -60,7 +58,7 @@ class AccessTokenCreatedMail extends Mailable
      *
      * @return $this
      */
-    public function build()
+    public function build(): self
     {
         return $this->view('emails.access-token-created-html')->text('emails.access-token-created-text')
                     ->subject('A new access token was created');

@@ -40,15 +40,15 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    /** @var Collection */
+    /** @var Collection The accounts */
     private $accounts;
-    /** @var Carbon */
+    /** @var Carbon The end date */
     private $endDate;
-    /** @var Rule */
+    /** @var Rule The current rule */
     private $rule;
-    /** @var Carbon */
+    /** @var Carbon The start date */
     private $startDate;
-    /** @var User */
+    /** @var User The user */
     private $user;
 
     /**
@@ -62,6 +62,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Get accounts.
+     *
      * @return Collection
      */
     public function getAccounts(): Collection
@@ -70,6 +72,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Set accounts.
+     *
      * @param Collection $accounts
      */
     public function setAccounts(Collection $accounts)
@@ -78,6 +82,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Get end date.
+     *
      * @return \Carbon\Carbon
      */
     public function getEndDate(): Carbon
@@ -86,6 +92,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Set end date.
+     *
      * @param Carbon $date
      */
     public function setEndDate(Carbon $date)
@@ -94,6 +102,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Get rule.
+     *
      * @return Rule
      */
     public function getRule(): Rule
@@ -102,6 +112,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Get start date.
+     *
      * @return \Carbon\Carbon
      */
     public function getStartDate(): Carbon
@@ -110,6 +122,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Set start date.
+     *
      * @param Carbon $date
      */
     public function setStartDate(Carbon $date)
@@ -118,6 +132,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Get user.
+     *
      * @return User
      */
     public function getUser(): User
@@ -126,6 +142,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     }
 
     /**
+     * Set user.
+     *
      * @param User $user
      */
     public function setUser(User $user)
@@ -137,6 +155,8 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
      * Execute the job.
      *
      * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function handle()
     {
@@ -170,7 +190,7 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
      *
      * @return Collection
      */
-    protected function collectJournals()
+    protected function collectJournals(): Collection
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);

@@ -183,7 +183,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         $canBeMapped = config('csv.import_roles.' . $name . '.mappable');
 
-        return $canBeMapped === true && $requested === true;
+        return true === $canBeMapped && true === $requested;
     }
 
     /**
@@ -247,7 +247,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
         $collection = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($collection as $attachment) {
-            if ($attachment->filename === 'import_file') {
+            if ('import_file' === $attachment->filename) {
                 $content = $this->attachments->getAttachmentContent($attachment);
                 break;
             }
@@ -271,10 +271,11 @@ class ConfigureMappingHandler implements FileConfigurationInterface
      *
      * @return array
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getValuesForMapping(Reader $reader, array $config, array $columnConfig): array
     {
-        $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
+        $offset = isset($config['has-headers']) && true === $config['has-headers'] ? 1 : 0;
         try {
             $stmt = (new Statement)->offset($offset);
             // @codeCoverageIgnoreStart
@@ -295,7 +296,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
                     continue;
                 }
                 $value = trim($line[$columnIndex]);
-                if (\strlen($value) === 0) {
+                if ('' === $value) {
                     // value is empty, ignore it.
                     continue;
                 }
@@ -309,7 +310,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
             $columnConfig[$columnIndex]['values'] = array_unique($columnConfig[$columnIndex]['values']);
             asort($columnConfig[$columnIndex]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if (\count($columnConfig[$columnIndex]['values']) === 0) {
+            if (0 === \count($columnConfig[$columnIndex]['values'])) {
                 unset($columnConfig[$columnIndex]);
             }
         }

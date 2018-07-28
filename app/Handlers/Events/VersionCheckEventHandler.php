@@ -24,14 +24,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use Carbon\Carbon;
+
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Exceptions\FireflyException;
+
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Services\Github\Object\Release;
-use FireflyIII\Services\Github\Request\UpdateRequest;
+
+
 use FireflyIII\User;
 use Log;
 
@@ -66,7 +66,6 @@ class VersionCheckEventHandler
             return;
         }
 
-        $permission    = FireflyConfig::get('permission_update_check', -1);
         $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
         $diff          = $now - $lastCheckTime->data;
@@ -80,16 +79,9 @@ class VersionCheckEventHandler
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');
 
-        // have actual permission?
-        if ($permission->data === -1) {
-            // never asked before.
-            //session()->flash('info', (string)trans('firefly.check_for_updates_permission', ['link' => route('admin.update-check')]));
-            //return;
-        }
-
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
-        $resultString = $this->parseResult($latestRelease, $versionCheck);
+        $resultString = $this->parseResult($versionCheck, $latestRelease);
         if (0 !== $versionCheck && '' !== $resultString) {
             // flash info
             session()->flash('info', $resultString);

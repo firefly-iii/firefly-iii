@@ -43,16 +43,18 @@ use Illuminate\Support\Collection;
  * Separate controller because many helper functions are shared.
  *
  * Class BudgetReportController
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BudgetReportController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgetRepository;
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     private $generator;
 
     /**
-     *
+     * BudgetReportController constructor.
      */
     public function __construct()
     {
@@ -69,6 +71,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart that groups expenses by the account.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -76,6 +80,8 @@ class BudgetReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function accountExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -94,6 +100,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart that groups the expenses by budget.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -101,6 +109,8 @@ class BudgetReportController extends Controller
      * @param string     $others
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function budgetExpense(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end, string $others): JsonResponse
     {
@@ -119,12 +129,17 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Main overview of a budget in the budget report.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function mainChart(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): JsonResponse
     {
@@ -233,6 +248,8 @@ class BudgetReportController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Helper function that collects expenses for the given budgets.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -255,6 +272,8 @@ class BudgetReportController extends Controller
     }
 
     /**
+     * Helper function that groups expenses.
+     *
      * @param Collection $set
      *
      * @return array

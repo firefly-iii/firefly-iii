@@ -38,7 +38,7 @@ class LinkControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -167,14 +167,14 @@ class LinkControllerTest extends TestCase
      */
     public function testStoreInvalid(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
         $data         = [
             'link_other' => 0,
             'link_type'  => '1_inward',
         ];
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->andReturn(null);
+        $journalRepos->shouldReceive('findNull')->andReturn(null);
 
         $this->be($this->user());
         $response = $this->post(route('transactions.link.store', [1]), $data);

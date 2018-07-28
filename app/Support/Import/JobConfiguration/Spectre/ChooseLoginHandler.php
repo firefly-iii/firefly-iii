@@ -82,7 +82,7 @@ class ChooseLoginHandler implements SpectreJobConfigurationInterface
         Log::debug(sprintf('The selected login by the user is #%d', $selectedLogin));
 
         // if selected login is zero, create a new one.
-        if ($selectedLogin === 0) {
+        if (0 === $selectedLogin) {
             Log::debug('Login is zero, get Spectre customer + token and store it in config.');
             $customer = $this->getCustomer($this->importJob);
             // get a token for the user and redirect to next stage

@@ -82,6 +82,9 @@ class Authenticate
      * @return mixed
      * @throws \Illuminate\Auth\AuthenticationException
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function authenticate(array $guards)
     {

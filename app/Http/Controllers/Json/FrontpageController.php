@@ -33,6 +33,8 @@ use Illuminate\Http\JsonResponse;
 class FrontpageController extends Controller
 {
     /**
+     * Piggy bank pie chart.
+     *
      * @param PiggyBankRepositoryInterface $repository
      *
      * @return JsonResponse

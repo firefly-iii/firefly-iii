@@ -38,11 +38,11 @@ use Illuminate\Support\Collection;
  */
 class BillController extends Controller
 {
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     * checked.
+     * BillController constructor.
      */
     public function __construct()
     {
@@ -85,6 +85,8 @@ class BillController extends Controller
 
 
     /**
+     * Shows overview for a single bill.
+     *
      * @param JournalCollectorInterface $collector
      * @param Bill                      $bill
      *
@@ -99,16 +101,16 @@ class BillController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        $results   = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
-        $results   = $results->sortBy(
+        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
+        $results = $results->sortBy(
             function (Transaction $transaction) {
                 return $transaction->date->format('U');
             }
         );
         $chartData = [
-            ['type' => 'bar', 'label' => trans('firefly.min-amount'), 'entries' => []],
-            ['type' => 'bar', 'label' => trans('firefly.max-amount'), 'entries' => []],
-            ['type' => 'line', 'label' => trans('firefly.journal-amount'), 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.min-amount'), 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.max-amount'), 'entries' => []],
+            ['type' => 'line', 'label' => (string)trans('firefly.journal-amount'), 'entries' => []],
         ];
 
         /** @var Transaction $entry */
@@ -116,7 +118,13 @@ class BillController extends Controller
             $date                           = $entry->date->formatLocalized((string)trans('config.month_and_day'));
             $chartData[0]['entries'][$date] = $bill->amount_min; // minimum amount of bill
             $chartData[1]['entries'][$date] = $bill->amount_max; // maximum amount of bill
-            $chartData[2]['entries'][$date] = bcmul($entry->transaction_amount, '-1'); // amount of journal
+
+            // append amount because there are more than one per moment:
+            if (!isset($chartData[2]['entries'][$date])) {
+                $chartData[2]['entries'][$date] = '0';
+            }
+            $amount                         = bcmul($entry->transaction_amount, '-1');
+            $chartData[2]['entries'][$date] = bcadd($chartData[2]['entries'][$date], $amount);  // amount of journal
         }
 
         $data = $this->generator->multiSet($chartData);

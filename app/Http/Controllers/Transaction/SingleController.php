@@ -23,13 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
-use ExpandedForm;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -38,23 +36,24 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
-use Preferences;
 use View;
 
 /**
  * Class SingleController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class SingleController extends Controller
 {
-    /** @var AttachmentHelperInterface */
+    /** @var AttachmentHelperInterface The attachment helper. */
     private $attachments;
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**
-     *
+     * SingleController constructor.
      */
     public function __construct()
     {
@@ -63,7 +62,7 @@ class SingleController extends Controller
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
         $maxPostSize = app('steam')->phpBytes(ini_get('post_max_size'));
         $uploadSize  = min($maxFileSize, $maxPostSize);
-        View::share('uploadSize', $uploadSize);
+        app('view')->share('uploadSize', $uploadSize);
 
         // some useful repositories:
         $this->middleware(
@@ -72,7 +71,7 @@ class SingleController extends Controller
                 $this->attachments = app(AttachmentHelperInterface::class);
                 $this->repository  = app(JournalRepositoryInterface::class);
 
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
 
                 return $next($request);
@@ -81,9 +80,13 @@ class SingleController extends Controller
     }
 
     /**
+     * CLone a transaction.
+     *
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function cloneTransaction(TransactionJournal $journal)
     {
@@ -120,14 +123,8 @@ class SingleController extends Controller
             'payment_date'              => $this->repository->getMetaField($journal, 'payment_date'),
             'invoice_date'              => $this->repository->getMetaField($journal, 'invoice_date'),
             'internal_reference'        => $this->repository->getMetaField($journal, 'internal_reference'),
-            'notes'                     => '',
+            'notes'                     => $this->repository->getNoteText($journal),
         ];
-
-        /** @var Note $note */
-        $note = $this->repository->getNote($journal);
-        if (null !== $note) {
-            $preFilled['notes'] = $note->text;
-        }
 
         session()->flash('preFilled', $preFilled);
 
@@ -135,20 +132,24 @@ class SingleController extends Controller
     }
 
     /**
+     * Create a new journal.
+     *
      * @param Request     $request
      * @param string|null $what
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request, string $what = null)
     {
         $what           = strtolower($what ?? TransactionType::DEPOSIT);
         $what           = (string)($request->old('what') ?? $what);
-        $budgets        = ExpandedForm::makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $budgets        = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
         $preFilled      = session()->has('preFilled') ? session('preFilled') : [];
-        $subTitle       = trans('form.add_new_' . $what);
+        $subTitle       = (string)trans('form.add_new_' . $what);
         $subTitleIcon   = 'fa-plus';
-        $optionalFields = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $source         = (int)$request->get('source');
 
         // grab old currency ID from old data:
@@ -193,7 +194,7 @@ class SingleController extends Controller
         // @codeCoverageIgnoreEnd
 
         $what     = strtolower($journal->transaction_type_type ?? $journal->transactionType->type);
-        $subTitle = trans('firefly.delete_' . $what, ['description' => $journal->description]);
+        $subTitle = (string)trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.delete.uri');
@@ -202,11 +203,11 @@ class SingleController extends Controller
     }
 
     /**
+     * Actually destroys the journal.
+     *
      * @param TransactionJournal $transactionJournal
      *
      * @return \Illuminate\Http\RedirectResponse
-     *
-     * @internal param JournalRepositoryInterface $repository
      */
     public function destroy(TransactionJournal $transactionJournal): RedirectResponse
     {
@@ -226,11 +227,16 @@ class SingleController extends Controller
     }
 
     /**
+     * Edit a journal.
+     *
      * @param TransactionJournal         $journal
      *
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function edit(TransactionJournal $journal, JournalRepositoryInterface $repository)
     {
@@ -251,15 +257,15 @@ class SingleController extends Controller
         }
 
         $what       = strtolower($transactionType);
-        $budgetList = ExpandedForm::makeSelectListWithEmpty($this->budgets->getBudgets());
+        $budgetList = app('expandedform')->makeSelectListWithEmpty($this->budgets->getBudgets());
 
         // view related code
-        $subTitle = trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
+        $subTitle = (string)trans('breadcrumbs.edit_journal', ['description' => $journal->description]);
 
         // journal related code
         $sourceAccounts      = $repository->getJournalSourceAccounts($journal);
         $destinationAccounts = $repository->getJournalDestinationAccounts($journal);
-        $optionalFields      = Preferences::get('transaction_journal_optional_fields', [])->data;
+        $optionalFields      = app('preferences')->get('transaction_journal_optional_fields', [])->data;
         $pTransaction        = $repository->getFirstPosTransaction($journal);
         $foreignCurrency     = $pTransaction->foreignCurrency ?? $pTransaction->transactionCurrency;
         $preFilled           = [
@@ -316,11 +322,17 @@ class SingleController extends Controller
     }
 
     /**
+     * Stores a new journal.
+     *
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      *
      * @return RedirectResponse
      * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function store(JournalFormRequest $request, JournalRepositoryInterface $repository): RedirectResponse
     {
@@ -374,11 +386,16 @@ class SingleController extends Controller
     }
 
     /**
+     * Update a journal.
+     *
      * @param JournalFormRequest         $request
      * @param JournalRepositoryInterface $repository
      * @param TransactionJournal         $journal
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(JournalFormRequest $request, JournalRepositoryInterface $repository, TransactionJournal $journal)
     {
@@ -427,6 +444,8 @@ class SingleController extends Controller
     }
 
     /**
+     * Checks if journal is split.
+     *
      * @param TransactionJournal $journal
      *
      * @return bool

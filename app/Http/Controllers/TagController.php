@@ -33,23 +33,22 @@ use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
-use View;
 
 /**
  * Class TagController.
  */
 class TagController extends Controller
 {
-    /** @var TagRepositoryInterface */
+    /** @var TagRepositoryInterface The tag repository. */
     protected $repository;
 
     /**
-     *
+     * TagController constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        View::share('hideTags', true);
+        app('view')->share('hideTags', true);
         $this->redirectUri = route('tags.index');
 
         $this->middleware(
@@ -64,11 +63,13 @@ class TagController extends Controller
     }
 
     /**
+     * Create a new tag.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()
     {
-        $subTitle     = trans('firefly.new_tag');
+        $subTitle     = (string)trans('firefly.new_tag');
         $subTitleIcon = 'fa-tag';
 
         // put previous url in session if not redirect from store (not "create another").
@@ -89,7 +90,7 @@ class TagController extends Controller
      */
     public function delete(Tag $tag)
     {
-        $subTitle = trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
+        $subTitle = (string)trans('breadcrumbs.delete_tag', ['tag' => $tag->tag]);
 
         // put previous url in session
         $this->rememberPreviousUri('tags.delete.uri');
@@ -98,6 +99,8 @@ class TagController extends Controller
     }
 
     /**
+     * Destroy a tag.
+     *
      * @param Tag $tag
      *
      * @return RedirectResponse
@@ -122,7 +125,7 @@ class TagController extends Controller
      */
     public function edit(Tag $tag)
     {
-        $subTitle     = trans('firefly.edit_tag', ['tag' => $tag->tag]);
+        $subTitle     = (string)trans('firefly.edit_tag', ['tag' => $tag->tag]);
         $subTitleIcon = 'fa-tag';
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -163,11 +166,16 @@ class TagController extends Controller
     }
 
     /**
+     * Show a single tag.
+     *
      * @param Request     $request
      * @param Tag         $tag
      * @param string|null $moment
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function show(Request $request, Tag $tag, string $moment = null)
     {
@@ -185,8 +193,8 @@ class TagController extends Controller
 
         // prep for "all" view.
         if ('all' === $moment) {
-            $subTitle = trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
-            $start    = $this->repository->firstUseDate($tag);
+            $subTitle = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $start    = $this->repository->firstUseDate($tag) ?? new Carbon;
             $end      = new Carbon;
             $path     = route('tags.show', [$tag->id, 'all']);
         }
@@ -231,6 +239,8 @@ class TagController extends Controller
     }
 
     /**
+     * Store a tag.
+     *
      * @param TagFormRequest $request
      *
      * @return RedirectResponse
@@ -257,6 +267,8 @@ class TagController extends Controller
     }
 
     /**
+     * Update a tag.
+     *
      * @param TagFormRequest $request
      * @param Tag            $tag
      *
@@ -284,17 +296,21 @@ class TagController extends Controller
     }
 
     /**
+     * Get overview of periods for tag.
+     *
      * @param Tag $tag
      *
      * @return Collection
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getPeriodOverview(Tag $tag): Collection
     {
         // get first and last tag date from tag:
         $range = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $end */
-        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag), $range, null);
-        $start = $this->repository->firstUseDate($tag);
+        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag) ?? new Carbon, $range, null);
+        $start = $this->repository->firstUseDate($tag) ?? new Carbon;
 
 
         // properties for entries with their amounts.

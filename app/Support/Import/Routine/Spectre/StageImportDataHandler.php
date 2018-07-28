@@ -60,7 +60,7 @@ class StageImportDataHandler
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
         Log::debug(sprintf('Count of accounts in array is %d', \count($accounts)));
-        if (\count($accounts) === 0) {
+        if (0 === \count($accounts)) {
             throw new FireflyException('There are no accounts in this import job. Cannot continue.'); // @codeCoverageIgnore
         }
         $toImport = $config['account_mapping'] ?? [];
@@ -107,6 +107,7 @@ class StageImportDataHandler
      * @param LocalAccount   $originalSource
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function convertToArray(array $transactions, SpectreAccount $spectreAccount, LocalAccount $originalSource): array
     {
@@ -124,14 +125,14 @@ class StageImportDataHandler
             $amount              = $transaction->getAmount();
             $source              = $originalSource;
             $destination         = $this->mapper->map(null, $amount, $destinationData);
-            $notes               = (string)trans('import.imported_from_account', ['account' => $spectreAccount->getName()]) . '  ' . "\n";
+            $notes               = trans('import.imported_from_account', ['account' => $spectreAccount->getName()]) . '  ' . "\n";
             $foreignAmount       = null;
             $foreignCurrencyCode = null;
 
             $currencyCode = $transaction->getCurrencyCode();
             $type         = 'withdrawal';
             // switch source and destination if amount is greater than zero.
-            if (bccomp($amount, '0') === 1) {
+            if (1 === bccomp($amount, '0')) {
                 [$source, $destination] = [$destination, $source];
                 $type = 'deposit';
             }

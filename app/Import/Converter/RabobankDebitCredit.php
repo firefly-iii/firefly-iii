@@ -30,6 +30,8 @@ use Log;
 class RabobankDebitCredit implements ConverterInterface
 {
     /**
+     * Convert D or A to integer values.
+     *
      * @param $value
      *
      * @return int

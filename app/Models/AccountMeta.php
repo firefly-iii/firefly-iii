@@ -76,7 +76,7 @@ class AccountMeta extends Model
      *
      * @codeCoverageIgnore
      */
-    public function setDataAttribute($value)
+    public function setDataAttribute($value): void
     {
         $this->attributes['data'] = json_encode($value);
     }

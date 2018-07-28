@@ -189,7 +189,7 @@ class AccountFactory
         }
         if (null === $result) {
             /** @var string $type */
-            $type   = (string)config('firefly.accountTypeByIdentifier.' . (string)$accountType);
+            $type   = (string)config('firefly.accountTypeByIdentifier.' . $accountType);
             $result = AccountType::whereType($type)->first();
             if (null === $result && null !== $accountType) {
                 // try as full name:

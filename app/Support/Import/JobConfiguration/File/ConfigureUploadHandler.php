@@ -57,10 +57,10 @@ class ConfigureUploadHandler implements FileConfigurationInterface
         // collect values:
         $importId              = isset($data['csv_import_account']) ? (int)$data['csv_import_account'] : 0;
         $delimiter             = (string)$data['csv_delimiter'];
-        $config['has-headers'] = (int)($data['has_headers'] ?? 0.0) === 1;
+        $config['has-headers'] = 1 === (int)($data['has_headers'] ?? 0.0);
         $config['date-format'] = (string)$data['date_format'];
         $config['delimiter']   = 'tab' === $delimiter ? "\t" : $delimiter;
-        $config['apply-rules'] = (int)($data['apply_rules'] ?? 0.0) === 1;
+        $config['apply-rules'] = 1 === (int)($data['apply_rules'] ?? 0.0);
         $config['specifics']   = $this->getSpecifics($data);
         // validate values:
         $account = $this->accountRepos->findNull($importId);
@@ -80,7 +80,7 @@ class ConfigureUploadHandler implements FileConfigurationInterface
         }
         if (!$complete) {
             $messages = new MessageBag;
-            $messages->add('account', trans('import.invalid_import_account'));
+            $messages->add('account', (string)trans('import.invalid_import_account'));
 
             return $messages;
         }
@@ -96,9 +96,9 @@ class ConfigureUploadHandler implements FileConfigurationInterface
     public function getNextData(): array
     {
         $delimiters            = [
-            ','   => trans('form.csv_comma'),
-            ';'   => trans('form.csv_semicolon'),
-            'tab' => trans('form.csv_tab'),
+            ','   => (string)trans('form.csv_comma'),
+            ';'   => (string)trans('form.csv_semicolon'),
+            'tab' => (string)trans('form.csv_tab'),
         ];
         $config                = $this->importJob->configuration;
         $config['date-format'] = $config['date-format'] ?? 'Ymd';

@@ -62,6 +62,7 @@ class Preferences
         try {
             Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
         } catch (Exception $e) {
+            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
             // don't care.
         }
 
@@ -79,12 +80,12 @@ class Preferences
     }
 
     /**
-     * @param      $name
-     * @param null $default
+     * @param string $name
+     * @param mixed  $default
      *
      * @return \FireflyIII\Models\Preference|null
      */
-    public function get($name, $default = null)
+    public function get(string $name, $default = null): ?Preference
     {
         /** @var User $user */
         $user = auth()->user();
@@ -125,7 +126,7 @@ class Preferences
      *
      * @return \FireflyIII\Models\Preference|null
      */
-    public function getForUser(User $user, $name, $default = null): ?Preference
+    public function getForUser(User $user, string $name, $default = null): ?Preference
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         if (Cache::has($fullName)) {
@@ -137,7 +138,7 @@ class Preferences
             try {
                 $preference->delete();
             } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete preference #%d', $preference->id));
+                Log::debug(sprintf('Could not delete preference #%d: %s', $preference->id, $e->getMessage()));
             }
             $preference = null;
         }
@@ -177,23 +178,21 @@ class Preferences
     }
 
     /**
-     * @return bool
+     *
      */
-    public function mark(): bool
+    public function mark(): void
     {
         $this->set('lastActivity', microtime());
         Session::forget('first');
-
-        return true;
     }
 
     /**
-     * @param   $name
-     * @param   $value
+     * @param string $name
+     * @param mixed  $value
      *
-     * @return Preference
+     * @return \FireflyIII\Models\Preference
      */
-    public function set($name, $value): Preference
+    public function set(string $name, $value): Preference
     {
         $user = auth()->user();
         if (null === $user) {
@@ -210,12 +209,12 @@ class Preferences
 
     /**
      * @param \FireflyIII\User $user
-     * @param                  $name
+     * @param string           $name
      * @param mixed            $value
      *
      * @return Preference
      */
-    public function setForUser(User $user, $name, $value): Preference
+    public function setForUser(User $user, string $name, $value): Preference
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);

@@ -55,6 +55,8 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Show configuration index.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function index()
@@ -75,6 +77,8 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Store new configuration values.
+     *
      * @param ConfigurationRequest $request
      *
      * @return RedirectResponse

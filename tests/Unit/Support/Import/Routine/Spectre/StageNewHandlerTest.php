@@ -59,7 +59,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 1000);
+        $job->key           = 'sn_a_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -126,7 +126,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 1000);
+        $job->key           = 'sn_a_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -179,7 +179,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 1000);
+        $job->key           = 'sn_a_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -248,7 +248,7 @@ class StageNewHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sn_a_' . random_int(1, 1000);
+        $job->key           = 'sn_a_' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

@@ -46,7 +46,7 @@ class SpectreJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'spectre_jc_A' . random_int(1, 1000);
+        $job->key           = 'spectre_jc_A' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -75,7 +75,7 @@ class SpectreJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'spectre_jc_B' . random_int(1, 1000);
+        $job->key           = 'spectre_jc_B' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'do-authenticate';
         $job->provider      = 'spectre';
@@ -107,7 +107,7 @@ class SpectreJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'spectre_jc_C' . random_int(1, 1000);
+        $job->key           = 'spectre_jc_C' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'choose-login';
         $job->provider      = 'spectre';
@@ -137,7 +137,7 @@ class SpectreJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'spectre_jc_D' . random_int(1, 1000);
+        $job->key           = 'spectre_jc_D' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'authenticated';
         $job->provider      = 'spectre';
@@ -166,7 +166,7 @@ class SpectreJobConfigurationTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'spectre_jc_E' . random_int(1, 1000);
+        $job->key           = 'spectre_jc_E' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'choose-accounts';
         $job->provider      = 'spectre';

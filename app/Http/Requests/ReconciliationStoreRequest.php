@@ -32,6 +32,8 @@ use Log;
 class ReconciliationStoreRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -41,6 +43,8 @@ class ReconciliationStoreRequest extends Request
     }
 
     /**
+     * Returns the data required by the controller.
+     *
      * @return array
      */
     public function getAll(): array
@@ -64,6 +68,8 @@ class ReconciliationStoreRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

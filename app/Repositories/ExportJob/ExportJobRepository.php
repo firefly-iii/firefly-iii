@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\ExportJob;
 use Carbon\Carbon;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
 use Log;
 use Storage;
@@ -66,11 +67,10 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         /** @var ExportJob $entry */
         foreach ($set as $entry) {
             $key   = $entry->key;
-            $len   = \strlen($key);
             $files = scandir(storage_path('export'), SCANDIR_SORT_NONE);
             /** @var string $file */
             foreach ($files as $file) {
-                if (substr($file, 0, $len) === $key) {
+                if (0 === strpos($file, $key)) {
                     unlink(storage_path('export') . DIRECTORY_SEPARATOR . $file);
                 }
             }
@@ -81,15 +81,15 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
-     * @return ExportJob
+     * @return ExportJob|null
      */
-    public function create(): ExportJob
+    public function create(): ?ExportJob
     {
         $count = 0;
         while ($count < 30) {
             $key      = Str::random(12);
             $existing = $this->findByKey($key);
-            if (null === $existing->id) {
+            if (null === $existing) {
                 $exportJob = new ExportJob;
                 $exportJob->user()->associate($this->user);
                 $exportJob->key    = Str::random(12);
@@ -103,7 +103,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
             ++$count;
         }
 
-        return new ExportJob;
+        return null;
     }
 
     /**
@@ -122,13 +122,14 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     /**
      * @param string $key
      *
-     * @return ExportJob
+     * @return ExportJob|null
      */
-    public function findByKey(string $key): ExportJob
+    public function findByKey(string $key): ?ExportJob
     {
+        /** @var ExportJob $result */
         $result = $this->user->exportJobs()->where('key', $key)->first(['export_jobs.*']);
         if (null === $result) {
-            return new ExportJob;
+            return null;
         }
 
         return $result;
@@ -138,21 +139,26 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      * @param ExportJob $job
      *
      * @return string
-     *
-     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function getContent(ExportJob $job): string
     {
-        $disk = Storage::disk('export');
-        $file = $job->key . '.zip';
+        $disk    = Storage::disk('export');
+        $file    = $job->key . '.zip';
 
-        return $disk->get($file);
+        try {
+            $content = $disk->get($file);
+        } catch (FileNotFoundException $e) {
+            Log::warning(sprintf('File not found: %s', $e->getMessage()));
+            $content = '';
+        }
+
+        return $content;
     }
 
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }

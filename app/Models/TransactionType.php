@@ -128,7 +128,7 @@ class TransactionType extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function transactionJournals()
+    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\HasMany
     {
         return $this->hasMany(TransactionJournal::class);
     }

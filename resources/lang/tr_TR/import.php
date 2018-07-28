@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Öğe hesabı (IBAN)',
     'column_account-id'                    => 'Asset account ID (matching FF3)',
     'column_account-name'                  => 'Varlık hesabı (isim)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Tutar',
     'column_amount_foreign'                => 'Amount (in foreign currency)',
     'column_amount_debit'                  => 'Miktar (borç sütunu)',

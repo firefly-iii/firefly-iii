@@ -77,11 +77,12 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentContent(Attachment $attachment): string
     {
-        $content = '';
+
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
         } catch (DecryptException|FileNotFoundException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
+            $content = '';
         }
 
         return $content;
@@ -166,7 +167,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $attachment->md5      = md5_file($path);
         $attachment->mime     = $mime;
         $attachment->size     = \strlen($content);
-        $attachment->uploaded = 1;
+        $attachment->uploaded = true;
         $attachment->save();
 
         return true;
@@ -249,7 +250,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment->filename = $file->getClientOriginalName();
             $attachment->mime     = $file->getMimeType();
             $attachment->size     = $file->getSize();
-            $attachment->uploaded = 0;
+            $attachment->uploaded = false;
             $attachment->save();
             Log::debug('Created attachment:', $attachment->toArray());
 
@@ -262,7 +263,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             // store it:
             $this->uploadDisk->put($attachment->fileName(), $encrypted);
-            $attachment->uploaded = 1; // update attachment
+            $attachment->uploaded = true; // update attachment
             $attachment->save();
             $this->attachments->push($attachment);
 

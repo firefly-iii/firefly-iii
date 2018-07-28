@@ -112,6 +112,7 @@ return [
     'sepa-cc'                 => 'Код очистки SEPA',
     'sepa-ep'                 => 'Внешняя цель SEPA',
     'sepa-ci'                 => 'Идентификатор кредитора SEPA',
+    'sepa-batch-id'           => 'SEPA Batch ID',
     'external_id'             => 'Внешний ID',
     'account_at_bunq'         => 'Счёт с bunq',
     'file_name'               => 'Имя файла',

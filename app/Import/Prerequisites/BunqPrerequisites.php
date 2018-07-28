@@ -36,12 +36,13 @@ use Log;
  */
 class BunqPrerequisites implements PrerequisitesInterface
 {
-    /** @var User */
+    /** @var User The current user */
     private $user;
 
     /**
-     * @codeCoverageIgnore
      * Returns view name that allows user to fill in prerequisites.
+     *
+     * @codeCoverageIgnore
      *
      * @return string
      */
@@ -86,10 +87,11 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
-     * @codeCoverageIgnore
      * Set the user for this Prerequisites-routine. Class is expected to implement and save this.
      *
      * @param User $user
+     *
+     * @codeCoverageIgnore
      */
     public function setUser(User $user): void
     {
@@ -104,6 +106,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      * @param array $data
      *
      * @return MessageBag
+     *
      */
     public function storePrerequisites(array $data): MessageBag
     {
@@ -112,7 +115,6 @@ class BunqPrerequisites implements PrerequisitesInterface
         Log::debug('Storing bunq API key');
         app('preferences')->setForUser($this->user, 'bunq_api_key', $apiKey);
         app('preferences')->setForUser($this->user, 'bunq_external_ip', $externalIP);
-
         $environment       = $this->getBunqEnvironment();
         $deviceDescription = 'Firefly III v' . config('firefly.version');
         $permittedIps      = [$externalIP];
@@ -147,8 +149,10 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Get correct bunq environment.
+     *
      * @return BunqEnumApiEnvironmentType
+     * @codeCoverageIgnore
      */
     private function getBunqEnvironment(): BunqEnumApiEnvironmentType
     {
@@ -164,6 +168,8 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Check if we have API context.
+     *
      * @return bool
      */
     private function hasApiContext(): bool
@@ -180,6 +186,8 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Check if we have the API key.
+     *
      * @return bool
      */
     private function hasApiKey(): bool
@@ -196,6 +204,8 @@ class BunqPrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Checks if we have an external IP.
+     *
      * @return bool
      */
     private function hasExternalIP(): bool

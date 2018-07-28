@@ -72,8 +72,9 @@ final class Processor
      * @return Processor
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public static function make(Rule $rule, $includeActions = true)
+    public static function make(Rule $rule, bool $includeActions = null): Processor
     {
+        $includeActions = $includeActions ?? true;
         Log::debug(sprintf('Making new rule from Rule %d', $rule->id));
         Log::debug(sprintf('Rule is strict: %s', var_export($rule->strict, true)));
         $self         = new self;
@@ -85,7 +86,7 @@ final class Processor
             Log::debug(sprintf('Push trigger %d', $trigger->id));
             $self->triggers->push(TriggerFactory::getTrigger($trigger));
         }
-        if ($includeActions) {
+        if ($includeActions === true) {
             $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
         }
 
@@ -104,7 +105,7 @@ final class Processor
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public static function makeFromString(string $triggerName, string $triggerValue)
+    public static function makeFromString(string $triggerName, string $triggerValue): Processor
     {
         Log::debug(sprintf('Processor::makeFromString("%s", "%s")', $triggerName, $triggerValue));
         $self    = new self;
@@ -129,7 +130,7 @@ final class Processor
      *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public static function makeFromStringArray(array $triggers)
+    public static function makeFromStringArray(array $triggers): Processor
     {
         $self = new self;
         foreach ($triggers as $entry) {
@@ -156,7 +157,7 @@ final class Processor
      *
      * @param int $foundTriggers
      */
-    public function setFoundTriggers(int $foundTriggers)
+    public function setFoundTriggers(int $foundTriggers): void
     {
         $this->foundTriggers = $foundTriggers;
     }
@@ -236,10 +237,10 @@ final class Processor
     /**
      * Run the actions
      *
-     * @return bool
+     * @return void
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    private function actions()
+    private function actions(): void
     {
         /**
          * @var int
@@ -255,8 +256,6 @@ final class Processor
                 break;
             }
         }
-
-        return true;
     }
 
     /**

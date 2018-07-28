@@ -48,8 +48,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use Laravel\Passport\Http\Middleware\CreateFreshApiToken;
 
 /**
- * @codeCoverageIgnore
  * Class Kernel
+ *
+ * @codeCoverageIgnore
  */
 class Kernel extends HttpKernel
 {

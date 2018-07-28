@@ -40,6 +40,8 @@ interface RoutineInterface
     public function run(): void;
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
      * @return void

@@ -4,8 +4,7 @@
             <button type="button" class="close" data-dismiss="modal"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
             </button>
             <h4 class="modal-title">
-                {{ trans('firefly.info_on_available_amount',
-                    {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                {{ trans('firefly.info_on_available_amount') }}
             </h4>
         </div>
 
@@ -18,7 +17,7 @@
                     <td>
                         {{ 'budgeted'|_ }}
                         <small><br/>
-                            {{ trans('firefly.average_between', {start:begin.formatLocalized(monthAndDayFormat), end:currentEnd.formatLocalized(monthAndDayFormat)}) }}
+                            {{ trans('firefly.average_between', {start:searchBegin.formatLocalized(monthAndDayFormat), end:searchEnd.formatLocalized(monthAndDayFormat)}) }}
                     </td>
                     <td>
                         <span class="pull-right">{{ result.available|formatAmount }}</span>
@@ -27,7 +26,7 @@
                 <tr>
                     <td>{{ 'earned'|_ }}
                         <small><br/>
-                            {{ trans('firefly.average_between', {start:begin.formatLocalized(monthAndDayFormat), end:currentEnd.formatLocalized(monthAndDayFormat)}) }}
+                            {{ trans('firefly.average_between', {start:searchBegin.formatLocalized(monthAndDayFormat), end:searchEnd.formatLocalized(monthAndDayFormat)}) }}
                         </small>
                     </td>
                     <td><span class="pull-right">{{ result.earned|formatAmount }}</span></td>
@@ -35,7 +34,7 @@
                 <tr>
                     <td>{{ 'spent'|_ }}
                         <small><br/>
-                            {{ trans('firefly.average_between', {start:begin.formatLocalized(monthAndDayFormat), end:currentEnd.formatLocalized(monthAndDayFormat)}) }}
+                            {{ trans('firefly.average_between', {start:searchBegin.formatLocalized(monthAndDayFormat), end:searchEnd.formatLocalized(monthAndDayFormat)}) }}
                         </small>
                     </td>
                     <td><span class="pull-right">{{ result.spent|formatAmount }}</span></td>

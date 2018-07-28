@@ -36,19 +36,24 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
 /**
  * Class BudgetController.
  *
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class BudgetController extends Controller
 {
-    /** @var GeneratorInterface */
+    use DateCalculation;
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     protected $repository;
 
     /**
@@ -70,13 +75,17 @@ class BudgetController extends Controller
 
 
     /**
+     * Shows overview of a single budget.
+     *
      * @param Budget $budget
      *
      * @return JsonResponse
      */
     public function budget(Budget $budget): JsonResponse
     {
-        $start = $this->repository->firstUseDate($budget);
+        /** @var Carbon $start */
+        $start = $this->repository->firstUseDate($budget) ?? session('start', new Carbon);
+        /** @var Carbon $end */
         $end   = session('end', new Carbon);
         $cache = new CacheProperties();
         $cache->addProperty($start);
@@ -88,23 +97,11 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        // depending on diff, do something with range of chart.
-        $step   = '1D';
-        $months = $start->diffInMonths($end);
-        if ($months > 3) {
-            $step = '1W';
-        }
-        if ($months > 24) {
-            $step = '1M';
-        }
-        if ($months > 60) {
-            $step = '1Y'; // @codeCoverageIgnore
-        }
+        $step             = $this->calculateStep($start, $end); // depending on diff, do something with range of chart.
         $budgetCollection = new Collection([$budget]);
         $chartData        = [];
         $current          = clone $start;
         $current          = app('navigation')->startOfPeriod($current, $step);
-
         while ($end >= $current) {
             /** @var Carbon $currentEnd */
             $currentEnd = app('navigation')->endOfPeriod($current, $step);
@@ -128,7 +125,6 @@ class BudgetController extends Controller
 
     /**
      * Shows the amount left in a specific budget limit.
-     *
      *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
@@ -175,10 +171,14 @@ class BudgetController extends Controller
 
 
     /**
+     * Shows how much is spent per asset account.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseAsset(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -221,10 +221,14 @@ class BudgetController extends Controller
 
 
     /**
+     * Shows how much is spent per category.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseCategory(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -260,7 +264,6 @@ class BudgetController extends Controller
         foreach ($result as $categoryId => $amount) {
             $chartData[$names[$categoryId]] = $amount;
         }
-
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
 
@@ -269,10 +272,14 @@ class BudgetController extends Controller
 
 
     /**
+     * Shows how much is spent per expense account.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function expenseExpense(Budget $budget, ?BudgetLimit $budgetLimit): JsonResponse
     {
@@ -319,6 +326,9 @@ class BudgetController extends Controller
      * Shows a budget list with spent/left/overspent.
      *
      * @return \Symfony\Component\HttpFoundation\Response
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function frontpage(): \Symfony\Component\HttpFoundation\Response
     {
@@ -368,6 +378,7 @@ class BudgetController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Shows a budget overview chart (spent and budgeted).
      *
      * @param Budget     $budget
      * @param Carbon     $start
@@ -413,6 +424,8 @@ class BudgetController extends Controller
 
 
     /**
+     * Shows a chart for transactions without a budget.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -449,6 +462,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * Get the account names belonging to a bunch of account ID's.
+     *
      * @param array $accountIds
      *
      * @return array
@@ -471,6 +486,8 @@ class BudgetController extends Controller
     }
 
     /**
+     * Get the amount of money budgeted in a period.
+     *
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
@@ -499,7 +516,7 @@ class BudgetController extends Controller
     }
 
     /**
-     * Small helper function for some of the charts.
+     * Small helper function for some of the charts. Extracts category names from a bunch of ID's.
      *
      * @param array $categoryIds
      *
@@ -517,13 +534,14 @@ class BudgetController extends Controller
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0] = trans('firefly.noCategory');
+        $return[0] = (string)trans('firefly.noCategory');
 
         return $return;
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Get the expenses for a budget in a date range.
      *
      * @param Collection $limits
      * @param Budget     $budget
@@ -531,6 +549,8 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array
     {
@@ -571,6 +591,9 @@ class BudgetController extends Controller
      * @param Collection $limits
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     private function spentInPeriodMulti(Budget $budget, Collection $limits): array
     {
@@ -591,18 +614,12 @@ class BudgetController extends Controller
                         ]
                     );
             }
-            /*
-             * amount: amount of budget limit
-             * left: amount of budget limit min spent, or 0 when < 0.
-             * spent: spent, or amount of budget limit when > amount
-             */
             $amount       = $budgetLimit->amount;
             $leftInLimit  = bcsub($amount, $expenses);
             $hasOverspent = bccomp($leftInLimit, '0') === -1;
-
-            $left      = $hasOverspent ? '0' : bcsub($amount, $expenses);
-            $spent     = $hasOverspent ? $amount : $expenses;
-            $overspent = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
+            $left         = $hasOverspent ? '0' : bcsub($amount, $expenses);
+            $spent        = $hasOverspent ? $amount : $expenses;
+            $overspent    = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
 
             $return[$name] = [
                 'left'      => $left,

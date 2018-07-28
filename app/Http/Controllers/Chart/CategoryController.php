@@ -32,18 +32,17 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
-use Preferences;
 
 /**
  * Class CategoryController.
  */
 class CategoryController extends Controller
 {
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * CategoryController constructor.
      */
     public function __construct()
     {
@@ -61,6 +60,8 @@ class CategoryController extends Controller
      * @param Category                    $category
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function all(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository, Category $category): JsonResponse
     {
@@ -70,33 +71,24 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-
-        $start = $repository->firstUseDate($category);
-
-        if (null === $start) {
-            $start = new Carbon; // @codeCoverageIgnore
-        }
-
-        $range     = Preferences::get('viewRange', '1M')->data;
+        $start     = $repository->firstUseDate($category);
+        $start     = $start ?? new Carbon;
+        $range     = app('preferences')->get('viewRange', '1M')->data;
         $start     = app('navigation')->startOfPeriod($start, $range);
         $end       = new Carbon;
         $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $chartData = [
             [
                 'label'   => (string)trans('firefly.spent'),
-                'entries' => [],
-                'type'    => 'bar',
+                'entries' => [], 'type' => 'bar',
             ],
             [
                 'label'   => (string)trans('firefly.earned'),
-                'entries' => [],
-                'type'    => 'bar',
+                'entries' => [], 'type' => 'bar',
             ],
             [
                 'label'   => (string)trans('firefly.sum'),
-                'entries' => [],
-                'type'    => 'line',
-                'fill'    => false,
+                'entries' => [], 'type' => 'line', 'fill' => false,
             ],
         ];
 
@@ -120,6 +112,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Shows the category chart on the front page.
+     *
      * @param CategoryRepositoryInterface $repository
      * @param AccountRepositoryInterface  $accountRepository
      *
@@ -162,12 +156,16 @@ class CategoryController extends Controller
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Chart report.
+     *
      * @param Category   $category
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function reportPeriod(Category $category, Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -178,7 +176,7 @@ class CategoryController extends Controller
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($category);
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return response()->json($cache->get());// @codeCoverageIgnore
         }
         $repository = app(CategoryRepositoryInterface::class);
         $expenses   = $repository->periodExpenses(new Collection([$category]), $accounts, $start, $end);
@@ -221,11 +219,15 @@ class CategoryController extends Controller
 
 
     /**
+     * Chart for period for transactions without a category.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function reportPeriodNoCategory(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -235,7 +237,7 @@ class CategoryController extends Controller
         $cache->addProperty('chart.category.period.no-cat');
         $cache->addProperty($accounts->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $repository = app(CategoryRepositoryInterface::class);
         $expenses   = $repository->periodExpensesNoCategory($accounts, $start, $end);
@@ -276,6 +278,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Chart for a specific period.
+     *
      * @param Category                    $category
      * @param                             $date
      *
@@ -283,7 +287,7 @@ class CategoryController extends Controller
      */
     public function specificPeriod(Category $category, Carbon $date): JsonResponse
     {
-        $range = Preferences::get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = app('navigation')->endOfPeriod($date, $range);
         $data  = $this->makePeriodChart($category, $start, $end);
@@ -293,11 +297,15 @@ class CategoryController extends Controller
 
 
     /**
+     * Chart for a specific period (start and end).
+     *
      * @param Category $category
      * @param Carbon   $start
      * @param Carbon   $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function makePeriodChart(Category $category, Carbon $start, Carbon $end): array
     {

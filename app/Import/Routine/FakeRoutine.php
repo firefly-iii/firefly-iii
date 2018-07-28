@@ -36,9 +36,9 @@ use Log;
  */
 class FakeRoutine implements RoutineInterface
 {
-    /** @var ImportJob */
+    /** @var ImportJob The import job */
     private $importJob;
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
 
     /**
@@ -51,11 +51,14 @@ class FakeRoutine implements RoutineInterface
      *
      * @return void
      * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function run(): void
     {
         Log::debug(sprintf('Now in run() for fake routine with status: %s', $this->importJob->status));
-        if ($this->importJob->status !== 'ready_to_run') {
+        if ('ready_to_run' !== $this->importJob->status) {
             throw new FireflyException(sprintf('Fake job should have status "ready_to_run", not "%s"', $this->importJob->status)); // @codeCoverageIgnore
         }
 
@@ -93,9 +96,10 @@ class FakeRoutine implements RoutineInterface
     }
 
     /**
+     * Set the import job.
+     *
      * @param ImportJob $importJob
      *
-     * @return
      */
     public function setImportJob(ImportJob $importJob): void
     {

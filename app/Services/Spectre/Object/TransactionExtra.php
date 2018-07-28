@@ -26,8 +26,11 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
- * @codeCoverageIgnore
  * Class TransactionExtra
+ *
+ * @SuppressWarnings(PHPMD.TooManyFields)
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ * @codeCoverageIgnore
  */
 class TransactionExtra extends SpectreObject
 {

@@ -30,6 +30,8 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 class RuleGroupFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +41,8 @@ class RuleGroupFormRequest extends Request
     }
 
     /**
+     * Get all data for controller.
+     *
      * @return array
      */
     public function getRuleGroupData(): array
@@ -50,6 +54,8 @@ class RuleGroupFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array
@@ -58,7 +64,7 @@ class RuleGroupFormRequest extends Request
         /** @var RuleGroupRepositoryInterface $repository */
         $repository = app(RuleGroupRepositoryInterface::class);
         $titleRule  = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
-        if (null !== $repository->find((int)$this->get('id'))->id) {
+        if (null !== $repository->find((int)$this->get('id'))) {
             $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title,' . (int)$this->get('id');
         }
 

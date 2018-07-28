@@ -106,18 +106,17 @@ class EventServiceProvider extends ServiceProvider
      * @codeCoverageIgnore
      * Register any events for your application.
      */
-    public function boot()
+    public function boot(): void
     {
         parent::boot();
         $this->registerCreateEvents();
     }
 
     /**
-     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function registerCreateEvents(): void
     {
-        // todo move this routine to a filter
         // in case of repeated piggy banks and/or other problems.
         PiggyBank::created(
             function (PiggyBank $piggyBank) {

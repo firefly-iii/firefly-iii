@@ -39,6 +39,8 @@ class ExchangeController extends Controller
 {
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
+     * Returns an exchange rate.
+     *
      * @param Request             $request
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency

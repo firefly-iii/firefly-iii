@@ -47,7 +47,7 @@ class UseEncryption extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         if (true === config('firefly.encryption')) {
             $this->info('Firefly III configuration calls for encrypted data.');
@@ -62,6 +62,7 @@ class UseEncryption extends Command
         $this->handleObjects('Category', 'name', 'encrypted');
         $this->handleObjects('PiggyBank', 'name', 'encrypted');
         $this->handleObjects('TransactionJournal', 'description', 'encrypted');
+        return 0;
     }
 
     /**

@@ -28,6 +28,10 @@ namespace FireflyIII\Import\Converter;
 interface ConverterInterface
 {
     /**
+     * Convert a value.
+     *
+     * @return mixed
+     *
      * @param $value
      */
     public function convert($value);

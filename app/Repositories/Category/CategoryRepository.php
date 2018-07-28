@@ -37,6 +37,10 @@ use Navigation;
 
 /**
  * Class CategoryRepository.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class CategoryRepository implements CategoryRepositoryInterface
 {
@@ -59,6 +63,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return true;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -76,23 +81,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         $set = $collector->getJournals();
 
         return (string)$set->sum('transaction_amount');
-    }
-
-    /**
-     * Find a category.
-     *
-     * @param int $categoryId
-     *
-     * @return Category
-     */
-    public function find(int $categoryId): Category
-    {
-        $category = $this->user->categories()->find($categoryId);
-        if (null === $category) {
-            $category = new Category;
-        }
-
-        return $category;
     }
 
     /**
@@ -130,6 +118,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Category $category
      *
      * @return Carbon|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function firstUseDate(Category $category): ?Carbon
     {
@@ -188,6 +177,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Collection $accounts
      *
      * @return Carbon|null
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon
     {
@@ -211,6 +202,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $lastJournalDate;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -294,6 +286,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -383,11 +376,12 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts

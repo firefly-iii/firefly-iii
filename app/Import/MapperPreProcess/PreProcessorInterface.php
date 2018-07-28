@@ -28,6 +28,8 @@ namespace FireflyIII\Import\MapperPreProcess;
 interface PreProcessorInterface
 {
     /**
+     * Run preprocessor.
+     *
      * @param string $value
      *
      * @return array

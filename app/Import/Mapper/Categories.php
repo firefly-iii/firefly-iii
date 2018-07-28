@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 class Categories implements MapperInterface
 {
     /**
+     * Get map of categories.
+     *
      * @return array
      */
     public function getMap(): array
@@ -46,7 +48,7 @@ class Categories implements MapperInterface
             $list[$categoryId] = $category->name;
         }
         asort($list);
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

@@ -34,7 +34,7 @@ use Illuminate\Support\Collection;
 class OperationsController extends Controller
 {
 
-    /** @var AccountTaskerInterface */
+    /** @var AccountTaskerInterface Some specific account things. */
     private $tasker;
 
     /**
@@ -56,6 +56,8 @@ class OperationsController extends Controller
 
 
     /**
+     * View of income and expense.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -83,6 +85,8 @@ class OperationsController extends Controller
     }
 
     /**
+     * View of income.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -111,6 +115,8 @@ class OperationsController extends Controller
     }
 
     /**
+     * Overview of income and expense.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

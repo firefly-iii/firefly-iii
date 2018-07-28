@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int       $transaction_journal_id
  * @property int       $piggy_bank_id
  * @property int       $id
- * @property mixed     date
+ * @property Carbon     date
  */
 class PiggyBankEvent extends Model
 {
@@ -61,7 +62,7 @@ class PiggyBankEvent extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function piggyBank()
+    public function piggyBank(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(PiggyBank::class);
     }
@@ -71,7 +72,7 @@ class PiggyBankEvent extends Model
      *
      * @param $value
      */
-    public function setAmountAttribute($value)
+    public function setAmountAttribute($value): void
     {
         $this->attributes['amount'] = (string)$value;
     }
@@ -80,7 +81,7 @@ class PiggyBankEvent extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function transactionJournal()
+    public function transactionJournal(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(TransactionJournal::class);
     }

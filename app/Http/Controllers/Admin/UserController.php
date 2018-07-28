@@ -29,7 +29,6 @@ use FireflyIII\Http\Requests\UserFormRequest;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
-use Preferences;
 
 /**
  * Class UserController.
@@ -37,7 +36,7 @@ use Preferences;
 class UserController extends Controller
 {
     /**
-     *
+     * UserController constructor.
      */
     public function __construct()
     {
@@ -56,18 +55,22 @@ class UserController extends Controller
     }
 
     /**
+     * Delete a user.
+     *
      * @param User $user
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(User $user)
     {
-        $subTitle = trans('firefly.delete_user', ['email' => $user->email]);
+        $subTitle = (string)trans('firefly.delete_user', ['email' => $user->email]);
 
         return view('admin.users.delete', compact('user', 'subTitle'));
     }
 
     /**
+     * Destroy a user.
+     *
      * @param User                    $user
      * @param UserRepositoryInterface $repository
      *
@@ -82,6 +85,8 @@ class UserController extends Controller
     }
 
     /**
+     * Edit user form.
+     *
      * @param User $user
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -107,6 +112,8 @@ class UserController extends Controller
     }
 
     /**
+     * Show index of user manager.
+     *
      * @param UserRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -121,7 +128,7 @@ class UserController extends Controller
         $users->each(
             function (User $user) use ($repository) {
                 $list          = ['twoFactorAuthEnabled', 'twoFactorAuthSecret'];
-                $preferences   = Preferences::getArrayForUser($user, $list);
+                $preferences   = app('preferences')->getArrayForUser($user, $list);
                 $user->isAdmin = $repository->hasRole($user, 'owner');
                 $is2faEnabled  = 1 === $preferences['twoFactorAuthEnabled'];
                 $has2faSecret  = null !== $preferences['twoFactorAuthSecret'];
@@ -134,6 +141,8 @@ class UserController extends Controller
     }
 
     /**
+     * Show single user.
+     *
      * @param UserRepositoryInterface $repository
      * @param User                    $user
      *
@@ -155,6 +164,8 @@ class UserController extends Controller
     }
 
     /**
+     * Update single user.
+     *
      * @param UserFormRequest         $request
      * @param User                    $user
      * @param UserRepositoryInterface $repository

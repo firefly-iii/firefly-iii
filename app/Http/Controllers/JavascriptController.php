@@ -31,7 +31,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Log;
-use Preferences;
 
 /**
  * Class JavascriptController.
@@ -39,6 +38,8 @@ use Preferences;
 class JavascriptController extends Controller
 {
     /**
+     * Show info about accounts.
+     *
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
      *
@@ -47,7 +48,7 @@ class JavascriptController extends Controller
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
         $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $preference = Preferences::get('currencyPreference', config('firefly.default_currency', 'EUR'));
+        $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
         /** @noinspection NullPointerExceptionInspection */
         $default = $currencyRepository->findByCodeNull($preference->data);
 
@@ -69,6 +70,8 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Get info about currencies.
+     *
      * @param CurrencyRepositoryInterface $repository
      *
      * @return Response
@@ -90,6 +93,8 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Show some common variables to be used in scripts.
+     *
      * @param Request                     $request
      * @param AccountRepositoryInterface  $repository
      * @param CurrencyRepositoryInterface $currencyRepository
@@ -114,7 +119,7 @@ class JavascriptController extends Controller
         $accounting                = app('amount')->getJsConfig($localeconv);
         $localeconv                = localeconv();
         $localeconv['frac_digits'] = $currency->decimal_places;
-        $pref                      = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        $pref                      = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
         $dateRange = $this->getDateRangeConfig();
@@ -136,13 +141,19 @@ class JavascriptController extends Controller
     }
 
     /**
+     * Get config for date range.
+     *
      * @return array
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getDateRangeConfig(): array
     {
-        $viewRange = Preferences::get('viewRange', '1M')->data;
+        $viewRange = app('preferences')->get('viewRange', '1M')->data;
+        /** @var Carbon $start */
         $start     = session('start');
+        /** @var Carbon $end */
         $end       = session('end');
+        /** @var Carbon $first */
         $first     = session('first');
         $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
         $isCustom  = true === session('is_custom_range', false);

@@ -32,6 +32,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 class AssetAccountIbans implements MapperInterface
 {
     /**
+     * Get map of asset accounts.
+     *
      * @return array
      */
     public function getMap(): array
@@ -49,14 +51,14 @@ class AssetAccountIbans implements MapperInterface
             if (\strlen($iban) > 0) {
                 $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
             }
-            if (0 === \strlen($iban)) {
+            if ('' === $iban) {
                 $list[$accountId] = $account->name;
             }
         }
         /** @noinspection AdditionOperationOnArraysInspection */
         $list = $topList + $list;
         asort($list);
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

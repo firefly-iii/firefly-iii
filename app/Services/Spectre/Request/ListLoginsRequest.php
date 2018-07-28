@@ -42,6 +42,7 @@ class ListLoginsRequest extends SpectreRequest
 
     /**
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function call(): void
     {
@@ -62,8 +63,6 @@ class ListLoginsRequest extends SpectreRequest
                 $hasNextPage = true;
                 $nextId      = $response['meta']['next_id'];
                 Log::debug(sprintf('Next ID is now %d.', $nextId));
-            } else {
-                Log::debug('No next page.');
             }
             $collection = new Collection;
             // store logins:

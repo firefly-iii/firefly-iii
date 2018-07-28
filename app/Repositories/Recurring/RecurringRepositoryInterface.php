@@ -36,7 +36,6 @@ use Illuminate\Support\Collection;
 /**
  * Interface RecurringRepositoryInterface
  *
- * @package FireflyIII\Repositories\Recurring
  */
 interface RecurringRepositoryInterface
 {
@@ -64,24 +63,23 @@ interface RecurringRepositoryInterface
     /**
      * Get the budget ID from a recurring transaction transaction.
      *
-     * @param RecurrenceTransaction $recurrenceTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|int
      */
-    public function getBudget(RecurrenceTransaction $recurrenceTransaction): ?int;
+    public function getBudget(RecurrenceTransaction $recTransaction): ?int;
 
     /**
      * Get the category from a recurring transaction transaction.
      *
-     * @param RecurrenceTransaction $recurrenceTransaction
+     * @param RecurrenceTransaction $recTransaction
      *
      * @return null|string
      */
-    public function getCategory(RecurrenceTransaction $recurrenceTransaction): ?string;
+    public function getCategory(RecurrenceTransaction $recTransaction): ?string;
 
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
-     * TODO make consistent with getTransactions
      *
      * @param Recurrence  $recurrence
      * @param Carbon|null $start

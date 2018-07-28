@@ -26,6 +26,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Twig\Extension\TransactionJournal as TransactionJournalExtension;
 use Twig_Extension;
@@ -53,8 +54,10 @@ class Journal extends Twig_Extension
                     return $cache->get(); // @codeCoverageIgnore
                 }
 
-                $list  = $journal->destinationAccountList();
-                $array = [];
+                /** @var JournalRepositoryInterface $repository */
+                $repository = app(JournalRepositoryInterface::class);
+                $list       = $repository->getJournalDestinationAccounts($journal);
+                $array      = [];
                 /** @var Account $entry */
                 foreach ($list as $entry) {
                     if (AccountType::CASH === $entry->accountType->type) {
@@ -119,7 +122,10 @@ class Journal extends Twig_Extension
                     return $cache->get(); // @codeCoverageIgnore
                 }
 
-                $list  = $journal->sourceAccountList();
+                /** @var JournalRepositoryInterface $repository */
+                $repository = app(JournalRepositoryInterface::class);
+
+                $list  = $repository->getJournalSourceAccounts($journal);
                 $array = [];
                 /** @var Account $entry */
                 foreach ($list as $entry) {

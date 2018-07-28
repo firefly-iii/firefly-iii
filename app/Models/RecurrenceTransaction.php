@@ -46,6 +46,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \FireflyIII\Models\Account             $destinationAccount
  * @property \Illuminate\Support\Collection         $recurrenceTransactionMeta
  * @property int                                    $id
+ * @property Recurrence                             $recurrence
  */
 class RecurrenceTransaction extends Model
 {
@@ -73,7 +74,7 @@ class RecurrenceTransaction extends Model
      */
     public function destinationAccount(): BelongsTo
     {
-        return $this->belongsTo(Account::class,'destination_id');
+        return $this->belongsTo(Account::class, 'destination_id');
     }
 
     /**
@@ -109,7 +110,7 @@ class RecurrenceTransaction extends Model
      */
     public function sourceAccount(): BelongsTo
     {
-        return $this->belongsTo(Account::class,'source_id');
+        return $this->belongsTo(Account::class, 'source_id');
     }
 
     /**

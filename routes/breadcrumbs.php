@@ -359,20 +359,21 @@ try {
         function (BreadCrumbsGenerator $breadcrumbs, string $moment, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('budgets.index');
             $breadcrumbs->push(trans('firefly.journals_without_budget'), route('budgets.no-budget'));
+            $title = trans(
+                'firefly.between_dates_breadcrumb',
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
+            );
+            $breadcrumbs->push($title, route('budgets.no-budget', ['a', 'b']));
+        }
+    );
 
-            // push when is all:
-            if ('all' === $moment) {
-                $breadcrumbs->push(trans('firefly.everything'), route('budgets.no-budget', ['all']));
-            }
-            // when is specific period or when empty:
-            if ('all' !== $moment && '(nothing)' !== $moment) {
-                $title = trans(
-                    'firefly.between_dates_breadcrumb',
-                    ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
-                     'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
-                );
-                $breadcrumbs->push($title, route('budgets.no-budget', [$moment]));
-            }
+    Breadcrumbs::register(
+        'budgets.no-budget-all',
+        function (BreadCrumbsGenerator $breadcrumbs) {
+            $breadcrumbs->parent('budgets.index');
+            $breadcrumbs->push(trans('firefly.journals_without_budget'), route('budgets.no-budget'));
+            $breadcrumbs->push(trans('firefly.everything'), route('budgets.no-budget-all'));
         }
     );
 
@@ -440,20 +441,21 @@ try {
         function (BreadCrumbsGenerator $breadcrumbs, Category $category, string $moment, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('categories.index');
             $breadcrumbs->push($category->name, route('categories.show', [$category->id]));
+            $title = trans(
+                'firefly.between_dates_breadcrumb',
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
+            );
+            $breadcrumbs->push($title, route('categories.show', [$category->id, $moment]));
+        }
+    );
 
-            // push when is all:
-            if ('all' === $moment) {
-                $breadcrumbs->push(trans('firefly.everything'), route('categories.show', [$category->id, 'all']));
-            }
-            // when is specific period or when empty:
-            if ('all' !== $moment && '(nothing)' !== $moment) {
-                $title = trans(
-                    'firefly.between_dates_breadcrumb',
-                    ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
-                     'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
-                );
-                $breadcrumbs->push($title, route('categories.show', [$category->id, $moment]));
-            }
+    Breadcrumbs::register(
+        'categories.show-all',
+        function (BreadCrumbsGenerator $breadcrumbs, Category $category, string $moment, Carbon $start, Carbon $end) {
+            $breadcrumbs->parent('categories.index');
+            $breadcrumbs->push($category->name, route('categories.show', [$category->id]));
+            $breadcrumbs->push(trans('firefly.everything'), route('categories.show', [$category->id, 'all']));
         }
     );
 
@@ -462,20 +464,22 @@ try {
         function (BreadCrumbsGenerator $breadcrumbs, string $moment, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('categories.index');
             $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
+            $title = trans(
+                'firefly.between_dates_breadcrumb',
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
+            );
+            $breadcrumbs->push($title, route('categories.no-category', [$moment]));
+        }
+    );
 
-            // push when is all:
-            if ('all' === $moment) {
-                $breadcrumbs->push(trans('firefly.everything'), route('categories.no-category', ['all']));
-            }
-            // when is specific period or when empty:
-            if ('all' !== $moment && '(nothing)' !== $moment) {
-                $title = trans(
-                    'firefly.between_dates_breadcrumb',
-                    ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
-                     'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
-                );
-                $breadcrumbs->push($title, route('categories.no-category', [$moment]));
-            }
+
+    Breadcrumbs::register(
+        'categories.no-category-all',
+        function (BreadCrumbsGenerator $breadcrumbs, string $moment, Carbon $start, Carbon $end) {
+            $breadcrumbs->parent('categories.index');
+            $breadcrumbs->push(trans('firefly.journals_without_category'), route('categories.no-category'));
+            $breadcrumbs->push(trans('firefly.everything'), route('categories.no-category-all'));
         }
     );
 

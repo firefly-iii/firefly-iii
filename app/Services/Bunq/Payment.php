@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Bunq;
 
-use bunq\Exception\BunqException;
+
 use bunq\Model\Generated\Endpoint\BunqResponsePaymentList;
 use bunq\Model\Generated\Endpoint\Payment as BunqPayment;
 use Exception;
@@ -49,7 +49,7 @@ class Payment
         $customHeaders     = $customHeaders ?? [];
         try {
             $result = BunqPayment::listing($monetaryAccountId, $params, $customHeaders);
-        } catch (BunqException|Exception $e) {
+        } catch (Exception $e) {
             throw new FireflyException($e->getMessage());
         }
 

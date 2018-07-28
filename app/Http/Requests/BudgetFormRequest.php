@@ -25,12 +25,15 @@ namespace FireflyIII\Http\Requests;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 
 /**
- * @codeCoverageIgnore
  * Class BudgetFormRequest.
+ *
+ * @codeCoverageIgnore
  */
 class BudgetFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,6 +42,8 @@ class BudgetFormRequest extends Request
     }
 
     /**
+     * Returns the data required by the controller.
+     *
      * @return array
      */
     public function getBudgetData(): array
@@ -50,6 +55,8 @@ class BudgetFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

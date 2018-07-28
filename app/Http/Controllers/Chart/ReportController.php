@@ -36,11 +36,11 @@ use Log;
  */
 class ReportController extends Controller
 {
-    /** @var GeneratorInterface */
+    /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
     /**
-     *
+     * ReportController constructor.
      */
     public function __construct()
     {
@@ -94,6 +94,8 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -111,19 +113,18 @@ class ReportController extends Controller
         $source    = $this->getChartData($accounts, $start, $end);
         $chartData = [
             [
-                'label'           => trans('firefly.income'),
+                'label'           => (string)trans('firefly.income'),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
                 'entries'         => [],
             ],
             [
-                'label'           => trans('firefly.expenses'),
+                'label'           => (string)trans('firefly.expenses'),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
                 'entries'         => [],
             ],
         ];
-
         foreach ($source['earned'] as $date => $amount) {
             $carbon                          = new Carbon($date);
             $label                           = $carbon->formatLocalized($format);
@@ -146,11 +147,14 @@ class ReportController extends Controller
     /**
      * Shows sum income and expense, debit/credit: operations.
      *
+     * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
-     * @param Collection $accounts
      *
      * @return \Illuminate\Http\JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sum(Collection $accounts, Carbon $start, Carbon $end): JsonResponse
     {
@@ -199,7 +203,7 @@ class ReportController extends Controller
                 ],
             ],
             [
-                'label'           => trans('firefly.expenses'),
+                'label'           => (string)trans('firefly.expenses'),
                 'type'            => 'bar',
                 'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
                 'entries'         => [
@@ -216,6 +220,8 @@ class ReportController extends Controller
     }
 
     /**
+     * Sum up an array.
+     *
      * @param $array
      *
      * @return string
@@ -238,6 +244,8 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function getChartData(Collection $accounts, Carbon $start, Carbon $end): array
     {

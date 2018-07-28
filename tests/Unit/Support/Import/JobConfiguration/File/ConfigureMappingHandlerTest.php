@@ -51,7 +51,7 @@ class ConfigureMappingHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapG' . random_int(1, 1000);
+        $job->key           = 'mapG' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -118,7 +118,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapA' . random_int(1, 1000);
+        $job->key           = 'mapA' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -150,7 +150,7 @@ class ConfigureMappingHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapE' . random_int(1, 1000);
+        $job->key           = 'mapE' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -214,7 +214,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapC' . random_int(1, 1000);
+        $job->key           = 'mapC' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -243,7 +243,7 @@ class ConfigureMappingHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapH' . random_int(1, 1000);
+        $job->key           = 'mapH' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -324,7 +324,7 @@ class ConfigureMappingHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapD' . random_int(1, 1000);
+        $job->key           = 'mapD' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -352,7 +352,7 @@ class ConfigureMappingHandlerTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapF' . random_int(1, 1000);
+        $job->key           = 'mapF' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -439,7 +439,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapB' . random_int(1, 1000);
+        $job->key           = 'mapB' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';
@@ -468,7 +468,7 @@ class ConfigureMappingHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'mapB' . random_int(1, 1000);
+        $job->key           = 'mapB' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'fake';

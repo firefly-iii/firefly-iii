@@ -25,7 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Models\RecurrenceMeta;
+
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;

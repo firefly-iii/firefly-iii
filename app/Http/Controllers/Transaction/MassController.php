@@ -42,14 +42,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class MassController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class MassController extends Controller
 {
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
     /**
-     *
+     * MassController constructor.
      */
     public function __construct()
     {
@@ -57,7 +59,7 @@ class MassController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.transactions'));
+                app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
                 $this->repository = app(JournalRepositoryInterface::class);
 
@@ -67,13 +69,15 @@ class MassController extends Controller
     }
 
     /**
+     * Mass delete transactions.
+     *
      * @param Collection $journals
      *
      * @return IlluminateView
      */
     public function delete(Collection $journals): IlluminateView
     {
-        $subTitle = trans('firefly.mass_delete_journals');
+        $subTitle = (string)trans('firefly.mass_delete_journals');
 
         // put previous url in session
         $this->rememberPreviousUri('transactions.mass-delete.uri');
@@ -82,41 +86,40 @@ class MassController extends Controller
     }
 
     /**
+     * Do the mass delete.
+     *
      * @param MassDeleteJournalRequest $request
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function destroy(MassDeleteJournalRequest $request)
     {
-        $ids = $request->get('confirm_mass_delete');
-        $set = new Collection;
+        $ids   = $request->get('confirm_mass_delete');
+        $count = 0;
         if (\is_array($ids)) {
             /** @var string $journalId */
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
                 $journal = $this->repository->findNull((int)$journalId);
                 if (null !== $journal && (int)$journalId === $journal->id) {
-                    $set->push($journal);
+                    $this->repository->destroy($journal);
+                    ++$count;
                 }
             }
         }
-        unset($journal);
-        $count = 0;
 
-        /** @var TransactionJournal $journal */
-        foreach ($set as $journal) {
-            $this->repository->destroy($journal);
-            ++$count;
-        }
 
         app('preferences')->mark();
-        session()->flash('success', trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string)trans('firefly.mass_deleted_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-delete.uri'));
     }
 
     /**
+     * Mass edit of journals.
+     *
      * @param Collection $journals
      *
      * @return IlluminateView
@@ -125,22 +128,18 @@ class MassController extends Controller
     {
         /** @var User $user */
         $user     = auth()->user();
-        $subTitle = trans('firefly.mass_edit_journals');
-
+        $subTitle = (string)trans('firefly.mass_edit_journals');
 
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
-        // get budgets
         /** @var BudgetRepositoryInterface $budgetRepository */
         $budgetRepository = app(BudgetRepositoryInterface::class);
         $budgets          = $budgetRepository->getBudgets();
 
-        // put previous url in session
         $this->rememberPreviousUri('transactions.mass-edit.uri');
 
-        // use the collector to get them.
         $transformer = new TransactionTransformer(new ParameterBag);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -148,12 +147,7 @@ class MassController extends Controller
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
         $collector->addFilter(TransactionViewFilter::class);
-        $collection = $collector->getJournals();
-
-        // add some filters:
-
-
-        // transform to array
+        $collection   = $collector->getJournals();
         $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {
                 $transformed = $transformer->transform($transaction);
@@ -169,10 +163,14 @@ class MassController extends Controller
     }
 
     /**
+     * Mass update of journals.
+     *
      * @param MassEditJournalRequest     $request
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(MassEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
@@ -240,7 +238,7 @@ class MassController extends Controller
             }
         }
         app('preferences')->mark();
-        session()->flash('success', trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
+        session()->flash('success', (string)trans('firefly.mass_edited_transactions_success', ['amount' => $count]));
 
         // redirect to previous URL:
         return redirect($this->getPreviousUri('transactions.mass-edit.uri'));

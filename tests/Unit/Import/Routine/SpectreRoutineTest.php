@@ -46,7 +46,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR1A' . random_int(1, 1000);
+        $job->key           = 'SR1A' . random_int(1, 10000);
         $job->status        = 'ready_to_run';
         $job->stage         = 'do-authenticate';
         $job->provider      = 'spectre';
@@ -77,7 +77,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR2b' . random_int(1, 1000);
+        $job->key           = 'SR2b' . random_int(1, 10000);
         $job->status        = 'ready_to_run';
         $job->stage         = 'authenticated';
         $job->provider      = 'spectre';
@@ -115,7 +115,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR3c' . random_int(1, 1000);
+        $job->key           = 'SR3c' . random_int(1, 10000);
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'spectre';
@@ -154,7 +154,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR4A' . random_int(1, 1000);
+        $job->key           = 'SR4A' . random_int(1, 10000);
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
@@ -194,7 +194,7 @@ class SpectreRoutineTest extends TestCase
     {
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'SR5A' . random_int(1, 1000);
+        $job->key           = 'SR5A' . random_int(1, 10000);
         $job->status        = 'ready_to_run';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

@@ -58,6 +58,8 @@ class MassControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
 
 
         $withdrawals = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->take(2)->get()->pluck('id')->toArray();

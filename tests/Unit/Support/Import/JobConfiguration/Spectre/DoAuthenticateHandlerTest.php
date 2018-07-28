@@ -51,7 +51,7 @@ class DoAuthenticateHandlerTest extends TestCase
 
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sda-A' . random_int(1, 1000);
+        $job->key           = 'sda-A' . random_int(1, 10000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';

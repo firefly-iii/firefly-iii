@@ -54,7 +54,7 @@ class ScanAttachments extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         $attachments = Attachment::get();
         $disk        = Storage::disk('upload');
@@ -82,5 +82,6 @@ class ScanAttachments extends Command
             $attachment->save();
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
         }
+        return 0;
     }
 }

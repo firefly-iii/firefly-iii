@@ -51,7 +51,6 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * TODO rename references to journals to transactions
  * Maybe this is a good idea after all...
  *
  * Class JournalCollector

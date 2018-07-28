@@ -38,7 +38,7 @@ class ValidRecurrenceRepetitionType implements Rule
      */
     public function message(): string
     {
-        return trans('validation.valid_recurrence_rep_type');
+        return (string)trans('validation.valid_recurrence_rep_type');
     }
 
     /**
@@ -48,11 +48,13 @@ class ValidRecurrenceRepetitionType implements Rule
      * @param  mixed  $value
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function passes($attribute, $value): bool
     {
         $value = (string)$value;
-        if ($value === 'daily') {
+        if ('daily' === $value) {
             return true;
         }
         //monthly,17

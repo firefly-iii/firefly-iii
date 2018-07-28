@@ -36,6 +36,8 @@ class BudgetController extends Controller
 {
 
     /**
+     * Show partial overview of budgets.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -65,6 +67,8 @@ class BudgetController extends Controller
 
 
     /**
+     * Show budget overview for a period.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end

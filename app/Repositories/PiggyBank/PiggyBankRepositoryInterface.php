@@ -101,14 +101,6 @@ interface PiggyBankRepositoryInterface
     public function destroy(PiggyBank $piggyBank): bool;
 
     /**
-     * @param int $piggyBankid
-     *
-     * @deprecated
-     * @return PiggyBank
-     */
-    public function find(int $piggyBankid): PiggyBank;
-
-    /**
      * Find by name or return NULL.
      *
      * @param string $name
@@ -207,13 +199,6 @@ interface PiggyBankRepositoryInterface
      * @return bool
      */
     public function removeAmount(PiggyBank $piggyBank, string $amount): bool;
-
-    /**
-     * Set all piggy banks to order 0.
-     *
-     * @return bool
-     */
-    public function reset(): bool;
 
     /**
      * Set specific piggy bank to specific order.

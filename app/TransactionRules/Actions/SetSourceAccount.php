@@ -100,7 +100,12 @@ class SetSourceAccount implements ActionInterface
 
         // update source transaction with new source account:
         // get source transaction:
-        $transaction             = $journal->transactions()->where('amount', '<', 0)->first();
+        $transaction = $journal->transactions()->where('amount', '<', 0)->first();
+        if (null === $transaction) {
+            Log::error(sprintf('Cannot change source account of journal #%d because no source transaction exists.', $journal->id));
+
+            return false;
+        }
         $transaction->account_id = $this->newSourceAccount->id;
         $transaction->save();
         $journal->touch();
@@ -130,7 +135,7 @@ class SetSourceAccount implements ActionInterface
     /**
      *
      */
-    private function findRevenueAccount()
+    private function findRevenueAccount(): void
     {
         $account = $this->repository->findByName($this->action->action_value, [AccountType::REVENUE]);
         if (null === $account) {

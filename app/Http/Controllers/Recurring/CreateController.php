@@ -38,13 +38,13 @@ use Illuminate\Http\Request;
  */
 class CreateController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * CreateController constructor.
      */
     public function __construct()
     {
@@ -54,8 +54,8 @@ class CreateController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', trans('firefly.recurrences'));
-                app('view')->share('subTitle', trans('firefly.create_new_recurrence'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
+                app('view')->share('subTitle', (string)trans('firefly.create_new_recurrence'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
                 $this->budgets   = app(BudgetRepositoryInterface::class);
@@ -66,9 +66,12 @@ class CreateController extends Controller
     }
 
     /**
+     * Create a new recurring transaction.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function create(Request $request)
     {
@@ -83,23 +86,20 @@ class CreateController extends Controller
             $this->rememberPreviousUri('recurring.create.uri');
         }
         $request->session()->forget('recurring.create.fromStore');
-
-        // when will it end?
         $repetitionEnds = [
-            'forever'    => trans('firefly.repeat_forever'),
-            'until_date' => trans('firefly.repeat_until_date'),
-            'times'      => trans('firefly.repeat_times'),
+            'forever'    => (string)trans('firefly.repeat_forever'),
+            'until_date' => (string)trans('firefly.repeat_until_date'),
+            'times'      => (string)trans('firefly.repeat_times'),
         ];
-        // what to do in the weekend?
         $weekendResponses = [
-            RecurrenceRepetition::WEEKEND_DO_NOTHING    => trans('firefly.do_nothing'),
-            RecurrenceRepetition::WEEKEND_SKIP_CREATION => trans('firefly.skip_transaction'),
-            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => trans('firefly.jump_to_friday'),
-            RecurrenceRepetition::WEEKEND_TO_MONDAY     => trans('firefly.jump_to_monday'),
+            RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
+            RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
+            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
+            RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-        // flash some data:
-        $hasOldInput = null !== $request->old('_token');
+
+        $hasOldInput = null !== $request->old('_token'); // flash some data
         $preFilled   = [
             'first_date'       => $tomorrow->format('Y-m-d'),
             'transaction_type' => $hasOldInput ? $request->old('transaction_type') : 'withdrawal',
@@ -115,6 +115,8 @@ class CreateController extends Controller
 
 
     /**
+     * Store a recurring transaction.
+     *
      * @param RecurrenceFormRequest $request
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -64,6 +65,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $transaction_journal_category_name
  * @property int                 $bill_id
  * @property string              $bill_name
+ * @property string              $bill_name_encrypted
  * @property string              $notes
  * @property string              $tags
  * @property string              $transaction_currency_symbol
@@ -87,7 +89,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $after       // used in audit reports.
  * @property int                 $opposing_id // ID of the opposing transaction, used in collector
  * @property bool                $encrypted   // is the journal encrypted
- * @property                     $bill_name_encrypted
+ * @property bool                reconciled
+ * @property string              transaction_category_encrypted
+ * @property string              transaction_journal_category_encrypted
+ * @property string              transaction_budget_encrypted
+ * @property string              transaction_journal_budget_encrypted
+ * @property string              type
+ * @property string              name
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Transaction extends Model
 {
@@ -150,8 +159,10 @@ class Transaction extends Model
     {
         if (auth()->check()) {
             $transactionId = (int)$value;
-            $transaction   = auth()->user()->transactions()->where('transactions.id', $transactionId)
-                                   ->first(['transactions.*']);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Transaction $transaction */
+            $transaction = $user->transactions()->where('transactions.id', $transactionId)->first(['transactions.*']);
             if (null !== $transaction) {
                 return $transaction;
             }
@@ -166,7 +177,7 @@ class Transaction extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function account()
+    public function account(): BelongsTo
     {
         return $this->belongsTo(Account::class);
     }
@@ -175,7 +186,7 @@ class Transaction extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function budgets()
+    public function budgets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Budget::class);
     }
@@ -184,7 +195,7 @@ class Transaction extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
-    public function categories()
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
     {
         return $this->belongsToMany(Category::class);
     }
@@ -193,21 +204,9 @@ class Transaction extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function foreignCurrency()
+    public function foreignCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class, 'foreign_currency_id');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return float|int
-     */
-    public function getAmountAttribute($value)
-    {
-        return $value;
     }
 
     /**
@@ -216,7 +215,7 @@ class Transaction extends Model
      * @param Builder $query
      * @param Carbon  $date
      */
-    public function scopeAfter(Builder $query, Carbon $date)
+    public function scopeAfter(Builder $query, Carbon $date): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -230,7 +229,7 @@ class Transaction extends Model
      * @param Builder $query
      * @param Carbon  $date
      */
-    public function scopeBefore(Builder $query, Carbon $date)
+    public function scopeBefore(Builder $query, Carbon $date): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -244,7 +243,7 @@ class Transaction extends Model
      * @param Builder $query
      * @param array   $types
      */
-    public function scopeTransactionTypes(Builder $query, array $types)
+    public function scopeTransactionTypes(Builder $query, array $types): void
     {
         if (!self::isJoined($query, 'transaction_journals')) {
             $query->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id');
@@ -261,7 +260,7 @@ class Transaction extends Model
      *
      * @param $value
      */
-    public function setAmountAttribute($value)
+    public function setAmountAttribute($value): void
     {
         $this->attributes['amount'] = (string)$value;
     }

@@ -40,6 +40,7 @@ interface CategoryRepositoryInterface
      */
     public function destroy(Category $category): bool;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -49,16 +50,6 @@ interface CategoryRepositoryInterface
      * @return string
      */
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
-
-    /**
-     * Find a category.
-     *
-     * @param int $categoryId
-     *
-     * @deprecated
-     * @return Category
-     */
-    public function find(int $categoryId): Category;
 
     /**
      * Find a category.
@@ -111,6 +102,7 @@ interface CategoryRepositoryInterface
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -130,6 +122,7 @@ interface CategoryRepositoryInterface
      */
     public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -154,6 +147,7 @@ interface CategoryRepositoryInterface
      */
     public function setUser(User $user);
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts

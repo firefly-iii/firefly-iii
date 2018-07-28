@@ -42,7 +42,6 @@ use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Log;
-use Preferences;
 use Schema;
 use stdClass;
 
@@ -70,11 +69,11 @@ class VerifyDatabase extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         // if table does not exist, return false
         if (!Schema::hasTable('users')) {
-            return;
+            return 1;
         }
 
         $this->reportEmptyBudgets();
@@ -95,6 +94,8 @@ class VerifyDatabase extends Command
         $this->fixDoubleAmounts();
         $this->fixBadMeta();
         $this->removeBills();
+
+        return 0;
     }
 
     /**
@@ -106,10 +107,10 @@ class VerifyDatabase extends Command
         $users = User::get();
         /** @var User $user */
         foreach ($users as $user) {
-            $pref = Preferences::getForUser($user, 'access_token', null);
+            $pref = app('preferences')->getForUser($user, 'access_token', null);
             if (null === $pref) {
                 $token = $user->generateAccessToken();
-                Preferences::setForUser($user, 'access_token', $token);
+                app('preferences')->setForUser($user, 'access_token', $token);
                 $this->line(sprintf('Generated access token for user %s', $user->email));
                 ++$count;
             }

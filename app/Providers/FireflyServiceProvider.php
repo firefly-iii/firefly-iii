@@ -42,8 +42,6 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
-use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
@@ -64,7 +62,6 @@ use FireflyIII\Support\Twig\Journal;
 use FireflyIII\Support\Twig\Loader\AccountLoader;
 use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
 use FireflyIII\Support\Twig\Loader\TransactionLoader;
-use FireflyIII\Support\Twig\PiggyBank;
 use FireflyIII\Support\Twig\Rule;
 use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
@@ -76,17 +73,21 @@ use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
- * @codeCoverageIgnore
+ *
  * Class FireflyServiceProvider.
+ *
+ * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FireflyServiceProvider extends ServiceProvider
 {
     /**
      * Start provider.
      */
-    public function boot()
+    public function boot(): void
     {
         Validator::resolver(
+        /** @noinspection MoreThanThreeArgumentsInspection */
             function ($translator, $data, $rules, $messages) {
                 return new FireflyValidator($translator, $data, $rules, $messages);
             }
@@ -96,7 +97,6 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addRuntimeLoader(new TransactionLoader);
         Twig::addRuntimeLoader(new AccountLoader);
         Twig::addRuntimeLoader(new TransactionJournalLoader);
-        Twig::addExtension(new PiggyBank);
         Twig::addExtension(new General);
         Twig::addExtension(new Journal);
         Twig::addExtension(new Translation);
@@ -107,8 +107,10 @@ class FireflyServiceProvider extends ServiceProvider
 
     /**
      * Register stuff.
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(
             'preferences',
@@ -170,7 +172,6 @@ class FireflyServiceProvider extends ServiceProvider
         // export:
         $this->app->bind(ProcessorInterface::class, ExpandedProcessor::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
-        $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
         // more generators:

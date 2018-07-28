@@ -54,7 +54,6 @@ use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
-use Preferences;
 use Schema;
 use UnexpectedValueException;
 
@@ -83,7 +82,7 @@ class UpgradeDatabase extends Command
     /**
      * Execute the console command.
      */
-    public function handle(): void
+    public function handle(): int
     {
         $this->setTransactionIdentifier();
         $this->updateAccountCurrencies();
@@ -97,6 +96,8 @@ class UpgradeDatabase extends Command
         $this->migrateBillsToRules();
 
         $this->info('Firefly III database is up to date.');
+
+        return 0;
     }
 
     /**
@@ -110,10 +111,10 @@ class UpgradeDatabase extends Command
     {
         foreach (User::get() as $user) {
             /** @var Preference $lang */
-            $lang               = Preferences::getForUser($user, 'language', 'en_US');
+            $lang               = app('preferences')->getForUser($user, 'language', 'en_US');
             $groupName          = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
             $ruleGroup          = $user->ruleGroups()->where('title', $groupName)->first();
-            $currencyPreference = Preferences::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
+            $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
 
             if (null === $currencyPreference) {
                 $this->error('User has no currency preference. Impossible.');
@@ -198,7 +199,7 @@ class UpgradeDatabase extends Command
                             [
                                 'rule_id'         => $rule->id,
                                 'trigger_type'    => 'amount_more',
-                                'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                                'trigger_value'   => round((float)$bill->amount_min, $currency->decimal_places),
                                 'active'          => 1,
                                 'stop_processing' => 0,
                                 'order'           => 4,
@@ -210,7 +211,7 @@ class UpgradeDatabase extends Command
                             [
                                 'rule_id'         => $rule->id,
                                 'trigger_type'    => 'amount_exactly',
-                                'trigger_value'   => round($bill->amount_min, $currency->decimal_places),
+                                'trigger_value'   => round((float)$bill->amount_min, $currency->decimal_places),
                                 'active'          => 1,
                                 'stop_processing' => 0,
                                 'order'           => 3,
@@ -294,7 +295,7 @@ class UpgradeDatabase extends Command
             function (Account $account) use ($repository) {
                 $repository->setUser($account->user);
                 // get users preference, fall back to system pref.
-                $defaultCurrencyCode = Preferences::getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+                $defaultCurrencyCode = app('preferences')->getForUser($account->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
                 $defaultCurrency     = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
                 $accountCurrency     = (int)$repository->getMetaValue($account, 'currency_id');
                 $openingBalance      = $account->getOpeningBalance();

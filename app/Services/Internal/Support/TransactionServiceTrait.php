@@ -51,47 +51,30 @@ trait TransactionServiceTrait
      * @param string             $direction
      *
      * @return string|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function accountType(TransactionJournal $journal, string $direction): ?string
     {
         $types = [];
         $type  = $journal->transactionType->type;
-        switch ($type) {
-            default:
-                // @codeCoverageIgnoreStart
-                Log::error(sprintf('Cannot handle type "%s" in accountType()', $type));
-
-                return null;
-            // @codeCoverageIgnoreEnd
-            case TransactionType::WITHDRAWAL:
-                $types['source']      = AccountType::ASSET;
-                $types['destination'] = AccountType::EXPENSE;
-                break;
-            case TransactionType::DEPOSIT:
-                $types['source']      = AccountType::REVENUE;
-                $types['destination'] = AccountType::ASSET;
-                break;
-            case TransactionType::TRANSFER:
-                $types['source']      = AccountType::ASSET;
-                $types['destination'] = AccountType::ASSET;
-                break;
-            case TransactionType::RECONCILIATION:
-                // always NULL, since this is handled by the reconciliation.
-                $types['source']      = null;
-                $types['destination'] = null;
-
-                // return here:
-                return $types[$direction];
+        if (TransactionType::WITHDRAWAL === $type) {
+            $types['source']      = AccountType::ASSET;
+            $types['destination'] = AccountType::EXPENSE;
         }
-        if (!isset($types[$direction])) {
-            // @codeCoverageIgnoreStart
-            Log::error(sprintf('No type set for direction "%s" and type "%s"', $type, $direction));
-
-            return null;
-            // @codeCoverageIgnoreEnd
+        if (TransactionType::DEPOSIT === $type) {
+            $types['source']      = AccountType::REVENUE;
+            $types['destination'] = AccountType::ASSET;
+        }
+        if (TransactionType::TRANSFER === $type) {
+            $types['source']      = AccountType::ASSET;
+            $types['destination'] = AccountType::ASSET;
+        }
+        if (TransactionType::RECONCILIATION === $type) {
+            $types['source']      = null;
+            $types['destination'] = null;
         }
 
-        return $types[$direction];
+        return $types[$direction] ?? null;
     }
 
     /**
@@ -100,6 +83,8 @@ trait TransactionServiceTrait
      * @param string|null $accountName
      *
      * @return Account|null
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account
     {
@@ -114,57 +99,23 @@ trait TransactionServiceTrait
             return $repository->findNull($accountId);
         }
 
-        switch ($expectedType) {
-            case AccountType::ASSET:
-                if ($accountId > 0) {
-                    // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $repository->findNull($accountId);
-                }
-
-                // alternatively, return by name. Validator should catch invalid names.
-                return $repository->findByName($accountName, [AccountType::ASSET]);
-                break;
-            case AccountType::EXPENSE:
-                if ($accountId > 0) {
-                    // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $repository->findNull($accountId);
-                }
-                if (\strlen($accountName) > 0) {
-                    /** @var AccountFactory $factory */
-                    $factory = app(AccountFactory::class);
-                    $factory->setUser($this->user);
-
-                    return $factory->findOrCreate($accountName, AccountType::EXPENSE);
-                }
-
-                // return cash account:
-                return $repository->getCashAccount();
-                break;
-            case AccountType::REVENUE:
-                if ($accountId > 0) {
-                    // must be able to find it based on ID. Validator should catch invalid ID's.
-                    return $repository->findNull($accountId);
-                }
-                if (\strlen($accountName) > 0) {
-                    // alternatively, return by name.
-                    /** @var AccountFactory $factory */
-                    $factory = app(AccountFactory::class);
-                    $factory->setUser($this->user);
-
-                    return $factory->findOrCreate($accountName, AccountType::REVENUE);
-                }
-
-                // return cash account:
-                return $repository->getCashAccount();
-
-            default:
-                // @codeCoverageIgnoreStart
-                Log::error(sprintf('Cannot find account of type "%s".', $expectedType));
-
-                return null;
-            // @codeCoverageIgnoreEnd
-
+        if ($accountId > 0) {
+            // must be able to find it based on ID. Validator should catch invalid ID's.
+            return $repository->findNull($accountId);
         }
+        if (AccountType::ASSET === $expectedType) {
+            return $repository->findByName($accountName, [AccountType::ASSET]);
+        }
+        // for revenue and expense:
+        if (\strlen($accountName) > 0) {
+            /** @var AccountFactory $factory */
+            $factory = app(AccountFactory::class);
+            $factory->setUser($this->user);
+
+            return $factory->findOrCreate($accountName, $expectedType);
+        }
+
+        return $repository->getCashAccount();
     }
 
     /**

@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 class TransactionCurrencies implements MapperInterface
 {
     /**
+     * Get map of currencies.
+     *
      * @return array
      */
     public function getMap(): array
@@ -44,7 +46,7 @@ class TransactionCurrencies implements MapperInterface
         }
         asort($list);
 
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Konto aktywów (IBAN)',
     'column_account-id'                    => 'ID konta aktywów (z bazy FF3)',
     'column_account-name'                  => 'Konto aktywów (nazwa)',
+    'column_account-bic'                  => 'Asset account (BIC)',
     'column_amount'                        => 'Kwota',
     'column_amount_foreign'                => 'Kwota (w obcej walucie)',
     'column_amount_debit'                  => 'Kwota (kolumna debetowa)',

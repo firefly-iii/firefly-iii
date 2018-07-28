@@ -35,6 +35,9 @@ use Log;
 
 /**
  * Class PiggyBankRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class PiggyBankRepository implements PiggyBankRepositoryInterface
 {
@@ -86,8 +89,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function canAddAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $leftOnAccount = $piggyBank->leftOnAccount(new Carbon);
-        $savedSoFar    = (string)$piggyBank->currentRelevantRep()->currentamount;
+        $leftOnAccount = $this->leftOnAccount($piggyBank, new Carbon);
+        $savedSoFar    = (string)$this->getRepetition($piggyBank)->currentamount;
         $leftToSave    = bcsub($piggyBank->targetamount, $savedSoFar);
         $maxAmount     = (string)min(round($leftOnAccount, 12), round($leftToSave, 12));
 
@@ -176,22 +179,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param int $piggyBankid
-     *
-     * @deprecated
-     * @return PiggyBank
-     */
-    public function find(int $piggyBankid): PiggyBank
-    {
-        $piggyBank = $this->user->piggyBanks()->where('piggy_banks.id', $piggyBankid)->first(['piggy_banks.*']);
-        if (null !== $piggyBank) {
-            return $piggyBank;
-        }
-
-        return new PiggyBank();
-    }
-
-    /**
      * Find by name or return NULL.
      *
      * @param string $name
@@ -261,6 +248,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param TransactionJournal  $journal
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getExactAmount(PiggyBank $piggyBank, PiggyBankRepetition $repetition, TransactionJournal $journal): string
     {
@@ -272,7 +260,6 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $sources = $repos->getJournalSourceAccounts($journal)->pluck('id')->toArray();
         $room    = bcsub((string)$piggyBank->targetamount, (string)$repetition->currentamount);
         $compare = bcmul($repetition->currentamount, '-1');
-
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if piggy account matches source account, the amount is positive
@@ -326,13 +313,16 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function getPiggyBanksWithAmount(): Collection
     {
-        $currency = app('amount')->getDefaultCurrency();
-        $set      = $this->getPiggyBanks();
-        foreach ($set as $piggy) {
-            $currentAmount = $piggy->currentRelevantRep()->currentamount ?? '0';
 
-            $piggy->name = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
+        $currency = app('amount')->getDefaultCurrency();
+
+        $set = $this->getPiggyBanks();
+        /** @var PiggyBank $piggy */
+        foreach ($set as $piggy) {
+            $currentAmount = $this->getRepetition($piggy)->currentamount ?? '0';
+            $piggy->name   = $piggy->name . ' (' . app('amount')->formatAnything($currency, $currentAmount, false) . ')';
         }
+
 
         return $set;
     }
@@ -353,6 +343,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param PiggyBank $piggyBank
      *
      * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string
     {
@@ -415,30 +406,12 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function removeAmount(PiggyBank $piggyBank, string $amount): bool
     {
-        $repetition                = $piggyBank->currentRelevantRep();
+        $repetition                = $this->getRepetition($piggyBank);
         $repetition->currentamount = bcsub($repetition->currentamount, $amount);
         $repetition->save();
 
         // create event
         $this->createEvent($piggyBank, bcmul($amount, '-1'));
-
-        return true;
-    }
-
-    /**
-     * Set all piggy banks to order 0.
-     *
-     * @return bool
-     */
-    public function reset(): bool
-    {
-        // split query to make it work in sqlite:
-        $set = PiggyBank::leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.id')
-                        ->where('accounts.user_id', $this->user->id)->get(['piggy_banks.*']);
-        foreach ($set as $e) {
-            $e->order = 0;
-            $e->save();
-        }
 
         return true;
     }
@@ -478,7 +451,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $piggyBank */
         $piggyBank = PiggyBank::create($data);
 
-        $this->updateNote($piggyBank, $data['note']); // todo rename to 'notes'
+        $this->updateNote($piggyBank, $data['note']);
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
@@ -501,7 +474,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         $piggyBank->name         = $data['name'];
         $piggyBank->account_id   = (int)$data['account_id'];
         $piggyBank->targetamount = $data['targetamount'];
-        $piggyBank->targetdate   = $data['targetdate'] ?? $piggyBank->targetdate;
+        $piggyBank->targetdate   = $data['targetdate'];
         $piggyBank->startdate    = $data['startdate'] ?? $piggyBank->startdate;
 
         $piggyBank->save();
@@ -530,7 +503,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     private function updateNote(PiggyBank $piggyBank, string $note): bool
     {
-        if (0 === \strlen($note)) {
+        if ('' === $note) {
             $dbNote = $piggyBank->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();

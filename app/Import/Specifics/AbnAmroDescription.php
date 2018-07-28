@@ -32,12 +32,14 @@ namespace FireflyIII\Import\Specifics;
  */
 class AbnAmroDescription implements SpecificInterface
 {
-    /** @var array */
+    /** @var array The current row. */
     public $row;
 
     /**
-     * @codeCoverageIgnore
+     * Description of this specific fix.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getDescription(): string
     {
@@ -45,8 +47,10 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Name of specific fix.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getName(): string
     {
@@ -54,9 +58,13 @@ class AbnAmroDescription implements SpecificInterface
     }
 
     /**
+     * Run the fix.
+     *
      * @param array $row
      *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function run(array $row): array
     {
@@ -72,7 +80,7 @@ class AbnAmroDescription implements SpecificInterface
         // If the description could not be parsed, specify an unknown opposing
         // account, as an opposing account is required
         if (!$parsed) {
-            $this->row[8] = trans('firefly.unknown'); // opposing-account-name
+            $this->row[8] = (string)trans('firefly.unknown'); // opposing-account-name
         }
 
         return $this->row;
@@ -122,9 +130,10 @@ class AbnAmroDescription implements SpecificInterface
     /**
      * Parses the current description in SEPA format.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
      * @return bool true if the description is SEPA format, false otherwise
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function parseSepaDescription(): bool
     {
@@ -165,7 +174,7 @@ class AbnAmroDescription implements SpecificInterface
             // Set a new description for the current transaction. If none was given
             // set the description to type, name and reference
             $this->row[7] = $newDescription;
-            if (0 === \strlen($newDescription)) {
+            if ('' === $newDescription) {
                 $this->row[7] = sprintf('%s - %s (%s)', $type, $name, $reference);
             }
 
@@ -179,6 +188,9 @@ class AbnAmroDescription implements SpecificInterface
      * Parses the current description in TRTP format.
      *
      * @return bool true if the description is TRTP format, false otherwise
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     protected function parseTRTPDescription(): bool
     {
@@ -220,7 +232,7 @@ class AbnAmroDescription implements SpecificInterface
                 // Set a new description for the current transaction. If none was given
                 // set the description to type, name and reference
                 $this->row[7] = $newDescription;
-                if (0 === \strlen($newDescription)) {
+                if ('' === $newDescription) {
                     $this->row[7] = sprintf('%s - %s (%s)', $type, $name, $reference);
                 }
             }

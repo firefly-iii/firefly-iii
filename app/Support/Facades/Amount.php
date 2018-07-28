@@ -22,11 +22,22 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Facades;
 
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
 /**
  * @codeCoverageIgnore
  * Class Amount.
+ *
+ * @method string formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true)
+ * @method Collection getAllCurrencies()
+ * @method string getCurrencyCode()
+ * @method string getCurrencySymbol()
+ * @method TransactionCurrency getDefaultCurrency()
+ * @method TransactionCurrency getDefaultCurrencyByUser(User $user)
+ * @method array getJsConfig(array $config)
  */
 class Amount extends Facade
 {

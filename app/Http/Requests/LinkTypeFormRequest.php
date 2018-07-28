@@ -28,6 +28,8 @@ namespace FireflyIII\Http\Requests;
 class LinkTypeFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -37,6 +39,8 @@ class LinkTypeFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

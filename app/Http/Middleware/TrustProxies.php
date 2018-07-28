@@ -27,12 +27,13 @@ use Illuminate\Contracts\Config\Repository;
 use Illuminate\Http\Request;
 
 /**
- * @codeCoverageIgnore
  * Class TrustProxies
+ *
+ * @codeCoverageIgnore
  */
 class TrustProxies extends Middleware
 {
-    /** @var int */
+    /** @var int The headers to check. */
     protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
     /**
@@ -40,7 +41,7 @@ class TrustProxies extends Middleware
      *
      * @var array|string
      */
-    protected $proxies;
+    protected $proxies = [];
 
     /**
      * TrustProxies constructor.
@@ -49,17 +50,8 @@ class TrustProxies extends Middleware
      */
     public function __construct(Repository $config)
     {
-        $trustedProxies = env('TRUSTED_PROXIES', null);
-        if (false !== $trustedProxies && null !== $trustedProxies && \strlen($trustedProxies) > 0) {
-            if ('*' === $trustedProxies || '**' === $trustedProxies) {
-                $this->proxies = $trustedProxies;
-
-            }
-            if ('*' !== $trustedProxies && '**' !== $trustedProxies) {
-                $this->proxies = explode(',', $trustedProxies);
-            }
-        }
-
+        $trustedProxies = (string)env('TRUSTED_PROXIES', null);
+        $this->proxies  = explode(',', $trustedProxies);
         parent::__construct($config);
     }
 }

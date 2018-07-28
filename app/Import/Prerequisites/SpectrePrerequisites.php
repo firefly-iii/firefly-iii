@@ -32,7 +32,7 @@ use Log;
  */
 class SpectrePrerequisites implements PrerequisitesInterface
 {
-    /** @var User */
+    /** @var User The current user */
     private $user;
 
     /**
@@ -156,6 +156,8 @@ class SpectrePrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Check if we have the App ID.
+     *
      * @return bool
      */
     private function hasAppId(): bool
@@ -172,6 +174,8 @@ class SpectrePrerequisites implements PrerequisitesInterface
     }
 
     /**
+     * Check if we have the secret.
+     *
      * @return bool
      */
     private function hasSecret(): bool

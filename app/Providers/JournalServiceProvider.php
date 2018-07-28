@@ -38,14 +38,14 @@ class JournalServiceProvider extends ServiceProvider
     /**
      * Bootstrap the application services.
      */
-    public function boot()
+    public function boot(): void
     {
     }
 
     /**
      * Register the application services.
      */
-    public function register()
+    public function register(): void
     {
         $this->registerRepository();
         $this->registerCollector();
@@ -54,7 +54,7 @@ class JournalServiceProvider extends ServiceProvider
     /**
      * Register the collector.
      */
-    private function registerCollector()
+    private function registerCollector(): void
     {
         $this->app->bind(
             JournalCollectorInterface::class,
@@ -73,7 +73,7 @@ class JournalServiceProvider extends ServiceProvider
     /**
      * Register repository.
      */
-    private function registerRepository()
+    private function registerRepository(): void
     {
         $this->app->bind(
             JournalRepositoryInterface::class,

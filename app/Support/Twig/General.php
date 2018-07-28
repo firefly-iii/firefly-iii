@@ -150,6 +150,7 @@ class General extends Twig_Extension
                 if (null === $account) {
                     return 'NULL';
                 }
+                /** @var Carbon $date */
                 $date = session('end', Carbon::now()->endOfMonth());
 
                 return app('steam')->balance($account, $date);
@@ -173,7 +174,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function formatDate()
+    protected function formatDate(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'formatDate',
@@ -329,7 +330,7 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function phpdate()
+    protected function phpdate(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
             'phpdate',

@@ -40,6 +40,7 @@ class ListAccountsRequest extends SpectreRequest
 
     /**
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function call(): void
     {
@@ -60,8 +61,6 @@ class ListAccountsRequest extends SpectreRequest
                 $hasNextPage = true;
                 $nextId      = $response['meta']['next_id'];
                 Log::debug(sprintf('Next ID is now %d.', $nextId));
-            } else {
-                Log::debug('No next page.');
             }
 
             // store customers:

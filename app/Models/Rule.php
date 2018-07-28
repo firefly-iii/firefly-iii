@@ -83,7 +83,10 @@ class Rule extends Model
     {
         if (auth()->check()) {
             $ruleId = (int)$value;
-            $rule   = auth()->user()->rules()->find($ruleId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Rule $rule */
+            $rule   = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
             }

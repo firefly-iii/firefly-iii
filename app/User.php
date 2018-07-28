@@ -46,23 +46,25 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasManyThrough;
-use Illuminate\Database\QueryException;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Collection;
 use Laravel\Passport\HasApiTokens;
-use Log;
 use Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class User.
  *
- * @property int    $id
- * @property string $email
- * @property bool   $isAdmin used in admin user controller.
- * @property bool   $has2FA used in admin user controller.
- * @property array  $prefs used in admin user controller.
- * @property mixed  password
+ * @property int        $id
+ * @property string     $email
+ * @property bool       $isAdmin used in admin user controller.
+ * @property bool       $has2FA  used in admin user controller.
+ * @property array      $prefs   used in admin user controller.
+ * @property string      password
+ * @property Collection roles
+ * @property string     blocked_code
+ * @property bool       blocked
  */
 class User extends Authenticatable
 {
@@ -125,30 +127,6 @@ class User extends Authenticatable
     public function accounts(): HasMany
     {
         return $this->hasMany(Account::class);
-    }
-
-    /**
-     * Alias to eloquent many-to-many relation's attach() method.
-     *
-     * Full credit goes to: https://github.com/Zizaco/entrust
-     *
-     * @param mixed $role
-     */
-    public function attachRole($role)
-    {
-        if (\is_object($role)) {
-            $role = $role->getKey();
-        }
-
-        if (\is_array($role)) {
-            $role = $role['id'];
-        }
-        try {
-            $this->roles()->attach($role);
-        } catch (QueryException $e) {
-            // don't care
-            Log::info(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
-        }
     }
 
     /**
@@ -239,28 +217,6 @@ class User extends Authenticatable
         $bytes = random_bytes(16);
 
         return (string)bin2hex($bytes);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * Checks if the user has a role by its name.
-     *
-     * Full credit goes to: https://github.com/Zizaco/entrust
-     *
-     * @param string $name
-     *
-     * @deprecated
-     * @return bool
-     */
-    public function hasRole(string $name): bool
-    {
-        foreach ($this->roles as $role) {
-            if ($role->name === $name) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     /**

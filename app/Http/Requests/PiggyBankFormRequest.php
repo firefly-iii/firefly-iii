@@ -28,6 +28,8 @@ namespace FireflyIII\Http\Requests;
 class PiggyBankFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -37,6 +39,8 @@ class PiggyBankFormRequest extends Request
     }
 
     /**
+     * Returns the data required by the controller.
+     *
      * @return array
      */
     public function getPiggyBankData(): array
@@ -52,6 +56,8 @@ class PiggyBankFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

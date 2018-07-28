@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -32,6 +31,8 @@ use Log;
 class IntroController
 {
     /**
+     * Returns the introduction wizard for a page.
+     *
      * @param string      $route
      * @param string|null $specificPage
      *
@@ -67,6 +68,8 @@ class IntroController
     }
 
     /**
+     * Returns true if there is a general outro step.
+     *
      * @param string $route
      *
      * @return bool
@@ -90,6 +93,8 @@ class IntroController
     }
 
     /**
+     * Enable the boxes for a specific page again.
+     *
      * @param string      $route
      * @param string|null $specialPage
      *
@@ -104,12 +109,14 @@ class IntroController
             $key .= '_' . $specialPage;
         }
         Log::debug(sprintf('Going to mark the following route as NOT done: %s with special "%s" (%s)', $route, $specialPage, $key));
-        Preferences::set($key, false);
+        app('preferences')->set($key, false);
 
-        return response()->json(['message' => trans('firefly.intro_boxes_after_refresh')]);
+        return response()->json(['message' => (string)trans('firefly.intro_boxes_after_refresh')]);
     }
 
     /**
+     * Set that you saw them.
+     *
      * @param string      $route
      * @param string|null $specialPage
      *
@@ -123,12 +130,14 @@ class IntroController
             $key .= '_' . $specialPage;
         }
         Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
-        Preferences::set($key, true);
+        app('preferences')->set($key, true);
 
         return response()->json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }
 
     /**
+     * Get the basic steps from config.
+     *
      * @param string $route
      *
      * @return array
@@ -143,7 +152,7 @@ class IntroController
                 $currentStep = $options;
 
                 // get the text:
-                $currentStep['intro'] = trans('intro.' . $route . '_' . $key);
+                $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $key);
 
                 // save in array:
                 $steps[] = $currentStep;
@@ -155,10 +164,13 @@ class IntroController
     }
 
     /**
+     * Get specific info for special routes.
+     *
      * @param string $route
      * @param string $specificPage
      *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getSpecificSteps(string $route, string $specificPage): array
     {
@@ -174,7 +186,7 @@ class IntroController
                     $currentStep = $options;
 
                     // get the text:
-                    $currentStep['intro'] = trans('intro.' . $route . '_' . $specificPage . '_' . $key);
+                    $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $specificPage . '_' . $key);
 
                     // save in array:
                     $steps[] = $currentStep;

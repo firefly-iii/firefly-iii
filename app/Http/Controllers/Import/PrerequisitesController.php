@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Import;
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Models\ImportJob;
@@ -37,11 +36,11 @@ use Log;
 class PrerequisitesController extends Controller
 {
 
-    /** @var ImportJobRepositoryInterface */
+    /** @var ImportJobRepositoryInterface The import job repository */
     private $repository;
 
     /**
-     *
+     * PrerequisitesController constructor.
      */
     public function __construct()
     {
@@ -50,7 +49,7 @@ class PrerequisitesController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-archive');
-                app('view')->share('title', trans('firefly.import_index_title'));
+                app('view')->share('title', (string)trans('firefly.import_index_title'));
                 app('view')->share('subTitleIcon', 'fa-check');
 
                 $this->repository = app(ImportJobRepositoryInterface::class);
@@ -68,7 +67,8 @@ class PrerequisitesController extends Controller
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function index(string $importProvider, ImportJob $importJob = null)
     {
@@ -76,16 +76,13 @@ class PrerequisitesController extends Controller
         $allowed = ['new'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::index() only accepts %s', $importJob->status, json_encode($allowed)));
-            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+            session()->flash('error', (string)trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
         }
 
-        app('view')->share('subTitle', trans('import.prerequisites_breadcrumb_' . $importProvider));
+        app('view')->share('subTitle', (string)trans('import.prerequisites_breadcrumb_' . $importProvider));
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('No class to handle prerequisites for "%s".', $importProvider)); // @codeCoverageIgnore
-        }
         /** @var User $user */
         $user = auth()->user();
         /** @var PrerequisitesInterface $object */
@@ -121,8 +118,8 @@ class PrerequisitesController extends Controller
      * @param ImportJob $importJob
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function post(Request $request, string $importProvider, ImportJob $importJob = null)
     {
@@ -132,16 +129,13 @@ class PrerequisitesController extends Controller
         $allowed = ['new'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
             Log::error(sprintf('Job has state "%s" but this Prerequisites::post() only accepts %s', $importJob->status, json_encode($allowed)));
-            session()->flash('error', trans('import.bad_job_status', ['status' => $importJob->status]));
+            session()->flash('error', (string)trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));
         }
 
 
         $class = (string)config(sprintf('import.prerequisites.%s', $importProvider));
-        if (!class_exists($class)) {
-            throw new FireflyException(sprintf('Cannot find class %s', $class)); // @codeCoverageIgnore
-        }
         /** @var User $user */
         $user = auth()->user();
         /** @var PrerequisitesInterface $object */

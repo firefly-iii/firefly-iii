@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -34,7 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $updated_at
  * @property string $text
  * @property string $title
- * @property int $noteable_id
+ * @property int    $noteable_id
  */
 class Note extends Model
 {
@@ -58,7 +59,7 @@ class Note extends Model
      *
      * Get all of the owning noteable models.
      */
-    public function noteable()
+    public function noteable(): MorphTo
     {
         return $this->morphTo();
     }
@@ -66,7 +67,7 @@ class Note extends Model
     /**
      * @param $value
      */
-    public function setTextAttribute($value)
+    public function setTextAttribute($value): void
     {
         $this->attributes['text'] = e($value);
     }

@@ -75,7 +75,7 @@ But actually, it features:
 * 2 factor authentication for extra security 🔒
 * Supports any currency you want, including [crypto currencies](https://firefly-iii.readthedocs.io/en/latest/concepts/currencies.html) such as ₿itcoin  and Ξthereum
 * Lots of help text in case you don’t get it
-* Translations into 10(!) languages, proudly powered by Crowdin
+* Translations into 10(!) languages, proudly powered by [Crowdin](https://crowdin.com/project/firefly-iii).
 
 Everything is organised:
 
@@ -102,7 +102,7 @@ There are many ways to run Firefly III
 9. *Even more options are on the way!*
 
 ### Update your instance
-Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. Upgrade instructions can be found with the installation instructions.
+Make sure you check for updates regularly. Your Firefly III instance will ask you to do this. [Upgrade instructions](https://firefly-iii.readthedocs.io/en/latest/installation/upgrading.html) can be found in the [official documentation](https://firefly-iii.readthedocs.io/en/latest/index.html).
 
 ## Contribute
 Your help is always welcome! Feel free to open issues, ask questions, talk about it and discuss this tool. I've create several social media accounts and I invite you to follow them, tweet at them and post to them. There's [reddit](https://www.reddit.com/r/FireflyIII/), [Twitter](https://twitter.com/Firefly_III) and [Facebook](https://www.facebook.com/FireflyIII/) just to start. It's not very active but it's a start!

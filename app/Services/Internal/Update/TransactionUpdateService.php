@@ -69,13 +69,19 @@ class TransactionUpdateService
      * @param array       $data
      *
      * @return Transaction
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      */
     public function update(Transaction $transaction, array $data): Transaction
     {
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $journal     = $transaction->transactionJournal;
         $description = $journal->description === $data['description'] ? null : $data['description'];
-
+        $amount      = (string)$data['amount'];
+        $account     = null;
         // update description:
         $transaction->description = $description;
         $foreignAmount            = null;
@@ -83,7 +89,7 @@ class TransactionUpdateService
             // this is the source transaction.
             $type          = $this->accountType($journal, 'source');
             $account       = $this->findAccount($type, $data['source_id'], $data['source_name']);
-            $amount        = app('steam')->negative((string)$data['amount']);
+            $amount        = app('steam')->negative($amount);
             $foreignAmount = app('steam')->negative((string)$data['foreign_amount']);
         }
 
@@ -91,7 +97,7 @@ class TransactionUpdateService
             // this is the destination transaction.
             $type          = $this->accountType($journal, 'destination');
             $account       = $this->findAccount($type, $data['destination_id'], $data['destination_name']);
-            $amount        = app('steam')->positive((string)$data['amount']);
+            $amount        = app('steam')->positive($amount);
             $foreignAmount = app('steam')->positive((string)$data['foreign_amount']);
         }
 
@@ -99,7 +105,7 @@ class TransactionUpdateService
         $transaction->description             = $description;
         $transaction->amount                  = $amount;
         $transaction->foreign_amount          = null;
-        $transaction->transaction_currency_id = $currency->id;
+        $transaction->transaction_currency_id = null === $currency ? $transaction->transaction_currency_id : $currency->id;
         $transaction->account_id              = $account->id;
         $transaction->reconciled              = $data['reconciled'];
         $transaction->save();
@@ -107,11 +113,11 @@ class TransactionUpdateService
         // set foreign currency
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         // set foreign amount:
-        if (null !== $data['foreign_amount'] && null !== $foreign) {
+        if (null !== $foreign && null !== $data['foreign_amount']) {
             $this->setForeignCurrency($transaction, $foreign);
             $this->setForeignAmount($transaction, $foreignAmount);
         }
-        if (null === $data['foreign_amount'] || null === $foreign) {
+        if (null === $foreign || null === $data['foreign_amount']) {
             $this->setForeignCurrency($transaction, null);
             $this->setForeignAmount($transaction, null);
         }

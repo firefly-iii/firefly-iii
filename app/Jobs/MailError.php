@@ -37,13 +37,13 @@ class MailError extends Job implements ShouldQueue
 {
     use InteractsWithQueue, SerializesModels;
 
-    /** @var string */
+    /** @var string Destination */
     protected $destination;
-    /** @var array */
+    /** @var array Exception information */
     protected $exception;
-    /** @var string */
+    /** @var string IP address */
     protected $ipAddress;
-    /** @var array */
+    /** @var array User information */
     protected $userData;
 
     /**
@@ -70,15 +70,13 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle()
     {
+        $email            = env('SITE_OWNER');
+        $args             = $this->exception;
+        $args['loggedIn'] = $this->userData['id'] > 0;
+        $args['user']     = $this->userData;
+        $args['ip']       = $this->ipAddress;
         if ($this->attempts() < 3) {
-            // mail?
             try {
-                $email            = env('SITE_OWNER');
-                $args             = $this->exception;
-                $args['loggedIn'] = $this->userData['id'] > 0;
-                $args['user']     = $this->userData;
-                $args['ip']       = $this->ipAddress;
-
                 Mail::send(
                     ['emails.error-html', 'emails.error-text'],
                     $args,

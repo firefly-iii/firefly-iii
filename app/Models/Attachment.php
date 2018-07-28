@@ -27,6 +27,7 @@ use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -78,7 +79,10 @@ class Attachment extends Model
     {
         if (auth()->check()) {
             $attachmentId = (int)$value;
-            $attachment   = auth()->user()->attachments()->find($attachmentId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Attachment $attachment */
+            $attachment   = $user->attachments()->find($attachmentId);
             if (null !== $attachment) {
                 return $attachment;
             }
@@ -177,7 +181,7 @@ class Attachment extends Model
      * @codeCoverageIgnore
      * Get all of the notes.
      */
-    public function notes()
+    public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
     }

@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 class Bills implements MapperInterface
 {
     /**
+     * Get map of bills.
+     *
      * @return array
      */
     public function getMap(): array
@@ -46,7 +48,7 @@ class Bills implements MapperInterface
             $list[$billId] = $bill->name;
         }
         asort($list);
-        $list = [0 => trans('import.map_do_not_map')] + $list;
+        $list = [0 => (string)trans('import.map_do_not_map')] + $list;
 
         return $list;
     }

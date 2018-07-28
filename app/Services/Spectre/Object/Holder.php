@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Spectre\Object;
 
 /**
- * @codeCoverageIgnore
  * Class Holder
+ *
+ * @codeCoverageIgnore
  */
 class Holder extends SpectreObject
 {
@@ -33,6 +34,7 @@ class Holder extends SpectreObject
      * Holder constructor.
      *
      * @param array $data
+     * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(array $data)
     {

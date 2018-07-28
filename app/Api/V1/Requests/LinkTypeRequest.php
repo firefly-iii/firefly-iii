@@ -71,7 +71,6 @@ class LinkTypeRequest extends Request
             'outward' => 'required|unique:link_types,outward|min:1|different:inward',
             'inward'  => 'required|unique:link_types,inward|min:1|different:outward',
         ];
-        //        Rule::unique('users')->ignore($user->id),
 
 
         switch ($this->method()) {

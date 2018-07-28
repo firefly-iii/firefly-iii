@@ -30,6 +30,8 @@ use Illuminate\Validation\Validator;
 class SplitJournalFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,7 +41,12 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
+     * Get all info for the controller.
+     *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getAll(): array
     {
@@ -104,6 +111,8 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array
@@ -146,7 +155,11 @@ class SplitJournalFormRequest extends Request
     }
 
     /**
+     * Verify that source and destination are not the same.
+     *
      * @param Validator $validator
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function sameAccounts(Validator $validator): void
     {
@@ -155,8 +168,8 @@ class SplitJournalFormRequest extends Request
         /** @var array $array */
         foreach ($transactions as $array) {
             if (null !== $array['destination_id'] && null !== $array['source_id'] && $array['destination_id'] === $array['source_id']) {
-                $validator->errors()->add('journal_source_id', trans('validation.source_equals_destination'));
-                $validator->errors()->add('journal_destination_id', trans('validation.source_equals_destination'));
+                $validator->errors()->add('journal_source_id', (string)trans('validation.source_equals_destination'));
+                $validator->errors()->add('journal_destination_id', (string)trans('validation.source_equals_destination'));
             }
         }
 

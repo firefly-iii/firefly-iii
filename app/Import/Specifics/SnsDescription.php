@@ -28,8 +28,10 @@ namespace FireflyIII\Import\Specifics;
 class SnsDescription implements SpecificInterface
 {
     /**
-     * @codeCoverageIgnore
+     * Get description of specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getDescription(): string
     {
@@ -37,8 +39,10 @@ class SnsDescription implements SpecificInterface
     }
 
     /**
-     * @codeCoverageIgnore
+     * Get name of specific.
+     *
      * @return string
+     * @codeCoverageIgnore
      */
     public static function getName(): string
     {
@@ -46,6 +50,8 @@ class SnsDescription implements SpecificInterface
     }
 
     /**
+     * Run specific.
+     *
      * @param array $row
      *
      * @return array

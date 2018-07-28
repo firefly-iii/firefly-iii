@@ -28,7 +28,6 @@ use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -80,7 +79,7 @@ trait AccountServiceTrait
      *
      * @return null|string
      */
-    public function filterIban(?string $iban)
+    public function filterIban(?string $iban): ?string
     {
         if (null === $iban) {
             return null;
@@ -127,6 +126,7 @@ trait AccountServiceTrait
      *
      * @return TransactionJournal|null
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {
@@ -180,7 +180,7 @@ trait AccountServiceTrait
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($account->user);
-        $one = $factory->create(
+        $factory->create(
             [
                 'account'             => $firstAccount,
                 'transaction_journal' => $journal,
@@ -192,7 +192,7 @@ trait AccountServiceTrait
                 'reconciled'          => false,
             ]
         );
-        $two = $factory->create(
+        $factory->create(
             [
                 'account'             => $secondAccount,
                 'transaction_journal' => $journal,
@@ -204,7 +204,6 @@ trait AccountServiceTrait
                 'reconciled'          => false,
             ]
         );
-        Log::notice(sprintf('Stored two transactions for new account, #%d and #%d', $one->id, $two->id));
 
         return $journal;
     }
@@ -214,6 +213,7 @@ trait AccountServiceTrait
      * @param string $name
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function storeOpposingAccount(User $user, string $name): Account
     {
@@ -231,6 +231,7 @@ trait AccountServiceTrait
      * @param array   $data
      *
      * @return bool
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function updateIB(Account $account, array $data): bool
     {
@@ -262,6 +263,7 @@ trait AccountServiceTrait
      * @param array              $data
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function updateIBJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
@@ -269,7 +271,6 @@ trait AccountServiceTrait
         $amount         = (string)$data['openingBalance'];
         $negativeAmount = bcmul($amount, '-1');
         $currencyId     = (int)$data['currency_id'];
-
         Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
         if (0 === bccomp($amount, '0')) {
             Log::notice(sprintf('Amount "%s" is zero, delete opening balance.', $amount));
@@ -277,16 +278,11 @@ trait AccountServiceTrait
             $service = app(JournalDestroyService::class);
             $service->destroy($journal);
 
-
             return true;
         }
-
-        // update date:
         $journal->date                    = $date;
         $journal->transaction_currency_id = $currencyId;
         $journal->save();
-
-        // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ((int)$account->id === (int)$transaction->account_id) {
@@ -312,43 +308,22 @@ trait AccountServiceTrait
      *
      * @param Account $account
      * @param array   $data
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function updateMetaData(Account $account, array $data)
+    public function updateMetaData(Account $account, array $data): void
     {
         $fields = $this->validFields;
 
         if ($account->accountType->type === AccountType::ASSET) {
             $fields = $this->validAssetFields;
         }
-        if ($account->accountType->type === AccountType::ASSET && $data['accountRole'] === 'ccAsset') {
+        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['accountRole']) {
             $fields = $this->validCCFields;
         }
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
-            /** @var AccountMeta $entry */
-            $entry = $account->accountMeta()->where('name', $field)->first();
-
-            // must not be an empty string:
-            if (isset($data[$field]) && \strlen((string)$data[$field]) > 0) {
-
-                // if $data has field and $entry is null, create new one:
-                if (null === $entry) {
-                    Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
-                    $factory->create(['account_id' => $account->id, 'name' => $field, 'data' => $data[$field],]);
-                }
-
-                // if $data has field and $entry is not null, update $entry:
-                // let's not bother with a service.
-                if (null !== $entry) {
-                    $entry->data = $data[$field];
-                    $entry->save();
-                    Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
-                }
-            }
-            if (null !== $entry && isset($data[$field]) && \strlen((string)$data[$field]) === 0) {
-                $entry->delete();
-            }
+            $factory->crud($account, $field, (string)($data[$field] ?? ''));
         }
     }
 
@@ -360,7 +335,7 @@ trait AccountServiceTrait
      */
     public function updateNote(Account $account, string $note): bool
     {
-        if (0 === \strlen($note)) {
+        if ('' === $note) {
             $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
                 $dbNote->delete();

@@ -30,6 +30,8 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 class RuleFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -39,7 +41,12 @@ class RuleFormRequest extends Request
     }
 
     /**
+     * Get all data for controller.
+     *
      * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getRuleData(): array
     {
@@ -86,6 +93,8 @@ class RuleFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array
@@ -99,7 +108,7 @@ class RuleFormRequest extends Request
         $contextActions = implode(',', config('firefly.rule-actions-text'));
 
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
-        if (null !== $repository->find((int)$this->get('id'))->id) {
+        if (null !== $repository->find((int)$this->get('id'))) {
             $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . (int)$this->get('id');
         }
         $rules = [

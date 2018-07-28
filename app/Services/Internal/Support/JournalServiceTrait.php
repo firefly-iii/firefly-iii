@@ -38,8 +38,11 @@ trait JournalServiceTrait
 {
 
     /**
+     * Link tags to journal.
+     *
      * @param TransactionJournal $journal
      * @param array              $data
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function connectTags(TransactionJournal $journal, array $data): void
     {
@@ -52,8 +55,10 @@ trait JournalServiceTrait
         }
         foreach ($data['tags'] as $string) {
             if (\strlen($string) > 0) {
-                $tag   = $factory->findOrCreate($string);
-                $set[] = $tag->id;
+                $tag = $factory->findOrCreate($string);
+                if (null !== $tag) {
+                    $set[] = $tag->id;
+                }
             }
         }
         $journal->tags()->sync($set);

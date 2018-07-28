@@ -38,6 +38,8 @@ use Log;
 class ReportFormRequest extends Request
 {
     /**
+     * Verify the request.
+     *
      * @return bool
      */
     public function authorize(): bool
@@ -47,6 +49,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate list of accounts.
+     *
      * @return Collection
      */
     public function getAccountList(): Collection
@@ -69,6 +73,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate list of budgets.
+     *
      * @return Collection
      */
     public function getBudgetList(): Collection
@@ -90,6 +96,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate list of categories.
+     *
      * @return Collection
      */
     public function getCategoryList(): Collection
@@ -111,6 +119,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate end date.
+     *
      * @return Carbon
      *
      * @throws FireflyException
@@ -137,6 +147,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate list of expense accounts.
+     *
      * @return Collection
      */
     public function getExpenseList(): Collection
@@ -159,6 +171,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate start date.
+     *
      * @return Carbon
      *
      * @throws FireflyException
@@ -184,6 +198,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Validate list of tags.
+     *
      * @return Collection
      */
     public function getTagList(): Collection
@@ -195,7 +211,7 @@ class ReportFormRequest extends Request
         if (\is_array($set)) {
             foreach ($set as $tagTag) {
                 $tag = $repository->findByTag($tagTag);
-                if (null !== $tag->id) {
+                if (null !== $tag) {
                     $collection->push($tag);
                 }
             }
@@ -205,6 +221,8 @@ class ReportFormRequest extends Request
     }
 
     /**
+     * Rules for this request.
+     *
      * @return array
      */
     public function rules(): array

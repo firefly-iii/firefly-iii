@@ -27,9 +27,6 @@ use Carbon\Carbon;
 use Closure;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\Request;
-use Preferences;
-use Session;
-use View;
 
 /**
  * Class SessionFilter.
@@ -64,25 +61,25 @@ class Range
     }
 
     /**
-     *
+     * Configure the list length.
      */
     private function configureList(): void
     {
-        $pref = Preferences::get('list-length', config('firefly.list_length', 10))->data;
-        View::share('listLength', $pref);
+        $pref = app('preferences')->get('list-length', config('firefly.list_length', 10))->data;
+        app('view')->share('listLength', $pref);
     }
 
     /**
-     *
+     * Configure the user's view.
      */
     private function configureView(): void
     {
-        $pref = Preferences::get('language', config('firefly.default_language', 'en_US'));
+        $pref = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
         /** @noinspection NullPointerExceptionInspection */
         $lang = $pref->data;
         App::setLocale($lang);
         Carbon::setLocale(substr($lang, 0, 2));
-        $locale = explode(',', trans('config.locale'));
+        $locale = explode(',', (string)trans('config.locale'));
         $locale = array_map('trim', $locale);
 
         setlocale(LC_TIME, $locale);
@@ -90,7 +87,7 @@ class Range
 
         // send error to view if could not set money format
         if (false === $moneyResult) {
-            View::share('invalidMonetaryLocale', true); // @codeCoverageIgnore
+            app('view')->share('invalidMonetaryLocale', true); // @codeCoverageIgnore
         }
 
         // save some formats:
@@ -98,12 +95,14 @@ class Range
         $dateTimeFormat    = (string)trans('config.date_time');
         $defaultCurrency   = app('amount')->getDefaultCurrency();
 
-        View::share('monthAndDayFormat', $monthAndDayFormat);
-        View::share('dateTimeFormat', $dateTimeFormat);
-        View::share('defaultCurrency', $defaultCurrency);
+        app('view')->share('monthAndDayFormat', $monthAndDayFormat);
+        app('view')->share('dateTimeFormat', $dateTimeFormat);
+        app('view')->share('defaultCurrency', $defaultCurrency);
     }
 
     /**
+     * Error when sqlite in docker.
+     *
      * @param Request $request
      */
     private function loseItAll(Request $request): void
@@ -116,25 +115,22 @@ class Range
     }
 
     /**
+     * Set the range for the current view.
      *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function setRange(): void
     {
         // ignore preference. set the range to be the current month:
-        if (!Session::has('start') && !Session::has('end')) {
-            $viewRange = Preferences::get('viewRange', '1M')->data;
-            if (null === $viewRange) {
-                $viewRange = '1M';
-                Preferences::set('viewRange', '1M');
-            }
-            $start = new Carbon;
-            $start = app('navigation')->updateStartDate($viewRange, $start);
-            $end   = app('navigation')->updateEndDate($viewRange, $start);
+        if (!app('session')->has('start') && !app('session')->has('end')) {
+            $viewRange = app('preferences')->get('viewRange', '1M')->data;
+            $start     = app('navigation')->updateStartDate($viewRange, new Carbon);
+            $end       = app('navigation')->updateEndDate($viewRange, $start);
 
-            Session::put('start', $start);
-            Session::put('end', $end);
+            app('session')->put('start', $start);
+            app('session')->put('end', $end);
         }
-        if (!Session::has('first')) {
+        if (!app('session')->has('first')) {
             /** @var JournalRepositoryInterface $repository */
             $repository = app(JournalRepositoryInterface::class);
             $journal    = $repository->firstNull();
@@ -143,7 +139,7 @@ class Range
             if (null !== $journal) {
                 $first = $journal->date ?? $first;
             }
-            Session::put('first', $first);
+            app('session')->put('first', $first);
         }
     }
 }

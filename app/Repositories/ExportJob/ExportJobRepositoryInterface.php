@@ -44,9 +44,9 @@ interface ExportJobRepositoryInterface
     public function cleanup(): bool;
 
     /**
-     * @return ExportJob
+     * @return ExportJob|null
      */
-    public function create(): ExportJob;
+    public function create(): ?ExportJob;
 
     /**
      * @param ExportJob $job
@@ -57,10 +57,9 @@ interface ExportJobRepositoryInterface
 
     /**
      * @param string $key
-     *
-     * @return ExportJob
+     * @return ExportJob|null
      */
-    public function findByKey(string $key): ExportJob;
+    public function findByKey(string $key): ?ExportJob;
 
     /**
      * @param ExportJob $job

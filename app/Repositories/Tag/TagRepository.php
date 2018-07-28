@@ -27,7 +27,6 @@ use DB;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
@@ -36,32 +35,13 @@ use Log;
 
 /**
  * Class TagRepository.
+ *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagRepository implements TagRepositoryInterface
 {
     /** @var User */
     private $user;
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Tag                $tag
-     *
-     * @return bool
-     */
-    public function connect(TransactionJournal $journal, Tag $tag): bool
-    {
-        // Already connected:
-        if ($journal->tags()->find($tag->id)) {
-            Log::info(sprintf('Tag #%d is already connected to journal #%d.', $tag->id, $journal->id));
-
-            return false;
-        }
-        Log::debug(sprintf('Tag #%d connected', $tag->id));
-        $journal->tags()->save($tag);
-        $journal->save();
-
-        return true;
-    }
 
     /**
      * @return int
@@ -103,27 +83,11 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param int $tagId
-     *
-     * @deprecated
-     * @return Tag
-     */
-    public function find(int $tagId): Tag
-    {
-        $tag = $this->user->tags()->find($tagId);
-        if (null === $tag) {
-            $tag = new Tag;
-        }
-
-        return $tag;
-    }
-
-    /**
      * @param string $tag
      *
-     * @return Tag
+     * @return Tag|null
      */
-    public function findByTag(string $tag): Tag
+    public function findByTag(string $tag): ?Tag
     {
         $tags = $this->user->tags()->get();
         /** @var Tag $databaseTag */
@@ -133,7 +97,7 @@ class TagRepository implements TagRepositoryInterface
             }
         }
 
-        return new Tag;
+        return null;
     }
 
     /**
@@ -149,16 +113,16 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param Tag $tag
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function firstUseDate(Tag $tag): Carbon
+    public function firstUseDate(Tag $tag): ?Carbon
     {
         $journal = $tag->transactionJournals()->orderBy('date', 'ASC')->first();
         if (null !== $journal) {
             return $journal->date;
         }
 
-        return new Carbon;
+        return null;
     }
 
     /**
@@ -178,28 +142,18 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param string $type
-     *
-     * @return Collection
-     */
-    public function getByType(string $type): Collection
-    {
-        return $this->user->tags()->where('tagMode', $type)->orderBy('date', 'ASC')->get();
-    }
-
-    /**
      * @param Tag $tag
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function lastUseDate(Tag $tag): Carbon
+    public function lastUseDate(Tag $tag): ?Carbon
     {
         $journal = $tag->transactionJournals()->orderBy('date', 'DESC')->first();
         if (null !== $journal) {
             return $journal->date;
         }
 
-        return new Carbon;
+        return null;
     }
 
     /**
@@ -223,7 +177,7 @@ class TagRepository implements TagRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
@@ -272,33 +226,8 @@ class TagRepository implements TagRepositoryInterface
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return string
-     */
-    public function sumOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): string
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-
-        if (null !== $start && null !== $end) {
-            $collector->setRange($start, $end);
-        }
-
-        $collector->setAllAssetAccounts()->setTag($tag);
-        $journals = $collector->getJournals();
-        $sum      = '0';
-        foreach ($journals as $journal) {
-            $sum = bcadd($sum, app('steam')->positive((string)$journal->transaction_amount));
-        }
-
-        return (string)$sum;
-    }
-
-    /**
-     * @param Tag         $tag
-     * @param Carbon|null $start
-     * @param Carbon|null $end
-     *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
@@ -341,84 +270,36 @@ class TagRepository implements TagRepositoryInterface
     public function tagCloud(?int $year): array
     {
         // Some vars
-        $min    = null;
-        $max    = '0';
-        $return = [];
-        // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()
-                               ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                               ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                               ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                               ->where(
-                                   function (Builder $query) {
-                                       $query->where('transactions.amount', '>', 0);
-                                       $query->orWhereNull('transactions.amount');
-                                   }
-                               )
-                               ->groupBy(['tags.id', 'tags.tag']);
-        // add date range (or not):
-        if (null === $year) {
-            Log::debug('Get tags without a date.');
-            $tagQuery->whereNull('tags.date');
-        }
-        if (null !== $year) {
-            Log::debug(sprintf('Get tags with year %s.', $year));
-            $start = $year . '-01-01 00:00:00';
-            $end   = $year . '-12-31 23:59:59';
-            $tagQuery->where('tags.date', '>=', $start)->where('tags.date', '<=', $end);
+        $tags          = $this->getTagsInYear($year);
+        $max           = $this->getMaxAmount($tags);
+        $min           = $this->getMinAmount($tags);
+        $diff          = bcsub($max, $min);
+        $return        = [];
+        $minimumFont   = '12'; // default scale is from 12 to 24, so 12 points.
+        $maxPoints     = '12';
+        $pointsPerCoin = '0';
+
+        Log::debug(sprintf('Minimum is %s, maximum is %s, difference is %s', $min, $max, $diff));
+
+        if (0 !== bccomp($diff, '0')) {// for each full coin in tag, add so many points
+            $pointsPerCoin = bcdiv($maxPoints, $diff);
         }
 
-        $result = $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
-
+        Log::debug(sprintf('Each coin in a tag earns it %s points', $pointsPerCoin));
         /** @var Tag $tag */
-        foreach ($result as $tag) {
-            $tagsWithAmounts[$tag->id] = (string)$tag->amount_sum;
-            $amount                    = \strlen($tagsWithAmounts[$tag->id]) ? $tagsWithAmounts[$tag->id] : '0';
-            if (null === $min) {
-                $min = $amount;
-            }
-            $max = 1 === bccomp($amount, $max) ? $amount : $max;
-            $min = -1 === bccomp($amount, $min) ? $amount : $min;
+        foreach ($tags as $tag) {
+            $amount       = (string)$tag->amount_sum;
+            $amount       = '' === $amount ? '0' : $amount;
+            $pointsForTag = bcmul($amount, $pointsPerCoin);
+            $fontSize     = bcadd($minimumFont, $pointsForTag);
+            Log::debug(sprintf('Tag "%s": Amount is %s, so points is %s', $tag->tag, $amount, $fontSize));
 
-            $temporary[] = [
-                'amount' => $amount,
-                'tag'    => [
-                    'id'  => $tag->id,
-                    'tag' => $tag->tag,
-                ],
-            ];
-            Log::debug(sprintf('After tag "%s", max is %s and min is %s.', $tag->tag, $max, $min));
-        }
-        $min = $min ?? '0';
-        Log::debug(sprintf('FINAL max is %s, FINAL min is %s', $max, $min));
-        // the difference between max and min:
-        $range = bcsub($max, $min);
-        Log::debug(sprintf('The range is: %s', $range));
-
-        // each euro difference is this step in the scale:
-        $step = (float)$range !== 0.0 ? 8 / (float)$range : 0;
-        Log::debug(sprintf('The step is: %f', $step));
-        $return = [];
-
-
-        foreach ($result as $tag) {
-            if ($step === 0) {
-                // easy: size is 12:
-                $size = 12;
-            }
-            if ($step !== 0) {
-                $amount = bcsub((string)$tag->amount_sum, $min);
-                Log::debug(sprintf('Work with amount %s for tag %s', $amount, $tag->tag));
-                $size = ((int)(float)$amount * $step) + 12;
-            }
-
+            // return value for tag cloud:
             $return[$tag->id] = [
-                'size' => $size,
+                'size' => $fontSize,
                 'tag'  => $tag->tag,
                 'id'   => $tag->id,
             ];
-
-            Log::debug(sprintf('Size is %d', $size));
         }
 
         return $return;
@@ -444,33 +325,86 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param array $range
-     * @param float $amount
-     * @param float $min
-     * @param float $max
+     * @param Collection $tags
      *
-     * @return int
+     * @return string
      */
-    private function cloudScale(array $range, float $amount, float $min, float $max): int
+    private function getMaxAmount(Collection $tags): string
     {
-        $amountDiff = $max - $min;
+        $max = '0';
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $amount = (string)$tag->amount_sum;
+            $amount = '' === $amount ? '0' : $amount;
+            $max    = 1 === bccomp($amount, $max) ? $amount : $max;
 
-        // no difference? Every tag same range:
-        if (0.0 === $amountDiff) {
-            return $range[0];
+        }
+        Log::debug(sprintf('Maximum is %s.', $max));
+
+        return $max;
+    }
+
+    /**
+     * @param Collection $tags
+     *
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function getMinAmount(Collection $tags): string
+    {
+        $min = null;
+
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $amount = (string)$tag->amount_sum;
+            $amount = '' === $amount ? '0' : $amount;
+
+            if (null === $min) {
+                $min = $amount;
+            }
+            $min = -1 === bccomp($amount, $min) ? $amount : $min;
         }
 
-        $diff = $range[1] - $range[0];
-        $step = 1;
-        if (0.0 !== $diff) {
-            $step = $amountDiff / $diff;
+
+        if (null === $min) {
+            $min = '0';
         }
-        if (0.0 === $step) {
-            $step = 1;
+        Log::debug(sprintf('Minimum is %s.', $min));
+
+        return $min;
+    }
+
+    /**
+     * @param int|null $year
+     *
+     * @return Collection
+     */
+    private function getTagsInYear(?int $year): Collection
+    {
+        // get all tags in the year (if present):
+        $tagQuery = $this->user->tags()
+                               ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                               ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                               ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                               ->where(
+                                   function (Builder $query) {
+                                       $query->where('transactions.amount', '>', 0);
+                                       $query->orWhereNull('transactions.amount');
+                                   }
+                               )
+                               ->groupBy(['tags.id', 'tags.tag']);
+
+        // add date range (or not):
+        if (null === $year) {
+            Log::debug('Get tags without a date.');
+            $tagQuery->whereNull('tags.date');
+        }
+        if (null !== $year) {
+            Log::debug(sprintf('Get tags with year %s.', $year));
+            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
         }
 
-        $extra = $step / $amount;
+        return $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
 
-        return (int)($range[0] + $extra);
     }
 }

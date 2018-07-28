@@ -46,11 +46,11 @@ class Transaction extends Twig_Extension
      */
     public function amount(TransactionModel $transaction): string
     {
+        // at this point amount is always negative.
         $amount   = bcmul(app('steam')->positive((string)$transaction->transaction_amount), '-1');
         $format   = '%s';
         $coloured = true;
 
-        // at this point amount is always negative.
         if (TransactionType::RECONCILIATION === $transaction->transaction_type_type && 1 === bccomp((string)$transaction->transaction_amount, '0')) {
             $amount = bcmul($amount, '-1');
         }
@@ -136,12 +136,12 @@ class Transaction extends Twig_Extension
         }
 
         // transaction has a budget
-        if (null !== $transaction->transaction_budget_id && $txt === '') {
+        if (null !== $transaction->transaction_budget_id && '' === $txt) {
             $name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
         }
 
-        if ($txt === '') {
+        if ('' === $txt) {
             // see if the transaction has a budget:
             $budgets = $transaction->budgets()->get();
             if (0 === $budgets->count()) {
@@ -174,12 +174,12 @@ class Transaction extends Twig_Extension
         }
 
         // transaction has a category:
-        if (null !== $transaction->transaction_category_id && $txt === '') {
+        if (null !== $transaction->transaction_category_id && '' === $txt) {
             $name = app('steam')->tryDecrypt($transaction->transaction_category_name);
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
         }
 
-        if ($txt === '') {
+        if ('' === $txt) {
             // see if the transaction has a category:
             $categories = $transaction->categories()->get();
             if (0 === $categories->count()) {
@@ -214,8 +214,6 @@ class Transaction extends Twig_Extension
     }
 
     /**
-     * TODO improve code
-     *
      * @param TransactionModel $transaction
      *
      * @return string
@@ -231,14 +229,14 @@ class Transaction extends Twig_Extension
         $type          = $transaction->account_type;
 
         // name is present in object, use that one:
-        if (bccomp($transaction->transaction_amount, '0') === -1 && null !== $transaction->opposing_account_id) {
+        if (null !== $transaction->opposing_account_id && bccomp($transaction->transaction_amount, '0') === -1) {
             $name          = $transaction->opposing_account_name;
             $transactionId = (int)$transaction->opposing_account_id;
             $type          = $transaction->opposing_account_type;
         }
 
         // Find the opposing account and use that one:
-        if (bccomp($transaction->transaction_amount, '0') === -1 && null === $transaction->opposing_account_id) {
+        if (null === $transaction->opposing_account_id && bccomp($transaction->transaction_amount, '0') === -1) {
             // if the amount is negative, find the opposing account and use that one:
             $journalId = $transaction->journal_id;
             /** @var TransactionModel $other */
@@ -287,7 +285,7 @@ class Transaction extends Twig_Extension
             )
             );
         }
-        if ($transaction->attachmentCount === null) {
+        if (null === $transaction->attachmentCount) {
             $journalId = (int)$transaction->journal_id;
             $count     = Attachment::whereNull('deleted_at')
                                    ->where('attachable_type', TransactionJournal::class)
@@ -310,19 +308,19 @@ class Transaction extends Twig_Extension
     {
         switch ($transaction->transaction_type_type) {
             case TransactionType::WITHDRAWAL:
-                $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', trans('firefly.withdrawal'));
+                $txt = sprintf('<i class="fa fa-long-arrow-left fa-fw" title="%s"></i>', (string)trans('firefly.withdrawal'));
                 break;
             case TransactionType::DEPOSIT:
-                $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', trans('firefly.deposit'));
+                $txt = sprintf('<i class="fa fa-long-arrow-right fa-fw" title="%s"></i>', (string)trans('firefly.deposit'));
                 break;
             case TransactionType::TRANSFER:
-                $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', trans('firefly.transfer'));
+                $txt = sprintf('<i class="fa fa-fw fa-exchange" title="%s"></i>', (string)trans('firefly.transfer'));
                 break;
             case TransactionType::OPENING_BALANCE:
-                $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', trans('firefly.opening_balance'));
+                $txt = sprintf('<i class="fa-fw fa fa-star-o" title="%s"></i>', (string)trans('firefly.opening_balance'));
                 break;
             case TransactionType::RECONCILIATION:
-                $txt = sprintf('<i class="fa-fw fa fa-calculator" title="%s"></i>', trans('firefly.reconciliation_transaction'));
+                $txt = sprintf('<i class="fa-fw fa fa-calculator" title="%s"></i>', (string)trans('firefly.reconciliation_transaction'));
                 break;
             default:
                 $txt = '';
@@ -357,11 +355,11 @@ class Transaction extends Twig_Extension
     public function isSplit(TransactionModel $transaction): string
     {
         $res = '';
-        if ($transaction->is_split === true) {
+        if (true === $transaction->is_split) {
             $res = '<i class="fa fa-fw fa-share-alt" aria-hidden="true"></i>';
         }
 
-        if ($transaction->is_split === null) {
+        if (null === $transaction->is_split) {
             $journalId = (int)$transaction->journal_id;
             $count     = TransactionModel::where('transaction_journal_id', $journalId)->whereNull('deleted_at')->count();
             if ($count > 2) {
@@ -389,13 +387,13 @@ class Transaction extends Twig_Extension
         $type          = $transaction->account_type;
 
         // name is present in object, use that one:
-        if (1 === bccomp($transaction->transaction_amount, '0') && null !== $transaction->opposing_account_id) {
+        if (null !== $transaction->opposing_account_id && 1 === bccomp($transaction->transaction_amount, '0')) {
             $name          = $transaction->opposing_account_name;
             $transactionId = (int)$transaction->opposing_account_id;
             $type          = $transaction->opposing_account_type;
         }
         // Find the opposing account and use that one:
-        if (1 === bccomp($transaction->transaction_amount, '0') && null === $transaction->opposing_account_id) {
+        if (null === $transaction->opposing_account_id && 1 === bccomp($transaction->transaction_amount, '0')) {
             $journalId = $transaction->journal_id;
             /** @var TransactionModel $other */
             $other         = TransactionModel::where('transaction_journal_id', $journalId)->where('transactions.id', '!=', $transaction->id)

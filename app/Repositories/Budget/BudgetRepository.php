@@ -30,9 +30,10 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\User;
@@ -40,10 +41,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
-use stdClass;
 
 /**
  * Class BudgetRepository.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 class BudgetRepository implements BudgetRepositoryInterface
 {
@@ -60,36 +64,39 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function budgetedPerDay(Budget $budget): string
     {
+        Log::debug(sprintf('Now with budget #%d "%s"', $budget->id, $budget->name));
         $total = '0';
         $count = 0;
         foreach ($budget->budgetlimits as $limit) {
-            $diff = (string)$limit->start_date->diffInDays($limit->end_date);
-            if (bccomp('0', $diff) === 0) {
-                $diff = '1';
-            }
+            $diff   = $limit->start_date->diffInDays($limit->end_date);
+            $diff   = 0 === $diff ? 1 : $diff;
             $amount = (string)$limit->amount;
-            $perDay = bcdiv($amount, $diff);
+            $perDay = bcdiv($amount, (string)$diff);
             $total  = bcadd($total, $perDay);
             $count++;
+            Log::debug(sprintf('Found %d budget limits. Per day is %s, total is %s', $count, $perDay, $total));
         }
         $avg = $total;
         if ($count > 0) {
             $avg = bcdiv($total, (string)$count);
         }
+        Log::debug(sprintf('%s / %d = %s = average.', $total, $count, $avg));
 
         return $avg;
     }
 
     /**
      * @return bool
-     *
-
-
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity) // it's 5.
      */
     public function cleanupBudgets(): bool
     {
         // delete limits with amount 0:
-        BudgetLimit::where('amount', 0)->delete();
+        try {
+            BudgetLimit::where('amount', 0)->delete();
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+        }
 
         // do the clean up by hand because Sqlite can be tricky with this.
         $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
@@ -99,7 +106,11 @@ class BudgetRepository implements BudgetRepositoryInterface
             $key = $budgetLimit->budget_id . '-' . $budgetLimit->start_date->format('Y-m-d') . $budgetLimit->end_date->format('Y-m-d');
             if (isset($count[$key])) {
                 // delete it!
-                BudgetLimit::find($budgetLimit->id)->delete();
+                try {
+                    BudgetLimit::find($budgetLimit->id)->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
+                }
             }
             $count[$key] = true;
         }
@@ -115,6 +126,7 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon     $end
      *
      * @return array
+     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function collectBudgetInformation(Collection $budgets, Carbon $start, Carbon $end): array
@@ -129,9 +141,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         foreach ($budgets as $budget) {
             $budgetId          = $budget->id;
             $return[$budgetId] = [
-                'spent'      => $this->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
-                'budgeted'   => '0',
-                'currentRep' => false,
+                'spent'    => $this->spentInPeriod(new Collection([$budget]), $accounts, $start, $end),
+                'budgeted' => '0',
             ];
             $budgetLimits      = $this->getBudgetLimits($budget, $start, $end);
             $otherLimits       = new Collection;
@@ -152,20 +163,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         return $return;
-    }
-
-    /**
-     * Deletes a budget limit.
-     *
-     * @param BudgetLimit $budgetLimit
-     */
-    public function deleteBudgetLimit(BudgetLimit $budgetLimit): void
-    {
-        try {
-            $budgetLimit->delete();
-        } catch (Exception $e) {
-            Log::error(sprintf('Could not delete budget limit: %s', $e->getMessage()));
-        }
     }
 
     /**
@@ -197,53 +194,17 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Filters entries from the result set generated by getBudgetPeriodReport.
+     * Destroy a budget limit.
      *
-     * @param Collection $set
-     * @param int        $budgetId
-     * @param array      $periods
-     *
-     * @return array
+     * @param BudgetLimit $budgetLimit
      */
-    public function filterAmounts(Collection $set, int $budgetId, array $periods): array
+    public function destroyBudgetLimit(BudgetLimit $budgetLimit): void
     {
-        $arr  = [];
-        $keys = array_keys($periods);
-        foreach ($keys as $period) {
-            /** @var stdClass $object */
-            $result = $set->filter(
-                function (TransactionJournal $object) use ($budgetId, $period) {
-                    $result = (string)$object->period_marker === (string)$period && $budgetId === (int)$object->budget_id;
-
-                    return $result;
-                }
-            );
-            $amount = '0';
-            if (null !== $result->first()) {
-                $amount = $result->first()->sum_of_period;
-            }
-
-            $arr[$period] = $amount;
+        try {
+            $budgetLimit->delete();
+        } catch (Exception $e) {
+            Log::info(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
-
-        return $arr;
-    }
-
-    /**
-     * Find a budget.
-     *
-     * @param int $budgetId
-     *
-     * @return Budget
-     */
-    public function find(int $budgetId): Budget
-    {
-        $budget = $this->user->budgets()->find($budgetId);
-        if (null === $budget) {
-            $budget = new Budget;
-        }
-
-        return $budget;
     }
 
     /**
@@ -289,10 +250,12 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Budget $budget
      *
      * @return Carbon
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function firstUseDate(Budget $budget): Carbon
+    public function firstUseDate(Budget $budget): ?Carbon
     {
-        $oldest  = Carbon::create()->startOfYear();
+        $oldest  = null;
         $journal = $budget->transactionJournals()->orderBy('date', 'ASC')->first();
         if (null !== $journal) {
             $oldest = $journal->date < $oldest ? $journal->date : $oldest;
@@ -332,6 +295,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Carbon $end
      *
      * @return Collection
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getAllBudgetLimits(Carbon $start = null, Carbon $end = null): Collection
     {
@@ -428,11 +393,43 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * Calculate the average amount in the budgets available in this period.
+     * Grouped by day.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return string
+     */
+    public function getAverageAvailable(Carbon $start, Carbon $end): string
+    {
+        /** @var Collection $list */
+        $list = $this->user->availableBudgets()
+                           ->where('start_date', '>=', $start->format('Y-m-d 00:00:00'))
+                           ->where('end_date', '<=', $end->format('Y-m-d 00:00:00'))
+                           ->get();
+        if (0 === $list->count()) {
+            return '0';
+        }
+        $total = '0';
+        $days  = 0;
+        /** @var AvailableBudget $availableBudget */
+        foreach ($list as $availableBudget) {
+            $total = bcadd($availableBudget->amount, $total);
+            $days  += $availableBudget->start_date->diffInDays($availableBudget->end_date);
+        }
+
+        return bcdiv($total, (string)$days);
+    }
+
+    /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
      *
      * @return Collection
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection
     {
@@ -490,6 +487,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
@@ -613,6 +611,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $result;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
@@ -643,11 +642,12 @@ class BudgetRepository implements BudgetRepositoryInterface
     /**
      * @param User $user
      */
-    public function setUser(User $user)
+    public function setUser(User $user): void
     {
         $this->user = $user;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -772,10 +772,13 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function update(Budget $budget, array $data): Budget
     {
-        // update the account:
+        $oldName        = $budget->name;
         $budget->name   = $data['name'];
         $budget->active = $data['active'];
         $budget->save();
+        $this->updateRuleTriggers($oldName, $data['name']);
+        $this->updateRuleActions($oldName, $data['name']);
+        app('preferences')->mark();
 
         return $budget;
     }
@@ -832,16 +835,18 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $budgetLimit;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Budget $budget
      * @param Carbon $start
      * @param Carbon $end
      * @param string $amount
      *
-     * @return BudgetLimit
-     * @throws \Exception
+     * @return BudgetLimit|null
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): BudgetLimit
+    public function updateLimitAmount(Budget $budget, Carbon $start, Carbon $end, string $amount): ?BudgetLimit
     {
         $this->cleanupBudgets();
         // count the limits:
@@ -850,6 +855,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                          ->where('budget_limits.end_date', $end->format('Y-m-d 00:00:00'))
                          ->get(['budget_limits.*'])->count();
         Log::debug(sprintf('Found %d budget limits.', $limits));
+
         // there might be a budget limit for these dates:
         /** @var BudgetLimit $limit */
         $limit = $budget->budgetlimits()
@@ -871,9 +877,14 @@ class BudgetRepository implements BudgetRepositoryInterface
         // 1 if the left_operand is larger than the right_operand, -1 otherwise.
         if (null !== $limit && bccomp($amount, '0') <= 0) {
             Log::debug(sprintf('%s is zero, delete budget limit #%d', $amount, $limit->id));
-            $limit->delete();
+            try {
+                $limit->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Could not delete limit: %s', $e->getMessage()));
+            }
 
-            return new BudgetLimit;
+
+            return null;
         }
         // update if exists:
         if (null !== $limit) {
@@ -887,12 +898,54 @@ class BudgetRepository implements BudgetRepositoryInterface
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date = $start->format('Y-m-d 00:00:00');
-        $limit->end_date   = $end->format('Y-m-d 00:00:00');
+        $limit->start_date = $start->startOfDay();
+        $limit->end_date   = $end->startOfDay();
         $limit->amount     = $amount;
         $limit->save();
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $amount));
 
         return $limit;
+    }
+
+    /**
+     * @param string $oldName
+     * @param string $newName
+     */
+    private function updateRuleActions(string $oldName, string $newName): void
+    {
+        $types   = ['set_budget',];
+        $actions = RuleAction::leftJoin('rules', 'rules.id', '=', 'rule_actions.rule_id')
+                             ->where('rules.user_id', $this->user->id)
+                             ->whereIn('rule_actions.action_type', $types)
+                             ->where('rule_actions.action_value', $oldName)
+                             ->get(['rule_actions.*']);
+        Log::debug(sprintf('Found %d actions to update.', $actions->count()));
+        /** @var RuleAction $action */
+        foreach ($actions as $action) {
+            $action->action_value = $newName;
+            $action->save();
+            Log::debug(sprintf('Updated action %d: %s', $action->id, $action->action_value));
+        }
+    }
+
+    /**
+     * @param string $oldName
+     * @param string $newName
+     */
+    private function updateRuleTriggers(string $oldName, string $newName): void
+    {
+        $types    = ['budget_is',];
+        $triggers = RuleTrigger::leftJoin('rules', 'rules.id', '=', 'rule_triggers.rule_id')
+                               ->where('rules.user_id', $this->user->id)
+                               ->whereIn('rule_triggers.trigger_type', $types)
+                               ->where('rule_triggers.trigger_value', $oldName)
+                               ->get(['rule_triggers.*']);
+        Log::debug(sprintf('Found %d triggers to update.', $triggers->count()));
+        /** @var RuleTrigger $trigger */
+        foreach ($triggers as $trigger) {
+            $trigger->trigger_value = $newName;
+            $trigger->save();
+            Log::debug(sprintf('Updated trigger %d: %s', $trigger->id, $trigger->trigger_value));
+        }
     }
 }

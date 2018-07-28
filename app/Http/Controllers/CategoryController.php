@@ -22,33 +22,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\CategoryFormRequest;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use Log;
-use Preferences;
 
 /**
  * Class CategoryController.
  */
 class CategoryController extends Controller
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepos;
-    /** @var JournalRepositoryInterface */
-    private $journalRepos;
-    /** @var CategoryRepositoryInterface */
+    /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
     /**
@@ -60,11 +46,9 @@ class CategoryController extends Controller
 
         $this->middleware(
             function ($request, $next) {
-                app('view')->share('title', trans('firefly.categories'));
+                app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
-                $this->journalRepos = app(JournalRepositoryInterface::class);
-                $this->repository   = app(CategoryRepositoryInterface::class);
-                $this->accountRepos = app(AccountRepositoryInterface::class);
+                $this->repository = app(CategoryRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -72,6 +56,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Create category.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -82,19 +68,21 @@ class CategoryController extends Controller
             $this->rememberPreviousUri('categories.create.uri');
         }
         $request->session()->forget('categories.create.fromStore');
-        $subTitle = trans('firefly.create_new_category');
+        $subTitle = (string)trans('firefly.create_new_category');
 
         return view('categories.create', compact('subTitle'));
     }
 
     /**
+     * Delete a category.
+     *
      * @param Category $category
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function delete(Category $category)
     {
-        $subTitle = trans('firefly.delete_category', ['name' => $category->name]);
+        $subTitle = (string)trans('firefly.delete_category', ['name' => $category->name]);
 
         // put previous url in session
         $this->rememberPreviousUri('categories.delete.uri');
@@ -103,6 +91,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Destroy a category.
+     *
      * @param Request  $request
      * @param Category $category
      *
@@ -120,6 +110,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Edit a category.
+     *
      * @param Request  $request
      * @param Category $category
      *
@@ -127,7 +119,7 @@ class CategoryController extends Controller
      */
     public function edit(Request $request, Category $category)
     {
-        $subTitle = trans('firefly.edit_category', ['name' => $category->name]);
+        $subTitle = (string)trans('firefly.edit_category', ['name' => $category->name]);
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('categories.edit.fromUpdate')) {
@@ -139,6 +131,8 @@ class CategoryController extends Controller
     }
 
     /**
+     * Show all categories.
+     *
      * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -146,7 +140,7 @@ class CategoryController extends Controller
     public function index(Request $request)
     {
         $page       = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize   = (int)Preferences::get('listPageSize', 50)->data;
+        $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getCategories();
         $total      = $collection->count();
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
@@ -164,141 +158,10 @@ class CategoryController extends Controller
         return view('categories.index', compact('categories'));
     }
 
+
     /**
-     * @param Request     $request
-     * @param string|null $moment
+     * Store new category.
      *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function noCategory(Request $request, string $moment = null)
-    {
-        // default values:
-        $moment   = $moment ?? '';
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $start    = null;
-        $end      = null;
-        $periods  = new Collection;
-        $page     = (int)$request->get('page');
-        $pageSize = (int)Preferences::get('listPageSize', 50)->data;
-        Log::debug('Start of noCategory()');
-        // prep for "all" view.
-        if ('all' === $moment) {
-            $subTitle = trans('firefly.all_journals_without_category');
-            $first    = $this->journalRepos->firstNull();
-            $start    = null === $first ? new Carbon : $first->date;
-            $end      = new Carbon;
-            Log::debug('Moment is all()');
-        }
-
-        // prep for "specific date" view.
-        if ('all' !== $moment && \strlen($moment) > 0) {
-            /** @var Carbon $start */
-            $start = app('navigation')->startOfPeriod(new Carbon($moment), $range);
-            /** @var Carbon $end */
-            $end      = app('navigation')->endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.without_category_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            $periods  = $this->getNoCategoryPeriodOverview($start);
-
-        }
-
-        // prep for current period
-        if ('' === $moment) {
-            $start    = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-            $periods  = $this->getNoCategoryPeriodOverview($start);
-            $subTitle = trans(
-                'firefly.without_category_between',
-                ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
-        Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
-
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedJournals();
-        $transactions->setPath(route('categories.no-category'));
-
-        return view('categories.no-category', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
-    }
-
-    /**
-     * @param Request     $request
-     * @param Category    $category
-     * @param string|null $moment
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function show(Request $request, Category $category, string $moment = null)
-    {
-        // default values:
-        $moment       = $moment ?? '';
-        $subTitle     = $category->name;
-        $subTitleIcon = 'fa-bar-chart';
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)Preferences::get('listPageSize', 50)->data;
-        $range        = Preferences::get('viewRange', '1M')->data;
-        $start        = null;
-        $end          = null;
-        $periods      = new Collection;
-        $path         = route('categories.show', [$category->id]);
-
-        // prep for "all" view.
-        if ('all' === $moment) {
-            $subTitle = trans('firefly.all_journals_for_category', ['name' => $category->name]);
-            $first    = $this->repository->firstUseDate($category);
-            /** @var Carbon $start */
-            $start = $first ?? new Carbon;
-            $end   = new Carbon;
-            $path  = route('categories.show', [$category->id, 'all']);
-        }
-
-        // prep for "specific date" view.
-        if ('all' !== $moment && \strlen($moment) > 0) {
-            $start = app('navigation')->startOfPeriod(new Carbon($moment), $range);
-            /** @var Carbon $end */
-            $end      = app('navigation')->endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_category',
-                ['name'  => $category->name,
-                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
-            );
-            $periods  = $this->getPeriodOverview($category, $start);
-            $path     = route('categories.show', [$category->id, $moment]);
-        }
-
-        // prep for current period
-        if ('' === $moment) {
-            /** @var Carbon $start */
-            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-            /** @var Carbon $end */
-            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-            $periods  = $this->getPeriodOverview($category, $start);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_category',
-                ['name' => $category->name, 'start' => $start->formatLocalized($this->monthAndDayFormat),
-                 'end'  => $end->formatLocalized($this->monthAndDayFormat),]
-            );
-        }
-
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                  ->setCategory($category)->withBudgetInformation()->withCategoryInformation();
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedJournals();
-        $transactions->setPath($path);
-
-        return view('categories.show', compact('category', 'moment', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
-    }
-
-    /**
      * @param CategoryFormRequest         $request
      * @param CategoryRepositoryInterface $repository
      *
@@ -326,6 +189,8 @@ class CategoryController extends Controller
 
 
     /**
+     * Update category.
+     *
      * @param CategoryFormRequest         $request
      * @param CategoryRepositoryInterface $repository
      * @param Category                    $category
@@ -354,149 +219,4 @@ class CategoryController extends Controller
     }
 
 
-    /**
-     * @param Carbon $theDate
-     *
-     * @return Collection
-     */
-    private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
-    {
-        Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
-        $range = Preferences::get('viewRange', '1M')->data;
-        $first = $this->journalRepos->firstNull();
-        $start = null === $first ? new Carbon : $first->date;
-        $end   = $theDate ?? new Carbon;
-
-        Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
-
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('no-category-period-entries');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-
-        foreach ($dates as $date) {
-
-            // count journals without category in this period:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $count = $collector->getJournals()->count();
-
-            // amount transferred
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive((string)$collector->getJournals()->sum('transaction_amount'));
-
-            // amount spent
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
-                [TransactionType::WITHDRAWAL]
-            );
-            $spent = $collector->getJournals()->sum('transaction_amount');
-
-            // amount earned
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
-                [TransactionType::DEPOSIT]
-            );
-            $earned = $collector->getJournals()->sum('transaction_amount');
-            /** @noinspection PhpUndefinedMethodInspection */
-            $dateStr  = $date['end']->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
-            $entries->push(
-                [
-                    'string'      => $dateStr,
-                    'name'        => $dateName,
-                    'count'       => $count,
-                    'spent'       => $spent,
-                    'earned'      => $earned,
-                    'transferred' => $transferred,
-                    'date'        => clone $date['end'],
-                ]
-            );
-        }
-        Log::debug('End of loops');
-        $cache->store($entries);
-
-        return $entries;
-    }
-
-
-    /**
-     * @param Category $category
-     *
-     * @param Carbon   $date
-     *
-     * @return Collection
-     */
-    private function getPeriodOverview(Category $category, Carbon $date): Collection
-    {
-        $range    = Preferences::get('viewRange', '1M')->data;
-        $first    = $this->journalRepos->firstNull();
-        $start    = null === $first ? new Carbon : $first->date;
-        $end      = $date ?? new Carbon;
-        $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-
-        // properties for entries with their amounts.
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($range);
-        $cache->addProperty('categories.entries');
-        $cache->addProperty($category->id);
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        /** @var array $dates */
-        $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-
-        foreach ($dates as $currentDate) {
-            $spent  = $this->repository->spentInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
-            $earned = $this->repository->earnedInPeriod(new Collection([$category]), $accounts, $currentDate['start'], $currentDate['end']);
-            /** @noinspection PhpUndefinedMethodInspection */
-            $dateStr  = $currentDate['end']->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-
-            // amount transferred
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive((string)$collector->getJournals()->sum('transaction_amount'));
-
-            $entries->push(
-                [
-                    'string'      => $dateStr,
-                    'name'        => $dateName,
-                    'spent'       => $spent,
-                    'earned'      => $earned,
-                    'sum'         => bcadd($earned, $spent),
-                    'transferred' => $transferred,
-                    'date'        => clone $currentDate['end'],
-                ]
-            );
-        }
-        $cache->store($entries);
-
-        return $entries;
-    }
 }

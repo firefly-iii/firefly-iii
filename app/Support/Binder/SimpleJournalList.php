@@ -41,17 +41,15 @@ class SimpleJournalList implements BinderInterface
      *
      * @return mixed
      * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $list     = [];
-            $incoming = explode(',', $value);
-            foreach ($incoming as $entry) {
-                $list[] = (int)$entry;
-            }
-            $list = array_unique($list);
-            if (\count($list) === 0) {
+            $list = array_unique(array_map('\intval', explode(',', $value)));
+            if (0 === \count($list)) {
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }
 
@@ -74,22 +72,22 @@ class SimpleJournalList implements BinderInterface
                 $sources      = $repository->getJournalSourceAccounts($journal);
                 $destinations = $repository->getJournalDestinationAccounts($journal);
                 if ($sources->count() > 1) {
-                    $messages[] = trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
+                    $messages[] = (string)trans('firefly.cannot_edit_multiple_source', ['description' => $journal->description, 'id' => $journal->id]);
                     continue;
                 }
 
                 if ($destinations->count() > 1) {
-                    $messages[] = trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
+                    $messages[] = (string)trans('firefly.cannot_edit_multiple_dest', ['description' => $journal->description, 'id' => $journal->id]);
                     continue;
                 }
                 if (TransactionType::OPENING_BALANCE === $repository->getTransactionType($journal)) {
-                    $messages[] = trans('firefly.cannot_edit_opening_balance');
+                    $messages[] = (string)trans('firefly.cannot_edit_opening_balance');
                     continue;
                 }
 
                 // cannot edit reconciled transactions / journals:
                 if ($repository->isJournalReconciled($journal)) {
-                    $messages[] = trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
+                    $messages[] = (string)trans('firefly.cannot_edit_reconciled', ['description' => $journal->description, 'id' => $journal->id]);
                     continue;
                 }
 
@@ -97,7 +95,6 @@ class SimpleJournalList implements BinderInterface
             }
 
             if ($final->count() > 0) {
-
                 if (\count($messages) > 0) {
                     session()->flash('info', $messages);
                 }

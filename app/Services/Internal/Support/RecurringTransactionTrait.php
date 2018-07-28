@@ -28,6 +28,7 @@ use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
@@ -41,7 +42,6 @@ use Log;
 /**
  * Trait RecurringTransactionTrait
  *
- * @package FireflyIII\Services\Internal\Support
  */
 trait RecurringTransactionTrait
 {
@@ -67,8 +67,12 @@ trait RecurringTransactionTrait
     }
 
     /**
+     * Store transactions of a recurring transactions. It's complex but readable.
+     *
      * @param Recurrence $recurrence
      * @param array      $transactions
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function createTransactions(Recurrence $recurrence, array $transactions): void
     {
@@ -94,9 +98,8 @@ trait RecurringTransactionTrait
             $factory         = app(TransactionCurrencyFactory::class);
             $currency        = $factory->find($array['currency_id'], $array['currency_code']);
             $foreignCurrency = $factory->find($array['foreign_currency_id'], $array['foreign_currency_code']);
-            $defaultCurrency = app('amount')->getDefaultCurrencyByUser($recurrence->user);
             if (null === $currency) {
-                $currency = $defaultCurrency;
+                $currency = app('amount')->getDefaultCurrencyByUser($recurrence->user);
             }
             $transaction = new RecurrenceTransaction(
                 [
@@ -169,6 +172,17 @@ trait RecurringTransactionTrait
     }
 
     /**
+     * @param null|string $expectedType
+     * @param int|null    $accountId
+     * @param null|string $accountName
+     *
+     * @return Account|null
+     */
+    abstract public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account;
+
+    /**
+     * Update meta data for recurring transaction.
+     *
      * @param Recurrence $recurrence
      * @param array      $data
      */
@@ -177,6 +191,22 @@ trait RecurringTransactionTrait
         // only two special meta fields right now. Let's just hard code them.
         $piggyId   = (int)($data['meta']['piggy_bank_id'] ?? 0.0);
         $piggyName = $data['meta']['piggy_bank_name'] ?? '';
+        $this->updatePiggyBank($recurrence, $piggyId, $piggyName);
+
+
+        $tags = $data['meta']['tags'] ?? [];
+        $this->updateTags($recurrence, $tags);
+
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     * @param int        $piggyId
+     * @param string     $piggyName
+     */
+    protected function updatePiggyBank(Recurrence $recurrence, int $piggyId, string $piggyName): void
+    {
+
         /** @var PiggyBankFactory $factory */
         $factory = app(PiggyBankFactory::class);
         $factory->setUser($recurrence->user);
@@ -194,9 +224,14 @@ trait RecurringTransactionTrait
             // delete if present
             $recurrence->recurrenceMeta()->where('name', 'piggy_bank_id')->delete();
         }
+    }
 
-
-        $tags = $data['meta']['tags'] ?? [];
+    /**
+     * @param Recurrence $recurrence
+     * @param array      $tags
+     */
+    protected function updateTags(Recurrence $recurrence, array $tags): void
+    {
         if (\count($tags) > 0) {
             /** @var RecurrenceMeta $entry */
             $entry = $recurrence->recurrenceMeta()->where('name', 'tags')->first();
@@ -206,7 +241,7 @@ trait RecurringTransactionTrait
             $entry->value = implode(',', $tags);
             $entry->save();
         }
-        if (\count($tags) === 0) {
+        if (0 === \count($tags)) {
             // delete if present
             $recurrence->recurrenceMeta()->where('name', 'tags')->delete();
         }

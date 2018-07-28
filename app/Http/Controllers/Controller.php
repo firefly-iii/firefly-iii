@@ -27,7 +27,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Support\Facades\Preferences;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -35,22 +34,23 @@ use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Route;
 use URL;
-use View;
 
 /**
  * Class Controller.
+ *
+ * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
 class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    /** @var string */
+    /** @var string Format for date and time. */
     protected $dateTimeFormat;
-    /** @var string */
+    /** @var string Format for "23 Feb, 2016". */
     protected $monthAndDayFormat;
-    /** @var string */
+    /** @var string Format for "March 2018" */
     protected $monthFormat;
-    /** @var string */
+    /** @var string Redirect user */
     protected $redirectUri = '/';
 
     /**
@@ -59,17 +59,17 @@ class Controller extends BaseController
     public function __construct()
     {
         // for transaction lists:
-        View::share('hideBudgets', false);
-        View::share('hideCategories', false);
-        View::share('hideBills', false);
-        View::share('hideTags', false);
+        app('view')->share('hideBudgets', false);
+        app('view')->share('hideCategories', false);
+        app('view')->share('hideBills', false);
+        app('view')->share('hideTags', false);
 
         // is site a demo site?
         $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        View::share('IS_DEMO_SITE', $isDemoSite);
-        View::share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
-        View::share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
-        View::share('FF_VERSION', config('firefly.version'));
+        app('view')->share('IS_DEMO_SITE', $isDemoSite);
+        app('view')->share('DEMO_USERNAME', env('DEMO_USERNAME', ''));
+        app('view')->share('DEMO_PASSWORD', env('DEMO_PASSWORD', ''));
+        app('view')->share('FF_VERSION', config('firefly.version'));
 
         $this->middleware(
             function ($request, $next) {
@@ -80,30 +80,13 @@ class Controller extends BaseController
 
                 // get shown-intro-preference:
                 if (auth()->check()) {
-                    // some routes have a "what" parameter, which indicates a special page:
-                    $specificPage = null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
-                    $page         = str_replace('.', '_', Route::currentRouteName());
-
-                    // indicator if user has seen the help for this page ( + special page):
-                    $key = 'shown_demo_' . $page . $specificPage;
-                    // is there an intro for this route?
-                    $intro        = config('intro.' . $page);
-                    $specialIntro = config('intro.' . $page . $specificPage);
-                    $shownDemo    = true;
-
-                    // either must be array and either must be > 0
-                    if ((\is_array($intro) || \is_array($specialIntro)) && (\count($intro) > 0 || \count($specialIntro) > 0)) {
-                        $shownDemo = Preferences::get($key, false)->data;
-                        Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
-                    }
-
-                    // share language
-                    $language = Preferences::get('language', config('firefly.default_language', 'en_US'))->data;
-
-                    View::share('language', $language);
-                    View::share('shownDemo', $shownDemo);
-                    View::share('current_route_name', $page);
-                    View::share('original_route_name', Route::currentRouteName());
+                    $language  = $this->getLanguage();
+                    $page      = $this->getPageName();
+                    $shownDemo = $this->hasSeenDemo();
+                    app('view')->share('language', $language);
+                    app('view')->share('shownDemo', $shownDemo);
+                    app('view')->share('current_route_name', $page);
+                    app('view')->share('original_route_name', Route::currentRouteName());
                 }
 
                 return $next($request);
@@ -136,6 +119,8 @@ class Controller extends BaseController
     }
 
     /**
+     * Is transaction opening balance?
+     *
      * @param TransactionJournal $journal
      *
      * @return bool
@@ -147,6 +132,8 @@ class Controller extends BaseController
 
 
     /**
+     * Redirect to asset account that transaction belongs to.
+     *
      * @param TransactionJournal $journal
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -170,10 +157,69 @@ class Controller extends BaseController
     }
 
     /**
+     * Remember previous URL.
+     *
      * @param string $identifier
      */
     protected function rememberPreviousUri(string $identifier): void
     {
         session()->put($identifier, URL::previous());
+    }
+
+    /**
+     * Get user's language.
+     * @return string
+     */
+    private function getLanguage(): string
+    {
+        /** @var string $language */
+        $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
+
+        return $language;
+    }
+
+    /**
+     * @return string
+     */
+    private function getPageName(): string
+    {
+        return str_replace('.', '_', Route::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    private function getSpecificPageName(): string
+    {
+        return null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
+    }
+
+    /**
+     * Returns if user has seen demo.
+     *
+     * @return bool
+     */
+    private function hasSeenDemo(): bool
+    {
+        $page         = $this->getPageName();
+        $specificPage = $this->getSpecificPageName();
+
+        // indicator if user has seen the help for this page ( + special page):
+        $key = 'shown_demo_' . $page . $specificPage;
+        // is there an intro for this route?
+        $intro        = config('intro.' . $page) ?? [];
+        $specialIntro = config('intro.' . $page . $specificPage) ?? [];
+        // some routes have a "what" parameter, which indicates a special page:
+
+        $shownDemo = true;
+        // both must be array and either must be > 0
+        if (\count($intro) > 0 || \count($specialIntro) > 0) {
+            $shownDemo = app('preferences')->get($key, false)->data;
+            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
+        }
+
+        return $shownDemo;
     }
 }

@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -50,7 +51,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                 $skip
  * @property bool                $automatch
  * @property User                $user
- * @property string $match
+ * @property string              $match
+ * @property bool                match_encrypted
+ * @property bool                name_encrypted
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class Bill extends Model
 {
@@ -93,7 +98,10 @@ class Bill extends Model
     {
         if (auth()->check()) {
             $billId = (int)$value;
-            $bill   = auth()->user()->bills()->find($billId);
+            /** @var User $user */
+            $user = auth()->user();
+            /** @var Bill $bill */
+            $bill = $user->bills()->find($billId);
             if (null !== $bill) {
                 return $bill;
             }
@@ -105,7 +113,7 @@ class Bill extends Model
      * @codeCoverageIgnore
      * @return \Illuminate\Database\Eloquent\Relations\MorphMany
      */
-    public function attachments()
+    public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
@@ -118,7 +126,7 @@ class Bill extends Model
      * @return string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getMatchAttribute($value)
+    public function getMatchAttribute($value): string
     {
         if (1 === (int)$this->match_encrypted) {
             return Crypt::decrypt($value);
@@ -132,10 +140,10 @@ class Bill extends Model
      *
      * @param $value
      *
-     * @return string
+     * @return string|null
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function getNameAttribute($value)
+    public function getNameAttribute($value): ?string
     {
         if (1 === (int)$this->name_encrypted) {
             return Crypt::decrypt($value);
@@ -148,7 +156,7 @@ class Bill extends Model
      * @codeCoverageIgnore
      * Get all of the notes.
      */
-    public function notes()
+    public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
     }
@@ -158,7 +166,7 @@ class Bill extends Model
      *
      * @param $value
      */
-    public function setAmountMaxAttribute($value)
+    public function setAmountMaxAttribute($value): void
     {
         $this->attributes['amount_max'] = (string)$value;
     }
@@ -168,7 +176,7 @@ class Bill extends Model
      *
      * @codeCoverageIgnore
      */
-    public function setAmountMinAttribute($value)
+    public function setAmountMinAttribute($value): void
     {
         $this->attributes['amount_min'] = (string)$value;
     }
@@ -179,7 +187,7 @@ class Bill extends Model
      * @codeCoverageIgnore
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setMatchAttribute($value)
+    public function setMatchAttribute($value): void
     {
         $encrypt                             = config('firefly.encryption');
         $this->attributes['match']           = $encrypt ? Crypt::encrypt($value) : $value;
@@ -192,7 +200,7 @@ class Bill extends Model
      * @codeCoverageIgnore
      * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function setNameAttribute($value)
+    public function setNameAttribute($value): void
     {
         $encrypt                            = config('firefly.encryption');
         $this->attributes['name']           = $encrypt ? Crypt::encrypt($value) : $value;

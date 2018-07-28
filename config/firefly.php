@@ -88,8 +88,8 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'               => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                  => '4.7.5.1',
-    'api_version'              => '0.5',
+    'version'                  => '4.7.5.2',
+    'api_version'              => '0.6',
     'db_version'               => 4,
     'maxUploadSize'            => 15242880,
     'allowedMimes'             => [
@@ -235,9 +235,6 @@ return [
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
         'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
-
-        // incomplete languages:
-        // 'ca_ES' => ['name_locale' => 'Català', 'name_english' => 'Catalan'],
     ],
     'transactionTypesByWhat'   => [
         'expenses'   => ['Withdrawal'],

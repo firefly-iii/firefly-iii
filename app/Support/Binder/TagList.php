@@ -44,13 +44,8 @@ class TagList implements BinderInterface
     public static function routeBinder(string $value, Route $route): Collection
     {
         if (auth()->check()) {
-            $list     = [];
-            $incoming = explode(',', $value);
-            foreach ($incoming as $entry) {
-                $list[] = strtolower(trim($entry));
-            }
-            $list = array_unique($list);
-            if (\count($list) === 0) {
+            $list = array_unique(array_map('\strtolower', explode(',', $value)));
+            if (0 === \count($list)) {
                 Log::error('Tag list is empty.');
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }
@@ -61,7 +56,7 @@ class TagList implements BinderInterface
 
             $collection = $allTags->filter(
                 function (Tag $tag) use ($list) {
-                    return \in_array(strtolower($tag->tag), $list);
+                    return \in_array(strtolower($tag->tag), $list, true);
                 }
             );
 

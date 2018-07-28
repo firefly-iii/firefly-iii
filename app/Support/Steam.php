@@ -30,6 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class Steam.
@@ -101,8 +102,11 @@ class Steam
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
-        $currencyId = (int)$account->getMeta('currency_id');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($account->user);
 
+        $currencyId    = (int)$repository->getMetaValue($account, 'currency_id');
         $nativeBalance = (string)$account->transactions()
                                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                                          ->where('transaction_journals.date', '<=', $date->format('Y-m-d'))
@@ -152,8 +156,12 @@ class Steam
         $formatted    = $start->format('Y-m-d');
         $startBalance = $this->balance($account, $start);
 
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        $repository->setUser($account->user);
+
         $balances[$formatted] = $startBalance;
-        $currencyId           = (int)$account->getMeta('currency_id');
+        $currencyId           = (int)$repository->getMetaValue($account, 'currency_id');
         $start->addDay();
 
         // query!
@@ -242,7 +250,7 @@ class Steam
      * @return string
      * @throws \Illuminate\Contracts\Encryption\DecryptException
      */
-    public function decrypt(int $isEncrypted, string $value)
+    public function decrypt(int $isEncrypted, string $value): string
     {
         if (1 === $isEncrypted) {
             return Crypt::decrypt($value);
@@ -302,11 +310,11 @@ class Steam
     }
 
     /**
-     * @param $string
+     * @param string $string
      *
      * @return int
      */
-    public function phpBytes($string): int
+    public function phpBytes(string $string): int
     {
         $string = strtolower($string);
 
@@ -359,6 +367,7 @@ class Steam
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             // do not care.
+            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
         }
 
         return $value;

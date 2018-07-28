@@ -65,7 +65,11 @@ class RecurrenceTransformer extends TransformerAbstract
     /** @var RecurringRepositoryInterface */
     protected $repository;
 
-
+    /**
+     * RecurrenceTransformer constructor.
+     *
+     * @param ParameterBag $parameters
+     */
     public function __construct(ParameterBag $parameters)
     {
         $this->repository = app(RecurringRepositoryInterface::class);
@@ -88,7 +92,7 @@ class RecurrenceTransformer extends TransformerAbstract
     }
 
     /**
-     * Transform the piggy bank.
+     * Transform the recurring transaction.
      *
      * @param Recurrence $recurrence
      *
@@ -98,7 +102,9 @@ class RecurrenceTransformer extends TransformerAbstract
     public function transform(Recurrence $recurrence): array
     {
         $this->repository->setUser($recurrence->user);
-        $return   = [
+
+        // basic data.
+        $return = [
             'id'                     => (int)$recurrence->id,
             'updated_at'             => $recurrence->updated_at->toAtomString(),
             'created_at'             => $recurrence->created_at->toAtomString(),
@@ -113,9 +119,9 @@ class RecurrenceTransformer extends TransformerAbstract
             'active'                 => $recurrence->active,
             'repetitions'            => $recurrence->repetitions,
             'notes'                  => $this->repository->getNoteText($recurrence),
-            'recurrence_repetitions' => [],
-            'transactions'           => [],
-            'meta'                   => [],
+            'recurrence_repetitions' => $this->getRepetitions($recurrence),
+            'transactions'           => $this->getTransactions($recurrence),
+            'meta'                   => $this->getMeta($recurrence),
             'links'                  => [
                 [
                     'rel' => 'self',
@@ -123,97 +129,20 @@ class RecurrenceTransformer extends TransformerAbstract
                 ],
             ],
         ];
-        $fromDate = $recurrence->latest_date ?? $recurrence->first_date;
-        // date in the past? use today:
-        $today    = new Carbon;
-        $fromDate = $fromDate->lte($today) ? $today : $fromDate;
 
-        /** @var RecurrenceRepetition $repetition */
-        foreach ($recurrence->recurrenceRepetitions as $repetition) {
-            $repetitionArray = [
-                'id'                => $repetition->id,
-                'updated_at'        => $repetition->updated_at->toAtomString(),
-                'created_at'        => $repetition->created_at->toAtomString(),
-                'repetition_type'   => $repetition->repetition_type,
-                'repetition_moment' => $repetition->repetition_moment,
-                'repetition_skip'   => (int)$repetition->repetition_skip,
-                'weekend'           => (int)$repetition->weekend,
-                'description'       => $this->repository->repetitionDescription($repetition),
-                'occurrences'       => [],
-            ];
 
-            // get the (future) occurrences for this specific type of repetition:
-            $occurrences = $this->repository->getXOccurrences($repetition, $fromDate, 5);
-            /** @var Carbon $carbon */
-            foreach ($occurrences as $carbon) {
-                $repetitionArray['occurrences'][] = $carbon->format('Y-m-d');
-            }
+        return $return;
+    }
 
-            $return['recurrence_repetitions'][] = $repetitionArray;
-        }
-        unset($repetitionArray);
-
-        // get all transactions:
-        /** @var RecurrenceTransaction $transaction */
-        foreach ($recurrence->recurrenceTransactions as $transaction) {
-            $transactionArray = [
-                'currency_id'         => $transaction->transaction_currency_id,
-                'currency_code'       => $transaction->transactionCurrency->code,
-                'currency_symbol'     => $transaction->transactionCurrency->symbol,
-                'currency_dp'         => $transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id' => $transaction->foreign_currency_id,
-                'source_id'           => $transaction->source_id,
-                'source_name'         => $transaction->sourceAccount->name,
-                'destination_id'      => $transaction->destination_id,
-                'destination_name'    => $transaction->destinationAccount->name,
-                'amount'              => $transaction->amount,
-                'foreign_amount'      => $transaction->foreign_amount,
-                'description'         => $transaction->description,
-                'meta'                => [],
-            ];
-            if (null !== $transaction->foreign_currency_id) {
-                $transactionArray['foreign_currency_code']   = $transaction->foreignCurrency->code;
-                $transactionArray['foreign_currency_symbol'] = $transaction->foreignCurrency->symbol;
-                $transactionArray['foreign_currency_dp']     = $transaction->foreignCurrency->decimal_places;
-            }
-
-            // get meta data for each transaction:
-            /** @var RecurrenceTransactionMeta $transactionMeta */
-            foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
-                $transactionMetaArray = [
-                    'name'  => $transactionMeta->name,
-                    'value' => $transactionMeta->value,
-                ];
-                switch ($transactionMeta->name) {
-                    default:
-                        throw new FireflyException(sprintf('Recurrence transformer cannot handle transaction meta-field "%s"', $transactionMeta->name));
-                    case 'category_name':
-                        /** @var CategoryFactory $factory */
-                        $factory = app(CategoryFactory::class);
-                        $factory->setUser($recurrence->user);
-                        $category = $factory->findOrCreate(null, $transactionMeta->value);
-                        if (null !== $category) {
-                            $transactionMetaArray['category_id']   = $category->id;
-                            $transactionMetaArray['category_name'] = $category->name;
-                        }
-                        break;
-                    case 'budget_id':
-                        /** @var BudgetRepositoryInterface $repository */
-                        $repository = app(BudgetRepositoryInterface::class);
-                        $budget     = $repository->findNull((int)$transactionMeta->value);
-                        if (null !== $budget) {
-                            $transactionMetaArray['budget_id']   = $budget->id;
-                            $transactionMetaArray['budget_name'] = $budget->name;
-                        }
-                        break;
-                }
-                // store transaction meta data in transaction
-                $transactionArray['meta'][] = $transactionMetaArray;
-            }
-            // store transaction in recurrence array.
-            $return['transactions'][] = $transactionArray;
-        }
-        // get all meta data for recurrence itself
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getMeta(Recurrence $recurrence): array
+    {
+        $return = [];
         /** @var RecurrenceMeta $recurrenceMeta */
         foreach ($recurrence->recurrenceMeta as $recurrenceMeta) {
             $recurrenceMetaArray = [
@@ -248,8 +177,137 @@ class RecurrenceTransformer extends TransformerAbstract
                     break;
             }
             // store meta date in recurring array
-            $return['meta'][] = $recurrenceMetaArray;
+            $return[] = $recurrenceMetaArray;
+        }
 
+        return $return;
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getRepetitions(Recurrence $recurrence): array
+    {
+        $fromDate = $recurrence->latest_date ?? $recurrence->first_date;
+        // date in the past? use today:
+        $today    = new Carbon;
+        $fromDate = $fromDate->lte($today) ? $today : $fromDate;
+        $return   = [];
+
+        /** @var RecurrenceRepetition $repetition */
+        foreach ($recurrence->recurrenceRepetitions as $repetition) {
+            $repetitionArray = [
+                'id'                => $repetition->id,
+                'updated_at'        => $repetition->updated_at->toAtomString(),
+                'created_at'        => $repetition->created_at->toAtomString(),
+                'repetition_type'   => $repetition->repetition_type,
+                'repetition_moment' => $repetition->repetition_moment,
+                'repetition_skip'   => (int)$repetition->repetition_skip,
+                'weekend'           => (int)$repetition->weekend,
+                'description'       => $this->repository->repetitionDescription($repetition),
+                'occurrences'       => [],
+            ];
+
+            // get the (future) occurrences for this specific type of repetition:
+            $occurrences = $this->repository->getXOccurrences($repetition, $fromDate, 5);
+            /** @var Carbon $carbon */
+            foreach ($occurrences as $carbon) {
+                $repetitionArray['occurrences'][] = $carbon->format('Y-m-d');
+            }
+
+            $return[] = $repetitionArray;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param RecurrenceTransaction $transaction
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getTransactionMeta(RecurrenceTransaction $transaction): array
+    {
+        $return = [];
+        // get meta data for each transaction:
+        /** @var RecurrenceTransactionMeta $transactionMeta */
+        foreach ($transaction->recurrenceTransactionMeta as $transactionMeta) {
+            $transactionMetaArray = [
+                'name'  => $transactionMeta->name,
+                'value' => $transactionMeta->value,
+            ];
+            switch ($transactionMeta->name) {
+                default:
+                    throw new FireflyException(sprintf('Recurrence transformer cannot handle transaction meta-field "%s"', $transactionMeta->name));
+                case 'category_name':
+                    /** @var CategoryFactory $factory */
+                    $factory = app(CategoryFactory::class);
+                    $factory->setUser($transaction->recurrence->user);
+                    $category = $factory->findOrCreate(null, $transactionMeta->value);
+                    if (null !== $category) {
+                        $transactionMetaArray['category_id']   = $category->id;
+                        $transactionMetaArray['category_name'] = $category->name;
+                    }
+                    break;
+                case 'budget_id':
+                    /** @var BudgetRepositoryInterface $repository */
+                    $repository = app(BudgetRepositoryInterface::class);
+                    $budget     = $repository->findNull((int)$transactionMeta->value);
+                    if (null !== $budget) {
+                        $transactionMetaArray['budget_id']   = $budget->id;
+                        $transactionMetaArray['budget_name'] = $budget->name;
+                    }
+                    break;
+            }
+            // store transaction meta data in transaction
+            $return[] = $transactionMetaArray;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function getTransactions(Recurrence $recurrence): array
+    {
+        $return = [];
+        // get all transactions:
+        /** @var RecurrenceTransaction $transaction */
+        foreach ($recurrence->recurrenceTransactions as $transaction) {
+
+            $sourceAccount      = $transaction->sourceAccount;
+            $destinationAccount = $transaction->destinationAccount;
+            $transactionArray   = [
+                'currency_id'         => $transaction->transaction_currency_id,
+                'currency_code'       => $transaction->transactionCurrency->code,
+                'currency_symbol'     => $transaction->transactionCurrency->symbol,
+                'currency_dp'         => $transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id' => $transaction->foreign_currency_id,
+                'source_id'           => $transaction->source_id,
+                'source_name'         => null === $sourceAccount ? '' : $sourceAccount->name,
+                'destination_id'      => $transaction->destination_id,
+                'destination_name'    => null === $destinationAccount ? '' : $destinationAccount->name,
+                'amount'              => $transaction->amount,
+                'foreign_amount'      => $transaction->foreign_amount,
+                'description'         => $transaction->description,
+                'meta'                => $this->getTransactionMeta($transaction),
+            ];
+            if (null !== $transaction->foreign_currency_id) {
+                $transactionArray['foreign_currency_code']   = $transaction->foreignCurrency->code;
+                $transactionArray['foreign_currency_symbol'] = $transaction->foreignCurrency->symbol;
+                $transactionArray['foreign_currency_dp']     = $transaction->foreignCurrency->decimal_places;
+            }
+
+            // store transaction in recurrence array.
+            $return[] = $transactionArray;
         }
 
         return $return;

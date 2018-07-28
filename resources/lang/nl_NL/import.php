@@ -219,6 +219,7 @@ return [
     'column_account-iban'                  => 'Betaalrekening (IBAN)',
     'column_account-id'                    => 'Betaalrekening (ID gelijk aan FF3)',
     'column_account-name'                  => 'Betaalrekeningnaam',
+    'column_account-bic'                  => 'Betaalrekening (BIC)',
     'column_amount'                        => 'Bedrag',
     'column_amount_foreign'                => 'Bedrag (in vreemde valuta)',
     'column_amount_debit'                  => 'Bedrag (debetkolom)',

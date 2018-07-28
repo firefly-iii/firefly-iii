@@ -58,12 +58,12 @@ class ConfigureRolesHandler implements FileConfigurationInterface
      * @param array $config
      *
      * @return MessageBag
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function configurationComplete(array $config): MessageBag
     {
         /** @var array $roles */
         $roles    = $config['column-roles'];
-        $count    = $config['column-count'];
         $assigned = 0;
 
         // check if data actually contains amount column (foreign amount does not count)
@@ -77,10 +77,10 @@ class ConfigureRolesHandler implements FileConfigurationInterface
             if (\in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
                 $hasAmount = true;
             }
-            if ($role === 'foreign-currency-code') {
+            if ('foreign-currency-code' === $role) {
                 $hasForeignCode = true;
             }
-            if ($role === 'amount_foreign') {
+            if ('amount_foreign' === $role) {
                 $hasForeignAmount = true;
             }
         }
@@ -123,7 +123,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
         $count  = $config['column-count'];
         for ($i = 0; $i < $count; ++$i) {
             $role                            = $data['role'][$i] ?? '_ignore';
-            $mapping                         = (isset($data['map'][$i]) && $data['map'][$i] === '1');
+            $mapping                         = (isset($data['map'][$i]) && '1' === $data['map'][$i]);
             $config['column-roles'][$i]      = $role;
             $config['column-do-mapping'][$i] = $mapping;
             Log::debug(sprintf('Column %d has been given role %s (mapping: %s)', $i, $role, var_export($mapping, true)));
@@ -131,7 +131,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
         $config   = $this->ignoreUnmappableColumns($config);
         $messages = $this->configurationComplete($config);
 
-        if ($messages->count() === 0) {
+        if (0 === $messages->count()) {
             $this->repository->setStage($this->importJob, 'ready_to_run');
             if ($this->isMappingNecessary($config)) {
                 $this->repository->setStage($this->importJob, 'map');
@@ -176,7 +176,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
     public function getExamplesFromFile(Reader $reader, array $config): void
     {
         $limit  = (int)config('csv.example_rows', 5);
-        $offset = isset($config['has-headers']) && $config['has-headers'] === true ? 1 : 0;
+        $offset = isset($config['has-headers']) && true === $config['has-headers'] ? 1 : 0;
 
         // make statement.
         try {
@@ -215,7 +215,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
     public function getHeaders(Reader $reader, array $config): array
     {
         $headers = [];
-        if (isset($config['has-headers']) && $config['has-headers'] === true) {
+        if (isset($config['has-headers']) && true === $config['has-headers']) {
             try {
                 $stmt    = (new Statement)->limit(1)->offset(0);
                 $records = $stmt->process($reader);
@@ -274,7 +274,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
         $collection = $this->repository->getAttachments($this->importJob);
         /** @var Attachment $attachment */
         foreach ($collection as $attachment) {
-            if ($attachment->filename === 'import_file') {
+            if ('import_file' === $attachment->filename) {
                 $content = $this->attachments->getAttachmentContent($attachment);
                 break;
             }
@@ -296,7 +296,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
     {
         $roles = [];
         foreach (array_keys(config('csv.import_roles')) as $role) {
-            $roles[$role] = trans('import.column_' . $role);
+            $roles[$role] = (string)trans('import.column_' . $role);
         }
         asort($roles);
 
@@ -386,7 +386,6 @@ class ConfigureRolesHandler implements FileConfigurationInterface
 
     /**
      * Save the column count in the job. It's used in a later stage.
-     * TODO move config out of this method (make it a parameter).
      *
      * @return void
      */

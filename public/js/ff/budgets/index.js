@@ -131,8 +131,8 @@ function updateBudgetedAmounts(e) {
         // fill in "left" value:
 
 
-        if (data.left_per_day !== 'none') {
-            leftCell.html(data.left + '(' + data.left_per_day + ')');
+        if (data.left_per_day !== null) {
+            leftCell.html(data.left + ' (' + data.left_per_day + ')');
         } else {
             leftCell.html(data.left);
         }

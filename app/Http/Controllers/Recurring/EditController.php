@@ -40,13 +40,13 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class EditController extends Controller
 {
-    /** @var BudgetRepositoryInterface */
+    /** @var BudgetRepositoryInterface The budget repository */
     private $budgets;
-    /** @var RecurringRepositoryInterface */
+    /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
     /**
-     *
+     * EditController constructor.
      */
     public function __construct()
     {
@@ -56,8 +56,8 @@ class EditController extends Controller
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('mainTitleIcon', 'fa-paint-brush');
-                app('view')->share('title', trans('firefly.recurrences'));
-                app('view')->share('subTitle', trans('firefly.recurrences'));
+                app('view')->share('title', (string)trans('firefly.recurrences'));
+                app('view')->share('subTitle', (string)trans('firefly.recurrences'));
 
                 $this->recurring = app(RecurringRepositoryInterface::class);
                 $this->budgets   = app(BudgetRepositoryInterface::class);
@@ -68,31 +68,28 @@ class EditController extends Controller
     }
 
     /**
+     * Edit a recurring transaction.
+     *
      * @param Request    $request
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      * @throws \FireflyIII\Exceptions\FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function edit(Request $request, Recurrence $recurrence)
     {
-
-
-        // use transformer:
         $transformer = new RecurrenceTransformer(new ParameterBag);
         $array       = $transformer->transform($recurrence);
         $budgets     = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
-        // get recurrence type:
-        // todo move to repository
-        // todo handle old repetition type as well.
-
-
         /** @var RecurrenceRepetition $repetition */
         $repetition            = $recurrence->recurrenceRepetitions()->first();
-        $currentRepetitionType = $repetition->repetition_type;
+        $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepetitionType .= ',' . $repetition->repetition_moment;
+            $currentRepType .= ',' . $repetition->repetition_moment;
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -101,13 +98,11 @@ class EditController extends Controller
         }
         $request->session()->forget('recurrences.edit.fromUpdate');
 
-        // assume repeats forever:
-        $repetitionEnd = 'forever';
-        // types of repetitions:
+        $repetitionEnd  = 'forever';
         $repetitionEnds = [
-            'forever'    => trans('firefly.repeat_forever'),
-            'until_date' => trans('firefly.repeat_until_date'),
-            'times'      => trans('firefly.repeat_times'),
+            'forever'    => (string)trans('firefly.repeat_forever'),
+            'until_date' => (string)trans('firefly.repeat_until_date'),
+            'times'      => (string)trans('firefly.repeat_times'),
         ];
         if (null !== $recurrence->repeat_until) {
             $repetitionEnd = 'until_date';
@@ -116,18 +111,15 @@ class EditController extends Controller
             $repetitionEnd = 'times';
         }
 
-        // what to do in the weekend?
         $weekendResponses = [
-            RecurrenceRepetition::WEEKEND_DO_NOTHING    => trans('firefly.do_nothing'),
-            RecurrenceRepetition::WEEKEND_SKIP_CREATION => trans('firefly.skip_transaction'),
-            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => trans('firefly.jump_to_friday'),
-            RecurrenceRepetition::WEEKEND_TO_MONDAY     => trans('firefly.jump_to_monday'),
+            RecurrenceRepetition::WEEKEND_DO_NOTHING    => (string)trans('firefly.do_nothing'),
+            RecurrenceRepetition::WEEKEND_SKIP_CREATION => (string)trans('firefly.skip_transaction'),
+            RecurrenceRepetition::WEEKEND_TO_FRIDAY     => (string)trans('firefly.jump_to_friday'),
+            RecurrenceRepetition::WEEKEND_TO_MONDAY     => (string)trans('firefly.jump_to_monday'),
         ];
 
-        // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
-        // $hasOldInput = false;
-        $preFilled = [
+        $preFilled   = [
             'transaction_type' => strtolower($recurrence->transactionType->type),
             'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
             'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
@@ -135,11 +127,13 @@ class EditController extends Controller
 
         return view(
             'recurring.edit',
-            compact('recurrence', 'array', 'weekendResponses', 'budgets', 'preFilled', 'currentRepetitionType', 'repetitionEnd', 'repetitionEnds')
+            compact('recurrence', 'array', 'weekendResponses', 'budgets', 'preFilled', 'currentRepType', 'repetitionEnd', 'repetitionEnds')
         );
     }
 
     /**
+     * Update the recurring transaction.
+     *
      * @param RecurrenceFormRequest $request
      * @param Recurrence            $recurrence
      *
