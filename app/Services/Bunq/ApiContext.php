@@ -48,6 +48,7 @@ class ApiContext
      *
      * @throws FireflyException
      * @return BunqApiContext|FakeApiContext
+     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
     public function create(BunqEnumApiEnvironmentType $environmentType, string $apiKey, string $description, array $permittedIps, string $proxyUrl = null
     ) {

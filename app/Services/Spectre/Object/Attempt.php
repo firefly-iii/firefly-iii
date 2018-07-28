@@ -26,8 +26,11 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
- * @codeCoverageIgnore
+ *
  * Class Attempt
+ * @codeCoverageIgnore
+ * @SuppressWarnings(PHPMD.ShortVariable)
+ * @SuppressWarnings(PHPMD.TooManyFields)
  */
 class Attempt extends SpectreObject
 {

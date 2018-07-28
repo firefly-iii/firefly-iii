@@ -38,8 +38,11 @@ trait JournalServiceTrait
 {
 
     /**
+     * Link tags to journal.
+     *
      * @param TransactionJournal $journal
      * @param array              $data
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function connectTags(TransactionJournal $journal, array $data): void
     {

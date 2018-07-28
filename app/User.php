@@ -61,7 +61,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool       $isAdmin used in admin user controller.
  * @property bool       $has2FA  used in admin user controller.
  * @property array      $prefs   used in admin user controller.
- * @property mixed      password
+ * @property string      password
  * @property Collection roles
  * @property string     blocked_code
  * @property bool       blocked

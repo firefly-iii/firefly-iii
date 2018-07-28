@@ -42,6 +42,8 @@ class AccountUpdateService
      *
      * @return Account
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function update(Account $account, array $data): Account
     {

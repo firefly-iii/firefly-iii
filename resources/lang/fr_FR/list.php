@@ -112,7 +112,7 @@ return [
     'sepa-cc'                 => 'Code de compensation SEPA',
     'sepa-ep'                 => 'Objectif externe SEPA',
     'sepa-ci'                 => 'Identifiant Créancier SEPA',
-    'sepa-batch-id'           => 'SEPA Batch ID',
+    'sepa-batch-id'           => 'ID de lot SEPA',
     'external_id'             => 'ID externe',
     'account_at_bunq'         => 'Compte avec bunq',
     'file_name'               => 'Nom du fichier',

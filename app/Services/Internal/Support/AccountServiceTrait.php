@@ -23,13 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
-use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
@@ -128,6 +126,7 @@ trait AccountServiceTrait
      *
      * @return TransactionJournal|null
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function storeIBJournal(Account $account, array $data): ?TransactionJournal
     {
@@ -181,7 +180,7 @@ trait AccountServiceTrait
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($account->user);
-        $one = $factory->create(
+        $factory->create(
             [
                 'account'             => $firstAccount,
                 'transaction_journal' => $journal,
@@ -193,7 +192,7 @@ trait AccountServiceTrait
                 'reconciled'          => false,
             ]
         );
-        $two = $factory->create(
+        $factory->create(
             [
                 'account'             => $secondAccount,
                 'transaction_journal' => $journal,
@@ -205,9 +204,6 @@ trait AccountServiceTrait
                 'reconciled'          => false,
             ]
         );
-        if (null !== $one && null !== $two) {
-            Log::notice(sprintf('Stored two transactions for new account, #%d and #%d', $one->id, $two->id));
-        }
 
         return $journal;
     }
@@ -267,6 +263,7 @@ trait AccountServiceTrait
      * @param array              $data
      *
      * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function updateIBJournal(Account $account, TransactionJournal $journal, array $data): bool
     {
@@ -274,7 +271,6 @@ trait AccountServiceTrait
         $amount         = (string)$data['openingBalance'];
         $negativeAmount = bcmul($amount, '-1');
         $currencyId     = (int)$data['currency_id'];
-
         Log::debug(sprintf('Submitted amount for opening balance to update is "%s"', $amount));
         if (0 === bccomp($amount, '0')) {
             Log::notice(sprintf('Amount "%s" is zero, delete opening balance.', $amount));
@@ -282,16 +278,11 @@ trait AccountServiceTrait
             $service = app(JournalDestroyService::class);
             $service->destroy($journal);
 
-
             return true;
         }
-
-        // update date:
         $journal->date                    = $date;
         $journal->transaction_currency_id = $currencyId;
         $journal->save();
-
-        // update transactions:
         /** @var Transaction $transaction */
         foreach ($journal->transactions()->get() as $transaction) {
             if ((int)$account->id === (int)$transaction->account_id) {
@@ -317,6 +308,7 @@ trait AccountServiceTrait
      *
      * @param Account $account
      * @param array   $data
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function updateMetaData(Account $account, array $data): void
     {
@@ -331,33 +323,7 @@ trait AccountServiceTrait
         /** @var AccountMetaFactory $factory */
         $factory = app(AccountMetaFactory::class);
         foreach ($fields as $field) {
-            /** @var AccountMeta $entry */
-            $entry = $account->accountMeta()->where('name', $field)->first();
-
-            // must not be an empty string:
-            if (isset($data[$field]) && \strlen((string)$data[$field]) > 0) {
-
-                // if $data has field and $entry is null, create new one:
-                if (null === $entry) {
-                    Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
-                    $factory->create(['account_id' => $account->id, 'name' => $field, 'data' => $data[$field],]);
-                }
-
-                // if $data has field and $entry is not null, update $entry:
-                // let's not bother with a service.
-                if (null !== $entry) {
-                    $entry->data = $data[$field];
-                    $entry->save();
-                    Log::debug(sprintf('Updated meta-field "%s":"%s" for #%d ("%s") ', $field, $data[$field], $account->id, $account->name));
-                }
-            }
-            if (null !== $entry && isset($data[$field]) && '' === (string)$data[$field]) {
-                try {
-                    $entry->delete();
-                } catch (Exception $e) {
-                    Log::debug(sprintf('Could not delete entry: %s', $e->getMessage()));
-                }
-            }
+            $factory->crud($account, $field, $data[$field] ?? '');
         }
     }
 

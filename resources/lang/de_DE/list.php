@@ -112,7 +112,7 @@ return [
     'sepa-cc'                 => 'SEPA • Verrechnungsschlüssel',
     'sepa-ep'                 => 'SEPA • Externer Verwendungszweck',
     'sepa-ci'                 => 'SEPA • Identifikationsnummer des Zahlungsempfängers',
-    'sepa-batch-id'           => 'SEPA Batch ID',
+    'sepa-batch-id'           => 'SEPA Batch-Kennung',
     'external_id'             => 'Externe Kennung',
     'account_at_bunq'         => 'Konto bei „bunq”',
     'file_name'               => 'Dateiname',

@@ -70,6 +70,10 @@ class TransactionUpdateService
      *
      * @return Transaction
      * @throws \FireflyIII\Exceptions\FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     *
      */
     public function update(Transaction $transaction, array $data): Transaction
     {
@@ -113,7 +117,7 @@ class TransactionUpdateService
             $this->setForeignCurrency($transaction, $foreign);
             $this->setForeignAmount($transaction, $foreignAmount);
         }
-        if (null === $foreign && null === $data['foreign_amount']) {
+        if (null === $foreign || null === $data['foreign_amount']) {
             $this->setForeignCurrency($transaction, null);
             $this->setForeignAmount($transaction, null);
         }

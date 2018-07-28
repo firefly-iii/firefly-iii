@@ -112,7 +112,7 @@ return [
     'sepa-cc'                 => 'SEPA vrijwaringscode',
     'sepa-ep'                 => 'SEPA transactiedoeleinde',
     'sepa-ci'                 => 'SEPA crediteuridentificatie',
-    'sepa-batch-id'           => 'SEPA Batch ID',
+    'sepa-batch-id'           => 'SEPA batchnummer',
     'external_id'             => 'Externe ID',
     'account_at_bunq'         => 'Bunq-account',
     'file_name'               => 'Bestandsnaam',

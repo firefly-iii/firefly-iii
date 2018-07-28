@@ -26,8 +26,10 @@ namespace FireflyIII\Services\Spectre\Object;
 use Carbon\Carbon;
 
 /**
- * @codeCoverageIgnore
  * Class Transaction
+ * @codeCoverageIgnore
+ *
+ * @SuppressWarnings(PHPMD.ShortVariable)
  */
 class Transaction extends SpectreObject
 {
@@ -169,7 +171,10 @@ class Transaction extends SpectreObject
     }
 
     /**
+     * Get opposing account data.
+     *
      * @return array
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function getOpposingAccountData(): array
     {

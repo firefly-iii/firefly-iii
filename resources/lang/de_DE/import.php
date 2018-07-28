@@ -219,7 +219,7 @@ return [
     'column_account-iban'                  => 'Bestandskonto (IBAN)',
     'column_account-id'                    => 'Kennung des Bestandkontos (passend zu FF3)',
     'column_account-name'                  => 'Bestandskonto (Name)',
-    'column_account-bic'                  => 'Asset account (BIC)',
+    'column_account-bic'                  => 'Bestandskonto (BIC)',
     'column_amount'                        => 'Betrag',
     'column_amount_foreign'                => 'Betrag (in Fremdwährung)',
     'column_amount_debit'                  => 'Betrag (Debitoren-Spalte)',

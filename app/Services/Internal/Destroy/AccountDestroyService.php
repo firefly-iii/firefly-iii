@@ -40,12 +40,14 @@ class AccountDestroyService
      * @param Account|null $moveTo
      *
      * @return void
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function destroy(Account $account, ?Account $moveTo): void
     {
         if (null !== $moveTo) {
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
         }
+        $service = app(JournalDestroyService::class);
 
         Log::debug('Now trigger account delete response #' . $account->id);
         /** @var Transaction $transaction */
@@ -56,7 +58,7 @@ class AccountDestroyService
             if (null !== $journal) {
                 Log::debug('Call for deletion of journal #' . $journal->id);
                 /** @var JournalDestroyService $service */
-                $service = app(JournalDestroyService::class);
+
                 $service->destroy($journal);
             }
         }

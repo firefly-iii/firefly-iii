@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -31,7 +32,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property int       $transaction_journal_id
  * @property int       $piggy_bank_id
  * @property int       $id
- * @property mixed     date
+ * @property Carbon     date
  */
 class PiggyBankEvent extends Model
 {

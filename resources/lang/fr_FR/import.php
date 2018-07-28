@@ -219,7 +219,7 @@ return [
     'column_account-iban'                  => 'Compte d’actif (IBAN)',
     'column_account-id'                    => 'Compte d\'actif (ID correspondant à FF3)',
     'column_account-name'                  => 'Compte d’actif (nom)',
-    'column_account-bic'                  => 'Asset account (BIC)',
+    'column_account-bic'                  => 'Compte d’actif (BIC)',
     'column_amount'                        => 'Montant',
     'column_amount_foreign'                => 'Montant (en devise étrangère)',
     'column_amount_debit'                  => 'Montant (colonne débit)',
