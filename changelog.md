@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.7.5.2] - 2017-07-28
+## [4.7.5.3] - 2017-07-28
 ### Added
 - Many updated French translations thanks to [@bubka](https://crowdin.com/profile/bubka).
 
@@ -19,6 +19,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Retired the "Rabobank description"-fix, because it is no longer necessary.
 - Fixed a bug where users could not delete budget limits in the API.
 - Piggy bank notes are visible again.
+
+## [4.7.5.2] - 2017-07-28
+This version was superseeded by v4.7.5.3 because of a critical bug in the proxy-middleware.
 
 ## [4.7.5.1] - 2018-07-14
 ### Fixed

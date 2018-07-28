@@ -37,13 +37,6 @@ class TrustProxies extends Middleware
     protected $headers = Request::HEADER_X_FORWARDED_ALL;
 
     /**
-     * The trusted proxies for this application.
-     *
-     * @var array|string
-     */
-    protected $proxies = [];
-
-    /**
      * TrustProxies constructor.
      *
      * @param Repository $config
@@ -52,6 +45,9 @@ class TrustProxies extends Middleware
     {
         $trustedProxies = (string)env('TRUSTED_PROXIES', null);
         $this->proxies  = explode(',', $trustedProxies);
+        if ($trustedProxies === '**') {
+            $this->proxies = '**';
+        }
         parent::__construct($config);
     }
 }
