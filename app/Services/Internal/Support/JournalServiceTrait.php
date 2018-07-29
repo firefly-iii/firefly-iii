@@ -75,7 +75,7 @@ trait JournalServiceTrait
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($journal->user);
-        $bill = $factory->find($data['bill_id'], $data['bill_name']);
+        $bill = $factory->find((int)$data['bill_id'], $data['bill_name']);
 
         if (null !== $bill) {
             $journal->bill_id = $bill->id;
