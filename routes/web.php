@@ -503,6 +503,9 @@ Route::group(
 
     // download config:
     Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'job.download']);
+
+    // callback URI for YNAB OAuth. Sadly, needs a custom solution.
+    Route::get('ynab-callback', ['uses' => 'Import\CallbackController@ynab', 'as' => 'callback.ynab']);
 }
 );
 

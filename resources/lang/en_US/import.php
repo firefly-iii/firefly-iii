@@ -28,9 +28,11 @@ return [
     'prerequisites_breadcrumb_fake'        => 'Prerequisites for the fake import provider',
     'prerequisites_breadcrumb_spectre'     => 'Prerequisites for Spectre',
     'prerequisites_breadcrumb_bunq'        => 'Prerequisites for bunq',
+    'prerequisites_breadcrumb_ynab'        => 'Prerequisites for YNAB',
     'job_configuration_breadcrumb'         => 'Configuration for ":key"',
     'job_status_breadcrumb'                => 'Import status for ":key"',
     'cannot_create_for_provider'           => 'Firefly III cannot create a job for the ":provider"-provider.',
+    'disabled_for_demo_user'               => 'disabled in demo',
 
     // index page:
     'general_index_title'                  => 'Import a file',
@@ -43,6 +45,7 @@ return [
     'button_plaid'                         => 'Import using Plaid',
     'button_yodlee'                        => 'Import using Yodlee',
     'button_quovo'                         => 'Import using Quovo',
+    'button_ynab'                          => 'Import from You Need A Budget',
     // global config box (index)
     'global_config_title'                  => 'Global import configuration',
     'global_config_text'                   => 'In the future, this box will feature preferences that apply to ALL import providers above.',
@@ -76,10 +79,14 @@ return [
     'prereq_bunq_title'                    => 'Prerequisites for an import from bunq',
     'prereq_bunq_text'                     => 'In order to import from bunq, you need to obtain an API key. You can do this through the app. Please note that the import function for bunq is in BETA. It has only been tested against the sandbox API.',
     'prereq_bunq_ip'                       => 'bunq requires your externally facing IP address. Firefly III has tried to fill this in using <a href="https://www.ipify.org/">the ipify service</a>. Make sure this IP address is correct, or the import will fail.',
+    'prereq_ynab_title'                    => 'Prerequisites for an import from YNAB',
+    'prereq_ynab_text'                    => 'In order to be able to download transactions from YNAB, please create a new application on your <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> and enter the client ID and secret on this page.',
+    'prereq_ynab_redirect' => 'To complete the configuration, enter the following URL at the <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> under the "Redirect URI(s)".',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'         => 'Fake API key stored successfully!',
     'prerequisites_saved_for_spectre'      => 'App ID and secret stored!',
     'prerequisites_saved_for_bunq'         => 'API key and IP stored!',
+    'prerequisites_saved_for_ynab'         => 'YNAB client ID and secret stored!',
 
     // job configuration:
     'job_config_apply_rules_title'         => 'Job configuration - apply your rules?',
@@ -219,7 +226,7 @@ return [
     'column_account-iban'                  => 'Asset account (IBAN)',
     'column_account-id'                    => 'Asset account ID (matching FF3)',
     'column_account-name'                  => 'Asset account (name)',
-    'column_account-bic'                  => 'Asset account (BIC)',
+    'column_account-bic'                   => 'Asset account (BIC)',
     'column_amount'                        => 'Amount',
     'column_amount_foreign'                => 'Amount (in foreign currency)',
     'column_amount_debit'                  => 'Amount (debit column)',
