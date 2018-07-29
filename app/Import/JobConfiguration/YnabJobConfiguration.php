@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\JobConfiguration;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\JobConfiguration\Ynab\NewYnabJobHandler;
+use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectBudgetsHandler;
+use FireflyIII\Support\Import\JobConfiguration\Ynab\YnabJobConfigurationInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -33,6 +37,8 @@ use Log;
  */
 class YnabJobConfiguration implements JobConfigurationInterface
 {
+    /** @var YnabJobConfigurationInterface The job handler. */
+    private $handler;
     /** @var ImportJob The import job */
     private $importJob;
     /** @var ImportJobRepositoryInterface Import job repository */
@@ -45,16 +51,7 @@ class YnabJobConfiguration implements JobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        // config is only needed when the job is in stage "new".
-        if ($this->importJob->stage === 'new') {
-            Log::debug('YNAB configurationComplete: stage is new, return false');
-
-            return false;
-        }
-
-        Log::debug('YNAB configurationComplete: stage is not new, return true');
-
-        return true;
+        return $this->handler->configurationComplete();
     }
 
     /**
@@ -67,10 +64,7 @@ class YnabJobConfiguration implements JobConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        Log::debug('YNAB configureJob: nothing to do.');
-
-        // there is never anything to store from this job.
-        return new MessageBag;
+        return $this->handler->configureJob($data);
     }
 
     /**
@@ -80,24 +74,7 @@ class YnabJobConfiguration implements JobConfigurationInterface
      */
     public function getNextData(): array
     {
-        $data = [];
-        // here we update the job so it can redirect properly to YNAB
-        if ($this->importJob->stage === 'new') {
-
-            // update stage to make sure we catch the token.
-            $this->repository->setStage($this->importJob, 'catch-auth-code');
-            $clientId          = (string)config('import.options.ynab.client_id');
-            $callBackUri       = route('import.callback.ynab');
-            $uri               = sprintf(
-                'https://app.youneedabudget.com/oauth/authorize?client_id=%s&redirect_uri=%s&response_type=code&state=%s', $clientId, $callBackUri,
-                $this->importJob->key
-            );
-            $data['token-url'] = $uri;
-            Log::debug(sprintf('YNAB getNextData: URI to redirect to is %s', $uri));
-        }
-
-        return $data;
-
+        return $this->handler->getNextData();
     }
 
     /**
@@ -107,19 +84,53 @@ class YnabJobConfiguration implements JobConfigurationInterface
      */
     public function getNextView(): string
     {
-        Log::debug('Return YNAB redirect view.');
-        return 'import.ynab.redirect';
+        return $this->handler->getNextView();
     }
 
     /**
      * Set import job.
      *
      * @param ImportJob $importJob
+     *
+     * @throws FireflyException
      */
     public function setImportJob(ImportJob $importJob): void
     {
         $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
+        $this->handler = $this->getHandler();
+    }
+
+    /**
+     * Get correct handler.
+     *
+     * @return YnabJobConfigurationInterface
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function getHandler(): YnabJobConfigurationInterface
+    {
+        Log::debug(sprintf('Now in YnabJobConfiguration::getHandler() with stage "%s"', $this->importJob->stage));
+        $handler = null;
+        switch ($this->importJob->stage) {
+            case 'new':
+                /** @var NewYnabJobHandler $handler */
+                $handler = app(NewYnabJobHandler::class);
+                $handler->setImportJob($this->importJob);
+                break;
+            case 'select_budgets':
+                /** @var SelectBudgetsHandler $handler */
+                $handler = app(SelectBudgetsHandler::class);
+                $handler->setImportJob($this->importJob);
+                break;
+            default:
+                // @codeCoverageIgnoreStart
+                throw new FireflyException(sprintf('Firefly III cannot create a YNAB configuration handler for stage "%s"', $this->importJob->stage));
+            // @codeCoverageIgnoreEnd
+        }
+
+        return $handler;
     }
 }

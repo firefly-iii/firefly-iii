@@ -151,8 +151,9 @@ return [
         'spectre' => [
             'server' => 'www.saltedge.com',
         ],
-        'ynab' => [
-            'client_id' => '666db19f6c5a2299bf44999a6ea802e96a5f488c3a5c8a5cbb417b59dcf18b72',
+        'ynab'    => [
+            'live'    => 'api.youneedabudget.com',
+            'version' => 'v1',
         ],
         'plaid'   => [],
         'quovo'   => [],

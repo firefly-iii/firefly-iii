@@ -172,7 +172,7 @@ class Preferences
             $lastActivity = implode(',', $lastActivity);
         }
         $hash = md5($lastActivity);
-        Log::debug(sprintf('Value of last activity is %s, hash is %s', $lastActivity, $hash));
+        //Log::debug(sprintf('Value of last activity is %s, hash is %s', $lastActivity, $hash));
 
         return $hash;
     }

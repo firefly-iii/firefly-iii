@@ -132,11 +132,12 @@ class JobStatusController extends Controller
      */
     public function start(ImportJob $importJob): JsonResponse
     {
+        Log::debug('Now in JobStatusController::start');
         // catch impossible status:
         $allowed = ['ready_to_run', 'need_job_config'];
 
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
-            Log::error('Job is not ready.');
+            Log::error(sprintf('Job is not ready. Status should be in array, but is %s', $importJob->status), $allowed);
             $this->repository->setStatus($importJob, 'error');
 
             return response()->json(
@@ -157,7 +158,11 @@ class JobStatusController extends Controller
         /** @var RoutineInterface $routine */
         $routine = app($className);
         $routine->setImportJob($importJob);
+
+        Log::debug(sprintf('Created class of type %s', $className));
+
         try {
+            Log::debug(sprintf('Try to call %s:run()', $className));
             $routine->run();
         } catch (FireflyException|Exception $e) {
             $message = 'The import routine crashed: ' . $e->getMessage();
@@ -189,7 +194,7 @@ class JobStatusController extends Controller
         // catch impossible status:
         $allowed = ['provider_finished', 'storing_data'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
-            Log::error('Job is not ready.');
+            Log::error(sprintf('Job is not ready. Status should be in array, but is %s', $importJob->status), $allowed);
 
             return response()->json(
                 ['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "provider_finished" instead of "%s".', $importJob->status)]

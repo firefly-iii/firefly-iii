@@ -26,7 +26,9 @@ namespace FireflyIII\Import\Routine;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Import\Routine\Ynab\GetAccountsHandler;
 use FireflyIII\Support\Import\Routine\Ynab\StageGetAccessHandler;
+use FireflyIII\Support\Import\Routine\Ynab\StageGetBudgetsHandler;
 use Log;
 
 /**
@@ -61,12 +63,69 @@ class YnabRoutine implements RoutineInterface
                 $handler = app(StageGetAccessHandler::class);
                 $handler->setImportJob($this->importJob);
                 $handler->run();
-                $this->repository->setStage($this->importJob, 'get_transactions');
+
+                // back to correct stage:
+                $this->repository->setStatus($this->importJob, 'ready_to_run');
+                $this->repository->setStage($this->importJob, 'get_budgets');
+
                 return;
             }
+            if ('get_budgets' === $this->importJob->stage) {
+                $this->repository->setStatus($this->importJob, 'running');
+                /** @var StageGetBudgetsHandler $handler */
+                $handler = app(StageGetBudgetsHandler::class);
+                $handler->setImportJob($this->importJob);
+                $handler->run();
+
+                // count budgets in job, to determine next step.
+                $configuration = $this->repository->getConfiguration($this->importJob);
+                $budgets       = $configuration['budgets'] ?? [];
+
+                // if more than 1 budget, select budget first.
+                if (\count($budgets) > 0) { // TODO should be 1
+                    $this->repository->setStage($this->importJob, 'select_budgets');
+                    $this->repository->setStatus($this->importJob, 'need_job_config');
+                    return;
+                }
+
+                if (\count($budgets) === 1) {
+                    $this->repository->setStage($this->importJob, 'match_accounts');
+                }
+
+                return;
+            }
+            if('get_accounts' === $this->importJob->stage) {
+                $this->repository->setStatus($this->importJob, 'running');
+
+                /** @var GetAccountsHandler $handler */
+                $handler = app(GetAccountsHandler::class);
+                $handler->setImportJob($this->importJob);
+                $handler->run();
+
+                $this->repository->setStage($this->importJob, 'select_accounts');
+                $this->repository->setStatus($this->importJob, 'need_job_config');
+
+            }
+
+//            if ('match_accounts' === $this->importJob->stage) {
+//                // $this->repository->setStatus($this->importJob, 'running');
+//                /** @var StageGetBudgetsHandler $handler */
+//                $handler = app(StageGetBudgetsHandler::class);
+//                $handler->setImportJob($this->importJob);
+//                $handler->run();
+//                $this->repository->setStage($this->importJob, 'get_transactions');
+//            }
+//
+//            if ('get_transactions' === $this->importJob->stage) {
+//                // $this->repository->setStatus($this->importJob, 'running');
+//                /** @var StageGetBudgetsHandler $handler */
+//                $handler = app(StageGetBudgetsHandler::class);
+//                $handler->setImportJob($this->importJob);
+//                $handler->run();
+//                $this->repository->setStage($this->importJob, 'get_transactions');
+//            }
             throw new FireflyException(sprintf('YNAB import routine cannot handle stage "%s"', $this->importJob->stage));
         }
-        throw new FireflyException(sprintf('YNAB import routine cannot handle status "%s"', $this->importJob->status));
     }
 
     /**

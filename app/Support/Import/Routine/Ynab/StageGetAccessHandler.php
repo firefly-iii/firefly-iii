@@ -30,6 +30,7 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Log;
+use RuntimeException;
 
 /**
  * Class StageGetAccessHandler
@@ -66,12 +67,31 @@ class StageGetAccessHandler
             throw new FireflyException($e->getMessage());
         }
         $statusCode = $res->getStatusCode();
-        $content    = trim($res->getBody()->getContents());
+        try {
+            $content    = trim($res->getBody()->getContents());
+        } catch(RuntimeException $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            throw new FireflyException($e->getMessage());
+        }
+
         $json       = json_decode($content, true) ?? [];
         Log::debug(sprintf('Status code from YNAB is %d', $statusCode));
         Log::debug(sprintf('Body of result is %s', $content), $json);
-        Log::error('Hard exit');
-        exit;
+
+        // store refresh token (if present?) as preference
+        // store token in job:
+        $configuration                         = $this->repository->getConfiguration($this->importJob);
+        $configuration['access_token']         = $json['access_token'];
+        $configuration['access_token_expires'] = (int)$json['created_at'] + (int)$json['expires_in'];
+        $this->repository->setConfiguration($this->importJob, $configuration);
+
+        Log::debug('end of StageGetAccessHandler::run()');
+
+        $refreshToken = (string)($json['refresh_token'] ?? '');
+        if ('' !== $refreshToken) {
+            app('preferences')->set('ynab_refresh_token', $refreshToken);
+        }
     }
 
     /**
