@@ -27,7 +27,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\NewYnabJobHandler;
-use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectBudgetsHandler;
+use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectAccountsHandler;
+use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectBudgetHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\YnabJobConfigurationInterface;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -121,8 +122,12 @@ class YnabJobConfiguration implements JobConfigurationInterface
                 $handler->setImportJob($this->importJob);
                 break;
             case 'select_budgets':
-                /** @var SelectBudgetsHandler $handler */
-                $handler = app(SelectBudgetsHandler::class);
+                /** @var SelectBudgetHandler $handler */
+                $handler = app(SelectBudgetHandler::class);
+                $handler->setImportJob($this->importJob);
+                break;
+            case 'select_accounts':
+                $handler = app(SelectAccountsHandler::class);
                 $handler->setImportJob($this->importJob);
                 break;
             default:

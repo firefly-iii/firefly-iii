@@ -1,6 +1,6 @@
 <?php
 /**
- * SelectBudgetsHandler.php
+ * SelectBudgetHandler.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -29,9 +29,9 @@ use Illuminate\Support\MessageBag;
 use Log;
 
 /**
- * Class SelectBudgetsHandler
+ * Class SelectBudgetHandler
  */
-class SelectBudgetsHandler implements YnabJobConfigurationInterface
+class SelectBudgetHandler implements YnabJobConfigurationInterface
 {
     /** @var ImportJob */
     private $importJob;
@@ -45,7 +45,7 @@ class SelectBudgetsHandler implements YnabJobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        Log::debug('Now in SelectBudgetsHandler::configComplete');
+        Log::debug('Now in SelectBudgetHandler::configComplete');
         $configuration  = $this->repository->getConfiguration($this->importJob);
         $selectedBudget = $configuration['selected_budget'] ?? '';
         if ($selectedBudget !== '') {
@@ -67,7 +67,7 @@ class SelectBudgetsHandler implements YnabJobConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        Log::debug('Now in SelectBudgetsHandler::configureJob');
+        Log::debug('Now in SelectBudgetHandler::configureJob');
         $configuration                    = $this->repository->getConfiguration($this->importJob);
         $configuration['selected_budget'] = $data['budget_id'];
 
@@ -87,7 +87,7 @@ class SelectBudgetsHandler implements YnabJobConfigurationInterface
      */
     public function getNextData(): array
     {
-        Log::debug('Now in SelectBudgetsHandler::getNextData');
+        Log::debug('Now in SelectBudgetHandler::getNextData');
         $configuration = $this->repository->getConfiguration($this->importJob);
         $budgets       = $configuration['budgets'] ?? [];
         $return        = [];
@@ -107,7 +107,7 @@ class SelectBudgetsHandler implements YnabJobConfigurationInterface
      */
     public function getNextView(): string
     {
-        Log::debug('Now in SelectBudgetsHandler::getNextView');
+        Log::debug('Now in SelectBudgetHandler::getNextView');
 
         return 'import.ynab.select-budgets';
     }

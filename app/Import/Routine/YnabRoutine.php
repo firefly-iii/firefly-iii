@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Ynab\GetAccountsHandler;
+use FireflyIII\Support\Import\Routine\Ynab\ImportDataHandler;
 use FireflyIII\Support\Import\Routine\Ynab\StageGetAccessHandler;
 use FireflyIII\Support\Import\Routine\Ynab\StageGetBudgetsHandler;
 use Log;
@@ -104,7 +105,18 @@ class YnabRoutine implements RoutineInterface
 
                 $this->repository->setStage($this->importJob, 'select_accounts');
                 $this->repository->setStatus($this->importJob, 'need_job_config');
-
+                return;
+            }
+            if('go-for-import' === $this->importJob->stage) {
+                $this->repository->setStatus($this->importJob, 'running');
+                $this->repository->setStage($this->importJob, 'do_import');
+                /** @var ImportDataHandler $handler */
+                $handler = app(ImportDataHandler::class);
+                $handler->setImportJob($this->importJob);
+                $handler->run();
+                $this->repository->setStatus($this->importJob, 'provider_finished');
+                $this->repository->setStage($this->importJob, 'final');
+                return;
             }
 
 //            if ('match_accounts' === $this->importJob->stage) {
