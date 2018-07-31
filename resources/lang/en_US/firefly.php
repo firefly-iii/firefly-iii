@@ -701,6 +701,7 @@ return [
     'cash_accounts'                           => 'Cash accounts',
     'Cash account'                            => 'Cash account',
     'reconcile_account'                       => 'Reconcile account ":account"',
+    'overview_of_reconcile_modal'             => 'Overview of reconciliation',
     'delete_reconciliation'                   => 'Delete reconciliation',
     'update_reconciliation'                   => 'Update reconciliation',
     'amount_cannot_be_zero'                   => 'The amount cannot be zero',
