@@ -18,11 +18,20 @@
                                 <p>
                                     {{ trans('import.prereq_ynab_text')|raw }}
                                 </p>
+                                {% if not is_https %}
+                                <p class="text-danger">
+                                    {{ trans('import.callback_not_tls') }}
+                                    <br /><br />
+                                    <code>{{ callback_uri }}</code>
+                                </p>
+                                {% endif %}
+                                {% if is_https %}
                                 <p>
                                     {{ trans('import.prereq_ynab_redirect')|raw }}
                                     <br /><br />
                                     <code>{{ callback_uri }}</code>
                                 </p>
+                                {% endif %}
                             </div>
                         </div>
 
@@ -38,9 +47,16 @@
                         </div>
                     </div>
                     <div class="box-footer">
+                        {% if is_https %}
                         <button type="submit" class="btn pull-right btn-success">
                             {{ ('submit')|_ }}
                         </button>
+                        {% endif %}
+                        {% if not is_https %}
+                            <button type="submit" class="btn pull-right btn-warning">
+                                {{ ('submit_yes_really')|_ }}
+                            </button>
+                        {% endif %}
                     </div>
                 </div>
             </div>

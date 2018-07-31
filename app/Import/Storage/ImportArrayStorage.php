@@ -29,6 +29,8 @@ use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Filter\NegativeAmountFilter;
+use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\Transaction;
@@ -210,6 +212,35 @@ class ImportArrayStorage
         Log::debug(sprintf('Found %d user rules.', $set->count()));
 
         return $set;
+    }
+
+    /**
+     * @param $journal
+     *
+     * @return Transaction
+     */
+    private function getTransactionFromJournal($journal): Transaction
+    {
+        // collect transactions using the journal collector
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$journal]));
+
+        // add filter to remove transactions:
+        $transactionType = $journal->transactionType->type;
+        if ($transactionType === TransactionType::WITHDRAWAL) {
+            $collector->addFilter(PositiveAmountFilter::class);
+        }
+        if (!($transactionType === TransactionType::WITHDRAWAL)) {
+            $collector->addFilter(NegativeAmountFilter::class);
+        }
+        /** @var Transaction $result */
+        $result = $collector->getJournals()->first();
+        Log::debug(sprintf('Return transaction #%d with journal id #%d based on ID #%d', $result->id, $result->journal_id, $journal->id));
+
+        return $result;
     }
 
     /**
@@ -414,6 +445,18 @@ class ImportArrayStorage
                 continue;
             }
 
+            // do transfer detection again!
+            if ($this->checkForTransfers && $this->transferExists($store)) {
+                $this->logDuplicateTransfer($store);
+                $this->repository->addErrorMessage(
+                    $this->importJob, sprintf(
+                                        'Row #%d ("%s") could not be imported. Such a transfer already exists.',
+                                        $index,
+                                        $store['description']
+                                    )
+                );
+                continue;
+            }
 
             Log::debug(sprintf('Going to store entry %d of %d', $index + 1, $count));
             // convert the date to an object:
@@ -430,6 +473,14 @@ class ImportArrayStorage
             }
             Log::debug(sprintf('Stored as journal #%d', $journal->id));
             $collection->push($journal);
+
+            // add to collection of transfers, if necessary:
+            if ('transfer' === $store['type']) {
+                $transaction = $this->getTransactionFromJournal($journal);
+                Log::debug('We just stored a transfer, so add the journal to the list of transfers.');
+                $this->transfers->push($transaction);
+                Log::debug(sprintf('List length is now %d', $this->transfers->count()));
+            }
         }
         Log::debug('DONE storing!');
 

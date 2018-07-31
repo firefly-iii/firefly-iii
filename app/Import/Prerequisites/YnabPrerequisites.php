@@ -63,8 +63,9 @@ class YnabPrerequisites implements PrerequisitesInterface
         }
 
         $callBackUri = route('import.callback.ynab');
+        $isHttps     = 0 === strpos($callBackUri, 'https://');
 
-        return ['client_id' => $clientId, 'client_secret' => $clientSecret, 'callback_uri' => $callBackUri];
+        return ['client_id' => $clientId, 'client_secret' => $clientSecret, 'callback_uri' => $callBackUri, 'is_https' => $isHttps];
     }
 
     /**

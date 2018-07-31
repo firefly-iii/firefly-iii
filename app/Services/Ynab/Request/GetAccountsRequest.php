@@ -46,6 +46,7 @@ class GetAccountsRequest extends YnabRequest
         Log::debug(sprintf('URI is %s', $uri));
 
         $result = $this->authenticatedGetRequest($uri, []);
+        //Log::debug('Raw GetAccountsRequest result', $result);
 
         // expect data in [data][accounts]
         $this->accounts = $result['data']['accounts'] ?? [];

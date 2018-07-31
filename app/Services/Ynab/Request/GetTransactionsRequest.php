@@ -50,6 +50,7 @@ class GetTransactionsRequest extends YnabRequest
         Log::debug(sprintf('URI is %s', $uri));
 
         $result = $this->authenticatedGetRequest($uri, []);
+        //Log::debug('Raw GetTransactionsRequest result', $result);
 
         // expect data in [data][transactions]
         $this->transactions = $result['data']['transactions'] ?? [];

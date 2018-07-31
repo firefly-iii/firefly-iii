@@ -84,6 +84,7 @@ return [
     'prereq_ynab_title'                   => 'Prerequisites for an import from YNAB',
     'prereq_ynab_text'                    => 'In order to be able to download transactions from YNAB, please create a new application on your <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> and enter the client ID and secret on this page.',
     'prereq_ynab_redirect'                => 'To complete the configuration, enter the following URL at the <a href="https://app.youneedabudget.com/settings/developer">Developer Settings Page</a> under the "Redirect URI(s)".',
+    'callback_not_tls'                    => 'Firefly III has detected the following callback URI. It seems your server is not set up to accept TLS-connections (https). YNAB will not accept this URI. You may continue with the import (because Firefly III could be wrong) but please keep this in mind.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'        => 'Fake API key stored successfully!',
     'prerequisites_saved_for_spectre'     => 'App ID and secret stored!',
@@ -171,8 +172,8 @@ return [
     'job_config_ynab_no_budgets'           => 'There are no budgets available to be imported from.',
     'ynab_no_mapping'                      => 'It seems you have not selected any accounts to import from.',
     'job_config_ynab_bad_currency'         => 'You cannot import from the following budget(s), because you do not have accounts with the same currency as these budgets.',
-    'job_config_ynab_accounts_title' => 'Select accounts',
-    'job_config_ynab_accounts_text' => 'You have the following accounts available in this budget. Please select from which accounts you want to import, and where the transactions should be stored.',
+    'job_config_ynab_accounts_title'       => 'Select accounts',
+    'job_config_ynab_accounts_text'        => 'You have the following accounts available in this budget. Please select from which accounts you want to import, and where the transactions should be stored.',
 
 
     // keys from "extra" array:

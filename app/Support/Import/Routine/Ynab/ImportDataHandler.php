@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\Routine\Ynab;
 
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -68,13 +69,20 @@ class ImportDataHandler
         foreach ($mapping as $ynabId => $localId) {
             $localAccount = $this->getLocalAccount((int)$localId);
             $transactions = $this->getTransactions($token, $ynabId);
-            $converted = $this->convertToArray($transactions, $localAccount);
-            $total[]   = $converted;
+            $converted    = $this->convertToArray($transactions, $localAccount);
+            $total[]      = $converted;
         }
 
         $totalSet = array_merge(...$total);
         Log::debug(sprintf('Found %d transactions in total.', \count($totalSet)));
         $this->repository->setTransactions($this->importJob, $totalSet);
+
+        // assuming this works, store today's date as a preference
+        // (combined with the budget from which FF3 imported)
+        $budgetId = $this->getSelectedBudget()['id'] ?? '';
+        if ('' !== $budgetId) {
+            app('preferences')->set('ynab_' . $budgetId, Carbon::now()->format('Y-m-d'));
+        }
     }
 
     /**
@@ -100,24 +108,38 @@ class ImportDataHandler
      */
     private function convertToArray(array $transactions, Account $localAccount): array
     {
-        $array = [];
-        $total = \count($transactions);
-        $budget             = $this->getSelectedBudget();
+        $config = $this->repository->getConfiguration($this->importJob);
+        $array  = [];
+        $total  = \count($transactions);
+        $budget = $this->getSelectedBudget();
         Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', \count($transactions)));
         /** @var array $transaction */
         foreach ($transactions as $index => $transaction) {
-            Log::debug(sprintf('Now creating array for transaction %d of %d', $index + 1, $total));
+            $description = $transaction['memo'] ?? '(empty)';
+            Log::debug(sprintf('Now creating array for transaction %d of %d ("%s")', $index + 1, $total, $description));
             $amount = (string)($transaction['amount'] ?? 0);
             if ('0' === $amount) {
+                Log::debug(sprintf('Amount is zero (%s), skip this transaction.', $amount));
                 continue;
             }
-            $source          = $localAccount;
-            $type            = 'withdrawal';
-            $tags            = [
+            Log::debug(sprintf('Amount detected is %s', $amount));
+            $source                = $localAccount;
+            $type                  = 'withdrawal';
+            $tags                  = [
                 $transaction['cleared'] ?? '',
                 $transaction['approved'] ? 'approved' : 'not-approved',
                 $transaction['flag_color'] ?? '',
             ];
+            $possibleDestinationId = null;
+            if (null !== $transaction['transfer_account_id']) {
+                // indication that it is a transfer.
+                $possibleDestinationId = $config['mapping'][$transaction['transfer_account_id']] ?? null;
+                Log::debug(sprintf('transfer_account_id has value %s', $transaction['transfer_account_id']));
+                Log::debug(sprintf('Can map this to the following FF3 asset account: %d', $possibleDestinationId));
+                $type = 'transfer';
+
+            }
+
             $destinationData = [
                 'name'   => $transaction['payee_name'],
                 'iban'   => null,
@@ -125,25 +147,28 @@ class ImportDataHandler
                 'bic'    => null,
             ];
 
-            $destination = $this->mapper->map(null, $amount, $destinationData);
-
+            $destination = $this->mapper->map($possibleDestinationId, $amount, $destinationData);
             if (1 === bccomp($amount, '0')) {
                 [$source, $destination] = [$destination, $source];
-                $type = 'deposit';
+                $type = $type === 'transfer' ? 'transfer' : 'deposit';
+                Log::debug(sprintf('Amount is %s, so switch source/dest and make this a %s', $amount, $type));
             }
 
-            $entry   = [
+            Log::debug(sprintf('Final source account: #%d ("%s")', $source->id, $source->name));
+            Log::debug(sprintf('Final destination account: #%d ("%s")', $destination->id, $destination->name));
+
+            $entry = [
                 'type'            => $type,
                 'date'            => $transaction['date'] ?? date('Y-m-d'),
-                'tags'            => $tags, // TODO
+                'tags'            => $tags,
                 'user'            => $this->importJob->user_id,
-                'notes'           => null, // TODO
+                'notes'           => null,
 
                 // all custom fields:
                 'external_id'     => $transaction['id'] ?? '',
 
                 // journal data:
-                'description'     => $transaction['memo'] ?? '(empty)',
+                'description'     => $description,
                 'piggy_bank_id'   => null,
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
@@ -172,6 +197,7 @@ class ImportDataHandler
                     ],
                 ],
             ];
+            Log::debug(sprintf('Done with entry #%d', $index));
             $array[] = $entry;
         }
 

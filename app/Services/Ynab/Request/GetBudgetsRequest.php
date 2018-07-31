@@ -50,6 +50,7 @@ class GetBudgetsRequest extends YnabRequest
         Log::debug(sprintf('URI is %s', $uri));
 
         $result = $this->authenticatedGetRequest($uri, []);
+        //Log::debug('Raw GetBudgetsRequest result', $result);
 
         // expect data in [data][budgets]
         $rawBudgets   = $result['data']['budgets'] ?? [];
