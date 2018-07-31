@@ -171,6 +171,9 @@ return [
     'job_config_ynab_no_budgets'           => 'There are no budgets available to be imported from.',
     'ynab_no_mapping'                      => 'It seems you have not selected any accounts to import from.',
     'job_config_ynab_bad_currency'         => 'You cannot import from the following budget(s), because you do not have accounts with the same currency as these budgets.',
+    'job_config_ynab_accounts_title' => 'Select accounts',
+    'job_config_ynab_accounts_text' => 'You have the following accounts available in this budget. Please select from which accounts you want to import, and where the transactions should be stored.',
+
 
     // keys from "extra" array:
     'spectre_extra_key_iban'               => 'IBAN',

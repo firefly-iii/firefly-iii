@@ -23,8 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\JobConfiguration\Ynab;
 
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
 
@@ -33,6 +38,12 @@ use Log;
  */
 class SelectBudgetHandler implements YnabJobConfigurationInterface
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
+    /** @var Collection */
+    private $accounts;
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepository;
     /** @var ImportJob */
     private $importJob;
     /** @var ImportJobRepositoryInterface */
@@ -51,6 +62,7 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
         if ($selectedBudget !== '') {
             Log::debug(sprintf('Selected budget is %s, config is complete. Return true.', $selectedBudget));
             $this->repository->setStage($this->importJob, 'get_accounts');
+
             return true;
         }
         Log::debug('User has not selected a budget yet, config is not yet complete.');
@@ -90,13 +102,24 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
         Log::debug('Now in SelectBudgetHandler::getNextData');
         $configuration = $this->repository->getConfiguration($this->importJob);
         $budgets       = $configuration['budgets'] ?? [];
-        $return        = [];
+        $available     = [];
+        $notAvailable  = [];
+        $total         = \count($budgets);
         foreach ($budgets as $budget) {
-            $return[$budget['id']] = $budget['name'] . ' (' . $budget['currency_code'] . ')';
+            if ($this->haveAssetWithCurrency($budget['currency_code'])) {
+                Log::debug('Add budget to available list.');
+                $available[$budget['id']] = $budget['name'] . ' (' . $budget['currency_code'] . ')';
+                continue;
+            }
+            Log::debug('Add budget to notAvailable list.');
+            $notAvailable[$budget['id']] = $budget['name'] . ' (' . $budget['currency_code'] . ')';
+
         }
 
         return [
-            'budgets' => $return,
+            'available'     => $available,
+            'not_available' => $notAvailable,
+            'total'         => $total,
         ];
     }
 
@@ -119,8 +142,44 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob  = $importJob;
-        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->importJob          = $importJob;
+        $this->repository         = app(ImportJobRepositoryInterface::class);
+        $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+        $this->accountRepository  = app(AccountRepositoryInterface::class);
+
         $this->repository->setUser($importJob->user);
+        $this->currencyRepository->setUser($importJob->user);
+        $this->accountRepository->setUser($importJob->user);
+        $this->accountRepository->setUser($importJob->user);
+
+        $this->accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+    }
+
+    /**
+     * @param string $code
+     *
+     * @return bool
+     */
+    private function haveAssetWithCurrency(string $code): bool
+    {
+        $currency = $this->currencyRepository->findByCodeNull($code);
+        if (null === $currency) {
+            Log::debug(sprintf('No currency found with code "%s"', $code));
+
+            return false;
+        }
+        /** @var Account $account */
+        foreach ($this->accounts as $account) {
+            $currencyId = (int)$this->accountRepository->getMetaValue($account, 'currency_id');
+            Log::debug(sprintf('Currency of %s is %d (looking for %d).', $account->name, $currencyId, $currency->id));
+            if ($currencyId === $currency->id) {
+                Log::debug('Return true!');
+
+                return true;
+            }
+        }
+        Log::debug('Found nothing, return false.');
+
+        return false;
     }
 }
