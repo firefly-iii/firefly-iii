@@ -223,8 +223,8 @@ class ImportArrayStorage
     {
         // collect transactions using the journal collector
         $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setUser($this->importJob->user);
+        $collector->withOpposingAccount();
         // filter on specific journals.
         $collector->setJournals(new Collection([$journal]));
 

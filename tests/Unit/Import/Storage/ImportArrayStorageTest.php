@@ -125,7 +125,8 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
-        $collector->shouldReceive('setUser')->once();
+        $collector->shouldReceive('setUser')->times(2);
+
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -142,12 +143,19 @@ class ImportArrayStorageTest extends TestCase
 
 
         // mock collector so it will return some transfers:
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->times(1)->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::TRANSFER]])->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->times(2)->andReturnSelf();
         $collector->shouldReceive('ignoreCache')->once()->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transferCollection);
+
+        // set journals for the return method.
+        $collector->shouldReceive('setJournals')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
+
+
+
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
@@ -400,6 +408,8 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('store')->once()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(2);
 
+
+
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
         $result = new Collection;
@@ -455,7 +465,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
-        $collector->shouldReceive('setUser')->once();
+        $collector->shouldReceive('setUser')->times(2); // twice for transfer
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -471,9 +481,13 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::TRANSFER]])->once()->andReturnSelf();
         $collector->shouldReceive('ignoreCache')->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->times(2)->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
         $collector->shouldReceive('getJournals')->andReturn($transferCollection);
+
+        // set journals for the return method.
+        $collector->shouldReceive('setJournals')->andReturnSelf();
+        $collector->shouldReceive('addFilter')->andReturnSelf();
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);

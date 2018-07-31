@@ -30,7 +30,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
-
+use Mockery;
 /**
  * Class CurrencyControllerTest
  *
@@ -121,7 +121,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.create'));
@@ -160,7 +160,7 @@ class CurrencyControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.delete', [2]));
@@ -182,7 +182,7 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
         $repository->shouldReceive('destroy')->andReturn(true)->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(1)->andReturn(true);
 
         $this->session(['currencies.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -202,7 +202,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.edit', [1]));
@@ -227,7 +227,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn($currencies->first());
         $repository->shouldReceive('get')->andReturn($currencies);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.index'));
@@ -250,7 +250,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn(new TransactionCurrency);
         $repository->shouldReceive('get')->andReturn(new Collection);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(false);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.index'));
