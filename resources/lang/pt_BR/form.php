@@ -237,5 +237,6 @@ return [
     'repetitions'             => 'Repetitions',
     'calendar'                => 'Calendar',
     'weekend'                 => 'Weekend',
+    'client_secret'           => 'Client secret',
 
 ];
