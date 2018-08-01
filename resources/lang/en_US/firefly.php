@@ -1131,6 +1131,13 @@ return [
     'destination_transaction'               => 'Destination transaction',
     'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Deleted link',
+    'link_is (partially) paid for by'       => 'is (partially) paid for by',
+    'link_(partially) pays for'             => '(partially) pays for',
+    'link_is (partially) refunded by'       => 'is (partially) refunded by',
+    'link_(partially) refunds'              => '(partially) refunds',
+    'link_is (partially) reimbursed by'     => 'is (partially) reimbursed by',
+    'link_(partially) reimburses'           => '(partially) reimburses',
+    'link_relates to'                       => 'relates to',
 
     // link translations:
     'relates to_inward'                     => 'relates to',
