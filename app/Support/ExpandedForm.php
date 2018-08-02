@@ -756,6 +756,7 @@ class ExpandedForm
      */
     public function textarea(string $name, $value = null, array $options = null): string
     {
+        $value           = $value ?? '';
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
@@ -791,7 +792,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         /** @var Collection $currencies */
-        $currencies      = app('amount')->getAllCurrencies();
+        $currencies = app('amount')->getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
