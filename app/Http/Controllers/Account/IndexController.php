@@ -79,7 +79,7 @@ class IndexController extends Controller
         // sort collection:
         $collection = $collection->sortBy(
             function (Account $account) {
-                return ($account->active ? '1' : '0') . $account->name;
+                return ($account->active ? '0' : '1') . $account->name;
             }
         );
 
