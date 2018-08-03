@@ -192,6 +192,53 @@ class JournalLinkControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
+    public function testStoreWithNull(): void
+    {
+        $journalLink                        = TransactionJournalLink::first();
+        $journal                            = $this->user()->transactionJournals()->find(1);
+        $transaction                        = Transaction::first();
+        $transaction->date                  = new Carbon;
+        $transaction->transaction_type_type = 'Withdrawal';
+
+        // mock stuff:
+        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $journalRepos->shouldReceive('setUser')->once();
+        $collector->shouldReceive('setUser')->withAnyArgs();
+
+        $collector->shouldReceive('setUser')->withAnyArgs();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setJournals')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+
+        $journalRepos->shouldReceive('findNull')->andReturn(null);
+
+
+        // data to submit
+        $data = [
+            'link_type_id' => '1',
+            'inward_id'    => '1',
+            'outward_id'   => '2',
+            'notes'        => 'Some notes',
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('Source or destination is NULL.'); // error message
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     */
     public function testUpdate(): void
     {
 
@@ -235,5 +282,54 @@ class JournalLinkControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee($journalLink->created_at->toAtomString()); // the creation moment.
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     */
+    public function testUpdateWithNull(): void
+    {
+
+        // mock repositories
+        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(JournalCollectorInterface::class);
+
+        $journalLink                        = TransactionJournalLink::first();
+        $journal                            = $this->user()->transactionJournals()->find(1);
+        $transaction                        = Transaction::first();
+        $transaction->date                  = new Carbon;
+        $transaction->transaction_type_type = 'Withdrawal';
+
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+        $journalRepos->shouldReceive('setUser')->once();
+        $collector->shouldReceive('setUser')->withAnyArgs();
+
+        $collector->shouldReceive('setUser')->withAnyArgs();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setJournals')->andReturnSelf();
+        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+
+        $journalRepos->shouldReceive('findNull')->andReturn(null);
+        $repository->shouldReceive('updateLink')->once()->andReturn($journalLink);
+
+        // data to submit
+        $data = [
+            'link_type_id' => '1',
+            'inward_id'    => '1',
+            'outward_id'   => '2',
+            'notes'        => 'Some notes',
+        ];
+
+        // test API
+        $response = $this->put('/api/v1/journal_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('Source or destination is NULL.'); // the creation moment.
+        $response->assertHeader('Content-Type', 'application/json');
     }
 }

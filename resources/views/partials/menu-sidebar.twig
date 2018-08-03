@@ -27,6 +27,11 @@
                     <i class="fa fa-download fa-fw"></i> {{ 'revenue_accounts'|_ }}
                 </a>
             </li>
+            <li class="{{ activeRoutePartialWhat('accounts', 'liabilities') }}">
+                <a href="{{ route('accounts.index','liabilities') }}">
+                    <i class="fa fa-ticket fa-fw"></i> {{ 'liabilities_accounts'|_ }}
+                </a>
+            </li>
         </ul>
     </li>
     <li class="{{ activeRoutePartial('budgets') }}" id="budget-menu">

@@ -197,10 +197,11 @@ return [
         ],
     'accountTypesByIdentifier' =>
         [
-            'asset'   => ['Default account', 'Asset account'],
-            'expense' => ['Expense account', 'Beneficiary account'],
-            'revenue' => ['Revenue account'],
-            'import'  => ['Import account'],
+            'asset'       => ['Default account', 'Asset account'],
+            'expense'     => ['Expense account', 'Beneficiary account'],
+            'revenue'     => ['Revenue account'],
+            'import'      => ['Import account'],
+            'liabilities' => ['Loan', 'Debt', 'Credit card', 'Mortgage'],
         ],
     'accountTypeByIdentifier'  =>
         [
@@ -267,7 +268,7 @@ return [
         'journalLink'       => \FireflyIII\Models\TransactionJournalLink::class,
         'currency'          => \FireflyIII\Models\TransactionCurrency::class,
         'piggyBank'         => \FireflyIII\Models\PiggyBank::class,
-        'preference'         => \FireflyIII\Models\Preference::class,
+        'preference'        => \FireflyIII\Models\Preference::class,
         'tj'                => \FireflyIII\Models\TransactionJournal::class,
         'tag'               => \FireflyIII\Models\Tag::class,
         'recurrence'        => \FireflyIII\Models\Recurrence::class,

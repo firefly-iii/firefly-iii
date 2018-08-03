@@ -35,51 +35,19 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class AccountType extends Model
 {
-    /**
-     *
-     */
-    public const DEFAULT = 'Default account';
-    /**
-     *
-     */
-    public const CASH = 'Cash account';
-    /**
-     *
-     */
-    public const ASSET = 'Asset account';
-    /**
-     *
-     */
-    public const EXPENSE = 'Expense account';
-    /**
-     *
-     */
-    public const REVENUE = 'Revenue account';
-    /**
-     *
-     */
+    public const DEFAULT         = 'Default account';
+    public const CASH            = 'Cash account';
+    public const ASSET           = 'Asset account';
+    public const EXPENSE         = 'Expense account';
+    public const REVENUE         = 'Revenue account';
     public const INITIAL_BALANCE = 'Initial balance account';
-    /**
-     *
-     */
-    public const BENEFICIARY = 'Beneficiary account';
-    /**
-     *
-     */
-    public const IMPORT = 'Import account';
-    /**
-     *
-     */
-    public const RECONCILIATION = 'Reconciliation account';
-    /**
-     *
-     */
-    public const LOAN = 'Loan';
-    /**
-     * The attributes that should be casted to native types.
-     *
-     * @var array
-     */
+    public const BENEFICIARY     = 'Beneficiary account';
+    public const IMPORT          = 'Import account';
+    public const RECONCILIATION  = 'Reconciliation account';
+    public const LOAN            = 'Loan';
+    public const DEBT            = 'Debt';
+    public const MORTGAGE        = 'Mortgage';
+    public const CREDITCARD      = 'Credit card';
     protected $casts
         = [
             'created_at' => 'datetime',
