@@ -95,19 +95,13 @@ trait JournalServiceTrait
      */
     protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
-
-        if (!isset($data[$field])) {
-            Log::debug(sprintf('Want to store meta-field "%s", but no value.', $field));
-
-            return;
-        }
         $set = [
             'journal' => $journal,
             'name'    => $field,
-            'data'    => (string)$data[$field],
+            'data'    => (string)($data[$field] ?? ''),
         ];
 
-        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $field, (string)$data[$field]));
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
 
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);
