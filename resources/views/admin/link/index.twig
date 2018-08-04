@@ -35,13 +35,13 @@
                                     {% endif %}
                                 </td>
                                 <td>
-                                    <strong>{{ linkType.name }}</strong>
+                                    <strong>{{ journalLinkTranslation('name', linkType.name) }}</strong>
                                 </td>
                                 <td>
-                                    {{ linkType.inward }}
+                                    {{ journalLinkTranslation('inward', linkType.inward) }}
                                 </td>
                                 <td>
-                                    {{ linkType.outward }}
+                                    {{ journalLinkTranslation('outward', linkType.outward) }}
                                 </td>
                                 <td data-value="{{ linkType.journalCount }}">
                                     <a href="{{ route('admin.links.show', [linkType.id]) }}">{{ linkType.journalCount }}</a>

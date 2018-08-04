@@ -1135,6 +1135,10 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'deleted_link'                          => 'Bağlantı silindi',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'ile ilişkili',
     'is (partially) refunded by_inward'     => 'tarafından (kısmen) geri ödendi',
     'is (partially) paid for by_inward'     => 'tarafından (kısmen) ödendi',

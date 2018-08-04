@@ -1133,6 +1133,10 @@ Sollen zusätzlich Ihre Girokonten angezeigt werden?',
     'deleted_link'                          => 'Verknüpfung löschen',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'bezieht sich auf',
     'is (partially) refunded by_inward'     => 'wird (teilweise) erstattet durch',
     'is (partially) paid for by_inward'     => 'wird (teilweise) bezahlt von',

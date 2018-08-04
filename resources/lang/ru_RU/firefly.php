@@ -1132,6 +1132,10 @@ return [
     'deleted_link'                          => 'Связь удалена',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'связано с',
     'is (partially) refunded by_inward'     => '(частично) возвращён',
     'is (partially) paid for by_inward'     => '(частично) оплачен',

@@ -1132,6 +1132,10 @@ return [
     'deleted_link'                          => 'Elimina collegamento',
 
     // link translations:
+    'Paid_name'                             => 'Pagata',
+    'Refund_name'                           => 'Rimborso',
+    'Reimbursement_name'                    => 'Rimborso',
+    'Related_name'                          => 'Inerente',
     'relates to_inward'                     => 'inerente a',
     'is (partially) refunded by_inward'     => 'è (parzialmente) rimborsata da',
     'is (partially) paid for by_inward'     => 'è (parzialmente) pagata da',

@@ -8,7 +8,7 @@
         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
             <div class="box box-default">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ trans('firefly.overview_for_link', {name: linkType.name}) }}</h3>
+                    <h3 class="box-title">{{ trans('firefly.overview_for_link', {name: journalLinkTranslation('name', linkType.name)}) }}</h3>
                 </div>
                 <div class="box-body no-padding">
                     <table class="table table-hover sortable">
@@ -36,7 +36,7 @@
                                     <a href="{{ route('transactions.show', [link.source_id]) }}">{{ link.source.description }}</a>
                                 </td>
                                 <td>{{ link.source|journalTotalAmount }}</td>
-                                <td>{{ linkType.outward }}</td>
+                                <td>{{ journalLinkTranslation('outward', linkType.outward) }}</td>
                                 <td data-value="{{ link.destination.description }}">
                                     <a href="{{ route('transactions.show', [link.destination_id]) }}">{{ link.destination.description }}</a>
                                 </td>
