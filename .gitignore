@@ -12,4 +12,3 @@ yarn-error.log
 public/google*.html
 report.html
 composer.phar
-/.idea
