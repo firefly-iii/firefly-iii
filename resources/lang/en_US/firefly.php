@@ -60,6 +60,7 @@ return [
     'new_asset_account'                          => 'New asset account',
     'new_expense_account'                        => 'New expense account',
     'new_revenue_account'                        => 'New revenue account',
+    'new_liabilities_account'                    => 'New liability',
     'new_budget'                                 => 'New budget',
     'new_bill'                                   => 'New bill',
     'block_account_logout'                       => 'You have been logged out. Blocked accounts cannot use this site. Did you register with a valid email address?',
@@ -589,6 +590,8 @@ return [
     'invalid_convert_selection'               => 'The account you have selected is already used in this transaction or does not exist.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
+
+
     // create new stuff:
     'create_new_withdrawal'                   => 'Create new withdrawal',
     'create_new_deposit'                      => 'Create new deposit',
@@ -695,6 +698,7 @@ return [
     'make_new_asset_account'                  => 'Create a new asset account',
     'make_new_expense_account'                => 'Create a new expense account',
     'make_new_revenue_account'                => 'Create a new revenue account',
+    'make_new_liabilities_account'            => 'Create a new liability',
     'asset_accounts'                          => 'Asset accounts',
     'expense_accounts'                        => 'Expense accounts',
     'revenue_accounts'                        => 'Revenue accounts',
@@ -734,7 +738,7 @@ return [
     'select_more_than_one_category'           => 'Please select more than one category',
     'select_more_than_one_budget'             => 'Please select more than one budget',
     'select_more_than_one_tag'                => 'Please select more than one tag',
-    'account_default_currency'                => 'If you select another currency, new transactions from this account will have this currency pre-selected.',
+    'account_default_currency'                => 'This will be the default currency associated with this account.',
     'reconcile_has_more'                      => 'Your Firefly III ledger has more money in it than your bank claims you should have. There are several options. Please choose what to do. Then, press "Confirm reconciliation".',
     'reconcile_has_less'                      => 'Your Firefly III ledger has less money in it than your bank claims you should have. There are several options. Please choose what to do. Then, press "Confirm reconciliation".',
     'reconcile_is_equal'                      => 'Your Firefly III ledger and your bank statements match. There is nothing to do. Please press "Confirm reconciliation" to confirm your input.',
@@ -854,6 +858,10 @@ return [
     'Expense account'                         => 'Expense account',
     'Revenue account'                         => 'Revenue account',
     'Initial balance account'                 => 'Initial balance account',
+    'account_type_Debt'                       => 'Debt',
+    'account_type_Loan'                       => 'Loan',
+    'account_type_Mortgage'                   => 'Mortgage',
+    'account_type_Credit card'                => 'Credit card',
     'budgets'                                 => 'Budgets',
     'tags'                                    => 'Tags',
     'reports'                                 => 'Reports',
@@ -883,6 +891,10 @@ return [
     'monthly'                                 => 'Monthly',
     'profile'                                 => 'Profile',
     'errors'                                  => 'Errors',
+    'debt_start_date'                         => 'Start date of debt',
+    'debt_start_amount'                       => 'Start amount of debt',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'store_new_liabilities_account'           => 'Store new liability',
 
     // reports:
     'report_default'                          => 'Default financial report between :start and :end',
@@ -1132,13 +1144,6 @@ return [
     'destination_transaction'               => 'Destination transaction',
     'delete_journal_link'                   => 'Delete the link between <a href=":source_link">:source</a> and <a href=":destination_link">:destination</a>',
     'deleted_link'                          => 'Deleted link',
-    'link_is (partially) paid for by'       => 'is (partially) paid for by',
-    'link_(partially) pays for'             => '(partially) pays for',
-    'link_is (partially) refunded by'       => 'is (partially) refunded by',
-    'link_(partially) refunds'              => '(partially) refunds',
-    'link_is (partially) reimbursed by'     => 'is (partially) reimbursed by',
-    'link_(partially) reimburses'           => '(partially) reimburses',
-    'link_relates to'                       => 'relates to',
 
     // link translations:
     'Paid_name'                             => 'Paid',
