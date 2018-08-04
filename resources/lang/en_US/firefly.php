@@ -1141,6 +1141,10 @@ return [
     'link_relates to'                       => 'relates to',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'relates to',
     'is (partially) refunded by_inward'     => 'is (partially) refunded by',
     'is (partially) paid for by_inward'     => 'is (partially) paid for by',
