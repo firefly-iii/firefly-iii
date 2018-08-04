@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
+use Log;
 
 /**
  * Trait RecurrenceValidation
@@ -187,6 +188,7 @@ trait RecurrenceValidation
         try {
             Carbon::createFromFormat('Y-m-d', $moment);
         } catch (InvalidArgumentException|Exception $e) {
+            Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }

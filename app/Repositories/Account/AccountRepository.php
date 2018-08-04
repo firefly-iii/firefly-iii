@@ -169,6 +169,18 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * Return account type or null if not found.
+     *
+     * @param string $type
+     *
+     * @return AccountType|null
+     */
+    public function getAccountTypeByType(string $type): ?AccountType
+    {
+        return AccountType::whereType($type)->first();
+    }
+
+    /**
      * @param array $accountIds
      *
      * @return Collection
@@ -373,6 +385,7 @@ class AccountRepository implements AccountRepositoryInterface
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
+     *
      * @return TransactionJournal|null
      */
     public function oldestJournal(Account $account): ?TransactionJournal

@@ -591,7 +591,6 @@ return [
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Create new withdrawal',
     'create_new_deposit'                      => 'Create new deposit',
@@ -689,6 +688,7 @@ return [
     'delete_asset_account'                    => 'Delete asset account ":name"',
     'delete_expense_account'                  => 'Delete expense account ":name"',
     'delete_revenue_account'                  => 'Delete revenue account ":name"',
+    'delete_liabilities_account'              => 'Delete liability ":name"',
     'asset_deleted'                           => 'Successfully deleted asset account ":name"',
     'expense_deleted'                         => 'Successfully deleted expense account ":name"',
     'revenue_deleted'                         => 'Successfully deleted revenue account ":name"',
@@ -756,6 +756,9 @@ return [
     'already_cleared_transactions'            => 'Already cleared transactions (:count)',
     'submitted_end_balance'                   => 'Submitted end balance',
     'initial_balance_description'             => 'Initial balance for ":account"',
+    'interest_calc_daily'                     => 'Per day',
+    'interest_calc_monthly'                   => 'Per month',
+    'interest_calc_yearly'                    => 'Per year',
 
     // categories:
     'new_category'                            => 'New category',

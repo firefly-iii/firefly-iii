@@ -86,6 +86,7 @@ return [
     'remember_me'                 => 'Remember me',
     'liability_type_id'           => 'Liability type',
     'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Source account (asset account)',
     'destination_account_expense' => 'Destination account (expense account)',

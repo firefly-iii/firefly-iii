@@ -49,7 +49,7 @@ trait AccountServiceTrait
     /** @var array */
     public $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
     /** @var array */
-    public $validFields = ['accountNumber', 'currency_id', 'BIC'];
+    public $validFields = ['accountNumber', 'currency_id', 'BIC','interest','interest_period'];
 
     /**
      * @param Account $account

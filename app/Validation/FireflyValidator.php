@@ -38,7 +38,9 @@ use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
+use Log;
 
 /**
  * Class FireflyValidator.
@@ -195,12 +197,12 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateMore($attribute, $value, $parameters): bool
+    public function validateLess($attribute, $value, $parameters): bool
     {
         /** @var mixed $compare */
         $compare = $parameters[0] ?? '0';
 
-        return bccomp((string)$value, (string)$compare) > 0;
+        return bccomp((string)$value, (string)$compare) < 0;
     }
 
     /**
@@ -211,14 +213,13 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateLess($attribute, $value, $parameters): bool
+    public function validateMore($attribute, $value, $parameters): bool
     {
         /** @var mixed $compare */
         $compare = $parameters[0] ?? '0';
 
-        return bccomp((string)$value, (string)$compare) < 0;
+        return bccomp((string)$value, (string)$compare) > 0;
     }
-
 
     /**
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
@@ -291,7 +292,7 @@ class FireflyValidator extends Validator
                 case 'link_to_bill':
                     /** @var BillRepositoryInterface $repository */
                     $repository = app(BillRepositoryInterface::class);
-                    $bill       = $repository->findByName((string)$value);
+                    $bill       = $repository->findByName($value);
 
                     return null !== $bill;
                 case 'invalid':
@@ -468,7 +469,7 @@ class FireflyValidator extends Validator
 
         if ((int)$accountId > 0) {
             // exclude current account from check.
-            $query->where('account_meta.account_id', '!=', (int)$accountId);
+            $query->where('account_meta.account_id', '!=', $accountId);
         }
         $set = $query->get(['account_meta.*']);
 
@@ -499,9 +500,7 @@ class FireflyValidator extends Validator
     public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
     {
         $value = $this->tryDecrypt($value);
-        // exclude?
-        $table   = $parameters[0];
-        $field   = $parameters[1];
+        [$table, $field] = $parameters;
         $exclude = (int)($parameters[2] ?? 0.0);
 
         /*
@@ -630,7 +629,7 @@ class FireflyValidator extends Validator
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
-            // do not care.
+            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }
 
         return $value;
@@ -717,11 +716,14 @@ class FireflyValidator extends Validator
      */
     private function validateByAccountTypeString(string $value, array $parameters, string $type): bool
     {
-        $search      = Config::get('firefly.accountTypeByIdentifier.' . $type);
-        $accountType = AccountType::whereType($search)->first();
-        $ignore      = (int)($parameters[0] ?? 0.0);
-
-        $set = auth()->user()->accounts()->where('account_type_id', $accountType->id)->where('id', '!=', $ignore)->get();
+        /** @var array $search */
+        $search = Config::get('firefly.accountTypeByIdentifier.' . $type);
+        /** @var Collection $accountTypes */
+        $accountTypes   = AccountType::whereIn('type', $search)->get();
+        $ignore         = (int)($parameters[0] ?? 0.0);
+        $accountTypeIds = $accountTypes->pluck('id')->toArray();
+        /** @var Collection $set */
+        $set = auth()->user()->accounts()->whereIn('account_type_id', $accountTypeIds)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
             if ($entry->name === $value) {

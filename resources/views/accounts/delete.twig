@@ -33,7 +33,7 @@
                                 {% endif %}
                             </p>
                         {% endif %}
-                        {% if account.transactions.count > 0 %}
+                        {% if account.transactions.count > 0 and account.accountType.type == 'Asset account' %}
                             <p class="text-success">
                                 {{ 'save_transactions_by_moving'|_ }}
                             </p>

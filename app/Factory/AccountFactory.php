@@ -32,6 +32,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
+use Log;
 
 /**
  * Factory to create or return accounts.
@@ -80,8 +81,9 @@ class AccountFactory
                 'iban'            => $data['iban'],
             ];
 
-            // remove virtual balance when not an asset account:
-            if ($type->type !== AccountType::ASSET) {
+            // remove virtual balance when not an asset account or a liability
+            $canHaveVirtual = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+            if (!\in_array($type->type, $canHaveVirtual, true)) {
                 $databaseData['virtual_balance'] = '0';
             }
 
@@ -93,7 +95,7 @@ class AccountFactory
             $return = Account::create($databaseData);
             $this->updateMetaData($return, $data);
 
-            if ($type->type === AccountType::ASSET) {
+            if (\in_array($type->type, $canHaveVirtual, true)) {
                 if ($this->validIBData($data)) {
                     $this->updateIB($return, $data);
                 }
@@ -188,9 +190,12 @@ class AccountFactory
             $result = AccountType::find($accountTypeId);
         }
         if (null === $result) {
-            /** @var string $type */
-            $type   = (string)config('firefly.accountTypeByIdentifier.' . $accountType);
-            $result = AccountType::whereType($type)->first();
+            Log::debug(sprintf('No account type found by ID, continue search for "%s".', $accountType));
+            /** @var array $types */
+            $types = config('firefly.accountTypeByIdentifier.' . $accountType) ?? [];
+            if (\count($types) > 0) {
+                $result = AccountType::whereIn('types', $types)->first();
+            }
             if (null === $result && null !== $accountType) {
                 // try as full name:
                 $result = AccountType::whereType($accountType)->first();

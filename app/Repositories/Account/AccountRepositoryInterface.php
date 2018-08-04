@@ -24,17 +24,18 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-
-
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+
 
 /**
  * Interface AccountRepositoryInterface.
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * Moved here from account CRUD.
      *
@@ -86,6 +87,15 @@ interface AccountRepositoryInterface
      * @return Account|null
      */
     public function findNull(int $accountId): ?Account;
+
+    /**
+     * Return account type or null if not found.
+     *
+     * @param string $type
+     *
+     * @return AccountType|null
+     */
+    public function getAccountTypeByType(string $type): ?AccountType;
 
     /**
      * @param array $accountIds
@@ -164,6 +174,7 @@ interface AccountRepositoryInterface
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
+     *
      * @return TransactionJournal|null
      */
     public function oldestJournal(Account $account): ?TransactionJournal;

@@ -78,6 +78,26 @@ class CreateController extends Controller
             $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
 
+        // types of liability:
+        $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
+        $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
+        $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
+        $creditCard     = $this->repository->getAccountTypeByType(AccountType::CREDITCARD);
+        $liabilityTypes = [
+            $debt->id       => (string)trans('firefly.account_type_' . AccountType::DEBT),
+            $loan->id       => (string)trans('firefly.account_type_' . AccountType::LOAN),
+            $mortgage->id   => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
+            $creditCard->id => (string)trans('firefly.account_type_' . AccountType::CREDITCARD),
+        ];
+        asort($liabilityTypes);
+
+        // interest calculation periods:
+        $interestPeriods = [
+            'daily'   => (string)trans('firefly.interest_calc_daily'),
+            'monthly' => (string)trans('firefly.interest_calc_monthly'),
+            'yearly'  => (string)trans('firefly.interest_calc_yearly'),
+        ];
+
         // pre fill some data
         $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id]);
 
@@ -87,7 +107,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('accounts.create.fromStore');
 
-        return view('accounts.create', compact('subTitleIcon', 'what', 'subTitle', 'roles'));
+        return view('accounts.create', compact('subTitleIcon', 'what','interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
     }
 
 
@@ -100,6 +120,7 @@ class CreateController extends Controller
      */
     public function store(AccountFormRequest $request)
     {
+
         $data    = $request->getAccountData();
         $account = $this->repository->store($data);
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));

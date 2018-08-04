@@ -529,6 +529,34 @@ class ExpandedForm
     }
 
     /**
+     * Function to render a percentage.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function percentage(string $name, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        unset($options['placeholder']);
+        try {
+            $html = view('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
+            $html = 'Could not render percentage.';
+        }
+
+        return $html;
+    }
+
+    /**
      * @param string $type
      * @param string $name
      *
@@ -772,6 +800,7 @@ class ExpandedForm
         return $html;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param string $view

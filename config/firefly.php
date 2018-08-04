@@ -176,10 +176,11 @@ return [
     ],
     'subTitlesByIdentifier'    =>
         [
-            'asset'   => 'Asset accounts',
-            'expense' => 'Expense accounts',
-            'revenue' => 'Revenue accounts',
-            'cash'    => 'Cash accounts',
+            'asset'       => 'Asset accounts',
+            'expense'     => 'Expense accounts',
+            'revenue'     => 'Revenue accounts',
+            'cash'        => 'Cash accounts',
+            'liabilities' => 'Liabilities',
         ],
     'subIconsByIdentifier'     =>
         [
@@ -194,6 +195,7 @@ return [
             'Revenue account'     => 'fa-download',
             'import'              => 'fa-download',
             'Import account'      => 'fa-download',
+            'liabilities'         => 'fa-ticket',
         ],
     'accountTypesByIdentifier' =>
         [
@@ -205,13 +207,14 @@ return [
         ],
     'accountTypeByIdentifier'  =>
         [
-            'asset'     => 'Asset account',
-            'expense'   => 'Expense account',
-            'revenue'   => 'Revenue account',
-            'opening'   => 'Initial balance account',
-            'initial'   => 'Initial balance account',
-            'import'    => 'Import account',
-            'reconcile' => 'Reconciliation account',
+            'asset'       => ['Asset account'],
+            'expense'     => ['Expense account'],
+            'revenue'     => ['Revenue account'],
+            'opening'     => ['Initial balance account'],
+            'initial'     => ['Initial balance account'],
+            'import'      => ['Import account'],
+            'reconcile'   => ['Reconciliation account'],
+            'liabilities' => ['Loan', 'Debt', 'Mortgage', 'Credit card'],
         ],
     'shortNamesByFullName'     =>
         [
@@ -222,6 +225,10 @@ return [
             'Beneficiary account' => 'expense',
             'Revenue account'     => 'revenue',
             'Cash account'        => 'cash',
+            'Credit card'         => 'liabilities',
+            'Loan'                => 'liabilities',
+            'Debt'                => 'liabilities',
+            'Mortgage'            => 'liabilities',
         ],
     'languages'                => [
         // completed languages
