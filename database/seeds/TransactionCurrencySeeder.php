@@ -38,6 +38,7 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'UAH', 'name' => 'Ukrainian hryvnia', 'symbol' => '₴', 'decimal_places' => 2];
         $currencies[] = ['code' => 'PLN', 'name' => 'Polish złoty', 'symbol' => 'zł', 'decimal_places' => 2];
         $currencies[] = ['code' => 'TRY', 'name' => 'Turkish lira', 'symbol' => '₺', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'CHF', 'name' => 'Swiss Franc', 'symbol' => 'Fr.', 'decimal_places' => 2];
 
         // american currencies
         $currencies[] = ['code' => 'USD', 'name' => 'US Dollar', 'symbol' => '$', 'decimal_places' => 2];
