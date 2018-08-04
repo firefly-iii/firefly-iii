@@ -1132,10 +1132,6 @@ return [
     'deleted_link'                          => 'Tautan dihapus',
 
     // link translations:
-    'Paid_name'                             => 'Paid',
-    'Refund_name'                           => 'Refund',
-    'Reimbursement_name'                    => 'Reimbursement',
-    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'berhubungan dengan',
     'is (partially) refunded by_inward'     => '(sebagian) dikembalikan oleh',
     'is (partially) paid for by_inward'     => 'adalah (sebagian) dibayar oleh',

@@ -1132,10 +1132,6 @@ return [
     'deleted_link'                          => 'Koppeling verwijderd',
 
     // link translations:
-    'Paid_name'                             => 'Paid',
-    'Refund_name'                           => 'Refund',
-    'Reimbursement_name'                    => 'Reimbursement',
-    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'gerelateerd aan',
     'is (partially) refunded by_inward'     => 'wordt (deels) terugbetaald door',
     'is (partially) paid for by_inward'     => 'wordt (deels) betaald door',

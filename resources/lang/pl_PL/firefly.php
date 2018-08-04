@@ -1132,10 +1132,6 @@ return [
     'deleted_link'                          => 'Usunięto powiązanie',
 
     // link translations:
-    'Paid_name'                             => 'Paid',
-    'Refund_name'                           => 'Refund',
-    'Reimbursement_name'                    => 'Reimbursement',
-    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'odnosi się do',
     'is (partially) refunded by_inward'     => 'jest (częściowo) zwracane przez',
     'is (partially) paid for by_inward'     => 'jest (częściowo) opłacane przez',
