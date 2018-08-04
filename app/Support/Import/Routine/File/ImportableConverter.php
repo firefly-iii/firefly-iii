@@ -212,7 +212,7 @@ class ImportableConverter
 
         return [
             'type'               => $transactionType,
-            'date'               => $this->convertDateValue($importable->date) ?? Carbon::create()->format('Y-m-d'),
+            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d'),
             'tags'               => $importable->tags,
             'user'               => $this->importJob->user_id,
             'notes'              => $importable->note,

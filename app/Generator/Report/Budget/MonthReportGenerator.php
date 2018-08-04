@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -64,7 +65,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -77,11 +77,17 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $topExpenses     = $this->getTopExpenses();
 
         // render!
-        return view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
+        try {
+        $result= view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
             ->with('start', $this->start)->with('end', $this->end)
             ->with('budgets', $this->budgets)
             ->with('accounts', $this->accounts)
             ->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
+            $result = 'Could not render report view.';
+        }
+        return $result;
     }
 
     /**

@@ -262,7 +262,7 @@ class TransactionController extends Controller
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->repository->firstNull();
-        $start = Carbon::create()->subYear();
+        $start = Carbon::now()->subYear();
         $types   = config('firefly.transactionTypesByWhat.' . $what);
         $entries = new Collection;
         if (null !== $first) {

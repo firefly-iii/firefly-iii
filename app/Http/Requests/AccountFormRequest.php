@@ -48,7 +48,7 @@ class AccountFormRequest extends Request
      */
     public function getAccountData(): array
     {
-        return [
+        $data = [
             'name'                 => $this->string('name'),
             'active'               => $this->boolean('active'),
             'accountType'          => $this->string('what'),
@@ -64,7 +64,22 @@ class AccountFormRequest extends Request
             'ccType'               => $this->string('ccType'),
             'ccMonthlyPaymentDate' => $this->string('ccMonthlyPaymentDate'),
             'notes'                => $this->string('notes'),
+            'interest'             => $this->string('interest'),
+            'interest_period'      => $this->string('interest_period'),
         ];
+
+        // if the account type is "liabilities" there are actually four types of liability
+        // that could have been selected.
+        if ($data['accountType'] === 'liabilities') {
+            $data['accountType']     = null;
+            $data['account_type_id'] = $this->integer('liability_type_id');
+            // also reverse the opening balance:
+            if ('' !== $data['openingBalance']) {
+                $data['openingBalance'] = bcmul($data['openingBalance'], '-1');
+            }
+        }
+
+        return $data;
     }
 
     /**
@@ -93,7 +108,13 @@ class AccountFormRequest extends Request
             'amount_currency_id_openingBalance' => 'exists:transaction_currencies,id',
             'amount_currency_id_virtualBalance' => 'exists:transaction_currencies,id',
             'what'                              => 'in:' . $types,
+            'interest_period'                   => 'in:daily,monthly,yearly',
         ];
+
+        if ('liabilities' === $this->get('what')) {
+            $rules['openingBalance']     = 'numeric|required|more:0';
+            $rules['openingBalanceDate'] = 'date|required';
+        }
 
         /** @var Account $account */
         $account = $this->route()->parameter('account');

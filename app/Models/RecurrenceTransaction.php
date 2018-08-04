@@ -51,7 +51,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class RecurrenceTransaction extends Model
 {
     use SoftDeletes;
-    /** @var array */
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
     protected $casts
         = [
             'created_at'     => 'datetime',
@@ -61,16 +65,16 @@ class RecurrenceTransaction extends Model
             'foreign_amount' => 'string',
             'description'    => 'string',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable
         = ['recurrence_id', 'transaction_currency_id', 'foreign_currency_id', 'source_id', 'destination_id', 'amount', 'foreign_amount',
            'description'];
-    /** @var string */
+    /** @var string The table to store the data in */
     protected $table = 'recurrences_transactions';
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function destinationAccount(): BelongsTo
     {
@@ -106,7 +110,7 @@ class RecurrenceTransaction extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function sourceAccount(): BelongsTo
     {

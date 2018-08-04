@@ -267,6 +267,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
      * - Add the value to the list of "values" that the user must map.
      *
      * @param Reader $reader
+     * @param array  $config
      * @param array  $columnConfig
      *
      * @return array

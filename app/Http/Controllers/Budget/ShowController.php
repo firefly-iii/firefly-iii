@@ -142,7 +142,7 @@ class ShowController extends Controller
     public function show(Request $request, Budget $budget)
     {
         /** @var Carbon $start */
-        $start      = session('first', Carbon::create()->startOfYear());
+        $start      = session('first', Carbon::now()->startOfYear());
         $end        = new Carbon;
         $page       = (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -196,7 +196,7 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
         /** @var Carbon $start */
-        $start  = session('first', Carbon::create()->startOfYear());
+        $start  = session('first', Carbon::now()->startOfYear());
         $end    = new Carbon;
         $limits = $this->getLimits($budget, $start, $end);
 

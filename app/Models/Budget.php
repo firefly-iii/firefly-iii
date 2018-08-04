@@ -26,6 +26,8 @@ use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -58,16 +60,18 @@ class Budget extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'name', 'active'];
-    /** @var array */
+    /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Budget
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Budget
     {
@@ -86,9 +90,9 @@ class Budget extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function budgetlimits(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function budgetlimits(): HasMany
     {
         return $this->hasMany(BudgetLimit::class);
     }
@@ -126,18 +130,18 @@ class Budget extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'budget_transaction_journal', 'budget_id');
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function transactions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'budget_transaction', 'budget_id');
     }

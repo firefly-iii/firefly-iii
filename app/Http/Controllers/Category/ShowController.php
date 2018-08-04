@@ -90,9 +90,9 @@ class ShowController extends Controller
     {
         Log::debug('Now in show()');
         /** @var Carbon $start */
-        $start = $start ?? session('start', Carbon::create()->startOfMonth());
+        $start = $start ?? session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end          = $end ?? session('end', Carbon::create()->startOfMonth());
+        $end          = $end ?? session('end', Carbon::now()->startOfMonth());
         $subTitleIcon = 'fa-bar-chart';
         $moment       = '';
         $page         = (int)$request->get('page');

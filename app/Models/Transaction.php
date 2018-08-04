@@ -27,6 +27,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -100,6 +101,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class Transaction extends Model
 {
+    use SoftDeletes;
     /**
      * The attributes that should be casted to native types.
      *
@@ -115,24 +117,23 @@ class Transaction extends Model
             'bill_name_encrypted' => 'boolean',
             'reconciled'          => 'boolean',
         ];
-    /**
-     * @var array
-     */
+    /** @var array Fields that can be filled */
     protected $fillable
         = ['account_id', 'transaction_journal_id', 'description', 'amount', 'identifier', 'transaction_currency_id', 'foreign_currency_id',
            'foreign_amount', 'reconciled'];
-    /**
-     * @var array
-     */
+    /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
     /**
-     * @codeCoverageIgnore
+     * Check if a table is joined.
+     *
+     *
      *
      * @param Builder $query
      * @param string  $table
      *
      * @return bool
+     * @codeCoverageIgnore
      */
     public static function isJoined(Builder $query, string $table): bool
     {
@@ -150,10 +151,12 @@ class Transaction extends Model
     }
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Transaction
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Transaction
     {
@@ -171,11 +174,12 @@ class Transaction extends Model
         throw new NotFoundHttpException;
     }
 
-    use SoftDeletes;
 
     /**
+     * Get the account this object belongs to.
+     *
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function account(): BelongsTo
     {
@@ -183,26 +187,32 @@ class Transaction extends Model
     }
 
     /**
+     * Get the budget(s) this object belongs to.
+     *
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function budgets(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function budgets(): BelongsToMany
     {
         return $this->belongsToMany(Budget::class);
     }
 
     /**
+     * Get the category(ies) this object belongs to.
+     *
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function categories(): BelongsToMany
     {
         return $this->belongsToMany(Category::class);
     }
 
     /**
+     * Get the currency this object belongs to.
+     *
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function foreignCurrency(): BelongsTo
     {
@@ -210,6 +220,8 @@ class Transaction extends Model
     }
 
     /**
+     * Check for transactions AFTER a specified date.
+     *
      * @codeCoverageIgnore
      *
      * @param Builder $query
@@ -224,6 +236,7 @@ class Transaction extends Model
     }
 
     /**
+     * Check for transactions BEFORE the specified date.
      * @codeCoverageIgnore
      *
      * @param Builder $query

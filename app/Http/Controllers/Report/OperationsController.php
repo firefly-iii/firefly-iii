@@ -38,7 +38,7 @@ class OperationsController extends Controller
     private $tasker;
 
     /**
-     *
+     * OperationsController constructor.
      */
     public function __construct()
     {

@@ -111,6 +111,7 @@ class StageImportDataHandler
      * @param LocalAccount $source
      *
      * @return array
+     * @throws FireflyException
      */
     private function convertPayment(BunqPayment $payment, LocalAccount $source): array
     {

@@ -26,6 +26,7 @@ namespace FireflyIII\Import\Storage;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -113,6 +114,9 @@ class ImportArrayStorage
         }
 
         app('preferences')->mark();
+
+        // email about this:
+        event(new RequestedReportOnJournals($this->importJob->user_id, $collection));
 
         return $collection;
     }

@@ -64,7 +64,7 @@ class ImportDataHandler
 
         /**
          * @var string $ynabId
-         * @var int    $localId
+         * @var string $localId
          */
         foreach ($mapping as $ynabId => $localId) {
             $localAccount = $this->getLocalAccount((int)$localId);
@@ -252,7 +252,6 @@ class ImportDataHandler
 
     /**
      * @param string $token
-     * @param string $budget
      * @param string $account
      *
      * @return array

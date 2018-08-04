@@ -218,7 +218,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
     }
 
     /**
-     * @param int $accountId
+     * @param string $accountId
      *
      * @return string
      */

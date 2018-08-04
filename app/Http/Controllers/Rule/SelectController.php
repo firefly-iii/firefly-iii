@@ -118,7 +118,7 @@ class SelectController extends Controller
     {
         // does the user have shared accounts?
         $first    = session('first')->format('Y-m-d');
-        $today    = Carbon::create()->format('Y-m-d');
+        $today    = Carbon::now()->format('Y-m-d');
         $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
         return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));

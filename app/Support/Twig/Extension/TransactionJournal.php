@@ -136,7 +136,7 @@ class TransactionJournal extends Twig_Extension
     /**
      * @param JournalModel $journal
      *
-     * @return string
+     * @return array
      */
     private function getTotalAmount(JournalModel $journal): array
     {

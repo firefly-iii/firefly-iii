@@ -45,6 +45,8 @@ class StageGetAccessHandler
     /**
      * Send a token request to YNAB. Return with access token (if all goes well).
      *
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws FireflyException
      */
     public function run(): void

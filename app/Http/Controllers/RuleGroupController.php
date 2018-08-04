@@ -208,7 +208,7 @@ class RuleGroupController extends Controller
     public function selectTransactions(RuleGroup $ruleGroup)
     {
         $first    = session('first')->format('Y-m-d');
-        $today    = Carbon::create()->format('Y-m-d');
+        $today    = Carbon::now()->format('Y-m-d');
         $subTitle = (string)trans('firefly.apply_rule_group_selection', ['title' => $ruleGroup->title]);
 
         return view('rules.rule-group.select-transactions', compact('first', 'today', 'ruleGroup', 'subTitle'));

@@ -36,6 +36,7 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
+use Throwable;
 
 /**
  * Class ReportController.
@@ -277,7 +278,6 @@ class ReportController extends Controller
      *
      * @return mixed
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @throws \Throwable
      */
     public function options(string $reportType)
     {
@@ -391,7 +391,6 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
@@ -423,7 +422,6 @@ class ReportController extends Controller
      * Get options for account report.
      *
      * @return string
-     * @throws \Throwable
      */
     private function accountReportOptions(): string
     {
@@ -438,52 +436,77 @@ class ReportController extends Controller
                 $set->push($exp);
             }
         }
+        try {
+            $result = view('reports.options.account', compact('set'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
 
-        return view('reports.options.account', compact('set'))->render();
+        return $result;
     }
 
     /**
      * Get options for budget report.
+     *
      * @return string
-     * @throws \Throwable
      */
     private function budgetReportOptions(): string
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $budgets    = $repository->getBudgets();
+        try {
+            $result = view('reports.options.budget', compact('budgets'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
 
-        return view('reports.options.budget', compact('budgets'))->render();
+        return $result;
     }
 
     /**
      * Get options for category report.
+     *
      * @return string
-     * @throws \Throwable
      */
     private function categoryReportOptions(): string
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $categories = $repository->getCategories();
+        try {
+            $result = view('reports.options.category', compact('categories'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.category: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
 
-        return view('reports.options.category', compact('categories'))->render();
+        return $result;
     }
 
     /**
      * Get options for default report.
+     *
      * @return string
-     * @throws \Throwable
      */
     private function noReportOptions(): string
     {
-        return view('reports.options.no-options')->render();
+        try {
+            $result = view('reports.options.no-options')->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.no-options: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
+
+        return $result;
     }
 
     /**
      * Get options for tag report.
+     *
      * @return string
-     * @throws \Throwable
      */
     private function tagReportOptions(): string
     {
@@ -494,7 +517,13 @@ class ReportController extends Controller
                 return $tag->tag;
             }
         );
+        try {
+            $result = view('reports.options.tag', compact('tags'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.options.tag: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
 
-        return view('reports.options.tag', compact('tags'))->render();
+        return $result;
     }
 }

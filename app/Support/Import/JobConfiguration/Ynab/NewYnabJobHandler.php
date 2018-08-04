@@ -87,6 +87,8 @@ class NewYnabJobHandler implements YnabJobConfigurationInterface
      * Get data for config view.
      *
      * @return array
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      */
     public function getNextData(): array
     {
@@ -134,6 +136,8 @@ class NewYnabJobHandler implements YnabJobConfigurationInterface
 
 
     /**
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      * @throws FireflyException
      */
     private function getAccessToken(): void
@@ -231,6 +235,8 @@ class NewYnabJobHandler implements YnabJobConfigurationInterface
 
     /**
      * @return bool
+     * @throws \Psr\Container\NotFoundExceptionInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
      */
     private function hasRefreshToken(): bool
     {

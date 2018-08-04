@@ -45,12 +45,23 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class TransactionJournalLink extends Model
 {
-    /**
-     * @var string
-     */
+    /** @var string The table to store the data in */
     protected $table = 'journal_links';
 
     /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
+    protected $casts
+        = [
+            'created_at'     => 'datetime',
+            'updated_at'     => 'datetime',
+        ];
+
+    /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return mixed
@@ -76,7 +87,7 @@ class TransactionJournalLink extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function destination(): BelongsTo
     {
@@ -101,7 +112,7 @@ class TransactionJournalLink extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function linkType(): BelongsTo
     {
@@ -136,7 +147,7 @@ class TransactionJournalLink extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function source(): BelongsTo
     {

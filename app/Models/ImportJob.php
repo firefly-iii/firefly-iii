@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -61,10 +62,12 @@ class ImportJob extends Model
             'transactions'    => 'array',
             'errors'          => 'array',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['key', 'user_id', 'file_type', 'provider', 'status', 'stage', 'configuration', 'extended_status', 'transactions', 'errors'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param $value
      *
      * @return mixed
@@ -97,18 +100,18 @@ class ImportJob extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function tag(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function tag(): BelongsTo
     {
         return $this->belongsTo(Tag::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

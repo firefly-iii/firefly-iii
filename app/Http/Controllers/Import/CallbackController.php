@@ -36,6 +36,8 @@ class CallbackController extends Controller
 {
 
     /**
+     * Callback specifically for YNAB logins.
+     *
      * @param Request                      $request
      *
      * @param ImportJobRepositoryInterface $repository

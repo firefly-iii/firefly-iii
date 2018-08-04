@@ -37,7 +37,7 @@ use Log;
  */
 class IndexController extends Controller
 {
-    /** @var array */
+    /** @var array All available providers */
     public $providers;
     /** @var ImportJobRepositoryInterface The import job repository */
     public $repository;

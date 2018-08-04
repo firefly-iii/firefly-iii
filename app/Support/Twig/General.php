@@ -103,9 +103,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRoutePartialWhat',
             function ($context): string {
-                $args       = \func_get_args();
-                $route      = $args[1]; // name of the route.
-                $what       = $args[2]; // name of the route.
+                [, $route, $what] = \func_get_args();
                 $activeWhat = $context['what'] ?? false;
 
                 if ($what === $activeWhat && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {

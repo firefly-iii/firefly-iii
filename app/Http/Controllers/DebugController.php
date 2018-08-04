@@ -120,7 +120,7 @@ class DebugController extends Controller
         $phpVersion     = str_replace($search, $replace, PHP_VERSION);
         $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
-        $now            = Carbon::create()->format('Y-m-d H:i:s e');
+        $now            = Carbon::now()->format('Y-m-d H:i:s e');
         $extensions     = implode(', ', get_loaded_extensions());
         $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();

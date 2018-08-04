@@ -50,7 +50,7 @@ return [
     'at_least_one_action'            => 'Rule must have at least one action.',
     'base64'                         => 'This is not valid base64 encoded data.',
     'model_id_invalid'               => 'The given ID seems invalid for this model.',
-    'more'                           => ':attribute must be larger than :value.',
+    'more'                           => ':attribute must be larger than zero.',
     'less'                           => ':attribute must be less than 10,000,000',
     'active_url'                     => 'The :attribute is not a valid URL.',
     'after'                          => 'The :attribute must be a date after :date.',

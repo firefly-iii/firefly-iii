@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -55,10 +56,12 @@ class LinkType extends Model
             'editable'   => 'boolean',
         ];
 
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['name', 'inward', 'outward', 'editable'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param $value
      *
      * @return LinkType
@@ -79,9 +82,9 @@ class LinkType extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactionJournalLinks(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function transactionJournalLinks(): HasMany
     {
         return $this->hasMany(TransactionJournalLink::class);
     }

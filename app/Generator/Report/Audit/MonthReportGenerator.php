@@ -34,6 +34,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -52,7 +54,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @return string
      * @throws FireflyException
-     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -78,10 +79,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
                         'internal_reference', 'notes',
                         'create_date', 'update_date',
         ];
+        try {
+            $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
+                ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
+                ->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
+            $result = 'Could not render report view.';
+        }
 
-        return view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
-            ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
-            ->render();
+        return $result;
     }
 
     /**
