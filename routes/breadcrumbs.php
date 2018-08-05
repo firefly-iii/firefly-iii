@@ -155,7 +155,9 @@ try {
             $breadcrumbs->parent('accounts.show', $account);
             $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
-            $breadcrumbs->push(trans('firefly.edit_' . $what . '_account', ['name' => limitStringLength($account->name)]), route('accounts.edit', [$account->id]));
+            $breadcrumbs->push(
+                trans('firefly.edit_' . $what . '_account', ['name' => limitStringLength($account->name)]), route('accounts.edit', [$account->id])
+            );
         }
     );
 
@@ -294,7 +296,9 @@ try {
             $object = $attachment->attachable;
             if ($object instanceof TransactionJournal) {
                 $breadcrumbs->parent('transactions.show', $object);
-                $breadcrumbs->push(trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment]));
+                $breadcrumbs->push(
+                    trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment])
+                );
             } else {
                 throw new FireflyException('Cannot make breadcrumb for attachment connected to object of type ' . get_class($object));
             }
@@ -834,9 +838,15 @@ try {
 
     Breadcrumbs::register(
         'rules.create',
-        function (BreadcrumbsGenerator $breadcrumbs, RuleGroup $ruleGroup) {
+        function (BreadcrumbsGenerator $breadcrumbs, RuleGroup $ruleGroup = null) {
             $breadcrumbs->parent('rules.index');
-            $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.create', [$ruleGroup]));
+            if (null === $ruleGroup) {
+                $breadcrumbs->push(trans('firefly.make_new_rule_no_group'), route('rules.create'));
+            }
+            if (null !== $ruleGroup) {
+                $breadcrumbs->push(trans('firefly.make_new_rule', ['title' => $ruleGroup->title]), route('rules.create', [$ruleGroup]));
+            }
+
         }
     );
     Breadcrumbs::register(

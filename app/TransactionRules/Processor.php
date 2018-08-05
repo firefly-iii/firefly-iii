@@ -122,7 +122,7 @@ final class Processor
      *
      * The given triggers must be in the following format:
      *
-     * [type => xx, value => yy, stopProcessing => bool], [type => xx, value => yy, stopProcessing => bool],
+     * [type => xx, value => yy, stop_processing => bool], [type => xx, value => yy, stop_processing => bool],
      *
      * @param array $triggers
      *
@@ -135,7 +135,7 @@ final class Processor
         $self = new self;
         foreach ($triggers as $entry) {
             $entry['value'] = $entry['value'] ?? '';
-            $trigger        = TriggerFactory::makeTriggerFromStrings($entry['type'], $entry['value'], $entry['stopProcessing']);
+            $trigger        = TriggerFactory::makeTriggerFromStrings($entry['type'], $entry['value'], $entry['stop_processing']);
             $self->triggers->push($trigger);
         }
 

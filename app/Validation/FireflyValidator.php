@@ -247,148 +247,99 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateRuleActionValue($attribute): bool
+    public function validateRuleActionValue(string $attribute, string $value): bool
     {
-        // get the index from a string like "rule-action-value.2".
+        // first, get the index from this string:
         $parts = explode('.', $attribute);
-        $index = $parts[\count($parts) - 1];
-        if ($index === 'value') {
-            // user is coming from API.
-            $index = $parts[\count($parts) - 2];
-        }
-        $index = (int)$index;
+        $index = (int)($parts[1] ?? '0');
 
-        // get actions from $this->data
-        $actions = [];
-        if (isset($this->data['rule-action']) && \is_array($this->data['rule-action'])) {
-            $actions = $this->data['rule-action'];
-        }
-        if (isset($this->data['rule-actions']) && \is_array($this->data['rule-actions'])) {
-            $actions = $this->data['rule-actions'];
+        // get the name of the trigger from the data array:
+        $actionType = $this->data['rule_actions'][$index]['name'] ?? 'invalid';
+
+        // if it's "invalid" return false.
+        if ('invalid' === $actionType) {
+            return false;
         }
 
+        // if it's set_budget, verify the budget name:
+        if ('set_budget' === $actionType) {
+            /** @var BudgetRepositoryInterface $repository */
+            $repository = app(BudgetRepositoryInterface::class);
+            $budgets    = $repository->getBudgets();
+            // count budgets, should have at least one
+            $count = $budgets->filter(
+                function (Budget $budget) use ($value) {
+                    return $budget->name === $value;
+                }
+            )->count();
 
-        // loop all rule-actions.
-        // check if rule-action-value matches the thing.
-        if (\is_array($actions)) {
-            $name  = $this->getRuleActionName($index);
-            $value = $this->getRuleActionValue($index);
-            switch ($name) {
-                default:
-
-                    return true;
-                case 'set_budget':
-                    /** @var BudgetRepositoryInterface $repository */
-                    $repository = app(BudgetRepositoryInterface::class);
-                    $budgets    = $repository->getBudgets();
-                    // count budgets, should have at least one
-                    $count = $budgets->filter(
-                        function (Budget $budget) use ($value) {
-                            return $budget->name === $value;
-                        }
-                    )->count();
-
-                    return 1 === $count;
-                case 'link_to_bill':
-                    /** @var BillRepositoryInterface $repository */
-                    $repository = app(BillRepositoryInterface::class);
-                    $bill       = $repository->findByName($value);
-
-                    return null !== $bill;
-                case 'invalid':
-                    return false;
-            }
+            return 1 === $count;
         }
 
-        return false;
+        // if it's link to bill, verify the name of the bill.
+        if ('link_to_bill' === $actionType) {
+            /** @var BillRepositoryInterface $repository */
+            $repository = app(BillRepositoryInterface::class);
+            $bill       = $repository->findByName($value);
+
+            return null !== $bill;
+        }
+
+        // return true for the rest.
+        return true;
     }
 
     /**
-     * @param $attribute
+     * $attribute has the format rule_triggers.%d.value.
+     *
+     * @param string $attribute
+     * @param string $value
      *
      * @return bool
      */
-    public function validateRuleTriggerValue($attribute): bool
+    public function validateRuleTriggerValue(string $attribute, string $value): bool
     {
-        // get the index from a string like "rule-trigger-value.2".
+        //
+
+        // first, get the index from this string:
         $parts = explode('.', $attribute);
-        $index = $parts[\count($parts) - 1];
-        // if the index is not a number, then we might be dealing with an API $attribute
-        // which is formatted "rule-triggers.0.value"
-        if ($index === 'value') {
-            $index = $parts[\count($parts) - 2];
-        }
-        $index = (int)$index;
+        $index = (int)($parts[1] ?? '0');
 
-        // get triggers from $this->data
-        $triggers = [];
-        if (isset($this->data['rule-trigger']) && \is_array($this->data['rule-trigger'])) {
-            $triggers = $this->data['rule-trigger'];
-        }
-        if (isset($this->data['rule-triggers']) && \is_array($this->data['rule-triggers'])) {
-            $triggers = $this->data['rule-triggers'];
+        // get the name of the trigger from the data array:
+        $triggerType = $this->data['rule_triggers'][$index]['name'] ?? 'invalid';
+
+        // invalid always returns false:
+        if ('invalid' === $triggerType) {
+            return false;
         }
 
-        // loop all rule-triggers.
-        // check if rule-value matches the thing.
-        if (\is_array($triggers)) {
-            $name  = $this->getRuleTriggerName($index);
-            $value = $this->getRuleTriggerValue($index);
-
-            // break on some easy checks:
-            switch ($name) {
-                case 'amount_less':
-                case 'amount_more':
-                case 'amount_exactly':
-                    $result = is_numeric($value);
-                    if (false === $result) {
-                        return false;
-                    }
-                    break;
-                case 'from_account_starts':
-                case 'from_account_ends':
-                case 'from_account_is':
-                case 'from_account_contains':
-                case 'to_account_starts':
-                case 'to_account_ends':
-                case 'to_account_is':
-                case 'to_account_contains':
-                case 'description_starts':
-                case 'description_ends':
-                case 'description_contains':
-                case 'description_is':
-                case 'category_is':
-                case 'budget_is':
-                case 'tag_is':
-                case 'currency_is':
-                case 'notes_contain':
-                case 'notes_start':
-                case 'notes_end':
-                case 'notes_are':
-                    return \strlen($value) > 0;
-
-                    break;
-                case 'transaction_type':
-                    $count = TransactionType::where('type', $value)->count();
-                    if (!(1 === $count)) {
-                        return false;
-                    }
-                    break;
-                case 'invalid':
-                    return false;
-            }
-            // still a special case where the trigger is
-            // triggered in such a way that it would trigger ANYTHING. We can check for such things
-            // with function willmatcheverything
-            // we know which class it is so dont bother checking that.
-            $classes = Config::get('firefly.rule-triggers');
-            /** @var TriggerInterface $class */
-            $class = $classes[$name];
-
-            return !$class::willMatchEverything($value);
+        // these trigger types need a numerical check:
+        $numerical = ['amount_less', 'amount_more', 'amount_exactly'];
+        if (\in_array($triggerType, $numerical, true)) {
+            return is_numeric($value);
         }
 
-        return false;
+        // these trigger types need a simple strlen check:
+        $length = ['from_account_starts', 'from_account_ends', 'from_account_is', 'from_account_contains', 'to_account_starts', 'to_account_ends',
+                   'to_account_is', 'to_account_contains', 'description_starts', 'description_ends', 'description_contains', 'description_is', 'category_is',
+                   'budget_is', 'tag_is', 'currency_is', 'notes_contain', 'notes_start', 'notes_end', 'notes_are',];
+        if (\in_array($triggerType, $length, true)) {
+            return '' !== $value;
+        }
+
+        // check transaction type.
+        if ('transaction_type' === $triggerType) {
+            $count = TransactionType::where('type', $value)->count();
+
+            return 1 !== $count;
+        }
+
+        // and finally a "will match everything check":
+        $classes = app('config')->get('firefly.rule-triggers');
+        /** @var TriggerInterface $class */
+        $class = $classes[$triggerType];
+
+        return !$class::willMatchEverything($value);
     }
 
     /**

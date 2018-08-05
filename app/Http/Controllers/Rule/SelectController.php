@@ -124,7 +124,6 @@ class SelectController extends Controller
         return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
 
-
     /**
      * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
      * using the URL parameters (GET), and are usually put there using a Javascript thing.
@@ -267,18 +266,13 @@ class SelectController extends Controller
     private function getValidTriggerList(TestRuleFormRequest $request): array
     {
         $triggers = [];
-        $data     = [
-            'rule-triggers'       => $request->get('rule-trigger'),
-            'rule-trigger-values' => $request->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
-        ];
-        if (\is_array($data['rule-triggers'])) {
-            foreach ($data['rule-triggers'] as $index => $triggerType) {
-                $data['rule-trigger-stop'][$index] = (int)($data['rule-trigger-stop'][$index] ?? 0.0);
-                $triggers[]                        = [
-                    'type'           => $triggerType,
-                    'value'          => $data['rule-trigger-values'][$index],
-                    'stopProcessing' => 1 === (int)$data['rule-trigger-stop'][$index],
+        $data     = $request->get('rule_triggers');
+        if (\is_array($data)) {
+            foreach ($data as $index => $triggerInfo) {
+                $triggers[] = [
+                    'type'            => $triggerInfo['name'] ?? '',
+                    'value'           => $triggerInfo['value'] ?? '',
+                    'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
                 ];
             }
         }
