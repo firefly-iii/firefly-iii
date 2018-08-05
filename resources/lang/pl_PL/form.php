@@ -84,6 +84,9 @@ return [
     'verification'                => 'Weryfikacja',
     'api_key'                     => 'Klucz API',
     'remember_me'                 => 'Zapamiętaj mnie',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Konto źródłowe (konto aktywów)',
     'destination_account_expense' => 'Konto docelowe (konto wydatków)',

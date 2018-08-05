@@ -84,6 +84,9 @@ return [
     'verification'                => 'Verificatie',
     'api_key'                     => 'API sleutel',
     'remember_me'                 => 'Aangemeld blijven',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
     'destination_account_expense' => 'Doelrekening (crediteur)',

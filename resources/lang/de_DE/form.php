@@ -84,6 +84,9 @@ return [
     'verification'                => 'Bestätigung',
     'api_key'                     => 'API-Schlüssel',
     'remember_me'                 => 'Angemeldet bleiben',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
     'destination_account_expense' => 'Zielkonto (Unkostenkonto)',
@@ -237,6 +240,6 @@ return [
     'repetitions'             => 'Wiederholungen',
     'calendar'                => 'Kalender',
     'weekend'                 => 'Wochenende',
-    'client_secret'           => 'Client secret',
+    'client_secret'           => 'Kundengeheimnis',
 
 ];

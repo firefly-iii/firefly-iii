@@ -84,6 +84,9 @@ return [
     'verification'                => 'Verifikasi',
     'api_key'                     => 'Kunci API',
     'remember_me'                 => 'Remember me',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Akun sumber (akun aset)',
     'destination_account_expense' => 'Akun tujuan (akun pengeluaran)',

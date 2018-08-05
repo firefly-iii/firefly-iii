@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Som van overschrijvingen',
     'reconcile'               => 'Afstemmen',
     'account_on_spectre'      => 'Rekening (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Importeer van deze rekening',
     'sepa-ct-id'              => 'SEPA end-to-end identificatie',
     'sepa-ct-op'              => 'SEPA identificatie tegenpartij',

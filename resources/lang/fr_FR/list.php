@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Somme des transferts',
     'reconcile'               => 'Rapprocher',
     'account_on_spectre'      => 'Compte (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Importer depuis ce compte',
     'sepa-ct-id'              => 'Identificateur de bout en bout SEPA',
     'sepa-ct-op'              => 'Identifiant de compte SEPA opposable',

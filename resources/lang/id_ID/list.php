@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Jumlah transfer',
     'reconcile'               => 'Menyesuaikan',
     'account_on_spectre'      => 'Account (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Import from this account',
     'sepa-ct-id'              => 'SEPA End to End Identifier',
     'sepa-ct-op'              => 'SEPA Opposing Account Identifier',

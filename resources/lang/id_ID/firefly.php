@@ -60,6 +60,7 @@ return [
     'new_asset_account'                          => 'Akun aset baru',
     'new_expense_account'                        => 'Akun pengeluaran baru',
     'new_revenue_account'                        => 'Akun pendapatan baru',
+    'new_liabilities_account'                    => 'New liability',
     'new_budget'                                 => 'Anggaran baru',
     'new_bill'                                   => 'Tagihan baru',
     'block_account_logout'                       => 'Kamu telah keluar Akun yang diblokir tidak dapat menggunakan situs ini. Apakah Anda mendaftar dengan alamat email yang benar?',
@@ -589,6 +590,7 @@ return [
     'invalid_convert_selection'               => 'Akun yang telah Anda pilih sudah digunakan dalam transaksi ini atau tidak ada.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
+
     // create new stuff:
     'create_new_withdrawal'                   => 'Buat penarikan baru',
     'create_new_deposit'                      => 'Buat deposit baru',
@@ -686,6 +688,7 @@ return [
     'delete_asset_account'                    => 'Hapus akun aset ":name"',
     'delete_expense_account'                  => 'Hapus akun pengeluaran ":name"',
     'delete_revenue_account'                  => 'Hapus akun pendapatan ":name"',
+    'delete_liabilities_account'              => 'Delete liability ":name"',
     'asset_deleted'                           => 'Berhasil menghapus akun aset ":name"',
     'expense_deleted'                         => 'Akun pengeluaran yang berhasil dihapus ":name"',
     'revenue_deleted'                         => 'Berhasil menghapus akun pendapatan ":name"',
@@ -695,11 +698,13 @@ return [
     'make_new_asset_account'                  => 'Buat akun aset baru',
     'make_new_expense_account'                => 'Buat akun pengeluaran baru',
     'make_new_revenue_account'                => 'Buat akun pendapatan baru',
+    'make_new_liabilities_account'            => 'Create a new liability',
     'asset_accounts'                          => 'Akun aset',
     'expense_accounts'                        => 'Rekening pengeluaran',
     'revenue_accounts'                        => 'Akun pendapatan',
     'cash_accounts'                           => 'Akun kas',
     'Cash account'                            => 'Akun kas',
+    'liabilities_accounts'                    => 'Liabilities',
     'reconcile_account'                       => 'Rekonsiliasi akun ":account"',
     'overview_of_reconcile_modal'             => 'Overview of reconciliation',
     'delete_reconciliation'                   => 'Hapus rekonsiliasi',
@@ -733,7 +738,7 @@ return [
     'select_more_than_one_category'           => 'Silakan pilih lebih dari satu kategori',
     'select_more_than_one_budget'             => 'Silakan pilih lebih dari satu anggaran',
     'select_more_than_one_tag'                => 'Silakan pilih lebih dari satu tag',
-    'account_default_currency'                => 'Jika Anda memilih mata uang lain, transaksi baru dari akun ini akan memiliki mata uang ini pra-dipilih.',
+    'account_default_currency'                => 'This will be the default currency associated with this account.',
     'reconcile_has_more'                      => 'Buku Firefly III Anda memiliki lebih banyak uang di dalamnya dari bank Anda klaim Anda harus. Ada beberapa pilihan. Silahkan memilih apa yang harus dilakukan. Kemudian, tekan "Konfirmasi rekonsiliasi".',
     'reconcile_has_less'                      => 'Buku Firefly III Anda memiliki sedikit uang di dalamnya daripada bank Anda klaim Anda harus. Ada beberapa pilihan. Silahkan memilih apa yang harus dilakukan. Kemudian, tekan "Konfirmasi rekonsiliasi".',
     'reconcile_is_equal'                      => 'Buku Firefly III Anda dan pernyataan bank Anda cocok. Tidak ada hubungannya. Silahkan tekan "Konfirmasi rekonsiliasi" untuk mengkonfirmasi masukan Anda.',
@@ -751,6 +756,9 @@ return [
     'already_cleared_transactions'            => 'Sudah dibersihkan transaksi (:count)',
     'submitted_end_balance'                   => 'Saldo akhir yang dikirim',
     'initial_balance_description'             => 'Initial balance for ":account"',
+    'interest_calc_daily'                     => 'Per day',
+    'interest_calc_monthly'                   => 'Per month',
+    'interest_calc_yearly'                    => 'Per year',
 
     // categories:
     'new_category'                            => 'Kategori baru',
@@ -814,6 +822,7 @@ return [
     // new user:
     'welcome'                                 => 'Welcome to Firefly III!',
     'submit'                                  => 'Menyerahkan',
+    'submit_yes_really'                       => 'Submit (I know what I\'m doing)',
     'getting_started'                         => 'Mulai',
     'to_get_started'                          => 'Senang melihat Anda berhasil memasang Firefly III. Untuk memulai dengan alat ini, harap masukkan nama bank dan saldo rekening giro utama Anda. Jangan khawatir jika Anda memiliki banyak akun. Anda bisa menambahkannya nanti. Hanya saja Firefly III butuh sesuatu untuk memulai.',
     'savings_balance_text'                    => 'Firefly III secara otomatis akan membuat rekening tabungan untuk Anda. Secara default, tidak akan ada uang di rekening tabungan Anda, tapi jika Anda memberi tahu Firefly III, saldo itu akan disimpan seperti itu.',
@@ -852,6 +861,10 @@ return [
     'Expense account'                         => 'Rekening pengeluaran',
     'Revenue account'                         => 'Akun pendapatan',
     'Initial balance account'                 => 'Akun saldo awal',
+    'account_type_Debt'                       => 'Debt',
+    'account_type_Loan'                       => 'Loan',
+    'account_type_Mortgage'                   => 'Mortgage',
+    'account_type_Credit card'                => 'Credit card',
     'budgets'                                 => 'Anggaran',
     'tags'                                    => 'Tag',
     'reports'                                 => 'Laporan',
@@ -881,6 +894,10 @@ return [
     'monthly'                                 => 'Bulanan',
     'profile'                                 => 'Profil',
     'errors'                                  => 'Kesalahan',
+    'debt_start_date'                         => 'Start date of debt',
+    'debt_start_amount'                       => 'Start amount of debt',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'store_new_liabilities_account'           => 'Store new liability',
 
     // reports:
     'report_default'                          => 'Laporan keuangan standar antara :start dan :end',
@@ -1132,6 +1149,10 @@ return [
     'deleted_link'                          => 'Tautan dihapus',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'berhubungan dengan',
     'is (partially) refunded by_inward'     => '(sebagian) dikembalikan oleh',
     'is (partially) paid for by_inward'     => 'adalah (sebagian) dibayar oleh',
@@ -1179,6 +1200,10 @@ return [
     'no_accounts_intro_revenue'             => 'Anda belum memiliki akun pendapatan. Akun pendapatan adalah tempat di mana Anda menerima uang dari, seperti atasan Anda.',
     'no_accounts_imperative_revenue'        => 'Akun pendapatan dibuat secara otomatis saat Anda membuat transaksi, namun Anda dapat membuatnya secara manual juga, jika Anda mau. Mari kita ciptakan sekarang:',
     'no_accounts_create_revenue'            => 'Buat akun pendapatan',
+    'no_accounts_title_liabilities'         => 'Let\'s create a liability!',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your credit card(s), (student) loans and other debts.',
+    'no_accounts_imperative_liabilities'    => 'You don\'t have to use this feature, but it can be useful if you want to keep track of these things.',
+    'no_accounts_create_liabilities'        => 'Create a liability',
     'no_budgets_title_default'              => 'Mari buat anggaran',
     'no_budgets_intro_default'              => 'Anda belum memiliki anggaran. Anggaran digunakan untuk mengatur pengeluaran Anda ke dalam kelompok logis, yang bisa Anda berikan topi lunak untuk membatasi pengeluaran Anda.',
     'no_budgets_imperative_default'         => 'Anggaran adalah alat dasar pengelolaan keuangan. Mari kita ciptakan sekarang:',

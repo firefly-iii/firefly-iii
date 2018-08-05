@@ -60,6 +60,7 @@ return [
     'new_asset_account'                          => 'Nova conta de ativo',
     'new_expense_account'                        => 'Nova conta de despesa',
     'new_revenue_account'                        => 'Nova conta de receita',
+    'new_liabilities_account'                    => 'New liability',
     'new_budget'                                 => 'Novo orçamento',
     'new_bill'                                   => 'Nova fatura',
     'block_account_logout'                       => 'Você foi desconectado. Contas bloqueadas não podem usar este site. Você se registrou com um email válido?',
@@ -589,6 +590,7 @@ return [
     'invalid_convert_selection'               => 'A conta que você selecionou já é usada nesta transação ou não existe.',
     'source_or_dest_invalid'                  => 'Os detalhes corretos da transação não foram encontrados. A conversão não é possível.',
 
+
     // create new stuff:
     'create_new_withdrawal'                   => 'Criar nova retirada',
     'create_new_deposit'                      => 'Criar um novo depósito',
@@ -686,6 +688,7 @@ return [
     'delete_asset_account'                    => 'Excluir conta do activo ":name"',
     'delete_expense_account'                  => 'Excluir conta de despesas ":name"',
     'delete_revenue_account'                  => 'Excluir conta de receitas ":name"',
+    'delete_liabilities_account'              => 'Delete liability ":name"',
     'asset_deleted'                           => 'Conta de ativo ":name" excluído com sucesso',
     'expense_deleted'                         => 'Conta de despesa ":name" excluída com sucesso',
     'revenue_deleted'                         => 'Conta de receitas ":name" excluída com sucesso',
@@ -695,11 +698,13 @@ return [
     'make_new_asset_account'                  => 'Criar uma nova conta de ativo',
     'make_new_expense_account'                => 'Criar uma nova conta de despesa',
     'make_new_revenue_account'                => 'Criar uma nova conta de receita',
+    'make_new_liabilities_account'            => 'Create a new liability',
     'asset_accounts'                          => 'Contas de ativo',
     'expense_accounts'                        => 'Contas de despesas',
     'revenue_accounts'                        => 'Contas de receitas',
     'cash_accounts'                           => 'Contas Correntes',
     'Cash account'                            => 'Conta Corrente',
+    'liabilities_accounts'                    => 'Liabilities',
     'reconcile_account'                       => 'Reconciliar conta ":account"',
     'overview_of_reconcile_modal'             => 'Overview of reconciliation',
     'delete_reconciliation'                   => 'Eliminar reconciliação',
@@ -733,7 +738,7 @@ return [
     'select_more_than_one_category'           => 'Por favor, selecione mais de uma categoria',
     'select_more_than_one_budget'             => 'Por favor, selecione mais de um orçamento',
     'select_more_than_one_tag'                => 'Por favor, selecione mais de uma tag',
-    'account_default_currency'                => 'Se você selecionar outra moeda, as novas transações desta conta terão essa moeda pré-selecionada.',
+    'account_default_currency'                => 'This will be the default currency associated with this account.',
     'reconcile_has_more'                      => 'Seu registro do Firefly III tem mais dinheiro nele do que o seu banco afirma que você deveria ter. Existem várias opções. Escolha o que fazer. Em seguida, pressione "Confirmar reconciliação".',
     'reconcile_has_less'                      => 'Seu registro do Firefly III tem menos dinheiro nele do que o seu banco afirma que você deveria ter. Existem várias opções. Escolha o que fazer. Em seguida, pressione "Confirmar reconciliação".',
     'reconcile_is_equal'                      => 'Seu registro do Firefly III e seus registros bancários combinam. Não há nada a se fazer. Pressione "Confirmar reconciliação" para confirmar sua entrada.',
@@ -751,6 +756,9 @@ return [
     'already_cleared_transactions'            => 'Transações já removidas (:count)',
     'submitted_end_balance'                   => 'Saldo final enviado',
     'initial_balance_description'             => 'Saldo inicial para ":account"',
+    'interest_calc_daily'                     => 'Per day',
+    'interest_calc_monthly'                   => 'Per month',
+    'interest_calc_yearly'                    => 'Per year',
 
     // categories:
     'new_category'                            => 'Nova categoria',
@@ -814,6 +822,7 @@ return [
     // new user:
     'welcome'                                 => 'Bem Vindo ao Firefly III!',
     'submit'                                  => 'Enviar',
+    'submit_yes_really'                       => 'Submit (I know what I\'m doing)',
     'getting_started'                         => 'Iniciar',
     'to_get_started'                          => 'É bom ver que você instalou o Firefly III com sucesso. Para começar com esta ferramenta, insira o nome do banco e o saldo da sua principal conta corrente. Não se preocupe ainda se você tiver várias contas. Você pode adicionar aqueles mais tarde. É só que o Firefly III precisa de algo para começar.',
     'savings_balance_text'                    => 'O Firefly III criará automaticamente uma conta de poupança para você. Por padrão, não haverá dinheiro na sua conta de poupança, mas se você contar o saldo ao Firefly III, ele será armazenado como tal.',
@@ -852,6 +861,10 @@ return [
     'Expense account'                         => 'Conta de Despesa',
     'Revenue account'                         => 'Conta de Receita',
     'Initial balance account'                 => 'Saldo inicial da conta',
+    'account_type_Debt'                       => 'Debt',
+    'account_type_Loan'                       => 'Loan',
+    'account_type_Mortgage'                   => 'Mortgage',
+    'account_type_Credit card'                => 'Credit card',
     'budgets'                                 => 'Orçamentos',
     'tags'                                    => 'Tags',
     'reports'                                 => 'Relatórios',
@@ -881,6 +894,10 @@ return [
     'monthly'                                 => 'Mensal',
     'profile'                                 => 'Perfil',
     'errors'                                  => 'Erros',
+    'debt_start_date'                         => 'Start date of debt',
+    'debt_start_amount'                       => 'Start amount of debt',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'store_new_liabilities_account'           => 'Store new liability',
 
     // reports:
     'report_default'                          => 'Relatório financeiro padrão entre :start e :end',
@@ -1132,6 +1149,10 @@ return [
     'deleted_link'                          => 'Excluir ligação',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'relacionado a',
     'is (partially) refunded by_inward'     => 'é (parcialmente) devolvido por',
     'is (partially) paid for by_inward'     => 'é (parcialmente) pago por',
@@ -1179,6 +1200,10 @@ return [
     'no_accounts_intro_revenue'             => 'Você ainda não possui contas de receita. As contas de receita são os locais onde você recebe dinheiro, como o seu empregador.',
     'no_accounts_imperative_revenue'        => 'As contas de receita são criadas automaticamente quando você cria transações, mas você também pode criar uma manualmente, se desejar. Vamos criar um agora:',
     'no_accounts_create_revenue'            => 'Criar uma conta de receita',
+    'no_accounts_title_liabilities'         => 'Let\'s create a liability!',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your credit card(s), (student) loans and other debts.',
+    'no_accounts_imperative_liabilities'    => 'You don\'t have to use this feature, but it can be useful if you want to keep track of these things.',
+    'no_accounts_create_liabilities'        => 'Create a liability',
     'no_budgets_title_default'              => 'Vamos criar um orçamento',
     'no_budgets_intro_default'              => 'Você ainda não tem orçamentos. Os orçamentos são usados ​​para organizar suas despesas em grupos lógicos, o que você pode usar como uma base para limitar suas despesas.',
     'no_budgets_imperative_default'         => 'Os orçamentos são as ferramentas básicas de gestão financeira. Vamos criar um agora:',

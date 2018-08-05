@@ -60,6 +60,7 @@ return [
     'new_asset_account'                          => 'Новый счет активов',
     'new_expense_account'                        => 'Новый расходный счет',
     'new_revenue_account'                        => 'Новый доходный счет',
+    'new_liabilities_account'                    => 'New liability',
     'new_budget'                                 => 'Новый бюджет',
     'new_bill'                                   => 'Новый счёт к оплате',
     'block_account_logout'                       => 'Вы вышли из системы. Заблокированные учётные записи не могут использовать этот сайт. Вы зарегистрировались с действующим адресом электронной почты?',
@@ -589,6 +590,7 @@ return [
     'invalid_convert_selection'               => 'Выбранный вами счёт уже используется в этой транзакции или не существует.',
     'source_or_dest_invalid'                  => 'Не удается найти правильные сведения о транзакции. Преобразование невозможно.',
 
+
     // create new stuff:
     'create_new_withdrawal'                   => 'Создать новый расход',
     'create_new_deposit'                      => 'Создать новый доход',
@@ -686,6 +688,7 @@ return [
     'delete_asset_account'                    => 'Удалить основной счёт ":name"',
     'delete_expense_account'                  => 'Удалить счёт расходов ":name"',
     'delete_revenue_account'                  => 'Удалить счёт доходов ":name"',
+    'delete_liabilities_account'              => 'Delete liability ":name"',
     'asset_deleted'                           => 'Основной счёт ":name" успешно удалён',
     'expense_deleted'                         => 'Счёт расхода ":name" успешно удалён',
     'revenue_deleted'                         => 'Счёт дохода ":name" успешно удалён',
@@ -695,11 +698,13 @@ return [
     'make_new_asset_account'                  => 'Создать новый основной счёт',
     'make_new_expense_account'                => 'Создать новый счёт расхода',
     'make_new_revenue_account'                => 'Создать новый счёт дохода',
+    'make_new_liabilities_account'            => 'Create a new liability',
     'asset_accounts'                          => 'Основные счета',
     'expense_accounts'                        => 'Счета расходов',
     'revenue_accounts'                        => 'Счета доходов',
     'cash_accounts'                           => 'Наличные деньги',
     'Cash account'                            => 'Наличные деньги',
+    'liabilities_accounts'                    => 'Liabilities',
     'reconcile_account'                       => 'Сверка счёта ":account"',
     'overview_of_reconcile_modal'             => 'Overview of reconciliation',
     'delete_reconciliation'                   => 'Удалить сверку',
@@ -733,7 +738,7 @@ return [
     'select_more_than_one_category'           => 'Пожалуйста, выберите больше одной категории',
     'select_more_than_one_budget'             => 'Пожалуйста, выберите больше одного бюджета',
     'select_more_than_one_tag'                => 'Пожалуйста, выберите больше одной метки',
-    'account_default_currency'                => 'Если вы выберете другую валюту, новые транзакции по данному счёту будут по умолчанию использовать именно её.',
+    'account_default_currency'                => 'This will be the default currency associated with this account.',
     'reconcile_has_more'                      => 'В вашей бухгалтерской книге Firefly III учтено больше денег, чем должно быть, согласно выписке из банка. Существует несколько вариантов. Пожалуйста, выберите, что делать, а затем нажмите «Подтвердить сверку».',
     'reconcile_has_less'                      => 'В вашей бухгалтерской книге Firefly III учтено меньше денег, чем должно быть, согласно выписке из банка. Существует несколько вариантов. Пожалуйста, выберите, что делать, а затем нажмите «Подтвердить сверку».',
     'reconcile_is_equal'                      => 'Ваша бухгалтерская книга Firefly III и ваши банковские выписки совпадают. Ничего делать не нужно. Пожалуйста, нажмите «Подтвердить сверку» для ввода данных.',
@@ -751,6 +756,9 @@ return [
     'already_cleared_transactions'            => 'Уже удалённые транзакции (:count)',
     'submitted_end_balance'                   => 'Подтверждённый конечный баланс',
     'initial_balance_description'             => 'Начальный баланс для ":account"',
+    'interest_calc_daily'                     => 'Per day',
+    'interest_calc_monthly'                   => 'Per month',
+    'interest_calc_yearly'                    => 'Per year',
 
     // categories:
     'new_category'                            => 'Новая категория',
@@ -814,6 +822,7 @@ return [
     // new user:
     'welcome'                                 => 'Добро пожаловать в Firefly III!',
     'submit'                                  => 'Подтвердить',
+    'submit_yes_really'                       => 'Submit (I know what I\'m doing)',
     'getting_started'                         => 'Начало работы',
     'to_get_started'                          => 'Приятно видеть, что вы успешно установили Firefly III. Чтобы начать работу, введите, пожалуйста, название своего банка и баланс вашего основного банковского счёта. Если вы планируете использовать несколько счетов, не волнуйтесь, вы сможете добавить их позже. Сейчас Firefly III просто нужны какие-нибудь первоначальные данные.',
     'savings_balance_text'                    => 'Firefly III автоматически создаст сберегательный счёт для вас. По умолчанию на вашем сберегательном счёте не будет денег, но если вы укажете начальный баланс, он будет сохранен.',
@@ -852,6 +861,10 @@ return [
     'Expense account'                         => 'Счета расходов',
     'Revenue account'                         => 'Счета доходов',
     'Initial balance account'                 => 'Начальный баланс для счёта',
+    'account_type_Debt'                       => 'Debt',
+    'account_type_Loan'                       => 'Loan',
+    'account_type_Mortgage'                   => 'Mortgage',
+    'account_type_Credit card'                => 'Credit card',
     'budgets'                                 => 'Бюджет',
     'tags'                                    => 'Метки',
     'reports'                                 => 'Отчёты',
@@ -881,6 +894,10 @@ return [
     'monthly'                                 => 'Ежемесячно',
     'profile'                                 => 'Профиль',
     'errors'                                  => 'Ошибки',
+    'debt_start_date'                         => 'Start date of debt',
+    'debt_start_amount'                       => 'Start amount of debt',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'store_new_liabilities_account'           => 'Store new liability',
 
     // reports:
     'report_default'                          => 'Стандартный финансовый отчёт за период с :start по :end',
@@ -1132,6 +1149,10 @@ return [
     'deleted_link'                          => 'Связь удалена',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'связано с',
     'is (partially) refunded by_inward'     => '(частично) возвращён',
     'is (partially) paid for by_inward'     => '(частично) оплачен',
@@ -1179,6 +1200,10 @@ return [
     'no_accounts_intro_revenue'             => 'У вас ещё нет счетов дохода. Счета дохода - это источники вашего дохода (например, ваш работодатель).',
     'no_accounts_imperative_revenue'        => 'Счета дохода создаются автоматически при создании транзакций, но вы можете создать их вручную, если хотите. Давайте создадим один сейчас:',
     'no_accounts_create_revenue'            => 'Создать счёт дохода',
+    'no_accounts_title_liabilities'         => 'Let\'s create a liability!',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your credit card(s), (student) loans and other debts.',
+    'no_accounts_imperative_liabilities'    => 'You don\'t have to use this feature, but it can be useful if you want to keep track of these things.',
+    'no_accounts_create_liabilities'        => 'Create a liability',
     'no_budgets_title_default'              => 'Давайте создадим бюджет',
     'no_budgets_intro_default'              => 'У вас пока нет бюджетов. Бюджеты используются для упорядочивания ваших расходов в логические группы, с помощью наблюдения за которыми вы можете ограничить свои расходы.',
     'no_budgets_imperative_default'         => 'Бюджеты - это основные инструменты управления финансами. Давайте создадим один сейчас:',

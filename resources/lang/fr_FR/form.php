@@ -84,6 +84,9 @@ return [
     'verification'                => 'Vérification',
     'api_key'                     => 'Clé API',
     'remember_me'                 => 'Se souvenir de moi',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Compte source (compte d\'actif)',
     'destination_account_expense' => 'Compte de destination (compte de dépenses)',

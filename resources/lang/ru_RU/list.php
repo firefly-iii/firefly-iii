@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Сумма переводов',
     'reconcile'               => 'Сверка',
     'account_on_spectre'      => 'Счёт (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Импортировать с этого счёта',
     'sepa-ct-id'              => 'Идентификатор SEPA end-to-end',
     'sepa-ct-op'              => 'Идентификатор учетной записи SEPA',

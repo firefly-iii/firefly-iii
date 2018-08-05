@@ -60,6 +60,7 @@ return [
     'new_asset_account'                          => 'Nieuwe betaalrekening',
     'new_expense_account'                        => 'Nieuwe crediteur',
     'new_revenue_account'                        => 'Nieuwe debiteur',
+    'new_liabilities_account'                    => 'New liability',
     'new_budget'                                 => 'Nieuw budget',
     'new_bill'                                   => 'Nieuw contract',
     'block_account_logout'                       => 'Je bent helaas uitgelogd. Geblokkeerde accounts kunnen deze site niet gebruiken. Heb je een geldig e-mailadres gebruikt toen je je registreerde?',
@@ -589,6 +590,7 @@ return [
     'invalid_convert_selection'               => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
     'source_or_dest_invalid'                  => 'Kan de juiste transactiegegevens niet vinden. Conversie is niet mogelijk.',
 
+
     // create new stuff:
     'create_new_withdrawal'                   => 'Nieuwe uitgave',
     'create_new_deposit'                      => 'Nieuwe inkomsten',
@@ -686,6 +688,7 @@ return [
     'delete_asset_account'                    => 'Verwijder betaalrekening ":name"',
     'delete_expense_account'                  => 'Verwijder crediteur ":name"',
     'delete_revenue_account'                  => 'Verwijder debiteur ":name"',
+    'delete_liabilities_account'              => 'Delete liability ":name"',
     'asset_deleted'                           => 'Betaalrekening ":name" is verwijderd.',
     'expense_deleted'                         => 'Crediteur ":name" is verwijderd.',
     'revenue_deleted'                         => 'Debiteur ":name" is verwijderd.',
@@ -695,11 +698,13 @@ return [
     'make_new_asset_account'                  => 'Nieuwe betaalrekening',
     'make_new_expense_account'                => 'Nieuwe crediteur',
     'make_new_revenue_account'                => 'Nieuwe debiteur',
+    'make_new_liabilities_account'            => 'Create a new liability',
     'asset_accounts'                          => 'Betaalrekeningen',
     'expense_accounts'                        => 'Crediteuren',
     'revenue_accounts'                        => 'Debiteuren',
     'cash_accounts'                           => 'Contant geldrekeningen',
     'Cash account'                            => 'Contant geldrekening',
+    'liabilities_accounts'                    => 'Liabilities',
     'reconcile_account'                       => 'Afstemmen betaalrekening ":account"',
     'overview_of_reconcile_modal'             => 'Overview of reconciliation',
     'delete_reconciliation'                   => 'Verwijder correctie',
@@ -733,7 +738,7 @@ return [
     'select_more_than_one_category'           => 'Selecteer meer dan één categorie',
     'select_more_than_one_budget'             => 'Selecteer meer dan één budget',
     'select_more_than_one_tag'                => 'Selecteer meer dan één tag',
-    'account_default_currency'                => 'Nieuwe transacties van deze betaalrekening krijgen automatisch deze valuta.',
+    'account_default_currency'                => 'This will be the default currency associated with this account.',
     'reconcile_has_more'                      => 'Je Firefly III boekhouding bevat meer geld dan je bank beweert dat er in zou moeten zitten. Je hebt verschillende opties. Kies wat je wilt doen, en klik dan "Bevestig correctie".',
     'reconcile_has_less'                      => 'Je Firefly III boekhouding bevat minder geld dan je bank beweert dat er in zou moeten zitten. Je hebt verschillende opties. Kies wat je wilt doen, en klik dan "Bevestig correctie".',
     'reconcile_is_equal'                      => 'Je Firefly III boekhouding en je bankafschriften lopen gelijk. Je hoeft niets te doen. Klik op "Bevestig correctie" om je invoer te bevestigen.',
@@ -751,6 +756,9 @@ return [
     'already_cleared_transactions'            => 'Al afgestemde transacties (:count)',
     'submitted_end_balance'                   => 'Ingevoerd eindsaldo',
     'initial_balance_description'             => 'Startsaldo voor ":account"',
+    'interest_calc_daily'                     => 'Per day',
+    'interest_calc_monthly'                   => 'Per month',
+    'interest_calc_yearly'                    => 'Per year',
 
     // categories:
     'new_category'                            => 'Nieuwe categorie',
@@ -814,6 +822,7 @@ return [
     // new user:
     'welcome'                                 => 'Welkom bij Firefly III!',
     'submit'                                  => 'Invoeren',
+    'submit_yes_really'                       => 'Submit (I know what I\'m doing)',
     'getting_started'                         => 'Aan de start!',
     'to_get_started'                          => 'Het is goed om te zien dat de installatie van Firefly III gelukt is. Voer de naam van je bank in en het saldo van je belangrijkste betaalrekening. Meerdere rekeningen kan je later toevoegen, maar we moeten ergens beginnen natuurlijk.',
     'savings_balance_text'                    => 'Firefly III maakt automatisch een spaarrekening voor je. Daar zit normaal geen geld in, maar je kan hier opgeven hoeveel er op staat.',
@@ -852,6 +861,10 @@ return [
     'Expense account'                         => 'Crediteur',
     'Revenue account'                         => 'Debiteur',
     'Initial balance account'                 => 'Startbalansrekening',
+    'account_type_Debt'                       => 'Debt',
+    'account_type_Loan'                       => 'Loan',
+    'account_type_Mortgage'                   => 'Mortgage',
+    'account_type_Credit card'                => 'Credit card',
     'budgets'                                 => 'Budgetten',
     'tags'                                    => 'Tags',
     'reports'                                 => 'Overzichten',
@@ -881,6 +894,10 @@ return [
     'monthly'                                 => 'Maandelijks',
     'profile'                                 => 'Profiel',
     'errors'                                  => 'Fouten',
+    'debt_start_date'                         => 'Start date of debt',
+    'debt_start_amount'                       => 'Start amount of debt',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'store_new_liabilities_account'           => 'Store new liability',
 
     // reports:
     'report_default'                          => 'Standaard financieel rapport (:start tot :end)',
@@ -1132,6 +1149,10 @@ return [
     'deleted_link'                          => 'Koppeling verwijderd',
 
     // link translations:
+    'Paid_name'                             => 'Paid',
+    'Refund_name'                           => 'Refund',
+    'Reimbursement_name'                    => 'Reimbursement',
+    'Related_name'                          => 'Related',
     'relates to_inward'                     => 'gerelateerd aan',
     'is (partially) refunded by_inward'     => 'wordt (deels) terugbetaald door',
     'is (partially) paid for by_inward'     => 'wordt (deels) betaald door',
@@ -1179,6 +1200,10 @@ return [
     'no_accounts_intro_revenue'             => 'Je hebt nog geen debiteuren-rekeningen. Debiteuren zijn de plaatsen of mensen waar je geld van ontvangt, zoals je werkgever.',
     'no_accounts_imperative_revenue'        => 'Crediteuren worden automatisch aangemaakt als je transacties aanmaakt, maar je kan ze ook met de hand maken. Zoals nu:',
     'no_accounts_create_revenue'            => 'Maak een debiteur',
+    'no_accounts_title_liabilities'         => 'Let\'s create a liability!',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your credit card(s), (student) loans and other debts.',
+    'no_accounts_imperative_liabilities'    => 'You don\'t have to use this feature, but it can be useful if you want to keep track of these things.',
+    'no_accounts_create_liabilities'        => 'Create a liability',
     'no_budgets_title_default'              => 'Je hebt een budget nodig',
     'no_budgets_intro_default'              => 'Je hebt nog geen budgetten. Budgetten gebruik je om je uitgaven te groeperen. Daarmee kan je je uitgaven beperken.',
     'no_budgets_imperative_default'         => 'Budgetten zijn de basis-gereedschappen van financieel beheer. Je kan nu een budget maken:',

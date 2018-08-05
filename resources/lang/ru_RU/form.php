@@ -84,6 +84,9 @@ return [
     'verification'                => 'Проверка',
     'api_key'                     => 'API-ключ',
     'remember_me'                 => 'Запомнить меня',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Исходный счёт (основной счёт)',
     'destination_account_expense' => 'Счёт назначения (счёт расхода)',

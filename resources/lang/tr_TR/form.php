@@ -84,6 +84,9 @@ return [
     'verification'                => 'Doğrulama',
     'api_key'                     => 'API anahtarı',
     'remember_me'                 => 'Remember me',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Kaynak Hesabı (varlık hesabı)',
     'destination_account_expense' => 'Hedef Hesap (gider hesabı)',

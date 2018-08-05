@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Summe der Umbuchungen',
     'reconcile'               => 'Abgleichen',
     'account_on_spectre'      => 'Konto (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Von diesem Konto importieren',
     'sepa-ct-id'              => 'SEPA • Ende-zu-Ende-Identifikationsnummer',
     'sepa-ct-op'              => 'SEPA • Zielkonto-Identifikationsnummer',
