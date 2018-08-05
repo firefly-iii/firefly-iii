@@ -130,4 +130,7 @@ return [
     'transaction_s'           => 'Транзакции',
     'field'                   => 'Поле',
     'value'                   => 'Значение',
+    'interest'                => 'Interest',
+    'interest_period'         => 'interest period',
+    'liability_type'          => 'Type of liability',
 ];

@@ -695,7 +695,7 @@ return [
     'expense_deleted'                         => 'Successfully deleted expense account ":name"',
     'revenue_deleted'                         => 'Successfully deleted revenue account ":name"',
     'update_asset_account'                    => 'Update asset account',
-    'update_liabilities_account'                    => 'Update liability',
+    'update_liabilities_account'              => 'Update liability',
     'update_expense_account'                  => 'Update expense account',
     'update_revenue_account'                  => 'Update revenue account',
     'make_new_asset_account'                  => 'Create a new asset account',
@@ -899,9 +899,9 @@ return [
     'errors'                                  => 'Errors',
     'debt_start_date'                         => 'Start date of debt',
     'debt_start_amount'                       => 'Start amount of debt',
-    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. You may also enter the current amount, if the original amount was way-back-when.',
     'store_new_liabilities_account'           => 'Store new liability',
-    'edit_liabilities_account' => 'Edit liability ":name"',
+    'edit_liabilities_account'                => 'Edit liability ":name"',
 
     // reports:
     'report_default'                          => 'Default financial report between :start and :end',

@@ -270,6 +270,8 @@ return [
     'move_rule_group_down'                       => 'Descendre le groupe de règles',
     'save_rules_by_moving'                       => 'Enregistrer ces règles en les déplaçant vers un autre groupe de règles :',
     'make_new_rule'                              => 'Créer une nouvelle règle dans le groupe de règles ":title"',
+    'make_new_rule_no_group'                     => 'Créer une nouvelle règle',
+    'instructions_rule_from_bill'                => 'Afin d’associer des transactions à votre nouvelle facture « :name », Firefly III peut créer une règle qui sera automatiquement appliquée sur toutes les transactions déjà enregistrées. Veuillez vérifier les détails ci-après et enregistrer la règle pour que Firefly III associe automatiquement des transactions à votre nouvelle facture.',
     'rule_is_strict'                             => 'règle stricte',
     'rule_is_not_strict'                         => 'règle non stricte',
     'rule_help_stop_processing'                  => 'Lorsque vous cochez cette case, les règles suivantes de ce groupe ne seront pas exécutées.',
@@ -693,6 +695,7 @@ return [
     'expense_deleted'                         => 'Compte de dépenses ":name" correctement supprimé',
     'revenue_deleted'                         => 'Compte de recettes ":name" correctement supprimé',
     'update_asset_account'                    => 'Mettre à jour le compte d’actif',
+    'update_liabilities_account'              => 'Update liability',
     'update_expense_account'                  => 'Mettre à jour le compte de dépenses',
     'update_revenue_account'                  => 'Mettre à jour le compte de recettes',
     'make_new_asset_account'                  => 'Créer un nouveau compte d’actif',
@@ -896,8 +899,9 @@ return [
     'errors'                                  => 'Erreurs',
     'debt_start_date'                         => 'Start date of debt',
     'debt_start_amount'                       => 'Start amount of debt',
-    'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
+    'debt_start_amount_help'                  => 'Please enter a positive amount. You may also enter the current amount, if the original amount was way-back-when.',
     'store_new_liabilities_account'           => 'Store new liability',
+    'edit_liabilities_account'                => 'Edit liability ":name"',
 
     // reports:
     'report_default'                          => 'Rapport financier par défaut entre le :start et le :end',

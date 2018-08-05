@@ -84,9 +84,9 @@ return [
     'verification'                => 'Bestätigung',
     'api_key'                     => 'API-Schlüssel',
     'remember_me'                 => 'Angemeldet bleiben',
-    'liability_type_id'           => 'Liability type',
-    'interest'                    => 'Interest',
-    'interest_period'             => 'Interest period',
+    'liability_type_id'           => 'Haftungsart',
+    'interest'                    => 'Zinsen',
+    'interest_period'             => 'Verzinsungszeitraum',
 
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
     'destination_account_expense' => 'Zielkonto (Unkostenkonto)',

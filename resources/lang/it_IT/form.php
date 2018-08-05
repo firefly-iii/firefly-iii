@@ -84,9 +84,9 @@ return [
     'verification'                => 'Verifica',
     'api_key'                     => 'Chiave API',
     'remember_me'                 => 'Ricordami',
-    'liability_type_id'           => 'Liability type',
-    'interest'                    => 'Interest',
-    'interest_period'             => 'Interest period',
+    'liability_type_id'           => 'Tipo passività',
+    'interest'                    => 'Interesse',
+    'interest_period'             => 'Periodo di interesse',
 
     'source_account_asset'        => 'Conto origine (conto attività)',
     'destination_account_expense' => 'Conto destinazione (conto spese)',

@@ -104,7 +104,7 @@ return [
     'sum_transfers'           => 'Summe der Umbuchungen',
     'reconcile'               => 'Abgleichen',
     'account_on_spectre'      => 'Konto (Spectre)',
-    'account_on_ynab'         => 'Account (YNAB)',
+    'account_on_ynab'         => 'Konto (YNAB)',
     'do_import'               => 'Von diesem Konto importieren',
     'sepa-ct-id'              => 'SEPA • Ende-zu-Ende-Identifikationsnummer',
     'sepa-ct-op'              => 'SEPA • Zielkonto-Identifikationsnummer',
@@ -130,4 +130,7 @@ return [
     'transaction_s'           => 'Buchung(en)',
     'field'                   => 'Feld',
     'value'                   => 'Wert',
+    'interest'                => 'Zinsen',
+    'interest_period'         => 'Verzinsungszeitraum',
+    'liability_type'          => 'Verbindlichkeitsart',
 ];

@@ -84,7 +84,7 @@ return [
     'prereq_ynab_title'                   => 'Prerequisiti per un\'importazione da YNAB',
     'prereq_ynab_text'                    => 'Per poter scaricare le transazioni da YNAB crea una nuova applicazione nella tua <a href="https://app.youneedabudget.com/settings/developer">Pagina delle impostazioni per sviluppatore</a> e inserisci l\'ID e il segreto del client in questa pagina.',
     'prereq_ynab_redirect'                => 'Per completare la configurazione inserisci il seguente URL nella <a href="https://app.youneedabudget.com/settings/developer">Pagina delle impostazioni per sviluppatore</a> alla voce "Reindirizza URI".',
-    'callback_not_tls'                    => 'Firefly III has detected the following callback URI. It seems your server is not set up to accept TLS-connections (https). YNAB will not accept this URI. You may continue with the import (because Firefly III could be wrong) but please keep this in mind.',
+    'callback_not_tls'                    => 'Firefly III ha rilevato il seguenti URI di callback. Sembra che il tuo server non sia impostato per accettare le connessioni TLS (https). YNAB non accetterà questo URI. Puoi continuare con l\'importazione (poiché Firefly III potrebbe sbagliarsi) ma tienilo a mente.',
     // prerequisites success messages:
     'prerequisites_saved_for_fake'        => 'Chiave API fittizia memorizzata correttamente!',
     'prerequisites_saved_for_spectre'     => 'ID dell\'app e segreto memorizzati!',
@@ -172,8 +172,8 @@ return [
     'job_config_ynab_no_budgets'           => 'Non ci sono budget disponibili da cui importare.',
     'ynab_no_mapping'                      => 'Sembra che tu non abbia selezionato nessun conto da cui importare.',
     'job_config_ynab_bad_currency'         => 'Non puoi importare dai seguenti budget perché non hai dei conti con la stessa valuta di questi budget.',
-    'job_config_ynab_accounts_title'       => 'Select accounts',
-    'job_config_ynab_accounts_text'        => 'You have the following accounts available in this budget. Please select from which accounts you want to import, and where the transactions should be stored.',
+    'job_config_ynab_accounts_title'       => 'Seleziona conti',
+    'job_config_ynab_accounts_text'        => 'In questo budget sono disponibili i seguenti conti. Seleziona da quale conti effettuare l\'importazione e dove memorizzare le transazioni.',
 
 
     // keys from "extra" array:
