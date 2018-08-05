@@ -337,7 +337,10 @@ class FireflyValidator extends Validator
         // and finally a "will match everything check":
         $classes = app('config')->get('firefly.rule-triggers');
         /** @var TriggerInterface $class */
-        $class = $classes[$triggerType];
+        $class = $classes[$triggerType] ?? false;
+        if(false === $class) {
+            return false;
+        }
 
         return !$class::willMatchEverything($value);
     }
