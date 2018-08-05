@@ -316,7 +316,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
 
         $journalRepos->shouldReceive('findNull')->andReturn(null);
-        $repository->shouldReceive('updateLink')->once()->andReturn($journalLink);
+        //$repository->shouldReceive('updateLink')->once()->andReturn($journalLink);
 
         // data to submit
         $data = [

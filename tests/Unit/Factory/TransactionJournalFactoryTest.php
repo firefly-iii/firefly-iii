@@ -67,6 +67,8 @@ class TransactionJournalFactoryTest extends TestCase
         $typeFactory->shouldReceive('find')->andReturn($type);
         $currencyRepos->shouldReceive('find')->andReturn($euro);
 
+        $metaFactory->shouldReceive('updateOrCreate');
+
         // mock factories:
         $transactionFactory->shouldReceive('setUser')->once();
         $billFactory->shouldReceive('setUser')->once();

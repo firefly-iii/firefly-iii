@@ -260,8 +260,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('store')->andReturn($bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
-        $ruleGroupRepos->shouldReceive('count')->andReturn(1);
-        $ruleGroupRepos->shouldReceive('getActiveGroups')->andReturn(new Collection([RuleGroup::first()]))->once();
+
         $data = [
             'name'                    => 'New Bill ' . random_int(1000, 9999),
             'amount_min'              => '100',
@@ -296,8 +295,6 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('store')->andReturn($bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
-        $ruleGroupRepos->shouldReceive('count')->andReturn(1);
-        $ruleGroupRepos->shouldReceive('getActiveGroups')->andReturn(new Collection([RuleGroup::first()]))->once();
 
         $data = [
             'name'                    => 'New Bill ' . random_int(1000, 9999),
@@ -333,8 +330,6 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('store')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
-        $ruleGroupRepos->shouldReceive('count')->andReturn(0);
-        $ruleGroupRepos->shouldReceive('store')->once()->withArgs([['title' => 'Rule group for bills','description'=> 'A special rule group for all the rules that involve bills.']])->andReturn(RuleGroup::first());
 
         $data = [
             'name'                    => 'New Bill ' . random_int(1000, 9999),

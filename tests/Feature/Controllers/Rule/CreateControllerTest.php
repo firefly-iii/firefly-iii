@@ -62,26 +62,6 @@ class CreateControllerTest extends TestCase
         $response = $this->get(route('rules.create', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertViewHas('returnToBill', false);
-        $response->assertViewHas('bill', null);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Rule\CreateController
-     */
-    public function testCreateBill(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $billRepos    = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $billRepos->shouldReceive('find')->withArgs([1])->andReturn(Bill::find(1))->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('rules.create', [1]) . '?return=true&fromBill=1');
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertViewHas('returnToBill', true);
     }
 
     /**
@@ -108,24 +88,6 @@ class CreateControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Rule\CreateController
-     */
-    public function testCreateReturn(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $billRepos    = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('rules.create', [1]) . '?return=true');
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertViewHas('returnToBill', true);
-    }
-
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Rule\CreateController

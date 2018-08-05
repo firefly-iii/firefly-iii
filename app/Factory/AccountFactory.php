@@ -194,7 +194,8 @@ class AccountFactory
             /** @var array $types */
             $types = config('firefly.accountTypeByIdentifier.' . $accountType) ?? [];
             if (\count($types) > 0) {
-                $result = AccountType::whereIn('types', $types)->first();
+                Log::debug(sprintf('%d accounts in list from config', \count($types)), $types);
+                $result = AccountType::whereIn('type', $types)->first();
             }
             if (null === $result && null !== $accountType) {
                 // try as full name:
