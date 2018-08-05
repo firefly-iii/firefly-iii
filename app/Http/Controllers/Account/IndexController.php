@@ -101,10 +101,13 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-                $account->lastActivityDate = $this->isInArray($activities, $account->id);
-                $account->startBalance     = $this->isInArray($startBalances, $account->id);
-                $account->endBalance       = $this->isInArray($endBalances, $account->id);
-                $account->difference       = bcsub($account->endBalance, $account->startBalance);
+                $account->lastActivityDate  = $this->isInArray($activities, $account->id);
+                $account->startBalance      = $this->isInArray($startBalances, $account->id);
+                $account->endBalance        = $this->isInArray($endBalances, $account->id);
+                $account->difference        = bcsub($account->endBalance, $account->startBalance);
+                $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
+                $account->interestPeriod    = (string)trans('firefly.interest_calc_' . $this->repository->getMetaValue($account, 'interest_period'));
+                $account->accountTypeString = (string)trans('firefly.account_type_' . $account->accountType->type);
             }
         );
 

@@ -781,6 +781,7 @@ Route::group(
 
     // create controller
     Route::get('create/{ruleGroup?}', ['uses' => 'Rule\CreateController@create', 'as' => 'create']);
+    Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
     Route::post('store', ['uses' => 'Rule\CreateController@store', 'as' => 'store']);
 
     // delete controller

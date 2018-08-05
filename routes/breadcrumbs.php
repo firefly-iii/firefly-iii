@@ -44,23 +44,25 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 
-/**
- * Cuts away the middle of a string when it's very long.
- *
- * @param string $string
- *
- * @return string
- */
-function limitStringLength(string $string): string
-{
-    $maxChars = 75;
-    $length   = \strlen($string);
-    $result   = $string;
-    if ($length > $maxChars) {
-        $result = substr_replace($string, ' ... ', $maxChars / 2, $length - $maxChars);
-    }
+if (!function_exists('limitStringLength')) {
+    /**
+     * Cuts away the middle of a string when it's very long.
+     *
+     * @param string $string
+     *
+     * @return string
+     */
+    function limitStringLength(string $string): string
+    {
+        $maxChars = 75;
+        $length   = \strlen($string);
+        $result   = $string;
+        if ($length > $maxChars) {
+            $result = substr_replace($string, ' ... ', $maxChars / 2, $length - $maxChars);
+        }
 
-    return $result;
+        return $result;
+    }
 }
 
 try {
@@ -849,6 +851,14 @@ try {
 
         }
     );
+
+    Breadcrumbs::register(
+        'rules.create-from-bill',
+        function (BreadcrumbsGenerator $breadcrumbs, RuleGroup $ruleGroup = null) {
+            $breadcrumbs->parent('rules.index');
+            $breadcrumbs->push(trans('firefly.make_new_rule_no_group'), route('rules.create'));
+        }
+    );
     Breadcrumbs::register(
         'rules.edit',
         function (BreadcrumbsGenerator $breadcrumbs, Rule $rule) {
@@ -1033,7 +1043,7 @@ try {
     Breadcrumbs::register(
         'transactions.show',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
-            $what = strtolower($journal->transactionType->type);
+            $what  = strtolower($journal->transactionType->type);
             $title = limitStringLength($journal->description);
 
             $breadcrumbs->parent('transactions.index', $what);

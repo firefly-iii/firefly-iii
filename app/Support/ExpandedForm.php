@@ -41,7 +41,6 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\MessageBag;
 use Log;
 use RuntimeException;
-use Session;
 use Throwable;
 
 /**
@@ -246,7 +245,7 @@ class ExpandedForm
         $value              = $value ?? 1;
         $options['checked'] = true === $checked;
 
-        if (Session::has('preFilled')) {
+        if (app('session')->has('preFilled')) {
             $preFilled          = session('preFilled');
             $options['checked'] = $preFilled[$name] ?? $options['checked'];
         }
@@ -529,34 +528,6 @@ class ExpandedForm
     }
 
     /**
-     * Function to render a percentage.
-     *
-     * @param string $name
-     * @param mixed  $value
-     * @param array  $options
-     *
-     * @return string
-     *
-     */
-    public function percentage(string $name, $value = null, array $options = null): string
-    {
-        $label           = $this->label($name, $options);
-        $options         = $this->expandOptionArray($name, $label, $options);
-        $classes         = $this->getHolderClasses($name);
-        $value           = $this->fillFieldValue($name, $value);
-        $options['step'] = 'any';
-        unset($options['placeholder']);
-        try {
-            $html = view('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
-        } catch (Throwable $e) {
-            Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
-            $html = 'Could not render percentage.';
-        }
-
-        return $html;
-    }
-
-    /**
      * @param string $type
      * @param string $name
      *
@@ -593,6 +564,34 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Function to render a percentage.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function percentage(string $name, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        unset($options['placeholder']);
+        try {
+            $html = view('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
+            $html = 'Could not render percentage.';
         }
 
         return $html;
@@ -784,12 +783,16 @@ class ExpandedForm
      */
     public function textarea(string $name, $value = null, array $options = null): string
     {
-        $value           = $value ?? '';
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
+
+        if (null === $value) {
+            $value = '';
+        }
+
         try {
             $html = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
@@ -880,12 +883,13 @@ class ExpandedForm
      * @return mixed
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function fillFieldValue(string $name, $value)
+    protected function fillFieldValue(string $name, $value = null)
     {
-        if (Session::has('preFilled')) {
+        if (app('session')->has('preFilled')) {
             $preFilled = session('preFilled');
             $value     = isset($preFilled[$name]) && null === $value ? $preFilled[$name] : $value;
         }
+
         try {
             if (null !== request()->old($name)) {
                 $value = request()->old($name);
@@ -894,6 +898,7 @@ class ExpandedForm
             // don't care about session errors.
             Log::debug(sprintf('Run time: %s', $e->getMessage()));
         }
+
         if ($value instanceof Carbon) {
             $value = $value->format('Y-m-d');
         }

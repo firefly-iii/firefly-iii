@@ -9,10 +9,17 @@
         {% if what == 'asset' %}
             <th data-defaultsign="az" class="hidden-sm hidden-xs hidden-md">{{ trans('list.role') }}</th>
         {% endif %}
+        {% if what == 'liabilities' %}
+            <th data-defaultsign="az">{{ trans('list.liability_type') }}</th>
+            <th data-defaultsign="_19">{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
+        {% endif %}
         <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.accountNumber') }}</th>
         <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
-        <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
+        {# hide last activity to make room for other stuff #}
+        {% if what != 'liabilities' %}
+            <th data-defaultsign="month" class="hidden-sm hidden-xs hidden-md">{{ trans('list.lastActivity') }}</th>
+        {% endif %}
         <th data-defaultsign="_19" style="width:15%;"
             class="hidden-sm hidden-xs hidden-md">{{ trans('list.balanceDiff') }}</th>
     </tr>
@@ -40,6 +47,12 @@
                     {% endfor %}
                 </td>
             {% endif %}
+            {% if what == 'liabilities' %}
+                <td>{{ account.accountTypeString }}</td>
+            <td data-value="{{ account.interest }}">
+                {{ account.interest }}% ({{ account.interestPeriod|lower }})
+            </td>
+            {% endif %}
             <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'accountNumber') }}{% endif %}</td>
             <td data-value="{{ account.endBalance }}" style="text-align: right;">
                 <span style="margin-right:5px;">
@@ -53,14 +66,17 @@
                     <i class="fa fa-fw fa-ban"></i>
                 {% endif %}
             </td>
-            {% if account.lastActivityDate %}
-                <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.lastActivityDate.format('Y-m-d H-i-s') }} ">
-                    {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
-                </td>
-            {% else %}
-                <td class="hidden-sm hidden-xs hidden-md" data-value="0000-00-00 00-00-00">
-                    <em>{{ 'never'|_ }}</em>
-                </td>
+            {# hide last activity to make room for other stuff #}
+            {% if what != 'liabilities' %}
+                {% if account.lastActivityDate %}
+                    <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.lastActivityDate.format('Y-m-d H-i-s') }} ">
+                        {{ account.lastActivityDate.formatLocalized(monthAndDayFormat) }}
+                    </td>
+                {% else %}
+                    <td class="hidden-sm hidden-xs hidden-md" data-value="0000-00-00 00-00-00">
+                        <em>{{ 'never'|_ }}</em>
+                    </td>
+                {% endif %}
             {% endif %}
             <td class="hidden-sm hidden-xs hidden-md" data-value="{{ account.difference }}" style="text-align: right;">
                 <span style="margin-right:5px;">

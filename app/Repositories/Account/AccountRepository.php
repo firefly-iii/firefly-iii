@@ -299,10 +299,10 @@ class AccountRepository implements AccountRepositoryInterface
     public function getNoteText(Account $account): ?string
     {
         $note = $account->notes()->first();
+
         if (null === $note) {
             return null;
         }
-
         return $note->text;
     }
 

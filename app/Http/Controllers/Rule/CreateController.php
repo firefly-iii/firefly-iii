@@ -70,8 +70,6 @@ class CreateController extends Controller
     /**
      * Create a new rule. It will be stored under the given $ruleGroup.
      *
-     * TODO reinstate bill specific code.
-     *
      * @param Request   $request
      * @param RuleGroup $ruleGroup
      *
@@ -116,6 +114,55 @@ class CreateController extends Controller
 
         return view(
             'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'ruleGroup', 'subTitle')
+        );
+    }
+
+    /**
+     * Create a new rule. It will be stored under the given $ruleGroup.
+     *
+     * @param Request $request
+     * @param Bill    $bill
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function createFromBill(Request $request, Bill $bill)
+    {
+        $request->session()->flash('info', (string)trans('firefly.instructions_rule_from_bill', ['name' => $bill->name]));
+
+        $this->createDefaultRuleGroup();
+        $this->createDefaultRule();
+        $preFilled = [
+            'strict'      => true,
+            'title'       => (string)trans('firefly.new_rule_for_bill_title', ['name' => $bill->name]),
+            'description' => (string)trans('firefly.new_rule_for_bill_description', ['name' => $bill->name]),
+        ];
+
+        // make triggers and actions from the bill itself.
+
+        // get triggers and actions for bill:
+        $oldTriggers = $this->getTriggersForBill($bill);
+        $oldActions  = $this->getActionsForBill($bill);
+
+        $triggerCount = \count($oldTriggers);
+        $actionCount  = \count($oldActions);
+        $subTitleIcon = 'fa-clone';
+
+        // title depends on whether or not there is a rule group:
+        $subTitle = (string)trans('firefly.make_new_rule_no_group');
+
+        // flash old data
+        $request->session()->flash('preFilled', $preFilled);
+
+        // put previous url in session if not redirect from store (not "create another").
+        if (true !== session('rules.create.fromStore')) {
+            $this->rememberPreviousUri('rules.create.uri');
+        }
+        session()->forget('rules.create.fromStore');
+
+        return view(
+            'rules.rule.create', compact('subTitleIcon', 'oldTriggers', 'preFilled', 'oldActions', 'triggerCount', 'actionCount', 'subTitle')
         );
     }
 

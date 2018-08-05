@@ -47,36 +47,36 @@ trait RuleManagement
         if (0 === $ruleRepository->count()) {
             $data = [
                 'rule_group_id'   => $ruleRepository->getFirstRuleGroup()->id,
-                'stop-processing' => 0,
+                'stop_processing' => 0,
                 'title'           => (string)trans('firefly.default_rule_name'),
                 'description'     => (string)trans('firefly.default_rule_description'),
                 'trigger'         => 'store-journal',
                 'strict'          => true,
-                'rule-triggers'   => [
+                'rule_triggers'   => [
                     [
                         'name'            => 'description_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_description'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
 
                     ],
                     [
                         'name'            => 'from_account_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_from_account'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
 
                     ],
 
                 ],
-                'rule-actions'    => [
+                'rule_actions'    => [
                     [
                         'name'            => 'prepend_description',
                         'value'           => (string)trans('firefly.default_rule_action_prepend'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
                     ],
                     [
                         'name'            => 'set_category',
                         'value'           => (string)trans('firefly.default_rule_action_set_category'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
                     ],
                 ],
             ];

@@ -276,10 +276,10 @@ class BillController extends Controller
     public function show(Request $request, Bill $bill)
     {
         // add info about rules:
-        $rules          = $this->billRepository->getRulesForBill($bill);
-        $subTitle       = $bill->name;
+        $rules    = $this->billRepository->getRulesForBill($bill);
+        $subTitle = $bill->name;
         /** @var Carbon $start */
-        $start          = session('start');
+        $start = session('start');
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
@@ -342,30 +342,7 @@ class BillController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
-        // do return to original bill form?
-        $return = 'false';
-        if (1 === (int)$request->get('create_another')) {
-            $return = 'true';
-        }
-
-        $group = null;
-        // find first rule group, or create one:
-        $count = $this->ruleGroupRepos->count();
-        if (0 === $count) {
-            $data  = [
-                'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
-                'description' => (string)trans('firefly.rulegroup_for_bills_description'),
-            ];
-            $group = $this->ruleGroupRepos->store($data);
-        }
-        if ($count > 0) {
-            $group = $this->ruleGroupRepos->getActiveGroups($bill->user)->first();
-        }
-
-        // redirect to page that will create a new rule.
-        $params = http_build_query(['fromBill' => $bill->id, 'return' => $return]);
-
-        return redirect(route('rules.create', [$group->id]) . '?' . $params);
+        return redirect(route('rules.create-from-bill', [$bill->id]));
     }
 
     /**

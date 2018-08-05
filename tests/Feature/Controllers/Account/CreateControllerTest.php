@@ -25,7 +25,9 @@ namespace Tests\Feature\Controllers\Account;
 
 
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -61,6 +63,12 @@ class CreateControllerTest extends TestCase
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        // get all types:
+        $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
+        $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Loan'])->andReturn(AccountType::find(9))->once();
+        $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Mortgage'])->andReturn(AccountType::find(12))->once();
+        $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Credit card'])->andReturn(AccountType::find(13))->once();
 
         $this->be($this->user());
         $response = $this->get(route('accounts.create', ['asset']));

@@ -271,6 +271,7 @@ return [
     'save_rules_by_moving'                       => 'Save these rule(s) by moving them to another rule group:',
     'make_new_rule'                              => 'Make a new rule in rule group ":title"',
     'make_new_rule_no_group'                     => 'Make a new rule',
+    'instructions_rule_from_bill'                => 'In order to match transactions to your new bill ":name", Firefly III can create a rule that will automatically be checked against any transactions you store. Please verify the details below and store the rule to have Firefly III automatically match transactions to your new bill.',
     'rule_is_strict'                             => 'strict rule',
     'rule_is_not_strict'                         => 'non-strict rule',
     'rule_help_stop_processing'                  => 'When you check this box, later rules in this group will not be executed.',
@@ -694,6 +695,7 @@ return [
     'expense_deleted'                         => 'Successfully deleted expense account ":name"',
     'revenue_deleted'                         => 'Successfully deleted revenue account ":name"',
     'update_asset_account'                    => 'Update asset account',
+    'update_liabilities_account'                    => 'Update liability',
     'update_expense_account'                  => 'Update expense account',
     'update_revenue_account'                  => 'Update revenue account',
     'make_new_asset_account'                  => 'Create a new asset account',
@@ -899,6 +901,7 @@ return [
     'debt_start_amount'                       => 'Start amount of debt',
     'debt_start_amount_help'                  => 'Please enter a positive amount. Feel free to enter the current amount and date.',
     'store_new_liabilities_account'           => 'Store new liability',
+    'edit_liabilities_account' => 'Edit liability ":name"',
 
     // reports:
     'report_default'                          => 'Default financial report between :start and :end',

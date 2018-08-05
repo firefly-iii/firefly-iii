@@ -17,7 +17,7 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('name') }}
-                        {% if what == 'asset' or what=='liabilities' %}
+                        {% if what == 'asset' or what == 'liabilities' %}
                             {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
                         {% endif %}
                         {% if what == 'liabilities' %}
@@ -26,7 +26,6 @@
                             {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
                             {{ ExpandedForm.percentage('interest') }}
                             {{ ExpandedForm.select('interest_period', interestPeriods) }}
-
                         {% endif %}
                     </div>
                 </div>
