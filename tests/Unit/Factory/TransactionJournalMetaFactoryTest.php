@@ -90,7 +90,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
                 'data'                   => 'bye!',
             ]
         );
-        $count = $journal->transactionJournalMeta()->count();
+        $count   = $journal->transactionJournalMeta()->count();
 
         $set = [
             'journal' => $journal,
@@ -101,7 +101,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);
 
-        $this->assertEquals($count-1, $journal->transactionJournalMeta()->count());
+        $this->assertEquals($count - 1, $journal->transactionJournalMeta()->count());
     }
 
     /**

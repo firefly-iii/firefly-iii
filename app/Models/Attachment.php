@@ -84,7 +84,7 @@ class Attachment extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Attachment $attachment */
-            $attachment   = $user->attachments()->find($attachmentId);
+            $attachment = $user->attachments()->find($attachmentId);
             if (null !== $attachment) {
                 return $attachment;
             }

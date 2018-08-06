@@ -28,7 +28,6 @@ use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\RedirectResponse;
@@ -51,8 +50,6 @@ class BillController extends Controller
     private $attachments;
     /** @var BillRepositoryInterface Bill repository */
     private $billRepository;
-    /** @var RuleGroupRepositoryInterface Rule group repository */
-    private $ruleGroupRepos;
 
     /**
      * BillController constructor.
@@ -72,7 +69,6 @@ class BillController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
-                $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
 
                 return $next($request);
             }

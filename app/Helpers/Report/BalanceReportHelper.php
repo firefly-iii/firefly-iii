@@ -160,6 +160,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     {
         $set    = $balance->getBalanceLines();
         $newSet = new Collection;
+        /** @var BalanceLine $entry */
         foreach ($set as $entry) {
             if (null !== $entry->getBudget()->id) {
                 $sum = '0';

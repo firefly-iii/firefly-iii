@@ -108,23 +108,6 @@ class AutoCompleteControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
-     */
-    public function testCurrencyNames(): void
-    {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-
-        $currency = TransactionCurrency::find(1);
-        $repository->shouldReceive('get')->andReturn(new Collection([$currency]))->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('json.currency-names'));
-        $response->assertStatus(200);
-        $response->assertExactJson(['Euro']);
-    }
-
     /**
      * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
@@ -157,6 +140,22 @@ class AutoCompleteControllerTest extends TestCase
         $response = $this->get(route('json.categories'));
         $response->assertStatus(200);
         $response->assertExactJson([$category->name]);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testCurrencyNames(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currency = TransactionCurrency::find(1);
+        $repository->shouldReceive('get')->andReturn(new Collection([$currency]))->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('json.currency-names'));
+        $response->assertStatus(200);
+        $response->assertExactJson(['Euro']);
     }
 
     /**

@@ -55,7 +55,7 @@ class CreateRecurringTransactions implements ShouldQueue
 
     /** @var Carbon The current date */
     private $date;
-    /** @var JournalRepositoryInterface Journal repository  */
+    /** @var JournalRepositoryInterface Journal repository */
     private $journalRepository;
     /** @var RecurringRepositoryInterface Recurring transactions repository. */
     private $repository;
@@ -155,6 +155,7 @@ class CreateRecurringTransactions implements ShouldQueue
                     function (Rule $rule) use ($journal) {
                         Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
                         $processor = Processor::make($rule);
+                        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                         $processor->handleTransactionJournal($journal);
                         if ($rule->stop_processing) {
                             return;

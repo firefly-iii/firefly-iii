@@ -56,7 +56,7 @@ class ClearBudgetTest extends TestCase
         $this->assertEquals(0, $journal->budgets()->count());
 
         /** @var Transaction $transaction */
-        foreach($journal->transactions as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             $this->assertEquals(0, $transaction->budgets()->count());
         }
 

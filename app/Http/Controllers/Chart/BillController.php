@@ -102,7 +102,8 @@ class BillController extends Controller
         }
 
         $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
-        $results = $results->sortBy(
+        /** @var Collection $results */
+        $results   = $results->sortBy(
             function (Transaction $transaction) {
                 return $transaction->date->format('U');
             }

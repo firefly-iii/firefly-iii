@@ -82,6 +82,7 @@ class ScanAttachments extends Command
             $attachment->save();
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
         }
+
         return 0;
     }
 }

@@ -147,6 +147,7 @@ class ImportableConverter
                 Log::error($e->getTraceAsString());
             }
         }
+
         return $result;
     }
 

@@ -340,6 +340,7 @@ class ProfileController extends Controller
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
+
         return redirect(route('profile.index'));
     }
 
@@ -371,6 +372,7 @@ class ProfileController extends Controller
 
     /**
      * Regenerate access token.
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function regenerate()

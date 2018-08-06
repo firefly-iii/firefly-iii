@@ -148,7 +148,7 @@ class AccountTransformer extends TransformerAbstract
 
         $type = $account->accountType->type;
         $role = $this->repository->getMetaValue($account, 'accountRole');
-        if ($type !== AccountType::ASSET || (string)$role === '') {
+        if ($type !== AccountType::ASSET || '' === (string)$role) {
             $role = null;
         }
         $currencyId     = (int)$this->repository->getMetaValue($account, 'currency_id');
@@ -167,13 +167,13 @@ class AccountTransformer extends TransformerAbstract
             $date = $this->parameters->get('date');
         }
 
-        if ($currencyId === 0) {
+        if (0 === $currencyId) {
             $currencyId = null;
         }
 
         $monthlyPaymentDate = null;
         $creditCardType     = null;
-        if ($role === 'ccAsset' && $type === AccountType::ASSET) {
+        if ('ccAsset' === $role && $type === AccountType::ASSET) {
             $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
             $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
         }
@@ -194,7 +194,7 @@ class AccountTransformer extends TransformerAbstract
             'updated_at'           => $account->updated_at->toAtomString(),
             'created_at'           => $account->created_at->toAtomString(),
             'name'                 => $account->name,
-            'active'               => (int)$account->active === 1,
+            'active'               => 1 === (int)$account->active,
             'type'                 => $type,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,

@@ -27,7 +27,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountIs;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ToAccountIsTest
@@ -46,7 +45,6 @@ class ToAccountIsTest extends TestCase
         $account    = $this->user()->accounts()->inRandomOrder()->first();
         $collection = new Collection([$account]);
         $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
-
 
 
         $trigger = ToAccountIs::makeFromStrings($account->name, false);
@@ -78,8 +76,8 @@ class ToAccountIsTest extends TestCase
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = ToAccountIs::willMatchEverything($value);
+        $value      = '';
+        $result     = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
@@ -89,8 +87,8 @@ class ToAccountIsTest extends TestCase
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = ToAccountIs::willMatchEverything($value);
+        $value      = 'x';
+        $result     = ToAccountIs::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
@@ -100,8 +98,8 @@ class ToAccountIsTest extends TestCase
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = ToAccountIs::willMatchEverything($value);
+        $value      = null;
+        $result     = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

@@ -78,15 +78,16 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
         // render!
         try {
-        $result= view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
-            ->with('start', $this->start)->with('end', $this->end)
-            ->with('budgets', $this->budgets)
-            ->with('accounts', $this->accounts)
-            ->render();
+            $result = view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
+                ->with('start', $this->start)->with('end', $this->end)
+                ->with('budgets', $this->budgets)
+                ->with('accounts', $this->accounts)
+                ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = 'Could not render report view.';
         }
+
         return $result;
     }
 

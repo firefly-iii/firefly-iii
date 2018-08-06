@@ -62,6 +62,7 @@ class UseEncryption extends Command
         $this->handleObjects('Category', 'name', 'encrypted');
         $this->handleObjects('PiggyBank', 'name', 'encrypted');
         $this->handleObjects('TransactionJournal', 'description', 'encrypted');
+
         return 0;
     }
 

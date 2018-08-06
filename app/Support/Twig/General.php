@@ -46,7 +46,7 @@ class General extends Twig_Extension
             $this->balance(),
             $this->formatFilesize(),
             $this->mimeIcon(),
-            $this->markdown()
+            $this->markdown(),
         ];
     }
 
@@ -249,6 +249,7 @@ class General extends Twig_Extension
                 if ($repository->hasRole(auth()->user(), $role)) {
                     return true;
                 }
+
                 return false;
             }
         );

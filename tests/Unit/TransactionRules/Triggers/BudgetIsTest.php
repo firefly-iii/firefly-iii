@@ -86,11 +86,11 @@ class BudgetIsTest extends TestCase
 
         /** @var Collection $transactions */
         $transactions = $journal->transactions()->get();
-        $budget      = $journal->user->budgets()->first();
+        $budget       = $journal->user->budgets()->first();
 
         $journal->budgets()->detach();
         /** @var Transaction $transaction */
-        foreach($transactions as $transaction) {
+        foreach ($transactions as $transaction) {
             $transaction->budgets()->detach();
             $transaction->budgets()->save($budget);
             $this->assertEquals(1, $transaction->budgets()->count());

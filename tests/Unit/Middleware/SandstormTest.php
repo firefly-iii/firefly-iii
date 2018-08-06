@@ -25,10 +25,10 @@ namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\Sandstorm;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Mockery;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Mockery;
 
 /**
  * Class RangeTest

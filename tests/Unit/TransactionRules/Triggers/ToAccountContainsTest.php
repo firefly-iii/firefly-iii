@@ -77,8 +77,8 @@ class ToAccountContainsTest extends TestCase
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = ToAccountContains::willMatchEverything($value);
+        $value      = '';
+        $result     = ToAccountContains::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
@@ -88,8 +88,8 @@ class ToAccountContainsTest extends TestCase
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = ToAccountContains::willMatchEverything($value);
+        $value      = 'x';
+        $result     = ToAccountContains::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
@@ -99,8 +99,8 @@ class ToAccountContainsTest extends TestCase
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = ToAccountContains::willMatchEverything($value);
+        $value      = null;
+        $result     = ToAccountContains::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

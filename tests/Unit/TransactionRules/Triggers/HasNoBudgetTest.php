@@ -74,8 +74,8 @@ class HasNoBudgetTest extends TestCase
     {
         $loopCount = 0;
         do {
-            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->count();
+            $journal = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
         } while ($loopCount < 30 && $count !== 2);
 
         $transactions = $journal->transactions()->get();

@@ -38,9 +38,9 @@ class HasAttachmentTest extends TestCase
     {
         do {
             $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count = $journal->attachments()->count();
-        } while($count !== 0);
-        
+            $count   = $journal->attachments()->count();
+        } while ($count !== 0);
+
         $attachment = $journal->user->attachments()->first();
         $journal->attachments()->save($attachment);
         $this->assertEquals(1, $journal->attachments()->count());
@@ -58,8 +58,8 @@ class HasAttachmentTest extends TestCase
         do {
             // this is kind of cheating but OK.
             $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count = $journal->attachments()->count();
-        } while($count !== 0);
+            $count   = $journal->attachments()->count();
+        } while ($count !== 0);
 
         $this->assertEquals(0, $journal->attachments()->count());
 

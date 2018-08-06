@@ -93,7 +93,7 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $start = $start ?? session('start');
         /** @var Carbon $end */
-        $end   = $end ?? session('end');
+        $end = $end ?? session('end');
         if ($end < $start) {
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }

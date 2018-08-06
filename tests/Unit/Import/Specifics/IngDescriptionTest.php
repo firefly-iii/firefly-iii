@@ -33,6 +33,52 @@ use Tests\TestCase;
 class IngDescriptionTest extends TestCase
 {
     /**
+     * Test changes to BA row.
+     *
+     * Remove specific fields.
+     *
+     * @covers \FireflyIII\Import\Specifics\IngDescription
+     */
+    public function testRunBABasic(): void
+    {
+        $row = [0, 'XX', 2, '', 'BA', 5, 6, 7, 'XX', 9, 10];
+
+        $parser = new IngDescription;
+        $result = $parser->run($row);
+        $this->assertEquals('XX XX', $result[8]);
+    }
+
+    /**
+     * Empty description? Use "tegenrekening".
+     * Remove specific fields.
+     *
+     * @covers \FireflyIII\Import\Specifics\IngDescription
+     */
+    public function testRunEmptyDescr(): void
+    {
+        $row = [0, 1, 2, '', 'GT', 5, 6, 7, 'Naar Oranje Spaarrekening Bla bla', 9, 10];
+
+        $parser = new IngDescription;
+        $result = $parser->run($row);
+        $this->assertEquals('Bla bla', $result[3]);
+    }
+
+    /**
+     * See if the description is removed
+     *
+     * @covers \FireflyIII\Import\Specifics\IngDescription
+     */
+    public function testRunGTRemoveDescr(): void
+    {
+        $iban = 'NL66INGB0665877351';
+        $row  = [0, 1, 2, $iban, 'GT', 5, 6, 7, 'Bla bla bla Omschrijving: Should be removed IBAN: ' . $iban, 9, 10];
+
+        $parser = new IngDescription;
+        $result = $parser->run($row);
+        $this->assertEquals('Should be removed', $result[8]);
+    }
+
+    /**
      * Try if the IBAN is removed in GT transactions
      *
      * @covers \FireflyIII\Import\Specifics\IngDescription
@@ -41,21 +87,6 @@ class IngDescriptionTest extends TestCase
     {
         $iban = 'NL66INGB0665877351';
         $row  = [0, 1, 2, $iban, 'GT', 5, 6, 7, 'Should be removed IBAN: ' . $iban, 9, 10];
-
-        $parser = new IngDescription;
-        $result = $parser->run($row);
-        $this->assertEquals('Should be removed', $result[8]);
-    }
-
-    /**
-     * Try if the IBAN is removed in OV transactions
-     *
-     * @covers \FireflyIII\Import\Specifics\IngDescription
-     */
-    public function testRunOVRemoveIban(): void
-    {
-        $iban = 'NL66INGB0665877351';
-        $row  = [0, 1, 2, $iban, 'OV', 5, 6, 7, 'Should be removed IBAN: ' . $iban, 9, 10];
 
         $parser = new IngDescription;
         $result = $parser->run($row);
@@ -78,44 +109,14 @@ class IngDescriptionTest extends TestCase
     }
 
     /**
-     * Empty description? Use "tegenrekening".
-     * Remove specific fields.
+     * Try if the IBAN is removed in OV transactions
      *
      * @covers \FireflyIII\Import\Specifics\IngDescription
      */
-    public function testRunEmptyDescr(): void
-    {
-        $row  = [0, 1, 2, '', 'GT', 5, 6, 7, 'Naar Oranje Spaarrekening Bla bla', 9, 10];
-
-        $parser = new IngDescription;
-        $result = $parser->run($row);
-        $this->assertEquals('Bla bla', $result[3]);
-    }
-
-    /**
-     * Test changes to BA row.
-     *
-     * Remove specific fields.
-     *
-     * @covers \FireflyIII\Import\Specifics\IngDescription
-     */
-    public function testRunBABasic(): void
-    {
-        $row  = [0, 'XX', 2, '', 'BA', 5, 6, 7, 'XX', 9, 10];
-
-        $parser = new IngDescription;
-        $result = $parser->run($row);
-        $this->assertEquals('XX XX', $result[8]);
-    }
-
-    /**
-     * See if the description is removed
-     * @covers \FireflyIII\Import\Specifics\IngDescription
-     */
-    public function testRunGTRemoveDescr(): void
+    public function testRunOVRemoveIban(): void
     {
         $iban = 'NL66INGB0665877351';
-        $row  = [0, 1, 2, $iban, 'GT', 5, 6, 7, 'Bla bla bla Omschrijving: Should be removed IBAN: ' . $iban, 9, 10];
+        $row  = [0, 1, 2, $iban, 'OV', 5, 6, 7, 'Should be removed IBAN: ' . $iban, 9, 10];
 
         $parser = new IngDescription;
         $result = $parser->run($row);

@@ -27,13 +27,11 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-
-
 use FireflyIII\User;
 use Log;
+
 
 /**
  * Class VersionCheckEventHandler
@@ -81,7 +79,7 @@ class VersionCheckEventHandler
 
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
-        $resultString = $this->parseResult($versionCheck, $latestRelease);
+        $resultString  = $this->parseResult($versionCheck, $latestRelease);
         if (0 !== $versionCheck && '' !== $resultString) {
             // flash info
             session()->flash('info', $resultString);

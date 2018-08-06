@@ -150,7 +150,7 @@ class ImportDataHandler
             $destination = $this->mapper->map($possibleDestinationId, $amount, $destinationData);
             if (1 === bccomp($amount, '0')) {
                 [$source, $destination] = [$destination, $source];
-                $type = $type === 'transfer' ? 'transfer' : 'deposit';
+                $type = 'transfer' === $type ? 'transfer' : 'deposit';
                 Log::debug(sprintf('Amount is %s, so switch source/dest and make this a %s', $amount, $type));
             }
 

@@ -150,15 +150,15 @@ class JavascriptController extends Controller
     {
         $viewRange = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $start */
-        $start     = session('start');
+        $start = session('start');
         /** @var Carbon $end */
-        $end       = session('end');
+        $end = session('end');
         /** @var Carbon $first */
-        $first     = session('first');
-        $title     = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
-        $isCustom  = true === session('is_custom_range', false);
-        $today     = new Carbon;
-        $ranges    = [
+        $first    = session('first');
+        $title    = sprintf('%s - %s', $start->formatLocalized($this->monthAndDayFormat), $end->formatLocalized($this->monthAndDayFormat));
+        $isCustom = true === session('is_custom_range', false);
+        $today    = new Carbon;
+        $ranges   = [
             // first range is the current range:
             $title => [$start, $end],
         ];

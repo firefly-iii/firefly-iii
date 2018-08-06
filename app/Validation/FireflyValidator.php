@@ -243,7 +243,9 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param $attribute
+     * @param string $attribute
+     *
+     * @param string $value
      *
      * @return bool
      */
@@ -338,7 +340,7 @@ class FireflyValidator extends Validator
         $classes = app('config')->get('firefly.rule-triggers');
         /** @var TriggerInterface $class */
         $class = $classes[$triggerType] ?? false;
-        if(false === $class) {
+        if (false === $class) {
             return false;
         }
 
@@ -412,7 +414,7 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountNumberForUser($attribute, $value, $parameters): bool
     {
         $accountId = (int)($this->data['id'] ?? 0.0);
-        if ($accountId === 0) {
+        if (0 === $accountId) {
             $accountId = (int)($parameters[0] ?? 0.0);
         }
 
@@ -421,7 +423,7 @@ class FireflyValidator extends Validator
                             ->where('accounts.user_id', auth()->user()->id)
                             ->where('account_meta.name', 'accountNumber');
 
-        if ((int)$accountId > 0) {
+        if ($accountId > 0) {
             // exclude current account from check.
             $query->where('account_meta.account_id', '!=', $accountId);
         }
@@ -514,66 +516,6 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * @param int $index
-     *
-     * @return string
-     */
-    private function getRuleActionName(int $index): string
-    {
-        $name = $this->data['rule-action'][$index] ?? 'invalid';
-        if (!isset($this->data['rule-action'][$index])) {
-            $name = $this->data['rule-actions'][$index]['name'] ?? 'invalid';
-        }
-
-        return $name;
-    }
-
-    /**
-     * @param int $index
-     *
-     * @return string
-     */
-    private function getRuleActionValue(int $index): string
-    {
-        $value = $this->data['rule-action-value'][$index] ?? '';
-        if (!isset($this->data['rule-action-value'][$index])) {
-            $value = $this->data['rule-actions'][$index]['value'] ?? '';
-        }
-
-        return $value;
-    }
-
-    /**
-     * @param int $index
-     *
-     * @return string
-     */
-    private function getRuleTriggerName(int $index): string
-    {
-        $name = $this->data['rule-trigger'][$index] ?? 'invalid';
-        if (!isset($this->data['rule-trigger'][$index])) {
-            $name = $this->data['rule-triggers'][$index]['name'] ?? 'invalid';
-        }
-
-        return $name;
-    }
-
-    /**
-     * @param int $index
-     *
-     * @return string
-     */
-    private function getRuleTriggerValue(int $index): string
-    {
-        $value = $this->data['rule-trigger-value'][$index] ?? '';
-        if (!isset($this->data['rule-trigger-value'][$index])) {
-            $value = $this->data['rule-triggers'][$index]['value'] ?? '';
-        }
-
-        return $value;
-    }
-
-    /**
      * @param $value
      *
      * @return mixed
@@ -627,6 +569,7 @@ class FireflyValidator extends Validator
         $ignore = $existingAccount->id;
         $value  = $this->tryDecrypt($value);
 
+        /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
@@ -650,6 +593,7 @@ class FireflyValidator extends Validator
         $ignore = (int)($parameters[0] ?? 0.0);
         $value  = $this->tryDecrypt($value);
 
+        /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {

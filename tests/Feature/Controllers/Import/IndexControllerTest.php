@@ -167,7 +167,6 @@ class IndexControllerTest extends TestCase
         $ynabPrerequisites->shouldReceive('setUser')->times(2);
 
 
-
         $repository->shouldReceive('create')->withArgs(['fake'])->andReturn($importJob);
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'has_prereq'])->andReturn($importJob)->once();
 

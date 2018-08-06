@@ -68,6 +68,20 @@ class TransactionCurrencyFactoryTest extends TestCase
     }
 
     /**
+     * submit ID = 1000
+     *
+     * @covers \FireflyIII\Factory\TransactionCurrencyFactory
+     */
+    public function testFindByBadID(): void
+    {
+        $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        $result  = $factory->find(1000, $currency->code);
+        $this->assertEquals($currency->id, $result->id);
+    }
+
+    /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */
     public function testFindByCode(): void
@@ -89,20 +103,6 @@ class TransactionCurrencyFactoryTest extends TestCase
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         $result  = $factory->find($currency->id, null);
-        $this->assertEquals($currency->id, $result->id);
-    }
-
-    /**
-     * submit ID = 1000
-     *
-     * @covers \FireflyIII\Factory\TransactionCurrencyFactory
-     */
-    public function testFindByBadID(): void
-    {
-        $currency = TransactionCurrency::inRandomOrder()->whereNull('deleted_at')->first();
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        $result  = $factory->find(1000, $currency->code);
         $this->assertEquals($currency->id, $result->id);
     }
 

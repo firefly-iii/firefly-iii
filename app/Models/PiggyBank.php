@@ -45,7 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int     $order
  * @property bool    $active
  * @property int     $account_id
- * @property bool encrypted
+ * @property bool    encrypted
  *
  */
 class PiggyBank extends Model

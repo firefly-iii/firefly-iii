@@ -86,17 +86,18 @@ class YnabRoutine implements RoutineInterface
                 if (\count($budgets) > 1) {
                     $this->repository->setStage($this->importJob, 'select_budgets');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
+
                     return;
                 }
 
-                if (\count($budgets) === 1) {
+                if (1 === \count($budgets)) {
                     $this->repository->setStatus($this->importJob, 'ready_to_run');
                     $this->repository->setStage($this->importJob, 'get_accounts');
                 }
 
                 return;
             }
-            if('get_accounts' === $this->importJob->stage) {
+            if ('get_accounts' === $this->importJob->stage) {
                 $this->repository->setStatus($this->importJob, 'running');
 
                 /** @var GetAccountsHandler $handler */
@@ -106,9 +107,10 @@ class YnabRoutine implements RoutineInterface
 
                 $this->repository->setStage($this->importJob, 'select_accounts');
                 $this->repository->setStatus($this->importJob, 'need_job_config');
+
                 return;
             }
-            if('go-for-import' === $this->importJob->stage) {
+            if ('go-for-import' === $this->importJob->stage) {
                 $this->repository->setStatus($this->importJob, 'running');
                 $this->repository->setStage($this->importJob, 'do_import');
                 /** @var ImportDataHandler $handler */
@@ -117,26 +119,27 @@ class YnabRoutine implements RoutineInterface
                 $handler->run();
                 $this->repository->setStatus($this->importJob, 'provider_finished');
                 $this->repository->setStage($this->importJob, 'final');
+
                 return;
             }
 
-//            if ('match_accounts' === $this->importJob->stage) {
-//                // $this->repository->setStatus($this->importJob, 'running');
-//                /** @var StageGetBudgetsHandler $handler */
-//                $handler = app(StageGetBudgetsHandler::class);
-//                $handler->setImportJob($this->importJob);
-//                $handler->run();
-//                $this->repository->setStage($this->importJob, 'get_transactions');
-//            }
-//
-//            if ('get_transactions' === $this->importJob->stage) {
-//                // $this->repository->setStatus($this->importJob, 'running');
-//                /** @var StageGetBudgetsHandler $handler */
-//                $handler = app(StageGetBudgetsHandler::class);
-//                $handler->setImportJob($this->importJob);
-//                $handler->run();
-//                $this->repository->setStage($this->importJob, 'get_transactions');
-//            }
+            //            if ('match_accounts' === $this->importJob->stage) {
+            //                // $this->repository->setStatus($this->importJob, 'running');
+            //                /** @var StageGetBudgetsHandler $handler */
+            //                $handler = app(StageGetBudgetsHandler::class);
+            //                $handler->setImportJob($this->importJob);
+            //                $handler->run();
+            //                $this->repository->setStage($this->importJob, 'get_transactions');
+            //            }
+            //
+            //            if ('get_transactions' === $this->importJob->stage) {
+            //                // $this->repository->setStatus($this->importJob, 'running');
+            //                /** @var StageGetBudgetsHandler $handler */
+            //                $handler = app(StageGetBudgetsHandler::class);
+            //                $handler->setImportJob($this->importJob);
+            //                $handler->run();
+            //                $this->repository->setStage($this->importJob, 'get_transactions');
+            //            }
             throw new FireflyException(sprintf('YNAB import routine cannot handle stage "%s"', $this->importJob->stage));
         }
     }

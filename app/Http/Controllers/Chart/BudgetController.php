@@ -325,12 +325,12 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * @return JsonResponse
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function frontpage(): \Symfony\Component\HttpFoundation\Response
+    public function frontpage(): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());

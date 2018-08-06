@@ -41,7 +41,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property Carbon $created_at
  * @property int    $id
- * @property User  user
+ * @property User   user
  */
 class Preference extends Model
 {
@@ -74,7 +74,7 @@ class Preference extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Preference $preference */
-            $preference   = $user->preferences()->find($preferenceId);
+            $preference = $user->preferences()->find($preferenceId);
             if (null !== $preference) {
                 return $preference;
             }

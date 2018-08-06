@@ -129,6 +129,7 @@ class AccountController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withBudgetInformation()->setTypes([TransactionType::WITHDRAWAL]);
         $transactions = $collector->getJournals();
@@ -192,6 +193,7 @@ class AccountController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::WITHDRAWAL]);
         $transactions = $collector->getJournals();
@@ -283,6 +285,7 @@ class AccountController extends Controller
         }
 
         // grab all journals:
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->withCategoryInformation()->setTypes([TransactionType::DEPOSIT]);
         $transactions = $collector->getJournals();

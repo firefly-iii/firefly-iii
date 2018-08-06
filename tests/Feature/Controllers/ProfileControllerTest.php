@@ -228,9 +228,9 @@ class ProfileControllerTest extends TestCase
         $listPref->data = '50';
         Preferences::shouldReceive('get')->withArgs(['list-length', '10'])->andReturn($listPref)->once();
 
-        $secretPref= new Preference;
+        $secretPref       = new Preference;
         $secretPref->data = 'X';
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturn(null,$secretPref);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturn(null, $secretPref);
 
         // set pref
         Preferences::shouldReceive('set')->once()->withArgs(['twoFactorAuthEnabled', 1]);
@@ -313,7 +313,7 @@ class ProfileControllerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
-        $data       = [
+        $data = [
             'email' => $this->user()->email,
         ];
         $this->be($this->user());
@@ -467,7 +467,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testRegenerate(): void
     {
-        $repository   = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $token        = '';
         $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();

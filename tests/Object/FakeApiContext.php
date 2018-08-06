@@ -31,7 +31,8 @@ class FakeApiContext
     /**
      * @return string
      */
-    public function toJson(): string{
+    public function toJson(): string
+    {
         return json_encode(['a' => 'b']);
     }
 

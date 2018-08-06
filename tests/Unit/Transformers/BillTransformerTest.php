@@ -25,7 +25,6 @@ namespace Tests\Unit\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\Note;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Support\Collection;

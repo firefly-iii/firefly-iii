@@ -202,7 +202,7 @@ class BoxController extends Controller
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end   = session('end', Carbon::now()->endOfMonth());
+        $end = session('end', Carbon::now()->endOfMonth());
 
         $cache = new CacheProperties;
         $cache->addProperty($start);

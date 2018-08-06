@@ -59,7 +59,7 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
         Log::debug('Now in SelectBudgetHandler::configComplete');
         $configuration  = $this->repository->getConfiguration($this->importJob);
         $selectedBudget = $configuration['selected_budget'] ?? '';
-        if ($selectedBudget !== '') {
+        if ('' !== $selectedBudget) {
             Log::debug(sprintf('Selected budget is %s, config is complete. Return true.', $selectedBudget));
             $this->repository->setStage($this->importJob, 'get_accounts');
 

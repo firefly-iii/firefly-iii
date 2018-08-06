@@ -117,9 +117,9 @@ class BoxControllerTest extends TestCase
      */
     public function testBalanceTransactions(): void
     {
-        $transaction = new Transaction;
+        $transaction                          = new Transaction;
         $transaction->transaction_currency_id = 1;
-        $transaction->transaction_amount ='5';
+        $transaction->transaction_amount      = '5';
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(JournalCollectorInterface::class);
@@ -171,17 +171,20 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
      */
-    public function testNetWorthVirtual(): void
+    public function testNetWorthFuture(): void
     {
-        $account = $this->user()->accounts()->first();
-        $account->virtual_balance = '1000';
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
 
+        $start = new Carbon;
+        $start->addMonths(6)->startOfMonth();
+        $end = clone $start;
+        $end->endOfMonth();
+        $this->session(['start' => $start, 'end' => $end]);
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));
         $response->assertStatus(200);
@@ -207,20 +210,17 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
      */
-    public function testNetWorthFuture(): void
+    public function testNetWorthVirtual(): void
     {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $account                  = $this->user()->accounts()->first();
+        $account->virtual_balance = '1000';
+        $accountRepos             = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos            = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$account]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
 
-        $start = new Carbon;
-        $start->addMonths(6)->startOfMonth();
-        $end = clone $start;
-        $end->endOfMonth();
-        $this->session(['start' => $start, 'end' => $end]);
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));
         $response->assertStatus(200);

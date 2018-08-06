@@ -36,25 +36,27 @@ class PresidentsChoiceTest extends TestCase
     /**
      * @covers \FireflyIII\Import\Specifics\PresidentsChoice
      */
-    public function testRunBasic():void {
-        $row = [''];
+    public function testRunAmount(): void
+    {
+        $row = ['', 'Descr', '12.34', '', ''];
 
         $parser = new PresidentsChoice;
         $result = $parser->run($row);
-        $this->assertEquals($row, $result);
+        $this->assertEquals('-12.34', $result[3]);
+        $this->assertEquals('Descr', $result[2]);
 
     }
 
     /**
      * @covers \FireflyIII\Import\Specifics\PresidentsChoice
      */
-    public function testRunAmount():void {
-        $row = ['','Descr','12.34','',''];
+    public function testRunBasic(): void
+    {
+        $row = [''];
 
         $parser = new PresidentsChoice;
         $result = $parser->run($row);
-        $this->assertEquals('-12.34', $result[3]);
-        $this->assertEquals('Descr', $result[2]);
+        $this->assertEquals($row, $result);
 
     }
 

@@ -28,8 +28,8 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Routine\SpectreRoutine;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
+use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
 use Mockery;
 use Tests\TestCase;
@@ -39,37 +39,6 @@ use Tests\TestCase;
  */
 class SpectreRoutineTest extends TestCase
 {
-    /**
-     * @covers \FireflyIII\Import\Routine\SpectreRoutine
-     */
-    public function testRunDoAuthenticate(): void
-    {
-        $job                = new ImportJob;
-        $job->user_id       = $this->user()->id;
-        $job->key           = 'SR1A' . random_int(1, 10000);
-        $job->status        = 'ready_to_run';
-        $job->stage         = 'do-authenticate';
-        $job->provider      = 'spectre';
-        $job->file_type     = '';
-        $job->configuration = [];
-        $job->save();
-
-        // mock handler and repository
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
-
-        // mock calls for repository
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'need_job_config'])->once();
-
-        $routine = new SpectreRoutine;
-        $routine->setImportJob($job);
-        try {
-            $routine->run();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-    }
-
     /**
      * @covers \FireflyIII\Import\Routine\SpectreRoutine
      */
@@ -98,6 +67,37 @@ class SpectreRoutineTest extends TestCase
         // mock calls for handler
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('run')->once();
+
+        $routine = new SpectreRoutine;
+        $routine->setImportJob($job);
+        try {
+            $routine->run();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * @covers \FireflyIII\Import\Routine\SpectreRoutine
+     */
+    public function testRunDoAuthenticate(): void
+    {
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'SR1A' . random_int(1, 10000);
+        $job->status        = 'ready_to_run';
+        $job->stage         = 'do-authenticate';
+        $job->provider      = 'spectre';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->save();
+
+        // mock handler and repository
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        // mock calls for repository
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'need_job_config'])->once();
 
         $routine = new SpectreRoutine;
         $routine->setImportJob($job);

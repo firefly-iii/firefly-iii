@@ -202,8 +202,8 @@ class MassControllerTest extends TestCase
             'amount'                                    => [$deposit->id => 1600],
             'amount_currency_id_amount_' . $deposit->id => 1,
             'date'                                      => [$deposit->id => '2014-07-24'],
-            'source_name'                       => [$deposit->id => 'Job'],
-            'destination_id'                    => [$deposit->id => 1],
+            'source_name'                               => [$deposit->id => 'Job'],
+            'destination_id'                            => [$deposit->id => 1],
             'category'                                  => [$deposit->id => 'Salary'],
         ];
 

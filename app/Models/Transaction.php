@@ -237,6 +237,7 @@ class Transaction extends Model
 
     /**
      * Check for transactions BEFORE the specified date.
+     *
      * @codeCoverageIgnore
      *
      * @param Builder $query

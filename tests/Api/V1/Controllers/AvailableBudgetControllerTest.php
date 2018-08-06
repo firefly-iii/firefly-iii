@@ -174,7 +174,7 @@ class AvailableBudgetControllerTest extends TestCase
 
 
         // test API
-        $response = $this->post('/api/v1/available_budgets', $data,['Accept' => 'application/json']);
+        $response = $this->post('/api/v1/available_budgets', $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('Could not find the indicated currency.');
         $response->assertHeader('Content-Type', 'application/json');

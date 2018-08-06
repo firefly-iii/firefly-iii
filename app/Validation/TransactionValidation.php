@@ -338,13 +338,13 @@ trait TransactionValidation
         if ($accountId < 1 && '' === $accountName) {
             return null;
         }
-        if ($accountId !== 0) {
+        if (0 !== $accountId) {
             // ID belongs to user and is $type account:
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
             $repository->setUser($admin);
             $set = $repository->getAccountsById([$accountId]);
-            if ($set->count() === 1) {
+            if (1 === $set->count()) {
                 /** @var Account $first */
                 $first = $set->first();
                 if ($first->accountType->type !== $type) {

@@ -168,6 +168,7 @@ class Controller extends BaseController
 
     /**
      * Get user's language.
+     *
      * @return string
      */
     private function getLanguage(): string

@@ -707,6 +707,8 @@ class JournalRepository implements JournalRepositoryInterface
      *
      * @return TransactionJournal
      *
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {

@@ -303,6 +303,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (null === $note) {
             return null;
         }
+
         return $note->text;
     }
 
@@ -450,6 +451,9 @@ class AccountRepository implements AccountRepositoryInterface
      * @param array   $data
      *
      * @return Account
+     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
+     * @throws FireflyException
      */
     public function update(Account $account, array $data): Account
     {

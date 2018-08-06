@@ -39,7 +39,7 @@ class ImportableCreatorTest extends TestCase
      */
     public function testConvertSets(): void
     {
-        $columnValue =new ColumnValue();
+        $columnValue = new ColumnValue();
         $columnValue->setOriginalRole('account-name');
         $columnValue->setRole('account-id');
         $columnValue->setValue('Checking Account');
@@ -47,13 +47,13 @@ class ImportableCreatorTest extends TestCase
 
         $input = [
             [
-                $columnValue
-            ]
+                $columnValue,
+            ],
         ];
 
 
         $creator = new ImportableCreator;
-        $result = $creator->convertSets($input);
+        $result  = $creator->convertSets($input);
 
         $this->assertCount(1, $result);
         $this->assertInstanceOf(ImportTransaction::class, $result[0]);

@@ -171,6 +171,7 @@ class Preferences
         if (\is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
+
         return md5($lastActivity);
     }
 

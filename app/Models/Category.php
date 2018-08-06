@@ -39,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int         $id
  * @property float       $spent // used in category reports
  * @property Carbon|null lastActivity
- * @property bool encrypted
+ * @property bool        encrypted
  */
 class Category extends Model
 {
@@ -77,7 +77,7 @@ class Category extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Category $category */
-            $category   = $user->categories()->find($categoryId);
+            $category = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
             }

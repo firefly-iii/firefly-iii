@@ -184,6 +184,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $newConfig          = array_merge($currentConfig, $configuration);
         $job->configuration = $newConfig;
         $job->save();
+
         //Log::debug(sprintf('Set config of job "%s" to: ', $job->key), $newConfig);
 
         return $job;

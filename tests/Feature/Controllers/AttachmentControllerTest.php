@@ -139,7 +139,7 @@ class AttachmentControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection([Attachment::first()]))->once();
         $repository->shouldReceive('exists')->andReturn(true)->once();
 

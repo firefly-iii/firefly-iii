@@ -92,8 +92,8 @@ class FromAccountEndsTest extends TestCase
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = FromAccountEnds::willMatchEverything($value);
+        $value      = '';
+        $result     = FromAccountEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
@@ -103,8 +103,8 @@ class FromAccountEndsTest extends TestCase
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = FromAccountEnds::willMatchEverything($value);
+        $value      = 'x';
+        $result     = FromAccountEnds::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
@@ -114,8 +114,8 @@ class FromAccountEndsTest extends TestCase
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = FromAccountEnds::willMatchEverything($value);
+        $value      = null;
+        $result     = FromAccountEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

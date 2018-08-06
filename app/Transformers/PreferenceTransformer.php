@@ -28,6 +28,9 @@ use FireflyIII\Models\Preference;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * Class PreferenceTransformer
+ */
 class PreferenceTransformer extends TransformerAbstract
 {
     /**
@@ -45,6 +48,11 @@ class PreferenceTransformer extends TransformerAbstract
     /** @var ParameterBag */
     protected $parameters;
 
+    /**
+     * PreferenceTransformer constructor.
+     *
+     * @param ParameterBag $parameters
+     */
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;

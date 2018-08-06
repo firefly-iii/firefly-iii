@@ -103,7 +103,7 @@ class MappingConvergerTest extends TestCase
                 5 => 'USD',
                 6 => 'SomeNumber',
                 7 => 'I am a description',
-                8 => 'IBANX'
+                8 => 'IBANX',
             ],
             [
                 0 => 'CheckingX Account',
@@ -114,7 +114,7 @@ class MappingConvergerTest extends TestCase
                 5 => 'USA',
                 6 => 'SomeANumber',
                 7 => 'I am X description',
-                8 => 'IBANXX'
+                8 => 'IBANXX',
             ],
         ];
 

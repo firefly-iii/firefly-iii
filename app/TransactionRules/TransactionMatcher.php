@@ -195,15 +195,15 @@ class TransactionMatcher
             $allTriggers = $this->rule->ruleTriggers()->whereIn('trigger_type', $valid)->get();
             /** @var RuleTrigger $trigger */
             foreach ($allTriggers as $trigger) {
-                if ($trigger->trigger_type === 'amount_less') {
+                if ('amount_less' === $trigger->trigger_type) {
                     $this->maxAmount = $trigger->trigger_value;
                     Log::debug(sprintf('Set max amount to be %s', $trigger->trigger_value));
                 }
-                if ($trigger->trigger_type === 'amount_more') {
+                if ('amount_more' === $trigger->trigger_type) {
                     $this->minAmount = $trigger->trigger_value;
                     Log::debug(sprintf('Set min amount to be %s', $trigger->trigger_value));
                 }
-                if ($trigger->trigger_type === 'amount_exactly') {
+                if ('amount_exactly' === $trigger->trigger_type) {
                     $this->exactAmount = $trigger->trigger_value;
                     Log::debug(sprintf('Set exact amount to be %s', $trigger->trigger_value));
                 }

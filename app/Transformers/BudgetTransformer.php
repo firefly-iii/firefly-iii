@@ -118,7 +118,7 @@ class BudgetTransformer extends TransformerAbstract
             'id'         => (int)$budget->id,
             'updated_at' => $budget->updated_at->toAtomString(),
             'created_at' => $budget->created_at->toAtomString(),
-            'active'     => (int)$budget->active === 1,
+            'active'     => 1 === (int)$budget->active,
             'name'       => $budget->name,
             'links'      => [
                 [

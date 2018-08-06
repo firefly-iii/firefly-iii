@@ -29,8 +29,9 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Tests\TestCase;
 use Mockery;
+use Tests\TestCase;
+
 /**
  * Class CurrencyControllerTest
  *

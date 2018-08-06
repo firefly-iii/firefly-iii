@@ -28,7 +28,6 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use Illuminate\Http\RedirectResponse;
@@ -42,8 +41,6 @@ use Throwable;
 class CreateController extends Controller
 {
     use RuleManagement;
-    /** @var BillRepositoryInterface Bill repository */
-    private $billRepos;
     /** @var RuleRepositoryInterface Rule repository */
     private $ruleRepos;
 
@@ -59,7 +56,6 @@ class CreateController extends Controller
                 app('view')->share('title', (string)trans('firefly.rules'));
                 app('view')->share('mainTitleIcon', 'fa-random');
 
-                $this->billRepos = app(BillRepositoryInterface::class);
                 $this->ruleRepos = app(RuleRepositoryInterface::class);
 
                 return $next($request);

@@ -86,7 +86,7 @@ final class Processor
             Log::debug(sprintf('Push trigger %d', $trigger->id));
             $self->triggers->push(TriggerFactory::getTrigger($trigger));
         }
-        if ($includeActions === true) {
+        if (true === $includeActions) {
             $self->actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
         }
 

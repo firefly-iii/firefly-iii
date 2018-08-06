@@ -54,6 +54,7 @@ class UpgradeFireflyInstructions extends Command
         if ('install' === (string)$this->argument('task')) {
             $this->installInstructions();
         }
+
         return 0;
     }
 

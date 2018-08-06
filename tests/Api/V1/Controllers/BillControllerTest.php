@@ -127,6 +127,7 @@ class BillControllerTest extends TestCase
 
     /**
      * Store with minimum amount more than maximum amount
+     *
      * @covers \FireflyIII\Api\V1\Controllers\BillController
      * @covers \FireflyIII\Api\V1\Requests\BillRequest
      */

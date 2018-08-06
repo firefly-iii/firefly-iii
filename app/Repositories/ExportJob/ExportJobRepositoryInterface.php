@@ -57,6 +57,7 @@ interface ExportJobRepositoryInterface
 
     /**
      * @param string $key
+     *
      * @return ExportJob|null
      */
     public function findByKey(string $key): ?ExportJob;

@@ -41,7 +41,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int         $user_id
  * @property-read string $email
  * @property bool        encrypted
- * @property Collection       budgetlimits
+ * @property Collection  budgetlimits
  */
 class Budget extends Model
 {
@@ -80,7 +80,7 @@ class Budget extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Budget $budget */
-            $budget   = $user->budgets()->find($budgetId);
+            $budget = $user->budgets()->find($budgetId);
             if (null !== $budget) {
                 return $budget;
             }

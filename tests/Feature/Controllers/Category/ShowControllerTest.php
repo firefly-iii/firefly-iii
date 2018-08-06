@@ -24,13 +24,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Category;
 
 
-use Tests\TestCase;
-use Log;
-
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -38,7 +34,10 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
+use Tests\TestCase;
+
 /**
  *
  * Class ShowControllerTest
@@ -200,7 +199,7 @@ class ShowControllerTest extends TestCase
     public function testShowEmpty(string $range): void
     {
         $latestJournal = $this->user()->transactionJournals()
-            ->orderBy('date','DESC')->first();
+                              ->orderBy('date', 'DESC')->first();
 
         Log::debug(sprintf('Test testShowEmpty(%s)', $range));
         $journalRepos = $this->mock(JournalRepositoryInterface::class);

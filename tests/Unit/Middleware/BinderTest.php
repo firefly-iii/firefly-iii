@@ -534,7 +534,7 @@ class BinderTest extends TestCase
         );
 
         // mock fiscal helper:
-        $date = new Carbon;
+        $date   = new Carbon;
         $helper = $this->mock(FiscalHelperInterface::class);
         $helper->shouldReceive('endOfFiscalYear')->andReturn($date)->once();
         $helper->shouldReceive('startOfFiscalYear')->andReturn($date)->once();

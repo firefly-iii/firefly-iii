@@ -78,9 +78,9 @@ class IndexController extends Controller
     public function index(Request $request, string $moment = null)
     {
         /** @var string $range */
-        $range    = app('preferences')->get('viewRange', '1M')->data;
+        $range = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $start */
-        $start    = session('start', new Carbon);
+        $start = session('start', new Carbon);
         /** @var Carbon $end */
         $end      = session('end', new Carbon);
         $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
@@ -92,7 +92,7 @@ class IndexController extends Controller
             try {
                 $start = new Carbon($moment);
                 /** @var Carbon $end */
-                $end   = app('navigation')->endOfPeriod($start, $range);
+                $end = app('navigation')->endOfPeriod($start, $range);
             } catch (Exception $e) {
                 // start and end are already defined.
                 Log::debug(sprintf('start and end are already defined: %s', $e->getMessage()));

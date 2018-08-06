@@ -287,10 +287,10 @@ class ChooseAccountsHandlerTest extends TestCase
         // data:
         $data   = ['account_mapping' => [], 'apply_rules' => true,];
         $config = [
-            'accounts' => [
+            'accounts'    => [
                 0 => ['id' => 1234, 'name' => 'bunq'],
             ],
-            'apply-rules'     => true,
+            'apply-rules' => true,
 
         ];
 

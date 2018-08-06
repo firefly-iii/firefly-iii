@@ -33,7 +33,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int       $transaction_journal_id
  * @property int       $piggy_bank_id
  * @property int       $id
- * @property Carbon     date
+ * @property Carbon    date
  */
 class PiggyBankEvent extends Model
 {

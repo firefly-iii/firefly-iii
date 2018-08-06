@@ -150,7 +150,7 @@ class RecurrenceFormRequest extends Request
     {
         $today    = new Carbon;
         $tomorrow = Carbon::now()->addDay();
-        $rules = [
+        $rules    = [
             // mandatory info for recurrence.
             'title'                   => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'first_date'              => 'required|date|after:' . $today->format('Y-m-d'),

@@ -26,7 +26,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountStarts;
 use Illuminate\Support\Collection;
-use Log;
 use Tests\TestCase;
 
 /**

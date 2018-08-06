@@ -147,7 +147,7 @@ class ReconcileController extends Controller
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
-            $end   = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
+            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
         }
         if (null === $end) {
             /** @var Carbon $end */

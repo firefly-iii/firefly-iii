@@ -48,7 +48,8 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     public function changeStatus(ExportJob $job, string $status): bool
     {
         Log::debug(sprintf('Change status of job #%d to "%s"', $job->id, $status));
-        $job->change($status);
+        $job->status = $status;
+        $job->save();
 
         return true;
     }

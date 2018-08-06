@@ -26,16 +26,16 @@ namespace Tests\Feature\Controllers\Account;
 
 use Amount;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  *
  * Class EditControllerTest
@@ -50,6 +50,7 @@ class EditControllerTest extends TestCase
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Account\EditController
      */

@@ -159,7 +159,7 @@ class TransactionUpdateServiceTest extends TestCase
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-        $data = [
+        $data   = [
             'currency_id'           => 1,
             'currency_code'         => null,
             'description'           => 'Some new description',
@@ -187,7 +187,6 @@ class TransactionUpdateServiceTest extends TestCase
         $result = $service->update($source, $data);
 
 
-
         $this->assertEquals($source->id, $result->id);
         $this->assertEquals($result->description, $data['description']);
         $this->assertEquals($data['foreign_amount'], $result->foreign_amount);
@@ -202,7 +201,7 @@ class TransactionUpdateServiceTest extends TestCase
     {
         /** @var Transaction $source */
         $source = $this->user()->transactions()->where('amount', '<', 0)->inRandomOrder()->first();
-        $data = [
+        $data   = [
             'currency_id'           => 1,
             'currency_code'         => null,
             'description'           => 'Some new description',

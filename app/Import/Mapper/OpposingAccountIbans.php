@@ -33,6 +33,7 @@ class OpposingAccountIbans implements MapperInterface
 {
     /**
      * Get map of opposing accounts.
+     *
      * @return array
      */
     public function getMap(): array

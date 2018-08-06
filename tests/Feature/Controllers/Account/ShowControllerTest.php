@@ -147,7 +147,7 @@ class ShowControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
+     * @covers                   \FireflyIII\Http\Controllers\Account\ShowController
      * @expectedExceptionMessage End is after start!
      */
     public function testShowBrokenBadDates(): void
@@ -165,7 +165,7 @@ class ShowControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
+     * @covers                   \FireflyIII\Http\Controllers\Account\ShowController
      * @expectedExceptionMessage Expected a transaction
      */
     public function testShowBrokenInitial(): void

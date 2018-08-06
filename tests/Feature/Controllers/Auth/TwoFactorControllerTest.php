@@ -74,8 +74,8 @@ class TwoFactorControllerTest extends TestCase
 
         $falsePreference       = new Preference;
         $falsePreference->data = false;
-        $langPreference         = new Preference;
-        $langPreference->data   = 'en_US';
+        $langPreference        = new Preference;
+        $langPreference->data  = 'en_US';
 
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($falsePreference)->twice();
         Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret', null])->andReturn(null)->once();

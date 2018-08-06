@@ -260,9 +260,9 @@ class TransactionController extends Controller
      */
     private function getPeriodOverview(string $what, Carbon $date): Collection
     {
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $first = $this->repository->firstNull();
-        $start = Carbon::now()->subYear();
+        $range   = app('preferences')->get('viewRange', '1M')->data;
+        $first   = $this->repository->firstNull();
+        $start   = Carbon::now()->subYear();
         $types   = config('firefly.transactionTypesByWhat.' . $what);
         $entries = new Collection;
         if (null !== $first) {
@@ -289,9 +289,9 @@ class TransactionController extends Controller
                 /** @noinspection PhpUndefinedMethodInspection */
                 $entries->push(
                     [
-                        'name' => $dateName,
-                        'sums' => $sums,
-                        'sum'  => $sum,
+                        'name'  => $dateName,
+                        'sums'  => $sums,
+                        'sum'   => $sum,
                         'start' => $currentDate['start']->format('Y-m-d'),
                         'end'   => $currentDate['end']->format('Y-m-d'),
                     ]

@@ -155,8 +155,6 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('addFilter')->andReturnSelf();
 
 
-
-
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
         $result = new Collection;
@@ -407,7 +405,6 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('store')->once()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(2);
-
 
 
         $storage = new ImportArrayStorage;

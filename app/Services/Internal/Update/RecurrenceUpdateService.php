@@ -25,7 +25,6 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
-
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
@@ -65,7 +64,7 @@ class RecurrenceUpdateService
         $recurrence->apply_rules         = $data['recurrence']['apply_rules'] ?? $recurrence->apply_rules;
         $recurrence->active              = $data['recurrence']['active'] ?? $recurrence->active;
 
-        if(isset($data['recurrence']['repetition_end'])) {
+        if (isset($data['recurrence']['repetition_end'])) {
             if (\in_array($data['recurrence']['repetition_end'], ['forever ', 'until_date'])) {
                 $recurrence->repetitions = 0;
             }

@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Models\TransactionCurrency;
-use Mockery;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -34,6 +33,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -111,11 +111,11 @@ class HomeControllerTest extends TestCase
     public function testIndex(string $range): void
     {
         // mock stuff
-        $account      = factory(Account::class)->make();
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $billRepos    = $this->mock(BillRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $account       = factory(Account::class)->make();
+        $collector     = $this->mock(JournalCollectorInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('count')->andReturn(1);

@@ -107,7 +107,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('accounts.create.fromStore');
 
-        return view('accounts.create', compact('subTitleIcon', 'what','interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
+        return view('accounts.create', compact('subTitleIcon', 'what', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
     }
 
 

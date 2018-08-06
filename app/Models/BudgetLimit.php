@@ -48,7 +48,7 @@ class BudgetLimit extends Model
      * @var array
      */
     protected $casts
-                        = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'start_date' => 'date',

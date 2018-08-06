@@ -54,7 +54,7 @@ class ExpandedProcessor implements ProcessorInterface
 {
     /** @var Collection All accounts */
     public $accounts;
-    /** @var string The export format*/
+    /** @var string The export format */
     public $exportFormat;
     /** @var bool Should include attachments */
     public $includeAttachments;
@@ -62,7 +62,7 @@ class ExpandedProcessor implements ProcessorInterface
     public $includeOldUploads;
     /** @var ExportJob The export job itself */
     public $job;
-    /** @var array The settings*/
+    /** @var array The settings */
     public $settings;
     /** @var Collection The entries to export. */
     private $exportEntries;
@@ -222,7 +222,7 @@ class ExpandedProcessor implements ProcessorInterface
     {
         $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
         /** @var ExporterInterface $exporter */
-        $exporter      = app($exporterClass);
+        $exporter = app($exporterClass);
         $exporter->setJob($this->job);
         $exporter->setEntries($this->exportEntries);
         $exporter->run();
@@ -260,7 +260,7 @@ class ExpandedProcessor implements ProcessorInterface
     /**
      * Delete files.
      */
-    private function deleteFiles():void
+    private function deleteFiles(): void
     {
         $disk = Storage::disk('export');
         foreach ($this->getFiles() as $file) {

@@ -60,7 +60,7 @@ class UpdateRequest implements GithubRequest
         }
         try {
             $releaseXml = new SimpleXMLElement($res->getBody()->getContents(), LIBXML_NOCDATA);
-        } catch (RunTimeException $e) {
+        } catch (RuntimeException $e) {
             Log::error(sprintf('Could not get body from github updat result: %s', $e->getMessage()));
             $releaseXml = new SimpleXMLElement('');
         }

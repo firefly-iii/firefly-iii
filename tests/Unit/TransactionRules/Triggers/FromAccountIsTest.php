@@ -27,7 +27,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\FromAccountIs;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class FromAccountIsTest
  */
@@ -76,8 +76,8 @@ class FromAccountIsTest extends TestCase
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = FromAccountIs::willMatchEverything($value);
+        $value      = '';
+        $result     = FromAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
@@ -87,8 +87,8 @@ class FromAccountIsTest extends TestCase
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = FromAccountIs::willMatchEverything($value);
+        $value      = 'x';
+        $result     = FromAccountIs::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
@@ -98,8 +98,8 @@ class FromAccountIsTest extends TestCase
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = FromAccountIs::willMatchEverything($value);
+        $value      = null;
+        $result     = FromAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

@@ -54,6 +54,7 @@ class ConfigurationController extends Controller
                 $admin = auth()->user();
 
                 if (!$this->repository->hasRole($admin, 'owner')) {
+                    /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                     throw new FireflyException('No access to method.'); // @codeCoverageIgnore
                 }
 

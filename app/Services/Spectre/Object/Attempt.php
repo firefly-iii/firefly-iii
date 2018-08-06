@@ -28,6 +28,7 @@ use Carbon\Carbon;
 /**
  *
  * Class Attempt
+ *
  * @codeCoverageIgnore
  * @SuppressWarnings(PHPMD.ShortVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)

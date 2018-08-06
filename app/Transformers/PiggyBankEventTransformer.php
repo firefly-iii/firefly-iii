@@ -95,6 +95,7 @@ class PiggyBankEventTransformer extends TransformerAbstract
         $pageSize = (int)app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
+        /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setUser($journal->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
@@ -129,7 +130,8 @@ class PiggyBankEventTransformer extends TransformerAbstract
             /** @var CurrencyRepositoryInterface $repository */
             $repository = app(CurrencyRepositoryInterface::class);
             $repository->setUser($account->user);
-            $currency      = $repository->findNull($currencyId);
+            $currency = $repository->findNull($currencyId);
+            /** @noinspection NullPointerExceptionInspection */
             $decimalPlaces = $currency->decimal_places;
         }
 

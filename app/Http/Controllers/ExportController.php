@@ -78,7 +78,7 @@ class ExportController extends Controller
         }
         $content = $repository->getContent($job);
 
-        $job->change('export_downloaded');
+        $repository->changeStatus($job, 'export_downloaded');
         /** @var LaravelResponse $response */
         $response = response($content, 200);
         $response

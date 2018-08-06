@@ -46,8 +46,8 @@ class CurrencyExchangeRate extends Model
     /** @var array Convert these fields to other data types */
     protected $casts
         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
+            'created_at'       => 'datetime',
+            'updated_at'       => 'datetime',
             'user_id'          => 'int',
             'from_currency_id' => 'int',
             'to_currency_id'   => 'int',

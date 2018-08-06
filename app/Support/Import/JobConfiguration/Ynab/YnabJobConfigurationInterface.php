@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\Import\JobConfiguration\Ynab;
+
 use FireflyIII\Models\ImportJob;
 use Illuminate\Support\MessageBag;
 

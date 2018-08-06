@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace tests\Feature\Controllers\Rule;
 
 
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;

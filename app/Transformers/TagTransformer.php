@@ -121,7 +121,7 @@ class TagTransformer extends TransformerAbstract
             'tag'         => $tag->tag,
             'tag_mode'    => $tag->tagMode,
             'date'        => $date,
-            'description' => $tag->description === '' ? null : $tag->description,
+            'description' => '' === $tag->description ? null : $tag->description,
             'latitude'    => (float)$tag->latitude,
             'longitude'   => (float)$tag->longitude,
             'zoom_level'  => (int)$tag->zoomLevel,

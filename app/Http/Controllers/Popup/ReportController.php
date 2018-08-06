@@ -80,6 +80,7 @@ class ReportController extends Controller
 
     /**
      * Generate popup view.
+     *
      * @param Request $request
      *
      * @return JsonResponse
@@ -274,7 +275,7 @@ class ReportController extends Controller
             $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
         } catch (InvalidArgumentException $e) {
             Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date = Carbon::now()->startOfMonth();
+            $date                    = Carbon::now()->startOfMonth();
             $attributes['startDate'] = $date;
         }
 
@@ -282,7 +283,7 @@ class ReportController extends Controller
             $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate']);
         } catch (InvalidArgumentException $e) {
             Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date = Carbon::now()->startOfMonth();
+            $date                  = Carbon::now()->startOfMonth();
             $attributes['endDate'] = $date;
         }
 

@@ -323,7 +323,7 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPayDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        $set = new Collection;
+        $set          = new Collection;
         $currentStart = clone $start;
         Log::debug(sprintf('Now at bill "%s" (%s)', $bill->name, $bill->repeat_freq));
         Log::debug(sprintf('First currentstart is %s', $currentStart->format('Y-m-d')));

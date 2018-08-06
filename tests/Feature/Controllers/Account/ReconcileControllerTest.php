@@ -32,8 +32,8 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Tests\TestCase;
 use Mockery;
+use Tests\TestCase;
 
 /**
  * Class ConfigurationControllerTest
@@ -217,7 +217,7 @@ class ReconcileControllerTest extends TestCase
         $journalRepos->shouldReceive('store')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getReconciliation')->andReturn(new Account);
         $repository->shouldReceive('findNull')->andReturn(new Account);
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
 
         $data = [
             'transactions' => [1, 2, 3],

@@ -61,6 +61,7 @@ class RuleFormRequest extends Request
             'rule_triggers'   => $this->getRuleTriggerData(),
             'rule_actions'    => $this->getRuleActionData(),
         ];
+
         return $data;
     }
 
@@ -109,8 +110,8 @@ class RuleFormRequest extends Request
      */
     private function getRuleActionData(): array
     {
-        $return      = [];
-        $actionData= $this->get('rule_actions');
+        $return     = [];
+        $actionData = $this->get('rule_actions');
         if (\is_array($actionData)) {
             foreach ($actionData as $action) {
                 $stopProcessing = $action['stop_processing'] ?? '0';

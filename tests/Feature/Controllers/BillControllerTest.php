@@ -27,7 +27,6 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -65,9 +64,9 @@ class BillControllerTest extends TestCase
     public function testCreate(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -83,9 +82,9 @@ class BillControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -101,10 +100,10 @@ class BillControllerTest extends TestCase
     public function testDestroy(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -121,9 +120,9 @@ class BillControllerTest extends TestCase
     public function testEdit(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -140,11 +139,11 @@ class BillControllerTest extends TestCase
     public function testIndex(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $bill         = factory(Bill::class)->make();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $bill           = factory(Bill::class)->make();
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $collection = new Collection([$bill]);
         $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
@@ -166,12 +165,12 @@ class BillControllerTest extends TestCase
     public function testRescan(): void
     {
         // mock stuff
-        $rule         = Rule::first();
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journal      = factory(TransactionJournal::class)->make();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $rule           = Rule::first();
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journal        = factory(TransactionJournal::class)->make();
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection([$rule]));
 
@@ -196,10 +195,10 @@ class BillControllerTest extends TestCase
     public function testRescanInactive(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -214,11 +213,11 @@ class BillControllerTest extends TestCase
     public function testShow(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $collector      = $this->mock(JournalCollectorInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $repository->shouldReceive('getYearAverage')->andReturn('0');
         $repository->shouldReceive('getOverallAverage')->andReturn('0');
         $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
@@ -252,10 +251,10 @@ class BillControllerTest extends TestCase
         $this->be($this->user());
         $bill = $this->user()->bills()->first();
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn($bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
@@ -286,48 +285,13 @@ class BillControllerTest extends TestCase
     public function testStoreCreateAnother(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
-        $bill = $this->user()->bills()->first();
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $bill           = $this->user()->bills()->first();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn($bill);
-        $attachHelper->shouldReceive('saveAttachmentsForModel');
-        $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
-
-        $data = [
-            'name'                    => 'New Bill ' . random_int(1000, 9999),
-            'amount_min'              => '100',
-            'transaction_currency_id' => 1,
-            'skip'                    => 0,
-            'create_another'          => '1',
-            'strict'                  => 1,
-            'amount_max'              => '100',
-            'date'                    => '2016-01-01',
-            'repeat_freq'             => 'monthly',
-        ];
-        $this->session(['bills.create.uri' => 'http://localhost']);
-        $this->be($this->user());
-        $response = $this->post(route('bills.store'), $data);
-        $response->assertStatus(302);
-        $response->assertSessionHas('success');
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\BillController::store
-     * @covers \FireflyIII\Http\Requests\BillFormRequest
-     * @covers \FireflyIII\Http\Requests\Request
-     */
-    public function testStoreNoGroup(): void
-    {
-        // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('store')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
@@ -357,10 +321,10 @@ class BillControllerTest extends TestCase
     public function testStoreError(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn(null);
 
@@ -382,6 +346,41 @@ class BillControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Http\Controllers\BillController::store
+     * @covers \FireflyIII\Http\Requests\BillFormRequest
+     * @covers \FireflyIII\Http\Requests\Request
+     */
+    public function testStoreNoGroup(): void
+    {
+        // mock stuff
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('store')->andReturn(new Bill);
+        $attachHelper->shouldReceive('saveAttachmentsForModel');
+        $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
+
+        $data = [
+            'name'                    => 'New Bill ' . random_int(1000, 9999),
+            'amount_min'              => '100',
+            'transaction_currency_id' => 1,
+            'skip'                    => 0,
+            'create_another'          => '1',
+            'strict'                  => 1,
+            'amount_max'              => '100',
+            'date'                    => '2016-01-01',
+            'repeat_freq'             => 'monthly',
+        ];
+        $this->session(['bills.create.uri' => 'http://localhost']);
+        $this->be($this->user());
+        $response = $this->post(route('bills.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
      * @covers \FireflyIII\Http\Controllers\BillController::update
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
@@ -389,10 +388,10 @@ class BillControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock stuff
-        $attachHelper = $this->mock(AttachmentHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $ruleGroupRepos =$this->mock(RuleGroupRepositoryInterface::class);
+        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(BillRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');

@@ -806,7 +806,6 @@ Route::group(
     Route::post('update/{rule}', ['uses' => 'Rule\EditController@update', 'as' => 'update']);
 
 
-
 }
 );
 

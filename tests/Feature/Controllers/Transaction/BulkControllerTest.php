@@ -76,32 +76,6 @@ class BulkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
-     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
-     */
-    public function testEditNull(): void
-    {
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal, null);
-        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
-        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
-
-        $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(4)->get()->pluck('id')->toArray();
-
-        $this->be($this->user());
-        $response = $this->get(route('transactions.bulk.edit', $transfers));
-        $response->assertStatus(200);
-        $response->assertSee('Bulk edit a number of transactions');
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
      * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
      */
     public function testEditMultiple(): void
@@ -134,6 +108,32 @@ class BulkControllerTest extends TestCase
         $response->assertSee('marked as reconciled');
         $response->assertSee('multiple source accounts');
         $response->assertSee('multiple destination accounts');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
+     */
+    public function testEditNull(): void
+    {
+        // mock stuff:
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal, null);
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
+        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
+
+        $transfers = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(4)->get()->pluck('id')->toArray();
+
+        $this->be($this->user());
+        $response = $this->get(route('transactions.bulk.edit', $transfers));
+        $response->assertStatus(200);
+        $response->assertSee('Bulk edit a number of transactions');
+        // has bread crumb
+        $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**

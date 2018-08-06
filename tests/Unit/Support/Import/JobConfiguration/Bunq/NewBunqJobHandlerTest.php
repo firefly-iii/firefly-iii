@@ -27,7 +27,6 @@ namespace Tests\Unit\Support\Import\JobConfiguration\Bunq;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\Bunq\NewBunqJobHandler;
-use Mockery;
 use Tests\TestCase;
 
 class NewBunqJobHandlerTest extends TestCase

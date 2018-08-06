@@ -70,7 +70,7 @@ class AccountFormRequest extends Request
 
         // if the account type is "liabilities" there are actually four types of liability
         // that could have been selected.
-        if ($data['accountType'] === 'liabilities') {
+        if ('liabilities' === $data['accountType']) {
             $data['accountType']     = null;
             $data['account_type_id'] = $this->integer('liability_type_id');
             // also reverse the opening balance:

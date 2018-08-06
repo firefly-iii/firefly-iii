@@ -86,7 +86,7 @@ class CreateController extends Controller
             $this->rememberPreviousUri('recurring.create.uri');
         }
         $request->session()->forget('recurring.create.fromStore');
-        $repetitionEnds = [
+        $repetitionEnds   = [
             'forever'    => (string)trans('firefly.repeat_forever'),
             'until_date' => (string)trans('firefly.repeat_until_date'),
             'times'      => (string)trans('firefly.repeat_times'),
