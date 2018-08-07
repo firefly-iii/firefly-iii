@@ -242,7 +242,7 @@ Route::group(
     Route::post('destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'destroy']);
 
     // show category:
-    Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show-all']);
+    Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show.all']);
     Route::get('show/{category}/{start_date?}/{end_date?}', ['uses' => 'Category\ShowController@show', 'as' => 'show']);
 
     // no category controller:
@@ -848,7 +848,8 @@ Route::group(
     Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
-    Route::get('show/{tag}/{moment?}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('show/{tag}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
+    Route::get('show/{tag}/{start_date?}/{end_date?}', ['uses' => 'TagController@show', 'as' => 'show']);
 
     Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
     Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);

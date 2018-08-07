@@ -92,7 +92,7 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $start = $start ?? session('start', Carbon::now()->startOfMonth());
         /** @var Carbon $end */
-        $end          = $end ?? session('end', Carbon::now()->startOfMonth());
+        $end          = $end ?? session('end', Carbon::now()->endOfMonth());
         $subTitleIcon = 'fa-bar-chart';
         $moment       = '';
         $page         = (int)$request->get('page');
@@ -142,7 +142,7 @@ class ShowController extends Controller
         /** @var Carbon $start */
         $start = $first ?? new Carbon;
         $end   = new Carbon;
-        $path  = route('categories.show-all', [$category->id]);
+        $path  = route('categories.show.all', [$category->id]);
 
 
         /** @var JournalCollectorInterface $collector */

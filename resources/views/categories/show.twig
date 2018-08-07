@@ -52,7 +52,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('categories.show-all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('categories.show.all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -69,7 +69,7 @@
                     {% if periods.count > 0 %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('categories.show-all', [category.id]) }}">
+                            <a href="{{ route('categories.show.all', [category.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>

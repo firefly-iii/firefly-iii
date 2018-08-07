@@ -177,54 +177,20 @@ class TagController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function show(Request $request, Tag $tag, string $moment = null)
+    public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
         // default values:
-        $moment       = $moment ?? '';
-        $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $range        = app('preferences')->get('viewRange', '1M')->data;
-        $start        = null;
-        $end          = null;
-        $periods      = new Collection;
-        $path         = route('tags.show', [$tag->id]);
-
-        // prep for "all" view.
-        if ('all' === $moment) {
-            $subTitle = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
-            $start    = $this->repository->firstUseDate($tag) ?? new Carbon;
-            $end      = new Carbon;
-            $path     = route('tags.show', [$tag->id, 'all']);
-        }
-
-        // prep for "specific date" view.
-        if ('all' !== $moment && \strlen($moment) > 0) {
-            $start = new Carbon($moment);
-            /** @var Carbon $end */
-            $end      = app('navigation')->endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_tag',
-                ['tag'   => $tag->tag,
-                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
-            );
-            $periods  = $this->getPeriodOverview($tag);
-            $path     = route('tags.show', [$tag->id, $moment]);
-        }
-
-        // prep for current period
-        if ('' === $moment) {
-            /** @var Carbon $start */
-            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-            /** @var Carbon $end */
-            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-            $periods  = $this->getPeriodOverview($tag);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_tag',
-                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
+        $start        = $start ?? session('start');
+        $end          = $end ?? session('end');
+        $subTitle     = trans(
+            'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                                                   'end' => $end->formatLocalized($this->monthAndDayFormat),]
+        );
+        $periods      = $this->getPeriodOverview($tag);
+        $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -235,7 +201,41 @@ class TagController extends Controller
 
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end', 'moment'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end'));
+    }
+
+    /**
+     * Show a single tag.
+     *
+     * @param Request     $request
+     * @param Tag         $tag
+     * @param string|null $moment
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function showAll(Request $request, Tag $tag)
+    {
+        // default values:
+        $subTitleIcon = 'fa-tag';
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $periods      = new Collection;
+        $subTitle     = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+        $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
+        $end          = new Carbon;
+        $path         = route('tags.show', [$tag->id, 'all']);
+        /** @var JournalCollectorInterface $collector */
+        $collector = app(JournalCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
+        $transactions = $collector->getPaginatedJournals();
+        $transactions->setPath($path);
+        $sums = $this->repository->sumsOfTag($tag, $start, $end);
+
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end'));
     }
 
     /**
@@ -334,6 +334,8 @@ class TagController extends Controller
             $arr = [
                 'string' => $end->format('Y-m-d'),
                 'name'   => app('navigation')->periodShow($currentEnd, $range),
+                'start'  => clone $currentStart,
+                'end'    => clone $currentEnd,
                 'date'   => clone $end,
                 'spent'  => $this->repository->spentInPeriod($tag, $currentStart, $currentEnd),
                 'earned' => $this->repository->earnedInPeriod($tag, $currentStart, $currentEnd),

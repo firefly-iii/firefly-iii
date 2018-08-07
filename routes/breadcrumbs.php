@@ -447,7 +447,7 @@ try {
     Breadcrumbs::register(
         'categories.edit',
         function (BreadcrumbsGenerator $breadcrumbs, Category $category) {
-            $breadcrumbs->parent('categories.show-all', $category, '', new Carbon, new Carbon);
+            $breadcrumbs->parent('categories.show.all', $category, '', new Carbon, new Carbon);
             $breadcrumbs->push(trans('firefly.edit_category', ['name' => limitStringLength($category->name)]), route('categories.edit', [$category->id]));
         }
     );
@@ -474,7 +474,7 @@ try {
     );
 
     Breadcrumbs::register(
-        'categories.show-all',
+        'categories.show.all',
         function (BreadcrumbsGenerator $breadcrumbs, Category $category, string $moment, Carbon $start, Carbon $end) {
             $breadcrumbs->parent('categories.index');
             $breadcrumbs->push(limitStringLength($category->name), route('categories.show', [$category->id]));
@@ -959,21 +959,30 @@ try {
 
     Breadcrumbs::register(
         'tags.show',
-        function (BreadcrumbsGenerator $breadcrumbs, Tag $tag, string $moment, Carbon $start, Carbon $end) {
+        function (BreadcrumbsGenerator $breadcrumbs, Tag $tag, Carbon $start = null, Carbon $end = null) {
             $breadcrumbs->parent('tags.index');
-            $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id, $moment]));
-            if ('all' === $moment) {
-                $breadcrumbs->push(trans('firefly.everything'), route('tags.show', [$tag->id, $moment]));
-            }
-            // when is specific period or when empty:
-            if ('all' !== $moment && '(nothing)' !== $moment) {
-                $title = trans(
-                    'firefly.between_dates_breadcrumb',
-                    ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
-                     'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
-                );
-                $breadcrumbs->push($title, route('tags.show', [$tag->id, $moment]));
-            }
+
+            $start = $start ?? session('start');
+            $end   = $end ?? session('end');
+
+            $breadcrumbs->push($tag->tag, route('tags.show', [$tag->id, $start, $end]));
+            $title = trans(
+                'firefly.between_dates_breadcrumb',
+                ['start' => $start->formatLocalized((string)trans('config.month_and_day')),
+                 'end'   => $end->formatLocalized((string)trans('config.month_and_day')),]
+            );
+            $breadcrumbs->push($title, route('tags.show', [$tag->id, $start, $end]));
+        }
+    );
+
+
+    Breadcrumbs::register(
+        'tags.show.all',
+        function (BreadcrumbsGenerator $breadcrumbs, Tag $tag) {
+            $breadcrumbs->parent('tags.index');
+            $breadcrumbs->push($tag->tag, route('tags.show', $tag->id,null,null));
+            $title     = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+            $breadcrumbs->push($title, route('tags.show.all',$tag->id));
         }
     );
 
@@ -1017,7 +1026,9 @@ try {
         'transactions.edit',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
-            $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => limitStringLength($journal->description)]), route('transactions.edit', [$journal->id]));
+            $breadcrumbs->push(
+                trans('breadcrumbs.edit_journal', ['description' => limitStringLength($journal->description)]), route('transactions.edit', [$journal->id])
+            );
         }
     );
 
@@ -1027,7 +1038,8 @@ try {
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
             $breadcrumbs->push(
-                trans('breadcrumbs.edit_reconciliation', ['description' => limitStringLength($journal->description)]), route('accounts.reconcile.edit', [$journal->id])
+                trans('breadcrumbs.edit_reconciliation', ['description' => limitStringLength($journal->description)]),
+                route('accounts.reconcile.edit', [$journal->id])
             );
         }
     );
@@ -1036,7 +1048,9 @@ try {
         'transactions.delete',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
-            $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => limitStringLength($journal->description)]), route('transactions.delete', [$journal->id]));
+            $breadcrumbs->push(
+                trans('breadcrumbs.delete_journal', ['description' => limitStringLength($journal->description)]), route('transactions.delete', [$journal->id])
+            );
         }
     );
 
