@@ -451,7 +451,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         /** @var PiggyBank $piggyBank */
         $piggyBank = PiggyBank::create($data);
 
-        $this->updateNote($piggyBank, $data['note']);
+        $this->updateNote($piggyBank, $data['notes']);
 
         // repetition is auto created.
         $repetition = $this->getRepetition($piggyBank);
@@ -479,7 +479,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
         $piggyBank->save();
 
-        $this->updateNote($piggyBank, $data['note']);
+        $this->updateNote($piggyBank, $data['notes']);
 
         // if the piggy bank is now smaller than the current relevant rep,
         // remove money from the rep.
