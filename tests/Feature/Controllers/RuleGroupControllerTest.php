@@ -130,10 +130,16 @@ class RuleGroupControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
+        /** @var RuleGroup $ruleGroup */
+        $ruleGroup              = $this->user()->ruleGroups()->first();
+        $ruleGroup->description = 'Some description ' . random_int(1, 10000);
+        $ruleGroup->save();
+
         $this->be($this->user());
         $response = $this->get(route('rule-groups.edit', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee($ruleGroup->description);
     }
 
     /**
