@@ -184,9 +184,9 @@ interface AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function oldestJournalDate(Account $account): Carbon;
+    public function oldestJournalDate(Account $account): ?Carbon;
 
     /**
      * @param User $user

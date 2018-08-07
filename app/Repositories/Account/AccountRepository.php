@@ -410,11 +410,11 @@ class AccountRepository implements AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function oldestJournalDate(Account $account): Carbon
+    public function oldestJournalDate(Account $account): ?Carbon
     {
-        $result  = new Carbon;
+        $result  = null;
         $journal = $this->oldestJournal($account);
         if (null !== $journal) {
             $result = $journal->date;

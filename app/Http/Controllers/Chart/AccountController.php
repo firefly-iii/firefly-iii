@@ -166,7 +166,7 @@ class AccountController extends Controller
      */
     public function expenseBudgetAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
-        $start = $repository->oldestJournalDate($account);
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $end   = Carbon::now();
 
         return $this->expenseBudget($account, $start, $end);
@@ -229,7 +229,7 @@ class AccountController extends Controller
      */
     public function expenseCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
-        $start = $repository->oldestJournalDate($account);
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $end   = Carbon::now();
 
         return $this->expenseCategory($account, $start, $end);
@@ -320,7 +320,7 @@ class AccountController extends Controller
      */
     public function incomeCategoryAll(AccountRepositoryInterface $repository, Account $account): JsonResponse
     {
-        $start = $repository->oldestJournalDate($account);
+        $start = $repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $end   = Carbon::now();
 
         return $this->incomeCategory($account, $start, $end);

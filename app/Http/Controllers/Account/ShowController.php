@@ -145,7 +145,7 @@ class ShowController extends Controller
         }
         $end          = new Carbon;
         $today        = new Carbon;
-        $start        = $this->repository->oldestJournalDate($account);
+        $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -190,7 +190,7 @@ class ShowController extends Controller
     private function getPeriodOverview(Account $account, ?Carbon $date): Collection
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
-        $start = $this->repository->oldestJournalDate($account);
+        $start = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $end   = $date ?? new Carbon;
         if ($end < $start) {
             [$start, $end] = [$end, $start]; // @codeCoverageIgnore
