@@ -170,7 +170,7 @@ class PiggyBankTransformer extends TransformerAbstract
             'start_date'      => $startDate,
             'target_date'     => $targetDate,
             'order'           => (int)$piggyBank->order,
-            'active'          => 1 === (int)$piggyBank->active,
+            'active'          => true,
             'notes'           => null,
             'links'           => [
                 [
