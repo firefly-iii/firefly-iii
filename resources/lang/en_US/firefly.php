@@ -759,6 +759,7 @@ return [
     'already_cleared_transactions'            => 'Already cleared transactions (:count)',
     'submitted_end_balance'                   => 'Submitted end balance',
     'initial_balance_description'             => 'Initial balance for ":account"',
+    'interest_calc_'                          => 'unknown',
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',
