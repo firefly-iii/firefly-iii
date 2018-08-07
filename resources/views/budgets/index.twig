@@ -9,7 +9,7 @@
         <div class="col-lg-9 col-md-8 col-sm-12 col-xs-12">
             <div class="box">
                 <div class="box-header with-border">
-                    <h3 class="box-title">{{ periodStart }} &mdash; {{ periodEnd }}</h3>
+                    <h3 class="box-title">{{ start.formatLocalized(monthAndDayFormat) }} &mdash; {{ end.formatLocalized(monthAndDayFormat) }}</h3>
                 </div>
                 <div class="box-body">
                     <div class="row">
@@ -17,7 +17,7 @@
                             <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount" class="text-success">{{ budgeted|formatAmountPlain }}</span></small>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
-                            <small id="availableBar">{{ trans('firefly.available_between',{start : periodStart, end: periodEnd }) }}:
+                            <small id="availableBar">{{ trans('firefly.available_between',{start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}:
                                 <span id="available" data-value="{{ available }}">{{ available|formatAmountPlain }}</span>
                                 <a href="#" class="updateIncome btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
                                 <a href="#" class="infoIncome btn btn-info btn-xs"><i class="fa fa-info-circle"></i></a>
@@ -39,7 +39,7 @@
                     </div>
                     <div class="row" id="spentBar">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <small>{{ trans('firefly.spent_between', {start: periodStart, end: periodEnd}) }}: {{ spent|formatAmount }}</small>
+                            <small>{{ trans('firefly.spent_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}: {{ spent|formatAmount }}</small>
                         </div>
                     </div>
                     <div class="row">
@@ -66,12 +66,12 @@
                 <div class="box-body">
                     <p>
                         <a href="{{ route('budgets.no-budget', [start.format('Y-m-d'), end.format('Y-m-d')]) }}">
-                            {{ trans('firefly.transactions_no_budget', {start: periodStart, end: periodEnd }) }}
+                            {{ trans('firefly.transactions_no_budget', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
                         </a>
                     </p>
                 </div>
             </div>
-            {% if budgets.count > 0 and inactive.count > 0 %}
+            {% if paginator.count > 0 and inactive.count > 0 %}
                 <div class="box" id="createBudgetBox">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'createBudget'|_ }}</h3>
@@ -83,7 +83,7 @@
             {% endif %}
         </div>
     </div>
-    {% if budgets.count == 0 and inactive.count == 0 and page == 1 %}
+    {% if paginator.count == 0 and inactive.count == 0 and page == 1 %}
         {% include 'partials.empty' with {what: 'default', type: 'budgets',route: route('budgets.create')} %}
         {# make FF ignore demo for now. #}
         {% set shownDemo = true %}
@@ -138,7 +138,7 @@
                         <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>  {{ 'createBudget'|_ }}</a>
                     </div>
                     <div style="padding-left:8px;">
-                        {{ budgets.render|raw }}
+                        {{ paginator.render|raw }}
                     </div>
                     <table class="table table-bordered table-striped sortable" id="budgetList">
                         <thead>
@@ -152,7 +152,7 @@
                         </thead>
                         <tbody>
                         <tr>
-                            {% for budget in budgets %}
+                            {% for budget in paginator %}
                         <tr>
                             <td class="hidden-sm hidden-xs">
                                 <div class="btn-group btn-group-xs">
@@ -188,13 +188,13 @@
                             <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
                                 data-value="{{ budgetInformation[budget.id]['spent'] }}">
                                 {{ budgetInformation[budget.id]['spent']|formatAmount }}
-                                ({{ (budgetInformation[budget.id]['spent'] / daysPassed)|formatAmount }})
+                                ({{ (budgetInformation[budget.id]['spent'] / activeDaysPassed)|formatAmount }})
                             </td>
                             <td class="left" data-id="{{ budget.id }}"
                                 data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
                                 {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
                                 {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
-                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / daysPassed)|formatAmount }})
+                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / activeDaysLeft)|formatAmount }})
                                 {% endif %}
                             </td>
                         </tr>
@@ -202,7 +202,7 @@
                         </tbody>
                     </table>
                     <div style="padding-left:8px;">
-                        {{ budgets.render|raw }}
+                        {{ paginator.render|raw }}
                     </div>
                 </div>
                 <div class="box-footer">
