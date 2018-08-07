@@ -1017,7 +1017,7 @@ try {
         'transactions.edit',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
-            $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => $journal->description]), route('transactions.edit', [$journal->id]));
+            $breadcrumbs->push(trans('breadcrumbs.edit_journal', ['description' => limitStringLength($journal->description)]), route('transactions.edit', [$journal->id]));
         }
     );
 
@@ -1027,7 +1027,7 @@ try {
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
             $breadcrumbs->push(
-                trans('breadcrumbs.edit_reconciliation', ['description' => $journal->description]), route('accounts.reconcile.edit', [$journal->id])
+                trans('breadcrumbs.edit_reconciliation', ['description' => limitStringLength($journal->description)]), route('accounts.reconcile.edit', [$journal->id])
             );
         }
     );
@@ -1036,7 +1036,7 @@ try {
         'transactions.delete',
         function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
-            $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => $journal->description]), route('transactions.delete', [$journal->id]));
+            $breadcrumbs->push(trans('breadcrumbs.delete_journal', ['description' => limitStringLength($journal->description)]), route('transactions.delete', [$journal->id]));
         }
     );
 
@@ -1056,7 +1056,7 @@ try {
         function (BreadcrumbsGenerator $breadcrumbs, TransactionType $destinationType, TransactionJournal $journal) {
             $breadcrumbs->parent('transactions.show', $journal);
             $breadcrumbs->push(
-                trans('firefly.convert_to_' . $destinationType->type, ['description' => $journal->description]),
+                trans('firefly.convert_to_' . $destinationType->type, ['description' => limitStringLength($journal->description)]),
                 route('transactions.convert.index', [strtolower($destinationType->type), $journal->id])
             );
         }
