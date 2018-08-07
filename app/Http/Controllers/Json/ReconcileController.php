@@ -37,6 +37,8 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  *
@@ -90,7 +92,6 @@ class ReconcileController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @throws \Throwable
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -123,15 +124,24 @@ class ReconcileController extends Controller
         }
         $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare = bccomp($difference, '0');
-        $return      = [
-            'post_uri' => $route,
-            'html'     => view(
+
+        try {
+            $view = view(
                 'accounts.reconcile.overview', compact(
                                                  'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount',
                                                  'startBalance', 'endBalance', 'amount',
                                                  'route', 'countCleared'
                                              )
-            )->render(),
+            )->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('View error: %s', $e->getMessage()));
+            $view = 'Could not render accounts.reconcile.overview';
+        }
+
+
+        $return = [
+            'post_uri' => $route,
+            'html'     => $view,
         ];
 
         return response()->json($return);
@@ -148,7 +158,6 @@ class ReconcileController extends Controller
      * @return mixed
      *
      * @throws FireflyException
-     * @throws \Throwable
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
@@ -180,9 +189,14 @@ class ReconcileController extends Controller
         $collector->setAccounts(new Collection([$account]))
                   ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
         $transactions = $collector->getJournals();
-        $html         = view(
-            'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
-        )->render();
+        try {
+            $html = view(
+                'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+            )->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render: %s', $e->getMessage()));
+            $html = 'Could not render accounts.reconcile.transactions';
+        }
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }
