@@ -121,7 +121,7 @@ class AccountFormRequest extends Request
         if (null !== $account) {
             // add rules:
             $rules['id']   = 'belongsToUser:accounts';
-            $rules['name'] = 'required|min:1|uniqueAccountForUser:' . (int)$this->get('id');
+            $rules['name'] = 'required|min:1|uniqueAccountForUser:' . $account->id;
             $rules['iban'] = ['iban', 'nullable', new UniqueIban($account, $account->accountType->type)];
         }
 

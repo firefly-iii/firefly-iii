@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Models\Bill;
+
 /**
  * Class BillFormRequest.
  */
@@ -66,8 +68,10 @@ class BillFormRequest extends Request
     public function rules(): array
     {
         $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
-        if ($this->integer('id') > 0) {
-            $nameRule .= ',' . $this->integer('id');
+        /** @var Bill $bill */
+        $bill = $this->route()->parameter('bill');
+        if (null !== $bill) {
+            $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name,' . $bill->id;
         }
         // is OK
         $rules = [

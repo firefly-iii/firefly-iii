@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Models\Rule;
 
 /**
  * Class RuleFormRequest.
@@ -72,8 +72,6 @@ class RuleFormRequest extends Request
      */
     public function rules(): array
     {
-        /** @var RuleRepositoryInterface $repository */
-        $repository    = app(RuleRepositoryInterface::class);
         $validTriggers = array_keys(config('firefly.rule-triggers'));
         $validActions  = array_keys(config('firefly.rule-actions'));
 
@@ -81,8 +79,11 @@ class RuleFormRequest extends Request
         $contextActions = implode(',', config('firefly.rule-actions-text'));
 
         $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
-        if (null !== $repository->find((int)$this->get('id'))) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . (int)$this->get('id');
+        /** @var Rule $rule */
+        $rule = $this->route()->parameter('rule');
+
+        if (null !== $rule) {
+            $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . $rule->id;
         }
         $rules = [
             'title'                 => $titleRule,
