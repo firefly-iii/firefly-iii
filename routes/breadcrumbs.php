@@ -447,7 +447,7 @@ try {
     Breadcrumbs::register(
         'categories.edit',
         function (BreadcrumbsGenerator $breadcrumbs, Category $category) {
-            $breadcrumbs->parent('categories.show', $category, '(nothing)', new Carbon, new Carbon);
+            $breadcrumbs->parent('categories.show-all', $category, '', new Carbon, new Carbon);
             $breadcrumbs->push(trans('firefly.edit_category', ['name' => limitStringLength($category->name)]), route('categories.edit', [$category->id]));
         }
     );
