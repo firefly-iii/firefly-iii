@@ -282,9 +282,9 @@ class CreateRecurringTransactions implements ShouldQueue
             Log::debug(sprintf('%s IS today (%s)', $date->format('Y-m-d'), $this->date->format('Y-m-d')));
 
             // count created journals on THIS day.
-            $created = $this->repository->getJournals($recurrence, $date, $date);
-            if ($created->count() > 0) {
-                Log::info(sprintf('Already created %d journal(s) for date %s', $created->count(), $date->format('Y-m-d')));
+            $journalCount = $this->repository->getJournalCount($recurrence, $date, $date);
+            if ($journalCount > 0) {
+                Log::info(sprintf('Already created %d journal(s) for date %s', $journalCount, $date->format('Y-m-d')));
                 continue;
             }
 
@@ -419,8 +419,8 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         // has repeated X times.
-        $journals = $this->repository->getJournals($recurrence, null, null);
-        if (0 !== $recurrence->repetitions && $journals->count() >= $recurrence->repetitions) {
+        $journalCount = $this->repository->getJournalCount($recurrence, null, null);
+        if (0 !== $recurrence->repetitions && $journalCount >= $recurrence->repetitions) {
             Log::info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
 
             return false;

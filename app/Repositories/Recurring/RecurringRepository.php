@@ -145,9 +145,9 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return Collection
+     * @return int
      */
-    public function getJournals(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): Collection
+    public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int
     {
         $query = TransactionJournal
             ::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
@@ -162,7 +162,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
         }
 
-        return $query->get(['transaction_journals.*']);
+        return $query->get(['transaction_journals.*'])->count();
     }
 
     /**
