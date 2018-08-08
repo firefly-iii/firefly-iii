@@ -94,7 +94,6 @@ class ShowController extends Controller
         /** @var Carbon $end */
         $end          = $end ?? session('end', Carbon::now()->endOfMonth());
         $subTitleIcon = 'fa-bar-chart';
-        $moment       = '';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         $periods      = $this->getPeriodOverview($category, $start);
@@ -115,7 +114,7 @@ class ShowController extends Controller
 
         Log::debug('End of show()');
 
-        return view('categories.show', compact('category', 'transactions', 'moment', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**
@@ -135,7 +134,6 @@ class ShowController extends Controller
         $start        = null;
         $end          = null;
         $periods      = new Collection;
-        $moment       = 'all';
 
         $subTitle = (string)trans('firefly.all_journals_for_category', ['name' => $category->name]);
         $first    = $this->repository->firstUseDate($category);
@@ -153,7 +151,7 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath($path);
 
-        return view('categories.show', compact('category', 'moment', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category',  'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**

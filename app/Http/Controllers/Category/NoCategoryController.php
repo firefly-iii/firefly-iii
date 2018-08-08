@@ -79,7 +79,6 @@ class NoCategoryController extends Controller
         $start = $start ?? session('start');
         /** @var Carbon $end */
         $end      = $end ?? session('end');
-        $moment   = '';
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
         $subTitle = trans(
@@ -99,7 +98,7 @@ class NoCategoryController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('categories.no-category'));
 
-        return view('categories.no-category', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
     }
 
 
@@ -107,14 +106,12 @@ class NoCategoryController extends Controller
      * Show all transactions without a category.
      *
      * @param Request     $request
-     * @param string|null $moment
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function showAll(Request $request, string $moment = null)
+    public function showAll(Request $request)
     {
         // default values:
-        $moment   = $moment ?? '';
         $start    = null;
         $end      = null;
         $periods  = new Collection;
@@ -136,7 +133,7 @@ class NoCategoryController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('categories.no-category'));
 
-        return view('categories.no-category', compact('transactions', 'subTitle', 'moment', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
     }
 
 

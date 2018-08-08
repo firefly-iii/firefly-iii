@@ -70,34 +70,23 @@ class IndexController extends Controller
      * Show all budgets.
      *
      * @param Request     $request
-     * @param string|null $moment
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function index(Request $request, string $moment = null)
+    public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
         // collect some basic vars:
         $range           = app('preferences')->get('viewRange', '1M')->data;
-        $start           = session('start', new Carbon);
-        $end             = session('end', new Carbon);
+        $start           = $start ?? session('start', Carbon::now()->startOfMonth());
+        $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
         $page            = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
         $pageSize        = (int)app('preferences')->get('listPageSize', 50)->data;
-        $moment          = $moment ?? '';
         $defaultCurrency = app('amount')->getDefaultCurrency();
-
-        // make a date if the data is given.
-        if ('' !== (string)$moment) {
-            try {
-                $start = new Carbon($moment);
-                /** @var Carbon $end */
-                $end = app('navigation')->endOfPeriod($start, $range);
-            } catch (Exception $e) {
-                // start and end are already defined.
-                Log::debug(sprintf('start and end are already defined: %s', $e->getMessage()));
-            }
-        }
 
         // make the next and previous period, and calculate the periods used for period navigation
         $next = clone $end;
@@ -106,7 +95,7 @@ class IndexController extends Controller
         $prev->subDay();
         $prev         = app('navigation')->startOfPeriod($prev, $range);
         $previousLoop = $this->getPreviousPeriods($start, $range);
-        $nextLoop     = $this->getNextPeriods($end, $range);
+        $nextLoop     = $this->getNextPeriods($start, $range);
         $currentMonth = app('navigation')->periodShow($start, $range);
         $nextText     = app('navigation')->periodShow($next, $range);
         $prevText     = app('navigation')->periodShow($prev, $range);

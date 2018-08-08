@@ -210,7 +210,7 @@ Route::group(
 
 
     // index
-    Route::get('{moment?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
+    Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
 
     // update budget amount and income amount
     Route::get('income/{start_date}/{end_date}', ['uses' => 'Budget\AmountController@updateIncome', 'as' => 'income']);
@@ -246,7 +246,7 @@ Route::group(
     Route::get('show/{category}/{start_date?}/{end_date?}', ['uses' => 'Category\ShowController@show', 'as' => 'show']);
 
     // no category controller:
-    Route::get('list/no-category/all', ['uses' => 'Category\NoCategoryController@showAll', 'as' => 'no-category-all']);
+    Route::get('list/no-category/all', ['uses' => 'Category\NoCategoryController@showAll', 'as' => 'no-category.all']);
     Route::get('list/no-category/{start_date?}/{end_date?}', ['uses' => 'Category\NoCategoryController@show', 'as' => 'no-category']);
 
 }

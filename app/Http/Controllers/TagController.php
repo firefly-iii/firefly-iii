@@ -170,7 +170,8 @@ class TagController extends Controller
      *
      * @param Request     $request
      * @param Tag         $tag
-     * @param string|null $moment
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
@@ -205,11 +206,10 @@ class TagController extends Controller
     }
 
     /**
-     * Show a single tag.
+     * Show a single tag over all time.
      *
-     * @param Request     $request
-     * @param Tag         $tag
-     * @param string|null $moment
+     * @param Request $request
+     * @param Tag     $tag
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *

@@ -1,12 +1,12 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, '', start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, start, end) }}
 {% endblock %}
 
 {% block content %}
     <div class="row">
-        {% if moment != 'all' %}
+        {% if Route.getCurrentRoute.getName == 'categories.show' %}
             {# both charts #}
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
@@ -33,7 +33,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if moment == 'all' %}
+        {% if Route.getCurrentRoute.getName == 'categories.show.all' %}
             {# all chart #}
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">

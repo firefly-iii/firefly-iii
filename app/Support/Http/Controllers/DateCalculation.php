@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use Log;
 
 /**
  * Trait DateCalculation
@@ -117,7 +116,8 @@ trait DateCalculation
         // select thing for next 12 periods:
         $loop = [];
         /** @var Carbon $current */
-        $current = clone $date;
+        $current = app('navigation')->startOfPeriod($date, $range);
+        $current = app('navigation')->endOfPeriod($current, $range);
         $current->addDay();
         $count = 0;
 
@@ -146,7 +146,7 @@ trait DateCalculation
         // select thing for last 12 periods:
         $loop = [];
         /** @var Carbon $current */
-        $current = clone $date;
+        $current = app('navigation')->startOfPeriod($date, $range);
         $count   = 0;
         while ($count < 12) {
             $current->subDay();

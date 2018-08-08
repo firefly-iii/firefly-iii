@@ -118,7 +118,6 @@ class ShowController extends Controller
         $end      = new Carbon;
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $moment   = 'all';
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -127,7 +126,7 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('transactions', 'subTitle', 'moment', 'start', 'end'));
+        return view('budgets.no-budget', compact('transactions', 'subTitle', 'start', 'end'));
     }
 
 
