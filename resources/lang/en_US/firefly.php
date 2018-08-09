@@ -677,6 +677,7 @@ return [
     'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
+    'account_missing_transaction'             => 'Account #:id (":name") cannot be viewed directly, but Firefly is missing redirect information.',
     'details_for_asset'                       => 'Details for asset account ":name"',
     'details_for_expense'                     => 'Details for expense account ":name"',
     'details_for_revenue'                     => 'Details for revenue account ":name"',
