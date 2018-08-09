@@ -706,7 +706,6 @@ class TransactionFactoryTest extends TestCase
         // objects:
         $asset        = $this->user()->accounts()->where('account_type_id', 3)->first();
         $reconAccount = $this->user()->accounts()->where('account_type_id', 10)->first();
-        //$opposing = $this->user()->accounts()->where('id', '!=', $asset->id)->where('account_type_id', 3)->first();
         $euro    = TransactionCurrency::first();
         $foreign = TransactionCurrency::where('id', '!=', $euro->id)->first();
 

@@ -39,7 +39,7 @@ use Tests\TestCase;
 class AttachmentHelperTest extends TestCase
 {
     /**
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachmentLocation
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
      */
     public function testGetAttachmentLocation(): void
     {
@@ -52,14 +52,7 @@ class AttachmentHelperTest extends TestCase
     /**
      * Test invalid mime thing
      *
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::processFile
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::validateUpload
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::validMime
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::hasFile
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
+     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper
      */
     public function testInvalidMime(): void
     {
@@ -80,15 +73,7 @@ class AttachmentHelperTest extends TestCase
     /**
      * Test valid file upload.
      *
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::processFile
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::validateUpload
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::validMime
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::hasFile
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
-     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachments
+     * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper
      */
     public function testSave(): void
     {
@@ -115,8 +100,7 @@ class AttachmentHelperTest extends TestCase
     /**
      * Test double file upload. Needs to be after testSave.
      *
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
      */
     public function testSaveEmpty(): void
     {
@@ -131,15 +115,7 @@ class AttachmentHelperTest extends TestCase
     /**
      * Test double file upload. Needs to be after testSave.
      *
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::__construct
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::saveAttachmentsForModel
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::processFile
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::validateUpload
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::validMime
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::hasFile
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getMessages
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getErrors
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper::getAttachments
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
      */
     public function testSaveSecond(): void
     {

@@ -39,7 +39,7 @@ class AdminEventHandlerTest extends TestCase
 {
 
     /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler::sendTestMessage
+     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
      * @covers \FireflyIII\Events\AdminRequestedTestMessage
      */
     public function testSendNoMessage(): void
@@ -55,7 +55,7 @@ class AdminEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler::sendTestMessage
+     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
      * @covers \FireflyIII\Events\AdminRequestedTestMessage
      */
     public function testSendTestMessage(): void

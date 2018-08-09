@@ -59,7 +59,7 @@ class BillControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::create
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testCreate(): void
     {
@@ -77,7 +77,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::delete
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testDelete(): void
     {
@@ -95,7 +95,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::destroy
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testDestroy(): void
     {
@@ -115,7 +115,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::edit
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testEdit(): void
     {
@@ -133,8 +133,8 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::index
-     * @covers \FireflyIII\Http\Controllers\BillController::__construct
+     * @covers \FireflyIII\Http\Controllers\BillController
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testIndex(): void
     {
@@ -160,7 +160,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::rescan
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testRescan(): void
     {
@@ -190,7 +190,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::rescan
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testRescanInactive(): void
     {
@@ -208,7 +208,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::show
+     * @covers \FireflyIII\Http\Controllers\BillController
      */
     public function testShow(): void
     {
@@ -278,7 +278,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::store
+     * @covers \FireflyIII\Http\Controllers\BillController
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */
@@ -314,7 +314,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::store
+     * @covers \FireflyIII\Http\Controllers\BillController
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */
@@ -346,7 +346,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::store
+     * @covers \FireflyIII\Http\Controllers\BillController
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */
@@ -381,7 +381,7 @@ class BillControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\BillController::update
+     * @covers \FireflyIII\Http\Controllers\BillController
      * @covers \FireflyIII\Http\Requests\BillFormRequest
      * @covers \FireflyIII\Http\Requests\Request
      */

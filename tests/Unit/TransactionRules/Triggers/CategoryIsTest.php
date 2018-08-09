@@ -32,7 +32,7 @@ use Tests\TestCase;
 class CategoryIsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs
      */
     public function testTriggeredJournal(): void
     {
@@ -52,7 +52,7 @@ class CategoryIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs
      */
     public function testTriggeredNotJournal(): void
     {
@@ -73,7 +73,7 @@ class CategoryIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs
      */
     public function testTriggeredTransaction(): void
     {
@@ -97,7 +97,7 @@ class CategoryIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -107,7 +107,7 @@ class CategoryIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\CategoryIs
      */
     public function testWillMatchEverythingNull(): void
     {

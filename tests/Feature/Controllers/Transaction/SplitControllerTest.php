@@ -58,11 +58,7 @@ class SplitControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEdit(): void
     {
@@ -107,11 +103,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEditOldInput(): void
     {
@@ -206,7 +198,7 @@ class SplitControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEditOpeningBalance(): void
     {
@@ -224,11 +216,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEditSingle(): void
     {
@@ -269,7 +257,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdate(): void
@@ -324,8 +312,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::isOpeningBalance
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateOpeningBalance(): void
@@ -367,7 +354,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateTransfer(): void
@@ -423,7 +410,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateWithdrawal(): void

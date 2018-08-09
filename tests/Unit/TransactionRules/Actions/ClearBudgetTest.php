@@ -34,8 +34,7 @@ use Tests\TestCase;
 class ClearBudgetTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\ClearBudget::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\ClearBudget::act()
+     * @covers \FireflyIII\TransactionRules\Actions\ClearBudget
      */
     public function testAct(): void
     {

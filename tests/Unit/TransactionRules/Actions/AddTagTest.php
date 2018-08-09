@@ -35,8 +35,8 @@ use Tests\TestCase;
 class AddTagTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\AddTag::__construct
-     * @covers \FireflyIII\TransactionRules\Actions\AddTag::act()
+     * @covers \FireflyIII\TransactionRules\Actions\AddTag
+     * @covers \FireflyIII\TransactionRules\Actions\AddTag
      */
     public function testActExistingTag(): void
     {
@@ -62,7 +62,7 @@ class AddTagTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\AddTag::act()
+     * @covers \FireflyIII\TransactionRules\Actions\AddTag
      */
     public function testActNoTag(): void
     {

@@ -34,7 +34,7 @@ use Tests\TestCase;
 class ToAccountIsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testTriggered(): void
     {
@@ -53,7 +53,7 @@ class ToAccountIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testTriggeredNot(): void
     {
@@ -71,7 +71,7 @@ class ToAccountIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testWillMatchEverythingEmpty(): void
     {
@@ -82,7 +82,7 @@ class ToAccountIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -93,7 +93,7 @@ class ToAccountIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testWillMatchEverythingNull(): void
     {

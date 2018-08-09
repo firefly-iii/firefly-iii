@@ -39,9 +39,7 @@ class BillTransformerTest extends TestCase
     /**
      * Basic coverage
      *
-     * @covers \FireflyIII\Transformers\BillTransformer::transform
-     * @covers \FireflyIII\Transformers\BillTransformer::paidData
-     * @covers \FireflyIII\Transformers\BillTransformer::payDates
+     * @covers \FireflyIII\Transformers\BillTransformer
      */
     public function testBasic(): void
     {
@@ -70,11 +68,7 @@ class BillTransformerTest extends TestCase
     /**
      * Coverage for dates.
      *
-     * @covers \FireflyIII\Transformers\BillTransformer::transform
-     * @covers \FireflyIII\Transformers\BillTransformer::paidData
-     * @covers \FireflyIII\Transformers\BillTransformer::payDates
-     * @covers \FireflyIII\Transformers\BillTransformer::lastPaidDate
-     * @covers \FireflyIII\Transformers\BillTransformer::nextDateMatch
+     * @covers \FireflyIII\Transformers\BillTransformer
      */
     public function testWithDates(): void
     {

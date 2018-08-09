@@ -37,7 +37,7 @@ class UserTransformerTest extends TestCase
     /**
      * Test basic transformer.
      *
-     * @covers \FireflyIII\Transformers\UserTransformer::transform
+     * @covers \FireflyIII\Transformers\UserTransformer
      */
     public function testBasic(): void
     {
@@ -52,7 +52,7 @@ class UserTransformerTest extends TestCase
     /**
      * Test basic transformer.
      *
-     * @covers \FireflyIII\Transformers\UserTransformer::transform
+     * @covers \FireflyIII\Transformers\UserTransformer
      */
     public function testEmptyUser(): void
     {

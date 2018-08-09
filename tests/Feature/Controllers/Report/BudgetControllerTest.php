@@ -48,7 +48,7 @@ class BudgetControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\BudgetController::general
+     * @covers \FireflyIII\Http\Controllers\Report\BudgetController
      */
     public function testGeneral(): void
     {
@@ -62,8 +62,7 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\BudgetController::period
-     * @covers \FireflyIII\Http\Controllers\Report\BudgetController::filterBudgetPeriodReport
+     * @covers \FireflyIII\Http\Controllers\Report\BudgetController
      */
     public function testPeriod(): void
     {

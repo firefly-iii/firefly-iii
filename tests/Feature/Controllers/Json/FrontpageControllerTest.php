@@ -46,7 +46,7 @@ class FrontpageControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\FrontpageController::piggyBanks
+     * @covers \FireflyIII\Http\Controllers\Json\FrontpageController
      */
     public function testPiggyBanks(): void
     {

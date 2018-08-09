@@ -46,7 +46,7 @@ class ExchangeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
+     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController
      */
     public function testGetRate(): void
     {
@@ -61,7 +61,7 @@ class ExchangeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
+     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController
      */
     public function testGetRateAmount(): void
     {

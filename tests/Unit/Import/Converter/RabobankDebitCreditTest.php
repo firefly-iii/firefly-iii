@@ -32,7 +32,7 @@ use Tests\TestCase;
 class RabobankDebitCreditTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit::convert()
+     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit
      */
     public function testConvertAnything(): void
     {
@@ -42,7 +42,7 @@ class RabobankDebitCreditTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit::convert()
+     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit
      */
     public function testConvertCredit(): void
     {
@@ -52,7 +52,7 @@ class RabobankDebitCreditTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit::convert()
+     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit
      */
     public function testConvertCreditOld(): void
     {
@@ -62,7 +62,7 @@ class RabobankDebitCreditTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit::convert()
+     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit
      */
     public function testConvertDebit(): void
     {
@@ -72,7 +72,7 @@ class RabobankDebitCreditTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit::convert()
+     * @covers \FireflyIII\Import\Converter\RabobankDebitCredit
      */
     public function testConvertDebitOld(): void
     {

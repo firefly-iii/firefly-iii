@@ -34,7 +34,7 @@ use Tests\TestCase;
 class FromAccountEndsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testTriggered(): void
     {
@@ -51,7 +51,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testTriggeredLonger(): void
     {
@@ -69,7 +69,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testTriggeredNot(): void
     {
@@ -87,7 +87,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testWillMatchEverythingEmpty(): void
     {
@@ -98,7 +98,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -109,7 +109,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testWillMatchEverythingNull(): void
     {

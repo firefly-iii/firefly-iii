@@ -33,7 +33,7 @@ use Tests\TestCase;
 class AmountMoreTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore
      */
     public function testTriggeredExact(): void
     {
@@ -50,7 +50,7 @@ class AmountMoreTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore
      */
     public function testTriggeredMore(): void
     {
@@ -67,7 +67,7 @@ class AmountMoreTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore
      */
     public function testTriggeredNotMore(): void
     {
@@ -84,7 +84,7 @@ class AmountMoreTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -94,7 +94,7 @@ class AmountMoreTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore
      */
     public function testWillMatchEverythingNull(): void
     {
@@ -104,7 +104,7 @@ class AmountMoreTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountMore
      */
     public function testWillMatchEverythingZero(): void
     {

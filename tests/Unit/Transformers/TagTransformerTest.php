@@ -37,7 +37,7 @@ class TagTransformerTest extends TestCase
     /**
      * Test basic tag transformer
      *
-     * @covers \FireflyIII\Transformers\TagTransformer::transform
+     * @covers \FireflyIII\Transformers\TagTransformer
      */
     public function testBasic(): void
     {

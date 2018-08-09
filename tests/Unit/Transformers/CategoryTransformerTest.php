@@ -37,7 +37,7 @@ class CategoryTransformerTest extends TestCase
     /**
      * Basic coverage
      *
-     * @covers \FireflyIII\Transformers\CategoryTransformer::transform
+     * @covers \FireflyIII\Transformers\CategoryTransformer
      */
     public function testBasic(): void
     {

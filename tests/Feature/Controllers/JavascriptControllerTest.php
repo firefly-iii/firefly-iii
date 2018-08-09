@@ -53,7 +53,7 @@ class JavascriptControllerTest extends TestCase
 
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::accounts
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      */
     public function testAccounts(): void
     {
@@ -72,7 +72,7 @@ class JavascriptControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::currencies
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      */
     public function testCurrencies(): void
     {
@@ -87,8 +87,8 @@ class JavascriptControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *
@@ -108,8 +108,7 @@ class JavascriptControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *
@@ -131,8 +130,7 @@ class JavascriptControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *

@@ -46,7 +46,7 @@ class OperationsControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\OperationsController::expenses
+     * @covers \FireflyIII\Http\Controllers\Report\OperationsController
      */
     public function testExpenses(): void
     {
@@ -68,7 +68,7 @@ class OperationsControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\OperationsController::income
+     * @covers \FireflyIII\Http\Controllers\Report\OperationsController
      */
     public function testIncome(): void
     {
@@ -81,7 +81,7 @@ class OperationsControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\OperationsController::operations
+     * @covers \FireflyIII\Http\Controllers\Report\OperationsController
      */
     public function testOperations(): void
     {

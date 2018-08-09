@@ -92,7 +92,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::balance
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testBalance(): void
     {
@@ -113,7 +113,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::balance
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testBalanceTransactions(): void
     {
@@ -138,7 +138,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::bills
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testBills(): void
     {
@@ -152,7 +152,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testNetWorth(): void
     {
@@ -169,7 +169,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testNetWorthFuture(): void
     {
@@ -191,7 +191,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testNetWorthNoCurrency(): void
     {
@@ -208,7 +208,7 @@ class BoxControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\BoxController::netWorth()
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testNetWorthVirtual(): void
     {

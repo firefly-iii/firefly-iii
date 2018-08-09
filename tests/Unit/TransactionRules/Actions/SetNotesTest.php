@@ -34,8 +34,7 @@ use Tests\TestCase;
 class SetNotesTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetNotes::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetNotes::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetNotes
      */
     public function testAct(): void
     {
@@ -63,8 +62,8 @@ class SetNotesTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetNotes::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetNotes::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetNotes()
+     * @covers \FireflyIII\TransactionRules\Actions\SetNotes
      */
     public function testActNoNotes(): void
     {

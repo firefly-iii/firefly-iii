@@ -47,7 +47,7 @@ class BalanceControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\BalanceController::general
+     * @covers \FireflyIII\Http\Controllers\Report\BalanceController
      */
     public function testGeneral(): void
     {

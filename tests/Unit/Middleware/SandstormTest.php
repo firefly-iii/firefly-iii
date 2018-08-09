@@ -36,7 +36,7 @@ use Tests\TestCase;
 class SandstormTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\Sandstorm::handle
+     * @covers \FireflyIII\Http\Middleware\Sandstorm
      */
     public function testMiddlewareBasic(): void
     {

@@ -32,7 +32,7 @@ use Tests\TestCase;
 class HasAttachmentTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment
      */
     public function testTriggered(): void
     {
@@ -51,7 +51,7 @@ class HasAttachmentTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment
      */
     public function testTriggeredFalse(): void
     {
@@ -69,7 +69,7 @@ class HasAttachmentTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment
      */
     public function testWillMatchEverything(): void
     {
@@ -79,7 +79,7 @@ class HasAttachmentTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAttachment
      */
     public function testWillMatchEverythingTrue(): void
     {

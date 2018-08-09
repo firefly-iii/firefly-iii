@@ -100,7 +100,6 @@ class CreateControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn(new Rule);
-        //$repository->shouldReceive('find')->withArgs([0])->andReturn(new Rule)->once();
 
         $this->session(['rules.create.uri' => 'http://localhost']);
         $data = [

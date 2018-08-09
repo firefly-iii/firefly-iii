@@ -63,7 +63,6 @@ class CurrencyControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        //$userRepos->shouldReceive('setUser')->once();
 
         $userRepos->shouldReceive('hasRole')->once()->withArgs([Mockery::any(), 'owner'])->andReturn(true);
         $repository->shouldReceive('canDeleteCurrency')->once()->andReturn(true);

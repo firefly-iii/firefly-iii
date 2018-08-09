@@ -48,8 +48,7 @@ class CategoryControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\CategoryController::expenses
-     * @covers \FireflyIII\Http\Controllers\Report\CategoryController::filterReport
+     * @covers \FireflyIII\Http\Controllers\Report\CategoryController
      */
     public function testExpenses(): void
     {
@@ -66,8 +65,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\CategoryController::income
-     * @covers \FireflyIII\Http\Controllers\Report\CategoryController::filterReport
+     * @covers \FireflyIII\Http\Controllers\Report\CategoryController
      */
     public function testIncome(): void
     {
@@ -84,7 +82,7 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\CategoryController::operations
+     * @covers \FireflyIII\Http\Controllers\Report\CategoryController
      */
     public function testOperations(): void
     {

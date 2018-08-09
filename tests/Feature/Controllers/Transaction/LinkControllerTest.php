@@ -46,8 +46,8 @@ class LinkControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::delete
+     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
+     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
      */
     public function testDelete(): void
     {
@@ -61,7 +61,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::destroy
+     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
      */
     public function testDestroy(): void
     {
@@ -82,7 +82,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStore(): void
@@ -108,7 +108,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreAlreadyLinked(): void
@@ -133,7 +133,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreInvalid(): void
@@ -155,7 +155,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\LinkController
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreSame(): void
@@ -182,7 +182,7 @@ class LinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController::switchLink
+     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
      */
     public function testSwitchLink(): void
     {

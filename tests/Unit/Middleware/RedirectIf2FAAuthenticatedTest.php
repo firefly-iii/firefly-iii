@@ -36,7 +36,7 @@ use Tests\TestCase;
 class RedirectIf2FAAuthenticatedTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated::handle
+     * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated
      */
     public function testMiddleware(): void
     {
@@ -45,7 +45,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated::handle
+     * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated
      */
     public function testMiddlewareAuthenticated(): void
     {
@@ -69,7 +69,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated::handle
+     * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated
      */
     public function testMiddlewareLightAuth(): void
     {

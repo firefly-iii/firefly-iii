@@ -53,7 +53,7 @@ class ExportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ExportController::download
+     * @covers \FireflyIII\Http\Controllers\ExportController
      */
     public function testDownload(): void
     {
@@ -73,7 +73,7 @@ class ExportControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\ExportController::download
+     * @covers                   \FireflyIII\Http\Controllers\ExportController
      * @expectedExceptionMessage Against all expectations
      */
     public function testDownloadFailed(): void
@@ -91,7 +91,7 @@ class ExportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ExportController::getStatus
+     * @covers \FireflyIII\Http\Controllers\ExportController
      */
     public function testGetStatus(): void
     {
@@ -105,8 +105,8 @@ class ExportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ExportController::index
-     * @covers \FireflyIII\Http\Controllers\ExportController::__construct
+     * @covers \FireflyIII\Http\Controllers\ExportController
+     * @covers \FireflyIII\Http\Controllers\ExportController
      */
     public function testIndex(): void
     {
@@ -129,7 +129,7 @@ class ExportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ExportController::postIndex
+     * @covers \FireflyIII\Http\Controllers\ExportController
      * @covers \FireflyIII\Http\Requests\ExportFormRequest
      */
     public function testPostIndex(): void

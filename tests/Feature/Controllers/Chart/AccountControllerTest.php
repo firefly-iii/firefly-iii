@@ -57,7 +57,6 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
-     * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface
      * @dataProvider dateRangeProvider
      *
      * @param string $range
@@ -195,7 +194,6 @@ class AccountControllerTest extends TestCase
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Chart\AccountController
-     * @covers       \FireflyIII\Generator\Chart\Basic\GeneratorInterface
      * @dataProvider dateRangeProvider
      *
      * @param string $range

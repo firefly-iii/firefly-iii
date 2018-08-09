@@ -47,7 +47,7 @@ use Tests\TestCase;
 class UserEventHandlerTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::attachUserRole
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      * @covers \FireflyIII\Events\RegisteredUser
      */
     public function testAttachUserRole(): void
@@ -64,7 +64,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      */
     public function testCheckSingleUserIsAdminMulti(): void
     {
@@ -82,7 +82,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      */
     public function testCheckSingleUserIsAdminNoRole(): void
     {
@@ -104,7 +104,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      */
     public function testCheckSingleUserIsAdminNotAdmin(): void
     {
@@ -124,7 +124,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::checkSingleUserIsAdmin
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      */
     public function testCheckSingleUserIsAdminSingle(): void
     {
@@ -142,7 +142,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendEmailChangeConfirmMail
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      * @covers \FireflyIII\Events\UserChangedEmail
      */
     public function testSendEmailChangeConfirmMail(): void
@@ -165,7 +165,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendEmailChangeUndoMail
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      * @covers \FireflyIII\Events\UserChangedEmail
      */
     public function testSendEmailChangeUndoMail(): void
@@ -189,7 +189,7 @@ class UserEventHandlerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendNewPassword
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      * @covers \FireflyIII\Events\RequestedNewPassword
      */
     public function testSendNewPassword(): void
@@ -212,7 +212,7 @@ class UserEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UserEventHandler::sendRegistrationMail
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
      * @covers \FireflyIII\Events\RegisteredUser
      */
     public function testSendRegistrationMail(): void

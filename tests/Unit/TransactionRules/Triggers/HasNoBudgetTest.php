@@ -33,7 +33,7 @@ use Tests\TestCase;
 class HasNoBudgetTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testTriggeredBudget(): void
     {
@@ -49,7 +49,7 @@ class HasNoBudgetTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testTriggeredNoBudget(): void
     {
@@ -68,7 +68,7 @@ class HasNoBudgetTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testTriggeredTransaction(): void
     {
@@ -95,7 +95,7 @@ class HasNoBudgetTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testWillMatchEverythingNull(): void
     {

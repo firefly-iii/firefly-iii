@@ -33,8 +33,8 @@ use Tests\TestCase;
 class AppendDescriptionTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\AppendDescription::__construct
-     * @covers \FireflyIII\TransactionRules\Actions\AppendDescription::act()
+     * @covers \FireflyIII\TransactionRules\Actions\AppendDescription
+     * @covers \FireflyIII\TransactionRules\Actions\AppendDescription
      */
     public function testActExistingTag(): void
     {

@@ -76,7 +76,7 @@ class BulkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
      */
     public function testEditMultiple(): void
     {
@@ -137,7 +137,7 @@ class BulkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController::update
+     * @covers \FireflyIII\Http\Controllers\Transaction\BulkController
      * @covers \FireflyIII\Http\Requests\BulkEditJournalRequest
      */
     public function testUpdate(): void

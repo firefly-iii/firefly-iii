@@ -33,7 +33,7 @@ use Tests\TestCase;
 class AmountExactlyTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly
      */
     public function testTriggeredExact(): void
     {
@@ -49,7 +49,7 @@ class AmountExactlyTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly
      */
     public function testTriggeredNotExact(): void
     {
@@ -65,7 +65,7 @@ class AmountExactlyTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -75,7 +75,7 @@ class AmountExactlyTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountExactly
      */
     public function testWillMatchEverythingNull(): void
     {

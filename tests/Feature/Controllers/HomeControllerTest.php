@@ -56,8 +56,7 @@ class HomeControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::dateRange
-     * @covers \FireflyIII\Http\Controllers\HomeController::__construct
+     * @covers \FireflyIII\Http\Controllers\HomeController
      */
     public function testDateRange(): void
     {
@@ -78,8 +77,7 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HomeController::dateRange
-     * @covers \FireflyIII\Http\Controllers\HomeController::__construct
+     * @covers \FireflyIII\Http\Controllers\HomeController
      */
     public function testDateRangeCustom(): void
     {
@@ -101,9 +99,9 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\HomeController::index
-     * @covers       \FireflyIII\Http\Controllers\HomeController::__construct
-     * @covers       \FireflyIII\Http\Controllers\Controller::__construct
+     * @covers       \FireflyIII\Http\Controllers\HomeController
+     * @covers       \FireflyIII\Http\Controllers\HomeController
+     * @covers       \FireflyIII\Http\Controllers\Controller
      * @dataProvider dateRangeProvider
      *
      * @param $range
@@ -138,9 +136,9 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\HomeController::index
-     * @covers       \FireflyIII\Http\Controllers\HomeController::__construct
-     * @covers       \FireflyIII\Http\Controllers\Controller::__construct
+     * @covers       \FireflyIII\Http\Controllers\HomeController
+     * @covers       \FireflyIII\Http\Controllers\HomeController
+     * @covers       \FireflyIII\Http\Controllers\Controller
      * @dataProvider dateRangeProvider
      *
      * @param $range

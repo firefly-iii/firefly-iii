@@ -32,7 +32,7 @@ use Tests\TestCase;
 class HasNoTagTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoTag::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoTag
      */
     public function testTriggeredNoTag(): void
     {
@@ -46,7 +46,7 @@ class HasNoTagTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoTag::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoTag
      */
     public function testTriggeredTag(): void
     {
@@ -62,7 +62,7 @@ class HasNoTagTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoTag::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoTag
      */
     public function testWillMatchEverythingNull(): void
     {

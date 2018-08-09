@@ -46,9 +46,9 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
-     * @covers \FireflyIII\Http\Controllers\HelpController::__construct
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShow(): void
     {
@@ -65,8 +65,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowBackupFromCache(): void
     {
@@ -94,8 +94,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowBackupFromGithub(): void
     {
@@ -123,8 +123,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowCached(): void
     {
@@ -140,8 +140,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowNoRoute(): void
     {

@@ -53,7 +53,7 @@ class TagControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::create
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testCreate(): void
     {
@@ -69,7 +69,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::delete
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testDelete(): void
     {
@@ -85,7 +85,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::destroy
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testDestroy(): void
     {
@@ -102,7 +102,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::edit
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testEdit(): void
     {
@@ -118,8 +118,8 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::index
-     * @covers \FireflyIII\Http\Controllers\TagController::__construct
+     * @covers \FireflyIII\Http\Controllers\TagController
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testIndex(): void
     {
@@ -140,8 +140,8 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
-     * @covers \FireflyIII\Http\Controllers\TagController::getPeriodOverview
+     * @covers \FireflyIII\Http\Controllers\TagController
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShow(): void
     {
@@ -180,7 +180,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShowAll(): void
     {
@@ -216,7 +216,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShowDate(): void
     {
@@ -255,7 +255,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\TagController::store
+     * @covers       \FireflyIII\Http\Controllers\TagController
      * @covers       \FireflyIII\Http\Requests\TagFormRequest
      */
     public function testStore(): void
@@ -281,7 +281,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\TagController::update
+     * @covers       \FireflyIII\Http\Controllers\TagController
      * @covers       \FireflyIII\Http\Requests\TagFormRequest
      */
     public function testUpdate(): void

@@ -34,8 +34,7 @@ use Tests\TestCase;
 class ClearCategoryTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\ClearCategory::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\ClearCategory::act()
+     * @covers \FireflyIII\TransactionRules\Actions\ClearCategory
      */
     public function testAct(): void
     {

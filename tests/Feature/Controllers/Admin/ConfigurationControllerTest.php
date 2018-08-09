@@ -42,8 +42,8 @@ class ConfigurationControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::index
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::__construct
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
      */
     public function testIndex(): void
     {
@@ -66,7 +66,7 @@ class ConfigurationControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController::postIndex
+     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
      */
     public function testPostIndex(): void
     {

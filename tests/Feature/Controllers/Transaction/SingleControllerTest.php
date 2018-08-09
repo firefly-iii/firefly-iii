@@ -65,7 +65,7 @@ class SingleControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::cloneTransaction
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testCloneTransaction(): void
     {
@@ -96,8 +96,8 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testCreate(): void
     {
@@ -122,8 +122,8 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testCreateDepositWithSource(): void
     {
@@ -147,8 +147,8 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::create
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testCreateWithSource(): void
     {
@@ -172,7 +172,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::delete
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testDelete(): void
     {
@@ -193,7 +193,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::destroy
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testDestroy(): void
     {
@@ -218,8 +218,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEdit(): void
     {
@@ -262,7 +261,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditCashDeposit(): void
     {
@@ -309,7 +308,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditCashWithdrawal(): void
     {
@@ -356,7 +355,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditReconcile(): void
     {
@@ -382,7 +381,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditRedirect(): void
     {
@@ -412,7 +411,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditRedirectOpening(): void
     {
@@ -432,7 +431,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditTransferWithForeignAmount(): void
     {
@@ -480,8 +479,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::isSplitJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditWithForeign(): void
     {
@@ -523,7 +521,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      */
     public function testEditWithForeignAmount(): void
     {
@@ -571,7 +569,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreError(): void
@@ -607,7 +605,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccess(): void
@@ -662,7 +660,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessDeposit(): void
@@ -717,7 +715,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessTransfer(): void
@@ -773,7 +771,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController::store
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SingleController
      * @covers       \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testStoreSuccessTransferForeign(): void
@@ -833,7 +831,7 @@ class SingleControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController::update
+     * @covers \FireflyIII\Http\Controllers\Transaction\SingleController
      * @covers \FireflyIII\Http\Requests\JournalFormRequest
      */
     public function testUpdate(): void

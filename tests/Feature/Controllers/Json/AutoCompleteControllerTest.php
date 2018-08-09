@@ -59,7 +59,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::allAccounts
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testAllAccounts(): void
     {
@@ -181,7 +181,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::journalsWithId
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testJournalsWithId(): void
     {
@@ -200,7 +200,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::revenueAccounts
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testRevenueAccounts(): void
     {
@@ -222,7 +222,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::tags
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testTags(): void
     {
@@ -240,7 +240,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::transactionJournals
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testTransactionJournals(): void
     {
@@ -260,7 +260,7 @@ class AutoCompleteControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController::transactionTypes
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
      */
     public function testTransactionTypes(): void
     {

@@ -51,8 +51,8 @@ class PreferencesControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PreferencesController::index
-     * @covers \FireflyIII\Http\Controllers\PreferencesController::__construct
+     * @covers \FireflyIII\Http\Controllers\PreferencesController
+     * @covers \FireflyIII\Http\Controllers\PreferencesController
      */
     public function testIndex(): void
     {
@@ -69,7 +69,7 @@ class PreferencesControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\PreferencesController::postIndex
+     * @covers \FireflyIII\Http\Controllers\PreferencesController
      */
     public function testPostIndex(): void
     {

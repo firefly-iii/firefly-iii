@@ -34,8 +34,7 @@ use Tests\TestCase;
 class RemoveAllTagsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveAllTags::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveAllTags::act()
+     * @covers \FireflyIII\TransactionRules\Actions\RemoveAllTags
      */
     public function testAct(): void
     {

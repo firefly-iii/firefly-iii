@@ -94,7 +94,6 @@ class UserControllerTest extends TestCase
     public function testIndex(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        //$repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(3)->andReturn(true);
         $user = $this->user();
         $repository->shouldReceive('all')->andReturn(new Collection([$user]));

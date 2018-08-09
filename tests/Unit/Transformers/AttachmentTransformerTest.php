@@ -37,7 +37,7 @@ class AttachmentTransformerTest extends TestCase
     /**
      * Test basic transformer
      *
-     * @covers \FireflyIII\Transformers\AttachmentTransformer::transform
+     * @covers \FireflyIII\Transformers\AttachmentTransformer
      */
     public function testBasic(): void
     {

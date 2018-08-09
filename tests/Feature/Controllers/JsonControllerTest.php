@@ -46,8 +46,7 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::action
-     * @covers \FireflyIII\Http\Controllers\JsonController::__construct
+     * @covers \FireflyIII\Http\Controllers\JsonController
      */
     public function testAction(): void
     {
@@ -61,7 +60,7 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController::trigger
+     * @covers \FireflyIII\Http\Controllers\JsonController
      */
     public function testTrigger(): void
     {
