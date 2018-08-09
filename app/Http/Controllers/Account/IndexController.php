@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -36,6 +37,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class IndexController extends Controller
 {
+    use BasicDataSupport;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -119,23 +121,7 @@ class IndexController extends Controller
     }
 
 
-    /**
-     * Find the ID in a given array. Return '0' of not there (amount).
-     *
-     * @param array $array
-     * @param int   $entryId
-     *
-     * @return null|mixed
-     */
-    protected function isInArray(array $array, int $entryId) // helper for data (math, calculations)
-    {
-        $result = '0';
-        if (isset($array[$entryId])) {
-            $result = $array[$entryId];
-        }
 
-        return $result;
-    }
 
 
 }

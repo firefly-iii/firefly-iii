@@ -27,6 +27,7 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
@@ -36,6 +37,7 @@ use Log;
  */
 class ReportController extends Controller
 {
+    use BasicDataSupport;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -217,23 +219,6 @@ class ReportController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    /**
-     * Sum up an array.
-     *
-     * @param array $array
-     *
-     * @return string
-     */
-    protected function arraySum(array $array): string // filter + group data
-    {
-        $sum = '0';
-        foreach ($array as $entry) {
-            $sum = bcadd($sum, $entry);
-        }
-
-        return $sum;
     }
 
     /**
