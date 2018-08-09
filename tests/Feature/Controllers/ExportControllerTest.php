@@ -61,6 +61,8 @@ class ExportControllerTest extends TestCase
         $repository   = $this->mock(ExportJobRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('changeStatus')->once();
+
 
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('Some content beep boop');

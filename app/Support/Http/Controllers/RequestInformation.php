@@ -39,13 +39,13 @@ use FireflyIII\User;
 use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
 use Illuminate\Http\Request;
+use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Log;
-use Route;
 use Symfony\Component\HttpFoundation\ParameterBag;
-
+use Route as RouteFacade;
 /**
  * Trait RequestInformation
  *
@@ -193,7 +193,7 @@ trait RequestInformation
      */
     protected function getPageName(): string // get request info
     {
-        return str_replace('.', '_', Route::currentRouteName());
+        return str_replace('.', '_', RouteFacade::currentRouteName());
     }
 
     /**
@@ -203,7 +203,7 @@ trait RequestInformation
      */
     protected function getSpecificPageName(): string // get request info
     {
-        return null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
+        return null === RouteFacade::current()->parameter('what') ? '' : '_' . RouteFacade::current()->parameter('what');
     }
 
     /**

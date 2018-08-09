@@ -22,19 +22,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Popup;
 
-use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Routing\Route;
-use InvalidArgumentException;
 use Log;
 use Throwable;
 

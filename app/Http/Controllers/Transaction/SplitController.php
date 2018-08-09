@@ -25,21 +25,15 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
-use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
 /**
@@ -176,7 +170,6 @@ class SplitController extends Controller
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit-split.uri'));
     }
-
 
 
     /**

@@ -166,7 +166,6 @@ class ShowControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\Account\ShowController
-     * @expectedExceptionMessage Expected a transaction
      */
     public function testShowBrokenInitial(): void
     {
@@ -180,7 +179,9 @@ class ShowControllerTest extends TestCase
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id', 'ASC')->whereNull('deleted_at')->first();
         $response = $this->get(route('accounts.show', [$account->id]));
-        $response->assertStatus(500);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
+        $response->assertSessionHas('error');
     }
 
     /**

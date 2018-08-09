@@ -56,6 +56,7 @@ use phpseclib\Crypt\RSA;
 class ProfileController extends Controller
 {
     use RequestInformation;
+
     /**
      * ProfileController constructor.
      */

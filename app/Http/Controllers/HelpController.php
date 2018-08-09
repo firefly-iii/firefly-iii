@@ -22,10 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
-use Log;
 
 /**
  * Class HelpController.
