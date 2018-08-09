@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -50,6 +51,7 @@ use View;
  */
 class TransactionController extends Controller
 {
+    use ModelInformation;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 

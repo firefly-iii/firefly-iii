@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -47,6 +48,8 @@ use View;
  */
 class SplitController extends Controller
 {
+    use ModelInformation;
+
     /** @var AttachmentHelperInterface Attachment helper */
     private $attachments;
 

@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -45,6 +46,8 @@ use View;
  */
 class SingleController extends Controller
 {
+    use ModelInformation;
+
     /** @var AttachmentHelperInterface The attachment helper. */
     private $attachments;
     /** @var BudgetRepositoryInterface The budget repository */

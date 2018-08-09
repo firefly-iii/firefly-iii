@@ -23,10 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyConfig;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -34,7 +30,6 @@ use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
 use Log;
 use Route;
-use URL;
 
 /**
  * Class Controller.
@@ -94,22 +89,6 @@ class Controller extends BaseController
             }
         );
     }
-
-
-
-    /**
-     * Is transaction opening balance?
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    protected function isOpeningBalance(TransactionJournal $journal): bool // get object info / validate input
-    {
-        return TransactionType::OPENING_BALANCE === $journal->transactionType->type;
-    }
-
-
 
 
     /**
