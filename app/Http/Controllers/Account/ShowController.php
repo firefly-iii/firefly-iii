@@ -33,7 +33,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Http\Controllers\UserRedirection;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use View;
@@ -45,7 +45,7 @@ use View;
  */
 class ShowController extends Controller
 {
-    use UserRedirection;
+    use UserNavigation;
 
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;

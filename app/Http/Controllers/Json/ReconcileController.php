@@ -34,7 +34,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\UserRedirection;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -49,7 +49,7 @@ use Throwable;
  */
 class ReconcileController extends Controller
 {
-    use UserRedirection;
+    use UserNavigation;
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
     /** @var CurrencyRepositoryInterface The currency repository */
