@@ -96,7 +96,8 @@ class IndexController extends Controller
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));
-        return view('recurring.index', compact('paginator', 'page', 'pageSize','total'));
+
+        return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
     }
 
     /**

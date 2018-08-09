@@ -32,6 +32,7 @@ use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\User;
@@ -48,7 +49,7 @@ use Throwable;
  */
 class SelectController extends Controller
 {
-    use RuleManagement;
+    use RuleManagement, RequestInformation;
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
 
@@ -256,27 +257,4 @@ class SelectController extends Controller
     }
 
 
-    /**
-     * Get a list of triggers.
-     *
-     * @param TestRuleFormRequest $request
-     *
-     * @return array
-     */
-    protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
-    {
-        $triggers = [];
-        $data     = $request->get('rule_triggers');
-        if (\is_array($data)) {
-            foreach ($data as $index => $triggerInfo) {
-                $triggers[] = [
-                    'type'            => $triggerInfo['name'] ?? '',
-                    'value'           => $triggerInfo['value'] ?? '',
-                    'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
-                ];
-            }
-        }
-
-        return $triggers;
-    }
 }

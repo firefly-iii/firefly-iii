@@ -76,8 +76,8 @@ class Help implements HelpInterface
             $statusCode = $res->getStatusCode();
             $content    = trim($res->getBody()->getContents());
         } catch (GuzzleException|Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
+            Log::info($e->getMessage());
+            Log::info($e->getTraceAsString());
         }
 
         Log::debug(sprintf('Status code is %d', $statusCode));

@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
@@ -44,6 +45,7 @@ use Throwable;
  */
 class ReportController extends Controller
 {
+    use RequestInformation;
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepository;
     /** @var BudgetRepositoryInterface The budget repository */
@@ -260,33 +262,5 @@ class ReportController extends Controller
         return $view;
     }
 
-    /**
-     * Parses attributes from URI.
-     *
-     * @param array $attributes
-     *
-     * @return array
-     */
-    protected function parseAttributes(array $attributes): array // parse input + return result
-    {
-        $attributes['location'] = $attributes['location'] ?? '';
-        $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));
-        try {
-            $attributes['startDate'] = Carbon::createFromFormat('Ymd', $attributes['startDate']);
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                    = Carbon::now()->startOfMonth();
-            $attributes['startDate'] = $date;
-        }
 
-        try {
-            $attributes['endDate'] = Carbon::createFromFormat('Ymd', $attributes['endDate']);
-        } catch (InvalidArgumentException $e) {
-            Log::debug(sprintf('Not important error message: %s', $e->getMessage()));
-            $date                  = Carbon::now()->startOfMonth();
-            $attributes['endDate'] = $date;
-        }
-
-        return $attributes;
-    }
 }

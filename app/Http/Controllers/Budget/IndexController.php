@@ -25,13 +25,11 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Log;
 
 /**
  *

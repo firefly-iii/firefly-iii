@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
@@ -43,7 +44,7 @@ use Illuminate\Support\Facades\Validator;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers;
+    use RegistersUsers, RequestInformation;
 
     /**
      * Where to redirect users after registration.
@@ -132,24 +133,6 @@ class RegisterController extends Controller
             [
                 'email'    => $data['email'],
                 'password' => bcrypt($data['password']),
-            ]
-        );
-    }
-
-    /**
-     * Get a validator for an incoming registration request.
-     *
-     * @param array $data
-     *
-     * @return ValidatorContract
-     */
-    protected function validator(array $data): ValidatorContract
-    {
-        return Validator::make(
-            $data,
-            [
-                'email'    => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|secure_password|confirmed',
             ]
         );
     }

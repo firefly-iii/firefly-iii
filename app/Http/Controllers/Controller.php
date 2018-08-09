@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyConfig;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
@@ -38,7 +39,7 @@ use Route;
  */
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, UserNavigation;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, UserNavigation, RequestInformation;
 
     /** @var string Format for date and time. */
     protected $dateTimeFormat;
@@ -90,62 +91,4 @@ class Controller extends BaseController
         );
     }
 
-
-    /**
-     * Get user's language.
-     *
-     * @return string
-     */
-    protected function getLanguage(): string // get preference
-    {
-        /** @var string $language */
-        $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-
-        return $language;
-    }
-
-    /**
-     * @return string
-     */
-    protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', Route::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    protected function getSpecificPageName(): string // get request info
-    {
-        return null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
-    }
-
-    /**
-     * Returns if user has seen demo.
-     *
-     * @return bool
-     */
-    protected function hasSeenDemo(): bool // get request info + get preference
-    {
-        $page         = $this->getPageName();
-        $specificPage = $this->getSpecificPageName();
-
-        // indicator if user has seen the help for this page ( + special page):
-        $key = 'shown_demo_' . $page . $specificPage;
-        // is there an intro for this route?
-        $intro        = config('intro.' . $page) ?? [];
-        $specialIntro = config('intro.' . $page . $specificPage) ?? [];
-        // some routes have a "what" parameter, which indicates a special page:
-
-        $shownDemo = true;
-        // both must be array and either must be > 0
-        if (\count($intro) > 0 || \count($specialIntro) > 0) {
-            $shownDemo = app('preferences')->get($key, false)->data;
-            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
-        }
-
-        return $shownDemo;
-    }
 }

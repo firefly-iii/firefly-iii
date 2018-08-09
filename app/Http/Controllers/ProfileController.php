@@ -35,6 +35,7 @@ use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\User;
 use Google2FA;
 use Hash;
@@ -54,6 +55,7 @@ use phpseclib\Crypt\RSA;
  */
 class ProfileController extends Controller
 {
+    use RequestInformation;
     /**
      * ProfileController constructor.
      */
@@ -440,30 +442,6 @@ class ProfileController extends Controller
     }
 
     /**
-     * Validate users new password.
-     *
-     * @param User   $user
-     * @param string $current
-     * @param string $new
-     *
-     * @return bool
-     *
-     * @throws ValidationException
-     */
-    protected function validatePassword(User $user, string $current, string $new): bool //get request info
-    {
-        if (!Hash::check($current, $user->password)) {
-            throw new ValidationException((string)trans('firefly.invalid_current_password'));
-        }
-
-        if ($current === $new) {
-            throw new ValidationException((string)trans('firefly.should_change'));
-        }
-
-        return true;
-    }
-
-    /**
      * Create new RSA keys.
      */
     protected function createOAuthKeys(): void // create stuff
@@ -485,18 +463,5 @@ class ProfileController extends Controller
         file_put_contents($publicKey, array_get($keys, 'publickey'));
         file_put_contents($privateKey, array_get($keys, 'privatekey'));
     }
-    // @codeCoverageIgnoreEnd
 
-    /**
-     * Get the domain of FF system.
-     *
-     * @return string
-     */
-    protected function getDomain(): string // get request info
-    {
-        $url   = url()->to('/');
-        $parts = parse_url($url);
-
-        return $parts['host'];
-    }
 }

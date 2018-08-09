@@ -151,7 +151,7 @@ class ShowController extends Controller
         $transactions = $collector->getPaginatedJournals();
         $transactions->setPath($path);
 
-        return view('categories.show', compact('category',  'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
+        return view('categories.show', compact('category', 'transactions', 'periods', 'subTitle', 'subTitleIcon', 'start', 'end'));
     }
 
     /**

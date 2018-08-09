@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
 
 /**
@@ -42,6 +43,7 @@ use Illuminate\Http\JsonResponse;
  */
 class BoxController extends Controller
 {
+    use RequestInformation;
 
     /**
      * How much money user has available.
@@ -322,29 +324,5 @@ class BoxController extends Controller
         return $accountCurrency;
     }
 
-    /**
-     * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function notInSessionRange(Carbon $date): bool // Validate a preference
-    {
-        /** @var Carbon $start */
-        $start = session('start', Carbon::now()->startOfMonth());
-        /** @var Carbon $end */
-        $end    = session('end', Carbon::now()->endOfMonth());
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
 
-        return $result;
-    }
 }

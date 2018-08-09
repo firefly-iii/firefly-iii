@@ -23,9 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Http\RedirectResponse;
+use Log;
 use URL;
 
 /**
@@ -92,5 +95,33 @@ trait UserNavigation
     protected function rememberPreviousUri(string $identifier): void
     {
         session()->put($identifier, URL::previous());
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    protected function redirectToOriginalAccount(Account $account)
+    {
+        /** @var Transaction $transaction */
+        $transaction = $account->transactions()->first();
+        if (null === $transaction) {
+            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => $account->name, 'id' => $account->id]));
+            Log::error(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id));
+
+            return redirect(route('index'));
+        }
+
+        $journal = $transaction->transactionJournal;
+        /** @var Transaction $opposingTransaction */
+        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
+
+        if (null === $opposingTransaction) {
+            app('session')->flash('error', trans('firefly.account_missing_transaction', ['name' => $account->name, 'id' => $account->id]));
+            Log::error(sprintf('Expected an opposing transaction. Account #%d has none. BEEP, error.', $account->id));
+        }
+
+        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
     }
 }

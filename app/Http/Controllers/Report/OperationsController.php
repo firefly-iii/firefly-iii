@@ -113,7 +113,7 @@ class OperationsController extends Controller
         $entries = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type    = 'income-entry';
         try {
-        $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             $result = 'Could not render view.';
@@ -165,7 +165,7 @@ class OperationsController extends Controller
             )
         );
         try {
-        $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
+            $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             $result = 'Could not render view.';
