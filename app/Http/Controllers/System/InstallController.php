@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\System;
 use Artisan;
 use Exception;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
 use Laravel\Passport\Passport;
 use Log;
@@ -39,6 +40,7 @@ use phpseclib\Crypt\RSA;
  */
 class InstallController extends Controller
 {
+    use GetConfigurationData;
     /** @var string Forbidden error */
     public const FORBIDDEN_ERROR = 'Internal PHP function "proc_close" is disabled for your installation. Auto-migration is not possible.';
     /** @var string Basedir error */
@@ -178,29 +180,5 @@ class InstallController extends Controller
         return response()->json(['error' => false, 'message' => 'OK']);
     }
 
-    /**
-     * Check if forbidden functions are set.
-     *
-     * @return bool
-     */
-    protected function hasForbiddenFunctions(): bool // validate system config
-    {
-        $list      = ['proc_close'];
-        $forbidden = explode(',', ini_get('disable_functions'));
-        $trimmed   = array_map(
-            function (string $value) {
-                return trim($value);
-            }, $forbidden
-        );
-        foreach ($list as $entry) {
-            if (\in_array($entry, $trimmed, true)) {
-                Log::error('Method "%s" is FORBIDDEN, so the console command cannot be executed.');
-
-                return true;
-            }
-        }
-
-        return false;
-    }
 
 }

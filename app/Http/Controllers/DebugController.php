@@ -29,6 +29,7 @@ use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Log;
@@ -42,6 +43,8 @@ use Route as RouteFacade;
  */
 class DebugController extends Controller
 {
+    use GetConfigurationData;
+
     /**
      * HomeController constructor.
      */
@@ -241,54 +244,6 @@ class DebugController extends Controller
         return redirect(route('home'));
     }
 
-    /**
-     * All packages that are installed.
-     *
-     * @return array
-     */
-    protected function collectPackages(): array  // get configuration
-    {
-        $packages = [];
-        $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
-        if (file_exists($file)) {
-            // file exists!
-            $content = file_get_contents($file);
-            $json    = json_decode($content, true);
-            foreach ($json as $package) {
-                $packages[]
-                    = [
-                    'name'    => $package['name'],
-                    'version' => $package['version'],
-                ];
-            }
-        }
 
-        return $packages;
-    }
 
-    /**
-     * Some common combinations.
-     *
-     * @param int $value
-     *
-     * @return string
-     */
-    protected function errorReporting(int $value): string // get configuration
-    {
-        $array  = [
-            -1                                                             => 'ALL errors',
-            E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED                  => 'E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED',
-            E_ALL                                                          => 'E_ALL',
-            E_ALL & ~E_DEPRECATED & ~E_STRICT                              => 'E_ALL & ~E_DEPRECATED & ~E_STRICT',
-            E_ALL & ~E_NOTICE                                              => 'E_ALL & ~E_NOTICE',
-            E_ALL & ~E_NOTICE & ~E_STRICT                                  => 'E_ALL & ~E_NOTICE & ~E_STRICT',
-            E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR => 'E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR',
-        ];
-        $result = (string)$value;
-        if (isset($array[$value])) {
-            $result = $array[$value];
-        }
-
-        return $result;
-    }
 }
