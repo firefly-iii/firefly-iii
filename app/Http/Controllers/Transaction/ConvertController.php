@@ -181,7 +181,7 @@ class ConvertController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getDestinationAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account
+    protected function getDestinationAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account // helper for conversion. Get info from obj.
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository  = app(AccountRepositoryInterface::class);
@@ -242,7 +242,7 @@ class ConvertController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getSourceAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account
+    protected function getSourceAccount(TransactionJournal $journal, TransactionType $destinationType, array $data): Account // helper for conversion. Get info from obj.
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository  = app(AccountRepositoryInterface::class);

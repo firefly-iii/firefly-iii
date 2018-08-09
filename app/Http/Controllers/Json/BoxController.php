@@ -302,7 +302,7 @@ class BoxController extends Controller
      *
      * @return TransactionCurrency
      */
-    private function getCurrencyOrDefault(Account $account): TransactionCurrency
+    protected function getCurrencyOrDefault(Account $account): TransactionCurrency // get a preference
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -330,7 +330,7 @@ class BoxController extends Controller
      * @return bool
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function notInSessionRange(Carbon $date): bool
+    protected function notInSessionRange(Carbon $date): bool // Validate a preference
     {
         /** @var Carbon $start */
         $start = session('start', Carbon::now()->startOfMonth());

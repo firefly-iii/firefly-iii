@@ -423,7 +423,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function accountReportOptions(): string
+    protected function accountReportOptions(): string // render a view
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -451,7 +451,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function budgetReportOptions(): string
+    protected function budgetReportOptions(): string // render a view
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
@@ -471,7 +471,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function categoryReportOptions(): string
+    protected function categoryReportOptions(): string // render a view
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -491,7 +491,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function noReportOptions(): string
+    protected function noReportOptions(): string // render a view
     {
         try {
             $result = view('reports.options.no-options')->render();
@@ -508,7 +508,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function tagReportOptions(): string
+    protected function tagReportOptions(): string // render a view
     {
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);

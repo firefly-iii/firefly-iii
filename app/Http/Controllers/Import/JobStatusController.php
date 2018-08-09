@@ -231,7 +231,7 @@ class JobStatusController extends Controller
      *
      * @throws FireflyException
      */
-    private function storeTransactions(ImportJob $importJob): void
+    protected function storeTransactions(ImportJob $importJob): void // make object + execute
     {
         /** @var ImportArrayStorage $storage */
         $storage = app(ImportArrayStorage::class);

@@ -380,7 +380,7 @@ class ReconcileController extends Controller
      *
      * @throws FireflyException
      */
-    private function redirectToOriginalAccount(Account $account)
+    protected function redirectToOriginalAccount(Account $account) // user redirection + nav
     {
         /** @var Transaction $transaction */
         $transaction = $account->transactions()->first();

@@ -145,7 +145,7 @@ class NoCategoryController extends Controller
      * @return Collection
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getNoCategoryPeriodOverview(Carbon $theDate): Collection
+    protected function getNoCategoryPeriodOverview(Carbon $theDate): Collection // period overview method.
     {
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = app('preferences')->get('viewRange', '1M')->data;

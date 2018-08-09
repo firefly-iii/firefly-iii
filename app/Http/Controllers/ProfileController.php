@@ -450,7 +450,7 @@ class ProfileController extends Controller
      *
      * @throws ValidationException
      */
-    protected function validatePassword(User $user, string $current, string $new): bool
+    protected function validatePassword(User $user, string $current, string $new): bool //get request info
     {
         if (!Hash::check($current, $user->password)) {
             throw new ValidationException((string)trans('firefly.invalid_current_password'));
@@ -466,7 +466,7 @@ class ProfileController extends Controller
     /**
      * Create new RSA keys.
      */
-    private function createOAuthKeys(): void
+    protected function createOAuthKeys(): void // create stuff
     {
         $rsa  = new RSA();
         $keys = $rsa->createKey(4096);
@@ -492,7 +492,7 @@ class ProfileController extends Controller
      *
      * @return string
      */
-    private function getDomain(): string
+    protected function getDomain(): string // get request info
     {
         $url   = url()->to('/');
         $parts = parse_url($url);

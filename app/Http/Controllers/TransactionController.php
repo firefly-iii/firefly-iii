@@ -258,7 +258,7 @@ class TransactionController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getPeriodOverview(string $what, Carbon $date): Collection
+    protected function getPeriodOverview(string $what, Carbon $date): Collection // period overview for transactions.
     {
         $range   = app('preferences')->get('viewRange', '1M')->data;
         $first   = $this->repository->firstNull();
@@ -309,7 +309,7 @@ class TransactionController extends Controller
      *
      * @return array
      */
-    private function sumPerCurrency(Collection $collection): array
+    protected function sumPerCurrency(Collection $collection): array // helper for transactions (math, calculations)
     {
         $return = [];
         /** @var Transaction $transaction */

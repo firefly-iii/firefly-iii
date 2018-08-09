@@ -468,7 +468,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function getAccountNames(array $accountIds): array
+    protected function getAccountNames(array $accountIds): array // extract info from array.
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -494,7 +494,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function getBudgetedInPeriod(Budget $budget, Carbon $start, Carbon $end): array
+    protected function getBudgetedInPeriod(Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
         $key      = app('navigation')->preferredCarbonFormat($start, $end);
         $range    = app('navigation')->preferredRangeFormat($start, $end);
@@ -522,7 +522,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function getCategoryNames(array $categoryIds): array
+    protected function getCategoryNames(array $categoryIds): array // extract info from arrat
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
@@ -552,7 +552,7 @@ class BudgetController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array
+    protected function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
         $return = [];
         if (0 === $limits->count()) {
@@ -595,7 +595,7 @@ class BudgetController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      */
-    private function spentInPeriodMulti(Budget $budget, Collection $limits): array
+    protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
     {
         $return = [];
         $format = (string)trans('config.month_and_day');
@@ -643,7 +643,7 @@ class BudgetController extends Controller
      *
      * @return string
      */
-    private function spentInPeriodWithout(Carbon $start, Carbon $end): string
+    protected function spentInPeriodWithout(Carbon $start, Carbon $end): string // get data + augment with info
     {
         // collector
         /** @var JournalCollectorInterface $collector */

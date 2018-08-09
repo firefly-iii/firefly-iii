@@ -335,7 +335,7 @@ class ExpenseController extends Controller
      *
      * @return array
      */
-    protected function combineAccounts(Collection $accounts): array
+    protected function combineAccounts(Collection $accounts): array  // filter + group data
     {
         $combined = [];
         /** @var Account $expenseAccount */
@@ -367,7 +367,7 @@ class ExpenseController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -431,7 +431,7 @@ class ExpenseController extends Controller
      *
      * @return array
      */
-    protected function earnedInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    protected function earnedInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -478,7 +478,7 @@ class ExpenseController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -545,7 +545,7 @@ class ExpenseController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -609,7 +609,7 @@ class ExpenseController extends Controller
      *
      * @return array
      */
-    protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array
+    protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);

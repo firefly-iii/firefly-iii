@@ -206,7 +206,7 @@ class CreateController extends Controller
      *
      * @return array
      */
-    private function getActionsForBill(Bill $bill): array
+    protected function getActionsForBill(Bill $bill): array // get info and augument
     {
         try {
             $result = view(
@@ -237,7 +237,7 @@ class CreateController extends Controller
      *
      * @return array
      */
-    private function getTriggersForBill(Bill $bill): array
+    protected function getTriggersForBill(Bill $bill): array // get info and augument
     {
         $result   = [];
         $triggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];

@@ -248,7 +248,7 @@ class DebugController extends Controller
      *
      * @return string
      */
-    protected function errorReporting(int $value): string
+    protected function errorReporting(int $value): string // get configuration
     {
         $array  = [
             -1                                                             => 'ALL errors',
@@ -272,7 +272,7 @@ class DebugController extends Controller
      *
      * @return array
      */
-    private function collectPackages(): array
+    protected function collectPackages(): array  // get configuration
     {
         $packages = [];
         $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';

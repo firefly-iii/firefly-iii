@@ -183,7 +183,7 @@ class InstallController extends Controller
      *
      * @return bool
      */
-    private function hasForbiddenFunctions(): bool
+    protected function hasForbiddenFunctions(): bool // validate system config
     {
         $list      = ['proc_close'];
         $forbidden = explode(',', ini_get('disable_functions'));

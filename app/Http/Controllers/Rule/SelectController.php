@@ -263,7 +263,7 @@ class SelectController extends Controller
      *
      * @return array
      */
-    private function getValidTriggerList(TestRuleFormRequest $request): array
+    protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
     {
         $triggers = [];
         $data     = $request->get('rule_triggers');

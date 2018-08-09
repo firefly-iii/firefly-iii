@@ -228,7 +228,7 @@ class BudgetReportController extends Controller
      *
      * @return Collection
      */
-    private function filterBudgetLimits(Collection $budgetLimits, Budget $budget, Carbon $start, Carbon $end): Collection
+    protected function filterBudgetLimits(Collection $budgetLimits, Budget $budget, Carbon $start, Carbon $end): Collection // filter data
     {
         $set = $budgetLimits->filter(
             function (BudgetLimit $budgetLimit) use ($budget, $start, $end) {
@@ -257,7 +257,7 @@ class BudgetReportController extends Controller
      *
      * @return Collection
      */
-    private function getExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection
+    protected function getExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -278,7 +278,7 @@ class BudgetReportController extends Controller
      *
      * @return array
      */
-    private function groupByBudget(Collection $set): array
+    protected function groupByBudget(Collection $set): array // filter + group data
     {
         // group by category ID:
         $grouped = [];

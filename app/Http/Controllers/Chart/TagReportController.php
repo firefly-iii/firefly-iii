@@ -355,7 +355,7 @@ class TagReportController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    private function getExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection
+    protected function getExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection // get data + augument
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -382,7 +382,7 @@ class TagReportController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveParameterList)
      */
-    private function getIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection
+    protected function getIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection // get data + augument
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -402,7 +402,7 @@ class TagReportController extends Controller
      *
      * @return array
      */
-    private function groupByTag(Collection $set): array
+    protected function groupByTag(Collection $set): array // filter + group data
     {
         // group by category ID:
         $grouped = [];

@@ -117,7 +117,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function filterBudgetPeriodReport(array $data): array
+    protected function filterBudgetPeriodReport(array $data): array // helper function for period overview.
     {
         /**
          * @var int

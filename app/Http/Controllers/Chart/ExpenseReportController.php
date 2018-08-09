@@ -199,7 +199,7 @@ class ExpenseReportController extends Controller
      *
      * @return array
      */
-    protected function combineAccounts(Collection $accounts): array
+    protected function combineAccounts(Collection $accounts): array // filter + group data
     {
         $combined = [];
         /** @var Account $expenseAccount */
@@ -227,7 +227,7 @@ class ExpenseReportController extends Controller
      *
      * @return Collection
      */
-    private function getExpenses(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): Collection
+    protected function getExpenses(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): Collection // get data + augument
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -246,7 +246,7 @@ class ExpenseReportController extends Controller
      *
      * @return Collection
      */
-    private function getIncome(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): Collection
+    protected function getIncome(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): Collection // get data + augument
     {
         /** @var JournalCollectorInterface $collector */
         /** @var JournalCollectorInterface $collector */
@@ -263,7 +263,7 @@ class ExpenseReportController extends Controller
      *
      * @return array
      */
-    private function groupByName(Collection $set): array
+    protected function groupByName(Collection $set): array // filter + group data
     {
         // group by opposing account name.
         $grouped = [];

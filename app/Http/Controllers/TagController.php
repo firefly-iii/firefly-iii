@@ -304,7 +304,7 @@ class TagController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getPeriodOverview(Tag $tag): Collection
+    protected function getPeriodOverview(Tag $tag): Collection // period overview for tags.
     {
         // get first and last tag date from tag:
         $range = app('preferences')->get('viewRange', '1M')->data;

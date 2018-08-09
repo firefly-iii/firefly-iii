@@ -302,7 +302,7 @@ class CategoryReportController extends Controller
      *
      *
      */
-    private function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
+    protected function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection // get data + augument
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -327,7 +327,7 @@ class CategoryReportController extends Controller
      *
      * @return Collection
      */
-    private function getIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection
+    protected function getIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection // get data + augument
     {
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -347,7 +347,7 @@ class CategoryReportController extends Controller
      *
      * @return array
      */
-    private function groupByCategory(Collection $set): array
+    protected function groupByCategory(Collection $set): array // filter + group data
     {
         // group by category ID:
         $grouped = [];

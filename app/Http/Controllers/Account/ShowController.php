@@ -187,7 +187,7 @@ class ShowController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getPeriodOverview(Account $account, ?Carbon $date): Collection
+    protected function getPeriodOverview(Account $account, ?Carbon $date): Collection // period overview
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
         $start = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
@@ -252,7 +252,7 @@ class ShowController extends Controller
      *
      * @throws FireflyException
      */
-    private function redirectToOriginalAccount(Account $account)
+    protected function redirectToOriginalAccount(Account $account) // user redirection + nav
     {
         /** @var Transaction $transaction */
         $transaction = $account->transactions()->first();

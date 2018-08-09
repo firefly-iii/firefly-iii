@@ -222,11 +222,11 @@ class ReportController extends Controller
     /**
      * Sum up an array.
      *
-     * @param $array
+     * @param array $array
      *
      * @return string
      */
-    private function arraySum($array): string
+    protected function arraySum(array $array): string // filter + group data
     {
         $sum = '0';
         foreach ($array as $entry) {
@@ -247,7 +247,7 @@ class ReportController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getChartData(Collection $accounts, Carbon $start, Carbon $end): array
+    protected function getChartData(Collection $accounts, Carbon $start, Carbon $end): array // chart helper function
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.report.get-chart-data');

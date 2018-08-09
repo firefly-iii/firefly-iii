@@ -127,7 +127,7 @@ class IndexController extends Controller
      *
      * @return null|mixed
      */
-    protected function isInArray(array $array, int $entryId)
+    protected function isInArray(array $array, int $entryId) // helper for data (math, calculations)
     {
         $result = '0';
         if (isset($array[$entryId])) {

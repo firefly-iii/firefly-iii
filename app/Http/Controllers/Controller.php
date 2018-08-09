@@ -27,6 +27,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -42,7 +43,7 @@ use URL;
  */
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, UserNavigation;
 
     /** @var string Format for date and time. */
     protected $dateTimeFormat;
@@ -94,29 +95,7 @@ class Controller extends BaseController
         );
     }
 
-    /**
-     * Functionality:.
-     *
-     * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
-     *   will be returned.
-     * - If the remembered uri contains "javascript/" the remembered uri will not be returned but instead the index (/) will be returned.
-     *
-     * @param string $identifier
-     *
-     * @return string
-     */
-    protected function getPreviousUri(string $identifier): string
-    {
-        $uri = (string)session($identifier);
-        if (!(false === strpos($identifier, 'delete')) && !(false === strpos($uri, '/show/'))) {
-            $uri = $this->redirectUri;
-        }
-        if (!(false === strpos($uri, 'jscript'))) {
-            $uri = $this->redirectUri; // @codeCoverageIgnore
-        }
 
-        return $uri;
-    }
 
     /**
      * Is transaction opening balance?
@@ -125,53 +104,20 @@ class Controller extends BaseController
      *
      * @return bool
      */
-    protected function isOpeningBalance(TransactionJournal $journal): bool
+    protected function isOpeningBalance(TransactionJournal $journal): bool // get object info / validate input
     {
         return TransactionType::OPENING_BALANCE === $journal->transactionType->type;
     }
 
 
-    /**
-     * Redirect to asset account that transaction belongs to.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    protected function redirectToAccount(TransactionJournal $journal)
-    {
-        $valid        = [AccountType::DEFAULT, AccountType::ASSET];
-        $transactions = $journal->transactions;
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $account = $transaction->account;
-            if (\in_array($account->accountType->type, $valid, true)) {
-                return redirect(route('accounts.show', [$account->id]));
-            }
-        }
-        // @codeCoverageIgnoreStart
-        session()->flash('error', (string)trans('firefly.cannot_redirect_to_account'));
 
-        return redirect(route('index'));
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * Remember previous URL.
-     *
-     * @param string $identifier
-     */
-    protected function rememberPreviousUri(string $identifier): void
-    {
-        session()->put($identifier, URL::previous());
-    }
 
     /**
      * Get user's language.
      *
      * @return string
      */
-    private function getLanguage(): string
+    protected function getLanguage(): string // get preference
     {
         /** @var string $language */
         $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
@@ -182,7 +128,7 @@ class Controller extends BaseController
     /**
      * @return string
      */
-    private function getPageName(): string
+    protected function getPageName(): string // get request info
     {
         return str_replace('.', '_', Route::currentRouteName());
     }
@@ -192,7 +138,7 @@ class Controller extends BaseController
      *
      * @return string
      */
-    private function getSpecificPageName(): string
+    protected function getSpecificPageName(): string // get request info
     {
         return null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
     }
@@ -202,7 +148,7 @@ class Controller extends BaseController
      *
      * @return bool
      */
-    private function hasSeenDemo(): bool
+    protected function hasSeenDemo(): bool // get request info + get preference
     {
         $page         = $this->getPageName();
         $specificPage = $this->getSpecificPageName();

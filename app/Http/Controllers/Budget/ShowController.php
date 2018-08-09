@@ -211,7 +211,7 @@ class ShowController extends Controller
      *
      * @return Collection
      */
-    private function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection
+    protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
         // properties for cache
         $cache = new CacheProperties;
@@ -245,7 +245,7 @@ class ShowController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getPeriodOverview(): Collection
+    protected function getPeriodOverview(): Collection
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);

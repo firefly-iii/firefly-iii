@@ -165,7 +165,7 @@ class ShowController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getPeriodOverview(Category $category, Carbon $date): Collection
+    protected function getPeriodOverview(Category $category, Carbon $date): Collection // periodOverview method
     {
         $range    = app('preferences')->get('viewRange', '1M')->data;
         $first    = $this->journalRepos->firstNull();

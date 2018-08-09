@@ -173,7 +173,7 @@ class CategoryController extends Controller
      *
      * @return array
      */
-    private function filterReport(array $data): array
+    protected function filterReport(array $data): array // filter data from report.
     {
         foreach ($data as $categoryId => $set) {
             $sum = '0';

@@ -146,7 +146,7 @@ class JavascriptController extends Controller
      * @return array
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function getDateRangeConfig(): array
+    protected function getDateRangeConfig(): array // get configuration + get preferences.
     {
         $viewRange = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $start */

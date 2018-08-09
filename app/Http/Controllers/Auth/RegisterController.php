@@ -126,7 +126,7 @@ class RegisterController extends Controller
      *
      * @return \FireflyIII\User
      */
-    protected function create(array $data): User
+    protected function create(array $data): User // create object
     {
         return User::create(
             [

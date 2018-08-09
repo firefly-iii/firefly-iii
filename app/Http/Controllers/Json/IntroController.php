@@ -142,7 +142,7 @@ class IntroController
      *
      * @return array
      */
-    private function getBasicSteps(string $route): array
+    protected function getBasicSteps(string $route): array // get config values
     {
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
@@ -172,7 +172,7 @@ class IntroController
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getSpecificSteps(string $route, string $specificPage): array
+    protected function getSpecificSteps(string $route, string $specificPage): array // get config values
     {
         $steps    = [];
         $routeKey = '';

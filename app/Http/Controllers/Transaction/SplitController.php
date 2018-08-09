@@ -182,7 +182,7 @@ class SplitController extends Controller
      * @return array
      * @throws FireflyException
      */
-    private function arrayFromJournal(Request $request, TransactionJournal $journal): array
+    protected function arrayFromJournal(Request $request, TransactionJournal $journal): array // convert user input.
     {
         $sourceAccounts      = $this->repository->getJournalSourceAccounts($journal);
         $destinationAccounts = $this->repository->getJournalDestinationAccounts($journal);
@@ -232,7 +232,7 @@ class SplitController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getTransactionDataFromJournal(TransactionJournal $journal): array
+    protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
     {
         // use collector to collect transactions.
         $collector = app(JournalCollectorInterface::class);
@@ -274,7 +274,7 @@ class SplitController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function updateWithPrevious($array, $old): array
+    protected function updateWithPrevious($array, $old): array // update object with new info
     {
         if (0 === \count($old) || !isset($old['transactions'])) {
             return $array;

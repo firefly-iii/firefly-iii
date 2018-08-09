@@ -128,7 +128,7 @@ class NewUserController extends Controller
      *
      * @return bool
      */
-    private function createAssetAccount(NewUserFormRequest $request, TransactionCurrency $currency): bool
+    protected function createAssetAccount(NewUserFormRequest $request, TransactionCurrency $currency): bool // create stuff
     {
         $assetAccount = [
             'name'               => $request->get('bank_name'),
@@ -156,7 +156,7 @@ class NewUserController extends Controller
      *
      * @return bool
      */
-    private function createCashWalletAccount(TransactionCurrency $currency, string $language): bool
+    protected function createCashWalletAccount(TransactionCurrency $currency, string $language): bool // create stuff
     {
         $assetAccount = [
             'name'               => (string)trans('firefly.cash_wallet', [], $language),
@@ -185,7 +185,7 @@ class NewUserController extends Controller
      *
      * @return bool
      */
-    private function createSavingsAccount(NewUserFormRequest $request, TransactionCurrency $currency, string $language): bool
+    protected function createSavingsAccount(NewUserFormRequest $request, TransactionCurrency $currency, string $language): bool // create stuff
     {
         $savingsAccount = [
             'name'               => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),

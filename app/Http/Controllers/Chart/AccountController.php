@@ -457,7 +457,7 @@ class AccountController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array
+    protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
     {
         // chart properties for cache:
         $cache = new CacheProperties();
@@ -515,7 +515,7 @@ class AccountController extends Controller
      *
      * @return array
      */
-    private function getBudgetNames(array $budgetIds): array
+    protected function getBudgetNames(array $budgetIds): array // extract info from array.
     {
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
@@ -539,7 +539,7 @@ class AccountController extends Controller
      *
      * @return array
      */
-    private function getCategoryNames(array $categoryIds): array
+    protected function getCategoryNames(array $categoryIds): array // extract info from array.
     {
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);

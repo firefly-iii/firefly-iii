@@ -307,7 +307,7 @@ class CategoryController extends Controller
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    private function makePeriodChart(Category $category, Carbon $start, Carbon $end): array
+    protected function makePeriodChart(Category $category, Carbon $start, Carbon $end): array // chart helper method.
     {
         $cache = new CacheProperties;
         $cache->addProperty($start);

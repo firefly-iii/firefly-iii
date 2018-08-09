@@ -127,7 +127,7 @@ class ReportController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function balanceAmount(array $attributes): string
+    protected function balanceAmount(array $attributes): string // generate view for report.
     {
         $role    = (int)$attributes['role'];
         $budget  = $this->budgetRepository->findNull((int)$attributes['budgetId']);
@@ -165,7 +165,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function budgetSpentAmount(array $attributes): string
+    protected function budgetSpentAmount(array $attributes): string // generate view for report.
     {
         $budget = $this->budgetRepository->findNull((int)$attributes['budgetId']);
         if (null === $budget) {
@@ -189,7 +189,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function categoryEntry(array $attributes): string
+    protected function categoryEntry(array $attributes): string // generate view for report.
     {
         $category = $this->categoryRepository->findNull((int)$attributes['categoryId']);
 
@@ -215,7 +215,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function expenseEntry(array $attributes): string
+    protected function expenseEntry(array $attributes): string // generate view for report.
     {
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
@@ -241,7 +241,7 @@ class ReportController extends Controller
      *
      * @return string
      */
-    private function incomeEntry(array $attributes): string
+    protected function incomeEntry(array $attributes): string // generate view for report.
     {
         $account = $this->accountRepository->findNull((int)$attributes['accountId']);
 
@@ -267,7 +267,7 @@ class ReportController extends Controller
      *
      * @return array
      */
-    private function parseAttributes(array $attributes): array
+    protected function parseAttributes(array $attributes): array // parse input + return result
     {
         $attributes['location'] = $attributes['location'] ?? '';
         $attributes['accounts'] = AccountList::routeBinder($attributes['accounts'] ?? '', new Route('get', '', []));

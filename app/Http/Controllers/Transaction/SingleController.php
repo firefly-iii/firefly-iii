@@ -450,7 +450,7 @@ class SingleController extends Controller
      *
      * @return bool
      */
-    private function isSplitJournal(TransactionJournal $journal): bool
+    protected function isSplitJournal(TransactionJournal $journal): bool // validate objects
     {
         $count = $this->repository->countTransactions($journal);
 

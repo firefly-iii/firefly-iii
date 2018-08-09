@@ -170,7 +170,7 @@ class JobConfigurationController extends Controller
      *
      * @throws FireflyException
      */
-    private function makeConfigurator(ImportJob $importJob): JobConfigurationInterface
+    protected function makeConfigurator(ImportJob $importJob): JobConfigurationInterface // make object
     {
         $key       = sprintf('import.configuration.%s', $importJob->provider);
         $className = (string)config($key);

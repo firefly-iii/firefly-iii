@@ -76,7 +76,7 @@ class HelpController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getHelpText(string $route, string $language): string
+    protected function getHelpText(string $route, string $language): string // get from internet.
     {
         // get language and default variables.
         $content = '<p>' . trans('firefly.route_has_no_help') . '</p>';
