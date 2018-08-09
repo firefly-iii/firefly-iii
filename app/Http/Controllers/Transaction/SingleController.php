@@ -445,18 +445,4 @@ class SingleController extends Controller
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));
     }
-
-    /**
-     * Checks if journal is split.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    protected function isSplitJournal(TransactionJournal $journal): bool // validate objects
-    {
-        $count = $this->repository->countTransactions($journal);
-
-        return $count > 2;
-    }
 }
