@@ -150,7 +150,15 @@ class JournalUpdateService
             foreach ($journal->transactions as $transaction) {
                 $service->updateBudget($transaction, $budgetId);
             }
+            return $journal;
         }
+        // clear budget.
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $transaction->budgets()->sync([]);
+        }
+        // remove budgets from journal:
+        $journal->budgets()->sync([]);
 
         return $journal;
     }

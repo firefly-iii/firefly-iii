@@ -126,7 +126,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileControllerAccount
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testDeleteAccount(): void
     {
@@ -141,7 +141,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileControllerCode
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testDeleteCode(): void
     {
