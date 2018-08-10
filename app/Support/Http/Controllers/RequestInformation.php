@@ -44,8 +44,9 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Route as RouteFacade;
+use Symfony\Component\HttpFoundation\ParameterBag;
+
 /**
  * Trait RequestInformation
  *

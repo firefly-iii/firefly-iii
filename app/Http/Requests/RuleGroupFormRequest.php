@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 
 /**
  * Class RuleGroupFormRequest.
@@ -61,7 +60,7 @@ class RuleGroupFormRequest extends Request
      */
     public function rules(): array
     {
-        $titleRule  = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
+        $titleRule = 'required|between:1,100|uniqueObjectForUser:rule_groups,title';
 
         /** @var RuleGroup $ruleGroup */
         $ruleGroup = $this->route()->parameter('ruleGroup');

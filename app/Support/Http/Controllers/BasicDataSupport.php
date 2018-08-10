@@ -31,6 +31,23 @@ namespace FireflyIII\Support\Http\Controllers;
 trait BasicDataSupport
 {
     /**
+     * Sum up an array.
+     *
+     * @param array $array
+     *
+     * @return string
+     */
+    protected function arraySum(array $array): string // filter + group data
+    {
+        $sum = '0';
+        foreach ($array as $entry) {
+            $sum = bcadd($sum, $entry);
+        }
+
+        return $sum;
+    }
+
+    /**
      * Find the ID in a given array. Return '0' of not there (amount).
      *
      * @param array $array
@@ -46,22 +63,5 @@ trait BasicDataSupport
         }
 
         return $result;
-    }
-
-    /**
-     * Sum up an array.
-     *
-     * @param array $array
-     *
-     * @return string
-     */
-    protected function arraySum(array $array): string // filter + group data
-    {
-        $sum = '0';
-        foreach ($array as $entry) {
-            $sum = bcadd($sum, $entry);
-        }
-
-        return $sum;
     }
 }

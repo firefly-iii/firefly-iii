@@ -88,16 +88,6 @@ trait UserNavigation
     }
 
     /**
-     * Remember previous URL.
-     *
-     * @param string $identifier
-     */
-    protected function rememberPreviousUri(string $identifier): void
-    {
-        session()->put($identifier, URL::previous());
-    }
-
-    /**
      * @param Account $account
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
@@ -123,5 +113,15 @@ trait UserNavigation
         }
 
         return redirect(route('accounts.show', [$opposingTransaction->account_id]));
+    }
+
+    /**
+     * Remember previous URL.
+     *
+     * @param string $identifier
+     */
+    protected function rememberPreviousUri(string $identifier): void
+    {
+        session()->put($identifier, URL::previous());
     }
 }

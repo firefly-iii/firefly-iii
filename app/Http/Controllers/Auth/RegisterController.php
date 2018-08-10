@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Auth;
 
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\User;
 use Illuminate\Auth\Events\Registered;
@@ -42,7 +43,7 @@ use Illuminate\Http\Request;
  */
 class RegisterController extends Controller
 {
-    use RegistersUsers, RequestInformation;
+    use RegistersUsers, RequestInformation, CreateStuff;
 
     /**
      * Where to redirect users after registration.
@@ -81,7 +82,7 @@ class RegisterController extends Controller
         /** @noinspection PhpUndefinedMethodInspection */
         $this->validator($request->all())->validate();
 
-        event(new Registered($user = $this->create($request->all())));
+        event(new Registered($user = $this->createUser($request->all())));
 
         $this->guard()->login($user);
 
@@ -118,20 +119,4 @@ class RegisterController extends Controller
         return view('auth.register', compact('isDemoSite', 'email'));
     }
 
-    /**
-     * Create a new user instance after a valid registration.
-     *
-     * @param array $data
-     *
-     * @return \FireflyIII\User
-     */
-    protected function create(array $data): User // create object
-    {
-        return User::create(
-            [
-                'email'    => $data['email'],
-                'password' => bcrypt($data['password']),
-            ]
-        );
-    }
 }
