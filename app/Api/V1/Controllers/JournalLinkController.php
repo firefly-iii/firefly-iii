@@ -175,8 +175,7 @@ class JournalLinkController extends Controller
         $data['direction'] = 'inward';
 
         $journalLink = $this->repository->storeLink($data, $inward, $outward);
-
-        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'journal_links');
+        $resource    = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'journal_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

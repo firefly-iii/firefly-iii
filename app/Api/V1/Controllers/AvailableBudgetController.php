@@ -154,6 +154,9 @@ class AvailableBudgetController extends Controller
         $data     = $request->getAll();
         $currency = $this->currencyRepository->findNull($data['transaction_currency_id']);
         if (null === $currency) {
+            $this->currencyRepository->findByCodeNull($data['transaction_currency_code']);
+        }
+        if (null === $currency) {
             throw new FireflyException('Could not find the indicated currency.');
         }
         $availableBudget = $this->repository->setAvailableBudget($currency, $data['start_date'], $data['end_date'], $data['amount']);
