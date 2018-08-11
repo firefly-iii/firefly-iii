@@ -24,7 +24,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
@@ -87,12 +87,12 @@ class BillController extends Controller
     /**
      * Shows overview for a single bill.
      *
-     * @param JournalCollectorInterface $collector
+     * @param TransactionCollectorInterface $collector
      * @param Bill                      $bill
      *
      * @return JsonResponse
      */
-    public function single(JournalCollectorInterface $collector, Bill $bill): JsonResponse
+    public function single(TransactionCollectorInterface $collector, Bill $bill): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('chart.bill.single');
@@ -101,7 +101,7 @@ class BillController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getJournals();
+        $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getTransactions();
         /** @var Collection $results */
         $results   = $results->sortBy(
             function (Transaction $transaction) {

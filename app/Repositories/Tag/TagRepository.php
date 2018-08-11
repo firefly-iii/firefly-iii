@@ -24,7 +24,7 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use DB;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
@@ -73,11 +73,11 @@ class TagRepository implements TagRepositoryInterface
      */
     public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
 
         return (string)$set->sum('transaction_amount');
     }
@@ -191,11 +191,11 @@ class TagRepository implements TagRepositoryInterface
      */
     public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
 
         return (string)$set->sum('transaction_amount');
     }
@@ -231,8 +231,8 @@ class TagRepository implements TagRepositoryInterface
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
 
         if (null !== $start && null !== $end) {
             $collector->setRange($start, $end);
@@ -240,7 +240,7 @@ class TagRepository implements TagRepositoryInterface
 
         $collector->setAllAssetAccounts()->setTag($tag)->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getJournals();
+        $journals = $collector->getTransactions();
 
         $sums = [
             TransactionType::WITHDRAWAL => '0',

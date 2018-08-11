@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -110,7 +110,7 @@ class HomeControllerTest extends TestCase
     {
         // mock stuff
         $account       = factory(Account::class)->make();
-        $collector     = $this->mock(JournalCollectorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $billRepos     = $this->mock(BillRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -127,7 +127,7 @@ class HomeControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

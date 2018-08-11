@@ -25,8 +25,8 @@ namespace Tests\Unit\Import\Storage;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Import\Storage\ImportArrayStorage;
 use FireflyIII\Models\ImportJob;
@@ -91,10 +91,10 @@ class ImportArrayStorageTest extends TestCase
                          ->first();
 
         // get transfer as a collection, so the compare routine works.
-        $journalCollector = new JournalCollector();
-        $journalCollector->setUser($this->user());
-        $journalCollector->setJournals(new Collection([$transfer]));
-        $transferCollection = $journalCollector->withOpposingAccount()->getJournals();
+        $transactionCollector = new TransactionCollector;
+        $transactionCollector->setUser($this->user());
+        $transactionCollector->setJournals(new Collection([$transfer]));
+        $transferCollection = $transactionCollector->withOpposingAccount()->getTransactions();
 
         // make fake job
         $job = new ImportJob;
@@ -119,7 +119,7 @@ class ImportArrayStorageTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -148,7 +148,7 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->times(2)->andReturnSelf();
         $collector->shouldReceive('ignoreCache')->once()->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($transferCollection);
+        $collector->shouldReceive('getTransactions')->andReturn($transferCollection);
 
         // set journals for the return method.
         $collector->shouldReceive('setJournals')->andReturnSelf();
@@ -198,7 +198,7 @@ class ImportArrayStorageTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -288,7 +288,7 @@ class ImportArrayStorageTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -334,7 +334,7 @@ class ImportArrayStorageTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -389,7 +389,7 @@ class ImportArrayStorageTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -441,10 +441,10 @@ class ImportArrayStorageTest extends TestCase
                          ->first();
 
         // get transfer as a collection, so the compare routine works.
-        $journalCollector = new JournalCollector();
-        $journalCollector->setUser($this->user());
-        $journalCollector->setJournals(new Collection([$transfer]));
-        $transferCollection = $journalCollector->withOpposingAccount()->getJournals();
+        $transactionCollector = new TransactionCollector;
+        $transactionCollector->setUser($this->user());
+        $transactionCollector->setJournals(new Collection([$transfer]));
+        $transferCollection = $transactionCollector->withOpposingAccount()->getTransactions();
 
         // get some stuff:
         $tag                      = $this->user()->tags()->inRandomOrder()->first();
@@ -456,7 +456,7 @@ class ImportArrayStorageTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -480,7 +480,7 @@ class ImportArrayStorageTest extends TestCase
         $collector->shouldReceive('ignoreCache')->once()->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->times(2)->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->once()->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($transferCollection);
+        $collector->shouldReceive('getTransactions')->andReturn($transferCollection);
 
         // set journals for the return method.
         $collector->shouldReceive('setJournals')->andReturnSelf();

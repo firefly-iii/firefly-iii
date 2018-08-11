@@ -25,7 +25,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
@@ -514,11 +514,11 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // get all transactions:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         // loop transactions:
         /** @var Transaction $transaction */
@@ -587,12 +587,12 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL]);
         $collector->withoutBudget();
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $result       = [
             'entries' => [],
             'name'    => (string)trans('firefly.no_budget'),
@@ -658,8 +658,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
 
@@ -670,7 +670,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $collector->setAllAssetAccounts();
         }
 
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
 
         return (string)$set->sum('transaction_amount');
     }
@@ -684,8 +684,8 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
 
@@ -696,7 +696,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $collector->setAllAssetAccounts();
         }
 
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         $set = $set->filter(
             function (Transaction $transaction) {
                 if (bccomp($transaction->transaction_amount, '0') === -1) {

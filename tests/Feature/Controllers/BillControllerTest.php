@@ -24,7 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionJournal;
@@ -215,7 +215,7 @@ class BillControllerTest extends TestCase
         // mock stuff
         $attachHelper   = $this->mock(AttachmentHelperInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
-        $collector      = $this->mock(JournalCollectorInterface::class);
+        $collector      = $this->mock(TransactionCollectorInterface::class);
         $repository     = $this->mock(BillRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $repository->shouldReceive('getYearAverage')->andReturn('0');
@@ -230,7 +230,7 @@ class BillControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
         $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
         $repository->shouldReceive('setUser');
 

@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -132,12 +132,12 @@ class BoxController extends Controller
         $sums     = [];
 
         // collect income of user:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::DEPOSIT])
                   ->withOpposingAccount();
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $currencyId           = (int)$transaction->transaction_currency_id;
@@ -148,12 +148,12 @@ class BoxController extends Controller
         }
 
         // collect expenses
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->withOpposingAccount();
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $currencyId            = (int)$transaction->transaction_currency_id;

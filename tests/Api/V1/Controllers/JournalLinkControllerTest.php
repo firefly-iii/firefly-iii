@@ -25,7 +25,7 @@ namespace Tests\Api\V1\Controllers;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -87,7 +87,7 @@ class JournalLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -101,7 +101,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         // call API
         $response = $this->get('/api/v1/journal_links');
@@ -122,7 +122,7 @@ class JournalLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -132,7 +132,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         // call API
         $response = $this->get('/api/v1/journal_links/' . $journalLink->id);
@@ -155,7 +155,7 @@ class JournalLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -167,7 +167,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
         $repository->shouldReceive('storeLink')->once()->andReturn($journalLink);
@@ -203,7 +203,7 @@ class JournalLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -215,7 +215,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         $journalRepos->shouldReceive('findNull')->andReturn(null);
 
@@ -245,7 +245,7 @@ class JournalLinkControllerTest extends TestCase
         // mock repositories
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
@@ -264,7 +264,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
         $repository->shouldReceive('updateLink')->once()->andReturn($journalLink);
@@ -294,7 +294,7 @@ class JournalLinkControllerTest extends TestCase
         // mock repositories
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
@@ -313,7 +313,7 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         $journalRepos->shouldReceive('findNull')->andReturn(null);
 

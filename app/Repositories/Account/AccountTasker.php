@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -108,12 +108,12 @@ class AccountTasker implements AccountTaskerInterface
         // get all expenses for the given accounts in the given period!
         // also transfers!
         // get all transactions:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->withOpposingAccount();
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $transactions = $transactions->filter(
             function (Transaction $transaction) {
                 // return negative amounts only.
@@ -150,12 +150,12 @@ class AccountTasker implements AccountTaskerInterface
         // get all expenses for the given accounts in the given period!
         // also transfers!
         // get all transactions:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->withOpposingAccount();
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $transactions = $transactions->filter(
             function (Transaction $transaction) {
                 // return positive amounts only.

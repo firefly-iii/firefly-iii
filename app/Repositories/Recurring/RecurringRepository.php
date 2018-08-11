@@ -26,7 +26,7 @@ namespace FireflyIII\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
@@ -266,15 +266,15 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = ['id' => (int)$journalId];
         }
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($recurrence->user);
         $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
         // filter on specific journals.
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->setJournals(new Collection($search));
 
-        return $collector->getPaginatedJournals();
+        return $collector->getPaginatedTransactions();
     }
 
     /**
@@ -295,15 +295,15 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = ['id' => (int)$journalId];
         }
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($recurrence->user);
         $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->setJournals(new Collection($search));
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**

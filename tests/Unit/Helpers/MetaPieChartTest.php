@@ -24,7 +24,7 @@ namespace Tests\Unit\Helpers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Chart\MetaPieChart;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -60,7 +60,7 @@ class MetaPieChartTest extends TestCase
 
         // mock collector so the correct set of journals is returned:
         // then verify the results.
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(TransactionCollectorInterface::class);
 
         $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('removeFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
@@ -73,7 +73,7 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('setCategories')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($collection);
+        $collector->shouldReceive('getTransactions')->andReturn($collection);
 
         // mock all repositories:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -114,7 +114,7 @@ class MetaPieChartTest extends TestCase
 
         // mock collector so the correct set of journals is returned:
         // then verify the results.
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf()->once();
@@ -126,10 +126,10 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('setCategories')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($collection)->once();
+        $collector->shouldReceive('getTransactions')->andReturn($collection)->once();
 
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($others)->once();
+        $collector->shouldReceive('getTransactions')->andReturn($others)->once();
 
         // mock all repositories:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -172,7 +172,7 @@ class MetaPieChartTest extends TestCase
 
         // mock collector so the correct set of journals is returned:
         // then verify the results.
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(TransactionCollectorInterface::class);
 
         $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf()->once();
@@ -184,7 +184,7 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('setCategories')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($collection);
+        $collector->shouldReceive('getTransactions')->andReturn($collection);
 
         // mock all repositories:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -225,7 +225,7 @@ class MetaPieChartTest extends TestCase
 
         // mock collector so the correct set of journals is returned:
         // then verify the results.
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->withArgs([OpposingAccountFilter::class])->andReturnSelf()->once();
         $collector->shouldReceive('removeFilter')->withArgs([TransferFilter::class])->andReturnSelf()->once();
@@ -236,10 +236,10 @@ class MetaPieChartTest extends TestCase
         $collector->shouldReceive('setCategories')->andReturnSelf()->once();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT, TransactionType::TRANSFER]])->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($collection)->once();
+        $collector->shouldReceive('getTransactions')->andReturn($collection)->once();
 
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($others)->once();
+        $collector->shouldReceive('getTransactions')->andReturn($others)->once();
 
         // mock all repositories:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);

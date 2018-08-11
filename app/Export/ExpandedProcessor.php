@@ -32,7 +32,7 @@ use FireflyIII\Export\Collector\AttachmentCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Export\Exporter\ExporterInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\ExportJob;
@@ -107,13 +107,13 @@ class ExpandedProcessor implements ProcessorInterface
     public function collectJournals(): bool
     {
         // use journal collector thing.
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->job->user);
         $collector->setAccounts($this->accounts)->setRange($this->settings['startDate'], $this->settings['endDate'])
                   ->withOpposingAccount()->withBudgetInformation()->withCategoryInformation()
                   ->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         // get some more meta data for each entry:
         $ids         = $transactions->pluck('journal_id')->toArray();
         $assetIds    = $transactions->pluck('account_id')->toArray();

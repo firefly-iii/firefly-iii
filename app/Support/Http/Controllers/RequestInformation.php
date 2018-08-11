@@ -26,7 +26,7 @@ namespace FireflyIII\Support\Http\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Help\HelpInterface;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
@@ -219,12 +219,12 @@ trait RequestInformation
     protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
     {
         // use collector to collect transactions.
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
         $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getJournals();
+        $set          = $collector->getTransactions();
         $transactions = [];
         $transformer  = new TransactionTransformer(new ParameterBag);
         /** @var Transaction $transaction */

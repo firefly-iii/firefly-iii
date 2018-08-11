@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -100,18 +100,18 @@ trait PeriodOverview
         foreach ($dates as $currentDate) {
 
             // try a collector for income:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
                       ->withOpposingAccount();
-            $earned = (string)$collector->getJournals()->sum('transaction_amount');
+            $earned = (string)$collector->getTransactions()->sum('transaction_amount');
 
             // try a collector for expenses:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
                       ->withOpposingAccount();
-            $spent = (string)$collector->getJournals()->sum('transaction_amount');
+            $spent = (string)$collector->getTransactions()->sum('transaction_amount');
 
             $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
             /** @noinspection PhpUndefinedMethodInspection */
@@ -158,12 +158,12 @@ trait PeriodOverview
         }
         $dates = app('navigation')->blockPeriods($start, $end, $range);
         foreach ($dates as $date) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutBudget()->withOpposingAccount()->setTypes(
                 [TransactionType::WITHDRAWAL]
             );
-            $set      = $collector->getJournals();
+            $set      = $collector->getTransactions();
             $sum      = (string)($set->sum('transaction_amount') ?? '0');
             $journals = $set->count();
             /** @noinspection PhpUndefinedMethodInspection */
@@ -229,12 +229,12 @@ trait PeriodOverview
             $dateName = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
 
             // amount transferred
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
                       ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
             $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive((string)$collector->getJournals()->sum('transaction_amount'));
+            $transferred = app('steam')->positive((string)$collector->getTransactions()->sum('transaction_amount'));
 
             $entries->push(
                 [
@@ -342,11 +342,11 @@ trait PeriodOverview
         $dates = app('navigation')->blockPeriods($start, $date, $range);
 
         foreach ($dates as $currentDate) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withOpposingAccount()->setTypes($types);
             $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getJournals();
+            $journals = $collector->getTransactions();
 
             if ($journals->count() > 0) {
                 $sums     = $this->sumPerCurrency($journals);

@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
@@ -109,15 +109,15 @@ class TransactionController extends Controller
         $subTitle = (string)trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
         $periods  = $this->getTransactionPeriodOverview($what, $end);
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->addFilter(SplitIndicatorFilter::class);
         $collector->addFilter(CountAttachmentsFilter::class);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end'));
@@ -143,15 +143,15 @@ class TransactionController extends Controller
         $end          = new Carbon;
         $subTitle     = (string)trans('firefly.all_' . $what);
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->addFilter(SplitIndicatorFilter::class);
         $collector->addFilter(CountAttachmentsFilter::class);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'start', 'end'));
@@ -229,12 +229,12 @@ class TransactionController extends Controller
         $links     = $linkTypeRepository->getLinks($journal);
 
         // get transactions using the collector:
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
         $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getJournals();
+        $set          = $collector->getTransactions();
         $transactions = [];
         $transformer  = new TransactionTransformer(new ParameterBag);
         /** @var Transaction $transaction */

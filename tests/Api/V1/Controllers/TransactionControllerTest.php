@@ -25,8 +25,8 @@ namespace Tests\Api\V1\Controllers;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -1215,20 +1215,20 @@ class TransactionControllerTest extends TestCase
                      ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
         // get some transactions using the collector:
-        $collector = new JournalCollector;
+        $collector = new TransactionCollector;
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
         $collector->setLimit(5)->setPage(1);
         try {
-            $paginator = $collector->getPaginatedJournals();
+            $paginator = $collector->getPaginatedTransactions();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
 
         // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $collector  = $this->mock(JournalCollectorInterface::class);
+        $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
 
 
@@ -1241,7 +1241,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn($paginator);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
 
         // mock some calls:
@@ -1268,20 +1268,20 @@ class TransactionControllerTest extends TestCase
                      ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
         // get some transactions using the collector:
-        $collector = new JournalCollector;
+        $collector = new TransactionCollector;
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
         $collector->setLimit(5)->setPage(1);
         try {
-            $paginator = $collector->getPaginatedJournals();
+            $paginator = $collector->getPaginatedTransactions();
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
 
         // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $collector  = $this->mock(JournalCollectorInterface::class);
+        $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
@@ -1294,7 +1294,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn($paginator);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
 
         // mock some calls:
@@ -1346,17 +1346,17 @@ class TransactionControllerTest extends TestCase
 
 
         // get some transactions using the collector:
-        $collector = new JournalCollector;
+        $collector = new TransactionCollector;
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
         $collector->setJournals(new Collection([$journal]));
         $collector->setLimit(5)->setPage(1);
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $collector  = $this->mock(JournalCollectorInterface::class);
+        $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
@@ -1365,7 +1365,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setJournals')->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($transactions);
+        $collector->shouldReceive('getTransactions')->andReturn($transactions);
 
         // test API
         $response = $this->get('/api/v1/transactions/' . $transaction->id);
@@ -1413,17 +1413,17 @@ class TransactionControllerTest extends TestCase
 
 
         // get some transactions using the collector:
-        $collector = new JournalCollector;
+        $collector = new TransactionCollector;
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
         $collector->setJournals(new Collection([$journal]));
         $collector->setLimit(5)->setPage(1);
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $collector  = $this->mock(JournalCollectorInterface::class);
+        $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
@@ -1432,7 +1432,7 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setJournals')->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn($transactions);
+        $collector->shouldReceive('getTransactions')->andReturn($transactions);
 
         // test API
         $response = $this->get('/api/v1/transactions/' . $transaction->id);

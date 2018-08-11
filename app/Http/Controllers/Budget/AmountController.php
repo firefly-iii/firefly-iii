@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
@@ -161,19 +161,19 @@ class AmountController extends Controller
         $available          = bcmul($average, (string)$daysInPeriod);
 
         // amount earned in this period:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-        $earned = (string)$collector->getJournals()->sum('transaction_amount');
+        $earned = (string)$collector->getTransactions()->sum('transaction_amount');
         // Total amount earned divided by the number of days in the whole search period is the average amount earned per day.
         // This is multiplied by the number of days in the current period, showing you the average.
         $earnedAverage = bcmul(bcdiv($earned, (string)$daysInSearchPeriod), (string)$daysInPeriod);
 
         // amount spent in period
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-        $spent        = (string)$collector->getJournals()->sum('transaction_amount');
+        $spent        = (string)$collector->getTransactions()->sum('transaction_amount');
         $spentAverage = app('steam')->positive(bcmul(bcdiv($spent, (string)$daysInSearchPeriod), (string)$daysInPeriod));
 
         // the default suggestion is the money the user has spent, on average, over this period.

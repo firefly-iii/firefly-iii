@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
@@ -111,8 +111,8 @@ class Search implements SearchInterface
         $result    = new Collection();
         $startTime = microtime(true);
         do {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
@@ -185,12 +185,12 @@ class Search implements SearchInterface
     }
 
     /**
-     * @param JournalCollectorInterface $collector
+     * @param TransactionCollectorInterface $collector
      *
-     * @return JournalCollectorInterface
+     * @return TransactionCollectorInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
+    private function applyModifiers(TransactionCollectorInterface $collector): TransactionCollectorInterface
     {
         foreach ($this->modifiers as $modifier) {
             switch ($modifier['type']) {

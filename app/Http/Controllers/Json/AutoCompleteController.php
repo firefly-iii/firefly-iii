@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -68,14 +68,14 @@ class AutoCompleteController extends Controller
     /**
      * List of all journals.
      *
-     * @param JournalCollectorInterface $collector
+     * @param TransactionCollectorInterface $collector
      *
      * @return JsonResponse
      */
-    public function allTransactionJournals(JournalCollectorInterface $collector): JsonResponse
+    public function allTransactionJournals(TransactionCollectorInterface $collector): JsonResponse
     {
         $collector->setLimit(250)->setPage(1);
-        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
+        $return = array_unique($collector->getTransactions()->pluck('description')->toArray());
         sort($return);
 
         return response()->json($return);
@@ -173,12 +173,12 @@ class AutoCompleteController extends Controller
     /**
      * List of journals with their ID.
      *
-     * @param JournalCollectorInterface $collector
+     * @param TransactionCollectorInterface $collector
      * @param TransactionJournal        $except
      *
      * @return JsonResponse
      */
-    public function journalsWithId(JournalCollectorInterface $collector, TransactionJournal $except): JsonResponse
+    public function journalsWithId(TransactionCollectorInterface $collector, TransactionJournal $except): JsonResponse
     {
         $cache = new CacheProperties;
         $cache->addProperty('recent-journals-id');
@@ -188,7 +188,7 @@ class AutoCompleteController extends Controller
         }
 
         $collector->setLimit(400)->setPage(1);
-        $set    = $collector->getJournals()->pluck('description', 'journal_id')->toArray();
+        $set    = $collector->getTransactions()->pluck('description', 'journal_id')->toArray();
         $return = [];
         foreach ($set as $id => $description) {
             $id = (int)$id;
@@ -248,18 +248,18 @@ class AutoCompleteController extends Controller
     /**
      * List of journals by type.
      *
-     * @param JournalCollectorInterface $collector
+     * @param TransactionCollectorInterface $collector
      * @param string                    $what
      *
      * @return JsonResponse
      */
-    public function transactionJournals(JournalCollectorInterface $collector, string $what): JsonResponse
+    public function transactionJournals(TransactionCollectorInterface $collector, string $what): JsonResponse
     {
         $type  = config('firefly.transactionTypesByWhat.' . $what);
         $types = [$type];
 
         $collector->setTypes($types)->setLimit(250)->setPage(1);
-        $return = array_unique($collector->getJournals()->pluck('description')->toArray());
+        $return = array_unique($collector->getTransactions()->pluck('description')->toArray());
         sort($return);
 
         return response()->json($return);

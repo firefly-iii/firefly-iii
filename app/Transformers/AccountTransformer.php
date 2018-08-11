@@ -25,7 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -104,7 +104,7 @@ class AccountTransformer extends TransformerAbstract
         $pageSize = (int)app('preferences')->getForUser($account->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($account->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         if ($account->accountType->type === AccountType::ASSET) {
@@ -116,7 +116,7 @@ class AccountTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getJournals();
+        $journals = $collector->getTransactions();
 
         return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
     }

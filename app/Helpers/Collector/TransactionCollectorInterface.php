@@ -83,18 +83,18 @@ interface TransactionCollectorInterface
     public function count(): int;
 
     /**
-     * Get all journals.
+     * Get all transactions.
      *
      * @return Collection
      */
-    public function getJournals(): Collection;
+    public function getTransactions(): Collection;
 
     /**
      * Get a paginated result.
      *
      * @return LengthAwarePaginator
      */
-    public function getPaginatedJournals(): LengthAwarePaginator;
+    public function getPaginatedTransactions(): LengthAwarePaginator;
 
     /**
      * Get the query.
@@ -129,7 +129,7 @@ interface TransactionCollectorInterface
     public function setAccounts(Collection $accounts): TransactionCollectorInterface;
 
     /**
-     * Collect journals after a specific date.
+     * Collect transactions after a specific date.
      *
      * @param Carbon $after
      *
@@ -145,7 +145,7 @@ interface TransactionCollectorInterface
     public function setAllAssetAccounts(): TransactionCollectorInterface;
 
     /**
-     * Collect journals before a specific date.
+     * Collect transactions before a specific date.
      *
      * @param Carbon $before
      *

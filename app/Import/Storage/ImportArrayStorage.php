@@ -28,7 +28,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -226,7 +226,7 @@ class ImportArrayStorage
     private function getTransactionFromJournal($journal): Transaction
     {
         // collect transactions using the journal collector
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->importJob->user);
         $collector->withOpposingAccount();
         // filter on specific journals.
@@ -241,7 +241,7 @@ class ImportArrayStorage
             $collector->addFilter(NegativeAmountFilter::class);
         }
         /** @var Transaction $result */
-        $result = $collector->getJournals()->first();
+        $result = $collector->getTransactions()->first();
         Log::debug(sprintf('Return transaction #%d with journal id #%d based on ID #%d', $result->id, $result->journal_id, $journal->id));
 
         return $result;
@@ -255,15 +255,15 @@ class ImportArrayStorage
         Log::debug('Now in getTransfers()');
         app('preferences')->mark();
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->importJob->user);
         $collector->setAllAssetAccounts()
                   ->ignoreCache()
                   ->setTypes([TransactionType::TRANSFER])
                   ->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
-        $this->transfers = $collector->getJournals();
+        $this->transfers = $collector->getTransactions();
         Log::debug(sprintf('Count of getTransfers() is %d', $this->transfers->count()));
     }
 

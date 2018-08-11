@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -259,11 +259,11 @@ class ExpenseController extends Controller
             $all = $all->merge($combi);
         }
         // get all expenses in period:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts);
         $collector->setOpposingAccounts($all);
-        $set    = $collector->getJournals();
+        $set    = $collector->getTransactions();
         $sorted = $set->sortBy(
             function (Transaction $transaction) {
                 return (float)$transaction->transaction_amount;
@@ -308,11 +308,11 @@ class ExpenseController extends Controller
             $all = $all->merge($combi);
         }
         // get all expenses in period:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts);
         $collector->setOpposingAccounts($all);
-        $set    = $collector->getJournals();
+        $set    = $collector->getTransactions();
         $sorted = $set->sortByDesc(
             function (Transaction $transaction) {
                 return (float)$transaction->transaction_amount;
@@ -347,11 +347,11 @@ class ExpenseController extends Controller
      */
     protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing)->withCategoryInformation();
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         $sum = [];
         // loop to support multi currency
         foreach ($set as $transaction) {
@@ -411,11 +411,11 @@ class ExpenseController extends Controller
      */
     protected function earnedInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing);
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         $sum = [
             'grand_sum'    => '0',
             'per_currency' => [],
@@ -458,11 +458,11 @@ class ExpenseController extends Controller
      */
     protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing)->withBudgetInformation();
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         $sum = [];
         // loop to support multi currency
         foreach ($set as $transaction) {
@@ -525,11 +525,11 @@ class ExpenseController extends Controller
      */
     protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing)->withCategoryInformation();
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         $sum = [];
         // loop to support multi currency
         foreach ($set as $transaction) {
@@ -589,11 +589,11 @@ class ExpenseController extends Controller
      */
     protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
         $collector->setOpposingAccounts($opposing);
-        $set = $collector->getJournals();
+        $set = $collector->getTransactions();
         $sum = [
             'grand_sum'    => '0',
             'per_currency' => [],

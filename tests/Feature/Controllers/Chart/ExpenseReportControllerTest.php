@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -53,7 +53,7 @@ class ExpenseReportControllerTest extends TestCase
     {
         $expense           = $this->user()->accounts()->where('account_type_id', 4)->first();
         $generator         = $this->mock(GeneratorInterface::class);
-        $collector         = $this->mock(JournalCollectorInterface::class);
+        $collector         = $this->mock(TransactionCollectorInterface::class);
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
         $accountRepository->shouldReceive('findByName')->once()->andReturn($expense);
 
@@ -67,7 +67,7 @@ class ExpenseReportControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
         $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($set);
+        $collector->shouldReceive('getTransactions')->andReturn($set);
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

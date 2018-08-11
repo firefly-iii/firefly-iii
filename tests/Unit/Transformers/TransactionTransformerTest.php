@@ -25,7 +25,7 @@ namespace Tests\Unit\Transformers;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Account;
@@ -1453,7 +1453,7 @@ class TransactionTransformerTest extends TestCase
      */
     protected function getTransaction(TransactionJournal $journal): Transaction
     {
-        $collector = new JournalCollector;
+        $collector = new TransactionCollector;
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals(new Collection([$journal]));
@@ -1466,7 +1466,7 @@ class TransactionTransformerTest extends TestCase
         if (!($transactionType === TransactionType::WITHDRAWAL)) {
             $collector->addFilter(NegativeAmountFilter::class);
         }
-        $journals = $collector->getJournals();
+        $journals = $collector->getTransactions();
 
         return $journals->first();
     }

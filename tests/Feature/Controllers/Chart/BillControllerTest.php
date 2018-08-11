@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -72,11 +72,11 @@ class BillControllerTest extends TestCase
     {
         $transaction = factory(Transaction::class)->make();
         $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setBills')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]))->once();
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
 
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 

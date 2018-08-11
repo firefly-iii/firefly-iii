@@ -24,7 +24,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -124,9 +124,9 @@ class HomeController extends Controller
         $billCount      = $billRepository->getBills()->count();
 
         foreach ($accounts as $account) {
-            $collector = app(JournalCollectorInterface::class);
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
-            $set            = $collector->getJournals();
+            $set            = $collector->getTransactions();
             $transactions[] = [$set, $account];
         }
 

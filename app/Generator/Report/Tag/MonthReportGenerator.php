@@ -28,7 +28,7 @@ namespace FireflyIII\Generator\Report\Tag;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -207,8 +207,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             return $this->expenses;
         }
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setTags($this->tags)->withOpposingAccount();
@@ -217,7 +217,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(PositiveAmountFilter::class);
 
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         $this->expenses = $transactions;
 
@@ -235,8 +235,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             return $this->income;
         }
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->setTags($this->tags)->withOpposingAccount();
@@ -244,7 +244,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(NegativeAmountFilter::class);
 
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $this->income = $transactions;
 
         return $transactions;

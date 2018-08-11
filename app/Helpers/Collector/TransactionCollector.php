@@ -223,7 +223,7 @@ class TransactionCollector implements TransactionCollectorInterface
     public function count(): int
     {
         if (true === $this->run) {
-            throw new FireflyException('Cannot count after run in JournalCollector.');
+            throw new FireflyException('Cannot count after run in TransactionCollector.');
         }
 
         $countQuery = clone $this->query;
@@ -240,13 +240,10 @@ class TransactionCollector implements TransactionCollectorInterface
         return $this->count;
     }
 
-    /** @noinspection MultipleReturnStatementsInspection */
     /**
      * @return Collection
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function getJournals(): Collection
+    public function getTransactions(): Collection
     {
         $this->run = true;
 
@@ -301,16 +298,15 @@ class TransactionCollector implements TransactionCollectorInterface
 
     /**
      * @return LengthAwarePaginator
-     *
      * @throws FireflyException
      */
-    public function getPaginatedJournals(): LengthAwarePaginator
+    public function getPaginatedTransactions(): LengthAwarePaginator
     {
         if (true === $this->run) {
-            throw new FireflyException('Cannot getPaginatedJournals after run in JournalCollector.');
+            throw new FireflyException('Cannot getPaginatedTransactions after run in TransactionCollector.');
         }
         $this->count();
-        $set      = $this->getJournals();
+        $set      = $this->getTransactions();
         $journals = new LengthAwarePaginator($set, $this->count, $this->limit, $this->page);
 
         return $journals;
@@ -380,7 +376,7 @@ class TransactionCollector implements TransactionCollectorInterface
     {
         $afterStr = $after->format('Y-m-d 00:00:00');
         $this->query->where('transaction_journals.date', '>=', $afterStr);
-        Log::debug(sprintf('JournalCollector range is now after %s (inclusive)', $afterStr));
+        Log::debug(sprintf('TransactionCollector range is now after %s (inclusive)', $afterStr));
 
         return $this;
     }
@@ -416,7 +412,7 @@ class TransactionCollector implements TransactionCollectorInterface
     {
         $beforeStr = $before->format('Y-m-d 00:00:00');
         $this->query->where('transaction_journals.date', '<=', $beforeStr);
-        Log::debug(sprintf('JournalCollector range is now before %s (inclusive)', $beforeStr));
+        Log::debug(sprintf('TransactionCollector range is now before %s (inclusive)', $beforeStr));
 
         return $this;
     }
@@ -617,7 +613,7 @@ class TransactionCollector implements TransactionCollectorInterface
             $endStr   = $end->format('Y-m-d 23:59:59');
             $this->query->where('transaction_journals.date', '>=', $startStr);
             $this->query->where('transaction_journals.date', '<=', $endStr);
-            Log::debug(sprintf('JournalCollector range is now %s - %s (inclusive)', $startStr, $endStr));
+            Log::debug(sprintf('TransactionCollector range is now %s - %s (inclusive)', $startStr, $endStr));
         }
 
         return $this;
@@ -680,7 +676,7 @@ class TransactionCollector implements TransactionCollectorInterface
      */
     public function startQuery(): void
     {
-        Log::debug('journalCollector::startQuery');
+        Log::debug('TransactionCollector::startQuery');
         /** @var EloquentBuilder $query */
         $query = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
                             ->leftJoin('transaction_types', 'transaction_types.id', 'transaction_journals.transaction_type_id')
