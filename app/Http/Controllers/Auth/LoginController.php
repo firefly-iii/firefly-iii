@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use Carbon\Carbon;
 use DB;
 use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -129,6 +131,10 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
+
+        // run recurring job:
+        $job = new CreateRecurringTransactions(new Carbon);
+        $job->handle();
         $count = DB::table('users')->count();
         if (0 === $count) {
             return redirect(route('register')); // @codeCoverageIgnore
