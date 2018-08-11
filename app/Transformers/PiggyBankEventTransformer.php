@@ -105,9 +105,9 @@ class PiggyBankEventTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getTransactions();
+        $transactions = $collector->getTransactions();
 
-        return $this->item($journals->first(), new TransactionTransformer($this->parameters), 'transactions');
+        return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**

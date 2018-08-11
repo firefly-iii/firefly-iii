@@ -116,9 +116,9 @@ class AccountTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getTransactions();
+        $transactions = $collector->getTransactions();
 
-        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**

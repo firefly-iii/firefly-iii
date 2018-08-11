@@ -86,7 +86,7 @@ class ReportHelper implements ReportHelperInterface
                 /** @var TransactionCollectorInterface $collector */
                 $collector = app(TransactionCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBills($bills);
-                $journals = $collector->getTransactions();
+                $transactions = $collector->getTransactions();
 
                 $billLine = new BillLine;
                 $billLine->setBill($bill);
@@ -95,7 +95,7 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setMin((string)$bill->amount_min);
                 $billLine->setMax((string)$bill->amount_max);
                 $billLine->setHit(false);
-                $entry = $journals->filter(
+                $entry = $transactions->filter(
                     function (Transaction $transaction) use ($bill) {
                         return $transaction->bill_id === $bill->id;
                     }

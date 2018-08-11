@@ -240,7 +240,7 @@ class TagRepository implements TagRepositoryInterface
 
         $collector->setAllAssetAccounts()->setTag($tag)->withOpposingAccount();
         $collector->removeFilter(InternalTransferFilter::class);
-        $journals = $collector->getTransactions();
+        $transactions = $collector->getTransactions();
 
         $sums = [
             TransactionType::WITHDRAWAL => '0',
@@ -248,9 +248,9 @@ class TagRepository implements TagRepositoryInterface
             TransactionType::TRANSFER   => '0',
         ];
 
-        foreach ($journals as $journal) {
-            $amount = app('steam')->positive((string)$journal->transaction_amount);
-            $type   = $journal->transaction_type_type;
+        foreach ($transactions as $transaction) {
+            $amount = app('steam')->positive((string)$transaction->transaction_amount);
+            $type   = $transaction->transaction_type_type;
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
             }

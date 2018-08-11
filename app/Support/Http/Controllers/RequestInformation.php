@@ -148,8 +148,8 @@ trait RequestInformation
         }
 
         // get help content from Github:
-        $content = $help->getFromGitHub($route, $language);
-
+        $content          = $help->getFromGitHub($route, $language);
+        $originalLanguage = $language;
         // content will have 0 length when Github failed. Try en_US when it does:
         if ('' === $content) {
             $language = 'en_US';
@@ -161,8 +161,11 @@ trait RequestInformation
 
                 return $content;
             }
-
-            $content = $help->getFromGitHub($route, $language);
+            $baseHref   = route('index');
+            $helpString = sprintf(
+                '<p><em><img src="%s/images/flags/%s.png" /> %s</em></p>', $baseHref, $originalLanguage, (string)trans('firefly.help_translating')
+            );
+            $content    = $helpString . $help->getFromGitHub($route, $language);
         }
 
         // help still empty?

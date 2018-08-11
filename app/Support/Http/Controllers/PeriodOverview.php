@@ -346,12 +346,12 @@ trait PeriodOverview
             $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withOpposingAccount()->setTypes($types);
             $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getTransactions();
+            $transactions = $collector->getTransactions();
 
-            if ($journals->count() > 0) {
-                $sums     = $this->sumPerCurrency($journals);
+            if ($transactions->count() > 0) {
+                $sums     = $this->sumPerCurrency($transactions);
                 $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-                $sum      = $journals->sum('transaction_amount');
+                $sum      = $transactions->sum('transaction_amount');
                 /** @noinspection PhpUndefinedMethodInspection */
                 $entries->push(
                     [

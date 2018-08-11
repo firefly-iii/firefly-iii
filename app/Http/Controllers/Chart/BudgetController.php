@@ -601,10 +601,10 @@ class BudgetController extends Controller
         $collector = app(TransactionCollectorInterface::class);
         $types     = [TransactionType::WITHDRAWAL];
         $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
-        $journals = $collector->getTransactions();
+        $transactions = $collector->getTransactions();
         $sum      = '0';
         /** @var Transaction $entry */
-        foreach ($journals as $entry) {
+        foreach ($transactions as $entry) {
             $sum = bcadd($entry->transaction_amount, $sum);
         }
 

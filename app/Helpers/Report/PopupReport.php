@@ -138,12 +138,12 @@ class PopupReport implements PopupReportInterface
 
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
-        $journals = $collector->getTransactions();
+        $transactions = $collector->getTransactions();
 
         $report = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter for transfers and withdrawals TO the given $account
-        $journals = $journals->filter(
+        $transactions = $transactions->filter(
             function (Transaction $transaction) use ($report, $repository) {
                 // get the destinations:
                 $sources = $repository->getJournalSourceAccounts($transaction->transactionJournal)->pluck('id')->toArray();
@@ -153,7 +153,7 @@ class PopupReport implements PopupReportInterface
             }
         );
 
-        return $journals;
+        return $transactions;
     }
 
     /**
@@ -173,11 +173,11 @@ class PopupReport implements PopupReportInterface
         $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $journals = $collector->getTransactions();
+        $transactions = $collector->getTransactions();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter the set so the destinations outside of $attributes['accounts'] are not included.
-        $journals = $journals->filter(
+        $transactions = $transactions->filter(
             function (Transaction $transaction) use ($report, $repository) {
                 // get the destinations:
                 $journal      = $transaction->transactionJournal;
@@ -188,6 +188,6 @@ class PopupReport implements PopupReportInterface
             }
         );
 
-        return $journals;
+        return $transactions;
     }
 }
