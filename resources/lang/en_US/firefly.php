@@ -37,6 +37,7 @@ return [
     'cancel'                                     => 'Cancel',
     'from'                                       => 'From',
     'to'                                         => 'To',
+    'help_translating'                           => 'This help text is not yet available in your language. <a href="https://crowdin.com/project/firefly-iii-help">Will you help translate?</a>',
     'showEverything'                             => 'Show everything',
     'never'                                      => 'Never',
     'no_results_for_empty_search'                => 'Your search was empty, so nothing was found.',

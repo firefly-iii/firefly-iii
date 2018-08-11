@@ -164,7 +164,7 @@
                     <h3 class="box-title">{{ 'connected_journals'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals' %}
+                    {% include 'list.transactions' with {showCategories: true, showBudgets: true} %}
                 </div>
             </div>
         </div>

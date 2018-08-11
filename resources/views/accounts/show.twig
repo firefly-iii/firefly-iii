@@ -96,7 +96,11 @@
                     {% else %}
                         {% set showReconcile = false %}
                     {% endif %}
-                    {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true, showReconcile: showReconcile} %}
+                    {% if periods.count > 0 %}
+                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile} %}
+                    {% else %}
+                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile, showCategories: true, showBudgets: true, showBill:true} %}
+                    {% endif %}
                     <p>
                         <i class="fa fa-calendar"></i>
                         {% if periods.count > 0 %}
