@@ -32,7 +32,6 @@ use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
@@ -492,8 +491,6 @@ class BudgetController extends Controller
     }
 
 
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Get the expenses for a budget in a date range.
      *

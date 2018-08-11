@@ -31,6 +31,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -42,6 +43,8 @@ use Throwable;
  */
 class ExpenseController extends Controller
 {
+    use AugumentData;
+
     /** @var AccountRepositoryInterface The account repository */
     protected $accountRepository;
 
@@ -328,30 +331,7 @@ class ExpenseController extends Controller
         return $result;
     }
 
-    /**
-     * Combine accounts into a single list.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    protected function combineAccounts(Collection $accounts): array  // filter + group data
-    {
-        $combined = [];
-        /** @var Account $expenseAccount */
-        foreach ($accounts as $expenseAccount) {
-            $collection = new Collection;
-            $collection->push($expenseAccount);
 
-            $revenue = $this->accountRepository->findByName($expenseAccount->name, [AccountType::REVENUE]);
-            if (null !== $revenue) {
-                $collection->push($revenue);
-            }
-            $combined[$expenseAccount->name] = $collection;
-        }
-
-        return $combined;
-    }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**

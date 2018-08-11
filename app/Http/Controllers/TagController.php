@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;

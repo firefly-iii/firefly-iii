@@ -63,7 +63,7 @@ class CategoryController extends Controller
         $categories = $repository->getCategories();
         $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
-        $report     = $this->filterReport($data);
+        $report     = $this->filterPeriodReport($data);
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();

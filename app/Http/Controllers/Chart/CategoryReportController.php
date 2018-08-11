@@ -25,16 +25,11 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -45,6 +40,8 @@ use Illuminate\Support\Collection;
  */
 class CategoryReportController extends Controller
 {
+    use AugumentData, TransactionCalculation;
+
     /** @var GeneratorInterface Chart generation methods. */
     private $generator;
 
@@ -244,8 +241,8 @@ class CategoryReportController extends Controller
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd = $currentEnd->$function();
-            $expenses   = $this->groupByCategory($this->getExpenses($accounts, $categories, $currentStart, $currentEnd));
-            $income     = $this->groupByCategory($this->getIncome($accounts, $categories, $currentStart, $currentEnd));
+            $expenses   = $this->groupByCategory($this->getExpensesInCategories($accounts, $categories, $currentStart, $currentEnd));
+            $income     = $this->groupByCategory($this->getIncomeForCategories($accounts, $categories, $currentStart, $currentEnd));
             $label      = $currentStart->formatLocalized($format);
 
             /** @var Category $category */
@@ -289,77 +286,5 @@ class CategoryReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * Get all expenses in a period for categories.
-     *
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     *
-     *
-     */
-    protected function getExpenses(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection // get data + augument
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
 
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        return $collector->getJournals();
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * Get all income for a period and a bunch of categories.
-     *
-     * @param Collection $accounts
-     * @param Collection $categories
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    protected function getIncome(Collection $accounts, Collection $categories, Carbon $start, Carbon $end): Collection // get data + augument
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($categories)->withOpposingAccount();
-
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(NegativeAmountFilter::class);
-
-        return $collector->getJournals();
-    }
-
-    /**
-     * Group transactions by category.
-     *
-     * @param Collection $set
-     *
-     * @return array
-     */
-    protected function groupByCategory(Collection $set): array // filter + group data
-    {
-        // group by category ID:
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlCatId            = (int)$transaction->transaction_journal_category_id;
-            $transCatId           = (int)$transaction->transaction_category_id;
-            $categoryId           = max($jrnlCatId, $transCatId);
-            $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
-            $grouped[$categoryId] = bcadd($transaction->transaction_amount, $grouped[$categoryId]);
-        }
-
-        return $grouped;
-    }
 }

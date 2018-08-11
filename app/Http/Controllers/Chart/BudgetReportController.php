@@ -25,17 +25,12 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -48,7 +43,7 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportController extends Controller
 {
-    use AugumentData;
+    use AugumentData, TransactionCalculation;
     /** @var BudgetRepositoryInterface The budget repository */
     private $budgetRepository;
     /** @var GeneratorInterface Chart generation methods. */
@@ -187,7 +182,7 @@ class BudgetReportController extends Controller
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd = $currentEnd->$function();
-            $expenses   = $this->groupByBudget($this->getExpenses($accounts, $budgets, $currentStart, $currentEnd));
+            $expenses   = $this->groupByBudget($this->getExpensesInBudgets($accounts, $budgets, $currentStart, $currentEnd));
             $label      = $currentStart->formatLocalized($format);
 
             /** @var Budget $budget */
@@ -218,52 +213,4 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * Helper function that collects expenses for the given budgets.
-     *
-     * @param Collection $accounts
-     * @param Collection $budgets
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    protected function getExpenses(Collection $accounts, Collection $budgets, Carbon $start, Carbon $end): Collection // get data + augment with info
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setBudgets($budgets)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
-
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        return $collector->getJournals();
-    }
-
-    /**
-     * Helper function that groups expenses.
-     *
-     * @param Collection $set
-     *
-     * @return array
-     */
-    protected function groupByBudget(Collection $set): array // filter + group data
-    {
-        // group by category ID:
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlBudId          = (int)$transaction->transaction_journal_budget_id;
-            $transBudId         = (int)$transaction->transaction_budget_id;
-            $budgetId           = max($jrnlBudId, $transBudId);
-            $grouped[$budgetId] = $grouped[$budgetId] ?? '0';
-            $grouped[$budgetId] = bcadd($transaction->transaction_amount, $grouped[$budgetId]);
-        }
-
-        return $grouped;
-    }
 }

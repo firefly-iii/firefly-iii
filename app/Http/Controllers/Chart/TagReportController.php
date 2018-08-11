@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection MoreThanThreeArgumentsInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -26,16 +25,11 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\TransactionCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -44,6 +38,7 @@ use Illuminate\Support\Collection;
  */
 class TagReportController extends Controller
 {
+    use AugumentData, TransactionCalculation;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -239,8 +234,8 @@ class TagReportController extends Controller
         while ($currentStart < $end) {
             $currentEnd = clone $currentStart;
             $currentEnd = $currentEnd->$function();
-            $expenses   = $this->groupByTag($this->getExpenses($accounts, $tags, $currentStart, $currentEnd));
-            $income     = $this->groupByTag($this->getIncome($accounts, $tags, $currentStart, $currentEnd));
+            $expenses   = $this->groupByTag($this->getExpensesForTags($accounts, $tags, $currentStart, $currentEnd));
+            $income     = $this->groupByTag($this->getIncomeForTags($accounts, $tags, $currentStart, $currentEnd));
             $label      = $currentStart->formatLocalized($format);
 
             /** @var Tag $tag */
@@ -340,84 +335,5 @@ class TagReportController extends Controller
         $data      = $this->generator->pieChart($chartData);
 
         return response()->json($data);
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * Get all expenses by tags.
-     *
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    protected function getExpenses(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection // get data + augument
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setTags($tags)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
-
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        return $collector->getJournals();
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * Get all income by tag.
-     *
-     * @param Collection $accounts
-     * @param Collection $tags
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveParameterList)
-     */
-    protected function getIncome(Collection $accounts, Collection $tags, Carbon $start, Carbon $end): Collection // get data + augument
-    {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setTags($tags)->withOpposingAccount();
-
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(NegativeAmountFilter::class);
-
-        return $collector->getJournals();
-    }
-
-    /**
-     * Group transactions by tag.
-     *
-     * @param Collection $set
-     *
-     * @return array
-     */
-    protected function groupByTag(Collection $set): array // filter + group data
-    {
-        // group by category ID:
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $journal     = $transaction->transactionJournal;
-            $journalTags = $journal->tags;
-            /** @var Tag $journalTag */
-            foreach ($journalTags as $journalTag) {
-                $journalTagId           = $journalTag->id;
-                $grouped[$journalTagId] = $grouped[$journalTagId] ?? '0';
-                $grouped[$journalTagId] = bcadd($transaction->transaction_amount, $grouped[$journalTagId]);
-            }
-        }
-
-        return $grouped;
     }
 }
