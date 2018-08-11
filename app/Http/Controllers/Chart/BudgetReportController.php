@@ -31,11 +31,11 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -48,6 +48,7 @@ use Illuminate\Support\Collection;
  */
 class BudgetReportController extends Controller
 {
+    use AugumentData;
     /** @var BudgetRepositoryInterface The budget repository */
     private $budgetRepository;
     /** @var GeneratorInterface Chart generation methods. */
@@ -217,34 +218,6 @@ class BudgetReportController extends Controller
         return response()->json($data);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
-     * Returns the budget limits belonging to the given budget and valid on the given day.
-     *
-     * @param Collection $budgetLimits
-     * @param Budget     $budget
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return Collection
-     */
-    protected function filterBudgetLimits(Collection $budgetLimits, Budget $budget, Carbon $start, Carbon $end): Collection // filter data
-    {
-        $set = $budgetLimits->filter(
-            function (BudgetLimit $budgetLimit) use ($budget, $start, $end) {
-                if ($budgetLimit->budget_id === $budget->id
-                    && $budgetLimit->start_date->lte($start) // start of budget limit is on or before start
-                    && $budgetLimit->end_date->gte($end) // end of budget limit is on or after end
-                ) {
-                    return $budgetLimit;
-                }
-
-                return false;
-            }
-        );
-
-        return $set;
-    }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**

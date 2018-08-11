@@ -27,15 +27,14 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -49,7 +48,7 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
-    use DateCalculation;
+    use DateCalculation, AugumentData;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -461,29 +460,6 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Get the account names belonging to a bunch of account ID's.
-     *
-     * @param array $accountIds
-     *
-     * @return array
-     */
-    protected function getAccountNames(array $accountIds): array // extract info from array.
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::CASH]);
-        $grouped    = $accounts->groupBy('id')->toArray();
-        $return     = [];
-        foreach ($accountIds as $accountId) {
-            if (isset($grouped[$accountId])) {
-                $return[$accountId] = $grouped[$accountId][0]['name'];
-            }
-        }
-        $return[0] = '(no name)';
-
-        return $return;
-    }
 
     /**
      * Get the amount of money budgeted in a period.
@@ -515,29 +491,7 @@ class BudgetController extends Controller
         return $budgeted;
     }
 
-    /**
-     * Small helper function for some of the charts. Extracts category names from a bunch of ID's.
-     *
-     * @param array $categoryIds
-     *
-     * @return array
-     */
-    protected function getCategoryNames(array $categoryIds): array // extract info from arrat
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-        $grouped    = $categories->groupBy('id')->toArray();
-        $return     = [];
-        foreach ($categoryIds as $categoryId) {
-            if (isset($grouped[$categoryId])) {
-                $return[$categoryId] = $grouped[$categoryId][0]['name'];
-            }
-        }
-        $return[0] = (string)trans('firefly.noCategory');
 
-        return $return;
-    }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**

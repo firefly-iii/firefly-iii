@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -51,7 +52,7 @@ use View;
  */
 class TransactionController extends Controller
 {
-    use ModelInformation;
+    use ModelInformation, PeriodOverview;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
@@ -106,7 +107,7 @@ class TransactionController extends Controller
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
         $subTitle = (string)trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
-        $periods  = $this->getPeriodOverview($what, $end);
+        $periods  = $this->getTransactionPeriodOverview($what, $end);
 
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
@@ -248,98 +249,5 @@ class TransactionController extends Controller
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }
 
-    /**
-     * Get period overview for index.
-     *
-     * @param string $what
-     *
-     * @param Carbon $date
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function getPeriodOverview(string $what, Carbon $date): Collection // period overview for transactions.
-    {
-        $range   = app('preferences')->get('viewRange', '1M')->data;
-        $first   = $this->repository->firstNull();
-        $start   = Carbon::now()->subYear();
-        $types   = config('firefly.transactionTypesByWhat.' . $what);
-        $entries = new Collection;
-        if (null !== $first) {
-            $start = $first->date;
-        }
-        if ($date < $start) {
-            [$start, $date] = [$date, $start]; // @codeCoverageIgnore
-        }
 
-        /** @var array $dates */
-        $dates = app('navigation')->blockPeriods($start, $date, $range);
-
-        foreach ($dates as $currentDate) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withOpposingAccount()->setTypes($types);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getJournals();
-
-            if ($journals->count() > 0) {
-                $sums     = $this->sumPerCurrency($journals);
-                $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-                $sum      = $journals->sum('transaction_amount');
-                /** @noinspection PhpUndefinedMethodInspection */
-                $entries->push(
-                    [
-                        'name'  => $dateName,
-                        'sums'  => $sums,
-                        'sum'   => $sum,
-                        'start' => $currentDate['start']->format('Y-m-d'),
-                        'end'   => $currentDate['end']->format('Y-m-d'),
-                    ]
-                );
-            }
-        }
-
-        return $entries;
-    }
-
-    /**
-     * Collect the sum per currency.
-     *
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    protected function sumPerCurrency(Collection $collection): array // helper for transactions (math, calculations)
-    {
-        $return = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $currencyId = (int)$transaction->transaction_currency_id;
-
-            // save currency information:
-            if (!isset($return[$currencyId])) {
-                $currencySymbol      = $transaction->transaction_currency_symbol;
-                $decimalPlaces       = $transaction->transaction_currency_dp;
-                $currencyCode        = $transaction->transaction_currency_code;
-                $return[$currencyId] = [
-                    'currency' => [
-                        'id'     => $currencyId,
-                        'code'   => $currencyCode,
-                        'symbol' => $currencySymbol,
-                        'dp'     => $decimalPlaces,
-                    ],
-                    'sum'      => '0',
-                    'count'    => 0,
-                ];
-            }
-            // save amount:
-            $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $transaction->transaction_amount);
-            ++$return[$currencyId]['count'];
-        }
-        asort($return);
-
-        return $return;
-    }
 }

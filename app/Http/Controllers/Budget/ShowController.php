@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -43,6 +44,7 @@ use Illuminate\Support\Collection;
  */
 class ShowController extends Controller
 {
+    use PeriodOverview;
 
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
@@ -86,7 +88,7 @@ class ShowController extends Controller
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
-        $periods  = $this->getPeriodOverview();
+        $periods  = $this->getBudgetPeriodOverview();
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
 
@@ -236,57 +238,4 @@ class ShowController extends Controller
 
         return $set;
     }
-
-
-    /**
-     * Gets period overview used for budgets.
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function getPeriodOverview(): Collection
-    {
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $first      = $repository->firstNull();
-        $start      = null === $first ? new Carbon : $first->date;
-        $range      = app('preferences')->get('viewRange', '1M')->data;
-        $start      = app('navigation')->startOfPeriod($start, $range);
-        $end        = app('navigation')->endOfX(new Carbon, $range, null);
-        $entries    = new Collection;
-        $cache      = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('no-budget-period-entries');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        $dates = app('navigation')->blockPeriods($start, $end, $range);
-        foreach ($dates as $date) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutBudget()->withOpposingAccount()->setTypes(
-                [TransactionType::WITHDRAWAL]
-            );
-            $set      = $collector->getJournals();
-            $sum      = (string)($set->sum('transaction_amount') ?? '0');
-            $journals = $set->count();
-            /** @noinspection PhpUndefinedMethodInspection */
-            $dateStr  = $date['end']->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
-            $entries->push(
-                ['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end'],
-                 'start'  => $date['start'],
-                 'end'    => $date['end'],
-
-                ]
-            );
-        }
-        $cache->store($entries);
-
-        return $entries;
-    }
-
 }

@@ -32,10 +32,9 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -50,7 +49,7 @@ use Log;
  */
 class AccountController extends Controller
 {
-    use DateCalculation;
+    use DateCalculation, AugumentData;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
@@ -508,51 +507,4 @@ class AccountController extends Controller
         return $data;
     }
 
-    /**
-     * Get the budget names from a set of budget ID's.
-     *
-     * @param array $budgetIds
-     *
-     * @return array
-     */
-    protected function getBudgetNames(array $budgetIds): array // extract info from array.
-    {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budgets    = $repository->getBudgets();
-        $grouped    = $budgets->groupBy('id')->toArray();
-        $return     = [];
-        foreach ($budgetIds as $budgetId) {
-            if (isset($grouped[$budgetId])) {
-                $return[$budgetId] = $grouped[$budgetId][0]['name'];
-            }
-        }
-        $return[0] = (string)trans('firefly.no_budget');
-
-        return $return;
-    }
-
-    /**
-     * Get the category names from a set of category ID's. Small helper function for some of the charts.
-     *
-     * @param array $categoryIds
-     *
-     * @return array
-     */
-    protected function getCategoryNames(array $categoryIds): array // extract info from array.
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-        $grouped    = $categories->groupBy('id')->toArray();
-        $return     = [];
-        foreach ($categoryIds as $categoryId) {
-            if (isset($grouped[$categoryId])) {
-                $return[$categoryId] = $grouped[$categoryId][0]['name'];
-            }
-        }
-        $return[0] = (string)trans('firefly.noCategory');
-
-        return $return;
-    }
 }

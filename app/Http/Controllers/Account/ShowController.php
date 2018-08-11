@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -45,7 +46,7 @@ use View;
  */
 class ShowController extends Controller
 {
-    use UserNavigation;
+    use UserNavigation, PeriodOverview;
 
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
@@ -114,7 +115,7 @@ class ShowController extends Controller
         $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
         $subTitle = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $periods  = $this->getPeriodOverview($account, $end);
+        $periods  = $this->getAccountPeriodOverview($account, $end);
         /** @var JournalCollectorInterface $collector */
         $collector = app(JournalCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
@@ -172,76 +173,4 @@ class ShowController extends Controller
         );
     }
 
-
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
-     * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
-     * performance reasons.
-     *
-     * @param Account     $account the account involved
-     *
-     * @param Carbon|null $date
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function getPeriodOverview(Account $account, ?Carbon $date): Collection // period overview
-    {
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $start = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
-        $end   = $date ?? new Carbon;
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
-        }
-
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('account-show-period-entries');
-        $cache->addProperty($account->id);
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        /** @var array $dates */
-        $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-        // loop dates
-        foreach ($dates as $currentDate) {
-
-            // try a collector for income:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
-                      ->withOpposingAccount();
-            $earned = (string)$collector->getJournals()->sum('transaction_amount');
-
-            // try a collector for expenses:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
-                      ->withOpposingAccount();
-            $spent = (string)$collector->getJournals()->sum('transaction_amount');
-
-            $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-            /** @noinspection PhpUndefinedMethodInspection */
-            $entries->push(
-                [
-                    'name'   => $dateName,
-                    'spent'  => $spent,
-                    'earned' => $earned,
-                    'start'  => $currentDate['start']->format('Y-m-d'),
-                    'end'    => $currentDate['end']->format('Y-m-d'),
-                ]
-            );
-        }
-
-        $cache->store($entries);
-
-        return $entries;
-    }
 }

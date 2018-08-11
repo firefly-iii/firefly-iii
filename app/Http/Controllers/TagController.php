@@ -30,6 +30,7 @@ use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -39,6 +40,8 @@ use Illuminate\Support\Collection;
  */
 class TagController extends Controller
 {
+    use PeriodOverview;
+
     /** @var TagRepositoryInterface The tag repository. */
     protected $repository;
 
@@ -190,7 +193,7 @@ class TagController extends Controller
             'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                    'end' => $end->formatLocalized($this->monthAndDayFormat),]
         );
-        $periods      = $this->getPeriodOverview($tag);
+        $periods      = $this->getTagPeriodOverview($tag);
         $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
         /** @var JournalCollectorInterface $collector */
@@ -295,59 +298,5 @@ class TagController extends Controller
         return $redirect;
     }
 
-    /**
-     * Get overview of periods for tag.
-     *
-     * @param Tag $tag
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function getPeriodOverview(Tag $tag): Collection // period overview for tags.
-    {
-        // get first and last tag date from tag:
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        /** @var Carbon $end */
-        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag) ?? new Carbon, $range, null);
-        $start = $this->repository->firstUseDate($tag) ?? new Carbon;
 
-
-        // properties for entries with their amounts.
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('tag.entries');
-        $cache->addProperty($tag->id);
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $collection = new Collection;
-        $currentEnd = clone $end;
-        // while end larger or equal to start
-        while ($currentEnd >= $start) {
-            $currentStart = app('navigation')->startOfPeriod($currentEnd, $range);
-
-            // get expenses and what-not in this period and this tag.
-            $arr = [
-                'string' => $end->format('Y-m-d'),
-                'name'   => app('navigation')->periodShow($currentEnd, $range),
-                'start'  => clone $currentStart,
-                'end'    => clone $currentEnd,
-                'date'   => clone $end,
-                'spent'  => $this->repository->spentInPeriod($tag, $currentStart, $currentEnd),
-                'earned' => $this->repository->earnedInPeriod($tag, $currentStart, $currentEnd),
-            ];
-            $collection->push($arr);
-
-            /** @var Carbon $currentEnd */
-            $currentEnd = clone $currentStart;
-            $currentEnd->subDay();
-        }
-        $cache->store($collection);
-
-        return $collection;
-    }
 }
