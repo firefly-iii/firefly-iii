@@ -30,7 +30,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 /**
  * Trait ModelInformation
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait ModelInformation
 {

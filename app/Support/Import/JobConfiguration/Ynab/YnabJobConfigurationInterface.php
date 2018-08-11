@@ -29,7 +29,6 @@ use Illuminate\Support\MessageBag;
 /**
  * Interface YnabJobConfigurationInterface
  *
- * @package FireflyIII\Support\Import\JobConfiguration\Ynab
  */
 interface YnabJobConfigurationInterface
 {

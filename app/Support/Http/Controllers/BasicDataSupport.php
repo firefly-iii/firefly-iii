@@ -26,7 +26,6 @@ namespace FireflyIII\Support\Http\Controllers;
 /**
  * Trait BasicDataSupport
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait BasicDataSupport
 {

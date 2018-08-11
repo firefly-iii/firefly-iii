@@ -32,7 +32,6 @@ use Throwable;
 /**
  * Trait RuleManagement
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait RuleManagement
 {

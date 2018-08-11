@@ -56,7 +56,6 @@ use Illuminate\Support\Collection;
  * - start (Carbon), end (Carbon), title (string), spent (string), earned (string), transferred (string)
  *
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait PeriodOverview
 {

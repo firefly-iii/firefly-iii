@@ -39,7 +39,6 @@ use Throwable;
 /**
  * Trait RenderPartialViews
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait RenderPartialViews
 {

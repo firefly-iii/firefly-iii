@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
 /**
  * Trait TransactionCalculation
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait TransactionCalculation
 {

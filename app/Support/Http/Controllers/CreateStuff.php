@@ -40,7 +40,6 @@ use phpseclib\Crypt\RSA;
 /**
  * Trait CreateStuff
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait CreateStuff
 {

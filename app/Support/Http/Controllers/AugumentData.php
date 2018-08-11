@@ -38,7 +38,6 @@ use Illuminate\Support\Collection;
 /**
  * Trait AugumentData
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait AugumentData
 {

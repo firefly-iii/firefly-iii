@@ -30,7 +30,6 @@ use Log;
 /**
  * Trait GetConfigurationData
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait GetConfigurationData
 {

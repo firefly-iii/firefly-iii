@@ -50,7 +50,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Trait RequestInformation
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait RequestInformation
 {

@@ -34,7 +34,6 @@ use URL;
 /**
  * Trait UserNavigation
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait UserNavigation
 {
