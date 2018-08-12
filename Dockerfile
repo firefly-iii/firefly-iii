@@ -19,6 +19,10 @@ VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 # Make sure we own Firefly III directory
 RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
 
+# Add cron job
+RUN docker-service enable cron
+RUN docker-cronjob '* * * * * application cd /app/ && php artisan schedule:run'
+
 # Run composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer install --prefer-dist --no-dev --no-scripts --no-suggest
