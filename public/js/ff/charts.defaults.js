@@ -85,7 +85,7 @@ var defaultChartOptions = {
                     display: false
                 },
                 ticks: {
-                    // Include a dollar sign in the ticks
+                    // break ticks when too long.
                     callback: function (value, index, values) {
                         return formatLabel(value, 20);
                     }

@@ -200,7 +200,10 @@ class BillController extends Controller
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
             function (Bill $bill) use ($transformer) {
-                return $transformer->transform($bill);
+                $return             = $transformer->transform($bill);
+                $return['currency'] = $bill->transactionCurrency;
+
+                return $return;
             }
         );
         $bills = $bills->sortBy(
@@ -291,8 +294,9 @@ class BillController extends Controller
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
-        $resource = new Item($bill, new BillTransformer($parameters), 'bill');
-        $object   = $manager->createData($resource)->toArray();
+        $resource                   = new Item($bill, new BillTransformer($parameters), 'bill');
+        $object                     = $manager->createData($resource)->toArray();
+        $object['data']['currency'] = $bill->transactionCurrency;
 
         // use collector:
         /** @var TransactionCollectorInterface $collector */

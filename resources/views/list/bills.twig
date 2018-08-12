@@ -57,8 +57,8 @@
                 {% endif %}
             </td>
             <td data-value="{{ entry.amount_min }}" style="text-align: right;">
-                <span style="margin-right:5px;" title="{{ entry.amount_min|formatAmountPlain }} - {{ entry.amount_max|formatAmountPlain }}">
-                    ~ {{ ((entry.amount_max+ entry.amount_min)/2)|formatAmount }}
+                <span style="margin-right:5px;">
+                    ~ {{ formatAmountByCurrency(entry.currency, (entry.amount_max + entry.amount_min)/2) }}
                 </span>
             </td>
 
@@ -127,12 +127,12 @@
         <td style="text-align:right;" colspan="3">{{ 'sum'|_ }} ({{ 'active_bills_only'|_ }})</td>
         <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                {{ sum_min|formatAmount }}
+                {{ formatAmountBySymbol(sum_min,'¤') }}
             </span>
         </td>
         <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                {{ sum_max|formatAmount }}
+                {{ formatAmountBySymbol(sum_max,'¤') }}
             </span>
         </td>
         <td colspan="5">&nbsp;</td>
@@ -151,12 +151,12 @@
         <td style="text-align:right;" colspan="3">{{ 'average_per_bill'|_ }} ({{ 'active_bills_only'|_ }})</td>
         <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                {{ avg_min|formatAmount }}
+                {{ formatAmountBySymbol(avg_min,'¤') }}
             </span>
         </td>
         <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                {{ avg_max|formatAmount }}
+                {{ formatAmountBySymbol(avg_max,'¤') }}
             </span>
         </td>
         <td colspan="6">&nbsp;</td>
@@ -165,7 +165,7 @@
         <td style="text-align:right;" colspan="3">{{ 'expected_total'|_ }} ({{ 'active_bills_only'|_ }})</td>
         <td style="text-align:right;" colspan="1">
             <span style="margin-right:5px;">
-                ~ {{ expected_total|formatAmount }}
+                ~ {{ formatAmountBySymbol(expected_total,'¤') }}
             </span>
         </td>
         <td colspan="6">&nbsp;</td>

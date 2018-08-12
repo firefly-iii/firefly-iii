@@ -202,7 +202,6 @@ function columnChart(URI, container) {
     var chartType = 'bar';
 
     drawAChart(URI, container, chartType, options, colorData);
-
 }
 
 /**

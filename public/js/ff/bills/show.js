@@ -22,6 +22,7 @@
 
 $(function () {
       "use strict";
+      configAccounting(billCurrencySymbol);
       columnChart(billUri, 'bill-overview');
   }
 );

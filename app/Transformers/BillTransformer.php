@@ -174,6 +174,7 @@ class BillTransformer extends TransformerAbstract
             'name'                => $bill->name,
             'currency_id'         => $bill->transaction_currency_id,
             'currency_code'       => $bill->transactionCurrency->code,
+            'currency_symbol'     => $bill->transactionCurrency->symbol,
             'amount_min'          => round((float)$bill->amount_min, 2),
             'amount_max'          => round((float)$bill->amount_max, 2),
             'date'                => $bill->date->format('Y-m-d'),
