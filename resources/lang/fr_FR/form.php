@@ -84,9 +84,9 @@ return [
     'verification'                => 'Vérification',
     'api_key'                     => 'Clé API',
     'remember_me'                 => 'Se souvenir de moi',
-    'liability_type_id'           => 'Liability type',
-    'interest'                    => 'Interest',
-    'interest_period'             => 'Interest period',
+    'liability_type_id'           => 'Type de passif',
+    'interest'                    => 'Intérêt',
+    'interest_period'             => 'Période d’intérêt',
 
     'source_account_asset'        => 'Compte source (compte d\'actif)',
     'destination_account_expense' => 'Compte de destination (compte de dépenses)',
@@ -240,6 +240,6 @@ return [
     'repetitions'             => 'Répétitions',
     'calendar'                => 'Calendrier',
     'weekend'                 => 'Week-end',
-    'client_secret'           => 'Client secret',
+    'client_secret'           => 'Clé secrète',
 
 ];

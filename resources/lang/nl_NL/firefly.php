@@ -37,6 +37,7 @@ return [
     'cancel'                                     => 'Annuleren',
     'from'                                       => 'Van',
     'to'                                         => 'Tot',
+    'help_translating'                           => 'Deze helptekst is nog niet beschikbaar in het Nederlands. <a href="https://crowdin.com/project/firefly-iii-help">Help je mee vertalen?</a>',
     'showEverything'                             => 'Laat alles zien',
     'never'                                      => 'Nooit',
     'no_results_for_empty_search'                => 'Je zoekopdracht was leeg, dus niets werd gevonden.',
@@ -677,6 +678,7 @@ return [
     'list_inactive_rule'                      => 'inactieve regel',
 
     // accounts:
+    'account_missing_transaction'             => 'Rekening #:id (":name") kan je niet bekijken in Firefly III, maar het origineel is kwijt.',
     'details_for_asset'                       => 'Overzicht voor betaalrekening ":name"',
     'details_for_expense'                     => 'Overzicht voor crediteur ":name"',
     'details_for_revenue'                     => 'Overzicht voor debiteur ":name"',
@@ -759,6 +761,7 @@ return [
     'already_cleared_transactions'            => 'Al afgestemde transacties (:count)',
     'submitted_end_balance'                   => 'Ingevoerd eindsaldo',
     'initial_balance_description'             => 'Startsaldo voor ":account"',
+    'interest_calc_'                          => 'onbekend',
     'interest_calc_daily'                     => 'Per dag',
     'interest_calc_monthly'                   => 'Per maand',
     'interest_calc_yearly'                    => 'Per jaar',

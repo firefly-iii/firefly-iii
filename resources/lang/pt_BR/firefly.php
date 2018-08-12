@@ -37,6 +37,7 @@ return [
     'cancel'                                     => 'Cancelar',
     'from'                                       => 'De',
     'to'                                         => 'Até',
+    'help_translating'                           => 'This help text is not yet available in your language. <a href="https://crowdin.com/project/firefly-iii-help">Will you help translate?</a>',
     'showEverything'                             => 'Mostrar tudo',
     'never'                                      => 'Nunca',
     'no_results_for_empty_search'                => 'Sua pesquisa estava vazia, então nada foi encontrado.',
@@ -677,6 +678,7 @@ return [
     'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
+    'account_missing_transaction'             => 'Account #:id (":name") cannot be viewed directly, but Firefly is missing redirect information.',
     'details_for_asset'                       => 'Detalhes para a conta de ativo ":name"',
     'details_for_expense'                     => 'Detalhes para a conta de despesas ":name"',
     'details_for_revenue'                     => 'Detalhes para a conta de receitas ":name"',
@@ -759,6 +761,7 @@ return [
     'already_cleared_transactions'            => 'Transações já removidas (:count)',
     'submitted_end_balance'                   => 'Saldo final enviado',
     'initial_balance_description'             => 'Saldo inicial para ":account"',
+    'interest_calc_'                          => 'unknown',
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',

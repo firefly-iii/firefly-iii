@@ -37,6 +37,7 @@ return [
     'cancel'                                     => 'Membatalkan',
     'from'                                       => 'Dari',
     'to'                                         => 'Untuk',
+    'help_translating'                           => 'This help text is not yet available in your language. <a href="https://crowdin.com/project/firefly-iii-help">Will you help translate?</a>',
     'showEverything'                             => 'Tunjukkan semuanya',
     'never'                                      => 'Tak pernah',
     'no_results_for_empty_search'                => 'Pencarian Anda kosong, jadi tidak ada yang ditemukan.',
@@ -677,6 +678,7 @@ return [
     'list_inactive_rule'                      => 'inactive rule',
 
     // accounts:
+    'account_missing_transaction'             => 'Account #:id (":name") cannot be viewed directly, but Firefly is missing redirect information.',
     'details_for_asset'                       => 'Rincian akun aset ":name"',
     'details_for_expense'                     => 'Rincian untuk akun biaya ":name"',
     'details_for_revenue'                     => 'Rincian untuk akun pendapatan ":name"',
@@ -759,6 +761,7 @@ return [
     'already_cleared_transactions'            => 'Sudah dibersihkan transaksi (:count)',
     'submitted_end_balance'                   => 'Saldo akhir yang dikirim',
     'initial_balance_description'             => 'Initial balance for ":account"',
+    'interest_calc_'                          => 'unknown',
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',
