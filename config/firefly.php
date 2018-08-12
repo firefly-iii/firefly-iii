@@ -307,6 +307,7 @@ return [
         'fromCurrencyCode'  => \FireflyIII\Support\Binder\CurrencyCode::class,
         'toCurrencyCode'    => \FireflyIII\Support\Binder\CurrencyCode::class,
         'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
+        'cliToken'          => \FireflyIII\Support\Binder\CLIToken::class,
 
 
     ],

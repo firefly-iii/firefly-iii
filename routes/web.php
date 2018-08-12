@@ -33,6 +33,12 @@ Route::group(
 }
 );
 
+Route::group(
+    ['middleware' => 'binders-only','namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], function () {
+    Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
+}
+);
+
 /**
  * These routes only work when the user is NOT logged in.
  */

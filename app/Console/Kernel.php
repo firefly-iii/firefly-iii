@@ -52,6 +52,18 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->job(new CreateRecurringTransactions(new Carbon))->daily();
+        $schedule->call(function() {
+            echo "\n";
+            echo '------------';
+            echo "\n";
+            echo wordwrap('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions here:');
+            echo "\n";
+            echo 'https://firefly-iii.readthedocs.io/en/latest/';
+            echo "\n\n";
+            echo 'Disable this cron job!';
+            echo "\n";
+            echo '------------';
+            echo "\n";
+        })->everyMinute();
     }
 }
