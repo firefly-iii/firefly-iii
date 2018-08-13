@@ -17,11 +17,11 @@ RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 U
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 
 # Make sure we own Firefly III directory
-RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
+RUN chown -R $APPLICATION_GID:$APPLICATION_UID /var/www && chmod -R 775 $FIREFLY_PATH/storage
 
 # Add cron job
 RUN docker-service enable cron
-RUN docker-cronjob '* * * * * application cd /app/ && php artisan schedule:run'
+RUN docker-cronjob '0 3 * * * application cd /app/ && php artisan firefly:cron'
 
 # Run composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
