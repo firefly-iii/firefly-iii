@@ -33,6 +33,7 @@ use Log;
  */
 trait GetConfigurationData
 {
+
     /**
      * All packages that are installed.
      *
@@ -246,5 +247,22 @@ trait GetConfigurationData
         }
 
         return false;
+    }
+
+    /**
+     *
+     */
+    protected function verifyRecurringCronJob(): void
+    {
+        $config   = app('fireflyconfig')->get('last_rt_job', 0);
+        $lastTime = (int)$config->data;
+        $now      = time();
+        if (0 === $lastTime) {
+            request()->session()->flash('info', trans('firefly.recurring_never_cron'));
+            return;
+        }
+        if($now - $lastTime > 129600) {
+            request()->session()->flash('warning', trans('firefly.recurring_cron_long_ago'));
+        }
     }
 }

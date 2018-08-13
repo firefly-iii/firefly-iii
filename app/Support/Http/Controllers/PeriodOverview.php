@@ -59,8 +59,6 @@ use Illuminate\Support\Collection;
  */
 trait PeriodOverview
 {
-
-
     /**
      * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for

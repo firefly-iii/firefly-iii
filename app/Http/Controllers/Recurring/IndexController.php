@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -41,6 +42,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class IndexController extends Controller
 {
+    use GetConfigurationData;
     /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
@@ -96,6 +98,8 @@ class IndexController extends Controller
         }
         $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
         $paginator->setPath(route('recurring.index'));
+
+        $this->verifyRecurringCronJob();
 
         return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
     }
