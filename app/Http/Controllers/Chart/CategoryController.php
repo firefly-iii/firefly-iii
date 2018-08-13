@@ -79,12 +79,14 @@ class CategoryController extends Controller
         $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
         $chartData = [
             [
-                'label'   => (string)trans('firefly.spent'),
-                'entries' => [], 'type' => 'bar',
+                'label'           => (string)trans('firefly.spent'),
+                'entries'         => [], 'type' => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ],
             [
-                'label'   => (string)trans('firefly.earned'),
-                'entries' => [], 'type' => 'bar',
+                'label'           => (string)trans('firefly.earned'),
+                'entries'         => [], 'type' => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
             ],
             [
                 'label'   => (string)trans('firefly.sum'),
@@ -184,14 +186,16 @@ class CategoryController extends Controller
         $periods    = app('navigation')->listOfPeriods($start, $end);
         $chartData  = [
             [
-                'label'   => (string)trans('firefly.spent'),
-                'entries' => [],
-                'type'    => 'bar',
+                'label'           => (string)trans('firefly.spent'),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ],
             [
-                'label'   => (string)trans('firefly.earned'),
-                'entries' => [],
-                'type'    => 'bar',
+                'label'           => (string)trans('firefly.earned'),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
             ],
             [
                 'label'   => (string)trans('firefly.sum'),
@@ -245,14 +249,16 @@ class CategoryController extends Controller
         $periods    = app('navigation')->listOfPeriods($start, $end);
         $chartData  = [
             [
-                'label'   => (string)trans('firefly.spent'),
-                'entries' => [],
-                'type'    => 'bar',
+                'label'           => (string)trans('firefly.spent'),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ],
             [
-                'label'   => (string)trans('firefly.earned'),
-                'entries' => [],
-                'type'    => 'bar',
+                'label'           => (string)trans('firefly.earned'),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
             ],
             [
                 'label'   => (string)trans('firefly.sum'),
@@ -328,14 +334,16 @@ class CategoryController extends Controller
         // chart data
         $chartData = [
             [
-                'label'   => (string)trans('firefly.spent'),
-                'entries' => [],
-                'type'    => 'bar',
+                'label'           => (string)trans('firefly.spent'),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
             ],
             [
-                'label'   => (string)trans('firefly.earned'),
-                'entries' => [],
-                'type'    => 'bar',
+                'label'           => (string)trans('firefly.earned'),
+                'entries'         => [],
+                'type'            => 'bar',
+                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
             ],
             [
                 'label'   => (string)trans('firefly.sum'),
