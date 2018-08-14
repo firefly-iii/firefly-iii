@@ -78,7 +78,7 @@
                         {% if budgets|length > 1 %}
                             {{ ExpandedForm.select('budget_id', budgets, null) }}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', budgets, null, {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {{ ExpandedForm.select('budget_id', budgets, null, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
                         {% endif %}
 
                         {# CATEGORY ALWAYS #}
