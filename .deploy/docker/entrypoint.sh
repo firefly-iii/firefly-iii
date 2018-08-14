@@ -26,3 +26,6 @@ cat .env.docker | envsubst > .env
 composer dump-autoload
 php artisan package:discover
 php artisan firefly:instructions install
+service rsyslog start
+service cron start
+exec apache2-foreground
