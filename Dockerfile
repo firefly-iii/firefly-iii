@@ -5,9 +5,9 @@ FROM php:7.1-apache
 ARG CORES
 ENV CORES ${CORES:-1}
 
-ENV FIREFLY_PATH /app
-WORKDIR $FIREFLY_PATH
-ADD . $FIREFLY_PATH
+ENV FIREFLY_PATH /var/www/firefly-iii)
+ENV CURL_VERSION 7.60.0
+ENV OPENSSL_VERSION 1.1.1-pre6
 
 # install packages
 RUN apt-get update -y && \
@@ -83,6 +83,10 @@ COPY ./.deploy/docker/apache-firefly.conf /etc/apache2/sites-available/000-defau
 
 # Make sure we own Firefly III directory
 RUN chown -R $APPLICATION_GID:$APPLICATION_UID /var/www && chmod -R 775 $FIREFLY_PATH/storage
+
+# Copy in Firefly Source
+WORKDIR $FIREFLY_PATH
+ADD . $FIREFLY_PATH
 
 # Run composer
 ENV COMPOSER_ALLOW_SUPERUSER 1
