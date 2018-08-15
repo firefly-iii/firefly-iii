@@ -5,7 +5,7 @@ FROM php:7.1-apache
 ARG CORES
 ENV CORES ${CORES:-1}
 
-ENV FIREFLY_PATH /var/www/firefly-iii)
+ENV FIREFLY_PATH /var/www/firefly-iii/
 ENV CURL_VERSION 7.60.0
 ENV OPENSSL_VERSION 1.1.1-pre6
 
