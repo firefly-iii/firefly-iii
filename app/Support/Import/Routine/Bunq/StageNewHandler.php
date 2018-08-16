@@ -150,6 +150,7 @@ class StageNewHandler
             'balance'       => $mab->getBalance(),
             'status'        => $mab->getStatus(),
             'type'          => 'MonetaryAccountBank',
+            'iban'          => null,
             'aliases'       => [],
         ];
 
@@ -168,6 +169,11 @@ class StageNewHandler
                     'name'  => $alias->getName(),
                     'value' => $alias->getValue(),
                 ];
+
+                // store IBAN alias separately:
+                if ('IBAN' === $alias->getType()) {
+                    $return['iban'] = $alias->getValue();
+                }
             }
         }
 

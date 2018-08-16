@@ -81,6 +81,17 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $mapping    = $data['account_mapping'] ?? [];
         $applyRules = 1 === (int)$data['apply_rules'];
         $final      = [];
+
+        /*
+         * $ibanToAsset is used to map bunq IBAN's to Firefly III asset accounts. The array is structured like this:
+         * 12BUNQ123456.. => 1,
+         * 12BUNQ928811.. => 4,
+         *
+         * And contains the bunq asset account iban (left) and the FF3 asset ID (right).
+         *
+         * This is used to properly map transfers.
+         */
+        $ibanToAsset = [];
         if (0 === \count($accounts)) {
             throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
@@ -95,11 +106,16 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
             $localId = (int)$localId;
 
             // validate each
-            $bunqId         = $this->validBunqAccount($bunqId);
-            $accountId      = $this->validLocalAccount($localId);
+            $bunqId    = $this->validBunqAccount($bunqId);
+            $accountId = $this->validLocalAccount($localId);
+            $bunqIban  = $this->getBunqIban($bunqId);
+            if (null !== $bunqIban) {
+                $ibanToAsset[$bunqIban] = $accountId;
+            }
             $final[$bunqId] = $accountId;
         }
         $config['mapping']     = $final;
+        $config['bunq-iban']   = $ibanToAsset;
         $config['apply-rules'] = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
 
@@ -167,6 +183,25 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $this->repository->setUser($importJob->user);
         $this->currencyRepository->setUser($importJob->user);
         $this->accountRepository->setUser($importJob->user);
+    }
+
+    /**
+     * @param int $bunqId
+     *
+     * @return null|string
+     */
+    private function getBunqIban(int $bunqId): ?string
+    {
+        $config   = $this->repository->getConfiguration($this->importJob);
+        $accounts = $config['accounts'] ?? [];
+        /** @var array $bunqAccount */
+        foreach ($accounts as $bunqAccount) {
+            if ((int)$bunqAccount['id'] === $bunqId) {
+                return $bunqAccount['iban'] ?? null;
+            }
+        }
+
+        return null;
     }
 
     /**

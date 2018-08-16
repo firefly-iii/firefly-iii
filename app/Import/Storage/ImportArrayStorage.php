@@ -160,7 +160,7 @@ class ImportArrayStorage
         $array = $this->importJob->transactions;
         $count = 0;
         foreach ($array as $index => $transaction) {
-            if (strtolower(TransactionType::TRANSFER) === $transaction['type']) {
+            if (strtolower(TransactionType::TRANSFER) === strtolower($transaction['type'])) {
                 $count++;
                 Log::debug(sprintf('Row #%d is a transfer, increase count to %d', $index + 1, $count));
             }
@@ -479,7 +479,7 @@ class ImportArrayStorage
             $collection->push($journal);
 
             // add to collection of transfers, if necessary:
-            if ('transfer' === $store['type']) {
+            if ('transfer' === strtolower($store['type'])) {
                 $transaction = $this->getTransactionFromJournal($journal);
                 Log::debug('We just stored a transfer, so add the journal to the list of transfers.');
                 $this->transfers->push($transaction);
@@ -505,7 +505,7 @@ class ImportArrayStorage
     private function transferExists(array $transaction): bool
     {
         Log::debug('Check if is a double transfer.');
-        if (strtolower(TransactionType::TRANSFER) !== $transaction['type']) {
+        if (strtolower(TransactionType::TRANSFER) !== strtolower($transaction['type'])) {
             Log::debug(sprintf('Is a %s, not a transfer so no.', $transaction['type']));
 
             return false;
