@@ -360,7 +360,8 @@ class MetaPieChart implements MetaPieChartInterface
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
                 $object           = $repository->findNull((int)$objectId);
-                $names[$objectId] = $object->name ?? $object->tag;
+                $name             = null === $object ? '(no name)' : $object->name;
+                $names[$objectId] = $name ?? $object->tag;
             }
             $amount                       = app('steam')->positive($amount);
             $this->total                  = bcadd($this->total, $amount);
