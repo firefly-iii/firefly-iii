@@ -28,6 +28,7 @@ namespace FireflyIII\Handlers\Events;
 use FireflyConfig;
 use FireflyIII\Events\RequestedVersionCheckStatus;
 use FireflyIII\Helpers\Update\UpdateTrait;
+use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
@@ -50,9 +51,11 @@ class VersionCheckEventHandler
      */
     public function checkForUpdates(RequestedVersionCheckStatus $event): void
     {
+        Log::debug('Now in checkForUpdates()');
         // in Sandstorm, cannot check for updates:
         $sandstorm = 1 === (int)getenv('SANDSTORM');
         if (true === $sandstorm) {
+            Log::debug('This is Sandstorm instance, done.');
             return; // @codeCoverageIgnore
         }
 
@@ -61,18 +64,19 @@ class VersionCheckEventHandler
         /** @var User $user */
         $user = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
+            Log::debug('User is not admin, done.');
             return;
         }
 
+        /** @var Configuration $lastCheckTime */
         $lastCheckTime = FireflyConfig::get('last_update_check', time());
         $now           = time();
         $diff          = $now - $lastCheckTime->data;
-        Log::debug(sprintf('Difference is %d seconds.', $diff));
+        Log::debug(sprintf('Last check time is %d, current time is %d, difference is %d', $lastCheckTime->data, $now, $diff));
         if ($diff < 604800) {
             Log::debug(sprintf('Checked for updates less than a week ago (on %s).', date('Y-m-d H:i:s', $lastCheckTime->data)));
 
-            //return;
-
+            return;
         }
         // last check time was more than a week ago.
         Log::debug('Have not checked for a new version in a week!');

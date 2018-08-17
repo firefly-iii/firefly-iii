@@ -136,8 +136,8 @@ class DebugController extends Controller
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv         = env('APP_ENV', '');
         $appDebug       = var_export(env('APP_DEBUG', false), true);
-        $logChannel         = env('LOG_CHANNEL', '');
-        $appLogLevel    = env('APP_LOG_LEVEL', '');
+        $logChannel     = env('LOG_CHANNEL', '');
+        $appLogLevel    = env('APP_LOG_LEVEL', 'info');
         $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
 
