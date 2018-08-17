@@ -323,7 +323,7 @@ class ReportController extends Controller
         $accounts   = implode(',', $request->getAccountList()->pluck('id')->toArray());
         $categories = implode(',', $request->getCategoryList()->pluck('id')->toArray());
         $budgets    = implode(',', $request->getBudgetList()->pluck('id')->toArray());
-        $tags       = implode(',', $request->getTagList()->pluck('tag')->toArray());
+        $tags       = implode(',', $request->getTagList()->pluck('id')->toArray());
         $expense    = implode(',', $request->getExpenseList()->pluck('id')->toArray());
         $uri        = route('reports.index');
 

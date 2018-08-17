@@ -213,6 +213,12 @@ class ReportFormRequest extends Request
                 $tag = $repository->findByTag($tagTag);
                 if (null !== $tag) {
                     $collection->push($tag);
+                    continue;
+                }
+                $tag = $repository->findNull((int)$tagTag);
+                if (null !== $tag) {
+                    $collection->push($tag);
+                    continue;
                 }
             }
         }
