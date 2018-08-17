@@ -136,7 +136,7 @@ class DebugController extends Controller
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv         = env('APP_ENV', '');
         $appDebug       = var_export(env('APP_DEBUG', false), true);
-        $appLog         = env('APP_LOG', '');
+        $logChannel         = env('LOG_CHANNEL', '');
         $appLogLevel    = env('APP_LOG_LEVEL', '');
         $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
@@ -175,7 +175,7 @@ class DebugController extends Controller
 
         return view(
             'debug', compact(
-                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'appLog', 'appLogLevel', 'now', 'packages', 'drivers',
+                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'packages', 'drivers',
                        'currentDriver',
                        'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm',
                        'trustedProxies',

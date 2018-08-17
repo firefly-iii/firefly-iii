@@ -32,8 +32,6 @@ return [
     'fallback_locale' => 'en_US',
     'key'             => env('APP_KEY'),
     'cipher'          => 'AES-256-CBC',
-    'log'             => envNonEmpty('APP_LOG', 'errorlog'),
-    'log_level'       => envNonEmpty('APP_LOG_LEVEL', 'info'),
     'providers'       => [
 
         /*
