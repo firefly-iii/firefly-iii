@@ -47,11 +47,11 @@ class AvailableBudgetRequest extends Request
     public function getAll(): array
     {
         return [
-            'transaction_currency_id'   => $this->integer('currency_id'),
-            'transaction_currency_code' => $this->string('currency_code'),
-            'amount'                    => $this->string('amount'),
-            'start_date'                => $this->date('start_date'),
-            'end_date'                  => $this->date('end_date'),
+            'currency_id'   => $this->integer('currency_id'),
+            'currency_code' => $this->string('currency_code'),
+            'amount'        => $this->string('amount'),
+            'start_date'    => $this->date('start_date'),
+            'end_date'      => $this->date('end_date'),
         ];
     }
 

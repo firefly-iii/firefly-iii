@@ -158,8 +158,8 @@ class JournalLinkControllerTest extends TestCase
         $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser');
+        $journalRepos->shouldReceive('setUser');
         $collector->shouldReceive('setUser')->withAnyArgs();
 
         $collector->shouldReceive('setUser')->withAnyArgs();
@@ -171,6 +171,7 @@ class JournalLinkControllerTest extends TestCase
 
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
         $repository->shouldReceive('storeLink')->once()->andReturn($journalLink);
+        $repository->shouldReceive('findLink')->once()->andReturn(false);
 
 
         // data to submit
@@ -206,8 +207,8 @@ class JournalLinkControllerTest extends TestCase
         $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser');
+        $journalRepos->shouldReceive('setUser');
         $collector->shouldReceive('setUser')->withAnyArgs();
 
         $collector->shouldReceive('setUser')->withAnyArgs();
@@ -230,8 +231,8 @@ class JournalLinkControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(500);
-        $response->assertSee('Source or destination is NULL.'); // error message
+        $response->assertStatus(422);
+        $response->assertSee('Invalid inward ID.'); // error message
         $response->assertHeader('Content-Type', 'application/json');
     }
 
@@ -256,7 +257,7 @@ class JournalLinkControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser')->once();
+        $journalRepos->shouldReceive('setUser');
         $collector->shouldReceive('setUser')->withAnyArgs();
 
         $collector->shouldReceive('setUser')->withAnyArgs();
@@ -268,6 +269,7 @@ class JournalLinkControllerTest extends TestCase
 
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
         $repository->shouldReceive('updateLink')->once()->andReturn($journalLink);
+        $repository->shouldReceive('findLink')->once()->andReturn(false);
 
         // data to submit
         $data = [
@@ -305,7 +307,7 @@ class JournalLinkControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser')->once();
+        $journalRepos->shouldReceive('setUser');
         $collector->shouldReceive('setUser')->withAnyArgs();
 
         $collector->shouldReceive('setUser')->withAnyArgs();
@@ -327,8 +329,8 @@ class JournalLinkControllerTest extends TestCase
 
         // test API
         $response = $this->put('/api/v1/journal_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
-        $response->assertStatus(500);
-        $response->assertSee('Source or destination is NULL.'); // the creation moment.
+        $response->assertStatus(422);
+        $response->assertSee('Invalid inward ID.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
     }
 }

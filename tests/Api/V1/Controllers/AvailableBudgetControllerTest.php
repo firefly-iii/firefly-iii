@@ -133,10 +133,10 @@ class AvailableBudgetControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'transaction_currency_id' => '1',
-            'amount'                  => '100',
-            'start_date'              => '2018-01-01',
-            'end_date'                => '2018-01-31',
+            'currency_id' => '1',
+            'amount'      => '100',
+            'start_date'  => '2018-01-01',
+            'end_date'    => '2018-01-31',
         ];
 
 
@@ -148,37 +148,6 @@ class AvailableBudgetControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
-    /**
-     * Store new available budget but the budget currency is invalid.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     * @covers \FireflyIII\Api\V1\Requests\AvailableBudgetRequest
-     */
-    public function testStoreInvalidCurrency(): void
-    {
-        // mock stuff:
-        $repository         = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $currencyRepository->shouldReceive('findNull')->andReturn(null);
-
-        // data to submit
-        $data = [
-            'transaction_currency_id' => '1',
-            'amount'                  => '100',
-            'start_date'              => '2018-01-01',
-            'end_date'                => '2018-01-31',
-        ];
-
-
-        // test API
-        $response = $this->post('/api/v1/available_budgets', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(500);
-        $response->assertSee('Could not find the indicated currency.');
-        $response->assertHeader('Content-Type', 'application/json');
-    }
 
     /**
      * Update available budget.
@@ -203,10 +172,10 @@ class AvailableBudgetControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'transaction_currency_id' => '1',
-            'amount'                  => '100',
-            'start_date'              => '2018-01-01',
-            'end_date'                => '2018-01-31',
+            'currency_id' => '1',
+            'amount'      => '100',
+            'start_date'  => '2018-01-01',
+            'end_date'    => '2018-01-31',
         ];
 
         // test API

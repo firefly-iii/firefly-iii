@@ -108,7 +108,7 @@ function setOptionalFromCookies() {
     if ((readCookie('report-categories') !== null)) {
         arr = readCookie('report-categories').split(',');
         arr.forEach(function (val) {
-            $('#inputCategories').find('option[value="' + val + '"]').prop('selected', true);
+            $('#inputCategories').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
     $('#inputCategories').multiselect(defaultMultiSelect);
@@ -117,7 +117,7 @@ function setOptionalFromCookies() {
     if ((readCookie('report-budgets') !== null)) {
         arr = readCookie('report-budgets').split(',');
         arr.forEach(function (val) {
-            $('#inputBudgets').find('option[value="' + val + '"]').prop('selected', true);
+            $('#inputBudgets').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
     $('#inputBudgets').multiselect(defaultMultiSelect);
@@ -126,7 +126,7 @@ function setOptionalFromCookies() {
     if ((readCookie('report-tags') !== null)) {
         arr = readCookie('report-tags').split(',');
         arr.forEach(function (val) {
-            $('#inputTags').find('option[value="' + val + '"]').prop('selected', true);
+            $('#inputTags').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
     $('#inputTags').multiselect(defaultMultiSelect);
@@ -135,7 +135,7 @@ function setOptionalFromCookies() {
     if ((readCookie('report-exp-rev') !== null)) {
         arr = readCookie('report-exp-rev').split(',');
         arr.forEach(function (val) {
-            $('#inputExpRevAccounts').find('option[value="' + val + '"]').prop('selected', true);
+            $('#inputExpRevAccounts').find('option[value="' + encodeURI(val) + '"]').prop('selected', true);
         });
     }
     $('#inputExpRevAccounts').multiselect(defaultMultiSelect);

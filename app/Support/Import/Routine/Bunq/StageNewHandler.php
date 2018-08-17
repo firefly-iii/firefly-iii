@@ -68,7 +68,6 @@ class StageNewHandler
             $config             = $this->repository->getConfiguration($this->importJob);
             $config['accounts'] = $accounts;
             $this->repository->setConfiguration($this->importJob, $config);
-
             return;
         }
         throw new FireflyException('The bunq API context is unexpectedly empty.'); // @codeCoverageIgnore

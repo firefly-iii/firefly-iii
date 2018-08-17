@@ -152,9 +152,9 @@ class AvailableBudgetController extends Controller
     public function store(AvailableBudgetRequest $request): JsonResponse
     {
         $data     = $request->getAll();
-        $currency = $this->currencyRepository->findNull($data['transaction_currency_id']);
+        $currency = $this->currencyRepository->findNull($data['currency_id']);
         if (null === $currency) {
-            $this->currencyRepository->findByCodeNull($data['transaction_currency_code']);
+            $this->currencyRepository->findByCodeNull($data['currency_code']);
         }
         if (null === $currency) {
             throw new FireflyException('Could not find the indicated currency.');
