@@ -16,7 +16,7 @@ mkdir -p $FIREFLY_PATH/storage/upload
 
 
 # make sure we own the volumes:
-chown -R $APPLICATION_GID:$APPLICATION_UID -R $FIREFLY_PATH/storage
+chown -R www-data:www-data -R $FIREFLY_PATH/storage
 chmod -R 775 $FIREFLY_PATH/storage
 
 # remove any lingering files that may break upgrades:

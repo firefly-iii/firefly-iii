@@ -12,7 +12,7 @@ services:
       - FF_APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
       - FF_APP_ENV=local
       - TZ=Europe/Amsterdam
-    image: jc5x/firefly-iii
+    image: jc5x/firefly-iii:develop
     links: 
       - firefly_iii_db
     networks: 

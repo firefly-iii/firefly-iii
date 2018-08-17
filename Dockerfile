@@ -82,7 +82,7 @@ VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 COPY ./.deploy/docker/apache-firefly.conf /etc/apache2/sites-available/000-default.conf
 
 # Make sure we own Firefly III directory
-RUN chown -R $APPLICATION_GID:$APPLICATION_UID /var/www && chmod -R 775 $FIREFLY_PATH/storage
+RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
 
 # Copy in Firefly Source
 WORKDIR $FIREFLY_PATH
