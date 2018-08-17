@@ -88,8 +88,8 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'               => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                  => '4.7.5.3',
-    'api_version'              => '0.6',
+    'version'                  => '4.7.6',
+    'api_version'              => '0.7',
     'db_version'               => 4,
     'maxUploadSize'            => 15242880,
     'allowedMimes'             => [
