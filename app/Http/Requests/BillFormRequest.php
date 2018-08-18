@@ -48,15 +48,15 @@ class BillFormRequest extends Request
     public function getBillData(): array
     {
         return [
-            'name'                    => $this->string('name'),
-            'amount_min'              => $this->string('amount_min'),
-            'transaction_currency_id' => $this->integer('transaction_currency_id'),
-            'amount_max'              => $this->string('amount_max'),
-            'date'                    => $this->date('date'),
-            'repeat_freq'             => $this->string('repeat_freq'),
-            'skip'                    => $this->integer('skip'),
-            'notes'                   => $this->string('notes'),
-            'active'                  => $this->boolean('active'),
+            'name'        => $this->string('name'),
+            'amount_min'  => $this->string('amount_min'),
+            'currency_id' => $this->integer('transaction_currency_id'),
+            'amount_max'  => $this->string('amount_max'),
+            'date'        => $this->date('date'),
+            'repeat_freq' => $this->string('repeat_freq'),
+            'skip'        => $this->integer('skip'),
+            'notes'       => $this->string('notes'),
+            'active'      => $this->boolean('active'),
         ];
     }
 

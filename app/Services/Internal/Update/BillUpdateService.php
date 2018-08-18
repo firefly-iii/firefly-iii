@@ -47,7 +47,7 @@ class BillUpdateService
         $bill->amount_min              = $data['amount_min'];
         $bill->amount_max              = $data['amount_max'];
         $bill->date                    = $data['date'];
-        $bill->transaction_currency_id = $data['transaction_currency_id'];
+        $bill->transaction_currency_id = $data['currency_id'];
         $bill->repeat_freq             = $data['repeat_freq'];
         $bill->skip                    = $data['skip'];
         $bill->automatch               = true;
@@ -55,7 +55,7 @@ class BillUpdateService
         $bill->save();
 
         // update note:
-        if (isset($data['notes']) && null !== $data['notes']) {
+        if (isset($data['notes'])) {
             $this->updateNote($bill, (string)$data['notes']);
         }
 
