@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'buttons'                 => 'Botones',
     'icon'                    => 'Icono',
-    'id'                      => 'Identificación',
+    'id'                      => 'ID',
     'create_date'             => 'Fecha de creación',
     'update_date'             => 'Fecha de modificación',
     'updated_at'              => 'Actualizado en',

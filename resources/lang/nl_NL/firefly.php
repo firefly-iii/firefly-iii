@@ -90,7 +90,7 @@ return [
     'warning_much_data'                          => 'Het kan even duren voor :days dagen aan gegevens geladen zijn.',
     'registered'                                 => 'Je bent geregistreerd!',
     'Default asset account'                      => 'Standaard betaalrekening',
-    'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href="/budgets">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
+    'no_budget_pointer'                          => 'Je hebt nog geen budgetten. Maak er een aantal op de <a href=":link">budgetten</a>-pagina. Met budgetten kan je je uitgaven beter bijhouden.',
     'Savings account'                            => 'Spaarrekening',
     'Credit card'                                => 'Credit card',
     'source_accounts'                            => 'Bronrekening(en)',
@@ -1266,6 +1266,8 @@ return [
     'created_Deposits'                      => 'Gemaakte inkomsten',
     'created_Transfers'                     => 'Gemaakte overschrijvingen',
     'created_from_recurrence'               => 'Gemaakt door periodieke transactie ":title" (#:id)',
+    'recurring_never_cron'                  => 'Het lijkt er op dat je cronjob die nodig is voor periodieke transacties nog nooit gedraaid heeft. Niet zo gek natuurlijk als je Firefly III echt net geïnstalleerd hebt, maar denk eraan dat je dit regelt. Check de helppagina\'s via het (?)-icoontje rechtsboven.',
+    'recurring_cron_long_ago'               => 'Het lijkt er op dat het meer dan 36 uur geleden is sinds de cronjob heeft gedraaid die je nodig hebt voor het maken van periodieke transacties. Weet je zeker dat deze goed is ingesteld? Check de helppagina\'s onder het (?)-icoontje rechtsboven voor meer informatie.',
 
     'recurring_meta_field_tags'          => 'Tags',
     'recurring_meta_field_notes'         => 'Notities',

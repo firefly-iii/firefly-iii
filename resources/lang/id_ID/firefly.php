@@ -90,7 +90,7 @@ return [
     'warning_much_data'                          => ':days hari data mungkin perlu beberapa saat untuk memuat.',
     'registered'                                 => 'Anda telah berhasil mendaftar!',
     'Default asset account'                      => 'Akun aset standar',
-    'no_budget_pointer'                          => 'Anda tampaknya belum memiliki anggaran. Anda harus membuat beberapa di halaman <a href="/budgets">budgets</a>. Anggaran dapat membantu Anda melacak pengeluaran.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href=":link">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Rekening tabungan',
     'Credit card'                                => 'Kartu kredit',
     'source_accounts'                            => 'Akun sumber',
@@ -1266,6 +1266,8 @@ return [
     'created_Deposits'                      => 'Created deposits',
     'created_Transfers'                     => 'Created transfers',
     'created_from_recurrence'               => 'Created from recurring transaction ":title" (#:id)',
+    'recurring_never_cron'                  => 'It seems the cron job that is necessary to support recurring transactions has never run. This is of course normal when you have just installed Firefly III, but this should be something to set up as soon as possible. Please check out the help-pages using the (?)-icon in the top right corner of the page.',
+    'recurring_cron_long_ago'               => 'It looks like it has been more than 36 hours since the cron job to support recurring transactions has fired for the last time. Are you sure it has been set up correctly? Please check out the help-pages using the (?)-icon in the top right corner of the page.',
 
     'recurring_meta_field_tags'          => 'Tags',
     'recurring_meta_field_notes'         => 'Notes',

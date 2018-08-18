@@ -90,7 +90,7 @@ return [
     'warning_much_data'                          => ':days dias de dados podem demorar um pouco para carregar.',
     'registered'                                 => 'Você se registrou com sucesso!',
     'Default asset account'                      => 'Conta padrão',
-    'no_budget_pointer'                          => 'Parece que não há orçamentos ainda. Você deve criar alguns na página <a href="/budgets">orçamentos</a>. Orçamentos podem ajudá-lo a manter o controle de despesas.',
+    'no_budget_pointer'                          => 'You seem to have no budgets yet. You should create some on the <a href=":link">budgets</a>-page. Budgets can help you keep track of expenses.',
     'Savings account'                            => 'Conta poupança',
     'Credit card'                                => 'Cartão de crédito',
     'source_accounts'                            => 'Conta(s) de origem',
@@ -1266,6 +1266,8 @@ return [
     'created_Deposits'                      => 'Created deposits',
     'created_Transfers'                     => 'Created transfers',
     'created_from_recurrence'               => 'Created from recurring transaction ":title" (#:id)',
+    'recurring_never_cron'                  => 'It seems the cron job that is necessary to support recurring transactions has never run. This is of course normal when you have just installed Firefly III, but this should be something to set up as soon as possible. Please check out the help-pages using the (?)-icon in the top right corner of the page.',
+    'recurring_cron_long_ago'               => 'It looks like it has been more than 36 hours since the cron job to support recurring transactions has fired for the last time. Are you sure it has been set up correctly? Please check out the help-pages using the (?)-icon in the top right corner of the page.',
 
     'recurring_meta_field_tags'          => 'Tags',
     'recurring_meta_field_notes'         => 'Notes',
