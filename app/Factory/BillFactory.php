@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -46,6 +47,10 @@ class BillFactory
      */
     public function create(array $data): ?Bill
     {
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find((int)$data['currency_id'], (string)$data['currency_code']);
         /** @var Bill $bill */
         $bill = Bill::create(
             [
@@ -53,7 +58,7 @@ class BillFactory
                 'match'                   => 'MIGRATED_TO_RULES',
                 'amount_min'              => $data['amount_min'],
                 'user_id'                 => $this->user->id,
-                'transaction_currency_id' => $data['transaction_currency_id'],
+                'transaction_currency_id' => $currency->id,
                 'amount_max'              => $data['amount_max'],
                 'date'                    => $data['date'],
                 'repeat_freq'             => $data['repeat_freq'],
