@@ -24,10 +24,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console;
 
-use Carbon\Carbon;
-use FireflyIII\Jobs\CreateRecurringTransactions;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use Log;
 
 /**
  * File to make sure commands work.
@@ -52,18 +51,21 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        $schedule->call(function() {
-            echo "\n";
-            echo '------------';
-            echo "\n";
-            echo wordwrap('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions here:');
-            echo "\n";
-            echo 'https://firefly-iii.readthedocs.io/en/latest/';
-            echo "\n\n";
-            echo 'Disable this cron job!';
-            echo "\n";
-            echo '------------';
-            echo "\n";
-        })->everyMinute();
+        $schedule->call(
+            function () {
+                Log::error('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://firefly-iii.readthedocs.io/en/latest/');
+                echo "\n";
+                echo '------------';
+                echo "\n";
+                echo wordwrap('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions here:');
+                echo "\n";
+                echo 'https://firefly-iii.readthedocs.io/en/latest/';
+                echo "\n\n";
+                echo 'Disable this cron job!';
+                echo "\n";
+                echo '------------';
+                echo "\n";
+            }
+        )->everyMinute();
     }
 }

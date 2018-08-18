@@ -1,1 +1,0 @@
-* * * * * root /artisan schedule:run >> /var/log/cron.log

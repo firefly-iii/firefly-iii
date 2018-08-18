@@ -20,12 +20,15 @@ RUN apt-get update -y && \
                                                libedit-dev \
                                                libtidy-dev \
                                                libxml2-dev \
+                                               unzip \
                                                libsqlite3-dev \
+                                               nano \
                                                libpq-dev \
                                                libbz2-dev \
                                                gettext-base \
                                                cron \
                                                rsyslog \
+                                               supervisor \
                                                locales && \
                                                apt-get clean && \
                                                rm -rf /var/lib/apt/lists/*
@@ -50,12 +53,18 @@ RUN cd /tmp && \
 # Make sure that libcurl is using the newer curl libaries
 RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/00-curl.conf && ldconfig
 
-# Create the log file to be able to run tail
-RUN touch /var/log/cron.log
+# Mimic the Debian/Ubuntu config file structure for supervisor
+COPY .deploy/docker/supervisord.conf /etc/supervisor/supervisord.conf
+RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor
 
-# Setup cron job
-COPY .deploy/docker/crontab /etc/cron.d/crontab
-RUN chmod 0644 /etc/cron.d/crontab
+# copy Firefly III supervisor conf file.
+COPY ./.deploy/docker/firefly-iii.conf /etc/supervisor/conf.d/firefly-iii.conf
+
+# copy cron job supervisor conf file.
+COPY ./.deploy/docker/cronjob.conf /etc/supervisor/conf.d/cronjob.conf
+
+# test crons added via crontab
+RUN echo "0 3 * * * cd /var/www/firefly-iii && php artisan firefly:cron >> /dev/stdout 2>&1" | crontab -
 
 # Install PHP exentions.
 RUN docker-php-ext-install -j$(nproc) gd intl tidy zip bcmath pdo_mysql bz2 pdo_pgsql
