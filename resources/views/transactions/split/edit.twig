@@ -264,7 +264,7 @@
                                                    value="{{ transaction.foreign_currency_id }}">
                                         {% endif %}
                                         <input type="hidden" name="transactions[{{ loop.index0 }}][transaction_currency_id]"
-                                               value="{{ transaction.transaction_currency_id }}">
+                                               value="{{ transaction.currency_id }}">
                                     </div>
                                     {# budget #}
                                     {% if preFilled.what == 'withdrawal' %}
