@@ -64,7 +64,7 @@ COPY ./.deploy/docker/firefly-iii.conf /etc/supervisor/conf.d/firefly-iii.conf
 COPY ./.deploy/docker/cronjob.conf /etc/supervisor/conf.d/cronjob.conf
 
 # test crons added via crontab
-RUN echo "0 3 * * * cd /var/www/firefly-iii && php artisan firefly:cron >> /dev/stdout 2>&1" | crontab -
+RUN echo "0 3 * * * /usr/local/bin/php /var/www/firefly-iii/artisan firefly:cron >> /dev/stdout 2>&1" | crontab -
 
 # Install PHP exentions.
 RUN docker-php-ext-install -j$(nproc) gd intl tidy zip bcmath pdo_mysql bz2 pdo_pgsql
