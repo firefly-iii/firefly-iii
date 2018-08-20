@@ -369,7 +369,8 @@ class SingleController extends Controller
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
-        session()->flash('success_uri', (string)trans('firefly.stored_journal', ['description' => "<a href='/transactions/show/{$journal->id}'>{$journal->description}</a>"]));
+        session()->flash('success_uri', route('transactions.show', [$journal->id]));
+        session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
         app('preferences')->mark();
 
         // @codeCoverageIgnoreStart
