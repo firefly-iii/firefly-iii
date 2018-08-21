@@ -9,6 +9,9 @@ ENV FIREFLY_PATH /var/www/firefly-iii/
 ENV CURL_VERSION 7.60.0
 ENV OPENSSL_VERSION 1.1.1-pre6
 
+LABEL version="1.0" maintainer="thegrumpydictator@gmail.com"
+
+
 # install packages
 RUN apt-get update -y && \
     apt-get install -y --no-install-recommends libcurl4-openssl-dev \
@@ -64,8 +67,8 @@ COPY ./.deploy/docker/firefly-iii.conf /etc/supervisor/conf.d/firefly-iii.conf
 COPY ./.deploy/docker/cronjob.conf /etc/supervisor/conf.d/cronjob.conf
 
 # test crons added via crontab
-RUN echo "0 3 * * * /usr/local/bin/php /var/www/firefly-iii/artisan firefly:cron >> /dev/stdout 2>&1" | crontab -
-
+RUN echo "0 3 * * * /usr/local/bin/php /var/www/firefly-iii/artisan firefly:cron" | crontab -
+#RUN (crontab -l ; echo "*/1 * * * * free >> /var/www/firefly-iii/public/cron.html") 2>&1 | crontab -
 # Install PHP exentions.
 RUN docker-php-ext-install -j$(nproc) gd intl tidy zip bcmath pdo_mysql bz2 pdo_pgsql
 
@@ -74,6 +77,7 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 
 # Generate locales supported by Firefly III
 RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\n\n" > /etc/locale.gen && locale-gen
+
 
 # copy Apache config to correct spot.
 COPY ./.deploy/docker/apache2.conf /etc/apache2/apache2.conf

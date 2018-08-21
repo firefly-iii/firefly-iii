@@ -119,6 +119,9 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         Log::debug('Done with handle()');
+
+        // clear cache:
+        app('preferences')->mark();
     }
 
     /**
