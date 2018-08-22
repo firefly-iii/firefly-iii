@@ -271,6 +271,30 @@ class AccountRepository implements AccountRepositoryInterface
     }
 
     /**
+     * @param $account
+     *
+     * @return string
+     */
+    public function getInterestPerDay(Account $account): string
+    {
+        $interest       = $this->getMetaValue($account, 'interest');
+        $interestPeriod = $this->getMetaValue($account, 'interest_period');
+        Log::debug(sprintf('Start with interest of %s percent', $interest));
+
+        // calculate
+        if ('monthly' === $interestPeriod) {
+            $interest = bcdiv(bcmul($interest, '12'), '365'); // per year
+            Log::debug(sprintf('Interest is now (monthly to daily) %s percent', $interest));
+        }
+        if ('yearly' === $interestPeriod) {
+            $interest = bcdiv($interest, '365'); // per year
+            Log::debug(sprintf('Interest is now (yearly to daily) %s percent', $interest));
+        }
+
+        return $interest;
+    }
+
+    /**
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
@@ -380,6 +404,57 @@ class AccountRepository implements AccountRepositoryInterface
         $account = $factory->findOrCreate($name, $type->type);
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    public function isLiability(Account $account): bool
+    {
+        return \in_array($account->accountType->type, [AccountType::CREDITCARD, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true);
+    }
+
+    /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    public function latestJournal(Account $account): ?TransactionJournal
+    {
+        $first = $account->transactions()
+                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                         ->orderBy('transaction_journals.date', 'DESC')
+                         ->orderBy('transaction_journals.order', 'ASC')
+                         ->where('transaction_journals.user_id', $this->user->id)
+                         ->orderBy('transaction_journals.id', 'DESC')
+                         ->first(['transaction_journals.id']);
+        if (null !== $first) {
+            return TransactionJournal::find((int)$first->id);
+        }
+
+        return null;
+    }
+
+    /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon|null
+     */
+    public function latestJournalDate(Account $account): ?Carbon
+    {
+        $result  = null;
+        $journal = $this->latestJournal($account);
+        if (null !== $journal) {
+            $result = $journal->date;
+        }
+
+        return $result;
     }
 
     /**

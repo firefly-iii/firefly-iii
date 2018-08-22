@@ -91,6 +91,11 @@ class ShowController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
+        // a basic thing to determin if this account is a liability:
+        if ($this->repository->isLiability($account)) {
+            return redirect(route('accounts.show.all', [$account->id]));
+        }
+
         /** @var Carbon $start */
         $start = $start ?? session('start');
         /** @var Carbon $end */
@@ -122,9 +127,13 @@ class ShowController extends Controller
         $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll = false;
 
+
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact(
+                'account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end',
+                'chartUri'
+            )
         );
     }
 
@@ -144,6 +153,7 @@ class ShowController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
         }
+        $isLiability  = $this->repository->isLiability($account);
         $end          = new Carbon;
         $today        = new Carbon;
         $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
@@ -167,7 +177,7 @@ class ShowController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
+            compact('account', 'showAll','isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
         );
     }
 
