@@ -902,7 +902,7 @@ return [
     'errors'                                  => 'Ошибки',
     'debt_start_date'                         => 'Start date of debt',
     'debt_start_amount'                       => 'Start amount of debt',
-    'debt_start_amount_help'                  => 'Please enter a positive amount. You may also enter the current amount, if the original amount was way-back-when.',
+    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
     'store_new_liabilities_account'           => 'Store new liability',
     'edit_liabilities_account'                => 'Edit liability ":name"',
 

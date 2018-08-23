@@ -902,7 +902,7 @@ return [
     'errors'                                  => 'Errori',
     'debt_start_date'                         => 'Data di inizio del debito',
     'debt_start_amount'                       => 'Importo iniziale del debito',
-    'debt_start_amount_help'                  => 'Inserisci un importo positivo. Puoi anche inserire l\'importo attuale se quello originale è di molto tempo fa.',
+    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
     'store_new_liabilities_account'           => 'Memorizza nuova passività',
     'edit_liabilities_account'                => 'Modica passività ":name"',
 
@@ -1144,7 +1144,7 @@ return [
     'journals_linked'                       => 'Le transazioni sono collegate.',
     'journals_error_linked'                 => 'Queste transazioni sono già collegate.',
     'journals_link_to_self'                 => 'Non puoi collegare una transazione con se stessa',
-    'journal_links'                         => 'Collegamenti di transazione',
+    'journal_links'                         => 'Collegamenti della transazione',
     'this_withdrawal'                       => 'Questo prelievo',
     'this_deposit'                          => 'Questa entrata',
     'this_transfer'                         => 'Questo trasferimento',

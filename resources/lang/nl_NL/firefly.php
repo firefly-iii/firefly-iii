@@ -902,7 +902,7 @@ return [
     'errors'                                  => 'Fouten',
     'debt_start_date'                         => 'Begindatum van schuld',
     'debt_start_amount'                       => 'Beginbedrag van schuld',
-    'debt_start_amount_help'                  => 'Voer een positief bedrag in. Je mag ook het bedrag van vandaag de dag invoeren, als het oorspronkelijke bedrag erg lang geleden was.',
+    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
     'store_new_liabilities_account'           => 'Nieuwe passiva opslaan',
     'edit_liabilities_account'                => 'Passiva ":name" wijzigen',
 
