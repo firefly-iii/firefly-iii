@@ -113,6 +113,7 @@ class BudgetControllerTest extends TestCase
      * Store a new budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetRequest
      */
     public function testStore(): void
     {
@@ -144,6 +145,7 @@ class BudgetControllerTest extends TestCase
      * Update a budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetRequest
      */
     public function testUpdate(): void
     {

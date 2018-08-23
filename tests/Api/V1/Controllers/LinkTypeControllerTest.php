@@ -77,6 +77,36 @@ class LinkTypeControllerTest extends TestCase
         $response->assertStatus(204);
     }
 
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
+     */
+    public function testDeleteNotEditable(): void
+    {
+        // mock stuff:
+        $repository     = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+
+        // create editable link type:
+        $linkType = LinkType::create(
+            [
+                'name'     => 'random' . random_int(1, 100000),
+                'outward'  => 'outward' . random_int(1, 100000),
+                'inward'   => 'inward ' . random_int(1, 100000),
+                'editable' => false,
+
+            ]
+        );
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+
+        // call API
+        $response = $this->delete('/api/v1/link_types/' . $linkType->id);
+        $response->assertStatus(500);
+        $response->assertSee('You cannot delete this link type');
+    }
+
     /**
      * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
      */
@@ -158,6 +188,38 @@ class LinkTypeControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
      * @covers \FireflyIII\Api\V1\Requests\LinkTypeRequest
      */
+    public function testStoreNotOwner(): void
+    {
+        $linkType = LinkType::first();
+
+        // mock stuff:
+        $repository     = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $userRepository->shouldReceive('hasRole')->once()->andReturn(false);
+
+
+        // data to submit
+        $data = [
+            'name'     => 'random' . random_int(1, 100000),
+            'outward'  => 'outward' . random_int(1, 100000),
+            'inward'   => 'inward ' . random_int(1, 100000),
+            'editable' => true,
+
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/link_types', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('You need the \"owner\"-role to do this.');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
+     * @covers \FireflyIII\Api\V1\Requests\LinkTypeRequest
+     */
     public function testUpdate(): void
     {
         // mock stuff:
@@ -194,6 +256,85 @@ class LinkTypeControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
         $response->assertSee($linkType->created_at->toAtomString());
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
+     * @covers \FireflyIII\Api\V1\Requests\LinkTypeRequest
+     */
+    public function testUpdateNotEditable(): void
+    {
+        // mock stuff:
+        $repository     = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+
+        // create editable link type:
+        $linkType = LinkType::create(
+            [
+                'name'     => 'random' . random_int(1, 100000),
+                'outward'  => 'outward' . random_int(1, 100000),
+                'inward'   => 'inward ' . random_int(1, 100000),
+                'editable' => false,
+
+            ]
+        );
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+
+        // data to submit
+        $data = [
+            'name'     => 'random' . random_int(1, 100000),
+            'outward'  => 'outward' . random_int(1, 100000),
+            'inward'   => 'inward ' . random_int(1, 100000),
+            'editable' => true,
+
+        ];
+
+        // test API
+        $response = $this->put('/api/v1/link_types/' . $linkType->id, $data, ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('You cannot edit this link type ');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
+     * @covers \FireflyIII\Api\V1\Requests\LinkTypeRequest
+     */
+    public function testUpdateNotOwner(): void
+    {
+        // mock stuff:
+        $repository     = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+        $userRepository->shouldReceive('hasRole')->once()->andReturn(false);
+
+        // create editable link type:
+        $linkType = LinkType::create(
+            [
+                'name'     => 'random' . random_int(1, 100000),
+                'outward'  => 'outward' . random_int(1, 100000),
+                'inward'   => 'inward ' . random_int(1, 100000),
+                'editable' => true,
+
+            ]
+        );
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+
+        // data to submit
+        $data = [
+            'name'     => 'random' . random_int(1, 100000),
+            'outward'  => 'outward' . random_int(1, 100000),
+            'inward'   => 'inward ' . random_int(1, 100000),
+            'editable' => true,
+
+        ];
+
+        // test API
+        $response = $this->put('/api/v1/link_types/' . $linkType->id, $data, ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('You need the \"owner\"-role to do this.');
     }
 
 

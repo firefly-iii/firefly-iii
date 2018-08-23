@@ -78,6 +78,7 @@ class ShowControllerTest extends TestCase
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
         $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(false);
 
 
         $transaction = factory(Transaction::class)->make();
@@ -125,6 +126,7 @@ class ShowControllerTest extends TestCase
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
         $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(false);
 
 
         $transaction = factory(Transaction::class)->make();
@@ -206,6 +208,7 @@ class ShowControllerTest extends TestCase
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
         $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(false);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();

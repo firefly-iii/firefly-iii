@@ -162,7 +162,7 @@ class VersionCheckEventHandlerTest extends TestCase
 
         // report on config variables:
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
-        FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
+        //FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn($checkConfig);
 
         $handler = new VersionCheckEventHandler;
         $handler->checkForUpdates($event);

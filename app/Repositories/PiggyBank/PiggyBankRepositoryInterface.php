@@ -220,9 +220,9 @@ interface PiggyBankRepositoryInterface
      *
      * @param array $data
      *
-     * @return PiggyBank
+     * @return PiggyBank|null
      */
-    public function store(array $data): PiggyBank;
+    public function store(array $data): ?PiggyBank;
 
     /**
      * Update existing piggy bank.

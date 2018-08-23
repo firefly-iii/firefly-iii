@@ -210,6 +210,7 @@ class AttachmentControllerTest extends TestCase
      * Store a new attachment.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AttachmentController
+     * @covers \FireflyIII\Api\V1\Requests\AttachmentRequest
      */
     public function testStore(): void
     {

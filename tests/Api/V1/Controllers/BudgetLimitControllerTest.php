@@ -191,6 +191,7 @@ class BudgetLimitControllerTest extends TestCase
      * Store new budget limit.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testStore(): void
     {
@@ -229,6 +230,7 @@ class BudgetLimitControllerTest extends TestCase
      * Store new budget limit, but give error
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testStoreBadBudget(): void
     {
@@ -257,6 +259,7 @@ class BudgetLimitControllerTest extends TestCase
      * Test update of budget limit.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testUpdate(): void
     {
@@ -296,6 +299,7 @@ class BudgetLimitControllerTest extends TestCase
      * Test update of budget limit but submit bad budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testUpdateBadBudget(): void
     {

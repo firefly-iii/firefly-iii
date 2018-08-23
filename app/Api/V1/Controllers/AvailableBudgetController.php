@@ -154,7 +154,7 @@ class AvailableBudgetController extends Controller
         $data     = $request->getAll();
         $currency = $this->currencyRepository->findNull($data['currency_id']);
         if (null === $currency) {
-            $this->currencyRepository->findByCodeNull($data['currency_code']);
+            $currency = $this->currencyRepository->findByCodeNull($data['currency_code']);
         }
         if (null === $currency) {
             throw new FireflyException('Could not find the indicated currency.');
@@ -168,6 +168,8 @@ class AvailableBudgetController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
+
+
 
     /**
      * Update the specified resource in storage.

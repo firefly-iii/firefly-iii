@@ -443,9 +443,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * @param array $data
      *
-     * @return PiggyBank
+     * @return PiggyBank|null
      */
-    public function store(array $data): PiggyBank
+    public function store(array $data): ?PiggyBank
     {
         $data['order'] = $this->getMaxOrder() + 1;
         /** @var PiggyBank $piggyBank */
