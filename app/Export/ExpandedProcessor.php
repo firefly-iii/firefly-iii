@@ -49,6 +49,9 @@ use ZipArchive;
  * Class ExpandedProcessor.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // its doing a lot.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class ExpandedProcessor implements ProcessorInterface
 {

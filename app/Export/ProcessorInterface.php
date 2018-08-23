@@ -28,6 +28,9 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface ProcessorInterface.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface ProcessorInterface
 {

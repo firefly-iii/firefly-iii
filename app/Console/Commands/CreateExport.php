@@ -39,6 +39,8 @@ use Storage;
  * Class CreateExport.
  *
  * Generates export from the command line.
+ *
+ * @codeCoverageIgnore
  */
 class CreateExport extends Command
 {

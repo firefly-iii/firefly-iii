@@ -30,6 +30,9 @@ use Illuminate\Support\Collection;
 
 /**
  * Class BasicCollector.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class BasicCollector
 {

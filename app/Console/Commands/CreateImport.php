@@ -37,6 +37,8 @@ use Log;
 
 /**
  * Class CreateImport.
+ *
+ * @codeCoverageIgnore
  */
 class CreateImport extends Command
 {

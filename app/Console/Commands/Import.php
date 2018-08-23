@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class Import.
+ *
+ * @codeCoverageIgnore
  */
 class Import extends Command
 {

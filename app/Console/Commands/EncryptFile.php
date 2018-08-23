@@ -29,6 +29,8 @@ use Illuminate\Console\Command;
 
 /**
  * Class EncryptFile.
+ *
+ * @codeCoverageIgnore
  */
 class EncryptFile extends Command
 {

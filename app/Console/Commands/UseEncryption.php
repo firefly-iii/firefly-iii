@@ -28,6 +28,7 @@ use Illuminate\Support\Str;
 
 /**
  * Class UseEncryption.
+ * @codeCoverageIgnore
  */
 class UseEncryption extends Command
 {

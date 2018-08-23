@@ -8,6 +8,8 @@ use Illuminate\Console\Command;
 
 /**
  * Class Cron
+ *
+ * @codeCoverageIgnore
  */
 class Cron extends Command
 {

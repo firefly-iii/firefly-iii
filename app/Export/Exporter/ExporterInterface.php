@@ -29,6 +29,9 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface ExporterInterface.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface ExporterInterface
 {

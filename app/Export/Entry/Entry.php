@@ -43,6 +43,9 @@ use FireflyIII\Models\Transaction;
  *
  * @SuppressWarnings(PHPMD.LongVariable)
  * @SuppressWarnings(PHPMD.TooManyFields)
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 final class Entry
 {

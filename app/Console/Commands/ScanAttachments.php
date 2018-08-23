@@ -34,6 +34,8 @@ use Storage;
 
 /**
  * Class ScanAttachments.
+ *
+ * @codeCoverageIgnore
  */
 class ScanAttachments extends Command
 {

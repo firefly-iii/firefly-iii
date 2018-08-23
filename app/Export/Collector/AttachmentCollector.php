@@ -34,6 +34,9 @@ use Storage;
 
 /**
  * Class AttachmentCollector.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AttachmentCollector extends BasicCollector implements CollectorInterface
 {
