@@ -93,8 +93,10 @@ class TransactionMatcher
         }
 
         // Variables used within the loop
-        $processor = Processor::makeFromStringArray($this->triggers);
-        $result    = $this->runProcessor($processor);
+        /** @var Processor $processor */
+        $processor = app(Processor::class);
+        $processor->makeFromStringArray($this->triggers);
+        $result = $this->runProcessor($processor);
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list

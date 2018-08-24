@@ -200,7 +200,10 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
         // Create a list of processors for these rules
         return array_map(
             function ($rule) {
-                return Processor::make($rule);
+                /** @var Processor $processor */
+                $processor = app(Processor::class);
+                $processor->make($rule);
+                return $processor;
             },
             $rules->all()
         );

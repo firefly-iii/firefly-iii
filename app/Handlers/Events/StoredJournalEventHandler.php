@@ -46,7 +46,9 @@ class StoredJournalEventHandler
         $journal = $storedJournalEvent->journal;
 
         // create objects:
+        /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
+        $ruleGroupRepos->setUser($journal->user);
         $groups         = $ruleGroupRepos->getActiveGroups($journal->user);
 
         /** @var RuleGroup $group */
@@ -54,7 +56,9 @@ class StoredJournalEventHandler
             $rules = $ruleGroupRepos->getActiveStoreRules($group);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                $processor = Processor::make($rule);
+                /** @var Processor $processor */
+                $processor = app(Processor::class);
+                $processor->make($rule);
                 $processor->handleTransactionJournal($journal);
 
                 if ($rule->stop_processing) {

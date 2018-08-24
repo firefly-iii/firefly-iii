@@ -162,7 +162,9 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     {
         // Lookup all journals that match the parameters specified
         $transactions = $this->collectJournals();
-        $processor    = Processor::make($this->rule, true);
+        /** @var Processor $processor */
+        $processor = app(Processor::class);
+        $processor->make($this->rule, true);
         $hits         = 0;
         $misses       = 0;
         $total        = 0;

@@ -157,7 +157,9 @@ class CreateRecurringTransactions implements ShouldQueue
                 $this->rules[$userId]->each(
                     function (Rule $rule) use ($journal) {
                         Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
-                        $processor = Processor::make($rule);
+                        /** @var Processor $processor */
+                        $processor = app(Processor::class);
+                        $processor->make($rule);
                         /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                         $processor->handleTransactionJournal($journal);
                         if ($rule->stop_processing) {

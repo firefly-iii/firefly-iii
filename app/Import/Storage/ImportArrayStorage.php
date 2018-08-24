@@ -135,7 +135,9 @@ class ImportArrayStorage
                 $rules->each(
                     function (Rule $rule) use ($journal) {
                         Log::debug(sprintf('Going to apply rule #%d to journal %d.', $rule->id, $journal->id));
-                        $processor = Processor::make($rule);
+                        /** @var Processor $processor */
+                        $processor = app(Processor::class);
+                        $processor->make($rule);
                         $processor->handleTransactionJournal($journal);
                         if ($rule->stop_processing) {
                             return false;
