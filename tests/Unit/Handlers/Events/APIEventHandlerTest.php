@@ -1,6 +1,6 @@
 <?php
 /**
- * AdminEventHandlerTest.php
+ * APIEventHandlerTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,18 +24,19 @@ declare(strict_types=1);
 namespace Tests\Unit\Handlers\Events;
 
 
-use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Handlers\Events\AdminEventHandler;
-use FireflyIII\Mail\AdminTestMail;
+use FireflyIII\Handlers\Events\APIEventHandler;
+use FireflyIII\Mail\AccessTokenCreatedMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
-use Mockery;
-use Tests\TestCase;
+use Laravel\Passport\Events\AccessTokenCreated;
 use Log;
+use Tests\TestCase;
+
 /**
- * Class AdminEventHandlerTest
+ *
+ * Class APIEventHandlerTest
  */
-class AdminEventHandlerTest extends TestCase
+class APIEventHandlerTest extends TestCase
 {
     /**
      *
@@ -46,46 +47,30 @@ class AdminEventHandlerTest extends TestCase
         Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
-
     /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
-     * @covers \FireflyIII\Events\AdminRequestedTestMessage
+     * @covers \FireflyIII\Handlers\Events\APIEventHandler
      */
-    public function testSendNoMessage(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $event      = new AdminRequestedTestMessage($this->user(), '127.0.0.1');
-
-
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(false)->once();
-
-        $listener = new AdminEventHandler();
-        $this->assertTrue($listener->sendTestMessage($event));
-    }
-
-    /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
-     * @covers \FireflyIII\Events\AdminRequestedTestMessage
-     */
-    public function testSendTestMessage(): void
+    public function testAccessTokenCreated(): void
     {
         Mail::fake();
+        // mock objects.
         $repository = $this->mock(UserRepositoryInterface::class);
-        $event      = new AdminRequestedTestMessage($this->user(), '127.0.0.1');
+
+        // mock calls.
+        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($this->user())->once();
 
 
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->once();
-
-        $listener = new AdminEventHandler();
-        $this->assertTrue($listener->sendTestMessage($event));
+        $event   = new AccessTokenCreated('1', '1', '1');
+        $handler = new APIEventHandler;
+        $handler->accessTokenCreated($event);
 
         // assert a message was sent.
         Mail::assertSent(
-            AdminTestMail::class, function ($mail) {
+            AccessTokenCreatedMail::class, function ($mail) {
             return $mail->hasTo('thegrumpydictator@gmail.com') && '127.0.0.1' === $mail->ipAddress;
         }
         );
 
-
     }
+
 }

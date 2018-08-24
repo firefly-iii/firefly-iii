@@ -36,6 +36,7 @@ use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Mail;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class UserEventHandlerTest
@@ -46,6 +47,15 @@ use Tests\TestCase;
  */
 class UserEventHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Handlers\Events\UserEventHandler
      * @covers \FireflyIII\Events\RegisteredUser

@@ -34,12 +34,23 @@ use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class VersionCheckEventHandlerTest
  */
 class VersionCheckEventHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
+
     /**
      *
      */

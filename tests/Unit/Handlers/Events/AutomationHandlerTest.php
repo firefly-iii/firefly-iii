@@ -1,6 +1,6 @@
 <?php
 /**
- * AdminEventHandlerTest.php
+ * AutomationHandlerTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,18 +24,21 @@ declare(strict_types=1);
 namespace Tests\Unit\Handlers\Events;
 
 
-use FireflyIII\Events\AdminRequestedTestMessage;
-use FireflyIII\Handlers\Events\AdminEventHandler;
-use FireflyIII\Mail\AdminTestMail;
+use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Handlers\Events\AutomationHandler;
+use FireflyIII\Mail\ReportNewJournalsMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Mail;
-use Mockery;
-use Tests\TestCase;
 use Log;
+use stdClass;
+use Tests\TestCase;
+
 /**
- * Class AdminEventHandlerTest
+ *
+ * Class AutomationHandlerTest
  */
-class AdminEventHandlerTest extends TestCase
+class AutomationHandlerTest extends TestCase
 {
     /**
      *
@@ -48,44 +51,30 @@ class AdminEventHandlerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
-     * @covers \FireflyIII\Events\AdminRequestedTestMessage
+     * @covers \FireflyIII\Handlers\Events\AutomationHandler
+     * @covers \FireflyIII\Events\RequestedReportOnJournals
      */
-    public function testSendNoMessage(): void
-    {
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $event      = new AdminRequestedTestMessage($this->user(), '127.0.0.1');
-
-
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(false)->once();
-
-        $listener = new AdminEventHandler();
-        $this->assertTrue($listener->sendTestMessage($event));
-    }
-
-    /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
-     * @covers \FireflyIII\Events\AdminRequestedTestMessage
-     */
-    public function testSendTestMessage(): void
+    public function testReportJournals(): void
     {
         Mail::fake();
+        // mock repositories
         $repository = $this->mock(UserRepositoryInterface::class);
-        $event      = new AdminRequestedTestMessage($this->user(), '127.0.0.1');
+        $journals   = new Collection;
+        $journals->push(new stdClass);
 
+        // mock calls.
+        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($this->user())->once();
 
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->once();
+        $event   = new RequestedReportOnJournals(1, $journals);
+        $handler = new AutomationHandler();
 
-        $listener = new AdminEventHandler();
-        $this->assertTrue($listener->sendTestMessage($event));
+        $handler->reportJournals($event);
 
         // assert a message was sent.
         Mail::assertSent(
-            AdminTestMail::class, function ($mail) {
+            ReportNewJournalsMail::class, function ($mail) {
             return $mail->hasTo('thegrumpydictator@gmail.com') && '127.0.0.1' === $mail->ipAddress;
         }
         );
-
-
     }
 }

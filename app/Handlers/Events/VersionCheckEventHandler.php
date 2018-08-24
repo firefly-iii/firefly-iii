@@ -56,7 +56,8 @@ class VersionCheckEventHandler
         $sandstorm = 1 === (int)getenv('SANDSTORM');
         if (true === $sandstorm) {
             Log::debug('This is Sandstorm instance, done.');
-            return; // @codeCoverageIgnore
+
+            return;
         }
 
         /** @var UserRepositoryInterface $repository */
@@ -65,6 +66,7 @@ class VersionCheckEventHandler
         $user = $event->user;
         if (!$repository->hasRole($user, 'owner')) {
             Log::debug('User is not admin, done.');
+
             return;
         }
 
