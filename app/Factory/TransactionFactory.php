@@ -59,10 +59,10 @@ class TransactionFactory
         $currencyId = isset($data['currency']) ? $data['currency']->id : $currencyId;
         if ('' === $data['amount']) {
             Log::error('Empty string in data.', $data);
-            throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.'); // @codeCoverageIgnore
+            throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
         }
         if (null === $currencyId) {
-            throw new FireflyException('Cannot store transaction without currency information.'); // @codeCoverageIgnore
+            throw new FireflyException('Cannot store transaction without currency information.');
         }
         $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
         Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));
@@ -154,7 +154,7 @@ class TransactionFactory
             ]
         );
         if (null === $source || null === $dest) {
-            throw new FireflyException('Could not create transactions.');
+            throw new FireflyException('Could not create transactions.'); // @codeCoverageIgnore
         }
 
         // set foreign currency

@@ -1,6 +1,6 @@
 <?php
 /**
- * TagFactoryTest.php
+ * TransactionTypeFactoryTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,16 +24,17 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
-use FireflyIII\Factory\TagFactory;
+use FireflyIII\Factory\TransactionTypeFactory;
+use FireflyIII\Models\TransactionType;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class TagFactoryTest
+ *
+ * Class TransactionTypeFactoryTest
  */
-class TagFactoryTest extends TestCase
+class TransactionTypeFactoryTest extends TestCase
 {
-
     /**
      *
      */
@@ -44,31 +45,18 @@ class TagFactoryTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Factory\TagFactory
+     * @covers \FireflyIII\Factory\TransactionTypeFactory
      */
-    public function testFindOrCreateExisting(): void
+    public function testFind(): void
     {
-        $tag = $this->user()->tags()->first();
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($this->user());
+        /** @var TransactionType $type */
+        $type = TransactionType::first();
+        /** @var TransactionTypeFactory $factory */
+        $factory = app(TransactionTypeFactory::class);
 
-        $result = $factory->findOrCreate($tag->tag);
-        $this->assertEquals($tag->id, $result->id);
-    }
+        $result  = $factory->find($type->type);
 
-    /**
-     * @covers \FireflyIII\Factory\TagFactory
-     */
-    public function testFindOrCreateNew(): void
-    {
-        $tag = 'Some new tag#' . random_int(1, 10000);
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($this->user());
-
-        $result = $factory->findOrCreate($tag);
-        $this->assertEquals($tag, $result->tag);
+        $this->assertEquals($result->id, $type->id);
     }
 
 }

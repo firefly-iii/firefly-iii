@@ -25,6 +25,7 @@ namespace Tests\Unit\Factory;
 
 
 use FireflyIII\Factory\BillFactory;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -32,6 +33,16 @@ use Tests\TestCase;
  */
 class BillFactoryTest extends TestCase
 {
+
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
 
     /**
      * Create basic bill with minimum data.
@@ -77,17 +88,17 @@ class BillFactoryTest extends TestCase
     public function testCreateEmptyNotes(): void
     {
         $data = [
-            'name'                    => 'Some new bill #' . random_int(1, 10000),
-            'amount_min'              => '5',
-            'amount_max'              => '10',
-            'date'                    => '2018-01-01',
-            'repeat_freq'             => 'monthly',
-            'currency_id' => 1,
+            'name'          => 'Some new bill #' . random_int(1, 10000),
+            'amount_min'    => '5',
+            'amount_max'    => '10',
+            'date'          => '2018-01-01',
+            'repeat_freq'   => 'monthly',
+            'currency_id'   => 1,
             'currency_code' => '',
-            'skip'                    => 0,
-            'automatch'               => true,
-            'active'                  => true,
-            'notes'                   => '',
+            'skip'          => 0,
+            'automatch'     => true,
+            'active'        => true,
+            'notes'         => '',
         ];
 
         /** @var BillFactory $factory */

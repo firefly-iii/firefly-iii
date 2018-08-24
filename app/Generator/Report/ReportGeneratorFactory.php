@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 
 /**
  * Class ReportGeneratorFactory.
+ * @codeCoverageIgnore
  */
 class ReportGeneratorFactory
 {

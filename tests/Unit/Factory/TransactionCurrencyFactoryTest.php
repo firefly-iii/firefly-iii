@@ -26,6 +26,7 @@ namespace Tests\Unit\Factory;
 
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\TransactionCurrency;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -33,6 +34,16 @@ use Tests\TestCase;
  */
 class TransactionCurrencyFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Factory\TransactionCurrencyFactory
      */

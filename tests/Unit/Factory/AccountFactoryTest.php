@@ -25,9 +25,12 @@ namespace Tests\Unit\Factory;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +38,15 @@ use Tests\TestCase;
  */
 class AccountFactoryTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Test minimal set of data to make factory work (asset account).
      *
@@ -520,6 +532,55 @@ class AccountFactoryTest extends TestCase
 
         // assert stuff about account:
         $this->assertEquals($account->id, $existing->id);
+    }
+
+    /**
+     * Can't find account type.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateNoType(): void
+    {
+
+        $data = [
+            'account_type_id' => null,
+            'accountType'     => 'bla-bla',
+            'iban'            => null,
+            'name'            => 'Basic asset account #' . random_int(1, 10000),
+            'virtualBalance'  => null,
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertContains('AccountFactory::create() was unable to find account type #0 ("bla-bla").', $e->getMessage());
+        }
+    }
+
+    /**
+     * Test only for existing account because the rest has been covered by other tests.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testFindOrCreate(): void
+    {
+        /** @var Account $account */
+        $account = $this->user()->accounts()->inRandomOrder()->first();
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+
+        $result = $factory->findOrCreate($account->name, $account->accountType->type);
+        $this->assertEquals($result->id, $account->id);
     }
 
 }

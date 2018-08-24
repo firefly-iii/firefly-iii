@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 use FireflyIII\Factory\CategoryFactory;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -31,6 +32,16 @@ use Tests\TestCase;
  */
 class CategoryFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Factory\CategoryFactory
      */

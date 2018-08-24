@@ -1,6 +1,6 @@
 <?php
 /**
- * TagFactoryTest.php
+ * AttachmentFactoryTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,14 +24,16 @@ declare(strict_types=1);
 namespace Tests\Unit\Factory;
 
 
-use FireflyIII\Factory\TagFactory;
+use FireflyIII\Factory\AttachmentFactory;
+use FireflyIII\Models\TransactionJournal;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class TagFactoryTest
+ *
+ * Class AttachmentFactoryTest
  */
-class TagFactoryTest extends TestCase
+class AttachmentFactoryTest extends TestCase
 {
 
     /**
@@ -44,31 +46,26 @@ class TagFactoryTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Factory\TagFactory
+     * @covers \FireflyIII\Factory\AttachmentFactory
      */
-    public function testFindOrCreateExisting(): void
+    public function testCreate(): void
     {
-        $tag = $this->user()->tags()->first();
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
+
+        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $data    = [
+            'model_id' => $journal->id,
+            'model'    => TransactionJournal::class,
+            'filename' => 'testfile.pdf',
+            'title'    => 'File name',
+            'notes'    => 'Some notes',
+        ];
+
+        $factory = new AttachmentFactory;
         $factory->setUser($this->user());
+        $result = $factory->create($data);
+        $this->assertEquals($data['title'], $result->title);
+        $this->assertEquals(1, $result->notes()->count());
 
-        $result = $factory->findOrCreate($tag->tag);
-        $this->assertEquals($tag->id, $result->id);
+
     }
-
-    /**
-     * @covers \FireflyIII\Factory\TagFactory
-     */
-    public function testFindOrCreateNew(): void
-    {
-        $tag = 'Some new tag#' . random_int(1, 10000);
-        /** @var TagFactory $factory */
-        $factory = app(TagFactory::class);
-        $factory->setUser($this->user());
-
-        $result = $factory->findOrCreate($tag);
-        $this->assertEquals($tag, $result->tag);
-    }
-
 }

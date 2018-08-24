@@ -39,6 +39,8 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ *
+ * @codeCoverageIgnore
  */
 class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
