@@ -141,9 +141,11 @@ class UserEventHandler
         $uri       = route('profile.confirm-email-change', [$token->data]);
         try {
             Mail::to($newEmail)->send(new ConfirmEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+        // @codeCoverageIgnoreEnd
 
         return true;
     }
@@ -165,9 +167,11 @@ class UserEventHandler
         $uri       = route('profile.undo-email-change', [$token->data, hash('sha256', $oldEmail)]);
         try {
             Mail::to($oldEmail)->send(new UndoEmailChangeMail($newEmail, $oldEmail, $uri, $ipAddress));
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+        // @codeCoverageIgnoreEnd
 
         return true;
     }
@@ -190,9 +194,11 @@ class UserEventHandler
         // send email.
         try {
             Mail::to($email)->send(new RequestedNewPasswordMail($url, $ipAddress));
+            // @codeCoverageIgnoreStart
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
+        // @codeCoverageIgnoreEnd
 
         return true;
     }
@@ -217,9 +223,11 @@ class UserEventHandler
             // send email.
             try {
                 Mail::to($email)->send(new RegisteredUserMail($uri, $ipAddress));
+                // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::error($e->getMessage());
             }
+            // @codeCoverageIgnoreEnd
         }
 
         return true;

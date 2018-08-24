@@ -271,6 +271,7 @@ class SplitControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
 
 
@@ -368,6 +369,7 @@ class SplitControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
 
 
@@ -424,6 +426,7 @@ class SplitControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
 
 

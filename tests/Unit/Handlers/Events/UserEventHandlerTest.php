@@ -34,9 +34,10 @@ use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Auth\Events\Login;
 use Illuminate\Support\Facades\Mail;
-use Mockery;
-use Tests\TestCase;
 use Log;
+use Mockery;
+use Preferences;
+use Tests\TestCase;
 
 /**
  * Class UserEventHandlerTest
@@ -148,6 +149,26 @@ class UserEventHandlerTest extends TestCase
         $repository->shouldReceive('count')->once()->andReturn(1);
 
         $listener->checkSingleUserIsAdmin($event);
+        $this->assertTrue(true);
+    }
+
+    /**
+     * @covers \FireflyIII\Handlers\Events\UserEventHandler
+     */
+    public function testDemoUserBackToEnglish(): void
+    {
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $user       = $this->emptyUser();
+        $event      = new Login($user, true);
+        $listener   = new UserEventHandler();
+
+        // mock stuff
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(true);
+
+        Preferences::shouldReceive('setForUser')->withArgs([Mockery::any(), 'language', 'en_US'])->once();
+        Preferences::shouldReceive('mark')->once();
+
+        $listener->demoUserBackToEnglish($event);
         $this->assertTrue(true);
     }
 
