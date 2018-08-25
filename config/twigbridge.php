@@ -187,9 +187,9 @@ return [
             'ExpandedForm' => [
                 'is_safe' => [
                     'date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location',
-                     'file', 'staticText', 'password', 'nonSelectableAmount',
-                    'number', 'assetAccountList','amountNoCurrency','currencyList','ruleGroupList','assetAccountCheckList','ruleGroupListWithEmpty',
-                    'piggyBankList','currencyListEmpty','activeAssetAccountList','percentage'
+                    'file', 'staticText', 'password', 'nonSelectableAmount',
+                    'number', 'assetAccountList', 'amountNoCurrency', 'currencyList', 'ruleGroupList', 'assetAccountCheckList', 'ruleGroupListWithEmpty',
+                    'piggyBankList', 'currencyListEmpty', 'activeAssetAccountList', 'percentage', 'activeLongAccountList', 'longAccountList',
                 ],
             ],
             'Form'         => [

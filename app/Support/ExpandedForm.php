@@ -66,6 +66,46 @@ class ExpandedForm
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
+        $accountList     = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = $repository->getMetaValue($account, 'accountRole');
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            if (null === $currency) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function activeLongAccountList(string $name, $value = null, array $options = null): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
         $accountList     = $repository->getActiveAccountsByType(
             [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
         );
@@ -200,8 +240,7 @@ class ExpandedForm
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
-        $accountList     = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]);
-        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $accountList     = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
@@ -213,10 +252,6 @@ class ExpandedForm
             $role       = (string)$repository->getMetaValue($account, 'accountRole');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
-            }
-
-            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
-                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
 
             if (null === $currency) {
@@ -243,7 +278,6 @@ class ExpandedForm
         return $this->currencyField($name, 'balance', $value, $options);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param int    $value
@@ -279,6 +313,8 @@ class ExpandedForm
 
         return $html;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param string $name
@@ -425,6 +461,53 @@ class ExpandedForm
         }
 
         return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function longAccountList(string $name, $value = null, array $options = null): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $accountList     = $repository->getAccountsByType(
+            [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
+        );
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+
+            if (null === $currency) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
     }
 
     /**
