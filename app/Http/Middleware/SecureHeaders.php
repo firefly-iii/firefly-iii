@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Middleware;
 
-use Auth;
 use Closure;
 use Illuminate\Http\Request;
 
@@ -44,10 +43,25 @@ class SecureHeaders
      */
     public function handle(Request $request, Closure $next)
     {
-        $response = $next($request);
+        $response    = $next($request);
+        $google      = '';
+        $analyticsId = env('ANALYTICS_ID', '');
+        if ('' !== $analyticsId) {
+            $google = 'https://www.google-analytics.com/analytics.js';
+        }
+        $csp = [
+            "default-src 'none'",
+            sprintf("script-src 'self' 'unsafe-eval' 'unsafe-inline' %s", $google),
+            "style-src 'self' 'unsafe-inline'",
+            "base-uri 'self'",
+            "form-action 'self'",
+            "font-src 'self'",
+            "connect-src 'self'",
+            "img-src 'self'",
+        ];
 
         $response->header('X-Frame-Options', 'deny');
-        $response->header('Content-Security-Policy', "default-src 'none'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google-analytics.com/analytics.js; style-src 'self' 'unsafe-inline';base-uri 'self';form-action 'self';font-src 'self';connect-src 'self';img-src 'self'");
+        $response->header('Content-Security-Policy', implode('; ', $csp));
 
         return $response;
     }
