@@ -32,6 +32,7 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Http\Middleware\Sandstorm;
+use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
 use FireflyIII\Http\Middleware\TrimStrings;
 use FireflyIII\Http\Middleware\TrustProxies;
@@ -63,6 +64,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware
         = [
+            SecureHeaders::class,
             CheckForMaintenanceMode::class,
             ValidatePostSize::class,
             TrimStrings::class,
