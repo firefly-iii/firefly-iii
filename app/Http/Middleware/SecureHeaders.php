@@ -47,7 +47,7 @@ class SecureHeaders
         $response = $next($request);
 
         $response->header('X-Frame-Options', 'deny');
-        //$response->header('Content-Security-Policy', "default-src 'none'; script-src 'self' 'unsafe-inline' https://www.google-analytics.com/analytics.js; style-src 'self' 'unsafe-inline';base-uri 'self';form-action 'self';font-src 'self';connect-src 'self';img-src 'self'");
+        $response->header('Content-Security-Policy', "default-src 'none'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://www.google-analytics.com/analytics.js; style-src 'self' 'unsafe-inline';base-uri 'self';form-action 'self';font-src 'self';connect-src 'self';img-src 'self'");
 
         return $response;
     }
