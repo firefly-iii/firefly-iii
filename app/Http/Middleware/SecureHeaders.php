@@ -60,8 +60,28 @@ class SecureHeaders
             "img-src 'self'",
         ];
 
+        $featurePolicies = [
+            "geolocation 'none'",
+            "midi 'none'",
+            "notifications 'none'",
+            "push 'self'",
+            "sync-xhr 'self'",
+            "microphone 'none'",
+            "camera 'none'",
+            "magnetometer 'none'",
+            "gyroscope 'none'",
+            "speaker 'none'",
+            "vibrate 'none'",
+            "fullscreen 'self'",
+            "payment 'none'",
+        ];
+
         $response->header('X-Frame-Options', 'deny');
         $response->header('Content-Security-Policy', implode('; ', $csp));
+        $response->header('X-XSS-Protection', '1; mode=block');
+        $response->header('X-Content-Type-Options', 'nosniff');
+        $response->header('Referrer-Policy', 'no-referrer');
+        $response->header('Feature-Policy', implode('; ', $featurePolicies));
 
         return $response;
     }
