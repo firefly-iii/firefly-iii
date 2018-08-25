@@ -29,6 +29,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class BalanceLine.
+ *
+ * @codeCoverageIgnore
  */
 class BalanceLine
 {

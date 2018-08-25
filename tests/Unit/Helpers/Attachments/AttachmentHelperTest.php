@@ -20,14 +20,16 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Helpers\Attachments;
 
+use Crypt;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AttachmentHelperTest
@@ -38,6 +40,15 @@ use Tests\TestCase;
  */
 class AttachmentHelperTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
      */
@@ -95,6 +106,45 @@ class AttachmentHelperTest extends TestCase
 
         // Assert the file was stored...
         Storage::disk('upload')->assertExists(sprintf('at-%d.data', $attachments->first()->id));
+    }
+
+    /**
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
+     */
+    public function testSaveAttachmentFromApi(): void
+    {
+        // mock calls:
+        Crypt::shouldReceive('encrypt')->times(2)->andReturn('Some encrypted content');
+        Storage::fake('upload');
+
+        $path       = public_path('apple-touch-icon.png');
+        $helper     = new AttachmentHelper;
+        $attachment = Attachment::first();
+
+        // call helper
+        $result     = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
+
+        $this->assertTrue($result);
+
+    }
+
+    /**
+     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
+     */
+    public function testSaveAttachmentFromApiBadMime(): void
+    {
+        // mock calls:
+        Storage::fake('upload');
+
+        $path       = public_path('browserconfig.xml');
+        $helper     = new AttachmentHelper;
+        $attachment = Attachment::first();
+
+        // call helper
+        $result     = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
+
+        $this->assertFalse($result);
+
     }
 
     /**

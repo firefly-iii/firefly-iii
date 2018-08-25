@@ -26,6 +26,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class Balance.
+ *
+ * @codeCoverageIgnore
  */
 class Balance
 {

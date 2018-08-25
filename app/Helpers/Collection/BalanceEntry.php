@@ -26,6 +26,8 @@ use FireflyIII\Models\Account as AccountModel;
 
 /**
  * Class BalanceEntry.
+ *
+ * @codeCoverageIgnore
  */
 class BalanceEntry
 {

@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Helpers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Chart\MetaPieChart;
@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class MetaPieChartTest
@@ -45,6 +46,15 @@ use Tests\TestCase;
  */
 class MetaPieChartTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Helpers\Chart\MetaPieChart
      */

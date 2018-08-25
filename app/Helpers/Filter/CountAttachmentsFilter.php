@@ -31,6 +31,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class CountAttachmentsFilter
+ * @codeCoverageIgnore
  */
 class CountAttachmentsFilter implements FilterInterface
 {

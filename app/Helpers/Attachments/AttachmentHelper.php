@@ -144,9 +144,11 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $resource = tmpfile();
         if (false === $resource) {
+            // @codeCoverageIgnoreStart
             Log::error('Cannot create temp-file for file upload.');
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $path = stream_get_meta_data($resource)['uri'];
         fwrite($resource, $content);
@@ -341,9 +343,12 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!$this->validMime($file)) {
             $result = false;
         }
+        // @codeCoverageIgnoreStart
+        // can't seem to reach this point.
         if (true === $result && !$this->validSize($file)) {
             $result = false;
         }
+        // @codeCoverageIgnoreEnd
         if (true === $result && $this->hasFile($file, $model)) {
             $result = false;
         }

@@ -52,6 +52,8 @@ use Log;
 
 /**
  * Class TransactionCollector
+ *
+ * @codeCoverageIgnore 
  */
 class TransactionCollector implements TransactionCollectorInterface
 {

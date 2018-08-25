@@ -35,6 +35,8 @@ use Log;
  *
  * This is used in the mass-edit routine.
  *
+ * @codeCoverageIgnore
+ *
  */
 class TransactionViewFilter implements FilterInterface
 {
