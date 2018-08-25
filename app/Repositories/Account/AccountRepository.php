@@ -247,7 +247,7 @@ class AccountRepository implements AccountRepositoryInterface
         $result = $query->get(['accounts.*']);
         $result = $result->sortBy(
             function (Account $account) {
-                return strtolower($account->name);
+                return sprintf('%02d', $account->account_type_id) . strtolower($account->name);
             }
         );
 

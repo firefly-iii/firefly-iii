@@ -121,13 +121,9 @@ class TransactionFactory
         }
 
         Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
-        // throw big fat error when source type === dest type and it's not a transfer or reconciliation.
-        if ($sourceAccount->accountType->type === $destinationAccount->accountType->type && $journal->transactionType->type !== TransactionType::TRANSFER) {
-            throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationAccount->accountType->type));
-        }
-        if ($sourceAccount->accountType->type !== AccountType::ASSET && $destinationAccount->accountType->type !== AccountType::ASSET) {
-            throw new FireflyException('At least one of the accounts must be an asset account.');
-        }
+
+        // based on the source type, destination type and transaction type, the system can start throwing FireflyExceptions.
+        $this->validateTransaction($sourceAccount->accountType->type, $destinationAccount->accountType->type, $journal->transactionType->type);
 
         $source = $this->create(
             [
@@ -192,6 +188,30 @@ class TransactionFactory
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    /**
+     * @param string $sourceType
+     * @param string $destinationType
+     * @param string $transactionType
+     *
+     * @throws FireflyException
+     */
+    private function validateTransaction(string $sourceType, string $destinationType, string $transactionType): void
+    {
+        // throw big fat error when source type === dest type and it's not a transfer or reconciliation.
+        if ($sourceType === $destinationType && $transactionType !== TransactionType::TRANSFER) {
+            throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationType));
+        }
+        // source must be in this list AND dest must be in this list:
+        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::MORTGAGE, AccountType::LOAN, AccountType::MORTGAGE];
+        if (
+            !\in_array($sourceType, $list, true) &&
+            !\in_array($destinationType, $list, true)) {
+            throw new FireflyException(sprintf('At least one of the accounts must be an asset account (%s, %s).', $sourceType, $destinationType));
+        }
+        // either of these must be asset or default account.
+
     }
 
 

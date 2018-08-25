@@ -33,7 +33,7 @@
                         {{ ExpandedForm.text('description') }}
 
                         {# SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS #}
-                        {{ ExpandedForm.activeAssetAccountList('source_id', null, {label: trans('form.asset_source_account')}) }}
+                        {{ ExpandedForm.activeAssetAccountList('source_id', null, {label: trans('form.asset_source_account') }) }}
 
                         {# FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS #}
                         {{ ExpandedForm.text('source_name', null, {label: trans('form.revenue_account')}) }}

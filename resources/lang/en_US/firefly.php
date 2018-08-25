@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'The account you have selected is already used in this transaction or does not exist.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Create new withdrawal',
     'create_new_deposit'                      => 'Create new deposit',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Deleting many items in one go can be very disruptive. Please be cautious.',
     'mass_deleted_transactions_success'       => 'Deleted :amount transaction(s).',
     'mass_edited_transactions_success'        => 'Updated :amount transaction(s)',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(no account type)',
     'opt_group_defaultAsset'                  => 'Default asset accounts',
     'opt_group_savingAsset'                   => 'Savings accounts',
     'opt_group_sharedAsset'                   => 'Shared asset accounts',
     'opt_group_ccAsset'                       => 'Credit cards',
     'opt_group_cashWalletAsset'               => 'Cash wallets',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 

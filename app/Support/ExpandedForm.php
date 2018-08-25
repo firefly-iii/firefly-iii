@@ -66,19 +66,27 @@ class ExpandedForm
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
-        $assetAccounts   = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accountList     = $repository->getActiveAccountsByType(
+            [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
+        );
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
         /** @var Account $account */
-        foreach ($assetAccounts as $account) {
+        foreach ($accountList as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
             $role       = $repository->getMetaValue($account, 'accountRole');
-            if ('' === $role) {
+            if ('' === $role && !\in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
+
+            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+
             if (null === $currency) {
                 $currency = $defaultCurrency;
             }
@@ -192,12 +200,13 @@ class ExpandedForm
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
-        $assetAccounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accountList     = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]);
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
         /** @var Account $account */
-        foreach ($assetAccounts as $account) {
+        foreach ($accountList as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
@@ -205,6 +214,11 @@ class ExpandedForm
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
+
+            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+
             if (null === $currency) {
                 $currency = $defaultCurrency;
             }
