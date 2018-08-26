@@ -29,6 +29,9 @@
  * Core: General Layout Style
  * -------------------------
  */
+
+@import url('../../../css/google-fonts.css');
+
 html,
 body {
   height: 100%;
