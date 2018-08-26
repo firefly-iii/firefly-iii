@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'Выбранный вами счёт уже используется в этой транзакции или не существует.',
     'source_or_dest_invalid'                  => 'Не удается найти правильные сведения о транзакции. Преобразование невозможно.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Создать новый расход',
     'create_new_deposit'                      => 'Создать новый доход',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Удаление большого числа записей за один раз может вызывать проблемы. Пожалуйста, будьте осторожны.',
     'mass_deleted_transactions_success'       => 'Удалено :amount транзакций.',
     'mass_edited_transactions_success'        => 'Обновлено :amount транзакций',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(нет типа счёта)',
     'opt_group_defaultAsset'                  => 'Основные счета по умолчанию',
     'opt_group_savingAsset'                   => 'Сберегательные счета',
     'opt_group_sharedAsset'                   => 'Общие основные счета',
     'opt_group_ccAsset'                       => 'Кредитные карты',
     'opt_group_cashWalletAsset'               => 'Кошельки с наличными',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Заметки',
     'unknown_journal_error'                   => 'Не удалось сохранить транзакцию. Пожалуйста, проверьте log-файлы.',
 

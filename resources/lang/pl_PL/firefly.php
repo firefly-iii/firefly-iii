@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'Wybrane konto jest już używane w tej transakcji lub nie istnieje.',
     'source_or_dest_invalid'                  => 'Nie można znaleźć poprawnych szczegółów transakcji. Konwersja nie jest możliwa.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Utwórz nową wypłatę',
     'create_new_deposit'                      => 'Utwórz nową wpłatę',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Usuwanie wielu elementów jednocześnie może być bardzo destrukcyjne. Proszę zachować ostrożność.',
     'mass_deleted_transactions_success'       => 'Usunięto :amount transakcję(i).',
     'mass_edited_transactions_success'        => 'Zaktualizowano :amount transakcję(i)',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(brak typu konta)',
     'opt_group_defaultAsset'                  => 'Domyślne konta aktywów',
     'opt_group_savingAsset'                   => 'Konta oszczędnościowe',
     'opt_group_sharedAsset'                   => 'Współdzielone konta aktywów',
     'opt_group_ccAsset'                       => 'Karty kredytowe',
     'opt_group_cashWalletAsset'               => 'Cash wallets',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Notatki',
     'unknown_journal_error'                   => 'Nie można zapisać transakcji. Sprawdź pliki dziennika.',
 

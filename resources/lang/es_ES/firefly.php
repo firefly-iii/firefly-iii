@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'L a cuenta que usted ha selecionado ya esta en uso o no existe.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Crear nuevo retiro',
     'create_new_deposit'                      => 'Crear nuevo deposito',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Eliminar muchos elementos de una sola vez puede ser perturbador. Por favor sea cuidadoso.',
     'mass_deleted_transactions_success'       => 'Eliminar :amount transacción (es).',
     'mass_edited_transactions_success'        => 'Actualizado :amount transacción (es)',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(Sin tipo de cuenta)',
     'opt_group_defaultAsset'                  => 'Cuenta de ingresos por mora',
     'opt_group_savingAsset'                   => 'Cuenta de ahorros',
     'opt_group_sharedAsset'                   => 'Cuenta de activos compartidas',
     'opt_group_ccAsset'                       => 'Tarjetas de credito',
     'opt_group_cashWalletAsset'               => 'Cash wallets',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Notas',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 

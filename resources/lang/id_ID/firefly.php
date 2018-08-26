@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'Akun yang telah Anda pilih sudah digunakan dalam transaksi ini atau tidak ada.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Buat penarikan baru',
     'create_new_deposit'                      => 'Buat deposit baru',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Menghapus banyak barang dalam satu go bisa sangat mengganggu. Harap berhati-hati.',
     'mass_deleted_transactions_success'       => 'Dihapus:amount transaksi.',
     'mass_edited_transactions_success'        => 'Diperbarui:amount transaksi',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(tidak ada jenis akun)',
     'opt_group_defaultAsset'                  => 'Akun aset standar',
     'opt_group_savingAsset'                   => 'Menyimpan akun',
     'opt_group_sharedAsset'                   => 'Akun aset bersama',
     'opt_group_ccAsset'                       => 'Kartu kredit',
     'opt_group_cashWalletAsset'               => 'Cash wallets',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
 

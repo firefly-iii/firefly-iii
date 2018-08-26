@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'Il conto che hai selezionato è già utilizzato in questa transazione o non esiste.',
     'source_or_dest_invalid'                  => 'Impossibile trovare i dettagli corretti della transazione. Non è possibile effettuare la conversione.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Crea un nuovo prelievo',
     'create_new_deposit'                      => 'Crea una nuova entrata',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Eliminare molti oggetti in una volta sola può essere molto pericoloso. Per favore sii cauto.',
     'mass_deleted_transactions_success'       => ':amount transazioni eliminate .',
     'mass_edited_transactions_success'        => ':amount transazioni aggiornate',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(nessun tipo di conto)',
     'opt_group_defaultAsset'                  => 'Conto attività predefinito',
     'opt_group_savingAsset'                   => 'Conti risparmio',
     'opt_group_sharedAsset'                   => 'Conti attività condivisi',
     'opt_group_ccAsset'                       => 'Carte di credito',
     'opt_group_cashWalletAsset'               => 'Portafogli',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Note',
     'unknown_journal_error'                   => 'Impossibile memorizzare la transazione. Controllare i file di log.',
 
@@ -902,7 +906,7 @@ return [
     'errors'                                  => 'Errori',
     'debt_start_date'                         => 'Data di inizio del debito',
     'debt_start_amount'                       => 'Importo iniziale del debito',
-    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
+    'debt_start_amount_help'                  => 'Inserisci l\'importo originario di questa passività come un numero positivo. Puoi anche inserire l\'importo corrente. Assicurati di modificare i dati sottostanti in modo che corrispondano.',
     'store_new_liabilities_account'           => 'Memorizza nuova passività',
     'edit_liabilities_account'                => 'Modica passività ":name"',
 

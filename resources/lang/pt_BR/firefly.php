@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'A conta que você selecionou já é usada nesta transação ou não existe.',
     'source_or_dest_invalid'                  => 'Os detalhes corretos da transação não foram encontrados. A conversão não é possível.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Criar nova retirada',
     'create_new_deposit'                      => 'Criar um novo depósito',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Exclusão de muitos itens de uma só vez pode ser muito perturbador. Por favor, seja cauteloso.',
     'mass_deleted_transactions_success'       => 'Excluído :amount de transação(ões).',
     'mass_edited_transactions_success'        => 'Atualizado :amount de transação(ões)',
+    'opt_group_'                              => '(no account type)',
     'opt_group_no_account_type'               => '(sem o tipo de conta)',
     'opt_group_defaultAsset'                  => 'Contas padrão',
     'opt_group_savingAsset'                   => 'Contas de poupança',
     'opt_group_sharedAsset'                   => 'Contas de ativos compartilhadas',
     'opt_group_ccAsset'                       => 'Cartões de crédito',
     'opt_group_cashWalletAsset'               => 'Cash wallets',
+    'opt_group_l_Loan'                        => 'Liability: Loan',
+    'opt_group_l_Debt'                        => 'Liability: Debt',
+    'opt_group_l_Mortgage'                    => 'Liability: Mortgage',
+    'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Notas',
     'unknown_journal_error'                   => 'A transação não pôde ser armazenada. Por favor, verifique os arquivos de log.',
 

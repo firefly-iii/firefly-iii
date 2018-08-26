@@ -593,7 +593,6 @@ return [
     'invalid_convert_selection'               => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
     'source_or_dest_invalid'                  => 'Kan de juiste transactiegegevens niet vinden. Conversie is niet mogelijk.',
 
-
     // create new stuff:
     'create_new_withdrawal'                   => 'Nieuwe uitgave',
     'create_new_deposit'                      => 'Nieuwe inkomsten',
@@ -816,12 +815,17 @@ return [
     'perm-delete-many'                        => 'Veel items in één keer verwijderen kan zeer storend zijn. Wees voorzichtig.',
     'mass_deleted_transactions_success'       => 'Verwijder :amount transactie(s).',
     'mass_edited_transactions_success'        => 'Wijzig :amount transactie(s)',
+    'opt_group_'                              => '(geen rekeningtype)',
     'opt_group_no_account_type'               => '(geen rekeningtype)',
     'opt_group_defaultAsset'                  => 'Standaard betaalrekeningen',
     'opt_group_savingAsset'                   => 'Spaarrekeningen',
     'opt_group_sharedAsset'                   => 'Gedeelde betaalrekeningen',
     'opt_group_ccAsset'                       => 'Creditcards',
     'opt_group_cashWalletAsset'               => 'Cash portomonees',
+    'opt_group_l_Loan'                        => 'Passiva: lening',
+    'opt_group_l_Debt'                        => 'Passiva: schuld',
+    'opt_group_l_Mortgage'                    => 'Passiva: hypotheek',
+    'opt_group_l_Credit card'                 => 'Passiva: credit card',
     'notes'                                   => 'Notities',
     'unknown_journal_error'                   => 'Kon de transactie niet opslaan. Kijk in de logbestanden.',
 
@@ -902,7 +906,7 @@ return [
     'errors'                                  => 'Fouten',
     'debt_start_date'                         => 'Begindatum van schuld',
     'debt_start_amount'                       => 'Beginbedrag van schuld',
-    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
+    'debt_start_amount_help'                  => 'Voer de originele schuld in als een positief getal. Je mag ook je huidige schuld invullen. Pas de datum hier op aan.',
     'store_new_liabilities_account'           => 'Nieuwe passiva opslaan',
     'edit_liabilities_account'                => 'Passiva ":name" wijzigen',
 
