@@ -181,6 +181,7 @@ return [
             'revenue'     => 'Revenue accounts',
             'cash'        => 'Cash accounts',
             'liabilities' => 'Liabilities',
+            'liability'   => 'Liabilities',
         ],
     'subIconsByIdentifier'     =>
         [
@@ -215,6 +216,7 @@ return [
             'import'      => ['Import account'],
             'reconcile'   => ['Reconciliation account'],
             'liabilities' => ['Loan', 'Debt', 'Mortgage', 'Credit card'],
+            'liability'   => ['Loan', 'Debt', 'Mortgage', 'Credit card'],
         ],
     'shortNamesByFullName'     =>
         [

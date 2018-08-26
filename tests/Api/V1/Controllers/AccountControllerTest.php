@@ -125,12 +125,13 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'            => 'Some new asset account #' . random_int(1, 10000),
-            'currency_id'     => 1,
-            'type'            => 'asset',
-            'active'          => 1,
-            'account_role'    => 'defaultAsset',
-            'opening_balance' => '123.45',
+            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'currency_id'       => 1,
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
+            'opening_balance'   => '123.45',
         ];
 
         // test API
@@ -165,11 +166,12 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . random_int(1, 10000),
-            'type'         => 'asset',
-            'active'       => 1,
-            'account_role' => 'ccAsset',
-            'currency_id'  => 1,
+            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'ccAsset',
+            'currency_id'       => 1,
         ];
 
         // test API
@@ -205,10 +207,11 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . random_int(1, 10000),
-            'type'         => 'asset',
-            'active'       => 1,
-            'account_role' => 'defaultAsset',
+            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
@@ -280,11 +283,12 @@ class AccountControllerTest extends TestCase
         $account = $this->user()->accounts()->where('account_type_id', 3)->first();
         // data to submit
         $data = [
-            'name'         => $account->name,
-            'currency_id'  => 1,
-            'type'         => 'asset',
-            'active'       => 1,
-            'account_role' => 'defaultAsset',
+            'name'              => $account->name,
+            'currency_id'       => 1,
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
@@ -328,11 +332,12 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . random_int(1, 10000),
-            'currency_id'  => 1,
-            'type'         => 'asset',
-            'active'       => 1,
-            'account_role' => 'defaultAsset',
+            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'currency_id'       => 1,
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
@@ -374,11 +379,12 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'          => 'Some new asset account #' . random_int(1, 10000),
-            'currency_code' => 'EUR',
-            'type'          => 'asset',
-            'active'        => 1,
-            'account_role'  => 'defaultAsset',
+            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'currency_code'     => 'EUR',
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
@@ -417,11 +423,12 @@ class AccountControllerTest extends TestCase
         $account = $this->user()->accounts()->first();
         // data to submit
         $data = [
-            'name'         => $account->name,
-            'currency_id'  => 1,
-            'type'         => 'asset',
-            'active'       => 1,
-            'account_role' => 'defaultAsset',
+            'name'              => $account->name,
+            'currency_id'       => 1,
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
@@ -461,11 +468,12 @@ class AccountControllerTest extends TestCase
         $account = $this->user()->accounts()->first();
         // data to submit
         $data = [
-            'name'          => $account->name,
-            'currency_code' => 'EUR',
-            'type'          => 'asset',
-            'active'        => 1,
-            'account_role'  => 'defaultAsset',
+            'name'              => $account->name,
+            'currency_code'     => 'EUR',
+            'type'              => 'asset',
+            'active'            => 1,
+            'include_net_worth' => 1,
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
