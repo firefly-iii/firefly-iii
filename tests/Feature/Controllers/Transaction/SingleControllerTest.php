@@ -249,7 +249,7 @@ class SingleControllerTest extends TestCase
         // mock new account list:
         $currency = TransactionCurrency::first();
         $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn(new Collection([$account]))->once();
+                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]])->andReturn(new Collection([$account]))->once();
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(6);
 
         $this->be($this->user());

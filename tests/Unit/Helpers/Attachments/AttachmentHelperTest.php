@@ -28,8 +28,8 @@ use FireflyIII\Models\Attachment;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AttachmentHelperTest
@@ -114,15 +114,31 @@ class AttachmentHelperTest extends TestCase
     public function testSaveAttachmentFromApi(): void
     {
         // mock calls:
-        Crypt::shouldReceive('encrypt')->times(2)->andReturn('Some encrypted content');
+        Crypt::shouldReceive('encrypt')->times(6)->andReturn('Some encrypted content');
         Storage::fake('upload');
 
-        $path       = public_path('apple-touch-icon.png');
-        $helper     = new AttachmentHelper;
-        $attachment = Attachment::first();
+        $path   = public_path('apple-touch-icon.png');
+        $helper = new AttachmentHelper;
+
+        // make new attachment:
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $attachment = Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'user_id'         => $this->user()->id,
+                'attachable_type' => TransactionJournal::class,
+                'md5'             => md5('Hello' . random_int(1, 10000)),
+                'filename'        => 'file.txt',
+                'title'           => 'Some title',
+                'description'     => 'Some descr',
+                'mime'            => 'text/plain',
+                'size'            => 30,
+                'uploaded'        => true,
+            ]
+        );
 
         // call helper
-        $result     = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
+        $result = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
 
         $this->assertTrue($result);
 
@@ -138,10 +154,26 @@ class AttachmentHelperTest extends TestCase
 
         $path       = public_path('browserconfig.xml');
         $helper     = new AttachmentHelper;
-        $attachment = Attachment::first();
+
+        // make new attachment:
+        $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $attachment = Attachment::create(
+            [
+                'attachable_id'   => $journal->id,
+                'user_id'         => $this->user()->id,
+                'attachable_type' => TransactionJournal::class,
+                'md5'             => md5('Hello' . random_int(1, 10000)),
+                'filename'        => 'file.txt',
+                'title'           => 'Some title',
+                'description'     => 'Some descr',
+                'mime'            => 'text/plain',
+                'size'            => 30,
+                'uploaded'        => true,
+            ]
+        );
 
         // call helper
-        $result     = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
+        $result = $helper->saveAttachmentFromApi($attachment, file_get_contents($path));
 
         $this->assertFalse($result);
 

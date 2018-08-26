@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -37,6 +38,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\JsonResponse;
+use Log;
 
 /**
  * Class BoxController.
@@ -235,16 +237,13 @@ class BoxController extends Controller
     /**
      * Total user net worth.
      *
-     * @param AccountRepositoryInterface $repository
-     *
      * @return JsonResponse
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function netWorth(AccountRepositoryInterface $repository): JsonResponse
+    public function netWorth(): JsonResponse
     {
-        $date = new Carbon(date('Y-m-d')); // needed so its per day.
+        $date = Carbon::create()->startOfDay();
 
         // start and end in the future? use $end
         if ($this->notInSessionRange($date)) {
@@ -252,47 +251,42 @@ class BoxController extends Controller
             $date = session('end', Carbon::now()->endOfMonth());
         }
 
-        // start in the past, end in the future? use $date
-        $cache = new CacheProperties;
-        $cache->addProperty($date);
-        $cache->addProperty('box-net-worth');
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        $netWorth = [];
-        $accounts = $repository->getActiveAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        /** @var NetWorthInterface $netWorthHelper */
+        $netWorthHelper = app(NetWorthInterface::class);
+        $netWorthHelper->setUser(auth()->user());
 
-        $balances = app('steam')->balancesByAccounts($accounts, $date);
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $allAccounts = $accountRepository->getActiveAccountsByType(
+            [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
+        );
+        Log::debug(sprintf('Found %d accounts.', $allAccounts->count()));
 
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $accountCurrency = $this->getCurrencyOrDefault($account);
-            $balance         = $balances[$account->id] ?? '0';
+        // filter list on preference of being included.
+        $filtered = $allAccounts->filter(
+            function (Account $account) use ($accountRepository) {
+                $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
+                $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+                if (false === $result) {
+                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                }
 
-            // if the account is a credit card, subtract the virtual balance from the balance,
-            // to better reflect that this is not money that is actually "yours".
-            $role           = (string)$repository->getMetaValue($account, 'accountRole');
-            $virtualBalance = (string)$account->virtual_balance;
-            if ('ccAsset' === $role && '' !== $virtualBalance && (float)$virtualBalance > 0) {
-                $balance = bcsub($balance, $virtualBalance);
+                return $result;
             }
+        );
 
-            if (!isset($netWorth[$accountCurrency->id])) {
-                $netWorth[$accountCurrency->id]['currency'] = $accountCurrency;
-                $netWorth[$accountCurrency->id]['sum']      = '0';
-            }
-            $netWorth[$accountCurrency->id]['sum'] = bcadd($netWorth[$accountCurrency->id]['sum'], $balance);
-        }
+        $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
+
 
         $return = [];
-        foreach ($netWorth as $currencyId => $data) {
-            $return[$currencyId] = app('amount')->formatAnything($data['currency'], $data['sum'], false);
+        foreach ($netWorthSet as $index => $data) {
+            /** @var TransactionCurrency $currency */
+            $currency = $data['currency'];
+            $return[$currency->id] = app('amount')->formatAnything($currency, $data['balance'], false);
         }
         $return = [
             'net_worths' => array_values($return),
         ];
-
-        $cache->store($return);
 
         return response()->json($return);
     }

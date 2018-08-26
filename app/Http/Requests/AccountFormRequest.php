@@ -66,7 +66,11 @@ class AccountFormRequest extends Request
             'notes'                => $this->string('notes'),
             'interest'             => $this->string('interest'),
             'interest_period'      => $this->string('interest_period'),
+            'include_net_worth'    => '1',
         ];
+        if (false === $this->boolean('include_net_worth')) {
+            $data['include_net_worth'] = '0';
+        }
 
         // if the account type is "liabilities" there are actually four types of liability
         // that could have been selected.

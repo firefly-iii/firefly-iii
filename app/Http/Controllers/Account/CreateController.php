@@ -99,7 +99,13 @@ class CreateController extends Controller
         ];
 
         // pre fill some data
-        $request->session()->flash('preFilled', ['currency_id' => $defaultCurrency->id]);
+        $hasOldInput = null !== $request->old('_token');
+        $request->session()->flash(
+            'preFilled', [
+                           'currency_id'       => $defaultCurrency->id,
+                           'include_net_worth' => $hasOldInput ? (bool)$request->old('include_net_worth') : true,
+                       ]
+        );
 
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('accounts.create.fromStore')) {

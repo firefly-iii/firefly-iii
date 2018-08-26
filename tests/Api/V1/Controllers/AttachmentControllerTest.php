@@ -199,7 +199,6 @@ class AttachmentControllerTest extends TestCase
         // test API
         $response = $this->get('/api/v1/attachments/' . $attachment->id);
         $response->assertStatus(200);
-        $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'attachments', 'links' => true],]);
         $response->assertSee($attachment->filename); // attachment file name
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

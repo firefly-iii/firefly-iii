@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
@@ -67,22 +68,41 @@ class ReportController extends Controller
         $cache = new CacheProperties;
         $cache->addProperty('chart.report.net-worth');
         $cache->addProperty($start);
-        $cache->addProperty($accounts);
+        $cache->addProperty(implode(',', $accounts->pluck('id')->toArray()));
         $cache->addProperty($end);
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         $current   = clone $start;
         $chartData = [];
+        /** @var NetWorthInterface $helper */
+        $helper = app(NetWorthInterface::class);
+        $helper->setUser(auth()->user());
+
         while ($current < $end) {
-            $balances          = app('steam')->balancesByAccounts($accounts, $current);
-            $sum               = $this->arraySum($balances);
-            $label             = $current->formatLocalized((string)trans('config.month_and_day'));
-            $chartData[$label] = $sum;
+            // get balances by date, grouped by currency.
+            $result = $helper->getNetWorthByCurrency($accounts, $current);
+
+            // loop result, add to array.
+            /** @var array $netWorthItem */
+            foreach ($result as $netWorthItem) {
+                $currencyId = $netWorthItem['currency']->id;
+                $label      = $current->formatLocalized((string)trans('config.month_and_day'));
+                if (!isset($chartData[$currencyId])) {
+                    $chartData[$currencyId] = [
+                        'label'           => 'Net worth in ' . $netWorthItem['currency']->name,
+                        'type'            => 'line',
+                        'currency_symbol' => $netWorthItem['currency']->symbol,
+                        'entries'         => [],
+                    ];
+                }
+                $chartData[$currencyId]['entries'][$label] = $netWorthItem['balance'];
+
+            }
             $current->addDays(7);
         }
 
-        $data = $this->generator->singleSet((string)trans('firefly.net_worth'), $chartData);
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);

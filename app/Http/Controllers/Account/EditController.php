@@ -116,6 +116,11 @@ class EditController extends Controller
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $default              = app('amount')->getDefaultCurrency();
         $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
+
+        // include this account in net-worth charts?
+        $includeNetWorth = $repository->getMetaValue($account, 'include_net_worth');
+        $includeNetWorth = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+
         if (null === $currency) {
             $currency = $default;
         }
@@ -133,6 +138,7 @@ class EditController extends Controller
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
+            'include_net_worth'    => $includeNetWorth,
             'interest'             => $repository->getMetaValue($account, 'interest'),
             'interest_period'      => $repository->getMetaValue($account, 'interest_period'),
             'notes'                => $this->repository->getNoteText($account),

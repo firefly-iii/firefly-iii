@@ -1037,7 +1037,7 @@ class TransactionFactoryTest extends TestCase
         try {
             $factory->createPair($withdrawal, $data);
         } catch (FireflyException $e) {
-            $this->assertEquals('At least one of the accounts must be an asset account.', $e->getMessage());
+            $this->assertEquals('At least one of the accounts must be an asset account (Expense account, Revenue account).', $e->getMessage());
         }
 
         $newCount = $withdrawal->transactions()->count();

@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -155,12 +156,26 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorth(): void
     {
+        $result = [
+            [
+                'currency' => TransactionCurrency::find(1),
+                'balance'  => '3',
+            ],
+        ];
+
+
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
+
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
+
 
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));
@@ -172,12 +187,25 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthFuture(): void
     {
+        $result = [
+            [
+                'currency' => TransactionCurrency::find(1),
+                'balance'  => '3',
+            ],
+        ];
+
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
+
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
 
         $start = new Carbon;
         $start->addMonths(6)->startOfMonth();
@@ -194,12 +222,25 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthNoCurrency(): void
     {
+        $result = [
+            [
+                'currency' => TransactionCurrency::find(1),
+                'balance'  => '3',
+            ],
+        ];
+
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
+
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
         $currencyRepos->shouldReceive('findNull')->andReturn(null);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));
@@ -211,14 +252,27 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthVirtual(): void
     {
+        $result = [
+            [
+                'currency' => TransactionCurrency::find(1),
+                'balance'  => '3',
+            ],
+        ];
+
         $account                  = $this->user()->accounts()->first();
         $account->virtual_balance = '1000';
         $accountRepos             = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos            = $this->mock(CurrencyRepositoryInterface::class);
+
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
+
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$account]));
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('json.box.net-worth'));

@@ -50,7 +50,7 @@ class ReportControllerTest extends TestCase
         $generator = $this->mock(GeneratorInterface::class);
 
         Steam::shouldReceive('balancesByAccounts')->andReturn(['5', '10']);
-        $generator->shouldReceive('singleSet')->andReturn([]);
+        $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('chart.report.net-worth', [1, '20120101', '20120131']));

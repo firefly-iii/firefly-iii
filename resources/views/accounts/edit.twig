@@ -56,10 +56,14 @@
                         {{ ExpandedForm.amountNoCurrency('virtualBalance',null) }}
 
                     {% endif %}
+
+
                     {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
 
                     {# only correct way to do active checkbox #}
                     {{ ExpandedForm.checkbox('active', 1) }}
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                 </div>
             </div>
 

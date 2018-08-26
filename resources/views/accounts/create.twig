@@ -50,7 +50,8 @@
                             {{ ExpandedForm.select('accountRole', roles,null,{helpText : 'asset_account_role_help'|_}) }}
                             {{ ExpandedForm.amountNoCurrency('virtualBalance') }}
                         {% endif %}
-
+                        {# only correct way to do active checkbox #}
+                        {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
 
                     </div>
