@@ -183,6 +183,7 @@ return [
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
     'none_in_select_list'                        => '(none)',
+    'account_in_currency'                        => ':account in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',

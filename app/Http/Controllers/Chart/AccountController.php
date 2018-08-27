@@ -65,7 +65,7 @@ class AccountController extends Controller
 
 
     /**
-     * Shows the balances for all the user's expense accounts.
+     * Shows the balances for all the user's expense accounts (on the front page).
      *
      * @param AccountRepositoryInterface $repository
      *
@@ -86,23 +86,50 @@ class AccountController extends Controller
         }
         $start->subDay();
 
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $currencies    = [];
+        $chartData     = [
+            [
+                'label'           => (string)trans('firefly.spent'),
+                'type'            => 'bar',
+                'currency_symbol' => '¤',
+                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
+                'entries'         => [],
+            ],
+        ];
         $accounts      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
-        $chartData     = [];
+        $accountNames  = $this->extractNames($accounts);
+        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
+        $tempData      = [];
 
-        foreach ($accounts as $account) {
-            $id           = $account->id;
-            $startBalance = $startBalances[$id] ?? '0';
-            $endBalance   = $endBalances[$id] ?? '0';
-            $diff         = bcsub($endBalance, $startBalance);
-            if (0 !== bccomp($diff, '0')) {
-                $chartData[$account->name] = $diff;
+
+        foreach ($endBalances as $accountId => $expenses) {
+            $accountId = (int)$accountId;
+            foreach ($expenses as $currencyId => $endAmount) {
+                $currencyId              = (int)$currencyId;
+                $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
+                $diff                    = bcsub($endAmount, $startAmount);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
+                $title                   = (string)trans(
+                    'firefly.account_in_currency', ['account' => $accountNames[$accountId], 'currency' => $currencies[$currencyId]->name]
+                );
+                $tempData[$title]        = $diff;
             }
         }
+        arsort($tempData, SORT_NUMERIC);
 
-        arsort($chartData);
-        $data = $this->generator->singleSet((string)trans('firefly.spent'), $chartData);
+        foreach ($tempData as $label => $entry) {
+            if (0 !== bccomp($entry, '0')) {
+                $chartData[0]['entries'][$label] = $entry;
+            }
+        }
+        if (1 === \count($currencies)) {
+            $first                           = array_first($currencies);
+            $chartData[0]['currency_symbol'] = $first->symbol;
+        }
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -505,6 +532,53 @@ class AccountController extends Controller
         $cache->store($data);
 
         return $data;
+    }
+
+    /**
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    private function extractNames(Collection $accounts): array
+    {
+        $return = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $return[$account->id] = $account->name;
+        }
+
+        return $return;
+    }
+
+    /**
+     * This method extracts the unique currency ID's from an array of balances.
+     *
+     * The given array is expected to be in this format:
+     *
+     * accountID1:
+     *  currencyID1: balance
+     *  currencyID2: balance
+     * accountID2:
+     *  currencyID1: balance
+     *  currencyID2: balance
+     *
+     *
+     * @param array $balances
+     *
+     * @return array
+     */
+    private function getCurrencyIDs(array $balances): array
+    {
+        $currencies = [];
+        /**
+         * @var int   $accountId
+         * @var array $info
+         */
+        foreach ($balances as $accountId => $info) {
+            $currencies = array_merge(array_keys($info));
+        }
+
+        return array_unique($currencies);
     }
 
 }

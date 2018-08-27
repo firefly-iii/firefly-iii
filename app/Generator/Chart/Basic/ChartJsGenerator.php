@@ -39,6 +39,8 @@ class ChartJsGenerator implements GeneratorInterface
      *    'type' => bar or line, optional
      *    'yAxisID' => ID of yAxis, optional, will not be included when unused.
      *    'fill' => if to fill a line? optional, will not be included when unused.
+     *    'currency_symbol' => 'x',
+     *    'backgroundColor' => 'x',
      *    'entries' =>
      *        [
      *         'label-of-entry' => 'value'
