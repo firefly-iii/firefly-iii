@@ -63,14 +63,31 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseAccounts(string $range): void
     {
-        $account       = factory(Account::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn(new Collection([$account]));
-        $generator->shouldReceive('multiSet')->andReturn([]);
-        Steam::shouldReceive('balancesPerCurrenciesByAccounts')->twice()->andReturn([]);
+        // grab two expense accounts from the current user.
+        $accounts = $this->user()->accounts()->where('account_type_id', 4)->take(2)->get();
+
+        $firstId  = $accounts->first()->id;
+        $secondId = $accounts->first()->id;
+        // for each a set of balances:
+        $start = [$firstId => [1 => '123.45', 2 => '200.01',], $secondId => [1 => '123.45', 2 => '200.01',],];
+        $end   = [$firstId => [1 => '121.45', 2 => '234.01',], $secondId => [1 => '121.45', 2 => '234.01',],];
+
+        // return them when collected:
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn($accounts);
+
+        // and return start and end balances:
+        Steam::shouldReceive('balancesPerCurrencyByAccounts')->twice()->andReturn($start, $end);
+
+        // currency should be looking for the currency ID's:
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([2])->once()->andReturn(TransactionCurrency::find(2));
+
+        $generator->shouldReceive('multiSet')->andReturn([])->once();
+
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -322,13 +339,30 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueAccounts(string $range): void
     {
-        $account      = factory(Account::class)->make();
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->andReturn(new Collection([$account]));
-        $generator->shouldReceive('singleSet')->andReturn([]);
-        Steam::shouldReceive('balancesByAccounts')->twice()->andReturn([]);
+        // grab two expense accounts from the current user.
+        $accounts = $this->user()->accounts()->where('account_type_id', 5)->take(2)->get();
+
+        $firstId  = $accounts->first()->id;
+        $secondId = $accounts->first()->id;
+        // for each a set of balances:
+        $start = [$firstId => [1 => '123.45', 2 => '200.01',], $secondId => [1 => '123.45', 2 => '200.01',],];
+        $end   = [$firstId => [1 => '121.45', 2 => '234.01',], $secondId => [1 => '121.45', 2 => '234.01',],];
+
+        // return them when collected:
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::REVENUE]])->andReturn($accounts);
+
+        // and return start and end balances:
+        Steam::shouldReceive('balancesPerCurrencyByAccounts')->twice()->andReturn($start, $end);
+
+        // currency should be looking for the currency ID's:
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([2])->once()->andReturn(TransactionCurrency::find(2));
+
+        $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
