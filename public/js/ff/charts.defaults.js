@@ -130,3 +130,17 @@ var defaultPieOptions = {
     maintainAspectRatio: true,
     responsive: true
 };
+
+var neutralDefaultPieOptions = {
+    tooltips: {
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                var value = data.datasets[0].data[tooltipItem.index];
+                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value, '¤');
+            }
+        }
+    },
+    maintainAspectRatio: true,
+    responsive: true
+};

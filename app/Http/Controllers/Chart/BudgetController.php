@@ -75,6 +75,8 @@ class BudgetController extends Controller
     /**
      * Shows overview of a single budget.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget $budget
      *
      * @return JsonResponse
@@ -124,6 +126,8 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
@@ -170,6 +174,8 @@ class BudgetController extends Controller
 
     /**
      * Shows how much is spent per asset account.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
@@ -220,6 +226,8 @@ class BudgetController extends Controller
 
     /**
      * Shows how much is spent per category.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
@@ -272,6 +280,8 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per expense account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
@@ -322,6 +332,8 @@ class BudgetController extends Controller
 
     /**
      * Shows a budget list with spent/left/overspent.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @return JsonResponse
      *
@@ -378,6 +390,8 @@ class BudgetController extends Controller
     /**
      * Shows a budget overview chart (spent and budgeted).
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget     $budget
      * @param Carbon     $start
      * @param Carbon     $end
@@ -423,6 +437,8 @@ class BudgetController extends Controller
 
     /**
      * Shows a chart for transactions without a budget.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Carbon     $start

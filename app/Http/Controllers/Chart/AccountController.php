@@ -18,7 +18,6 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-/** @noinspection NullPointerExceptionInspection */
 declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Chart;
@@ -30,6 +29,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -54,24 +54,41 @@ class AccountController extends Controller
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
+    /** @var AccountRepositoryInterface Account repository. */
+    private $accountRepository;
+
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepository;
+
     /**
      * AccountController constructor.
      */
     public function __construct()
     {
         parent::__construct();
-        $this->generator = app(GeneratorInterface::class);
+
+        $this->middleware(
+            function ($request, $next) {
+                $this->generator          = app(GeneratorInterface::class);
+                $this->accountRepository  = app(AccountRepositoryInterface::class);
+                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+
+
     }
 
 
     /**
      * Shows the balances for all the user's expense accounts (on the front page).
      *
-     * @param AccountRepositoryInterface $repository
+     * This chart is (multi) currency aware.
      *
      * @return JsonResponse
      */
-    public function expenseAccounts(AccountRepositoryInterface $repository): JsonResponse
+    public function expenseAccounts(): JsonResponse
     {
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
@@ -86,49 +103,70 @@ class AccountController extends Controller
         }
         $start->subDay();
 
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-        $currencies    = [];
-        $chartData     = [
-            [
-                'label'           => (string)trans('firefly.spent'),
-                'type'            => 'bar',
-                'currency_symbol' => '¤',
-                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-                'entries'         => [],
-            ],
-        ];
-        $accounts      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        $accountNames  = $this->extractNames($accounts);
+        // prep some vars:
+        $currencies = [];
+        $chartData  = [];
+        $tempData   = [];
+
+        // grab all accounts and names
+        $accounts     = $this->accountRepository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
+        $accountNames = $this->extractNames($accounts);
+
+        // grab all balances
         $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
         $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
-        $tempData      = [];
 
-
+        // loop the end balances. This is an array for each account ($expenses)
         foreach ($endBalances as $accountId => $expenses) {
             $accountId = (int)$accountId;
+            // loop each expense entry (each entry can be a different currency).
             foreach ($expenses as $currencyId => $endAmount) {
-                $currencyId              = (int)$currencyId;
+                $currencyId = (int)$currencyId;
+
+                // see if there is an accompanying start amount.
+                // grab the difference and find the currency.
                 $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
                 $diff                    = bcsub($endAmount, $startAmount);
-                $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
-                $title                   = (string)trans(
-                    'firefly.account_in_currency', ['account' => $accountNames[$accountId], 'currency' => $currencies[$currencyId]->name]
-                );
-                $tempData[$title]        = $diff;
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                if (0 !== bccomp($diff, '0')) {
+                    // store the values in a temporary array.
+                    $tempData[] = [
+                        'name'        => $accountNames[$accountId],
+                        'difference'  => $diff,
+                        'diff_float'  => (float)$diff,
+                        'currency_id' => $currencyId,
+                    ];
+                }
             }
         }
-        arsort($tempData, SORT_NUMERIC);
 
-        foreach ($tempData as $label => $entry) {
-            if (0 !== bccomp($entry, '0')) {
-                $chartData[0]['entries'][$label] = $entry;
-            }
+        // sort temp array by amount.
+        $amounts = array_column($tempData, 'diff_float');
+        array_multisort($amounts, SORT_DESC, $tempData);
+
+        // loop all found currencies and build the data array for the chart.
+        /**
+         * @var int                 $currencyId
+         * @var TransactionCurrency $currency
+         */
+        foreach ($currencies as $currencyId => $currency) {
+            $dataSet
+                                    = [
+                'label'           => (string)trans('firefly.spent'),
+                'type'            => 'bar',
+                'currency_symbol' => $currency->symbol,
+                'entries'         => $this->expandNames($tempData),
+            ];
+            $chartData[$currencyId] = $dataSet;
         }
-        if (1 === \count($currencies)) {
-            $first                           = array_first($currencies);
-            $chartData[0]['currency_symbol'] = $first->symbol;
+
+        // loop temp data and place data in correct array:
+        foreach ($tempData as $entry) {
+            $currencyId                               = $entry['currency_id'];
+            $name                                     = $entry['name'];
+            $chartData[$currencyId]['entries'][$name] = $entry['difference'];
         }
+
         $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
@@ -161,19 +199,31 @@ class AccountController extends Controller
         $transactions = $collector->getTransactions();
         $chartData    = [];
         $result       = [];
-
+        $budgetIds    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlBudgetId      = (int)$transaction->transaction_journal_budget_id;
-            $transBudgetId     = (int)$transaction->transaction_budget_id;
-            $budgetId          = max($jrnlBudgetId, $transBudgetId);
-            $result[$budgetId] = $result[$budgetId] ?? '0';
-            $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
+            $jrnlBudgetId  = (int)$transaction->transaction_journal_budget_id;
+            $transBudgetId = (int)$transaction->transaction_budget_id;
+            $currencyName  = $transaction->transaction_currency_name;
+            $budgetId      = max($jrnlBudgetId, $transBudgetId);
+            $combi         = $budgetId . $currencyName;
+            $budgetIds[]   = $budgetId;
+            if (!isset($result[$combi])) {
+                $result[$combi] = [
+                    'total'     => '0',
+                    'budget_id' => $budgetId,
+                    'currency'  => $currencyName,
+                ];
+            }
+            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
         }
 
-        $names = $this->getBudgetNames(array_keys($result));
-        foreach ($result as $budgetId => $amount) {
-            $chartData[$names[$budgetId]] = $amount;
+        $names = $this->getBudgetNames($budgetIds);
+        foreach ($result as $row) {
+            $budgetId          = $row['budget_id'];
+            $name              = $names[$budgetId];
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $chartData[$label] = $row['total'];
         }
 
         $data = $this->generator->pieChart($chartData);
@@ -225,18 +275,32 @@ class AccountController extends Controller
         $transactions = $collector->getTransactions();
         $result       = [];
         $chartData    = [];
+        $categoryIds  = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
-            $transCatId          = (int)$transaction->transaction_category_id;
-            $categoryId          = max($jrnlCatId, $transCatId);
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
+            $jrnlCatId     = (int)$transaction->transaction_journal_category_id;
+            $transCatId    = (int)$transaction->transaction_category_id;
+            $currencyName  = $transaction->transaction_currency_name;
+            $categoryId    = max($jrnlCatId, $transCatId);
+            $combi         = $categoryId . $currencyName;
+            $categoryIds[] = $categoryId;
+            if (!isset($result[$combi])) {
+                $result[$combi] = [
+                    'total'       => '0',
+                    'category_id' => $categoryId,
+                    'currency'    => $currencyName,
+                ];
+            }
+            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
         }
 
         $names = $this->getCategoryNames(array_keys($result));
-        foreach ($result as $categoryId => $amount) {
-            $chartData[$names[$categoryId]] = $amount;
+
+        foreach ($result as $row) {
+            $categoryId        = $row['category_id'];
+            $name              = $names[$categoryId];
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $chartData[$label] = $row['total'];
         }
 
         $data = $this->generator->pieChart($chartData);
@@ -264,6 +328,8 @@ class AccountController extends Controller
 
     /**
      * Shows the balances for all the user's frontpage accounts.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param AccountRepositoryInterface $repository
      *
@@ -319,16 +385,28 @@ class AccountController extends Controller
         $chartData    = [];
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $jrnlCatId           = (int)$transaction->transaction_journal_category_id;
-            $transCatId          = (int)$transaction->transaction_category_id;
-            $categoryId          = max($jrnlCatId, $transCatId);
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($transaction->transaction_amount, $result[$categoryId]);
+            $jrnlCatId     = (int)$transaction->transaction_journal_category_id;
+            $transCatId    = (int)$transaction->transaction_category_id;
+            $categoryId    = max($jrnlCatId, $transCatId);
+            $currencyName  = $transaction->transaction_currency_name;
+            $combi         = $categoryId . $currencyName;
+            $categoryIds[] = $categoryId;
+            if (!isset($result[$combi])) {
+                $result[$combi] = [
+                    'total'       => '0',
+                    'category_id' => $categoryId,
+                    'currency'    => $currencyName,
+                ];
+            }
+            $result[$combi]['total'] = bcadd($transaction->transaction_amount, $result[$combi]['total']);
         }
 
         $names = $this->getCategoryNames(array_keys($result));
-        foreach ($result as $categoryId => $amount) {
-            $chartData[$names[$categoryId]] = $amount;
+        foreach ($result as $row) {
+            $categoryId        = $row['category_id'];
+            $name              = $names[$categoryId];
+            $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
+            $chartData[$label] = $row['total'];
         }
         $data = $this->generator->pieChart($chartData);
         $cache->store($data);
@@ -355,6 +433,8 @@ class AccountController extends Controller
 
     /**
      * Shows overview of account during a single period.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Account $account
      * @param Carbon  $start
@@ -415,6 +495,8 @@ class AccountController extends Controller
     /**
      * Shows the balances for a given set of dates and accounts.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Carbon     $start
      * @param Carbon     $end
      * @param Collection $accounts
@@ -430,41 +512,90 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's revenue accounts.
      *
-     * @param AccountRepositoryInterface $repository
+     * This chart is multi-currency aware.
      *
      * @return JsonResponse
      */
-    public function revenueAccounts(AccountRepositoryInterface $repository): JsonResponse
+    public function revenueAccounts(): JsonResponse
     {
-        $start     = clone session('start', Carbon::now()->startOfMonth());
-        $end       = clone session('end', Carbon::now()->endOfMonth());
-        $chartData = [];
-        $cache     = new CacheProperties;
+        /** @var Carbon $start */
+        $start = clone session('start', Carbon::now()->startOfMonth());
+        /** @var Carbon $end */
+        $end   = clone session('end', Carbon::now()->endOfMonth());
+        $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('chart.account.revenue-accounts');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $accounts = $repository->getAccountsByType([AccountType::REVENUE]);
-
         $start->subDay();
-        $startBalances = app('steam')->balancesByAccounts($accounts, $start);
-        $endBalances   = app('steam')->balancesByAccounts($accounts, $end);
 
-        foreach ($accounts as $account) {
-            $id           = $account->id;
-            $startBalance = $startBalances[$id] ?? '0';
-            $endBalance   = $endBalances[$id] ?? '0';
-            $diff         = bcsub($endBalance, $startBalance);
-            $diff         = bcmul($diff, '-1');
-            if (0 !== bccomp($diff, '0')) {
-                $chartData[$account->name] = $diff;
+        // prep some vars:
+        $currencies = [];
+        $chartData  = [];
+        $tempData   = [];
+
+        // grab all accounts and names
+        $accounts     = $this->accountRepository->getAccountsByType([AccountType::REVENUE]);
+        $accountNames = $this->extractNames($accounts);
+
+        // grab all balances
+        $startBalances = app('steam')->balancesPerCurrencyByAccounts($accounts, $start);
+        $endBalances   = app('steam')->balancesPerCurrencyByAccounts($accounts, $end);
+
+        // loop the end balances. This is an array for each account ($expenses)
+        foreach ($endBalances as $accountId => $expenses) {
+            $accountId = (int)$accountId;
+            // loop each expense entry (each entry can be a different currency).
+            foreach ($expenses as $currencyId => $endAmount) {
+                $currencyId = (int)$currencyId;
+
+                // see if there is an accompanying start amount.
+                // grab the difference and find the currency.
+                $startAmount             = $startBalances[$accountId][$currencyId] ?? '0';
+                $diff                    = bcsub($endAmount, $startAmount);
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $this->currencyRepository->findNull($currencyId);
+                if (0 !== bccomp($diff, '0')) {
+                    // store the values in a temporary array.
+                    $tempData[] = [
+                        'name'        => $accountNames[$accountId],
+                        'difference'  => $diff,
+                        'diff_float'  => (float)$diff,
+                        'currency_id' => $currencyId,
+                    ];
+                }
             }
         }
 
-        arsort($chartData);
-        $data = $this->generator->singleSet((string)trans('firefly.earned'), $chartData);
+        // sort temp array by amount.
+        $amounts = array_column($tempData, 'diff_float');
+        array_multisort($amounts, SORT_DESC, $tempData);
+
+        // loop all found currencies and build the data array for the chart.
+        /**
+         * @var int                 $currencyId
+         * @var TransactionCurrency $currency
+         */
+        foreach ($currencies as $currencyId => $currency) {
+            $dataSet
+                                    = [
+                'label'           => (string)trans('firefly.earned'),
+                'type'            => 'bar',
+                'currency_symbol' => $currency->symbol,
+                'entries'         => $this->expandNames($tempData),
+            ];
+            $chartData[$currencyId] = $dataSet;
+        }
+
+        // loop temp data and place data in correct array:
+        foreach ($tempData as $entry) {
+            $currencyId                               = $entry['currency_id'];
+            $name                                     = $entry['name'];
+            $chartData[$currencyId]['entries'][$name] = bcmul($entry['difference'], '-1');
+        }
+
+        $data = $this->generator->multiSet($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -535,6 +666,25 @@ class AccountController extends Controller
     }
 
     /**
+     * Small helper function for the revenue and expense account charts.
+     *
+     * @param array $names
+     *
+     * @return array
+     */
+    private function expandNames(array $names): array
+    {
+        $result = [];
+        foreach ($names as $entry) {
+            $result[$entry['name']] = 0;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Small helper function for the revenue and expense account charts.
+     *
      * @param Collection $accounts
      *
      * @return array
@@ -549,36 +699,4 @@ class AccountController extends Controller
 
         return $return;
     }
-
-    /**
-     * This method extracts the unique currency ID's from an array of balances.
-     *
-     * The given array is expected to be in this format:
-     *
-     * accountID1:
-     *  currencyID1: balance
-     *  currencyID2: balance
-     * accountID2:
-     *  currencyID1: balance
-     *  currencyID2: balance
-     *
-     *
-     * @param array $balances
-     *
-     * @return array
-     */
-    private function getCurrencyIDs(array $balances): array
-    {
-        $currencies = [];
-        /**
-         * @var int   $accountId
-         * @var array $info
-         */
-        foreach ($balances as $accountId => $info) {
-            $currencies = array_merge(array_keys($info));
-        }
-
-        return array_unique($currencies);
-    }
-
 }

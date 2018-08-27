@@ -163,7 +163,7 @@ trait AugumentData
                 $return[$categoryId] = $grouped[$categoryId][0]['name'];
             }
         }
-        $return[0] = (string)trans('firefly.noCategory');
+        $return[0] = (string)trans('firefly.no_category');
 
         return $return;
     }

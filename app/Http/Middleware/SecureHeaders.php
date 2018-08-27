@@ -63,15 +63,15 @@ class SecureHeaders
         $featurePolicies = [
             "geolocation 'none'",
             "midi 'none'",
-            "notifications 'none'",
-            "push 'self'",
+            //"notifications 'none'",
+            //"push 'self'",
             "sync-xhr 'self'",
             "microphone 'none'",
             "camera 'none'",
             "magnetometer 'none'",
             "gyroscope 'none'",
             "speaker 'none'",
-            "vibrate 'none'",
+            //"vibrate 'none'",
             "fullscreen 'self'",
             "payment 'none'",
         ];

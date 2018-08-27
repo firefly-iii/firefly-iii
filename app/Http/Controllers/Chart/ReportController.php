@@ -56,6 +56,8 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -110,6 +112,8 @@ class ReportController extends Controller
 
     /**
      * Shows income and expense, debit/credit: operations.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Carbon     $start
@@ -168,6 +172,8 @@ class ReportController extends Controller
 
     /**
      * Shows sum income and expense, debit/credit: operations.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Carbon     $start

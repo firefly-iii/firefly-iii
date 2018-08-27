@@ -69,8 +69,8 @@ class AccountControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn(new Collection([$account]));
-        $generator->shouldReceive('singleSet')->andReturn([]);
-        Steam::shouldReceive('balancesByAccounts')->twice()->andReturn([]);
+        $generator->shouldReceive('multiSet')->andReturn([]);
+        Steam::shouldReceive('balancesPerCurrenciesByAccounts')->twice()->andReturn([]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

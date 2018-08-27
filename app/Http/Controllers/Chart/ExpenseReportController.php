@@ -67,6 +67,8 @@ class ExpenseReportController extends Controller
     /**
      * Main chart that shows income and expense for a combination of expense/revenue accounts.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $expense
      * @param Carbon     $start

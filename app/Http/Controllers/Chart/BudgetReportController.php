@@ -69,6 +69,8 @@ class BudgetReportController extends Controller
     /**
      * Chart that groups expenses by the account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -98,6 +100,8 @@ class BudgetReportController extends Controller
     /**
      * Chart that groups the expenses by budget.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $budgets
      * @param Carbon     $start
@@ -126,6 +130,8 @@ class BudgetReportController extends Controller
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Main overview of a budget in the budget report.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Collection $budgets

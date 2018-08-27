@@ -69,6 +69,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $bill_name_encrypted
  * @property string              $notes
  * @property string              $tags
+ * @property string              $transaction_currency_name
  * @property string              $transaction_currency_symbol
  * @property int                 $transaction_currency_dp
  * @property string              $transaction_currency_code

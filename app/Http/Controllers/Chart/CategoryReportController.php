@@ -64,6 +64,8 @@ class CategoryReportController extends Controller
     /**
      * Chart for expenses grouped by expense account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -89,6 +91,8 @@ class CategoryReportController extends Controller
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Chart for income grouped by revenue account.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Collection $categories
@@ -119,6 +123,8 @@ class CategoryReportController extends Controller
     /**
      * Chart for expenses grouped by expense account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -148,6 +154,8 @@ class CategoryReportController extends Controller
     /**
      * Piechart for income grouped by account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $categories
      * @param Carbon     $start
@@ -176,6 +184,8 @@ class CategoryReportController extends Controller
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Main report category chart.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Collection $categories

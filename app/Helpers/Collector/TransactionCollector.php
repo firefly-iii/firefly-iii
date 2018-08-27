@@ -87,6 +87,7 @@ class TransactionCollector implements TransactionCollectorInterface
             'transactions.amount as transaction_amount',
             'transactions.transaction_currency_id as transaction_currency_id',
 
+            'transaction_currencies.name as transaction_currency_name',
             'transaction_currencies.code as transaction_currency_code',
             'transaction_currencies.symbol as transaction_currency_symbol',
             'transaction_currencies.decimal_places as transaction_currency_dp',

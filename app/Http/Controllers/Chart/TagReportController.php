@@ -56,6 +56,8 @@ class TagReportController extends Controller
     /**
      * Generate expenses for tags grouped on account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -84,6 +86,8 @@ class TagReportController extends Controller
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Generate income for tag grouped by account.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Collection $tags
@@ -114,6 +118,8 @@ class TagReportController extends Controller
     /**
      * Generate expense for tag grouped on budget.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -142,6 +148,8 @@ class TagReportController extends Controller
     /**
      * Generate expense for tag grouped on category.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -169,6 +177,8 @@ class TagReportController extends Controller
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Generate main tag overview chart.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Collection $tags
@@ -283,6 +293,8 @@ class TagReportController extends Controller
     /**
      * Show expense grouped by expense account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Collection $tags
      * @param Carbon     $start
@@ -311,6 +323,8 @@ class TagReportController extends Controller
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Show income grouped by tag.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Collection $accounts
      * @param Collection $tags

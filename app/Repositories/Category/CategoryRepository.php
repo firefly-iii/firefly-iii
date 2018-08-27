@@ -409,6 +409,89 @@ class CategoryRepository implements CategoryRepositoryInterface
         return (string)$set->sum('transaction_amount');
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * A very cryptic method name that means:
+     *
+     * Get me the amount spent in this period, grouped per currency, where no category was set.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (0 === $accounts->count()) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set = $collector->getTransactions();
+        $set = $set->filter(
+            function (Transaction $transaction) {
+                if (bccomp($transaction->transaction_amount, '0') === -1) {
+                    return $transaction;
+                }
+
+                return null;
+            }
+        );
+
+        $return = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId          = $transaction->transaction_currency_id;
+            $return[$currencyId] = $return[$currencyId] ?? '0';
+            $return[$currencyId] = bcadd($return[$currencyId], $transaction->transaction_amount);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (0 === $accounts->count()) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set    = $collector->getTransactions();
+        $return = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId          = $transaction->transaction_currency_id;
+            $return[$currencyId] = $return[$currencyId] ?? '0';
+            $return[$currencyId] = bcadd($return[$currencyId], $transaction->transaction_amount);
+        }
+
+        return $return;
+    }
+
     /**
      * @param Collection $accounts
      * @param Carbon     $start

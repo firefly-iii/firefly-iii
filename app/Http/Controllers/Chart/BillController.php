@@ -54,6 +54,8 @@ class BillController extends Controller
     /**
      * Shows all bills and whether or not they've been paid this month (pie chart).
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -88,9 +90,11 @@ class BillController extends Controller
      * Shows overview for a single bill.
      *
      * @param TransactionCollectorInterface $collector
-     * @param Bill                      $bill
+     * @param Bill                          $bill
      *
      * @return JsonResponse
+     *
+     * TODO this chart is not multi-currency aware.
      */
     public function single(TransactionCollectorInterface $collector, Bill $bill): JsonResponse
     {
@@ -109,9 +113,9 @@ class BillController extends Controller
             }
         );
         $chartData = [
-            ['type' => 'bar', 'label' => (string)trans('firefly.min-amount'),'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
-            ['type' => 'bar', 'label' => (string)trans('firefly.max-amount'),'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
-            ['type' => 'line', 'label' => (string)trans('firefly.journal-amount'),'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.min-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'bar', 'label' => (string)trans('firefly.max-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
+            ['type' => 'line', 'label' => (string)trans('firefly.journal-amount'), 'currency_symbol' => $bill->transactionCurrency->symbol, 'entries' => []],
         ];
 
         /** @var Transaction $entry */

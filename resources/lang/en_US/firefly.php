@@ -183,7 +183,7 @@ return [
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
     'none_in_select_list'                        => '(none)',
-    'account_in_currency'                        => ':account in :currency',
+    'name_in_currency'                        => ':name in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -811,7 +811,7 @@ return [
     'no_bulk_tags'                            => 'Don\'t update tag(s)',
     'bulk_edit'                               => 'Bulk edit',
     'cannot_edit_other_fields'                => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
-    'no_budget'                               => 'none',
+    'no_budget'                               => '(no budget)',
     'no_budget_squared'                       => '(no budget)',
     'perm-delete-many'                        => 'Deleting many items in one go can be very disruptive. Please be cautious.',
     'mass_deleted_transactions_success'       => 'Deleted :amount transaction(s).',

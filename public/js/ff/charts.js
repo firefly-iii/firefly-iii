@@ -204,6 +204,8 @@ function columnChart(URI, container) {
     drawAChart(URI, container, chartType, options, colorData);
 }
 
+
+
 /**
  *
  * @param URI
@@ -249,6 +251,22 @@ function pieChart(URI, container) {
 
     var colorData = false;
     var options = $.extend(true, {}, defaultPieOptions);
+    var chartType = 'pie';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function neutralPieChart(URI, container) {
+    "use strict";
+
+    var colorData = false;
+    var options = $.extend(true, {}, neutralDefaultPieOptions);
     var chartType = 'pie';
 
     drawAChart(URI, container, chartType, options, colorData);
