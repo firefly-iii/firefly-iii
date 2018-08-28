@@ -28,6 +28,13 @@ namespace FireflyIII\Generator\Chart\Basic;
 interface GeneratorInterface
 {
     /**
+     * @param array $data
+     *
+     * @return array
+     */
+    public function multiCurrencyPieChart(array $data): array;
+
+    /**
      * Will generate a Chart JS compatible array from the given input. Expects this format.
      *
      * Will take labels for all from first set.

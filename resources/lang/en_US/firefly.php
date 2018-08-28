@@ -183,7 +183,9 @@ return [
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
     'none_in_select_list'                        => '(none)',
-    'name_in_currency'                        => ':name in :currency',
+    'name_in_currency'                           => ':name in :currency',
+    'paid_in_currency'                           => 'Paid in :currency',
+    'unpaid_in_currency'                         => 'Unpaid in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',

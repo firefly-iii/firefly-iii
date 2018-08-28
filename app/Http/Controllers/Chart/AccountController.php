@@ -329,8 +329,6 @@ class AccountController extends Controller
     /**
      * Shows the balances for all the user's frontpage accounts.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse

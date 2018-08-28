@@ -29,6 +29,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -54,8 +55,6 @@ class BillController extends Controller
     /**
      * Shows all bills and whether or not they've been paid this month (pie chart).
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
@@ -69,17 +68,28 @@ class BillController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.bill.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
+        }
+        /** @var CurrencyRepositoryInterface $currencyRepository */
+        $currencyRepository = app(CurrencyRepositoryInterface::class);
+
+        $chartData  = [];
+        $currencies = [];
+        $paid       = $repository->getBillsPaidInRangePerCurrency($start, $end); // will be a negative amount.
+        $unpaid     = $repository->getBillsUnpaidInRangePerCurrency($start, $end); // will be a positive amount.
+
+        foreach ($paid as $currencyId => $amount) {
+            $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
+            $label                   = (string)trans('firefly.paid_in_currency', ['currency' => $currencies[$currencyId]->name]);
+            $chartData[$label]       = ['amount' => $amount, 'currency_symbol' => $currencies[$currencyId]->symbol];
+        }
+        foreach ($unpaid as $currencyId => $amount) {
+            $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
+            $label                   = (string)trans('firefly.unpaid_in_currency', ['currency' => $currencies[$currencyId]->name]);
+            $chartData[$label]       = ['amount' => $amount, 'currency_symbol' => $currencies[$currencyId]->symbol];
         }
 
-        $paid      = $repository->getBillsPaidInRange($start, $end); // will be a negative amount.
-        $unpaid    = $repository->getBillsUnpaidInRange($start, $end); // will be a positive amount.
-        $chartData = [
-            (string)trans('firefly.unpaid') => $unpaid,
-            (string)trans('firefly.paid')   => $paid,
-        ];
-
-        $data = $this->generator->pieChart($chartData);
+        $data = $this->generator->multiCurrencyPieChart($chartData);
         $cache->store($data);
 
         return response()->json($data);
@@ -93,8 +103,6 @@ class BillController extends Controller
      * @param Bill                          $bill
      *
      * @return JsonResponse
-     *
-     * TODO this chart is not multi-currency aware.
      */
     public function single(TransactionCollectorInterface $collector, Bill $bill): JsonResponse
     {

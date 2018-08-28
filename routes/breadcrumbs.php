@@ -104,7 +104,7 @@ try {
             $what = config('firefly.shortNamesByFullName.' . $account->accountType->type);
 
             $breadcrumbs->parent('accounts.index', $what);
-            $breadcrumbs->push(limitStringLength($account->name), route('accounts.show', [$account->id]));
+            $breadcrumbs->push(limitStringLength($account->name), route('accounts.show.all', [$account->id]));
             if (null !== $start && null !== $end) {
                 $title = trans(
                     'firefly.between_dates_breadcrumb',
