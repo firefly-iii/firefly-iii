@@ -404,7 +404,7 @@ class AccountController extends Controller
         $names = $this->getCategoryNames(array_keys($result));
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
-            $name              = $names[$categoryId];
+            $name              = $names[$categoryId] ?? '(unknown)';
             $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
             $chartData[$label] = $row['total'];
         }
