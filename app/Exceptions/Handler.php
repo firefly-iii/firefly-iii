@@ -38,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Handler
+ * @codeCoverageIgnore
  */
 class Handler extends ExceptionHandler
 {

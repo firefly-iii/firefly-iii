@@ -22,6 +22,7 @@ apitestclass=''
 
 verbalflag=''
 testsuite=''
+suiteflag=''
 configfile='phpunit.xml';
 
 while getopts 'vcrtf:u:s:a:' flag; do
@@ -56,6 +57,7 @@ while getopts 'vcrtf:u:s:a:' flag; do
         echo "Will only run Api test $OPTARG"
     ;;
     s)
+        suiteflag='true'
         testsuite="--testsuite $OPTARG"
         echo "Will only run test suite '$OPTARG'"
     ;;
@@ -63,7 +65,7 @@ while getopts 'vcrtf:u:s:a:' flag; do
   esac
 done
 
-if [[ $coverageflag == "true" && ($featureflag == "true" || $unitflag == "true" || $apiflag == "true") ]]
+if [[ $coverageflag == "true" && ($suiteflag == "true" || $featureflag == "true" || $unitflag == "true" || $apiflag == "true") ]]
 then
     echo "Use config file specific.xml"
     configfile='phpunit.coverage.specific.xml'

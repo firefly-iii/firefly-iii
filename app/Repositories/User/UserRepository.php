@@ -58,7 +58,7 @@ class UserRepository implements UserRepositoryInterface
         }
 
         try {
-            $user->roles()->attach($role);
+            $user->roles()->attach($roleObject);
         } catch (QueryException $e) {
             // don't care
             Log::info(sprintf('Query exception when giving user a role: %s', $e->getMessage()));

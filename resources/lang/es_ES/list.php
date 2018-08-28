@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'buttons'                 => 'Botones',
     'icon'                    => 'Icono',
-    'id'                      => 'Identificación',
+    'id'                      => 'ID',
     'create_date'             => 'Fecha de creación',
     'update_date'             => 'Fecha de modificación',
     'updated_at'              => 'Actualizado en',
@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Suma de transferencias',
     'reconcile'               => 'Reconciliar',
     'account_on_spectre'      => 'Cuenta (espectro)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Importar desde esta cuenta',
     'sepa-ct-id'              => 'SEPA End to End Identifier',
     'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
@@ -129,4 +130,7 @@ return [
     'transaction_s'           => 'Transaction(s)',
     'field'                   => 'Field',
     'value'                   => 'Value',
+    'interest'                => 'Interest',
+    'interest_period'         => 'interest period',
+    'liability_type'          => 'Type of liability',
 ];

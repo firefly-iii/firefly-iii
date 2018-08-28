@@ -50,7 +50,7 @@ return [
     'at_least_one_action'            => 'De regel moet minstens één actie hebben.',
     'base64'                         => 'Dit is geen geldige base64 gecodeerde data.',
     'model_id_invalid'               => 'Dit ID past niet bij dit object.',
-    'more'                           => ':attribute moet groter zijn dan :value.',
+    'more'                           => ':attribute moet groter zijn dan nul.',
     'less'                           => ':attribute moet minder zijn dan 10.000.000',
     'active_url'                     => ':attribute is geen geldige URL.',
     'after'                          => ':attribute moet een datum na :date zijn.',

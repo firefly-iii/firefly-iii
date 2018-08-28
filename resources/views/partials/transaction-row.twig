@@ -1,17 +1,11 @@
-<tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}"
-    data-transaction-id="{{ transaction.id }}"
->
+<tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}" data-transaction-id="{{ transaction.id }}">
+
     {# input buttons #}
     <td class="hidden-xs">
         <div class="select_single" style="display:none;">
-            <input name="select_all_single[]" class="select_all_single" data-transaction="{{ transaction.id }}" value="{{ transaction.journal_id }}"
-                   type="checkbox"/>
+            <input name="select_all_single[]" class="select_all_single" data-transaction="{{ transaction.id }}" value="{{ transaction.journal_id }}" type="checkbox"/>
         </div>
-        <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">{% if sorting %}<a href="#" class="handle btn btn-default btn-xs"><i
-                    class="fa fa-fw fa-arrows-v"></i></a>{% endif %}<a href="{{ route('transactions.edit',transaction.journal_id) }}"
-                                                                       class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a><a
-                    href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i
-                        class="fa fa-fw fa-trash-o"></i></a></div>
+        <div class="btn-group btn-group-xs edit_buttons edit_tr_buttons">{% if sorting %}<a href="#" class="handle btn btn-default btn-xs"><i class="fa fa-fw fa-arrows-v"></i></a>{% endif %}<a href="{{ route('transactions.edit',transaction.journal_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a><a href="{{ route('transactions.delete',transaction.journal_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a></div>
     </td>
 
     {# icon #}
@@ -36,31 +30,39 @@
 
     </td>
 
+    {# amount #}
     <td style="text-align: right;"><span style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
+
+    {# date #}
     <td class="hidden-sm hidden-xs">
         {{ transaction.date.formatLocalized(monthAndDayFormat) }}
     </td>
 
+    {# source #}
     <td class="hidden-xs hidden-sm hidden-md">
         {{ transaction|transactionSourceAccount }}
     </td>
-
+    {# dest #}
     <td class="hidden-xs hidden-sm hidden-md">
         {{ transaction|transactionDestinationAccount }}
     </td>
 
-    {% if not hideBudgets %}
+    {# budget, if opted to show. #}
+    {% if showBudgets %}
         <td class="hidden-xs">
             {{ transaction|transactionBudgets }}
         </td>
     {% endif %}
 
-    {% if not hideCategories %}
+    {# category, if opted to show. #}
+    {% if showCategories %}
         <td class="hidden-xs">
             {{ transaction|transactionCategories }}
         </td>
     {% endif %}
-    {% if not hideBills %}
+
+    {# bill, if opted to show#}
+    {% if showBill %}
         <td class="hidden-xs">
             {% if transaction.bill_id %}
                 <a href="{{ route('bills.show',transaction.bill_id) }}">{{ transaction.bill_name }}</a>

@@ -32,6 +32,7 @@ use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Http\Middleware\Sandstorm;
+use FireflyIII\Http\Middleware\SecureHeaders;
 use FireflyIII\Http\Middleware\StartFireflySession;
 use FireflyIII\Http\Middleware\TrimStrings;
 use FireflyIII\Http\Middleware\TrustProxies;
@@ -63,6 +64,7 @@ class Kernel extends HttpKernel
      */
     protected $middleware
         = [
+            SecureHeaders::class,
             CheckForMaintenanceMode::class,
             ValidatePostSize::class,
             TrimStrings::class,
@@ -80,7 +82,7 @@ class Kernel extends HttpKernel
             // does not check login
             // does not check 2fa
             // does not check activation
-            'web'                   => [
+            'web' => [
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
@@ -88,6 +90,14 @@ class Kernel extends HttpKernel
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
                 CreateFreshApiToken::class,
+            ],
+
+            // only the basic variable binders.
+            'binders-only'          => [
+                Installer::class,
+                EncryptCookies::class,
+                AddQueuedCookiesToResponse::class,
+                Binder::class,
             ],
 
             // MUST NOT be logged in. Does not care about 2FA or confirmation.

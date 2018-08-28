@@ -31,8 +31,7 @@ use Tests\TestCase;
 class AmountTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Converter\Amount::convert()
-     * @covers \FireflyIII\Import\Converter\Amount::stripAmount()
+     * @covers \FireflyIII\Import\Converter\Amount
      */
     public function testConvert(): void
     {
@@ -173,7 +172,7 @@ class AmountTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\Amount::convert()
+     * @covers \FireflyIII\Import\Converter\Amount
      */
     public function testConvertNull(): void
     {

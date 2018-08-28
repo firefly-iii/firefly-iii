@@ -33,7 +33,7 @@ class TagsSpaceTest extends TestCase
 {
 
     /**
-     * \FireflyIII\Import\MapperPreProcess\TagsSpace::run
+     * \FireflyIII\Import\MapperPreProcess\TagsSpace
      */
     public function testBasic(): void
     {

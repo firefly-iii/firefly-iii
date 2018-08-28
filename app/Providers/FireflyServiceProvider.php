@@ -38,6 +38,8 @@ use FireflyIII\Helpers\Report\BalanceReportHelper;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelper;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
+use FireflyIII\Helpers\Report\NetWorth;
+use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
@@ -188,5 +190,8 @@ class FireflyServiceProvider extends ServiceProvider
 
         // IP thing:
         $this->app->bind(IPRetrievalInterface::class, IpifyOrg::class);
+
+        // net worth thing.
+        $this->app->bind(NetWorthInterface::class, NetWorth::class);
     }
 }

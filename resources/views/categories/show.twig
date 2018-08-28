@@ -1,12 +1,12 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, '', start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category, start, end) }}
 {% endblock %}
 
 {% block content %}
     <div class="row">
-        {% if moment != 'all' %}
+        {% if Route.getCurrentRoute.getName == 'categories.show' %}
             {# both charts #}
             <div class="col-lg-6 col-md-12 col-sm-12 col-xs-12">
                 <div class="box">
@@ -33,7 +33,7 @@
                 </div>
             </div>
         {% endif %}
-        {% if moment == 'all' %}
+        {% if Route.getCurrentRoute.getName == 'categories.show.all' %}
             {# all chart #}
             <div class="col-lg-12 col-md-12 col-sm-12">
                 <div class="box">
@@ -52,7 +52,7 @@
     {% if periods.count > 0 %}
         <div class="row">
             <div class="col-lg-offset-10 col-lg-2 col-md-offset-10 col-md-2 col-sm-12 col-xs-12">
-                <p class="small text-center"><a href="{{ route('categories.show-all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
+                <p class="small text-center"><a href="{{ route('categories.show.all',[category.id]) }}">{{ 'showEverything'|_ }}</a></p>
             </div>
         </div>
     {% endif %}
@@ -65,15 +65,16 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals' with {hideCategories: true, hideBills: true} %}
                     {% if periods.count > 0 %}
+                        {% include 'list.transactions' %}
                         <p>
                             <i class="fa fa-calendar"></i>
-                            <a href="{{ route('categories.show-all', [category.id]) }}">
+                            <a href="{{ route('categories.show.all', [category.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
                         </p>
                     {% else %}
+                        {% include 'list.transactions' with {showBudgets:true, showBill:true} %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.show', [category.id]) }}">

@@ -84,7 +84,7 @@ class RecurrenceRequest extends Request
      */
     public function rules(): array
     {
-        $today = Carbon::create()->addDay();
+        $today = Carbon::now()->addDay();
 
         return [
             'type'                                 => 'required|in:withdrawal,transfer,deposit',

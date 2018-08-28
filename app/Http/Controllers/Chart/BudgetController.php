@@ -25,17 +25,15 @@ namespace FireflyIII\Http\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -49,7 +47,7 @@ use Illuminate\Support\Collection;
  */
 class BudgetController extends Controller
 {
-    use DateCalculation;
+    use DateCalculation, AugumentData;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -76,6 +74,8 @@ class BudgetController extends Controller
 
     /**
      * Shows overview of a single budget.
+     *
+     * TODO this chart is not multi-currency aware.
      *
      * @param Budget $budget
      *
@@ -126,6 +126,8 @@ class BudgetController extends Controller
     /**
      * Shows the amount left in a specific budget limit.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget      $budget
      * @param BudgetLimit $budgetLimit
      *
@@ -173,6 +175,8 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per asset account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
@@ -191,14 +195,14 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget);
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $result       = [];
         $chartData    = [];
         /** @var Transaction $transaction */
@@ -223,6 +227,8 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per category.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
@@ -241,14 +247,14 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBudget($budget)->withCategoryInformation();
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $result       = [];
         $chartData    = [];
         /** @var Transaction $transaction */
@@ -274,6 +280,8 @@ class BudgetController extends Controller
     /**
      * Shows how much is spent per expense account.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget           $budget
      * @param BudgetLimit|null $budgetLimit
      *
@@ -292,14 +300,14 @@ class BudgetController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withOpposingAccount();
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
         }
 
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $result       = [];
         $chartData    = [];
         /** @var Transaction $transaction */
@@ -325,12 +333,14 @@ class BudgetController extends Controller
     /**
      * Shows a budget list with spent/left/overspent.
      *
-     * @return \Symfony\Component\HttpFoundation\Response
+     * TODO this chart is not multi-currency aware.
+     *
+     * @return JsonResponse
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function frontpage(): \Symfony\Component\HttpFoundation\Response
+    public function frontpage(): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -380,6 +390,8 @@ class BudgetController extends Controller
     /**
      * Shows a budget overview chart (spent and budgeted).
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Budget     $budget
      * @param Carbon     $start
      * @param Carbon     $end
@@ -426,6 +438,8 @@ class BudgetController extends Controller
     /**
      * Shows a chart for transactions without a budget.
      *
+     * TODO this chart is not multi-currency aware.
+     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -461,29 +475,6 @@ class BudgetController extends Controller
         return response()->json($data);
     }
 
-    /**
-     * Get the account names belonging to a bunch of account ID's.
-     *
-     * @param array $accountIds
-     *
-     * @return array
-     */
-    private function getAccountNames(array $accountIds): array
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $accounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT, AccountType::EXPENSE, AccountType::CASH]);
-        $grouped    = $accounts->groupBy('id')->toArray();
-        $return     = [];
-        foreach ($accountIds as $accountId) {
-            if (isset($grouped[$accountId])) {
-                $return[$accountId] = $grouped[$accountId][0]['name'];
-            }
-        }
-        $return[0] = '(no name)';
-
-        return $return;
-    }
 
     /**
      * Get the amount of money budgeted in a period.
@@ -494,7 +485,7 @@ class BudgetController extends Controller
      *
      * @return array
      */
-    private function getBudgetedInPeriod(Budget $budget, Carbon $start, Carbon $end): array
+    protected function getBudgetedInPeriod(Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
         $key      = app('navigation')->preferredCarbonFormat($start, $end);
         $range    = app('navigation')->preferredRangeFormat($start, $end);
@@ -515,31 +506,7 @@ class BudgetController extends Controller
         return $budgeted;
     }
 
-    /**
-     * Small helper function for some of the charts. Extracts category names from a bunch of ID's.
-     *
-     * @param array $categoryIds
-     *
-     * @return array
-     */
-    private function getCategoryNames(array $categoryIds): array
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-        $grouped    = $categories->groupBy('id')->toArray();
-        $return     = [];
-        foreach ($categoryIds as $categoryId) {
-            if (isset($grouped[$categoryId])) {
-                $return[$categoryId] = $grouped[$categoryId][0]['name'];
-            }
-        }
-        $return[0] = (string)trans('firefly.noCategory');
 
-        return $return;
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Get the expenses for a budget in a date range.
      *
@@ -552,7 +519,7 @@ class BudgetController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array
+    protected function getExpensesForBudget(Collection $limits, Budget $budget, Carbon $start, Carbon $end): array // get data + augment with info
     {
         $return = [];
         if (0 === $limits->count()) {
@@ -595,7 +562,7 @@ class BudgetController extends Controller
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      *
      */
-    private function spentInPeriodMulti(Budget $budget, Collection $limits): array
+    protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
     {
         $return = [];
         $format = (string)trans('config.month_and_day');
@@ -643,17 +610,17 @@ class BudgetController extends Controller
      *
      * @return string
      */
-    private function spentInPeriodWithout(Carbon $start, Carbon $end): string
+    protected function spentInPeriodWithout(Carbon $start, Carbon $end): string // get data + augment with info
     {
         // collector
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $types     = [TransactionType::WITHDRAWAL];
         $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $sum      = '0';
         /** @var Transaction $entry */
-        foreach ($journals as $entry) {
+        foreach ($transactions as $entry) {
             $sum = bcadd($entry->transaction_amount, $sum);
         }
 

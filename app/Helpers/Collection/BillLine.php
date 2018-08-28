@@ -27,6 +27,8 @@ use FireflyIII\Models\Bill as BillModel;
 
 /**
  * Class BillLine.
+ *
+ * @codeCoverageIgnore
  */
 class BillLine
 {

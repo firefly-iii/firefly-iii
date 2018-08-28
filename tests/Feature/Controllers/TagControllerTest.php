@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -53,7 +53,7 @@ class TagControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::create
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testCreate(): void
     {
@@ -69,7 +69,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::delete
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testDelete(): void
     {
@@ -85,7 +85,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::destroy
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testDestroy(): void
     {
@@ -102,7 +102,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::edit
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testEdit(): void
     {
@@ -118,8 +118,8 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::index
-     * @covers \FireflyIII\Http\Controllers\TagController::__construct
+     * @covers \FireflyIII\Http\Controllers\TagController
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testIndex(): void
     {
@@ -140,8 +140,8 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
-     * @covers \FireflyIII\Http\Controllers\TagController::getPeriodOverview
+     * @covers \FireflyIII\Http\Controllers\TagController
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShow(): void
     {
@@ -153,7 +153,7 @@ class TagControllerTest extends TestCase
 
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('spentInPeriod')->andReturn('-1')->times(1);
@@ -171,7 +171,7 @@ class TagControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1]));
@@ -180,13 +180,13 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShowAll(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
@@ -200,7 +200,7 @@ class TagControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
         $amounts = [
             TransactionType::WITHDRAWAL => '0',
@@ -216,13 +216,13 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\TagController::show
+     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShowDate(): void
     {
         // mock stuff
         $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('spentInPeriod')->andReturn('-1')->times(1);
@@ -239,7 +239,7 @@ class TagControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
 
         $amounts = [
             TransactionType::WITHDRAWAL => '0',
@@ -255,7 +255,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\TagController::store
+     * @covers       \FireflyIII\Http\Controllers\TagController
      * @covers       \FireflyIII\Http\Requests\TagFormRequest
      */
     public function testStore(): void
@@ -281,7 +281,7 @@ class TagControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\TagController::update
+     * @covers       \FireflyIII\Http\Controllers\TagController
      * @covers       \FireflyIII\Http\Requests\TagFormRequest
      */
     public function testUpdate(): void

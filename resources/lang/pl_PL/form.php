@@ -50,8 +50,8 @@ return [
     'source_account'              => 'Konto źródłowe',
     'destination_account'         => 'Konto docelowe',
     'journal_destination_id'      => 'Konto aktywów (przeznaczenie)',
-    'asset_destination_account'   => 'Konto aktywów (przeznaczenie)',
-    'asset_source_account'        => 'Konto aktywów (źródło)',
+    'asset_destination_account'   => 'Destination account',
+    'asset_source_account'        => 'Source account',
     'journal_description'         => 'Opis',
     'note'                        => 'Notatki',
     'split_journal'               => 'Podziel tę transakcję',
@@ -84,6 +84,9 @@ return [
     'verification'                => 'Weryfikacja',
     'api_key'                     => 'Klucz API',
     'remember_me'                 => 'Zapamiętaj mnie',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Konto źródłowe (konto aktywów)',
     'destination_account_expense' => 'Konto docelowe (konto wydatków)',
@@ -237,5 +240,6 @@ return [
     'repetitions'             => 'Powtórzenia',
     'calendar'                => 'Kalendarz',
     'weekend'                 => 'Weekend',
+    'client_secret'           => 'Client secret',
 
 ];

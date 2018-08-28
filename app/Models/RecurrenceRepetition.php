@@ -51,9 +51,13 @@ class RecurrenceRepetition extends Model
     /** @var int */
     public const WEEKEND_TO_MONDAY = 4;
     use SoftDeletes;
-    /** @var array */
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
     protected $casts
-                        = [
+        = [
             'created_at'        => 'datetime',
             'updated_at'        => 'datetime',
             'deleted_at'        => 'datetime',
@@ -62,8 +66,9 @@ class RecurrenceRepetition extends Model
             'repetition_skip'   => 'int',
             'weekend'           => 'int',
         ];
+    /** @var array Fields that can be filled */
     protected $fillable = ['recurrence_id', 'weekend', 'repetition_type', 'repetition_moment', 'repetition_skip'];
-    /** @var string */
+    /** @var string The table to store the data in */
     protected $table = 'recurrences_repetitions';
 
     /**

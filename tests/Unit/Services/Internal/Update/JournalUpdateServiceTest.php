@@ -61,6 +61,7 @@ class JournalUpdateServiceTest extends TestCase
         $tagFactory->shouldReceive('setUser');
         $metaFactory->shouldReceive('setUser');
 
+        $metaFactory->shouldReceive('updateOrCreate');
 
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
@@ -102,6 +103,7 @@ class JournalUpdateServiceTest extends TestCase
         $transactionFactory->shouldReceive('setUser');
         $tagFactory->shouldReceive('setUser');
         $metaFactory->shouldReceive('setUser');
+        $metaFactory->shouldReceive('updateOrCreate');
 
 
         /** @var TransactionJournal $journal */
@@ -194,6 +196,7 @@ class JournalUpdateServiceTest extends TestCase
         $transactionFactory->shouldReceive('createPair')->times(2);
         $tagFactory->shouldReceive('setUser');
         $metaFactory->shouldReceive('setUser');
+        $metaFactory->shouldReceive('updateOrCreate');
 
 
         /** @var TransactionJournal $journal */

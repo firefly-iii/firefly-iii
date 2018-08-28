@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -45,6 +46,8 @@ use View;
  */
 class SingleController extends Controller
 {
+    use ModelInformation;
+
     /** @var AttachmentHelperInterface The attachment helper. */
     private $attachments;
     /** @var BudgetRepositoryInterface The budget repository */
@@ -366,6 +369,7 @@ class SingleController extends Controller
 
         event(new StoredTransactionJournal($journal, $data['piggy_bank_id']));
 
+        session()->flash('success_uri', route('transactions.show', [$journal->id]));
         session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
         app('preferences')->mark();
 
@@ -441,19 +445,5 @@ class SingleController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));
-    }
-
-    /**
-     * Checks if journal is split.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    private function isSplitJournal(TransactionJournal $journal): bool
-    {
-        $count = $this->repository->countTransactions($journal);
-
-        return $count > 2;
     }
 }

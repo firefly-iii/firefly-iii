@@ -31,6 +31,8 @@ use Log;
  *
  * This filter is similar to the internal transfer filter but only removes transactions when the opposing account is
  * amongst $parameters (list of account ID's).
+ *
+ * @codeCoverageIgnore
  */
 class OpposingAccountFilter implements FilterInterface
 {

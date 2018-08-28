@@ -26,9 +26,9 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Import\Routine\RoutineInterface;
-use FireflyIII\Import\Storage\ImportArrayStorage;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\CreateStuff;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -37,6 +37,7 @@ use Log;
  */
 class JobStatusController extends Controller
 {
+    use CreateStuff;
     /** @var ImportJobRepositoryInterface The import job repository */
     private $repository;
 
@@ -132,11 +133,12 @@ class JobStatusController extends Controller
      */
     public function start(ImportJob $importJob): JsonResponse
     {
+        Log::debug('Now in JobStatusController::start');
         // catch impossible status:
         $allowed = ['ready_to_run', 'need_job_config'];
 
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
-            Log::error('Job is not ready.');
+            Log::error(sprintf('Job is not ready. Status should be in array, but is %s', $importJob->status), $allowed);
             $this->repository->setStatus($importJob, 'error');
 
             return response()->json(
@@ -157,7 +159,11 @@ class JobStatusController extends Controller
         /** @var RoutineInterface $routine */
         $routine = app($className);
         $routine->setImportJob($importJob);
+
+        Log::debug(sprintf('Created class of type %s', $className));
+
         try {
+            Log::debug(sprintf('Try to call %s:run()', $className));
             $routine->run();
         } catch (FireflyException|Exception $e) {
             $message = 'The import routine crashed: ' . $e->getMessage();
@@ -189,7 +195,7 @@ class JobStatusController extends Controller
         // catch impossible status:
         $allowed = ['provider_finished', 'storing_data'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
-            Log::error('Job is not ready.');
+            Log::error(sprintf('Job is not ready. Status should be in array, but is %s', $importJob->status), $allowed);
 
             return response()->json(
                 ['status' => 'NOK', 'message' => sprintf('JobStatusController::start expects status "provider_finished" instead of "%s".', $importJob->status)]
@@ -219,22 +225,5 @@ class JobStatusController extends Controller
         return response()->json(['status' => 'OK', 'message' => 'storage_finished']);
     }
 
-    /**
-     * Store the transactions.
-     *
-     * @param ImportJob $importJob
-     *
-     * @throws FireflyException
-     */
-    private function storeTransactions(ImportJob $importJob): void
-    {
-        /** @var ImportArrayStorage $storage */
-        $storage = app(ImportArrayStorage::class);
-        $storage->setImportJob($importJob);
-        try {
-            $storage->store();
-        } catch (FireflyException|Exception $e) {
-            throw new FireflyException($e->getMessage());
-        }
-    }
+
 }

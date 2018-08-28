@@ -32,7 +32,7 @@ function drawChart() {
     lineChart(accountFrontpageUri, 'accounts-chart');
 
     if (billCount > 0) {
-        pieChart('chart/bill/frontpage', 'bills-chart');
+        multiCurrencyPieChart('chart/bill/frontpage', 'bills-chart');
     }
     stackedColumnChart('chart/budget/frontpage', 'budgets-chart');
     columnChart('chart/category/frontpage', 'categories-chart');

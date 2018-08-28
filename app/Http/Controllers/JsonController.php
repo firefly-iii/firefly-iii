@@ -24,6 +24,8 @@ namespace FireflyIII\Http\Controllers;
 
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Log;
+use Throwable;
 
 /**
  * Class JsonController.
@@ -36,7 +38,6 @@ class JsonController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \Throwable
      */
     public function action(Request $request): JsonResponse
     {
@@ -46,7 +47,12 @@ class JsonController extends Controller
         foreach ($keys as $key) {
             $actions[$key] = (string)trans('firefly.rule_action_' . $key . '_choice');
         }
-        $view = view('rules.partials.action', compact('actions', 'count'))->render();
+        try {
+            $view = view('rules.partials.action', compact('actions', 'count'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
+            $view = 'Could not render view.';
+        }
 
         return response()->json(['html' => $view]);
     }
@@ -57,7 +63,6 @@ class JsonController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     * @throws \Throwable
      */
     public function trigger(Request $request): JsonResponse
     {
@@ -71,7 +76,12 @@ class JsonController extends Controller
         }
         asort($triggers);
 
-        $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
+        try {
+            $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
+            $view = 'Could not render view.';
+        }
 
         return response()->json(['html' => $view]);
     }

@@ -6,13 +6,15 @@ services:
   firefly_iii_app: 
     environment: 
       - FF_DB_HOST=firefly_iii_db
-      - FF_DB_NAME=firefly_db
-      - FF_DB_USER=firefly_db
-      - FF_DB_PASSWORD=firefly_db_secret
+      - FF_DB_NAME=firefly
+      - FF_DB_USER=firefly
+      - FF_DB_PASSWORD=firefly
       - FF_APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
       - FF_APP_ENV=local
+      - FF_DB_CONNECTION=pgsql
       - TZ=Europe/Amsterdam
-    image: jc5x/firefly-iii
+      - APP_LOG_LEVEL=debug
+    image: jc5x/firefly-iii:develop
     links: 
       - firefly_iii_db
     networks: 
@@ -30,15 +32,13 @@ services:
         type: volume
   firefly_iii_db: 
     environment: 
-      - MYSQL_DATABASE=firefly_db
-      - MYSQL_USER=firefly_db
-      - MYSQL_PASSWORD=firefly_db_secret
-      - MYSQL_RANDOM_ROOT_PASSWORD=yes
-    image: "mariadb:latest"
+      - POSTGRES_PASSWORD=firefly
+      - POSTGRES_USER=firefly
+    image: "postgres:latest"
     networks: 
       - firefly_iii_net
     volumes: 
-      - "firefly_iii_db:/var/lib/mysql"
+      - "firefly_iii_db:/var/lib/postgresql/data"
 version: "3.2"
 volumes: 
   firefly_iii_db: ~

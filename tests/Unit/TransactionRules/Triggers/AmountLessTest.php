@@ -33,7 +33,7 @@ use Tests\TestCase;
 class AmountLessTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess
      */
     public function testTriggeredExact(): void
     {
@@ -50,7 +50,7 @@ class AmountLessTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess
      */
     public function testTriggeredLess(): void
     {
@@ -67,7 +67,7 @@ class AmountLessTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess
      */
     public function testTriggeredNotLess(): void
     {
@@ -84,7 +84,7 @@ class AmountLessTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -94,7 +94,7 @@ class AmountLessTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\AmountLess
      */
     public function testWillMatchEverythingNull(): void
     {

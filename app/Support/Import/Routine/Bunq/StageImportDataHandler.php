@@ -50,6 +50,8 @@ class StageImportDataHandler
     private $accountRepository;
     /** @var ImportJob */
     private $importJob;
+    /** @var array */
+    private $jobConfiguration;
     /** @var ImportJobRepositoryInterface */
     private $repository;
     /** @var array */
@@ -71,10 +73,11 @@ class StageImportDataHandler
     public function run(): void
     {
         $this->getContext();
-        $config     = $this->repository->getConfiguration($this->importJob);
-        $accounts   = $config['accounts'] ?? [];
-        $mapping    = $config['mapping'] ?? [];
-        $collection = [[]];
+        $config                 = $this->repository->getConfiguration($this->importJob);
+        $accounts               = $config['accounts'] ?? [];
+        $mapping                = $config['mapping'] ?? [];
+        $collection             = [[]];
+        $this->jobConfiguration = $config;
         /** @var array $bunqAccount */
         foreach ($accounts as $bunqAccount) {
             $bunqAccountId = $bunqAccount['id'] ?? 0;
@@ -111,6 +114,7 @@ class StageImportDataHandler
      * @param LocalAccount $source
      *
      * @return array
+     * @throws FireflyException
      */
     private function convertPayment(BunqPayment $payment, LocalAccount $source): array
     {
@@ -191,9 +195,24 @@ class StageImportDataHandler
      */
     private function convertToAccount(LabelMonetaryAccount $party, string $expectedType): LocalAccount
     {
-        Log::debug('in convertToAccount()');
+
+        Log::debug(sprintf('in convertToAccount() with LabelMonetaryAccount: %s', ''));
         if (null !== $party->getIban()) {
-            // find opposing party by IBAN first.
+            // find account in 'bunq-iban' array first.
+            $bunqIbans = $this->jobConfiguration['bunq-iban'] ?? [];
+            if (isset($bunqIbans[$party->getIban()])) {
+                $accountId = (int)$bunqIbans[$party->getIban()];
+                $result    = $this->accountRepository->findNull($accountId);
+                if (null !== $result) {
+                    Log::debug(
+                        sprintf('Search for #%s (based on IBAN %s) resulted in account %s (#%d)', $accountId, $party->getIban(), $result->name, $result->id)
+                    );
+
+                    return $result;
+                }
+            }
+
+            // find opposing party by IBAN second.
             $result = $this->accountRepository->findByIbanNull($party->getIban(), [$expectedType]);
             if (null !== $result) {
                 Log::debug(sprintf('Search for %s resulted in account %s (#%d)', $party->getIban(), $result->name, $result->id));

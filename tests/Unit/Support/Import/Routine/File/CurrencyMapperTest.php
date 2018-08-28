@@ -72,6 +72,48 @@ class CurrencyMapperTest extends TestCase
     /**
      * @covers \FireflyIII\Support\Import\Routine\File\CurrencyMapper
      */
+    public function testEmpty(): void
+    {
+
+        // mock data
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+
+        $mapper = new CurrencyMapper();
+        $mapper->setUser($this->user());
+
+        $result = $mapper->map(null, []);
+        $this->assertNull($result);
+    }
+
+    /**
+     * @covers \FireflyIII\Support\Import\Routine\File\CurrencyMapper
+     */
+    public function testFindAndCreate(): void
+    {
+        $currency = TransactionCurrency::inRandomOrder()->first();
+        // mock data
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findBySymbolNull')->withArgs([$currency->symbol])->andReturn(null)->once();
+        $repository->shouldReceive('findByCodeNull')->withArgs([$currency->code])->andReturn(null)->once();
+        $repository->shouldReceive('findByNameNull')->withArgs([$currency->name])->andReturn(null)->once();
+
+        // nothing found, mapper will try to create it.
+        $repository->shouldReceive('store')
+                   ->withArgs([['code' => $currency->code, 'name' => $currency->name, 'symbol' => $currency->symbol, 'decimal_places' => 2]])
+                   ->once()->andReturn($currency);
+
+        $mapper = new CurrencyMapper();
+        $mapper->setUser($this->user());
+
+        $result = $mapper->map(null, ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol]);
+        $this->assertEquals($currency->id, $result->id);
+    }
+
+    /**
+     * @covers \FireflyIII\Support\Import\Routine\File\CurrencyMapper
+     */
     public function testFindByCode(): void
     {
         $currency = TransactionCurrency::inRandomOrder()->first();
@@ -79,7 +121,7 @@ class CurrencyMapperTest extends TestCase
         $repository = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('findByCodeNull')->withArgs([$currency->code])
-            ->andReturn($currency)->once();
+                   ->andReturn($currency)->once();
 
         $mapper = new CurrencyMapper();
         $mapper->setUser($this->user());
@@ -124,48 +166,6 @@ class CurrencyMapperTest extends TestCase
 
         $result = $mapper->map(null, ['symbol' => $currency->symbol]);
         $this->assertEquals($currency->id, $result->id);
-    }
-
-    /**
-     * @covers \FireflyIII\Support\Import\Routine\File\CurrencyMapper
-     */
-    public function testFindAndCreate(): void
-    {
-        $currency = TransactionCurrency::inRandomOrder()->first();
-        // mock data
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('findBySymbolNull')->withArgs([$currency->symbol])->andReturn(null)->once();
-        $repository->shouldReceive('findByCodeNull')->withArgs([$currency->code])->andReturn(null)->once();
-        $repository->shouldReceive('findByNameNull')->withArgs([$currency->name])->andReturn(null)->once();
-
-        // nothing found, mapper will try to create it.
-        $repository->shouldReceive('store')
-            ->withArgs([['code' => $currency->code, 'name' =>  $currency->name, 'symbol' => $currency->symbol,'decimal_places'=>2]])
-            ->once()->andReturn($currency);
-
-        $mapper = new CurrencyMapper();
-        $mapper->setUser($this->user());
-
-        $result = $mapper->map(null, ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol]);
-        $this->assertEquals($currency->id, $result->id);
-    }
-
-    /**
-     * @covers \FireflyIII\Support\Import\Routine\File\CurrencyMapper
-     */
-    public function testEmpty(): void
-    {
-
-        // mock data
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
-
-        $mapper = new CurrencyMapper();
-        $mapper->setUser($this->user());
-
-        $result = $mapper->map(null, []);
-        $this->assertNull($result);
     }
 
 }

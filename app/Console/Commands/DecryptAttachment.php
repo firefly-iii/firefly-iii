@@ -31,6 +31,8 @@ use Log;
 
 /**
  * Class DecryptAttachment.
+ *
+ * @codeCoverageIgnore
  */
 class DecryptAttachment extends Command
 {

@@ -103,9 +103,11 @@ class SelectControllerTest extends TestCase
     public function testTestTriggers(): void
     {
         $data = [
-            'rule-trigger'       => ['description_is'],
-            'rule-trigger-value' => ['Bla bla'],
-            'rule-trigger-stop'  => ['1'],
+            'rule_triggers' => [
+                'name'            => 'description',
+                'value'           => 'Bla bla',
+                'stop_processing' => 1,
+            ],
         ];
 
         // mock stuff
@@ -165,9 +167,11 @@ class SelectControllerTest extends TestCase
     public function testTestTriggersMax(): void
     {
         $data = [
-            'rule-trigger'       => ['description_is'],
-            'rule-trigger-value' => ['Bla bla'],
-            'rule-trigger-stop'  => ['1'],
+            'rule_triggers' => [
+                'name'            => 'description',
+                'value'           => 'Bla bla',
+                'stop_processing' => 1,
+            ],
         ];
         $set  = factory(Transaction::class, 10)->make();
 

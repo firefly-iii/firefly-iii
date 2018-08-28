@@ -35,7 +35,7 @@ use Tests\TestCase;
 class TagsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Mapper\Tags::getMap()
+     * @covers \FireflyIII\Import\Mapper\Tags
      */
     public function testGetMapBasic(): void
     {

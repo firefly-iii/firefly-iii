@@ -58,14 +58,16 @@ class AvailableBudget extends Model
             'start_date' => 'date',
             'end_date'   => 'date',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return AvailableBudget
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): AvailableBudget
     {
@@ -74,7 +76,7 @@ class AvailableBudget extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var AvailableBudget $availableBudget */
-            $availableBudget   = $user->availableBudgets()->find($availableBudgetId);
+            $availableBudget = $user->availableBudgets()->find($availableBudgetId);
             if (null !== $availableBudget) {
                 return $availableBudget;
             }
@@ -84,7 +86,7 @@ class AvailableBudget extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function transactionCurrency(): BelongsTo
     {

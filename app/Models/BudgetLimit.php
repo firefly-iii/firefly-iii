@@ -48,19 +48,23 @@ class BudgetLimit extends Model
      * @var array
      */
     protected $casts
-                        = [
+        = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'start_date' => 'date',
             'end_date'   => 'date',
         ];
+
+    /** @var array Fields that can be filled */
     protected $fillable = ['budget_id', 'start_date', 'end_date', 'amount'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return mixed
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): BudgetLimit
     {

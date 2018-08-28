@@ -25,7 +25,6 @@ namespace FireflyIII\Helpers\Attachments;
 use Crypt;
 use FireflyIII\Models\Attachment;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -80,7 +79,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
-        } catch (DecryptException|FileNotFoundException $e) {
+        } catch (DecryptException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $content = '';
         }
@@ -145,9 +144,11 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $resource = tmpfile();
         if (false === $resource) {
+            // @codeCoverageIgnoreStart
             Log::error('Cannot create temp-file for file upload.');
 
             return false;
+            // @codeCoverageIgnoreEnd
         }
         $path = stream_get_meta_data($resource)['uri'];
         fwrite($resource, $content);
@@ -342,9 +343,12 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!$this->validMime($file)) {
             $result = false;
         }
+        // @codeCoverageIgnoreStart
+        // can't seem to reach this point.
         if (true === $result && !$this->validSize($file)) {
             $result = false;
         }
+        // @codeCoverageIgnoreEnd
         if (true === $result && $this->hasFile($file, $model)) {
             $result = false;
         }

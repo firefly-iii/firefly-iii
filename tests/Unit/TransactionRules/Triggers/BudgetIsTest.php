@@ -34,7 +34,7 @@ use Tests\TestCase;
 class BudgetIsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs
      */
     public function testTriggeredJournal(): void
     {
@@ -54,7 +54,7 @@ class BudgetIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs
      */
     public function testTriggeredNotJournal(): void
     {
@@ -75,7 +75,7 @@ class BudgetIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs
      */
     public function testTriggeredTransaction(): void
     {
@@ -86,11 +86,11 @@ class BudgetIsTest extends TestCase
 
         /** @var Collection $transactions */
         $transactions = $journal->transactions()->get();
-        $budget      = $journal->user->budgets()->first();
+        $budget       = $journal->user->budgets()->first();
 
         $journal->budgets()->detach();
         /** @var Transaction $transaction */
-        foreach($transactions as $transaction) {
+        foreach ($transactions as $transaction) {
             $transaction->budgets()->detach();
             $transaction->budgets()->save($budget);
             $this->assertEquals(1, $transaction->budgets()->count());
@@ -104,7 +104,7 @@ class BudgetIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -114,7 +114,7 @@ class BudgetIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\BudgetIs
      */
     public function testWillMatchEverythingNull(): void
     {

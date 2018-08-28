@@ -71,7 +71,7 @@ class CurrencyMapper
                 return $result;
             }
         }
-        if (!isset($data['code']) || null === $data['code']) {
+        if (!isset($data['code'])) {
             return null;
         }
 

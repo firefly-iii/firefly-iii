@@ -74,7 +74,7 @@ class AccountList implements BinderInterface
                 return $collection;
             }
         }
-        Log::error('User is not logged in.');
+        Log::error(sprintf('Trying to show account list (%s), but user is not logged in or list is empty.', $route->uri));
         throw new NotFoundHttpException;
     }
 }

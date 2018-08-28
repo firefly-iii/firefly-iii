@@ -8,6 +8,7 @@
     {{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
 
     <input type="hidden" name="id" value="{{ account.id }}"/>
+    <input type="hidden" name="what" value="{{ what }}"/>
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -17,8 +18,16 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
-                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' %}
+                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or what == 'liabilities' %}
                         {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
+                    {% endif %}
+
+                    {% if what == 'liabilities' %}
+                        {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
+                        {{ ExpandedForm.amountNoCurrency('openingBalance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                        {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
+                        {{ ExpandedForm.percentage('interest') }}
+                        {{ ExpandedForm.select('interest_period', interestPeriods) }}
                     {% endif %}
                 </div>
             </div>
@@ -47,10 +56,14 @@
                         {{ ExpandedForm.amountNoCurrency('virtualBalance',null) }}
 
                     {% endif %}
-                    {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
+
+
+                    {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
 
                     {# only correct way to do active checkbox #}
                     {{ ExpandedForm.checkbox('active', 1) }}
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                 </div>
             </div>
 

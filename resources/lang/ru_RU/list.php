@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Сумма переводов',
     'reconcile'               => 'Сверка',
     'account_on_spectre'      => 'Счёт (Spectre)',
+    'account_on_ynab'         => 'Счёт (YNAB)',
     'do_import'               => 'Импортировать с этого счёта',
     'sepa-ct-id'              => 'Идентификатор SEPA end-to-end',
     'sepa-ct-op'              => 'Идентификатор учетной записи SEPA',
@@ -129,4 +130,7 @@ return [
     'transaction_s'           => 'Транзакции',
     'field'                   => 'Поле',
     'value'                   => 'Значение',
+    'interest'                => 'Процентная ставка',
+    'interest_period'         => 'период начисления процентов',
+    'liability_type'          => 'Тип ответственности',
 ];

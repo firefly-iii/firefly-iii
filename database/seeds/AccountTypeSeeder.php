@@ -41,12 +41,15 @@ class AccountTypeSeeder extends Seeder
             AccountType::IMPORT,
             AccountType::LOAN,
             AccountType::RECONCILIATION,
+            AccountType::DEBT,
+            AccountType::MORTGAGE,
+            AccountType::CREDITCARD,
         ];
         foreach ($types as $type) {
             try {
                 AccountType::create(['type' => $type]);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create account type "%s". It might exist already.', $type));
+                Log::warning(sprintf('Could not create account type "%s". It might exist already: %s', $type , $e->getMessage()));
             }
         }
     }

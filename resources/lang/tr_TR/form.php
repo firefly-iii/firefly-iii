@@ -50,8 +50,8 @@ return [
     'source_account'              => 'Kaynak hesap',
     'destination_account'         => 'Hedef Hesap',
     'journal_destination_id'      => 'Asset account (destination)',
-    'asset_destination_account'   => 'Öğe hesabı (Hedef)',
-    'asset_source_account'        => 'Varlık Hesabı (kaynak)',
+    'asset_destination_account'   => 'Destination account',
+    'asset_source_account'        => 'Source account',
     'journal_description'         => 'Tanımlama',
     'note'                        => 'Notlar',
     'split_journal'               => 'Bu işlemi böl / Taksitlendir',
@@ -84,6 +84,9 @@ return [
     'verification'                => 'Doğrulama',
     'api_key'                     => 'API anahtarı',
     'remember_me'                 => 'Remember me',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Kaynak Hesabı (varlık hesabı)',
     'destination_account_expense' => 'Hedef Hesap (gider hesabı)',
@@ -237,5 +240,6 @@ return [
     'repetitions'             => 'Repetitions',
     'calendar'                => 'Calendar',
     'weekend'                 => 'Weekend',
+    'client_secret'           => 'Client secret',
 
 ];

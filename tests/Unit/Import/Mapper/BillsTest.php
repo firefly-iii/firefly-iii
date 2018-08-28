@@ -35,7 +35,7 @@ use Tests\TestCase;
 class BillsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Mapper\Bills::getMap()
+     * @covers \FireflyIII\Import\Mapper\Bills
      */
     public function testGetMapBasic(): void
     {

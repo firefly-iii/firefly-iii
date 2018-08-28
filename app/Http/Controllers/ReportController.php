@@ -28,11 +28,9 @@ use FireflyIII\Generator\Report\ReportGeneratorFactory;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Http\Requests\ReportFormRequest;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Collection;
 use Log;
@@ -44,6 +42,8 @@ use Log;
  */
 class ReportController extends Controller
 {
+    use RenderPartialViews;
+
     /** @var ReportHelperInterface Helper interface. */
     protected $helper;
 
@@ -277,7 +277,6 @@ class ReportController extends Controller
      *
      * @return mixed
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @throws \Throwable
      */
     public function options(string $reportType)
     {
@@ -324,7 +323,7 @@ class ReportController extends Controller
         $accounts   = implode(',', $request->getAccountList()->pluck('id')->toArray());
         $categories = implode(',', $request->getCategoryList()->pluck('id')->toArray());
         $budgets    = implode(',', $request->getBudgetList()->pluck('id')->toArray());
-        $tags       = implode(',', $request->getTagList()->pluck('tag')->toArray());
+        $tags       = implode(',', $request->getTagList()->pluck('id')->toArray());
         $expense    = implode(',', $request->getExpenseList()->pluck('id')->toArray());
         $uri        = route('reports.index');
 
@@ -391,7 +390,6 @@ class ReportController extends Controller
      * @param Carbon     $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View|string
-     *
      * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function tagReport(Collection $accounts, Collection $tags, Carbon $start, Carbon $end)
@@ -419,82 +417,5 @@ class ReportController extends Controller
         return $generator->generate();
     }
 
-    /**
-     * Get options for account report.
-     *
-     * @return string
-     * @throws \Throwable
-     */
-    private function accountReportOptions(): string
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $expense    = $repository->getActiveAccountsByType([AccountType::EXPENSE]);
-        $revenue    = $repository->getActiveAccountsByType([AccountType::REVENUE]);
-        $set        = new Collection;
-        $names      = $revenue->pluck('name')->toArray();
-        foreach ($expense as $exp) {
-            if (\in_array($exp->name, $names, true)) {
-                $set->push($exp);
-            }
-        }
 
-        return view('reports.options.account', compact('set'))->render();
-    }
-
-    /**
-     * Get options for budget report.
-     * @return string
-     * @throws \Throwable
-     */
-    private function budgetReportOptions(): string
-    {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $budgets    = $repository->getBudgets();
-
-        return view('reports.options.budget', compact('budgets'))->render();
-    }
-
-    /**
-     * Get options for category report.
-     * @return string
-     * @throws \Throwable
-     */
-    private function categoryReportOptions(): string
-    {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $categories = $repository->getCategories();
-
-        return view('reports.options.category', compact('categories'))->render();
-    }
-
-    /**
-     * Get options for default report.
-     * @return string
-     * @throws \Throwable
-     */
-    private function noReportOptions(): string
-    {
-        return view('reports.options.no-options')->render();
-    }
-
-    /**
-     * Get options for tag report.
-     * @return string
-     * @throws \Throwable
-     */
-    private function tagReportOptions(): string
-    {
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $tags       = $repository->get()->sortBy(
-            function (Tag $tag) {
-                return $tag->tag;
-            }
-        );
-
-        return view('reports.options.tag', compact('tags'))->render();
-    }
 }

@@ -133,9 +133,9 @@ class ImportableConverter
     /**
      * @param string|null $date
      *
-     * @return string
+     * @return string|null
      */
-    private function convertDateValue(string $date = null): string
+    private function convertDateValue(string $date = null): ?string
     {
         $result = null;
         if (null !== $date) {
@@ -146,10 +146,6 @@ class ImportableConverter
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
             }
-        }
-        if (null === $result) {
-            $object = new Carbon;
-            $result = $object->format('Y-m-d');
         }
 
         return $result;
@@ -166,6 +162,8 @@ class ImportableConverter
         Log::debug(sprintf('Description is: "%s"', $importable->description));
         $foreignAmount = $importable->calculateForeignAmount();
         $amount        = $importable->calculateAmount();
+
+        Log::debug('All meta data: ', $importable->meta);
 
         if ('' === $amount) {
             $amount = $foreignAmount;
@@ -215,7 +213,7 @@ class ImportableConverter
 
         return [
             'type'               => $transactionType,
-            'date'               => $this->convertDateValue($importable->date),
+            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d'),
             'tags'               => $importable->tags,
             'user'               => $this->importJob->user_id,
             'notes'              => $importable->note,

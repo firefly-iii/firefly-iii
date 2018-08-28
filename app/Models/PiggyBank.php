@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Crypt;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -44,7 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int     $order
  * @property bool    $active
  * @property int     $account_id
- * @property bool encrypted
+ * @property bool    encrypted
  *
  */
 class PiggyBank extends Model
@@ -67,18 +68,18 @@ class PiggyBank extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array */
-    protected $dates = ['startdate', 'targetdate'];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
-    /** @var array */
+    /** @var array Hidden from view */
     protected $hidden = ['targetamount_encrypted', 'encrypted'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return PiggyBank
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): PiggyBank
     {
@@ -96,7 +97,7 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function account(): BelongsTo
     {
@@ -131,18 +132,18 @@ class PiggyBank extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function piggyBankEvents(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function piggyBankEvents(): HasMany
     {
         return $this->hasMany(PiggyBankEvent::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function piggyBankRepetitions(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function piggyBankRepetitions(): HasMany
     {
         return $this->hasMany(PiggyBankRepetition::class);
     }

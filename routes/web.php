@@ -33,6 +33,12 @@ Route::group(
 }
 );
 
+Route::group(
+    ['middleware' => 'binders-only','namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], function () {
+    Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
+}
+);
+
 /**
  * These routes only work when the user is NOT logged in.
  */
@@ -110,10 +116,10 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
 
     // show:
-    Route::get('{what}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense');
+    Route::get('{what}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense|liabilities');
 
     // create
-    Route::get('create/{what}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense');
+    Route::get('create/{what}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense|liabilities');
     Route::post('store', ['uses' => 'Account\CreateController@store', 'as' => 'store']);
 
 
@@ -210,7 +216,7 @@ Route::group(
 
 
     // index
-    Route::get('{moment?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
+    Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
 
     // update budget amount and income amount
     Route::get('income/{start_date}/{end_date}', ['uses' => 'Budget\AmountController@updateIncome', 'as' => 'income']);
@@ -242,11 +248,11 @@ Route::group(
     Route::post('destroy/{category}', ['uses' => 'CategoryController@destroy', 'as' => 'destroy']);
 
     // show category:
-    Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show-all']);
+    Route::get('show/{category}/all', ['uses' => 'Category\ShowController@showAll', 'as' => 'show.all']);
     Route::get('show/{category}/{start_date?}/{end_date?}', ['uses' => 'Category\ShowController@show', 'as' => 'show']);
 
     // no category controller:
-    Route::get('list/no-category/all', ['uses' => 'Category\NoCategoryController@showAll', 'as' => 'no-category-all']);
+    Route::get('list/no-category/all', ['uses' => 'Category\NoCategoryController@showAll', 'as' => 'no-category.all']);
     Route::get('list/no-category/{start_date?}/{end_date?}', ['uses' => 'Category\NoCategoryController@show', 'as' => 'no-category']);
 
 }
@@ -503,6 +509,9 @@ Route::group(
 
     // download config:
     Route::get('download/{importJob}', ['uses' => 'Import\IndexController@download', 'as' => 'job.download']);
+
+    // callback URI for YNAB OAuth. Sadly, needs a custom solution.
+    Route::get('ynab-callback', ['uses' => 'Import\CallbackController@ynab', 'as' => 'callback.ynab']);
 }
 );
 
@@ -778,6 +787,7 @@ Route::group(
 
     // create controller
     Route::get('create/{ruleGroup?}', ['uses' => 'Rule\CreateController@create', 'as' => 'create']);
+    Route::get('create-from-bill/{bill}', ['uses' => 'Rule\CreateController@createFromBill', 'as' => 'create-from-bill']);
     Route::post('store', ['uses' => 'Rule\CreateController@store', 'as' => 'store']);
 
     // delete controller
@@ -800,7 +810,6 @@ Route::group(
     // edit controller
     Route::get('edit/{rule}', ['uses' => 'Rule\EditController@edit', 'as' => 'edit']);
     Route::post('update/{rule}', ['uses' => 'Rule\EditController@update', 'as' => 'update']);
-
 
 
 }
@@ -845,7 +854,8 @@ Route::group(
     Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
     Route::get('create', ['uses' => 'TagController@create', 'as' => 'create']);
 
-    Route::get('show/{tag}/{moment?}', ['uses' => 'TagController@show', 'as' => 'show']);
+    Route::get('show/{tag}/all', ['uses' => 'TagController@showAll', 'as' => 'show.all']);
+    Route::get('show/{tag}/{start_date?}/{end_date?}', ['uses' => 'TagController@show', 'as' => 'show']);
 
     Route::get('edit/{tag}', ['uses' => 'TagController@edit', 'as' => 'edit']);
     Route::get('delete/{tag}', ['uses' => 'TagController@delete', 'as' => 'delete']);

@@ -82,17 +82,19 @@ class Recurrence extends Model
             'active'       => 'bool',
             'apply_rules'  => 'bool',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable
         = ['user_id', 'transaction_type_id', 'title', 'description', 'first_date', 'repeat_until', 'latest_date', 'repetitions', 'apply_rules', 'active'];
-    /** @var string */
+    /** @var string The table to store the data in */
     protected $table = 'recurrences';
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Recurrence
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Recurrence
     {
@@ -101,7 +103,7 @@ class Recurrence extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Recurrence $recurrence */
-            $recurrence   = $user->recurrences()->find($recurrenceId);
+            $recurrence = $user->recurrences()->find($recurrenceId);
             if (null !== $recurrence) {
                 return $recurrence;
             }

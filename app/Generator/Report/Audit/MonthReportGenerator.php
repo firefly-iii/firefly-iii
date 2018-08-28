@@ -28,12 +28,14 @@ namespace FireflyIII\Generator\Report\Audit;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
@@ -52,7 +54,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      *
      * @return string
      * @throws FireflyException
-     * @throws \Throwable
+     * @codeCoverageIgnore
      */
     public function generate(): string
     {
@@ -78,100 +80,16 @@ class MonthReportGenerator implements ReportGeneratorInterface
                         'internal_reference', 'notes',
                         'create_date', 'update_date',
         ];
+        try {
+            $result = view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
+                ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
+                ->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
+            $result = 'Could not render report view.';
+        }
 
-        return view('reports.audit.report', compact('reportType', 'accountIds', 'auditData', 'hideable', 'defaultShow'))
-            ->with('start', $this->start)->with('end', $this->end)->with('accounts', $this->accounts)
-            ->render();
-    }
-
-    /**
-     * Account collection setter.
-     *
-     * @param Collection $accounts
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setAccounts(Collection $accounts): ReportGeneratorInterface
-    {
-        $this->accounts = $accounts;
-
-        return $this;
-    }
-
-    /**
-     * Budget collection setter.
-     *
-     * @param Collection $budgets
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setBudgets(Collection $budgets): ReportGeneratorInterface
-    {
-        return $this;
-    }
-
-    /**
-     * Category collection setter.
-     *
-     * @param Collection $categories
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setCategories(Collection $categories): ReportGeneratorInterface
-    {
-        return $this;
-    }
-
-    /**
-     * End date setter.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setEndDate(Carbon $date): ReportGeneratorInterface
-    {
-        $this->end = $date;
-
-        return $this;
-    }
-
-    /**
-     * Expenses collection setter.
-     *
-     * @param Collection $expense
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setExpense(Collection $expense): ReportGeneratorInterface
-    {
-        return $this;
-    }
-
-    /**
-     * Start date collection setter.
-     *
-     * @param Carbon $date
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setStartDate(Carbon $date): ReportGeneratorInterface
-    {
-        $this->start = $date;
-
-        return $this;
-    }
-
-    /**
-     * Tags collection setter.
-     *
-     * @param Collection $tags
-     *
-     * @return ReportGeneratorInterface
-     */
-    public function setTags(Collection $tags): ReportGeneratorInterface
-    {
-        return $this;
+        return $result;
     }
 
     /**
@@ -185,7 +103,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // not that long
      * @throws FireflyException
      */
-    private function getAuditReport(Account $account, Carbon $date): array
+    public function getAuditReport(Account $account, Carbon $date): array
     {
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
@@ -194,10 +112,10 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($account->user);
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
-        $journals         = $collector->getJournals();
+        $journals         = $collector->getTransactions();
         $journals         = $journals->reverse();
         $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
@@ -231,5 +149,102 @@ class MonthReportGenerator implements ReportGeneratorInterface
         ];
 
         return $return;
+    }
+
+    /**
+     * Account collection setter.
+     *
+     * @param Collection $accounts
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setAccounts(Collection $accounts): ReportGeneratorInterface
+    {
+        $this->accounts = $accounts;
+
+        return $this;
+    }
+
+    /**
+     * Budget collection setter.
+     *
+     * @param Collection $budgets
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setBudgets(Collection $budgets): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
+     * Category collection setter.
+     *
+     * @param Collection $categories
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setCategories(Collection $categories): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
+     * End date setter.
+     *
+     * @param Carbon $date
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setEndDate(Carbon $date): ReportGeneratorInterface
+    {
+        $this->end = $date;
+
+        return $this;
+    }
+
+    /**
+     * Expenses collection setter.
+     *
+     * @param Collection $expense
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setExpense(Collection $expense): ReportGeneratorInterface
+    {
+        return $this;
+    }
+
+    /**
+     * Start date collection setter.
+     *
+     * @param Carbon $date
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setStartDate(Carbon $date): ReportGeneratorInterface
+    {
+        $this->start = $date;
+
+        return $this;
+    }
+
+    /**
+     * Tags collection setter.
+     *
+     * @param Collection $tags
+     *
+     * @return ReportGeneratorInterface
+     * @codeCoverageIgnore
+     */
+    public function setTags(Collection $tags): ReportGeneratorInterface
+    {
+        return $this;
     }
 }

@@ -154,7 +154,7 @@ class EditController extends Controller
      *
      * @return array
      */
-    private function getCurrentActions(Rule $rule): array
+    protected function getCurrentActions(Rule $rule): array // get info from object and present.
     {
         $index   = 0;
         $actions = [];
@@ -192,7 +192,7 @@ class EditController extends Controller
      * @return array
      *
      */
-    private function getCurrentTriggers(Rule $rule): array
+    protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
         $index    = 0;
         $triggers = [];

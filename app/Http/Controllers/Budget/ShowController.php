@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
@@ -43,6 +44,7 @@ use Illuminate\Support\Collection;
  */
 class ShowController extends Controller
 {
+    use PeriodOverview;
 
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
@@ -86,15 +88,15 @@ class ShowController extends Controller
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
-        $periods  = $this->getPeriodOverview();
+        $periods  = $this->getBudgetPeriodOverview();
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
                   ->withoutBudget()->withOpposingAccount();
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('budgets.no-budget'));
 
         return view('budgets.no-budget', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
@@ -118,16 +120,15 @@ class ShowController extends Controller
         $end      = new Carbon;
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $moment   = 'all';
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setLimit($pageSize)->setPage($page)
                   ->withoutBudget()->withOpposingAccount();
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('budgets.no-budget'));
 
-        return view('budgets.no-budget', compact('transactions', 'subTitle', 'moment',  'start', 'end'));
+        return view('budgets.no-budget', compact('transactions', 'subTitle', 'start', 'end'));
     }
 
 
@@ -142,7 +143,7 @@ class ShowController extends Controller
     public function show(Request $request, Budget $budget)
     {
         /** @var Carbon $start */
-        $start      = session('first', Carbon::create()->startOfYear());
+        $start      = session('first', Carbon::now()->startOfYear());
         $end        = new Carbon;
         $page       = (int)$request->get('page');
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -150,10 +151,10 @@ class ShowController extends Controller
         $repetition = null;
 
         // collector:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('budgets.show', [$budget->id]));
 
         $subTitle = (string)trans('firefly.all_journals_for_budget', ['name' => $budget->name]);
@@ -189,14 +190,14 @@ class ShowController extends Controller
         );
 
         // collector:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($budgetLimit->start_date, $budgetLimit->end_date)
                   ->setBudget($budget)->setLimit($pageSize)->setPage($page)->withBudgetInformation();
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('budgets.show', [$budget->id, $budgetLimit->id]));
         /** @var Carbon $start */
-        $start  = session('first', Carbon::create()->startOfYear());
+        $start  = session('first', Carbon::now()->startOfYear());
         $end    = new Carbon;
         $limits = $this->getLimits($budget, $start, $end);
 
@@ -212,7 +213,7 @@ class ShowController extends Controller
      *
      * @return Collection
      */
-    private function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection
+    protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
     {
         // properties for cache
         $cache = new CacheProperties;
@@ -237,57 +238,4 @@ class ShowController extends Controller
 
         return $set;
     }
-
-
-    /**
-     * Gets period overview used for budgets.
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    private function getPeriodOverview(): Collection
-    {
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $first      = $repository->firstNull();
-        $start      = null === $first ? new Carbon : $first->date;
-        $range      = app('preferences')->get('viewRange', '1M')->data;
-        $start      = app('navigation')->startOfPeriod($start, $range);
-        $end        = app('navigation')->endOfX(new Carbon, $range, null);
-        $entries    = new Collection;
-        $cache      = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('no-budget-period-entries');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        $dates = app('navigation')->blockPeriods($start, $end, $range);
-        foreach ($dates as $date) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutBudget()->withOpposingAccount()->setTypes(
-                [TransactionType::WITHDRAWAL]
-            );
-            $set      = $collector->getJournals();
-            $sum      = (string)($set->sum('transaction_amount') ?? '0');
-            $journals = $set->count();
-            /** @noinspection PhpUndefinedMethodInspection */
-            $dateStr  = $date['end']->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
-            $entries->push(
-                ['string' => $dateStr, 'name' => $dateName, 'count' => $journals, 'sum' => $sum, 'date' => clone $date['end'],
-                 'start'  => $date['start'],
-                 'end'    => $date['end'],
-
-                ]
-            );
-        }
-        $cache->store($entries);
-
-        return $entries;
-    }
-
 }

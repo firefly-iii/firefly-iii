@@ -25,19 +25,15 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\SplitJournalFormRequest;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use View;
 
 /**
@@ -47,6 +43,8 @@ use View;
  */
 class SplitController extends Controller
 {
+    use ModelInformation, RequestInformation;
+
     /** @var AttachmentHelperInterface Attachment helper */
     private $attachments;
 
@@ -173,95 +171,6 @@ class SplitController extends Controller
         return redirect($this->getPreviousUri('transactions.edit-split.uri'));
     }
 
-    /**
-     * Create data-array from a journal.
-     *
-     * @param SplitJournalFormRequest|Request $request
-     * @param TransactionJournal              $journal
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    private function arrayFromJournal(Request $request, TransactionJournal $journal): array
-    {
-        $sourceAccounts      = $this->repository->getJournalSourceAccounts($journal);
-        $destinationAccounts = $this->repository->getJournalDestinationAccounts($journal);
-        $array               = [
-            'journal_description'    => $request->old('journal_description', $journal->description),
-            'journal_amount'         => '0',
-            'journal_foreign_amount' => '0',
-            'sourceAccounts'         => $sourceAccounts,
-            'journal_source_id'      => $request->old('journal_source_id', $sourceAccounts->first()->id),
-            'journal_source_name'    => $request->old('journal_source_name', $sourceAccounts->first()->name),
-            'journal_destination_id' => $request->old('journal_destination_id', $destinationAccounts->first()->id),
-            'destinationAccounts'    => $destinationAccounts,
-            'what'                   => strtolower($this->repository->getTransactionType($journal)),
-            'date'                   => $request->old('date', $this->repository->getJournalDate($journal, null)),
-            'tags'                   => implode(',', $journal->tags->pluck('tag')->toArray()),
-
-            // all custom fields:
-            'interest_date'          => $request->old('interest_date', $this->repository->getMetaField($journal, 'interest_date')),
-            'book_date'              => $request->old('book_date', $this->repository->getMetaField($journal, 'book_date')),
-            'process_date'           => $request->old('process_date', $this->repository->getMetaField($journal, 'process_date')),
-            'due_date'               => $request->old('due_date', $this->repository->getMetaField($journal, 'due_date')),
-            'payment_date'           => $request->old('payment_date', $this->repository->getMetaField($journal, 'payment_date')),
-            'invoice_date'           => $request->old('invoice_date', $this->repository->getMetaField($journal, 'invoice_date')),
-            'internal_reference'     => $request->old('internal_reference', $this->repository->getMetaField($journal, 'internal_reference')),
-            'notes'                  => $request->old('notes', $this->repository->getNoteText($journal)),
-
-            // transactions.
-            'transactions'           => $this->getTransactionDataFromJournal($journal),
-        ];
-        // update transactions array with old request data.
-        $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
-
-        // update journal amount and foreign amount:
-        $array['journal_amount']         = array_sum(array_column($array['transactions'], 'amount'));
-        $array['journal_foreign_amount'] = array_sum(array_column($array['transactions'], 'foreign_amount'));
-
-        return $array;
-    }
-
-    /**
-     * Get transaction overview from journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function getTransactionDataFromJournal(TransactionJournal $journal): array
-    {
-        // use collector to collect transactions.
-        $collector = app(JournalCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getJournals();
-        $transactions = [];
-        $transformer  = new TransactionTransformer(new ParameterBag);
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $res = [];
-            if ((float)$transaction->transaction_amount > 0 && $journal->transactionType->type === TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-            if ((float)$transaction->transaction_amount < 0 && $journal->transactionType->type !== TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-
-            if (\count($res) > 0) {
-                $res['amount']         = app('steam')->positive((string)$res['amount']);
-                $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
-                $transactions[]        = $res;
-            }
-        }
-
-        return $transactions;
-    }
 
     /**
      * Get info from old input.
@@ -274,7 +183,7 @@ class SplitController extends Controller
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function updateWithPrevious($array, $old): array
+    protected function updateWithPrevious($array, $old): array // update object with new info
     {
         if (0 === \count($old) || !isset($old['transactions'])) {
             return $array;

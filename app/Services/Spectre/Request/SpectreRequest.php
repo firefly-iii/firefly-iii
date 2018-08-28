@@ -211,7 +211,7 @@ abstract class SpectreRequest
         $statusCode = $res->getStatusCode();
         try {
             $returnBody = $res->getBody()->getContents();
-        } catch (RunTimeException $e) {
+        } catch (RuntimeException $e) {
             Log::error(sprintf('Could not get body from SpectreRequest::GET result: %s', $e->getMessage()));
             $returnBody = '';
         }
@@ -261,7 +261,7 @@ abstract class SpectreRequest
 
         try {
             $body = $res->getBody()->getContents();
-        } catch (RunTimeException $e) {
+        } catch (RuntimeException $e) {
             Log::error(sprintf('Could not get body from SpectreRequest::POST result: %s', $e->getMessage()));
             $body = '';
         }

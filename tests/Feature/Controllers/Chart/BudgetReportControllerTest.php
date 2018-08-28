@@ -25,7 +25,7 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
@@ -102,7 +102,7 @@ class BudgetReportControllerTest extends TestCase
     public function testMainChart(): void
     {
         $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
 
         $one                              = factory(BudgetLimit::class)->make();
@@ -128,7 +128,7 @@ class BudgetReportControllerTest extends TestCase
         $collector->shouldReceive('addFilter')->withArgs([PositiveAmountFilter::class])->andReturnSelf();
         $collector->shouldReceive('setBudgets')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

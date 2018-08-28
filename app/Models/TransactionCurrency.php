@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -33,7 +34,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $symbol
  * @property int    $decimal_places
  * @property int    $id
- * @property string  name
+ * @property string name
  *
  */
 class TransactionCurrency extends Model
@@ -52,16 +53,16 @@ class TransactionCurrency extends Model
             'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
         ];
-    /** @var array */
-    protected $dates = ['date'];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return TransactionCurrency
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionCurrency
     {
@@ -77,9 +78,9 @@ class TransactionCurrency extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
     }

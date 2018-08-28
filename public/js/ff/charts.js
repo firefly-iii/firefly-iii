@@ -202,8 +202,9 @@ function columnChart(URI, container) {
     var chartType = 'bar';
 
     drawAChart(URI, container, chartType, options, colorData);
-
 }
+
+
 
 /**
  *
@@ -250,6 +251,39 @@ function pieChart(URI, container) {
 
     var colorData = false;
     var options = $.extend(true, {}, defaultPieOptions);
+    var chartType = 'pie';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function multiCurrencyPieChart(URI, container) {
+    "use strict";
+
+    var colorData = false;
+    var options = $.extend(true, {}, pieOptionsWithCurrency);
+    var chartType = 'pie';
+
+    drawAChart(URI, container, chartType, options, colorData);
+
+}
+
+
+/**
+ *
+ * @param URI
+ * @param container
+ */
+function neutralPieChart(URI, container) {
+    "use strict";
+
+    var colorData = false;
+    var options = $.extend(true, {}, neutralDefaultPieOptions);
     var chartType = 'pie';
 
     drawAChart(URI, container, chartType, options, colorData);

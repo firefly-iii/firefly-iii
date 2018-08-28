@@ -7,8 +7,17 @@
 
     <title>Firefly III v{{ config('firefly.version') }} - {{ 'authorization'|_ }}</title>
 
-    <!-- Styles -->
-    <link href="/css/app.css" rel="stylesheet">
+    {# CSS things #}
+    {# libraries #}
+    <link href="lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# the theme #}
+    <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# Firefly III customisations #}
+    <link href="css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     <style>
         .passport-authorize .container {

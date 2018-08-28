@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Internal\Update;
 use FireflyIII\Factory\TransactionFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use Illuminate\Support\Collection;
 use Log;
@@ -144,11 +145,20 @@ class JournalUpdateService
         /** @var TransactionUpdateService $service */
         $service = app(TransactionUpdateService::class);
         $service->setUser($journal->user);
-
+        if (TransactionType::WITHDRAWAL === $journal->transactionType->type) {
+            /** @var Transaction $transaction */
+            foreach ($journal->transactions as $transaction) {
+                $service->updateBudget($transaction, $budgetId);
+            }
+            return $journal;
+        }
+        // clear budget.
         /** @var Transaction $transaction */
         foreach ($journal->transactions as $transaction) {
-            $service->updateBudget($transaction, $budgetId);
+            $transaction->budgets()->sync([]);
         }
+        // remove budgets from journal:
+        $journal->budgets()->sync([]);
 
         return $journal;
     }

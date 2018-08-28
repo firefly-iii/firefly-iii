@@ -69,12 +69,13 @@ class DeleteController extends Controller
         $typeName    = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $subTitle    = (string)trans('firefly.delete_' . $typeName . '_account', ['name' => $account->name]);
         $accountList = app('expandedform')->makeSelectListWithEmpty($this->repository->getAccountsByType([$account->accountType->type]));
+        $what        = $typeName;
         unset($accountList[$account->id]);
 
         // put previous url in session
         $this->rememberPreviousUri('accounts.delete.uri');
 
-        return view('accounts.delete', compact('account', 'subTitle', 'accountList'));
+        return view('accounts.delete', compact('account', 'subTitle', 'accountList', 'what'));
     }
 
     /**

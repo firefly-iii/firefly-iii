@@ -34,6 +34,8 @@ use Storage;
 
 /**
  * Class ScanAttachments.
+ *
+ * @codeCoverageIgnore
  */
 class ScanAttachments extends Command
 {
@@ -82,6 +84,7 @@ class ScanAttachments extends Command
             $attachment->save();
             $this->line(sprintf('Fixed attachment #%d', $attachment->id));
         }
+
         return 0;
     }
 }

@@ -51,7 +51,7 @@ class Note extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['title', 'text', 'noteable_id', 'noteable_type'];
 
     /**

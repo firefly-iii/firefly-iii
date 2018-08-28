@@ -27,6 +27,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class Category.
+ *
+ * @codeCoverageIgnore
  */
 class Category
 {

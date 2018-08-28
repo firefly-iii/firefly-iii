@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -40,7 +41,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property Carbon $created_at
  * @property int    $id
- * @property User  user
+ * @property User   user
  */
 class Preference extends Model
 {
@@ -55,14 +56,16 @@ class Preference extends Model
             'updated_at' => 'datetime',
         ];
 
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'data', 'name'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Preference
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Preference
     {
@@ -71,7 +74,7 @@ class Preference extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Preference $preference */
-            $preference   = $user->preferences()->find($preferenceId);
+            $preference = $user->preferences()->find($preferenceId);
             if (null !== $preference) {
                 return $preference;
             }
@@ -129,9 +132,9 @@ class Preference extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

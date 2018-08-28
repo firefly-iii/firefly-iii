@@ -23,17 +23,13 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use FireflyConfig;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Bus\DispatchesJobs;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Routing\Controller as BaseController;
-use Log;
 use Route;
-use URL;
 
 /**
  * Class Controller.
@@ -42,7 +38,7 @@ use URL;
  */
 class Controller extends BaseController
 {
-    use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
+    use AuthorizesRequests, DispatchesJobs, ValidatesRequests, UserNavigation, RequestInformation;
 
     /** @var string Format for date and time. */
     protected $dateTimeFormat;
@@ -94,132 +90,4 @@ class Controller extends BaseController
         );
     }
 
-    /**
-     * Functionality:.
-     *
-     * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
-     *   will be returned.
-     * - If the remembered uri contains "javascript/" the remembered uri will not be returned but instead the index (/) will be returned.
-     *
-     * @param string $identifier
-     *
-     * @return string
-     */
-    protected function getPreviousUri(string $identifier): string
-    {
-        $uri = (string)session($identifier);
-        if (!(false === strpos($identifier, 'delete')) && !(false === strpos($uri, '/show/'))) {
-            $uri = $this->redirectUri;
-        }
-        if (!(false === strpos($uri, 'jscript'))) {
-            $uri = $this->redirectUri; // @codeCoverageIgnore
-        }
-
-        return $uri;
-    }
-
-    /**
-     * Is transaction opening balance?
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    protected function isOpeningBalance(TransactionJournal $journal): bool
-    {
-        return TransactionType::OPENING_BALANCE === $journal->transactionType->type;
-    }
-
-
-    /**
-     * Redirect to asset account that transaction belongs to.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     */
-    protected function redirectToAccount(TransactionJournal $journal)
-    {
-        $valid        = [AccountType::DEFAULT, AccountType::ASSET];
-        $transactions = $journal->transactions;
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $account = $transaction->account;
-            if (\in_array($account->accountType->type, $valid, true)) {
-                return redirect(route('accounts.show', [$account->id]));
-            }
-        }
-        // @codeCoverageIgnoreStart
-        session()->flash('error', (string)trans('firefly.cannot_redirect_to_account'));
-
-        return redirect(route('index'));
-        // @codeCoverageIgnoreEnd
-    }
-
-    /**
-     * Remember previous URL.
-     *
-     * @param string $identifier
-     */
-    protected function rememberPreviousUri(string $identifier): void
-    {
-        session()->put($identifier, URL::previous());
-    }
-
-    /**
-     * Get user's language.
-     * @return string
-     */
-    private function getLanguage(): string
-    {
-        /** @var string $language */
-        $language = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
-
-        return $language;
-    }
-
-    /**
-     * @return string
-     */
-    private function getPageName(): string
-    {
-        return str_replace('.', '_', Route::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    private function getSpecificPageName(): string
-    {
-        return null === Route::current()->parameter('what') ? '' : '_' . Route::current()->parameter('what');
-    }
-
-    /**
-     * Returns if user has seen demo.
-     *
-     * @return bool
-     */
-    private function hasSeenDemo(): bool
-    {
-        $page         = $this->getPageName();
-        $specificPage = $this->getSpecificPageName();
-
-        // indicator if user has seen the help for this page ( + special page):
-        $key = 'shown_demo_' . $page . $specificPage;
-        // is there an intro for this route?
-        $intro        = config('intro.' . $page) ?? [];
-        $specialIntro = config('intro.' . $page . $specificPage) ?? [];
-        // some routes have a "what" parameter, which indicates a special page:
-
-        $shownDemo = true;
-        // both must be array and either must be > 0
-        if (\count($intro) > 0 || \count($specialIntro) > 0) {
-            $shownDemo = app('preferences')->get($key, false)->data;
-            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
-        }
-
-        return $shownDemo;
-    }
 }

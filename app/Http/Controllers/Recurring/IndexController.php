@@ -29,8 +29,11 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Http\Request;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -39,6 +42,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class IndexController extends Controller
 {
+    use GetConfigurationData;
     /** @var RecurringRepositoryInterface Recurring repository */
     private $recurring;
 
@@ -77,19 +81,27 @@ class IndexController extends Controller
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->recurring->get();
 
+        // split collection
+        $total = $collection->count();
+        /** @var Collection $recurrences */
+        $recurrences = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
         $transformer = new RecurrenceTransformer(new ParameterBag);
         $recurring   = [];
         /** @var Recurrence $recurrence */
-        foreach ($collection as $recurrence) {
+        foreach ($recurrences as $recurrence) {
             $array                 = $transformer->transform($recurrence);
             $array['first_date']   = new Carbon($array['first_date']);
             $array['repeat_until'] = null === $array['repeat_until'] ? null : new Carbon($array['repeat_until']);
             $array['latest_date']  = null === $array['latest_date'] ? null : new Carbon($array['latest_date']);
             $recurring[]           = $array;
         }
+        $paginator = new LengthAwarePaginator($recurring, $total, $pageSize, $page);
+        $paginator->setPath(route('recurring.index'));
 
-        return view('recurring.index', compact('recurring', 'page', 'pageSize'));
+        $this->verifyRecurringCronJob();
+
+        return view('recurring.index', compact('paginator', 'page', 'pageSize', 'total'));
     }
 
     /**

@@ -33,8 +33,7 @@ use Tests\TestCase;
 class PrependDescriptionTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\PrependDescription::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\PrependDescription::act()
+     * @covers \FireflyIII\TransactionRules\Actions\PrependDescription
      */
     public function testAct(): void
     {

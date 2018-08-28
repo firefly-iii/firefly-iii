@@ -24,6 +24,7 @@ namespace FireflyIII\Generator\Report\Tag;
 
 /**
  * Class YearReportGenerator.
+ * @codeCoverageIgnore
  */
 class YearReportGenerator extends MonthReportGenerator
 {

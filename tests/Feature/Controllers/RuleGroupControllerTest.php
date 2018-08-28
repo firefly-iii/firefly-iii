@@ -53,8 +53,8 @@ class RuleGroupControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::create
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testCreate(): void
     {
@@ -69,7 +69,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::delete
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testDelete(): void
     {
@@ -86,7 +86,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::destroy
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testDestroy(): void
     {
@@ -105,7 +105,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::down
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testDown(): void
     {
@@ -122,7 +122,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::edit
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testEdit(): void
     {
@@ -130,14 +130,20 @@ class RuleGroupControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
+        /** @var RuleGroup $ruleGroup */
+        $ruleGroup              = $this->user()->ruleGroups()->first();
+        $ruleGroup->description = 'Some description ' . random_int(1, 10000);
+        $ruleGroup->save();
+
         $this->be($this->user());
         $response = $this->get(route('rule-groups.edit', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee($ruleGroup->description);
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::execute
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testExecute(): void
     {
@@ -163,8 +169,8 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::selectTransactions
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::__construct
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testSelectTransactions(): void
     {
@@ -181,7 +187,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\RuleGroupController::store
+     * @covers       \FireflyIII\Http\Controllers\RuleGroupController
      * @covers       \FireflyIII\Http\Requests\RuleGroupFormRequest
      */
     public function testStore(): void
@@ -206,7 +212,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\RuleGroupController::up
+     * @covers \FireflyIII\Http\Controllers\RuleGroupController
      */
     public function testUp(): void
     {
@@ -223,7 +229,7 @@ class RuleGroupControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\RuleGroupController::update
+     * @covers       \FireflyIII\Http\Controllers\RuleGroupController
      * @covers       \FireflyIII\Http\Requests\RuleGroupFormRequest
      */
     public function testUpdate(): void

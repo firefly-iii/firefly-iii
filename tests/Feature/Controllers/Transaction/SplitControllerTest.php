@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Transaction;
 
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -59,11 +58,7 @@ class SplitControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEdit(): void
     {
@@ -75,7 +70,6 @@ class SplitControllerTest extends TestCase
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
-
 
 
         $deposit              = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
@@ -109,11 +103,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEditOldInput(): void
     {
@@ -129,7 +119,6 @@ class SplitControllerTest extends TestCase
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
-
 
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
@@ -209,7 +198,7 @@ class SplitControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEditOpeningBalance(): void
     {
@@ -227,11 +216,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::edit
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::__construct
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::arrayFromJournal
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::updateWithPrevious
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController::getTransactionDataFromJournal
+     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
      */
     public function testEditSingle(): void
     {
@@ -272,7 +257,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdate(): void
@@ -286,21 +271,22 @@ class SplitControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
 
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
         $data    = [
-            'id'                             => $deposit->id,
-            'what'                           => 'deposit',
-            'journal_description'            => 'Updated salary',
-            'journal_currency_id'            => 1,
+            'id'                     => $deposit->id,
+            'what'                   => 'deposit',
+            'journal_description'    => 'Updated salary',
+            'journal_currency_id'    => 1,
             'journal_destination_id' => 1,
-            'journal_amount'                 => 1591,
-            'date'                           => '2014-01-24',
-            'tags'                           => '',
-            'transactions'                   => [
+            'journal_amount'         => 1591,
+            'date'                   => '2014-01-24',
+            'tags'                   => '',
+            'transactions'           => [
                 [
                     'transaction_description' => 'Split #1',
                     'source_name'             => 'Job',
@@ -327,8 +313,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::isOpeningBalance
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateOpeningBalance(): void
@@ -342,15 +327,15 @@ class SplitControllerTest extends TestCase
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $data    = [
-            'id'                             => $opening->id,
-            'what'                           => 'opening balance',
-            'journal_description'            => 'Updated salary',
-            'journal_currency_id'            => 1,
+            'id'                     => $opening->id,
+            'what'                   => 'opening balance',
+            'journal_description'    => 'Updated salary',
+            'journal_currency_id'    => 1,
             'journal_destination_id' => 1,
-            'journal_amount'                 => 1591,
-            'date'                           => '2014-01-24',
-            'tags'                           => '',
-            'transactions'                   => [
+            'journal_amount'         => 1591,
+            'date'                   => '2014-01-24',
+            'tags'                   => '',
+            'transactions'           => [
                 [
                     'transaction_description' => 'Split #1',
                     'source_name'             => 'Job',
@@ -370,7 +355,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateTransfer(): void
@@ -384,24 +369,25 @@ class SplitControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
 
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $data     = [
-            'id'                        => $transfer->id,
-            'what'                      => 'transfer',
-            'journal_description'       => 'Some updated withdrawal',
-            'journal_currency_id'       => 1,
-            'journal_source_id' => 1,
-            'journal_amount'            => 1591,
-            'date'                      => '2014-01-24',
-            'tags'                      => '',
-            'transactions'              => [
+            'id'                  => $transfer->id,
+            'what'                => 'transfer',
+            'journal_description' => 'Some updated withdrawal',
+            'journal_currency_id' => 1,
+            'journal_source_id'   => 1,
+            'journal_amount'      => 1591,
+            'date'                => '2014-01-24',
+            'tags'                => '',
+            'transactions'        => [
                 [
                     'transaction_description' => 'Split #1',
-                    'source_id'       => '1',
+                    'source_id'               => '1',
                     'destination_id'          => '2',
                     'transaction_currency_id' => 1,
                     'amount'                  => 1591,
@@ -426,7 +412,7 @@ class SplitControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController::update
+     * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
      * @covers       \FireflyIII\Http\Requests\SplitJournalFormRequest
      */
     public function testUpdateWithdrawal(): void
@@ -440,21 +426,22 @@ class SplitControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
+        $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getActiveGroups')->andReturn(new Collection);
 
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $withdrawal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->first();
         $data       = [
-            'id'                        => $withdrawal->id,
-            'what'                      => 'withdrawal',
-            'journal_description'       => 'Some updated withdrawal',
-            'journal_currency_id'       => 1,
-            'journal_source_id' => 1,
-            'journal_amount'            => 1591,
-            'date'                      => '2014-01-24',
-            'tags'                      => '',
-            'transactions'              => [
+            'id'                  => $withdrawal->id,
+            'what'                => 'withdrawal',
+            'journal_description' => 'Some updated withdrawal',
+            'journal_currency_id' => 1,
+            'journal_source_id'   => 1,
+            'journal_amount'      => 1591,
+            'date'                => '2014-01-24',
+            'tags'                => '',
+            'transactions'        => [
                 [
                     'transaction_description' => 'Split #1',
                     'source_id'               => '1',

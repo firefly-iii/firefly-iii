@@ -50,6 +50,7 @@ class AccountRequest extends Request
         $data = [
             'name'                 => $this->string('name'),
             'active'               => $this->boolean('active'),
+            'include_net_worth'    => $this->boolean('include_net_worth'),
             'accountType'          => $this->string('type'),
             'account_type_id'      => null,
             'currency_id'          => $this->integer('currency_id'),
@@ -64,7 +65,21 @@ class AccountRequest extends Request
             'ccType'               => $this->string('cc_type'),
             'ccMonthlyPaymentDate' => $this->string('cc_monthly_payment_date'),
             'notes'                => $this->string('notes'),
+            'interest'             => $this->string('interest'),
+            'interest_period'      => $this->string('interest_period'),
         ];
+        // new fields for liabilities
+        //            'liability_type'       => $this->string('liability_type'),
+        //            'liability_start_date' => $this->date('liability_start_date'),
+
+
+        //];
+        if ('liability' === $data['accountType']) {
+            $data['openingBalance']     = bcmul($this->string('liability_amount'), '-1');
+            $data['openingBalanceDate'] = $this->date('liability_start_date');
+            $data['accountType']        = $this->string('liability_type');
+            $data['account_type_id']    = null;
+        }
 
         return $data;
     }
@@ -91,10 +106,18 @@ class AccountRequest extends Request
             'account_number'          => 'between:1,255|nullable|uniqueAccountNumberForUser',
             'account_role'            => 'in:' . $accountRoles . '|required_if:type,asset',
             'active'                  => 'required|boolean',
+            'include_net_worth'       => 'required|boolean',
             'cc_type'                 => 'in:' . $ccPaymentTypes . '|required_if:account_role,ccAsset',
             'cc_monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:cc_type,monthlyFull',
             'type'                    => 'required|in:' . $types,
             'notes'                   => 'min:0|max:65536',
+            // required fields for liabilities:
+            'liability_type'          => 'required_if:type,liability|in:loan,debt,mortgage,credit card',
+            'liability_amount'        => 'required_if:type,liability|min:0|numeric',
+            'liability_start_date'    => 'required_if:type,liability|date',
+            'interest'                => 'required_if:type,liability|between:0,100|numeric',
+            'interest_period'         => 'required_if:type,liability|in:daily,monthly,yearly',
+
         ];
         switch ($this->method()) {
             default:

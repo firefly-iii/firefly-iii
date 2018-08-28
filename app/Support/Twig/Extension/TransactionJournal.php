@@ -136,7 +136,7 @@ class TransactionJournal extends Twig_Extension
     /**
      * @param JournalModel $journal
      *
-     * @return string
+     * @return array
      */
     private function getTotalAmount(JournalModel $journal): array
     {
@@ -157,6 +157,7 @@ class TransactionJournal extends Twig_Extension
             $totals[$currencyId]['amount'] = bcadd($transaction->amount, $totals[$currencyId]['amount']);
 
             if (null !== $transaction->foreign_currency_id) {
+                $foreignAmount = $transaction->foreign_amount ?? '0';
                 $foreignId = $transaction->foreign_currency_id;
                 $foreign   = $transaction->foreignCurrency;
                 if (!isset($totals[$foreignId])) {
@@ -166,7 +167,7 @@ class TransactionJournal extends Twig_Extension
                     ];
                 }
                 $totals[$foreignId]['amount'] = bcadd(
-                    $transaction->foreign_amount,
+                    $foreignAmount,
                     $totals[$foreignId]['amount']
                 );
             }

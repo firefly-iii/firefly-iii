@@ -77,22 +77,21 @@ class Bill extends Model
             'name_encrypted'  => 'boolean',
             'match_encrypted' => 'boolean',
         ];
-    /**
-     * @var array
-     */
+
+    /** @var array Fields that can be filled */
     protected $fillable
         = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
            'automatch', 'active', 'transaction_currency_id'];
-    /**
-     * @var array
-     */
+    /** @var array Hidden from view */
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Bill
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Bill
     {
@@ -111,9 +110,9 @@ class Bill extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
-    public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }

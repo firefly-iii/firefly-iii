@@ -31,6 +31,9 @@ use Storage;
 
 /**
  * Class UploadCollector.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class UploadCollector extends BasicCollector implements CollectorInterface
 {

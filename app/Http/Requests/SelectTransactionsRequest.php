@@ -53,7 +53,7 @@ class SelectTransactionsRequest extends Request
         /** @var Carbon $sessionFirst */
         $sessionFirst = clone session('first');
         $first        = $sessionFirst->subDay()->format('Y-m-d');
-        $today        = Carbon::create()->addDay()->format('Y-m-d');
+        $today        = Carbon::now()->addDay()->format('Y-m-d');
 
         return [
             'start_date' => 'required|date|after:' . $first,

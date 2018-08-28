@@ -136,6 +136,7 @@ class LinkController extends Controller
 
     /**
      * Switch link from A <> B to B <> A.
+     *
      * @param TransactionJournalLink $link
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

@@ -24,7 +24,7 @@ namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -165,7 +165,7 @@ class TagReportControllerTest extends TestCase
     public function testMainChart(): void
     {
         $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
@@ -190,7 +190,7 @@ class TagReportControllerTest extends TestCase
         $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf();
         $collector->shouldReceive('setTags')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn($set);
+        $collector->shouldReceive('getTransactions')->andReturn($set);
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
         $this->be($this->user());

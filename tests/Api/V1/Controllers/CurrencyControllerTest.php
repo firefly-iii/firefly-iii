@@ -63,7 +63,6 @@ class CurrencyControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        //$userRepos->shouldReceive('setUser')->once();
 
         $userRepos->shouldReceive('hasRole')->once()->withArgs([Mockery::any(), 'owner'])->andReturn(true);
         $repository->shouldReceive('canDeleteCurrency')->once()->andReturn(true);
@@ -97,7 +96,8 @@ class CurrencyControllerTest extends TestCase
         $response = $this->get('/api/v1/currencies');
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson([
+        $response->assertJson(
+            [
                 'meta' => [
                     'pagination' => [
                         'total'        => $collection->count(),

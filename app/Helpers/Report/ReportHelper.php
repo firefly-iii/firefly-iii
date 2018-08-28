@@ -25,7 +25,7 @@ namespace FireflyIII\Helpers\Report;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Bill as BillCollection;
 use FireflyIII\Helpers\Collection\BillLine;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Transaction;
@@ -83,10 +83,10 @@ class ReportHelper implements ReportHelperInterface
             foreach ($expectedDates as $payDate) {
                 $endOfPayPeriod = app('navigation')->endOfX($payDate, $bill->repeat_freq, null);
 
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollectorInterface::class);
+                /** @var TransactionCollectorInterface $collector */
+                $collector = app(TransactionCollectorInterface::class);
                 $collector->setAccounts($accounts)->setRange($payDate, $endOfPayPeriod)->setBills($bills);
-                $journals = $collector->getJournals();
+                $transactions = $collector->getTransactions();
 
                 $billLine = new BillLine;
                 $billLine->setBill($bill);
@@ -95,7 +95,7 @@ class ReportHelper implements ReportHelperInterface
                 $billLine->setMin((string)$bill->amount_min);
                 $billLine->setMax((string)$bill->amount_max);
                 $billLine->setHit(false);
-                $entry = $journals->filter(
+                $entry = $transactions->filter(
                     function (Transaction $transaction) use ($bill) {
                         return $transaction->bill_id === $bill->id;
                     }

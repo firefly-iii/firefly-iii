@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Models\Tag;
 
 /**
  * Class TagFormRequest.
@@ -76,13 +76,14 @@ class TagFormRequest extends Request
      */
     public function rules(): array
     {
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $idRule     = '';
-        $tagRule    = 'required|min:1|uniqueObjectForUser:tags,tag';
-        if (null !== $repository->findNull((int)$this->get('id'))) {
+        $idRule = '';
+
+        /** @var Tag $tag */
+        $tag     = $this->route()->parameter('tag');
+        $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag';
+        if (null !== $tag) {
             $idRule  = 'belongsToUser:tags';
-            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $this->get('id');
+            $tagRule = 'required|min:1|uniqueObjectForUser:tags,tag,' . $tag->id;
         }
 
         return [

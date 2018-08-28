@@ -55,12 +55,14 @@ class AutomationHandler
                 Mail::to($user->email)->send(new ReportNewJournalsMail($user->email, '127.0.0.1', $event->journals));
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
+                Log::debug('Send message failed! :(');
                 Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
             }
+            // @codeCoverageIgnoreEnd
             Log::debug('Done!');
         }
 
-        // @codeCoverageIgnoreEnd
         return true;
     }
 }

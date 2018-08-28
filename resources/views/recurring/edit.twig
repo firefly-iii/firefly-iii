@@ -88,13 +88,13 @@
                         {{ ExpandedForm.amountNoCurrency('amount', array.transactions[0].amount) }}
 
                         {# source account if withdrawal, or if transfer: #}
-                        {{ ExpandedForm.assetAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
+                        {{ ExpandedForm.longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
 
                         {# source account name for deposits: #}
                         {{ ExpandedForm.text('source_name', array.transactions[0].source_name, {label: trans('form.revenue_account')}) }}
 
                         {# destination if deposit or transfer: #}
-                        {{ ExpandedForm.assetAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
+                        {{ ExpandedForm.longAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
 
                         {# destination account name for withdrawals #}
                         {{ ExpandedForm.text('destination_name', array.transactions[0].destination_name, {label: trans('form.expense_account')}) }}
@@ -128,7 +128,7 @@
                         {% if budgets|length > 1 %}
                             {{ ExpandedForm.select('budget_id', budgets, budgetId) }} {##}
                         {% else %}
-                            {{ ExpandedForm.select('budget_id', budgets, budgetId, {helpText: trans('firefly.no_budget_pointer')}) }}
+                            {{ ExpandedForm.select('budget_id', budgets, budgetId, {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
                             {#budgets#}
                         {% endif %}
 

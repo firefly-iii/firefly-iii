@@ -89,7 +89,11 @@
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body">
-                    {% include 'list.journals' with {hideBudgets:true, hideBills:true} %}
+                    {% if budgetLimit %}
+                        {% include 'list.transactions' %}
+                    {% else %}
+                        {% include 'list.transactions'  with {showCategories: true} %}
+                    {% endif %}
                     {% if budgetLimit %}
                         <p>
                             <i class="fa fa-calendar"></i>

@@ -44,10 +44,9 @@ class Configuration extends Model
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'deleted_at' => 'datetime',
         ];
-    /**
-     * @var string
-     */
+    /** @var string The table to store the data in */
     protected $table = 'configuration';
 
     /**

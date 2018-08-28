@@ -37,7 +37,7 @@ class BudgetTransformerTest extends TestCase
     /**
      * Basic coverage
      *
-     * @covers \FireflyIII\Transformers\BudgetTransformer::transform
+     * @covers \FireflyIII\Transformers\BudgetTransformer
      */
     public function testBasic(): void
     {

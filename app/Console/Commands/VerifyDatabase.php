@@ -50,6 +50,7 @@ use stdClass;
  *
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @codeCoverageIgnore
  */
 class VerifyDatabase extends Command
 {

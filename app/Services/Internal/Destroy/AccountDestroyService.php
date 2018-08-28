@@ -26,8 +26,10 @@ namespace FireflyIII\Services\Internal\Destroy;
 use DB;
 use Exception;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use Illuminate\Database\Eloquent\Builder;
 use Log;
 
 /**
@@ -44,8 +46,13 @@ class AccountDestroyService
      */
     public function destroy(Account $account, ?Account $moveTo): void
     {
+
         if (null !== $moveTo) {
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
+
+            // also update recurring transactions:
+            DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' =>  $moveTo->id]);
+            DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
         }
         $service = app(JournalDestroyService::class);
 
@@ -62,6 +69,24 @@ class AccountDestroyService
                 $service->destroy($journal);
             }
         }
+
+        // delete recurring transactions with this account:
+        if (null === $moveTo) {
+            $recurrences = RecurrenceTransaction::
+            where(
+                function (Builder $q) use ($account) {
+                    $q->where('source_id', $account->id);
+                    $q->orWhere('destination_id', $account->id);
+                }
+            )->get(['recurrence_id'])->pluck('recurrence_id')->toArray();
+
+
+            $destroyService = new RecurrenceDestroyService();
+            foreach ($recurrences as $recurrenceId) {
+                $destroyService->destroyById((int)$recurrenceId);
+            }
+        }
+
         try {
             $account->delete();
         } catch (Exception $e) { // @codeCoverageIgnore

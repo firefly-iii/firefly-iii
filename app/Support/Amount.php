@@ -56,7 +56,7 @@ class Amount
         $space = ' ';
 
         // require space between symbol and amount?
-        if ($sepBySpace === false) {
+        if (false === $sepBySpace) {
             $space = ''; // no
         }
 
@@ -134,8 +134,8 @@ class Amount
         // some complicated switches to format the amount correctly:
         $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
         $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
-        $space     = $separated === true ? ' ' : '';
-        $result    = $precedes === false ? $formatted . $space . $format->symbol : $format->symbol . $space . $formatted;
+        $space     = true === $separated ? ' ' : '';
+        $result    = false === $precedes ? $formatted . $space . $format->symbol : $format->symbol . $space . $formatted;
 
         if (true === $coloured) {
             if ($amount > 0) {

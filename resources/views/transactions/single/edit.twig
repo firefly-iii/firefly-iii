@@ -39,7 +39,7 @@
 
                         {# SELECTABLE SOURCE ACCOUNT ONLY FOR WITHDRAWALS AND TRANSFERS #}
                         {% if what == 'transfer' or what == 'withdrawal' %}
-                            {{ ExpandedForm.assetAccountList('source_id', data.source_id, {label: trans('form.asset_source_account')}) }}
+                            {{ ExpandedForm.longAccountList('source_id', data.source_id, {label: trans('form.asset_source_account')}) }}
                         {% endif %}
 
                         {# FREE FORMAT SOURCE ACCOUNT ONLY FOR DEPOSITS #}
@@ -54,7 +54,7 @@
 
                         {# SELECTABLE DESTINATION ACCOUNT ONLY FOR TRANSFERS AND DEPOSITS #}
                         {% if what == 'transfer' or what == 'deposit' %}
-                            {{ ExpandedForm.assetAccountList('destination_id', data.destination_id, {label: trans('form.asset_destination_account')} ) }}
+                            {{ ExpandedForm.longAccountList('destination_id', data.destination_id, {label: trans('form.asset_destination_account')} ) }}
                         {% endif %}
 
                         {# ALWAYS SHOW AMOUNT #}
@@ -85,7 +85,7 @@
                             {% if budgetList|length > 1 %}
                                 {{ ExpandedForm.select('budget_id', budgetList, data['budget_id']) }}
                             {% else %}
-                                {{ ExpandedForm.select('budget_id', budgetList, data['budget_id'], {helpText: trans('firefly.no_budget_pointer')}) }}
+                                {{ ExpandedForm.select('budget_id', budgetList, data['budget_id'], {helpText: trans('firefly.no_budget_pointer', {link: route('budgets.index')})}) }}
                             {% endif %}
                         {% endif %}
                         {{ ExpandedForm.text('category',data['category']) }}

@@ -24,13 +24,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Category;
 
 
-use Tests\TestCase;
-use Log;
-
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -38,7 +34,10 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Log;
 use Navigation;
+use Tests\TestCase;
+
 /**
  *
  * Class ShowControllerTest
@@ -76,7 +75,7 @@ class ShowControllerTest extends TestCase
 
         $accountRepos->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
 
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast(2);
@@ -86,10 +85,10 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast(2);
         $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(2);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('getJournals')->andReturn(new Collection)->atLeast(1);
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
 
         Navigation::shouldReceive('updateStartDate')->andReturn(new Carbon);
         Navigation::shouldReceive('updateEndDate')->andReturn(new Carbon);
@@ -118,7 +117,7 @@ class ShowControllerTest extends TestCase
         $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
@@ -131,7 +130,7 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->once();
 
         $collector->shouldReceive('setCategory')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);
@@ -156,7 +155,7 @@ class ShowControllerTest extends TestCase
         $transaction  = factory(Transaction::class)->make();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(JournalCollectorInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $month        = new Carbon();
         $month->startOfMonth();
@@ -175,8 +174,8 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast(1);
         $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('getJournals')->andReturn(new Collection)->atLeast(1);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
 
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
         $repository->shouldReceive('earnedInPeriod')->andReturn('1');
@@ -200,7 +199,7 @@ class ShowControllerTest extends TestCase
     public function testShowEmpty(string $range): void
     {
         $latestJournal = $this->user()->transactionJournals()
-            ->orderBy('date','DESC')->first();
+                              ->orderBy('date', 'DESC')->first();
 
         Log::debug(sprintf('Test testShowEmpty(%s)', $range));
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -214,7 +213,7 @@ class ShowControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
 
-        $collector = $this->mock(JournalCollectorInterface::class);
+        $collector = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast(1);
@@ -225,9 +224,9 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast(1);
         $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(1);
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('getJournals')->andReturn(new Collection)->atLeast(1);
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
 
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast(1);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast(1);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

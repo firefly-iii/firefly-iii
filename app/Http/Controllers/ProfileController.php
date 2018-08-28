@@ -35,15 +35,15 @@ use FireflyIII\Http\Requests\ProfileFormRequest;
 use FireflyIII\Http\Requests\TokenFormRequest;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\CreateStuff;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\User;
 use Google2FA;
 use Hash;
 use Illuminate\Contracts\Auth\Guard;
 use Illuminate\Support\Collection;
 use Laravel\Passport\ClientRepository;
-use Laravel\Passport\Passport;
 use Log;
-use phpseclib\Crypt\RSA;
 
 /**
  * Class ProfileController.
@@ -54,6 +54,8 @@ use phpseclib\Crypt\RSA;
  */
 class ProfileController extends Controller
 {
+    use RequestInformation, CreateStuff;
+
     /**
      * ProfileController constructor.
      */
@@ -340,6 +342,7 @@ class ProfileController extends Controller
 
         session()->flash('success', (string)trans('firefly.saved_preferences'));
         app('preferences')->mark();
+
         return redirect(route('profile.index'));
     }
 
@@ -371,6 +374,7 @@ class ProfileController extends Controller
 
     /**
      * Regenerate access token.
+     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
     public function regenerate()
@@ -437,64 +441,5 @@ class ProfileController extends Controller
         return redirect(route('login'));
     }
 
-    /**
-     * Validate users new password.
-     *
-     * @param User   $user
-     * @param string $current
-     * @param string $new
-     *
-     * @return bool
-     *
-     * @throws ValidationException
-     */
-    protected function validatePassword(User $user, string $current, string $new): bool
-    {
-        if (!Hash::check($current, $user->password)) {
-            throw new ValidationException((string)trans('firefly.invalid_current_password'));
-        }
 
-        if ($current === $new) {
-            throw new ValidationException((string)trans('firefly.should_change'));
-        }
-
-        return true;
-    }
-
-    /**
-     * Create new RSA keys.
-     */
-    private function createOAuthKeys(): void
-    {
-        $rsa  = new RSA();
-        $keys = $rsa->createKey(4096);
-
-        [$publicKey, $privateKey] = [
-            Passport::keyPath('oauth-public.key'),
-            Passport::keyPath('oauth-private.key'),
-        ];
-
-        if (file_exists($publicKey) || file_exists($privateKey)) {
-            return;
-        }
-        // @codeCoverageIgnoreStart
-        Log::alert('NO OAuth keys were found. They have been created.');
-
-        file_put_contents($publicKey, array_get($keys, 'publickey'));
-        file_put_contents($privateKey, array_get($keys, 'privatekey'));
-    }
-    // @codeCoverageIgnoreEnd
-
-    /**
-     * Get the domain of FF system.
-     *
-     * @return string
-     */
-    private function getDomain(): string
-    {
-        $url   = url()->to('/');
-        $parts = parse_url($url);
-
-        return $parts['host'];
-    }
 }

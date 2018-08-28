@@ -33,7 +33,7 @@ class TagsCommaTest extends TestCase
 {
 
     /**
-     * \FireflyIII\Import\MapperPreProcess\TagsComma::run
+     * \FireflyIII\Import\MapperPreProcess\TagsComma
      */
     public function testBasic(): void
     {

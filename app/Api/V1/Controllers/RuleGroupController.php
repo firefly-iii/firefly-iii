@@ -95,7 +95,7 @@ class RuleGroupController extends Controller
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
-        // get list of budgets. Count it and split it.
+        // get list of rule groups. Count it and split it.
         $collection = $this->ruleGroupRepository->get();
         $count      = $collection->count();
         $ruleGroups = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

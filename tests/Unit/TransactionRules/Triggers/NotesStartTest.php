@@ -33,7 +33,7 @@ use Tests\TestCase;
 class NotesStartTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart
      */
     public function testTriggered(): void
     {
@@ -49,7 +49,7 @@ class NotesStartTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart
      */
     public function testTriggeredLonger(): void
     {
@@ -65,7 +65,7 @@ class NotesStartTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart
      */
     public function testTriggeredNoMatch(): void
     {
@@ -81,7 +81,7 @@ class NotesStartTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart
      */
     public function testWillMatchEverythingEmpty(): void
     {
@@ -91,7 +91,7 @@ class NotesStartTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -101,7 +101,7 @@ class NotesStartTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesStart
      */
     public function testWillMatchEverythingNull(): void
     {

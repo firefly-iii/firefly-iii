@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -39,6 +39,8 @@ use Illuminate\Support\Collection;
  */
 class TagController extends Controller
 {
+    use PeriodOverview;
+
     /** @var TagRepositoryInterface The tag repository. */
     protected $repository;
 
@@ -170,72 +172,72 @@ class TagController extends Controller
      *
      * @param Request     $request
      * @param Tag         $tag
-     * @param string|null $moment
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function show(Request $request, Tag $tag, string $moment = null)
+    public function show(Request $request, Tag $tag, Carbon $start = null, Carbon $end = null)
     {
         // default values:
-        $moment       = $moment ?? '';
-        $subTitle     = $tag->tag;
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $range        = app('preferences')->get('viewRange', '1M')->data;
-        $start        = null;
-        $end          = null;
-        $periods      = new Collection;
-        $path         = route('tags.show', [$tag->id]);
+        $start        = $start ?? session('start');
+        $end          = $end ?? session('end');
+        $subTitle     = trans(
+            'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
+                                                   'end' => $end->formatLocalized($this->monthAndDayFormat),]
+        );
+        $periods      = $this->getTagPeriodOverview($tag);
+        $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
-        // prep for "all" view.
-        if ('all' === $moment) {
-            $subTitle = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
-            $start    = $this->repository->firstUseDate($tag) ?? new Carbon;
-            $end      = new Carbon;
-            $path     = route('tags.show', [$tag->id, 'all']);
-        }
-
-        // prep for "specific date" view.
-        if ('all' !== $moment && \strlen($moment) > 0) {
-            $start = new Carbon($moment);
-            /** @var Carbon $end */
-            $end      = app('navigation')->endOfPeriod($start, $range);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_tag',
-                ['tag'   => $tag->tag,
-                 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat),]
-            );
-            $periods  = $this->getPeriodOverview($tag);
-            $path     = route('tags.show', [$tag->id, $moment]);
-        }
-
-        // prep for current period
-        if ('' === $moment) {
-            /** @var Carbon $start */
-            $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
-            /** @var Carbon $end */
-            $end      = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
-            $periods  = $this->getPeriodOverview($tag);
-            $subTitle = trans(
-                'firefly.journals_in_period_for_tag',
-                ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-        }
-
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath($path);
 
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end', 'moment'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end'));
+    }
+
+    /**
+     * Show a single tag over all time.
+     *
+     * @param Request $request
+     * @param Tag     $tag
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function showAll(Request $request, Tag $tag)
+    {
+        // default values:
+        $subTitleIcon = 'fa-tag';
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $periods      = new Collection;
+        $subTitle     = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
+        $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
+        $end          = new Carbon;
+        $path         = route('tags.show', [$tag->id, 'all']);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
+                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
+        $transactions = $collector->getPaginatedTransactions();
+        $transactions->setPath($path);
+        $sums = $this->repository->sumsOfTag($tag, $start, $end);
+
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end'));
     }
 
     /**
@@ -295,57 +297,5 @@ class TagController extends Controller
         return $redirect;
     }
 
-    /**
-     * Get overview of periods for tag.
-     *
-     * @param Tag $tag
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    private function getPeriodOverview(Tag $tag): Collection
-    {
-        // get first and last tag date from tag:
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        /** @var Carbon $end */
-        $end   = app('navigation')->endOfX($this->repository->lastUseDate($tag) ?? new Carbon, $range, null);
-        $start = $this->repository->firstUseDate($tag) ?? new Carbon;
 
-
-        // properties for entries with their amounts.
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('tag.entries');
-        $cache->addProperty($tag->id);
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $collection = new Collection;
-        $currentEnd = clone $end;
-        // while end larger or equal to start
-        while ($currentEnd >= $start) {
-            $currentStart = app('navigation')->startOfPeriod($currentEnd, $range);
-
-            // get expenses and what-not in this period and this tag.
-            $arr = [
-                'string' => $end->format('Y-m-d'),
-                'name'   => app('navigation')->periodShow($currentEnd, $range),
-                'date'   => clone $end,
-                'spent'  => $this->repository->spentInPeriod($tag, $currentStart, $currentEnd),
-                'earned' => $this->repository->earnedInPeriod($tag, $currentStart, $currentEnd),
-            ];
-            $collection->push($arr);
-
-            /** @var Carbon $currentEnd */
-            $currentEnd = clone $currentStart;
-            $currentEnd->subDay();
-        }
-        $cache->store($collection);
-
-        return $collection;
-    }
 }

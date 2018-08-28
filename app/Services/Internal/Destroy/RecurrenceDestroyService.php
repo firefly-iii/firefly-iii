@@ -69,4 +69,19 @@ class RecurrenceDestroyService
         }
     }
 
+    /**
+     * Delete recurrence by ID
+     *
+     * @param int $recurrenceId
+     */
+    public function destroyById(int $recurrenceId): void
+    {
+        $recurrence = Recurrence::find($recurrenceId);
+        if (null === $recurrence) {
+            return;
+        }
+        $this->destroy($recurrence);
+
+    }
+
 }

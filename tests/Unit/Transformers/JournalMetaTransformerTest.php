@@ -36,7 +36,7 @@ class JournalMetaTransformerTest extends TestCase
     /**
      * Basic coverage
      *
-     * @covers  \FireflyIII\Transformers\JournalMetaTransformer::transform
+     * @covers  \FireflyIII\Transformers\JournalMetaTransformer
      */
     public function testBasic(): void
     {

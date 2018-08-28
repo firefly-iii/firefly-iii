@@ -35,6 +35,8 @@ use Log;
 
 /**
  * Class Import.
+ *
+ * @codeCoverageIgnore
  */
 class Import extends Command
 {
@@ -64,7 +66,7 @@ class Import extends Command
         Log::debug('Start start-import command');
         $jobKey = (string)$this->argument('key');
         /** @var ImportJob $job */
-        $job    = ImportJob::where('key', $jobKey)->first();
+        $job = ImportJob::where('key', $jobKey)->first();
         if (null === $job) {
             $this->errorLine(sprintf('No job found with key "%s"', $jobKey));
 

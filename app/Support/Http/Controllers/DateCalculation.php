@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use Log;
 
 /**
  * Trait DateCalculation
@@ -32,6 +31,52 @@ use Log;
  */
 trait DateCalculation
 {
+    /**
+     * Calculate the number of days passed left until end date, as seen from start date.
+     * If today is between start and end, today will be used instead of end.
+     *
+     * If both are in the past OR both are in the future, simply return the number of days in the period with a minimum of 1
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return int
+     */
+    public function activeDaysLeft(Carbon $start, Carbon $end): int
+    {
+        $difference = $start->diffInDays($end) + 1;
+        $today      = Carbon::now()->startOfDay();
+
+        if ($start->lte($today) && $end->gte($today)) {
+            $difference = $today->diffInDays($end);
+        }
+        $difference = 0 === $difference ? 1 : $difference;
+
+        return $difference;
+    }
+
+    /**
+     * Calculate the number of days passed between two dates. Will take the current moment into consideration.
+     *
+     * If both are in the past OR both are in the future, simply return the period between them with a minimum of 1
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return int
+     */
+    protected function activeDaysPassed(Carbon $start, Carbon $end): int
+    {
+        $difference = $start->diffInDays($end) + 1;
+        $today      = Carbon::now()->startOfDay();
+
+        if ($start->lte($today) && $end->gte($today)) {
+            $difference = $start->diffInDays($today) + 1;
+        }
+
+        return $difference;
+    }
+
     /**
      * @param Carbon $start
      * @param Carbon $end
@@ -56,62 +101,6 @@ trait DateCalculation
         return $step;
     }
 
-    /**
-     * Returns the number of days between the two given dates.
-     * - If today is within the two dates, give the number of days between today and the end date.
-     * - If they are the same, return 1.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return int
-     */
-    protected function getDayDifference(Carbon $start, Carbon $end): int
-    {
-        $dayDifference = 0;
-
-        // if today is between start and end, use the diff in days between end and today (days left)
-        // otherwise, use diff between start and end.
-        $today = new Carbon;
-        Log::debug(sprintf('Start is %s, end is %s, today is %s', $start->format('Y-m-d'), $end->format('Y-m-d'), $today->format('Y-m-d')));
-        if ($today->gte($start) && $today->lte($end)) {
-            $dayDifference = $end->diffInDays($today);
-        }
-        if ($today->lte($start) || $today->gte($end)) {
-            $dayDifference = $start->diffInDays($end);
-        }
-        $dayDifference = 0 === $dayDifference ? 1 : $dayDifference;
-
-        return $dayDifference;
-    }
-
-    /**
-     * Returns the number of days that have passed in this period. If it is zero (start of period)
-     * then return 1.
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return int
-     */
-    protected function getDaysPassedInPeriod(Carbon $start, Carbon $end): int
-    {
-        // if today is between start and end, use the diff in days between end and today (days left)
-        // otherwise, use diff between start and end.
-        $today      = new Carbon;
-        $daysPassed = 0;
-        Log::debug(sprintf('Start is %s, end is %s, today is %s', $start->format('Y-m-d'), $end->format('Y-m-d'), $today->format('Y-m-d')));
-        if ($today->gte($start) && $today->lte($end)) {
-            $daysPassed = $start->diffInDays($today);
-        }
-        if ($today->lte($start) || $today->gte($end)) {
-            $daysPassed = $start->diffInDays($end);
-        }
-        $daysPassed = 0 === $daysPassed ? 1 : $daysPassed;
-
-        return $daysPassed;
-
-    }
 
     /**
      * Get a list of the periods that will occur after this date. For example,
@@ -127,7 +116,8 @@ trait DateCalculation
         // select thing for next 12 periods:
         $loop = [];
         /** @var Carbon $current */
-        $current = clone $date;
+        $current = app('navigation')->startOfPeriod($date, $range);
+        $current = app('navigation')->endOfPeriod($current, $range);
         $current->addDay();
         $count = 0;
 
@@ -156,7 +146,7 @@ trait DateCalculation
         // select thing for last 12 periods:
         $loop = [];
         /** @var Carbon $current */
-        $current = clone $date;
+        $current = app('navigation')->startOfPeriod($date, $range);
         $count   = 0;
         while ($count < 12) {
             $current->subDay();

@@ -29,6 +29,9 @@ use Illuminate\Support\Collection;
 
 /**
  * Class BasicExporter.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class BasicExporter
 {

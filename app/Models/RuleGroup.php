@@ -25,6 +25,8 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -41,7 +43,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int        $id
  * @property int        $order
  * @property Collection $rules
- * @property string      description
+ * @property string     description
  */
 class RuleGroup extends Model
 {
@@ -60,16 +62,16 @@ class RuleGroup extends Model
             'order'      => 'int',
         ];
 
-    /**
-     * @var array
-     */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'order', 'title', 'description', 'active'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return RuleGroup
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): RuleGroup
     {
@@ -78,7 +80,7 @@ class RuleGroup extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var RuleGroup $ruleGroup */
-            $ruleGroup   = $user->ruleGroups()->find($ruleGroupId);
+            $ruleGroup = $user->ruleGroups()->find($ruleGroupId);
             if (null !== $ruleGroup) {
                 return $ruleGroup;
             }
@@ -88,18 +90,18 @@ class RuleGroup extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
-    public function rules(): \Illuminate\Database\Eloquent\Relations\HasMany
+    public function rules(): HasMany
     {
         return $this->hasMany(Rule::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

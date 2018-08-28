@@ -29,6 +29,7 @@ use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Middleware\IsDemoUser;
+use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
 use Log;
@@ -42,6 +43,8 @@ use Route as RouteFacade;
  */
 class DebugController extends Controller
 {
+    use GetConfigurationData;
+
     /**
      * HomeController constructor.
      */
@@ -120,7 +123,7 @@ class DebugController extends Controller
         $phpVersion     = str_replace($search, $replace, PHP_VERSION);
         $phpOs          = str_replace($search, $replace, PHP_OS);
         $interface      = PHP_SAPI;
-        $now            = Carbon::create()->format('Y-m-d H:i:s e');
+        $now            = Carbon::now()->format('Y-m-d H:i:s e');
         $extensions     = implode(', ', get_loaded_extensions());
         $drivers        = implode(', ', DB::availableDrivers());
         $currentDriver  = DB::getDriverName();
@@ -133,8 +136,8 @@ class DebugController extends Controller
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv         = env('APP_ENV', '');
         $appDebug       = var_export(env('APP_DEBUG', false), true);
-        $appLog         = env('APP_LOG', '');
-        $appLogLevel    = env('APP_LOG_LEVEL', '');
+        $logChannel     = env('LOG_CHANNEL', '');
+        $appLogLevel    = env('APP_LOG_LEVEL', 'info');
         $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
 
@@ -172,7 +175,7 @@ class DebugController extends Controller
 
         return view(
             'debug', compact(
-                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'appLog', 'appLogLevel', 'now', 'packages', 'drivers',
+                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'packages', 'drivers',
                        'currentDriver',
                        'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm',
                        'trustedProxies',
@@ -241,54 +244,5 @@ class DebugController extends Controller
         return redirect(route('home'));
     }
 
-    /**
-     * Some common combinations.
-     *
-     * @param int $value
-     *
-     * @return string
-     */
-    protected function errorReporting(int $value): string
-    {
-        $array  = [
-            -1                                                             => 'ALL errors',
-            E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED                  => 'E_ALL & ~E_NOTICE & ~E_STRICT & ~E_DEPRECATED',
-            E_ALL                                                          => 'E_ALL',
-            E_ALL & ~E_DEPRECATED & ~E_STRICT                              => 'E_ALL & ~E_DEPRECATED & ~E_STRICT',
-            E_ALL & ~E_NOTICE                                              => 'E_ALL & ~E_NOTICE',
-            E_ALL & ~E_NOTICE & ~E_STRICT                                  => 'E_ALL & ~E_NOTICE & ~E_STRICT',
-            E_COMPILE_ERROR | E_RECOVERABLE_ERROR | E_ERROR | E_CORE_ERROR => 'E_COMPILE_ERROR|E_RECOVERABLE_ERROR|E_ERROR|E_CORE_ERROR',
-        ];
-        $result = (string)$value;
-        if (isset($array[$value])) {
-            $result = $array[$value];
-        }
 
-        return $result;
-    }
-
-    /**
-     * All packages that are installed.
-     *
-     * @return array
-     */
-    private function collectPackages(): array
-    {
-        $packages = [];
-        $file     = \dirname(__DIR__, 3) . '/vendor/composer/installed.json';
-        if (file_exists($file)) {
-            // file exists!
-            $content = file_get_contents($file);
-            $json    = json_decode($content, true);
-            foreach ($json as $package) {
-                $packages[]
-                    = [
-                    'name'    => $package['name'],
-                    'version' => $package['version'],
-                ];
-            }
-        }
-
-        return $packages;
-    }
 }

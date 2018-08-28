@@ -230,6 +230,11 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     public function storeLink(array $information, TransactionJournal $inward, TransactionJournal $outward): ?TransactionJournalLink
     {
         $linkType = $this->findNull((int)($information['link_type_id'] ?? 0));
+
+        if (null === $linkType) {
+            $linkType = $this->findByName($information['link_type_name']);
+        }
+
         if (null === $linkType) {
             return null;
         }

@@ -28,6 +28,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -91,15 +92,17 @@ class TransactionJournal extends Model
             'completed'     => 'boolean',
         ];
 
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable
         = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',
            'transaction_currency_id', 'description', 'completed',
            'date', 'rent_date', 'encrypted', 'tag_count',];
-    /** @var array */
+    /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
     /**
+     * Checks if tables are joined.
+     *
      * @param Builder $query
      * @param string  $table
      *
@@ -121,10 +124,12 @@ class TransactionJournal extends Model
     }
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return TransactionJournal
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): TransactionJournal
     {
@@ -145,25 +150,25 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\MorphMany
+     * @return MorphMany
      */
-    public function attachments(): \Illuminate\Database\Eloquent\Relations\MorphMany
+    public function attachments(): MorphMany
     {
         return $this->morphMany(Attachment::class, 'attachable');
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function bill(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function bill(): BelongsTo
     {
         return $this->belongsTo(Bill::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function budgets(): BelongsToMany
     {
@@ -172,7 +177,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function categories(): BelongsToMany
     {
@@ -259,7 +264,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     * @return HasMany
      */
     public function piggyBankEvents(): HasMany
     {
@@ -333,7 +338,7 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function tags(): BelongsToMany
     {
@@ -342,9 +347,9 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function transactionCurrency(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
     }
@@ -360,9 +365,9 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function transactionType(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function transactionType(): BelongsTo
     {
         return $this->belongsTo(TransactionType::class);
     }
@@ -378,9 +383,9 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

@@ -6,9 +6,22 @@
     <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
     <title>Firefly III</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="css/app.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# CSS things #}
+
+    {# libraries #}
+    <link href="lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# the theme #}
     <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# Firefly III customisations #}
+    <link href="css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
 
     <!--[if lt IE 9]>
     <script src="js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>

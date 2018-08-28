@@ -53,9 +53,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::__construct
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
+     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
      * @expectedExceptionMessage Could not parse end date
      */
     public function testBadEndDate(): void
@@ -78,8 +76,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
+     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
      * @expectedExceptionMessage Could not parse start date
      */
     public function testBadStartDate(): void
@@ -102,9 +99,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testBalanceAmountDefaultNoBudget(): void
     {
@@ -138,9 +133,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testBalanceAmountDefaultRole(): void
     {
@@ -174,9 +167,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::balanceAmount
+     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
      * @expectedExceptionMessage Firefly cannot handle this type of info-button
      */
     public function testBalanceAmountTagRole(): void
@@ -210,9 +201,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::budgetSpentAmount()
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testBudgetSpentAmount(): void
     {
@@ -243,9 +232,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::categoryEntry()
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testCategoryEntry(): void
     {
@@ -276,9 +263,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::expenseEntry()
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testExpenseEntry(): void
     {
@@ -310,9 +295,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
-     * @covers \FireflyIII\Http\Controllers\Popup\ReportController::incomeEntry()
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testIncomeEntry(): void
     {
@@ -344,8 +327,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::general
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController::parseAttributes
+     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
      * @expectedExceptionMessage Firefly cannot handle
      */
     public function testWrongLocation(): void

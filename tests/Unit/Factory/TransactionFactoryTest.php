@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -42,6 +43,16 @@ use Tests\TestCase;
  */
 class TransactionFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
@@ -621,6 +632,70 @@ class TransactionFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionFactory
      * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
      */
+    public function testCreatePairEmptyAmount(): void
+    {
+        // objects:
+        $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $expense = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $euro    = TransactionCurrency::first();
+
+        // mocked classes
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $budgetFactory   = $this->mock(BudgetFactory::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
+        $data = [
+            'currency_id'           => 1,
+            'currency_code'         => null,
+            'description'           => null,
+            'source_id'             => $asset->id,
+            'source_name'           => null,
+            'destination_id'        => $expense->id,
+            'destination_name'      => null,
+            'amount'                => '',
+            'reconciled'            => false,
+            'identifier'            => 0,
+            'foreign_currency_id'   => null,
+            'foreign_currency_code' => null,
+            'foreign_amount'        => null,
+            'budget_id'             => null,
+            'budget_name'           => null,
+            'category_id'           => null,
+            'category_name'         => null,
+        ];
+
+        // mock:
+        $accountRepos->shouldReceive('setUser');
+        $budgetFactory->shouldReceive('setUser');
+        $categoryFactory->shouldReceive('setUser');
+        // first search action is for the asset account, second is for expense account.
+        $accountRepos->shouldReceive('findNull')->andReturn($asset, $expense)->atLeast()->once();
+
+        // factories return various stuff:
+        $currencyFactory->shouldReceive('find')->andReturn($euro, null)->atLeast()->once();
+
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $count      = $withdrawal->transactions()->count();
+
+        /** @var TransactionFactory $factory */
+        $factory = app(TransactionFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('Amount is an empty string, which Firefly III cannot handle. Apologies.', $e->getMessage());
+        }
+
+        $newCount = $withdrawal->transactions()->count();
+        $this->assertEquals($count, $newCount);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionFactory
+     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+     */
     public function testCreatePairForeign(): void
     {
         // objects:
@@ -696,6 +771,135 @@ class TransactionFactoryTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Factory\TransactionFactory
+     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+     */
+    public function testCreatePairNoAccounts(): void
+    {
+        // objects:
+        $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $expense = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $euro    = TransactionCurrency::first();
+
+        // mocked classes
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $budgetFactory   = $this->mock(BudgetFactory::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
+        $data = [
+            'currency_id'           => 1,
+            'currency_code'         => null,
+            'description'           => null,
+            'source_id'             => $asset->id,
+            'source_name'           => null,
+            'destination_id'        => $expense->id,
+            'destination_name'      => null,
+            'amount'                => '10',
+            'reconciled'            => false,
+            'identifier'            => 0,
+            'foreign_currency_id'   => null,
+            'foreign_currency_code' => null,
+            'foreign_amount'        => null,
+            'budget_id'             => null,
+            'budget_name'           => null,
+            'category_id'           => null,
+            'category_name'         => null,
+        ];
+
+        // mock:
+        $accountRepos->shouldReceive('setUser');
+        $budgetFactory->shouldReceive('setUser');
+        $categoryFactory->shouldReceive('setUser');
+        // first search action is for the asset account, second is for expense account.
+        $accountRepos->shouldReceive('findNull')->andReturn(null, null)->atLeast()->once();
+
+        // factories return various stuff:
+        $currencyFactory->shouldReceive('find')->andReturn($euro, null)->atLeast()->once();
+
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $count      = $withdrawal->transactions()->count();
+
+        /** @var TransactionFactory $factory */
+        $factory = app(TransactionFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('Could not determine source or destination account.', $e->getMessage());
+        }
+
+        $newCount = $withdrawal->transactions()->count();
+
+        $this->assertEquals($count, $newCount);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionFactory
+     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+     */
+    public function testCreatePairNoCurrency(): void
+    {
+        // objects:
+        $asset   = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $expense = $this->user()->accounts()->where('account_type_id', 4)->first();
+
+        // mocked classes
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $budgetFactory   = $this->mock(BudgetFactory::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
+        $data = [
+            'description'           => null,
+            'source_id'             => $asset->id,
+            'source_name'           => null,
+            'destination_id'        => $expense->id,
+            'currency_id'           => null,
+            'currency_code'         => null,
+            'destination_name'      => null,
+            'amount'                => '10',
+            'reconciled'            => false,
+            'identifier'            => 0,
+            'foreign_currency_id'   => null,
+            'foreign_currency_code' => null,
+            'foreign_amount'        => null,
+            'budget_id'             => null,
+            'budget_name'           => null,
+            'category_id'           => null,
+            'category_name'         => null,
+        ];
+
+        // mock:
+        $accountRepos->shouldReceive('setUser');
+        $budgetFactory->shouldReceive('setUser');
+        $categoryFactory->shouldReceive('setUser');
+        // first search action is for the asset account, second is for expense account.
+        $accountRepos->shouldReceive('findNull')->andReturn($asset, $expense)->atLeast()->once();
+
+        // factories return various stuff:
+        $currencyFactory->shouldReceive('find')->andReturn(null, null)->atLeast()->once();
+
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $count      = $withdrawal->transactions()->count();
+
+        /** @var TransactionFactory $factory */
+        $factory = app(TransactionFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('Cannot store transaction without currency information.', $e->getMessage());
+        }
+
+        $newCount = $withdrawal->transactions()->count();
+
+        $this->assertEquals($count, $newCount);
+    }
+
+    /**
      * Create reconciliation using minimal data.
      *
      * @covers \FireflyIII\Factory\TransactionFactory
@@ -704,11 +908,10 @@ class TransactionFactoryTest extends TestCase
     public function testCreatePairReconciliation(): void
     {
         // objects:
-        $asset    = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $asset        = $this->user()->accounts()->where('account_type_id', 3)->first();
         $reconAccount = $this->user()->accounts()->where('account_type_id', 10)->first();
-        //$opposing = $this->user()->accounts()->where('id', '!=', $asset->id)->where('account_type_id', 3)->first();
-        $euro     = TransactionCurrency::first();
-        $foreign  = TransactionCurrency::where('id', '!=', $euro->id)->first();
+        $euro         = TransactionCurrency::first();
+        $foreign      = TransactionCurrency::where('id', '!=', $euro->id)->first();
 
         // mocked classes
         $accountRepos    = $this->mock(AccountRepositoryInterface::class);
@@ -775,6 +978,134 @@ class TransactionFactoryTest extends TestCase
         $this->assertEquals($euro->id, $first->transaction_currency_id);
         $this->assertNull($first->foreign_amount);
         $this->assertNull($first->foreign_currency_id);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionFactory
+     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+     */
+    public function testCreatePairSameBadType(): void
+    {
+        // objects:
+        $expense     = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $revenue = $this->user()->accounts()->where('account_type_id', 5)->first();
+        $euro        = TransactionCurrency::first();
+
+        // mocked classes
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $budgetFactory   = $this->mock(BudgetFactory::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
+        $data = [
+            'currency_id'           => 1,
+            'currency_code'         => null,
+            'description'           => null,
+            'source_id'             => $expense->id,
+            'source_name'           => null,
+            'destination_id'        => $revenue->id,
+            'destination_name'      => null,
+            'amount'                => '10',
+            'reconciled'            => false,
+            'identifier'            => 0,
+            'foreign_currency_id'   => null,
+            'foreign_currency_code' => null,
+            'foreign_amount'        => null,
+            'budget_id'             => null,
+            'budget_name'           => null,
+            'category_id'           => null,
+            'category_name'         => null,
+        ];
+
+        // mock:
+        $accountRepos->shouldReceive('setUser');
+        $budgetFactory->shouldReceive('setUser');
+        $categoryFactory->shouldReceive('setUser');
+        // first search action is for the asset account, second is for expense account.
+        $accountRepos->shouldReceive('findNull')->andReturn($expense, $revenue);
+
+        // factories return various stuff:
+        $currencyFactory->shouldReceive('find')->andReturn($euro, null)->atLeast()->once();
+
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $count      = $withdrawal->transactions()->count();
+
+        /** @var TransactionFactory $factory */
+        $factory = app(TransactionFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('At least one of the accounts must be an asset account (Expense account, Revenue account).', $e->getMessage());
+        }
+
+        $newCount = $withdrawal->transactions()->count();
+        $this->assertEquals($count, $newCount);
+    }
+
+    /**
+     * @covers \FireflyIII\Factory\TransactionFactory
+     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+     */
+    public function testCreatePairSameType(): void
+    {
+        // objects:
+        $asset     = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $alsoAsset = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $euro      = TransactionCurrency::first();
+
+        // mocked classes
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $budgetFactory   = $this->mock(BudgetFactory::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+
+        $data = [
+            'currency_id'           => 1,
+            'currency_code'         => null,
+            'description'           => null,
+            'source_id'             => $asset->id,
+            'source_name'           => null,
+            'destination_id'        => $alsoAsset->id,
+            'destination_name'      => null,
+            'amount'                => '10',
+            'reconciled'            => false,
+            'identifier'            => 0,
+            'foreign_currency_id'   => null,
+            'foreign_currency_code' => null,
+            'foreign_amount'        => null,
+            'budget_id'             => null,
+            'budget_name'           => null,
+            'category_id'           => null,
+            'category_name'         => null,
+        ];
+
+        // mock:
+        $accountRepos->shouldReceive('setUser');
+        $budgetFactory->shouldReceive('setUser');
+        $categoryFactory->shouldReceive('setUser');
+        // first search action is for the asset account, second is for expense account.
+        $accountRepos->shouldReceive('findNull')->andReturn($asset, $alsoAsset);
+
+        // factories return various stuff:
+        $currencyFactory->shouldReceive('find')->andReturn($euro, null)->atLeast()->once();
+
+        /** @var TransactionJournal $withdrawal */
+        $withdrawal = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
+        $count      = $withdrawal->transactions()->count();
+
+        /** @var TransactionFactory $factory */
+        $factory = app(TransactionFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->createPair($withdrawal, $data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('Source and destination account cannot be both of the type "Asset account"', $e->getMessage());
+        }
+
+        $newCount = $withdrawal->transactions()->count();
+        $this->assertEquals($count, $newCount);
     }
 
     /**

@@ -46,9 +46,9 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
-     * @covers \FireflyIII\Http\Controllers\HelpController::__construct
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShow(): void
     {
@@ -65,8 +65,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowBackupFromCache(): void
     {
@@ -94,8 +94,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowBackupFromGithub(): void
     {
@@ -112,10 +112,12 @@ class HelpControllerTest extends TestCase
         $help->shouldReceive('inCache')->withArgs(['index', 'en_US'])->andReturn(false)->once();
         $help->shouldReceive('getFromGithub')->withArgs(['index', 'en_US'])->andReturn('')->once();
 
+        $help->shouldReceive('putInCache')->once();
+
         $this->be($this->user());
         $response = $this->get(route('help.show', ['index']));
         $response->assertStatus(200);
-        $response->assertSee('Er is geen hulptekst voor deze pagina.'); // Dutch
+        $response->assertSee('Deze helptekst is nog niet beschikbaar in het Nederlands.'); // Dutch
 
         // put English back:
         Preference::where('user_id', $this->user()->id)->where('name', 'language')->delete();
@@ -123,8 +125,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowCached(): void
     {
@@ -140,8 +142,8 @@ class HelpControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\HelpController::show
-     * @covers \FireflyIII\Http\Controllers\HelpController::getHelpText
+     * @covers \FireflyIII\Http\Controllers\HelpController
+     * @covers \FireflyIII\Http\Controllers\HelpController
      */
     public function testShowNoRoute(): void
     {

@@ -25,9 +25,12 @@ namespace Tests\Unit\Factory;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -35,6 +38,15 @@ use Tests\TestCase;
  */
 class AccountFactoryTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Test minimal set of data to make factory work (asset account).
      *
@@ -69,46 +81,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
-        $this->assertNotNull($meta);
-        $this->assertEquals('defaultAsset', $meta->data);
-    }
-
-    /**
-     * Test minimal set of data to make factory work (asset account).
-     *
-     * @covers \FireflyIII\Factory\AccountFactory
-     * @covers \FireflyIII\Factory\AccountMetaFactory
-     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
-     */
-    public function testCreateBasicEmptyVb(): void
-    {
-
-        $data = [
-            'account_type_id' => null,
-            'accountType'     => 'asset',
-            'iban'            => null,
-            'name'            => 'Basic asset account #' . random_int(1, 10000),
-            'virtualBalance'  => '',
-            'active'          => true,
-            'accountRole'     => 'defaultAsset',
-        ];
-
-        /** @var AccountFactory $factory */
-        $factory = app(AccountFactory::class);
-        $factory->setUser($this->user());
-        $account = $factory->create($data);
-
-        // assert stuff about account:
-        $this->assertEquals($account->name, $data['name']);
-        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
-        $this->assertEquals('', $account->iban);
-        $this->assertTrue($account->active);
-        $this->assertEquals('0', $account->virtual_balance);
-
-        // get the role:
-        /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
     }
@@ -148,15 +121,54 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('ccAsset', $meta->data);
 
         // get the date:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','ccMonthlyPaymentDate')->first();
+        $meta = $account->accountMeta()->where('name', 'ccMonthlyPaymentDate')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('2018-01-01', $meta->data);
+    }
+
+    /**
+     * Test minimal set of data to make factory work (asset account).
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateBasicEmptyVb(): void
+    {
+
+        $data = [
+            'account_type_id' => null,
+            'accountType'     => 'asset',
+            'iban'            => null,
+            'name'            => 'Basic asset account #' . random_int(1, 10000),
+            'virtualBalance'  => '',
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        $account = $factory->create($data);
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals('0', $account->virtual_balance);
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
     }
 
     /**
@@ -194,7 +206,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNull($meta);
     }
 
@@ -233,7 +245,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNull($meta);
     }
 
@@ -274,7 +286,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
 
@@ -320,7 +332,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
 
@@ -362,7 +374,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
     }
@@ -401,7 +413,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
     }
@@ -443,7 +455,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
 
@@ -487,7 +499,7 @@ class AccountFactoryTest extends TestCase
 
         // get the role:
         /** @var AccountMeta $meta */
-        $meta = $account->accountMeta()->where('name','accountRole')->first();
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
 
@@ -520,6 +532,55 @@ class AccountFactoryTest extends TestCase
 
         // assert stuff about account:
         $this->assertEquals($account->id, $existing->id);
+    }
+
+    /**
+     * Can't find account type.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateNoType(): void
+    {
+
+        $data = [
+            'account_type_id' => null,
+            'accountType'     => 'bla-bla',
+            'iban'            => null,
+            'name'            => 'Basic asset account #' . random_int(1, 10000),
+            'virtualBalance'  => null,
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        try {
+            $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertContains('AccountFactory::create() was unable to find account type #0 ("bla-bla").', $e->getMessage());
+        }
+    }
+
+    /**
+     * Test only for existing account because the rest has been covered by other tests.
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testFindOrCreate(): void
+    {
+        /** @var Account $account */
+        $account = $this->user()->accounts()->inRandomOrder()->first();
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+
+        $result = $factory->findOrCreate($account->name, $account->accountType->type);
+        $this->assertEquals($result->id, $account->id);
     }
 
 }

@@ -68,7 +68,7 @@ class FixerIOv2 implements ExchangeRateInterface
         }
 
         // build URI
-        $uri        = sprintf(
+        $uri = sprintf(
             'http://data.fixer.io/api/%s?access_key=%s&base=%s&symbols=%s',
             $date->format('Y-m-d'), $apiKey, $fromCurrency->code, $toCurrency->code
         );

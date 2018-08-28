@@ -24,17 +24,18 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-
-
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+
 
 /**
  * Interface AccountRepositoryInterface.
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * Moved here from account CRUD.
      *
@@ -88,6 +89,15 @@ interface AccountRepositoryInterface
     public function findNull(int $accountId): ?Account;
 
     /**
+     * Return account type or null if not found.
+     *
+     * @param string $type
+     *
+     * @return AccountType|null
+     */
+    public function getAccountTypeByType(string $type): ?AccountType;
+
+    /**
      * @param array $accountIds
      *
      * @return Collection
@@ -112,6 +122,13 @@ interface AccountRepositoryInterface
      * @return Account
      */
     public function getCashAccount(): Account;
+
+    /**
+     * @param $account
+     *
+     * @return string
+     */
+    public function getInterestPerDay(Account $account): string;
 
     /**
      * Return meta value for account. Null if not found.
@@ -141,7 +158,6 @@ interface AccountRepositoryInterface
      */
     public function getOpeningBalanceAmount(Account $account): ?string;
 
-
     /**
      * Return date of opening balance as string or null.
      *
@@ -161,9 +177,35 @@ interface AccountRepositoryInterface
     public function getReconciliation(Account $account): ?Account;
 
     /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    public function isLiability(Account $account): bool;
+
+    /**
      * Returns the date of the very first transaction in this account.
      *
      * @param Account $account
+     *
+     * @return TransactionJournal|null
+     */
+    public function latestJournal(Account $account): ?TransactionJournal;
+
+    /**
+     * Returns the date of the very last transaction in this account.
+     *
+     * @param Account $account
+     *
+     * @return Carbon|null
+     */
+    public function latestJournalDate(Account $account): ?Carbon;
+
+    /**
+     * Returns the date of the very first transaction in this account.
+     *
+     * @param Account $account
+     *
      * @return TransactionJournal|null
      */
     public function oldestJournal(Account $account): ?TransactionJournal;
@@ -173,9 +215,9 @@ interface AccountRepositoryInterface
      *
      * @param Account $account
      *
-     * @return Carbon
+     * @return Carbon|null
      */
-    public function oldestJournalDate(Account $account): Carbon;
+    public function oldestJournalDate(Account $account): ?Carbon;
 
     /**
      * @param User $user

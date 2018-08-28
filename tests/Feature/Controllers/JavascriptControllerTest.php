@@ -53,7 +53,7 @@ class JavascriptControllerTest extends TestCase
 
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::accounts
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      */
     public function testAccounts(): void
     {
@@ -62,7 +62,7 @@ class JavascriptControllerTest extends TestCase
         $account       = factory(Account::class)->make();
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]))
-                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->once();
+                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT,AccountType::LOAN,AccountType::MORTGAGE, AccountType::CREDITCARD]])->once();
         $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(new TransactionCurrency);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
 
@@ -72,7 +72,7 @@ class JavascriptControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::currencies
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      */
     public function testCurrencies(): void
     {
@@ -87,8 +87,8 @@ class JavascriptControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *
@@ -107,10 +107,30 @@ class JavascriptControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
+     *
+     * @param string $range
+     *
+     * @dataProvider dateRangeProvider
+     */
+    public function testVariablesCustom(string $range): void
+    {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $this->session(['is_custom_range' => true]);
+        $response = $this->get(route('javascript.variables'));
+        $response->assertStatus(200);
+    }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
+     * @covers       \FireflyIII\Http\Controllers\JavascriptController
      *
      * @param string $range
      *
@@ -129,29 +149,6 @@ class JavascriptControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('javascript.variables'));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::variables
-     * @covers       \FireflyIII\Http\Controllers\JavascriptController::getDateRangeConfig
-     *
-     * @param string $range
-     *
-     * @dataProvider dateRangeProvider
-     */
-    public function testVariablesCustom(string $range): void
-    {
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $this->session(['is_custom_range' => true]);
         $response = $this->get(route('javascript.variables'));
         $response->assertStatus(200);
     }

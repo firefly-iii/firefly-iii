@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Models\Bill;
+
 /**
  * Class BillFormRequest.
  */
@@ -46,15 +48,16 @@ class BillFormRequest extends Request
     public function getBillData(): array
     {
         return [
-            'name'                    => $this->string('name'),
-            'amount_min'              => $this->string('amount_min'),
-            'transaction_currency_id' => $this->integer('transaction_currency_id'),
-            'amount_max'              => $this->string('amount_max'),
-            'date'                    => $this->date('date'),
-            'repeat_freq'             => $this->string('repeat_freq'),
-            'skip'                    => $this->integer('skip'),
-            'notes'                   => $this->string('notes'),
-            'active'                  => $this->boolean('active'),
+            'name'          => $this->string('name'),
+            'amount_min'    => $this->string('amount_min'),
+            'currency_id'   => $this->integer('transaction_currency_id'),
+            'currency_code' => '',
+            'amount_max'    => $this->string('amount_max'),
+            'date'          => $this->date('date'),
+            'repeat_freq'   => $this->string('repeat_freq'),
+            'skip'          => $this->integer('skip'),
+            'notes'         => $this->string('notes'),
+            'active'        => $this->boolean('active'),
         ];
     }
 
@@ -66,8 +69,10 @@ class BillFormRequest extends Request
     public function rules(): array
     {
         $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name';
-        if ($this->integer('id') > 0) {
-            $nameRule .= ',' . $this->integer('id');
+        /** @var Bill $bill */
+        $bill = $this->route()->parameter('bill');
+        if (null !== $bill) {
+            $nameRule = 'required|between:1,255|uniqueObjectForUser:bills,name,' . $bill->id;
         }
         // is OK
         $rules = [

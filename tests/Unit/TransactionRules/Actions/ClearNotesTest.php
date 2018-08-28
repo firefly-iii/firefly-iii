@@ -35,8 +35,7 @@ use Tests\TestCase;
 class ClearNotesTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\ClearNotes::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\ClearNotes::act()
+     * @covers \FireflyIII\TransactionRules\Actions\ClearNotes
      */
     public function testAct(): void
     {

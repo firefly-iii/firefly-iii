@@ -171,10 +171,8 @@ class Preferences
         if (\is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
-        $hash = md5($lastActivity);
-        Log::debug(sprintf('Value of last activity is %s, hash is %s', $lastActivity, $hash));
 
-        return $hash;
+        return md5($lastActivity);
     }
 
     /**

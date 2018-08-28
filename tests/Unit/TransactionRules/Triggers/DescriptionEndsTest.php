@@ -32,7 +32,7 @@ use Tests\TestCase;
 class DescriptionEndsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testTriggeredCase(): void
     {
@@ -44,7 +44,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testTriggeredClose(): void
     {
@@ -56,7 +56,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testTriggeredDefault(): void
     {
@@ -68,7 +68,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testTriggeredLongSearch(): void
     {
@@ -80,7 +80,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testTriggeredLonger(): void
     {
@@ -92,7 +92,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testTriggeredNot(): void
     {
@@ -104,7 +104,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testWillMatchEverythingEmpty(): void
     {
@@ -114,7 +114,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -124,7 +124,7 @@ class DescriptionEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionEnds
      */
     public function testWillMatchEverythingNull(): void
     {

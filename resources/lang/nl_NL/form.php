@@ -50,8 +50,8 @@ return [
     'source_account'              => 'Bronrekening',
     'destination_account'         => 'Doelrekening',
     'journal_destination_id'      => 'Betaalrekening (doel)',
-    'asset_destination_account'   => 'Betaalrekening (doel)',
-    'asset_source_account'        => 'Betaalrekening (bron)',
+    'asset_destination_account'   => 'Doelrekening',
+    'asset_source_account'        => 'Bronrekening',
     'journal_description'         => 'Omschrijving',
     'note'                        => 'Notities',
     'split_journal'               => 'Splits deze transactie',
@@ -84,6 +84,9 @@ return [
     'verification'                => 'Verificatie',
     'api_key'                     => 'API sleutel',
     'remember_me'                 => 'Aangemeld blijven',
+    'liability_type_id'           => 'Passivasoort',
+    'interest'                    => 'Rente',
+    'interest_period'             => 'Renteperiode',
 
     'source_account_asset'        => 'Bronrekening (betaalrekening)',
     'destination_account_expense' => 'Doelrekening (crediteur)',
@@ -237,5 +240,6 @@ return [
     'repetitions'             => 'Herhalingen',
     'calendar'                => 'Kalender',
     'weekend'                 => 'Weekend',
+    'client_secret'           => 'Client secret',
 
 ];

@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+4.7.6
+- Only PHP7.2 as of the next release on October 1st.
+- New liability feature. Does not do much yet. Tell me what you need while I develop: 
+-- transactions to / from 
+-- creation of liability: where is the money? move to asset? away?
+-- what to do with interest? 
+
+
 ## [4.7.5.3] - 2017-07-28
 ### Added
 - Many updated French translations thanks to [@bubka](https://crowdin.com/profile/bubka).

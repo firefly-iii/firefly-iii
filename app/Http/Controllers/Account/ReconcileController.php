@@ -36,6 +36,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Log;
 
 /**
@@ -45,6 +46,7 @@ use Log;
  */
 class ReconcileController extends Controller
 {
+    use UserNavigation;
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
     /** @var CurrencyRepositoryInterface The currency repository */
@@ -147,7 +149,7 @@ class ReconcileController extends Controller
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
-            $end   = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
+            $end = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
         }
         if (null === $end) {
             /** @var Carbon $end */
@@ -369,33 +371,5 @@ class ReconcileController extends Controller
 
         // redirect to previous URL.
         return redirect($this->getPreviousUri('reconcile.edit.uri'));
-    }
-
-    /**
-     * Redirect user to the original asset account.
-     *
-     * @param Account $account
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws FireflyException
-     */
-    private function redirectToOriginalAccount(Account $account)
-    {
-        /** @var Transaction $transaction */
-        $transaction = $account->transactions()->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id)); // @codeCoverageIgnore
-        }
-
-        $journal = $transaction->transactionJournal;
-        /** @var Transaction $opposingTransaction */
-        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
-
-        if (null === $opposingTransaction) {
-            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
-        }
-
-        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
     }
 }

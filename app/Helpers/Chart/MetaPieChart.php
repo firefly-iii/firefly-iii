@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -108,12 +108,12 @@ class MetaPieChart implements MetaPieChartInterface
 
         // also collect all other transactions
         if ($this->collectOtherObjects && 'expense' === $direction) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
 
-            $journals        = $collector->getJournals();
+            $journals        = $collector->getTransactions();
             $sum             = (string)$journals->sum('transaction_amount');
             $sum             = bcmul($sum, '-1');
             $sum             = bcsub($sum, $this->total);
@@ -121,11 +121,11 @@ class MetaPieChart implements MetaPieChartInterface
         }
 
         if ($this->collectOtherObjects && 'income' === $direction) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
-            $journals        = $collector->getJournals();
+            $journals        = $collector->getTransactions();
             $sum             = (string)$journals->sum('transaction_amount');
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
@@ -271,8 +271,8 @@ class MetaPieChart implements MetaPieChartInterface
      */
     protected function getTransactions(string $direction): Collection
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $types     = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
         $collector->addFilter(NegativeAmountFilter::class);
         if ('expense' === $direction) {
@@ -304,7 +304,7 @@ class MetaPieChart implements MetaPieChartInterface
 
         // @codeCoverageIgnoreEnd
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**
@@ -360,7 +360,8 @@ class MetaPieChart implements MetaPieChartInterface
         foreach ($array as $objectId => $amount) {
             if (!isset($names[$objectId])) {
                 $object           = $repository->findNull((int)$objectId);
-                $names[$objectId] = $object->name ?? $object->tag;
+                $name             = null === $object ? '(no name)' : $object->name;
+                $names[$objectId] = $name ?? $object->tag;
             }
             $amount                       = app('steam')->positive($amount);
             $this->total                  = bcadd($this->total, $amount);

@@ -55,8 +55,8 @@ class ConvertControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexDepositTransfer(): void
     {
@@ -94,7 +94,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexDepositWithdrawal(): void
     {
@@ -128,7 +128,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexSameType(): void
     {
@@ -154,7 +154,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexSplit(): void
     {
@@ -183,7 +183,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexTransferDeposit(): void
     {
@@ -210,7 +210,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexTransferWithdrawal(): void
     {
@@ -241,7 +241,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexWithdrawalDeposit(): void
     {
@@ -273,7 +273,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::index
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexWithdrawalTransfer(): void
     {
@@ -308,9 +308,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexDepositTransfer(): void
     {
@@ -331,9 +329,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexDepositWithdrawal(): void
     {
@@ -356,9 +352,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexDepositWithdrawalEmptyName(): void
     {
@@ -377,9 +371,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexErrored(): void
     {
@@ -415,9 +407,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexSameType(): void
     {
@@ -438,9 +428,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexSplit(): void
     {
@@ -466,9 +454,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexTransferDeposit(): void
     {
@@ -500,9 +486,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexWithdrawalDeposit(): void
     {
@@ -520,9 +504,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexWithdrawalDepositEmptyName(): void
     {
@@ -540,9 +522,7 @@ class ConvertControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::postIndex
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getSourceAccount
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController::getDestinationAccount
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexWithdrawalTransfer(): void
     {

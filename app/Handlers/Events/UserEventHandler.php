@@ -145,8 +145,8 @@ class UserEventHandler
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
         // @codeCoverageIgnoreEnd
+
         return true;
     }
 
@@ -171,8 +171,8 @@ class UserEventHandler
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
         // @codeCoverageIgnoreEnd
+
         return true;
     }
 
@@ -198,7 +198,6 @@ class UserEventHandler
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
         // @codeCoverageIgnoreEnd
 
         return true;

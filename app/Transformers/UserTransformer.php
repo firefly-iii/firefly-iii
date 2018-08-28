@@ -193,7 +193,7 @@ class UserTransformer extends TransformerAbstract
             'updated_at'   => $user->updated_at->toAtomString(),
             'created_at'   => $user->created_at->toAtomString(),
             'email'        => $user->email,
-            'blocked'      => (int)$user->blocked === 1,
+            'blocked'      => 1 === (int)$user->blocked,
             'blocked_code' => $user->blocked_code,
             'role'         => $role,
             'links'        => [

@@ -30,6 +30,7 @@ use Log;
  * Trait VerifiesAccessToken.
  *
  * Verifies user access token for sensitive commands.
+ * @codeCoverageIgnore
  */
 trait VerifiesAccessToken
 {

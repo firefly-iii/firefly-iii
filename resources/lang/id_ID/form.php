@@ -50,8 +50,8 @@ return [
     'source_account'              => 'Akun sumber',
     'destination_account'         => 'Akun tujuan',
     'journal_destination_id'      => 'Asset account (destination)',
-    'asset_destination_account'   => 'Akun aset (tujuan)',
-    'asset_source_account'        => 'Akun aset (sumber)',
+    'asset_destination_account'   => 'Destination account',
+    'asset_source_account'        => 'Source account',
     'journal_description'         => 'Deskripsi',
     'note'                        => 'Catatan',
     'split_journal'               => 'Pisahkan transaksi ini',
@@ -84,6 +84,9 @@ return [
     'verification'                => 'Verifikasi',
     'api_key'                     => 'Kunci API',
     'remember_me'                 => 'Remember me',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Akun sumber (akun aset)',
     'destination_account_expense' => 'Akun tujuan (akun pengeluaran)',
@@ -237,5 +240,6 @@ return [
     'repetitions'             => 'Repetitions',
     'calendar'                => 'Calendar',
     'weekend'                 => 'Weekend',
+    'client_secret'           => 'Client secret',
 
 ];

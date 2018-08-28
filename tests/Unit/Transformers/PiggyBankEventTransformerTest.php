@@ -41,7 +41,7 @@ class PiggyBankEventTransformerTest extends TestCase
     /**
      * Basic test with no meta data.
      *
-     * @covers \FireflyIII\Transformers\PiggyBankEventTransformer::transform
+     * @covers \FireflyIII\Transformers\PiggyBankEventTransformer
      */
     public function testBasic(): void
     {
@@ -85,7 +85,7 @@ class PiggyBankEventTransformerTest extends TestCase
     /**
      * Basic test with currency meta data.
      *
-     * @covers \FireflyIII\Transformers\PiggyBankEventTransformer::transform
+     * @covers \FireflyIII\Transformers\PiggyBankEventTransformer
      */
     public function testBasicCurrency(): void
     {

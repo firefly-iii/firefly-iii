@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
@@ -162,7 +162,9 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     {
         // Lookup all journals that match the parameters specified
         $transactions = $this->collectJournals();
-        $processor    = Processor::make($this->rule, true);
+        /** @var Processor $processor */
+        $processor = app(Processor::class);
+        $processor->make($this->rule, true);
         $hits         = 0;
         $misses       = 0;
         $total        = 0;
@@ -192,11 +194,11 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
      */
     protected function collectJournals(): Collection
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setAccounts($this->accounts)->setRange($this->startDate, $this->endDate);
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 }

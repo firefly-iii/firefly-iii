@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
  * Class TransferFilter.
  *
  * This filter removes any transfers that are in the collection twice (from A to B and from B to A).
+ *
+ * @codeCoverageIgnore
  */
 class TransferFilter implements FilterInterface
 {

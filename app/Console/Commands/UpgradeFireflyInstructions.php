@@ -27,6 +27,8 @@ use Illuminate\Console\Command;
 
 /**
  * Class UpgradeFireflyInstructions.
+ *
+ * @codeCoverageIgnore
  */
 class UpgradeFireflyInstructions extends Command
 {
@@ -54,6 +56,7 @@ class UpgradeFireflyInstructions extends Command
         if ('install' === (string)$this->argument('task')) {
             $this->installInstructions();
         }
+
         return 0;
     }
 

@@ -49,7 +49,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::delete
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testDelete(): void
     {
@@ -65,7 +65,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::destroy
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testDestroy(): void
     {
@@ -83,7 +83,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::download
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testDownload(): void
     {
@@ -102,7 +102,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\AttachmentController::download
+     * @covers                   \FireflyIII\Http\Controllers\AttachmentController
      * @expectedExceptionMessage Could not find the indicated attachment
      */
     public function testDownloadFail(): void
@@ -119,7 +119,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::edit
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testEdit(): void
     {
@@ -139,7 +139,7 @@ class AttachmentControllerTest extends TestCase
      */
     public function testIndex()
     {
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection([Attachment::first()]))->once();
         $repository->shouldReceive('exists')->andReturn(true)->once();
 
@@ -152,7 +152,7 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::update
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testUpdate(): void
     {
@@ -176,8 +176,8 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::view
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::__construct
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testView(): void
     {
@@ -193,8 +193,8 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::view
-     * @covers \FireflyIII\Http\Controllers\AttachmentController::__construct
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
+     * @covers \FireflyIII\Http\Controllers\AttachmentController
      */
     public function testViewFail(): void
     {

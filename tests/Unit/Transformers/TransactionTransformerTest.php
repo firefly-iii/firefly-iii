@@ -25,7 +25,7 @@ namespace Tests\Unit\Transformers;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollector;
+use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Account;
@@ -48,7 +48,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      */
     public function testBasic(): void
     {
@@ -135,7 +135,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testDeposit(): void
@@ -223,7 +223,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Deposit cannot have a budget
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testDepositBudget(): void
@@ -320,7 +320,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal) with a foreign amount.
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testForeignAmount(): void
@@ -416,7 +416,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal) with a budget
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testJournalBudget(): void
@@ -518,7 +518,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal) with a category
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testJournalCategory(): void
@@ -620,7 +620,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (opening balance)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testOpeningBalanceNeg(): void
@@ -709,7 +709,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (opening balance)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testOpeningBalancePos(): void
@@ -798,7 +798,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (reconciliation)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testReconciliationNeg(): void
@@ -887,7 +887,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (reconciliation)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testReconciliationPos(): void
@@ -976,7 +976,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal) with budget on the transactions.
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testTransactionBudget(): void
@@ -1080,7 +1080,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal) with a category on the transactions
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testTransactionCategory(): void
@@ -1183,7 +1183,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (withdrawal) with a description for transactions.
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testTransactionDescription(): void
@@ -1271,7 +1271,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (transfer)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testTransferOne(): void
@@ -1359,7 +1359,7 @@ class TransactionTransformerTest extends TestCase
     /**
      * Basic journal (transfer)
      *
-     * @covers \FireflyIII\Transformers\TransactionTransformer::transform
+     * @covers \FireflyIII\Transformers\TransactionTransformer
      * throws \FireflyIII\Exceptions\FireflyException
      */
     public function testTransferTwo(): void
@@ -1453,7 +1453,7 @@ class TransactionTransformerTest extends TestCase
      */
     protected function getTransaction(TransactionJournal $journal): Transaction
     {
-        $collector = new JournalCollector;
+        $collector = new TransactionCollector;
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals(new Collection([$journal]));
@@ -1466,7 +1466,7 @@ class TransactionTransformerTest extends TestCase
         if (!($transactionType === TransactionType::WITHDRAWAL)) {
             $collector->addFilter(NegativeAmountFilter::class);
         }
-        $journals = $collector->getJournals();
+        $journals = $collector->getTransactions();
 
         return $journals->first();
     }

@@ -29,6 +29,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class RequestedNewPassword.
+ * @codeCoverageIgnore
  */
 class RequestedNewPassword extends Event
 {
@@ -36,10 +37,10 @@ class RequestedNewPassword extends Event
 
     /** @var string The users IP address */
     public $ipAddress;
-    /** @var User The user */
-    public $user;
     /** @var string The token */
     public $token;
+    /** @var User The user */
+    public $user;
 
     /**
      * Create a new event instance. This event is triggered when a users tries to reset his or her password.

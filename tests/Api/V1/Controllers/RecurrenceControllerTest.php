@@ -749,12 +749,12 @@ class RecurrenceControllerTest extends TestCase
     }
 
     /**
-     * Submit the minimum amount to store a recurring transaction (using source ID field).
+     * Add a recurring but refer to an asset as destination.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
      */
-    public function testStoreFailInvalidWeekly(): void
+    public function testStoreFailInvalidDestinationId(): void
     {
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
@@ -776,6 +776,19 @@ class RecurrenceControllerTest extends TestCase
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
                      ->andReturn(new Collection([$assetAccount]));
+        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$assetAccount->id]])->once()
+                     ->andReturn(new Collection([$assetAccount]));
+
+
+        // entries used by the transformer
+        $repository->shouldReceive('getNoteText')->andReturn('Note text');
+        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
+        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+
+        // entries used by the transformer (the fake entry has a category + a budget):
+        $factory->shouldReceive('findOrCreate')->andReturn(null);
+        $budgetRepos->shouldReceive('findNull')->andReturn(null);
+
 
         // data to submit
         $firstDate = new Carbon;
@@ -788,16 +801,17 @@ class RecurrenceControllerTest extends TestCase
             'active'       => 1,
             'transactions' => [
                 [
-                    'amount'      => '100',
-                    'currency_id' => '1',
-                    'description' => 'Test description',
-                    'source_id'   => '1',
+                    'amount'         => '100',
+                    'currency_id'    => '1',
+                    'description'    => 'Test description',
+                    'source_id'      => '1',
+                    'destination_id' => $assetAccount->id,
                 ],
             ],
             'repetitions'  => [
                 [
-                    'type'    => 'weekly',
-                    'moment'  => '8',
+                    'type'    => 'daily',
+                    'moment'  => '',
                     'skip'    => '0',
                     'weekend' => '1',
 
@@ -811,8 +825,8 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'repetitions.0.moment' => [
-                        'Invalid repetition moment for this type of repetition.',
+                    'transactions.0.destination_id' => [
+                        'This value is invalid for this field.',
                     ],
                 ],
             ]
@@ -973,6 +987,79 @@ class RecurrenceControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
      */
+    public function testStoreFailInvalidNdomCount(): void
+    {
+        /** @var Recurrence $recurrence */
+        $recurrence = $this->user()->recurrences()->first();
+
+        // mock stuff:
+        $repository   = $this->mock(RecurringRepositoryInterface::class);
+        $factory      = $this->mock(CategoryFactory::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+        $factory->shouldReceive('setUser');
+        $budgetRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('setUser');
+
+        // used by the validator to find the source_id:
+        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
+                     ->andReturn(new Collection([$assetAccount]));
+
+        // data to submit
+        $firstDate = new Carbon;
+        $firstDate->addDays(2);
+        $data = [
+            'type'         => 'withdrawal',
+            'title'        => 'Hello',
+            'first_date'   => $firstDate->format('Y-m-d'),
+            'apply_rules'  => 1,
+            'active'       => 1,
+            'transactions' => [
+                [
+                    'amount'      => '100',
+                    'currency_id' => '1',
+                    'description' => 'Test description',
+                    'source_id'   => '1',
+                ],
+            ],
+            'repetitions'  => [
+                [
+                    'type'    => 'ndom',
+                    'moment'  => '9',
+                    'skip'    => '0',
+                    'weekend' => '1',
+
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'repetitions.0.moment' => [
+                        'Invalid repetition moment for this type of repetition.',
+                    ],
+                ],
+            ]
+        );
+        $response->assertStatus(422);
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * Submit the minimum amount to store a recurring transaction (using source ID field).
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     */
     public function testStoreFailInvalidNdomHigh(): void
     {
         /** @var Recurrence $recurrence */
@@ -1046,7 +1133,7 @@ class RecurrenceControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
      */
-    public function testStoreFailInvalidNdomCount(): void
+    public function testStoreFailInvalidWeekly(): void
     {
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
@@ -1088,8 +1175,8 @@ class RecurrenceControllerTest extends TestCase
             ],
             'repetitions'  => [
                 [
-                    'type'    => 'ndom',
-                    'moment'  => '9',
+                    'type'    => 'weekly',
+                    'moment'  => '8',
                     'skip'    => '0',
                     'weekend' => '1',
 
@@ -1105,93 +1192,6 @@ class RecurrenceControllerTest extends TestCase
                 'errors'  => [
                     'repetitions.0.moment' => [
                         'Invalid repetition moment for this type of repetition.',
-                    ],
-                ],
-            ]
-        );
-        $response->assertStatus(422);
-        $response->assertHeader('Content-Type', 'application/json');
-    }
-
-    /**
-     * Add a recurring but refer to an asset as destination.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
-     */
-    public function testStoreFailInvalidDestinationId(): void
-    {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
-        // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
-
-        // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$assetAccount->id]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
-
-        // data to submit
-        $firstDate = new Carbon;
-        $firstDate->addDays(2);
-        $data = [
-            'type'         => 'withdrawal',
-            'title'        => 'Hello',
-            'first_date'   => $firstDate->format('Y-m-d'),
-            'apply_rules'  => 1,
-            'active'       => 1,
-            'transactions' => [
-                [
-                    'amount'         => '100',
-                    'currency_id'    => '1',
-                    'description'    => 'Test description',
-                    'source_id'      => '1',
-                    'destination_id' => $assetAccount->id,
-                ],
-            ],
-            'repetitions'  => [
-                [
-                    'type'    => 'daily',
-                    'moment'  => '',
-                    'skip'    => '0',
-                    'weekend' => '1',
-
-                ],
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.destination_id' => [
-                        'This value is invalid for this field.',
                     ],
                 ],
             ]
@@ -1627,5 +1627,84 @@ class RecurrenceControllerTest extends TestCase
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
+
+    /**
+     * Just a basic test because the store() tests cover everything.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     */
+    public function testUpdate(): void
+    {
+        /** @var Recurrence $recurrence */
+        $recurrence = $this->user()->recurrences()->first();
+
+        // mock stuff:
+        $repository   = $this->mock(RecurringRepositoryInterface::class);
+        $factory      = $this->mock(CategoryFactory::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+        $factory->shouldReceive('setUser');
+        $budgetRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('update')->once()->andReturn($recurrence);
+
+
+        // used by the validator to find the source_id:
+        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()->andReturn(new Collection([$assetAccount]));
+
+
+        // entries used by the transformer
+        $repository->shouldReceive('getNoteText')->andReturn('Note text');
+        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
+        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+
+        // entries used by the transformer (the fake entry has a category + a budget):
+        $factory->shouldReceive('findOrCreate')->andReturn(null);
+        $budgetRepos->shouldReceive('findNull')->andReturn(null);
+
+
+        // data to submit
+        $firstDate = new Carbon;
+        $firstDate->addDays(2);
+        $data = [
+            'type'         => 'deposit',
+            'title'        => 'Hello',
+            'first_date'   => $firstDate->format('Y-m-d'),
+            'apply_rules'  => 1,
+            'active'       => 1,
+            'transactions' => [
+                [
+                    'amount'         => '100',
+                    'currency_id'    => '1',
+                    'description'    => 'Test description deposit',
+                    'source_name'    => 'Some expense account',
+                    'destination_id' => '1',
+                ],
+            ],
+            'repetitions'  => [
+                [
+                    'type'    => 'daily',
+                    'moment'  => '',
+                    'skip'    => '0',
+                    'weekend' => '1',
+
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->put('/api/v1/recurrences/' . $recurrence->id, $data, ['Accept' => 'application/json']);
+        $response->assertSee($recurrence->title);
+        $response->assertStatus(200);
+
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
 
 }

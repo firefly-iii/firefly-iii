@@ -65,10 +65,10 @@ class APIEventHandler
                 Log::error($e->getTraceAsString());
                 Session::flash('error', 'Possible email error: ' . $e->getMessage());
             }
+            // @codeCoverageIgnoreEnd
             Log::debug('If no error above this line, message was sent.');
         }
 
-        // @codeCoverageIgnoreEnd
         return true;
 
 

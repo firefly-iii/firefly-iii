@@ -53,8 +53,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon      lastActivityDate
  * @property Collection  accountMeta
  * @property bool        encrypted
- * @property int       account_type_id
- * @property Collection piggyBanks
+ * @property int         account_type_id
+ * @property Collection  piggyBanks
+ * @property string      $interest
+ * @property string      $interestPeriod
+ * @property string      accountTypeString
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -75,18 +78,20 @@ class Account extends Model
             'active'     => 'boolean',
             'encrypted'  => 'boolean',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'account_type_id', 'name', 'active', 'virtual_balance', 'iban'];
-    /** @var array */
+    /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
     /** @var bool */
     private $joinedAccountTypes;
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Account
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Account
     {

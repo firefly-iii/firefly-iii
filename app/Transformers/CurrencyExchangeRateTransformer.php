@@ -29,6 +29,9 @@ use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
+/**
+ * Class CurrencyExchangeRateTransformer
+ */
 class CurrencyExchangeRateTransformer extends TransformerAbstract
 {
     /**
@@ -79,6 +82,11 @@ class CurrencyExchangeRateTransformer extends TransformerAbstract
         return $this->item($rate->toCurrency, new CurrencyTransformer($this->parameters), 'transaction_currencies');
     }
 
+    /**
+     * @param CurrencyExchangeRate $rate
+     *
+     * @return array
+     */
     public function transform(CurrencyExchangeRate $rate): array
     {
         $data = [

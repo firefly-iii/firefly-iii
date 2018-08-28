@@ -238,7 +238,7 @@
 
                 this.form.errors = [];
 
-                axios.post('./oauth/personal-access-tokens?_token=' + window.Laravel, this.form)
+                axios.post('./oauth/personal-access-tokens?_token=' + document.head.querySelector('meta[name="csrf-token"]').content, this.form)
                         .then(response => {
                             this.form.name = '';
                             this.form.scopes = [];

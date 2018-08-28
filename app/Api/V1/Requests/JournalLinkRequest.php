@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use Illuminate\Validation\Validator;
 
 /**
  *
@@ -49,10 +52,11 @@ class JournalLinkRequest extends Request
     public function getAll(): array
     {
         return [
-            'link_type_id' => $this->integer('link_type_id'),
-            'inward_id'    => $this->integer('inward_id'),
-            'outward_id'   => $this->integer('outward_id'),
-            'notes'        => $this->string('notes'),
+            'link_type_id'   => $this->integer('link_type_id'),
+            'link_type_name' => $this->string('link_type_name'),
+            'inward_id'      => $this->integer('inward_id'),
+            'outward_id'     => $this->integer('outward_id'),
+            'notes'          => $this->string('notes'),
         ];
     }
 
@@ -65,11 +69,63 @@ class JournalLinkRequest extends Request
     public function rules(): array
     {
         return [
-            'link_type_id' => 'required|exists:link_types,id',
-            'inward_id'    => 'required|belongsToUser:transaction_journals,id',
-            'outward_id'   => 'required|belongsToUser:transaction_journals,id',
-            'notes'        => 'between:0,65000',
+            'link_type_id'   => 'exists:link_types,id|required_without:link_type_name',
+            'link_type_name' => 'exists:link_types,name|required_without:link_type_id',
+            'inward_id'      => 'required|belongsToUser:transaction_journals,id',
+            'outward_id'     => 'required|belongsToUser:transaction_journals,id',
+            'notes'          => 'between:0,65000',
         ];
     }
 
+    /**
+     * Configure the validator instance.
+     *
+     * @param  Validator $validator
+     *
+     * @return void
+     */
+    public function withValidator(Validator $validator): void
+    {
+        $validator->after(
+            function (Validator $validator) {
+                $this->validateExistingLink($validator);
+            }
+        );
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    private function validateExistingLink(Validator $validator): void
+    {
+        /** @var LinkTypeRepositoryInterface $repository */
+        $repository = app(LinkTypeRepositoryInterface::class);
+        $repository->setUser(auth()->user());
+
+        /** @var JournalRepositoryInterface $journalRepos */
+        $journalRepos = app(JournalRepositoryInterface::class);
+        $journalRepos->setUser(auth()->user());
+
+        $data      = $validator->getData();
+        $inwardId  = (int)($data['inward_id'] ?? 0);
+        $outwardId = (int)($data['outward_id'] ?? 0);
+        $inward    = $journalRepos->findNull($inwardId);
+        $outward   = $journalRepos->findNull($outwardId);
+
+        if (null === $inward) {
+            $validator->errors()->add('inward_id', 'Invalid inward ID.');
+
+            return;
+        }
+        if (null === $outward) {
+            $validator->errors()->add('outward_id', 'Invalid outward ID.');
+
+            return;
+        }
+
+        if ($repository->findLink($inward, $outward)) {
+            $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
+            $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
+        }
+    }
 }

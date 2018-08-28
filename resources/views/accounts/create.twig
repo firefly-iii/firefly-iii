@@ -17,8 +17,15 @@
                     </div>
                     <div class="box-body">
                         {{ ExpandedForm.text('name') }}
-                        {% if what == 'asset' %}
+                        {% if what == 'asset' or what == 'liabilities' %}
                             {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
+                        {% endif %}
+                        {% if what == 'liabilities' %}
+                            {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
+                            {{ ExpandedForm.amountNoCurrency('openingBalance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                            {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
+                            {{ ExpandedForm.percentage('interest') }}
+                            {{ ExpandedForm.select('interest_period', interestPeriods) }}
                         {% endif %}
                     </div>
                 </div>
@@ -40,9 +47,11 @@
 
                             {{ ExpandedForm.amountNoCurrency('openingBalance') }}
                             {{ ExpandedForm.date('openingBalanceDate') }}
-                            {{ ExpandedForm.select('accountRole', roles,null,{'helpText' : 'asset_account_role_help'|_}) }}
+                            {{ ExpandedForm.select('accountRole', roles,null,{helpText : 'asset_account_role_help'|_}) }}
                             {{ ExpandedForm.amountNoCurrency('virtualBalance') }}
                         {% endif %}
+                        {# only correct way to do active checkbox #}
+                        {{ ExpandedForm.checkbox('include_net_worth', 1) }}
                         {{ ExpandedForm.textarea('notes',null,{helpText: trans('firefly.field_supports_markdown')}) }}
 
                     </div>

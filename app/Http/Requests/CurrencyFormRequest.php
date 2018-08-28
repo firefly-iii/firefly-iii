@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
+use FireflyIII\Models\TransactionCurrency;
+
 /**
  * Class CurrencyFormRequest.
  */
@@ -67,7 +69,11 @@ class CurrencyFormRequest extends Request
             'symbol'         => 'required|min:1|max:8|unique:transaction_currencies,symbol',
             'decimal_places' => 'required|min:0|max:12|numeric',
         ];
-        if ($this->integer('id') > 0) {
+
+        /** @var TransactionCurrency $currency */
+        $currency = $this->route()->parameter('currency');
+
+        if (null !== $currency) {
             $rules = [
                 'name'           => 'required|max:48|min:1',
                 'code'           => 'required|min:3|max:3',

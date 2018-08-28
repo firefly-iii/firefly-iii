@@ -61,9 +61,10 @@ class Request extends FormRequest
     public function float(string $field): ?float
     {
         $res = $this->get($field);
-        if(null === $res) {
+        if (null === $res) {
             return null;
         }
+
         return (float)$res;
     }
 

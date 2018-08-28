@@ -6,30 +6,46 @@
 
 {% block content %}
 
-        <div class="row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="box">
-                    <div class="box-header with-border">
-                        <h3 class="box-title">
-                            {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
-                        </h3>
-                        <div class="box-tools pull-right">
-                            <div class="btn-group">
-                                <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
-                                <ul class="dropdown-menu" role="menu">
-                                    <li><a href="{{ route('accounts.edit', account.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                                    <li><a href="{{ route('accounts.delete', account.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
-                                </ul>
-                            </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('accounts.edit', account.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('accounts.delete', account.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="box-body">
+                </div>
+                <div class="box-body">
+                    <div>
                         <canvas id="overview-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
                     </div>
                 </div>
             </div>
         </div>
-    {% if not showAll %}
+    </div>
+    {% if not showAll and isLiability %}
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">pay-off by date</h3>
+                    </div>
+                    <div class="box-body">
+                        Content
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if not showAll and not isLiability %}
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                 <div class="box">
@@ -96,7 +112,11 @@
                     {% else %}
                         {% set showReconcile = false %}
                     {% endif %}
-                    {% include 'list.journals' with {sorting:true, hideBills:true, hideBudgets: true, hideCategories: true, showReconcile: showReconcile} %}
+                    {% if periods.count > 0 %}
+                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile} %}
+                    {% else %}
+                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile, showCategories: true, showBudgets: true, showBill:true} %}
+                    {% endif %}
                     <p>
                         <i class="fa fa-calendar"></i>
                         {% if periods.count > 0 %}

@@ -85,7 +85,7 @@ var defaultChartOptions = {
                     display: false
                 },
                 ticks: {
-                    // Include a dollar sign in the ticks
+                    // break ticks when too long.
                     callback: function (value, index, values) {
                         return formatLabel(value, 20);
                     }
@@ -117,6 +117,20 @@ var defaultChartOptions = {
     }
 };
 
+var pieOptionsWithCurrency = {
+    tooltips: {
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                var value = data.datasets[0].data[tooltipItem.index];
+                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value, data.datasets[tooltipItem.datasetIndex].currency_symbol[tooltipItem.index]);
+            }
+        }
+    },
+    maintainAspectRatio: true,
+    responsive: true
+};
+
 var defaultPieOptions = {
     tooltips: {
         callbacks: {
@@ -124,6 +138,20 @@ var defaultPieOptions = {
                 "use strict";
                 var value = data.datasets[0].data[tooltipItem.index];
                 return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value);
+            }
+        }
+    },
+    maintainAspectRatio: true,
+    responsive: true
+};
+
+var neutralDefaultPieOptions = {
+    tooltips: {
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                var value = data.datasets[0].data[tooltipItem.index];
+                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value, '¤');
             }
         }
     },

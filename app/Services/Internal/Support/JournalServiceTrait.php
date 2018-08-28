@@ -75,7 +75,7 @@ trait JournalServiceTrait
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($journal->user);
-        $bill = $factory->find($data['bill_id'], $data['bill_name']);
+        $bill = $factory->find((int)$data['bill_id'], $data['bill_name']);
 
         if (null !== $bill) {
             $journal->bill_id = $bill->id;
@@ -95,19 +95,13 @@ trait JournalServiceTrait
      */
     protected function storeMeta(TransactionJournal $journal, array $data, string $field): void
     {
-
-        if (!isset($data[$field])) {
-            Log::debug(sprintf('Want to store meta-field "%s", but no value.', $field));
-
-            return;
-        }
         $set = [
             'journal' => $journal,
             'name'    => $field,
-            'data'    => (string)$data[$field],
+            'data'    => (string)($data[$field] ?? ''),
         ];
 
-        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $field, (string)$data[$field]));
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
 
         /** @var TransactionJournalMetaFactory $factory */
         $factory = app(TransactionJournalMetaFactory::class);

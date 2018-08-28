@@ -63,6 +63,7 @@ use UnexpectedValueException;
  * Upgrade user database.
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @codeCoverageIgnore
  */
 class UpgradeDatabase extends Command
 {

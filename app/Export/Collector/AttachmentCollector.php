@@ -28,13 +28,15 @@ use Crypt;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Log;
 use Storage;
 
 /**
  * Class AttachmentCollector.
+ *
+ * @deprecated
+ * @codeCoverageIgnore
  */
 class AttachmentCollector extends BasicCollector implements CollectorInterface
 {
@@ -108,7 +110,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
         if ($this->uploadDisk->exists($file)) {
             try {
                 $decrypted = Crypt::decrypt($this->uploadDisk->get($file));
-            } catch (FileNotFoundException|DecryptException $e) {
+            } catch (DecryptException $e) {
                 Log::error('Catchable error: could not decrypt attachment #' . $attachment->id . ' because: ' . $e->getMessage());
 
                 return false;

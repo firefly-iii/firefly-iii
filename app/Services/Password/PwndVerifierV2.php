@@ -67,7 +67,7 @@ class PwndVerifierV2 implements Verifier
         }
         try {
             $strpos = stripos($res->getBody()->getContents(), $rest);
-        } catch (RunTimeException $e) {
+        } catch (RuntimeException $e) {
             Log::error(sprintf('Could not get body from Pwnd result: %s', $e->getMessage()));
             $strpos = false;
         }

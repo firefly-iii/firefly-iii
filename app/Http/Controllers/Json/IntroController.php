@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
+use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
 use Log;
 
@@ -30,6 +31,8 @@ use Log;
  */
 class IntroController
 {
+    use GetConfigurationData;
+
     /**
      * Returns the introduction wizard for a page.
      *
@@ -135,66 +138,4 @@ class IntroController
         return response()->json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
     }
 
-    /**
-     * Get the basic steps from config.
-     *
-     * @param string $route
-     *
-     * @return array
-     */
-    private function getBasicSteps(string $route): array
-    {
-        $routeKey = str_replace('.', '_', $route);
-        $elements = config(sprintf('intro.%s', $routeKey));
-        $steps    = [];
-        if (\is_array($elements) && \count($elements) > 0) {
-            foreach ($elements as $key => $options) {
-                $currentStep = $options;
-
-                // get the text:
-                $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $key);
-
-                // save in array:
-                $steps[] = $currentStep;
-            }
-        }
-        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, \count($steps)));
-
-        return $steps;
-    }
-
-    /**
-     * Get specific info for special routes.
-     *
-     * @param string $route
-     * @param string $specificPage
-     *
-     * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function getSpecificSteps(string $route, string $specificPage): array
-    {
-        $steps    = [];
-        $routeKey = '';
-
-        // user is on page with specific instructions:
-        if (\strlen($specificPage) > 0) {
-            $routeKey = str_replace('.', '_', $route);
-            $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
-            if (\is_array($elements) && \count($elements) > 0) {
-                foreach ($elements as $key => $options) {
-                    $currentStep = $options;
-
-                    // get the text:
-                    $currentStep['intro'] = (string)trans('intro.' . $route . '_' . $specificPage . '_' . $key);
-
-                    // save in array:
-                    $steps[] = $currentStep;
-                }
-            }
-        }
-        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, \count($steps)));
-
-        return $steps;
-    }
 }

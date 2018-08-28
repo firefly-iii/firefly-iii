@@ -27,6 +27,7 @@ use Carbon\Carbon;
 
 /**
  * Class Transaction
+ *
  * @codeCoverageIgnore
  *
  * @SuppressWarnings(PHPMD.ShortVariable)
