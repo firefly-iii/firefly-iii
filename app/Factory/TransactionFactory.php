@@ -204,7 +204,7 @@ class TransactionFactory
             throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationType));
         }
         // source must be in this list AND dest must be in this list:
-        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::MORTGAGE, AccountType::LOAN, AccountType::MORTGAGE];
+        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::CASH, AccountType::DEBT, AccountType::MORTGAGE, AccountType::LOAN, AccountType::MORTGAGE];
         if (
             !\in_array($sourceType, $list, true) &&
             !\in_array($destinationType, $list, true)) {
