@@ -116,7 +116,7 @@ class StageImportDataHandler
      * @return array
      * @throws FireflyException
      */
-    private function convertPayment(BunqPayment $payment, LocalAccount $source): array
+    private function convertPayment(BunqPayment $payment, int $bunqAccountId, LocalAccount $source): array
     {
         Log::debug(sprintf('Now at payment with ID #%d', $payment->getId()));
         $type         = TransactionType::WITHDRAWAL;
@@ -300,15 +300,158 @@ class StageImportDataHandler
      */
     private function getTransactionsFromBunq(int $bunqAccountId, LocalAccount $localAccount): array
     {
-        $return = [];
-        // make request:
-        /** @var Payment $paymentRequest */
-        $paymentRequest = app(Payment::class);
-        $result         = $paymentRequest->listing($bunqAccountId, ['count' => 100]);
-        // loop result:
-        /** @var BunqPayment $payment */
-        foreach ($result->getValue() as $payment) {
-            $return[] = $this->convertPayment($payment, $localAccount);
+        Log::debug('Now in getTransactionsFromBunq(%d).');
+
+        // what was the last transaction we grabbed from bunq?
+        $return          = [];
+        $preferenceName  = sprintf('bunq-last-transaction-%d', $bunqAccountId);
+        $transactionPref = \Preferences::getForUser($this->importJob->user, $preferenceName, 0);
+        $transactionId   = (int)$transactionPref->data;
+
+        Log::debug(sprintf('ID of latest transaction is #%d', $transactionId));
+
+        if (0 === $transactionId) {
+            Log::debug('Its zero so we go back in time.');
+            // we go back into the past, way until the system says there is no more.
+            $return = $this->goBackInTime($bunqAccountId, $localAccount);
+        }
+        if (0 !== $transactionId) {
+            $return = $this->goForwardInTime($bunqAccountId, $localAccount);
+            // work my way forward.
+        }
+        sleep(1);
+
+        return $return;
+    }
+
+    /**
+     * @param int          $bunqAccountId
+     * @param LocalAccount $localAccount
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function goBackInTime(int $bunqAccountId, LocalAccount $localAccount): array
+    {
+        Log::debug('Now in goBackInTime().');
+        $hasMoreTransactions  = true;
+        $olderId              = null;
+        $count                = 0;
+        $return               = [];
+        $veryFirstTransaction = null;
+
+        // loop die loop!
+        sleep(1);
+        while ($hasMoreTransactions && $count < 50) {
+            Log::debug(sprintf('Now in loop #%d', $count));
+            /** @var Payment $paymentRequest */
+            $paymentRequest = app(Payment::class);
+            $response       = $paymentRequest->listing($bunqAccountId, ['count' => 20, 'older_id' => $olderId]);
+            $pagination     = $response->getPagination();
+            /*
+             * If pagination is not null, we can go back even further.
+             */
+            if (null !== $pagination) {
+                $olderId = $pagination->getOlderId();
+                Log::debug(sprintf('Pagination object is not null, olderID is "%s"', $olderId));
+            }
+            Log::debug('Now looping results...');
+            /** @var BunqPayment $payment */
+            foreach ($response->getValue() as $payment) {
+                $return[] = $this->convertPayment($payment, $bunqAccountId, $localAccount);
+
+                // store the very first transaction ID for this particular account.
+                if (null === $veryFirstTransaction) {
+                    $veryFirstTransaction = $payment->getId();
+                }
+
+            }
+            Log::debug(sprintf('Count of result is now %d', \count($return)));
+            $count++;
+            if (null === $olderId) {
+                Log::debug('Older ID is NULL, so stop looping cause we are done!');
+                $hasMoreTransactions = false;
+            }
+            if (null === $pagination) {
+                Log::debug('No pagination object, stop looping.');
+                $hasMoreTransactions = false;
+            }
+            sleep(1);
+        }
+        Log::debug(sprintf('Done with looping. Final loop count is %d, first transaction is %d', $count, $veryFirstTransaction));
+        if (null !== $veryFirstTransaction) {
+            Log::debug('Very first transaction is not null, so set the preference!');
+            $preferenceName = sprintf('bunq-last-transaction-%d', $bunqAccountId);
+            $pref           = \Preferences::setForUser($this->importJob->user, $preferenceName, $veryFirstTransaction);
+            Log::debug(sprintf('Preference set to: %s', $pref->data));
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param int          $bunqAccountId
+     * @param LocalAccount $localAccount
+     *
+     * @return array
+     * @throws FireflyException
+     */
+    private function goForwardInTime(int $bunqAccountId, LocalAccount $localAccount): array
+    {
+        Log::debug('Now in goForwardInTime().');
+        $hasMoreTransactions = true;
+        $count               = 0;
+        $return              = [];
+        $latestTransaction   = null;
+
+        // newer ID comes from pref:
+        $preferenceName  = sprintf('bunq-last-transaction-%d', $bunqAccountId);
+        $transactionPref = \Preferences::getForUser($this->importJob->user, $preferenceName, 0);
+        $newerId         = (int)$transactionPref->data;
+
+        // loop die loop!
+        sleep(1);
+        while ($hasMoreTransactions && $count < 50) {
+            Log::debug(sprintf('Now in loop #%d', $count));
+            /** @var Payment $paymentRequest */
+            $paymentRequest = app(Payment::class);
+            $params         = ['count' => 20, 'newer_id' => $newerId];
+            $response       = $paymentRequest->listing($bunqAccountId, $params);
+            $pagination     = $response->getPagination();
+            Log::debug('Submit payment request with params', $params);
+            /*
+             * If pagination is not null, we can go forward further.
+             */
+            if (null !== $pagination) {
+                $newerId = $pagination->getNewerId();
+                Log::debug(sprintf('Pagination object is not null, newerID is "%s"', $newerId));
+            }
+            Log::debug('Now looping results...');
+            /** @var BunqPayment $payment */
+            foreach ($response->getValue() as $payment) {
+                $return[] = $this->convertPayment($payment, $bunqAccountId, $localAccount);
+
+                // store the very last transaction ID for this particular account.
+                $latestTransaction = $payment->getId() > $latestTransaction ? $payment->getId() : $latestTransaction;
+            }
+            Log::debug(sprintf('Count of result is now %d', \count($return)));
+            $count++;
+            if (null === $newerId) {
+                Log::debug('Newer ID is NULL, so stop looping cause we are done!');
+                $hasMoreTransactions = false;
+            }
+            if (null === $pagination) {
+                Log::debug('No pagination object, stop looping.');
+                $hasMoreTransactions = false;
+            }
+            sleep(1);
+        }
+        Log::debug(sprintf('Done with looping. Final loop count is %d, latest transaction is %d', $count, $latestTransaction));
+        if (null !== $latestTransaction) {
+            Log::debug('Latest transaction is not null, so set the preference!');
+            $preferenceName = sprintf('bunq-last-transaction-%d', $bunqAccountId);
+            $pref           = \Preferences::setForUser($this->importJob->user, $preferenceName, $latestTransaction);
+            Log::debug(sprintf('Preference set to: %s', $pref->data));
         }
 
         return $return;

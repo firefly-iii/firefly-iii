@@ -439,7 +439,6 @@ class Steam
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             // do not care.
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
         }
 
         return $value;
