@@ -2,13 +2,53 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-4.7.6
-- Only PHP7.2 as of the next release on October 1st.
-- New liability feature. Does not do much yet. Tell me what you need while I develop: 
--- transactions to / from 
--- creation of liability: where is the money? move to asset? away?
--- what to do with interest? 
+## [4.7.6] - 2018-09-02
+### Added
+- #145 You can now download transactions from YNAB.
+- #306 You can now add liabilities to Firefly III.
+- #740 Various charts are now currency aware.
+- #833 Bills can use non-default currencies.
+- #1578 Firefly III will notify you if the cron job hasn't fired.
+- #1623 New transactions will link back from the success message.
+- #1624 transactions will link to the object.
+- You can call the cron job over the web now (see docs).
+- You don't need to call the cron job every minute any more.
+- Various charts are now red/green to signify income and expenses.
+- Option to add or remove accounts from the net worth calculations.
 
+### Deprecated
+- This will be the last release on PHP 7.1. Future versions will require PHP 7.2.
+
+### Fixed
+- #1460 Downloading transactions from bunq should go more smoothly.
+- #1464 Fixed the docker file to work on Raspberry Pi's.
+- #1540 The Docker file now has a working cron job for recurring transactions.
+- #1564 Fix double transfers when importing from bunq.
+- #1575 Some views would give a XSRF token warning
+- #1576 Fix assigning budgets
+- #1580 Missing string for translation
+- #1581 Expand help text
+- #1584 Link to administration is back.
+- #1586 Date fields in import were mislabeled.
+- #1593 Link types are translatable.
+- #1594 Very long breadcrumbs are weird.
+- #1598 Fix budget calculations.
+- #1597 Piggy banks are always inactive.
+- #1605 System will ignore foreign currency setting if user doesn't indicate the amount.
+- #1607 Firefly III trusts the Heroku load balancer, fixing deployment on Heroku.
+- #1608 Spelling error in command line import.
+- #1609 Link to budgets page was absolute.
+- #1615 Fix currency bug in transactions.
+- #1616 Fix null pointer exception in pie charts.
+- #1617 Fix for complex tag names in URL's.
+- #1620 Fixed index reference in API.
+- Users can no longer give expenses a budget.
+- Fix bug in Spectre import.
+- Heroku would not make you owner.
+
+### Security
+- Add `.htaccess` files to all public directories.
+- New secure headers will make Firefly III slightly more secure.
 
 ## [4.7.5.3] - 2017-07-28
 ### Added
