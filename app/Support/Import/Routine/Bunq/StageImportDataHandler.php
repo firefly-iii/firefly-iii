@@ -319,7 +319,6 @@ class StageImportDataHandler
             $return = $this->goForwardInTime($bunqAccountId, $localAccount);
             // work my way forward.
         }
-        sleep(1);
 
         return $return;
     }
@@ -341,12 +340,11 @@ class StageImportDataHandler
         $veryFirstTransaction = null;
 
         // loop die loop!
-        sleep(1);
         while ($hasMoreTransactions && $count < 50) {
             Log::debug(sprintf('Now in loop #%d', $count));
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $response       = $paymentRequest->listing($bunqAccountId, ['count' => 20, 'older_id' => $olderId]);
+            $response       = $paymentRequest->listing($bunqAccountId, ['count' => 100, 'older_id' => $olderId]);
             $pagination     = $response->getPagination();
             /*
              * If pagination is not null, we can go back even further.
@@ -410,12 +408,11 @@ class StageImportDataHandler
         $newerId         = (int)$transactionPref->data;
 
         // loop die loop!
-        sleep(1);
         while ($hasMoreTransactions && $count < 50) {
             Log::debug(sprintf('Now in loop #%d', $count));
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $params         = ['count' => 20, 'newer_id' => $newerId];
+            $params         = ['count' => 100, 'newer_id' => $newerId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Submit payment request with params', $params);
