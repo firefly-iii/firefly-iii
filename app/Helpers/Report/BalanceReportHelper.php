@@ -34,6 +34,8 @@ use Log;
 
 /**
  * Class BalanceReportHelper.
+ *
+ * @codeCoverageIgnore
  */
 class BalanceReportHelper implements BalanceReportHelperInterface
 {

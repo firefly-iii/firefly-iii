@@ -43,6 +43,8 @@ class Help implements HelpInterface
     /**
      * Get from cache.
      *
+     * @codeCoverageIgnore
+     *
      * @param string $route
      * @param string $language
      *
@@ -70,7 +72,7 @@ class Help implements HelpInterface
         $opt        = ['headers' => ['User-Agent' => $this->userAgent]];
         $content    = '';
         $statusCode = 500;
-        $client     = new Client;
+        $client     = app(Client::class);
         try {
             $res        = $client->request('GET', $uri, $opt);
             $statusCode = $res->getStatusCode();
@@ -94,6 +96,8 @@ class Help implements HelpInterface
     /**
      * Do we have the route?
      *
+     * @codeCoverageIgnore
+     *
      * @param string $route
      *
      * @return bool
@@ -105,6 +109,8 @@ class Help implements HelpInterface
 
     /**
      * Is in cache?
+     *
+     * @codeCoverageIgnore
      *
      * @param string $route
      * @param string $language
@@ -127,6 +133,8 @@ class Help implements HelpInterface
 
     /**
      * Put help text in cache.
+     *
+     * @codeCoverageIgnore
      *
      * @param string $route
      * @param string $language

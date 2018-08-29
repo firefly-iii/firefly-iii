@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class BudgetReportHelper.
+ *
+ * @codeCoverageIgnore
  */
 class BudgetReportHelper implements BudgetReportHelperInterface
 {

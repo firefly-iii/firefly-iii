@@ -171,6 +171,11 @@ class StageImportDataHandlerTest extends TestCase
         $accountFactory->shouldReceive('create')->withArgs([$expectedAccount])
                        ->andReturn($deposit)->once();
 
+        // set new last transaction ID:
+        $lastPref = new Preference;
+        $lastPref->data =0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
+
 
         $handler = new StageImportDataHandler;
         $handler->setImportJob($job);
@@ -233,6 +238,11 @@ class StageImportDataHandlerTest extends TestCase
         $accountRepository->shouldReceive('findNull')->withArgs([5678])->andReturn($account)->once();
         $payment->shouldReceive('listing')->once()->andReturn($list);
 
+        // set new last transaction ID:
+        $lastPref = new Preference;
+        $lastPref->data =0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
+
         $handler = new StageImportDataHandler;
         $handler->setImportJob($job);
         try {
@@ -278,6 +288,11 @@ class StageImportDataHandlerTest extends TestCase
         $today                   = new Carbon;
         $amount                  = new Amount('150', 'EUR');
         $pointer                 = new Pointer('iban', 'ES2364265841767173822054', 'Test Site');
+
+        // set new last transaction ID:
+        $lastPref = new Preference;
+        $lastPref->data =0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
 
 
         // ignore the deprecated fields:
@@ -430,6 +445,11 @@ class StageImportDataHandlerTest extends TestCase
         $payment->setDescription('Random transfer #' . random_int(1, 10000));
         $value = [$payment];
         $list  = new BunqResponsePaymentList($value, [], null);
+
+        // set new last transaction ID:
+        $lastPref = new Preference;
+        $lastPref->data =0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
 
         $expectedTransactions = [
             [
