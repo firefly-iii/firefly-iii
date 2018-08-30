@@ -172,9 +172,16 @@ class StageImportDataHandlerTest extends TestCase
                        ->andReturn($deposit)->once();
 
         // set new last transaction ID:
-        $lastPref = new Preference;
-        $lastPref->data =0;
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-oldest-transaction-1234', 0])->andReturn($lastPref)->times(2);
+
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-newest-transaction-1234', 0])->andReturn($lastPref)->once();
+
+        // todo: improve test thing:
+        Preferences::shouldReceive('setForUser');
 
 
         $handler = new StageImportDataHandler;
@@ -239,9 +246,16 @@ class StageImportDataHandlerTest extends TestCase
         $payment->shouldReceive('listing')->once()->andReturn($list);
 
         // set new last transaction ID:
-        $lastPref = new Preference;
-        $lastPref->data =0;
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-oldest-transaction-1234', 0])->andReturn($lastPref)->times(2);
+
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-newest-transaction-1234', 0])->andReturn($lastPref)->once();
+
+        // todo: improve test thing:
+        Preferences::shouldReceive('setForUser');
 
         $handler = new StageImportDataHandler;
         $handler->setImportJob($job);
@@ -290,9 +304,16 @@ class StageImportDataHandlerTest extends TestCase
         $pointer                 = new Pointer('iban', 'ES2364265841767173822054', 'Test Site');
 
         // set new last transaction ID:
-        $lastPref = new Preference;
-        $lastPref->data =0;
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-oldest-transaction-1234', 0])->andReturn($lastPref)->times(2);
+
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-newest-transaction-1234', 0])->andReturn($lastPref)->once();
+
+        // todo: improve test thing:
+        Preferences::shouldReceive('setForUser');
 
 
         // ignore the deprecated fields:
@@ -447,9 +468,9 @@ class StageImportDataHandlerTest extends TestCase
         $list  = new BunqResponsePaymentList($value, [], null);
 
         // set new last transaction ID:
-        $lastPref = new Preference;
-        $lastPref->data =0;
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-last-transaction-1234', 0])->andReturn($lastPref)->once();
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-oldest-transaction-1234', 0])->andReturn($lastPref)->once();
 
         $expectedTransactions = [
             [
@@ -509,6 +530,18 @@ class StageImportDataHandlerTest extends TestCase
         $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::REVENUE]])->once()->andReturnNull();
         $accountRepository->shouldReceive('findByIbanNull')->withArgs(['RS88844660406878687897', [AccountType::ASSET]])->once()->andReturn($asset);
 
+
+        // set new last transaction ID:
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-oldest-transaction-1234', 0])->andReturn($lastPref)->times(1);
+
+        $lastPref       = new Preference;
+        $lastPref->data = 0;
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'bunq-newest-transaction-1234', 0])->andReturn($lastPref)->once();
+
+        // todo: improve test thing:
+        Preferences::shouldReceive('setForUser');
 
         $handler = new StageImportDataHandler;
         $handler->setImportJob($job);

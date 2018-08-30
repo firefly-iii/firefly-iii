@@ -188,6 +188,28 @@ class ReconcileControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
+    /**
+     * Test show for actual reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
+     */
+    public function testShowError(): void
+    {
+        $journal    = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
+        $repository->shouldReceive('getAssetTransaction')->once()->andReturnNull();
+
+        $this->be($this->user());
+        $response = $this->get(route('accounts.reconcile.show', [$journal->id]));
+        $response->assertStatus(500);
+
+        // has bread crumb
+        $response->assertSee('The transaction data is incomplete. This is probably a bug. Apologies.');
+    }
+
+
     /**
      * Test show for actual reconciliation, but its not a reconciliation.
      *

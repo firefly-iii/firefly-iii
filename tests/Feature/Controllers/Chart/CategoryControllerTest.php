@@ -90,7 +90,7 @@ class CategoryControllerTest extends TestCase
 
         // spent per currency data:
         $spentData = [
-            1 => '123.45',
+            1 => '-123.45',
             2 => '567.21',
         ];
 

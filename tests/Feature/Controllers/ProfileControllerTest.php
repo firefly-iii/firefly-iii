@@ -163,7 +163,7 @@ class ProfileControllerTest extends TestCase
     public function testEnable2FANoSecret(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->twice()->andReturn(false);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
         // ask about language:
         $langPreference       = new Preference;
@@ -205,7 +205,7 @@ class ProfileControllerTest extends TestCase
     public function testEnable2FASecret(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->twice()->andReturn(false);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
         // ask about language:
         $langPreference       = new Preference;
@@ -515,7 +515,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController
      * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadHash(): void
@@ -540,7 +540,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController
      * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadToken(): void

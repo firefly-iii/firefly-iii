@@ -35,6 +35,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class ReportHelper.
+ *
+ * @codeCoverageIgnore
  */
 class ReportHelper implements ReportHelperInterface
 {

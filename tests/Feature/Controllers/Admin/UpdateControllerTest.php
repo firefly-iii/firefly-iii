@@ -89,6 +89,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheck(): void
     {
@@ -118,6 +119,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheckCurrent(): void
     {
@@ -145,6 +147,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheckError(): void
     {
@@ -167,6 +170,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheckNewer(): void
     {

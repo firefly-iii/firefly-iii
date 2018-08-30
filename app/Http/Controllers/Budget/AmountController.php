@@ -36,6 +36,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class AmountController
@@ -160,6 +161,8 @@ class AmountController extends Controller
         $average            = $this->repository->getAverageAvailable($start, $end);
         $available          = bcmul($average, (string)$daysInPeriod);
 
+        Log::debug(sprintf('Average is %s, so total available is %s because days is %d.', $average, $available, $daysInPeriod));
+
         // amount earned in this period:
         /** @var TransactionCollectorInterface $collector */
         $collector = app(TransactionCollectorInterface::class);
@@ -169,6 +172,8 @@ class AmountController extends Controller
         // This is multiplied by the number of days in the current period, showing you the average.
         $earnedAverage = bcmul(bcdiv($earned, (string)$daysInSearchPeriod), (string)$daysInPeriod);
 
+        Log::debug(sprintf('Earned is %s, earned average is %s', $earned, $earnedAverage));
+
         // amount spent in period
         /** @var TransactionCollectorInterface $collector */
         $collector = app(TransactionCollectorInterface::class);
@@ -176,11 +181,16 @@ class AmountController extends Controller
         $spent        = (string)$collector->getTransactions()->sum('transaction_amount');
         $spentAverage = app('steam')->positive(bcmul(bcdiv($spent, (string)$daysInSearchPeriod), (string)$daysInPeriod));
 
+        Log::debug(sprintf('Spent is %s, spent average is %s', $earned, $earnedAverage));
+
         // the default suggestion is the money the user has spent, on average, over this period.
         $suggested = $spentAverage;
 
+        Log::debug(sprintf('Suggested is now %s (spent average)',$suggested));
+
         // if the user makes less per period, suggest that amount instead.
         if (1 === bccomp($spentAverage, $earnedAverage)) {
+            Log::debug(sprintf('Because earned average (%s) is less than spent average (%s) will suggest earned average instead.', $earnedAverage, $spentAverage));
             $suggested = $earnedAverage;
         }
 

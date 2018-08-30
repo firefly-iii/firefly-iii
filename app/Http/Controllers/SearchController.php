@@ -102,10 +102,12 @@ class SearchController extends Controller
         }
         try {
             $html = view('search.search', compact('transactions'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             $html = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['count' => $transactions->count(), 'html' => $html]);
     }

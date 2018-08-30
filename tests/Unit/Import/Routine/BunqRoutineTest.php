@@ -63,9 +63,9 @@ class BunqRoutineTest extends TestCase
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('run')->once();
         $handler->shouldReceive('getTransactions')->once()->andReturn(['a' => 'c']);
-        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished'])->once();
-        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
-        $repository->shouldReceive('setTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
+        //$repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished'])->once();
+        //$repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
+        $repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
 
         $routine = new BunqRoutine;
         $routine->setImportJob($job);
