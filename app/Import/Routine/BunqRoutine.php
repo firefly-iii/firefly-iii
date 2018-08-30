@@ -77,10 +77,19 @@ class BunqRoutine implements RoutineInterface
                     $handler->setImportJob($this->importJob);
                     $handler->run();
                     $transactions = $handler->getTransactions();
+                    // could be that more transactions will arrive in a second run.
+                    if (true === $handler->stillRunning) {
+                        Log::debug('Handler indicates that it is still working.');
+                        $this->repository->setStatus($this->importJob, 'ready_to_run');
+                        $this->repository->setStage($this->importJob, 'go-for-import');
+                    }
+                    $this->repository->appendTransactions($this->importJob, $transactions);
+                    if (false === $handler->stillRunning) {
+                        Log::info('Handler indicates that its done!');
+                        $this->repository->setStatus($this->importJob, 'provider_finished');
+                        $this->repository->setStage($this->importJob, 'final');
+                    }
 
-                    $this->repository->setTransactions($this->importJob, $transactions);
-                    $this->repository->setStatus($this->importJob, 'provider_finished');
-                    $this->repository->setStage($this->importJob, 'final');
 
                     return;
             }

@@ -46,6 +46,16 @@ interface ImportJobRepositoryInterface
     public function addErrorMessage(ImportJob $job, string $error): ImportJob;
 
     /**
+     * Append transactions to array instead of replacing them.
+     *
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function appendTransactions(ImportJob $job, array $transactions): ImportJob;
+
+    /**
      * @param string $importProvider
      *
      * @return ImportJob
