@@ -309,8 +309,8 @@ class StageImportDataHandler
         }
 
         // if newest is not zero but oldest is zero, go forward.
-        if(0 === $oldest->data && 0 !== $newest->data) {
-            Log::debug(sprintf('Oldest tranaction ID is %d and newest tranasction ID is %d, so go backwards.', $oldest->data, $newest->data));
+        if (0 === $oldest->data && 0 !== $newest->data) {
+            Log::debug(sprintf('Oldest tranaction ID is %d and newest tranasction ID is %d, so go forwards.', $oldest->data, $newest->data));
 
             return self::DOWNLOAD_FORWARDS;
         }
@@ -483,42 +483,69 @@ class StageImportDataHandler
      */
     private function goForwardInTime(int $bunqAccountId, LocalAccount $localAccount): array
     {
-        Log::debug('Now in goForwardInTime().');
+        Log::debug(sprintf('Now in goForwardInTime(%d).', $bunqAccountId));
         $hasMoreTransactions = true;
         $count               = 0;
         $return              = [];
-        $latestTransaction   = null;
+        $newestTransaction   = null;
 
-        // newer ID comes from pref:
-        $preferenceName  = sprintf('bunq-last-transaction-%d', $bunqAccountId);
+        /*
+         * Go forward from the newest transaction we know about:
+         */
+        $preferenceName  = sprintf('bunq-newest-transaction-%d', $bunqAccountId);
         $transactionPref = \Preferences::getForUser($this->importJob->user, $preferenceName, 0);
         $newerId         = (int)$transactionPref->data;
 
-        // loop die loop!
+        /*
+         * Run a loop.
+         */
         while ($hasMoreTransactions && $this->timeRunning() < 25) {
+            /*
+             * Debug information:
+             */
             Log::debug(sprintf('Now in loop #%d', $count));
             Log::debug(sprintf('Now running for %s seconds.', $this->timeRunning()));
+
+            /*
+             * Send a request to bunq.
+             */
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
             $params         = ['count' => 107, 'newer_id' => $newerId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Submit payment request with params', $params);
+
             /*
-             * If pagination is not null, we can go forward further.
+             * If pagination is not null, we can go forward even further.
              */
             if (null !== $pagination) {
                 $newerId = $pagination->getNewerId();
                 Log::debug(sprintf('Pagination object is not null, newerID is "%s"', $newerId));
             }
             Log::debug('Now looping results...');
+            /*
+             * Process the bunq loop.
+             */
             /** @var BunqPayment $payment */
             foreach ($response->getValue() as $payment) {
-                $return[] = $this->convertPayment($payment, $bunqAccountId, $localAccount);
+                $return[]  = $this->convertPayment($payment, $bunqAccountId, $localAccount);
+                $paymentId = $payment->getId();
 
-                // store the very last transaction ID for this particular account.
-                $latestTransaction = $payment->getId() > $latestTransaction ? $payment->getId() : $latestTransaction;
+                /*
+                 * If oldest and newest transaction are null, they have to be set:
+                 */
+                $newestTransaction = $newestTransaction ?? $paymentId;
+
+                /*
+                 * Then, overwrite if appropriate
+                 */
+                $newestTransaction = $paymentId > $newestTransaction ? $paymentId : $newestTransaction;
             }
+
+            /*
+             * After the loop, check if Firefly III must loop again.
+            */
             Log::debug(sprintf('Count of result is now %d', \count($return)));
             $count++;
             if (null === $newerId) {
@@ -533,13 +560,9 @@ class StageImportDataHandler
             }
             sleep(1);
         }
-        Log::debug(sprintf('Done with looping. Final loop count is %d, latest transaction is %d', $count, $latestTransaction));
-        if (null !== $latestTransaction) {
-            Log::debug('Latest transaction is not null, so set the preference!');
-            $preferenceName = sprintf('bunq-last-transaction-%d', $bunqAccountId);
-            $pref           = \Preferences::setForUser($this->importJob->user, $preferenceName, $latestTransaction);
-            Log::debug(sprintf('Preference set to: %s', $pref->data));
-        }
+
+        // store newest tranasction ID to be used later:
+        \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
 
         return $return;
     }
