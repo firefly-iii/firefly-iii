@@ -67,10 +67,12 @@ class FrontpageController extends Controller
         if (\count($info) > 0) {
             try {
                 $html = view('json.piggy-banks', compact('info'))->render();
+                // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
                 Log::error(sprintf('Cannot render json.piggy-banks: %s', $e->getMessage()));
                 $html = 'Could not render view.';
             }
+            // @codeCoverageIgnoreEnd
         }
 
         return response()->json(['html' => $html]);

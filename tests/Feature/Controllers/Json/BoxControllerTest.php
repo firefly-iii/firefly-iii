@@ -185,6 +185,37 @@ class BoxControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
+    public function testNetWorthNoInclude(): void
+    {
+        $result = [
+            [
+                'currency' => TransactionCurrency::find(1),
+                'balance'  => '3',
+            ],
+        ];
+
+
+        $netWorthHelper = $this->mock(NetWorthInterface::class);
+        $netWorthHelper->shouldReceive('setUser')->once();
+        $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
+
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('0');
+
+
+        $this->be($this->user());
+        $response = $this->get(route('json.box.net-worth'));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\BoxController
+     */
     public function testNetWorthFuture(): void
     {
         $result = [

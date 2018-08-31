@@ -103,10 +103,8 @@ class RecurrenceController extends Controller
         $repetition->repetition_skip   = (int)$request->get('skip');
         $repetition->weekend           = (int)$request->get('weekend');
         $actualEnd                     = clone $end;
-
+        $occurrences                   = [];
         switch ($endsAt) {
-            default:
-                throw new FireflyException(sprintf('Cannot generate events for type that ends at "%s".', $endsAt));
             case 'forever':
                 // simply generate up until $end. No change from default behavior.
                 $occurrences = $this->recurring->getOccurrencesInRange($repetition, $actualStart, $actualEnd);

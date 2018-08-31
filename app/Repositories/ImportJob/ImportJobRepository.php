@@ -379,19 +379,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         return new MessageBag;
     }
 
-    /**
-     * @param ImportJob $job
-     * @param string    $status
-     *
-     * @return ImportJob
-     */
-    public function updateStatus(ImportJob $job, string $status): ImportJob
-    {
-        $job->status = $status;
-        $job->save();
 
-        return $job;
-    }
 
     /**
      * @codeCoverageIgnore

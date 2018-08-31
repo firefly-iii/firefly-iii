@@ -124,7 +124,7 @@ class JobConfigurationControllerTest extends TestCase
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(true);
-        $repository->shouldReceive('updateStatus')->withArgs([Mockery::any(), 'ready_to_run']);
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'ready_to_run']);
 
         $this->be($this->user());
         $response = $this->get(route('import.job.configuration.index', [$job->key]));
@@ -216,7 +216,7 @@ class JobConfigurationControllerTest extends TestCase
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();
         $configurator->shouldReceive('configurationComplete')->once()->andReturn(true);
-        $repository->shouldReceive('updateStatus')->withArgs([Mockery::any(), 'ready_to_run']);
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'ready_to_run']);
 
         // call thing.
         $this->be($this->user());

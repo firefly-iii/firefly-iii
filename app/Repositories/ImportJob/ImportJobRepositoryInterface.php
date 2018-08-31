@@ -164,12 +164,5 @@ interface ImportJobRepositoryInterface
      */
     public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag;
 
-    /**
-     * @param ImportJob $job
-     * @param string    $status
-     *
-     * @return ImportJob
-     */
-    public function updateStatus(ImportJob $job, string $status): ImportJob;
 
 }

@@ -115,6 +115,7 @@ class SelectControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
+        $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
         $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
@@ -179,6 +180,8 @@ class SelectControllerTest extends TestCase
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
 
         $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();

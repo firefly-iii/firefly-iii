@@ -291,32 +291,4 @@ class BoxController extends Controller
         return response()->json($return);
     }
 
-    /**
-     * Get a currency or return default currency.
-     *
-     * @param Account $account
-     *
-     * @return TransactionCurrency
-     */
-    protected function getCurrencyOrDefault(Account $account): TransactionCurrency // get a preference
-    {
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        $currency        = app('amount')->getDefaultCurrency();
-        $accountCurrency = null;
-        $currencyId      = (int)$repository->getMetaValue($account, 'currency_id');
-        if (0 !== $currencyId) {
-            $accountCurrency = $currencyRepos->findNull($currencyId);
-        }
-        if (null === $accountCurrency) {
-            $accountCurrency = $currency;
-        }
-
-        return $accountCurrency;
-    }
-
-
 }

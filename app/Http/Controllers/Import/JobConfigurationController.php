@@ -88,7 +88,7 @@ class JobConfigurationController extends Controller
         if (!(bool)config(sprintf('import.has_job_config.%s', $importProvider))) {
             // @codeCoverageIgnoreStart
             Log::debug('Job needs no config, is ready to run!');
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
             // @codeCoverageIgnoreEnd
@@ -97,7 +97,7 @@ class JobConfigurationController extends Controller
         $configurator = $this->makeConfigurator($importJob);
         if ($configurator->configurationComplete()) {
             Log::debug('Config is complete, set status to ready_to_run.');
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
         }
@@ -137,7 +137,7 @@ class JobConfigurationController extends Controller
 
         // is the job already configured?
         if ($configurator->configurationComplete()) {
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
         }

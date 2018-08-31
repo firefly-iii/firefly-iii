@@ -90,6 +90,42 @@ class IndexControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\Import\IndexController
      */
+    public function testCreateDemoUser(): void
+    {
+        // mock stuff:
+        $repository           = $this->mock(ImportJobRepositoryInterface::class);
+        $userRepository       = $this->mock(UserRepositoryInterface::class);
+        $fakePrerequisites    = $this->mock(FakePrerequisites::class);
+        $bunqPrerequisites    = $this->mock(BunqPrerequisites::class);
+        $spectrePrerequisites = $this->mock(SpectrePrerequisites::class);
+        $ynabPrerequisites    = $this->mock(YnabPrerequisites::class);
+
+        // fake job:
+        $importJob           = new ImportJob;
+        $importJob->provider = 'spectre';
+        $importJob->key      = 'fake_job_1';
+
+        // mock calls:
+        $ynabPrerequisites->shouldReceive('setUser')->times(2);
+        $fakePrerequisites->shouldReceive('setUser')->times(2);
+        $bunqPrerequisites->shouldReceive('setUser')->times(2);
+        $spectrePrerequisites->shouldReceive('setUser')->times(2);
+        $fakePrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
+        $bunqPrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
+        $spectrePrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
+        $ynabPrerequisites->shouldReceive('isComplete')->times(2)->andReturn(true);
+
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->times(3);
+
+        $this->be($this->user());
+        $response = $this->get(route('import.create', ['spectre']));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('import.index'));
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Import\IndexController
+     */
     public function testCreateFake(): void
     {
         // mock stuff:
