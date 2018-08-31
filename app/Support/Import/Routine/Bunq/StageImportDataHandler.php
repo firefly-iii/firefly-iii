@@ -406,7 +406,7 @@ class StageImportDataHandler
              */
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $params         = ['count' => 107, 'older_id' => $olderId];
+            $params         = ['count' => 53, 'older_id' => $olderId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Params for the request to bunq are: ', $params);
@@ -511,7 +511,7 @@ class StageImportDataHandler
              */
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $params         = ['count' => 107, 'newer_id' => $newerId];
+            $params         = ['count' => 53, 'newer_id' => $newerId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Submit payment request with params', $params);
