@@ -223,43 +223,43 @@ function updateActionInput(selectList) {
     inputResult.removeAttr('disabled');
     switch (selectList.val()) {
         case 'set_category':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/categories');
             break;
         case 'clear_category':
         case 'clear_budget':
         case 'clear_notes':
         case 'remove_all_tags':
-            console.log('Select list value is ' + selectList.val() +', so input needs to be disabled.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.attr('disabled', 'disabled');
             break;
         case 'set_budget':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/budgets');
             break;
         case 'add_tag':
         case 'remove_tag':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/tags');
             break;
         case 'set_description':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/transaction-journals/all');
             break;
         case 'set_source_account':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/all-accounts');
             break;
         case 'set_destination_account':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/all-accounts');
             break;
         case 'link_to_bill':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/bills');
             break;
         default:
-            console.log('Select list value is ' + selectList.val() +', destroy auto complete, do nothing else.');
+            console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
             inputResult.typeahead('destroy');
             break;
     }
@@ -289,30 +289,30 @@ function updateTriggerInput(selectList) {
         case 'to_account_ends':
         case 'to_account_is':
         case 'to_account_contains':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/all-accounts');
             break;
         case 'tag_is':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/tags');
             break;
         case 'budget_is':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/budgets');
             break;
         case 'category_is':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/categories');
             break;
         case 'transaction_type':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/transaction-types');
             break;
         case 'description_starts':
         case 'description_ends':
         case 'description_contains':
         case 'description_is':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/transaction-journals/all');
             break;
         case 'has_no_category':
@@ -323,16 +323,16 @@ function updateTriggerInput(selectList) {
         case 'no_notes':
         case 'any_notes':
         case 'has_any_tag':
-            console.log('Select list value is ' + selectList.val() +', so input needs to be disabled.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs to be disabled.');
             inputResult.prop('disabled', true);
             inputResult.typeahead('destroy');
             break;
         case 'currency_is':
-            console.log('Select list value is ' + selectList.val() +', so input needs auto complete.');
+            console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/currency-names');
             break;
         default:
-            console.log('Select list value is ' + selectList.val() +', destroy auto complete, do nothing else.');
+            console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
             inputResult.typeahead('destroy');
             break;
     }
@@ -349,7 +349,7 @@ function createAutoComplete(input, URI) {
     $.getJSON(URI).done(function (data) {
         console.log('Input now has auto complete from URI ' + URI);
         input.typeahead({source: data, autoSelect: false});
-    }).fail(function() {
+    }).fail(function () {
         console.log('Could not grab URI ' + URI + ' so autocomplete will not work');
     });
 
@@ -366,8 +366,10 @@ function testRuleTriggers() {
     button.attr('disabled', 'disabled');
 
     // Serialize all trigger data
-    var triggerData = $(".rule-trigger-tbody").find("input[type=text], input[type=checkbox], select").serializeArray();
-    console.log('Found the following trigger data: ' + triggerData);
+    var triggerData = $('.content').find("#ffInput_strict, .rule-trigger-tbody input[type=text], .rule-trigger-tbody input[type=checkbox], .rule-trigger-tbody select").serializeArray();
+
+    console.log('Found the following trigger data: ');
+    console.log(triggerData);
 
     // Find a list of existing transactions that match these triggers
     $.get('rules/test', triggerData).done(function (data) {

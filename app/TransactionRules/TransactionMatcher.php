@@ -52,6 +52,30 @@ class TransactionMatcher
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
     private $triggers = [];
+    /** @var bool */
+    private $strict;
+
+    public function __construct()
+    {
+        $this->strict = false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStrict(): bool
+    {
+        return $this->strict;
+    }
+
+    /**
+     * @param bool $strict
+     */
+    public function setStrict(bool $strict): void
+    {
+        $this->strict = $strict;
+    }
+
 
     /**
      * This method will search the user's transaction journal (with an upper limit of $range) for
@@ -96,6 +120,7 @@ class TransactionMatcher
         /** @var Processor $processor */
         $processor = app(Processor::class);
         $processor->makeFromStringArray($this->triggers);
+        $processor->setStrict($this->strict);
         $result = $this->runProcessor($processor);
 
         // If the list of matchingTransactions is larger than the maximum number of results
