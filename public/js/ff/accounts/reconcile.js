@@ -76,7 +76,7 @@ function storeReconcile() {
     var cleared = [];
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
-        cleared.push(obj.data('id'));
+        //cleared.push(obj.data('id'));
     });
 
     var variables = {
@@ -139,14 +139,15 @@ function getTransactionsForRange() {
 }
 
 /**
- * Loop over all transactions that have already been cleared (in the range) and add this to the selectedAmount.
+ * Loop over all transactions that have already been cleared (in the range)
+ * and add this to the selectedAmount.
  *
  */
 function includeClearedTransactions() {
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
         if (obj.data('younger') === false) {
-            selectedAmount = selectedAmount - parseFloat(obj.val());
+            //selectedAmount = selectedAmount - parseFloat(obj.val());
         }
     });
 }
