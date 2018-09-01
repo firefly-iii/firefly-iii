@@ -29,6 +29,9 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface CollectorInterface.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 interface CollectorInterface
 {

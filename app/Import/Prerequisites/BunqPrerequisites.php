@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Import\Prerequisites;
 
-use bunq\Exception\BunqException;
 use bunq\Util\BunqEnumApiEnvironmentType;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\IP\IPRetrievalInterface;
@@ -134,7 +134,7 @@ class BunqPrerequisites implements PrerequisitesInterface
         try {
             $json = $apiContext->toJson();
             // @codeCoverageIgnoreStart
-        } catch (BunqException $e) {
+        } catch (Exception $e) {
             $messages = new MessageBag();
             $messages->add('bunq_error', $e->getMessage());
 

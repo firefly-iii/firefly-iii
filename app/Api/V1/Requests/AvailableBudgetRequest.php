@@ -47,10 +47,11 @@ class AvailableBudgetRequest extends Request
     public function getAll(): array
     {
         return [
-            'transaction_currency_id' => $this->integer('transaction_currency_id'),
-            'amount'                  => $this->string('amount'),
-            'start_date'              => $this->date('start_date'),
-            'end_date'                => $this->date('end_date'),
+            'currency_id'   => $this->integer('currency_id'),
+            'currency_code' => $this->string('currency_code'),
+            'amount'        => $this->string('amount'),
+            'start_date'    => $this->date('start_date'),
+            'end_date'      => $this->date('end_date'),
         ];
     }
 
@@ -62,10 +63,11 @@ class AvailableBudgetRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'transaction_currency_id' => 'required|numeric|exists:transaction_currencies,id',
-            'amount'                  => 'required|numeric|more:0',
-            'start_date'              => 'required|date|before:end_date',
-            'end_date'                => 'required|date|after:start_date',
+            'currency_id'   => 'numeric|exists:transaction_currencies,id|required_without:currency_code',
+            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code|required_without:currency_id',
+            'amount'        => 'required|numeric|more:0',
+            'start_date'    => 'required|date|before:end_date',
+            'end_date'      => 'required|date|after:start_date',
         ];
 
         return $rules;

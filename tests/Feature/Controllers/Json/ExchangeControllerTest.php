@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Services\Currency\ExchangeRateInterface;
 use Log;
 use Tests\TestCase;
 
@@ -46,7 +47,7 @@ class ExchangeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
+     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController
      */
     public function testGetRate(): void
     {
@@ -61,7 +62,25 @@ class ExchangeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController::getRate
+     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController
+     */
+    public function testGetRateNull(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+
+        $rate = factory(CurrencyExchangeRate::class)->make();
+        $repository->shouldReceive('getExchangeRate')->andReturnNull();
+        $interface = $this->mock(ExchangeRateInterface::class);
+        $interface->shouldReceive('setUser')->once();
+        $interface->shouldReceive('getRate')->andReturn($rate);
+
+        $this->be($this->user());
+        $response = $this->get(route('json.rate', ['EUR', 'USD', '20170101']));
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Json\ExchangeController
      */
     public function testGetRateAmount(): void
     {

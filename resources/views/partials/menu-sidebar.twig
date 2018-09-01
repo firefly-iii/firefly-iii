@@ -1,5 +1,5 @@
-<ul class="sidebar-menu">
-    <li class="{{ activeRouteStrict('index') }} treeview">
+<ul class="sidebar-menu" data-widget="tree">
+    <li class="{{ activeRouteStrict('index') }}">
         <a href="{{ route('index') }}"><i class="fa fa-dashboard fa-fw"></i>
             <span>{{ 'dashboard'|_ }}</span></a>
     </li>
@@ -25,6 +25,11 @@
             <li class="{{ activeRoutePartialWhat('accounts', 'revenue') }}">
                 <a href="{{ route('accounts.index','revenue') }}">
                     <i class="fa fa-download fa-fw"></i> {{ 'revenue_accounts'|_ }}
+                </a>
+            </li>
+            <li class="{{ activeRoutePartialWhat('accounts', 'liabilities') }}">
+                <a href="{{ route('accounts.index','liabilities') }}">
+                    <i class="fa fa-ticket fa-fw"></i> {{ 'liabilities_accounts'|_ }}
                 </a>
             </li>
         </ul>
@@ -149,7 +154,7 @@
                 <a class="{{ activeRoutePartial('currencies') }}" href="{{ route('currencies.index') }}"><i class="fa fa-usd fa-fw"></i> {{ 'currencies'|_ }}
                 </a>
             </li>
-            {% if Auth.user.hasRole('owner') %}
+            {% if hasRole('owner') %}
                 <li class="{{ activeRoutePartial('admin') }}">
                     <a class="{{ activeRoutePartial('admin') }}" href="{{ route('admin.index') }}"><i
                                 class="fa fa-hand-spock-o fa-fw"></i> {{ 'administration'|_ }}</a>

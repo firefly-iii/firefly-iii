@@ -34,7 +34,7 @@ use Tests\TestCase;
 class IsAdminTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
+     * @covers \FireflyIII\Http\Middleware\IsAdmin
      */
     public function testMiddleware(): void
     {
@@ -45,7 +45,7 @@ class IsAdminTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
+     * @covers \FireflyIII\Http\Middleware\IsAdmin
      */
     public function testMiddlewareAjax(): void
     {
@@ -56,7 +56,7 @@ class IsAdminTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
+     * @covers \FireflyIII\Http\Middleware\IsAdmin
      */
     public function testMiddlewareNotOwner(): void
     {
@@ -68,7 +68,7 @@ class IsAdminTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\IsAdmin::handle
+     * @covers \FireflyIII\Http\Middleware\IsAdmin
      */
     public function testMiddlewareOwner(): void
     {

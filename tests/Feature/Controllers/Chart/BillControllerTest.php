@@ -23,9 +23,11 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
@@ -52,12 +54,21 @@ class BillControllerTest extends TestCase
      */
     public function testFrontpage(string $range): void
     {
-        $generator  = $this->mock(GeneratorInterface::class);
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $repository    = $this->mock(BillRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $repository->shouldReceive('getBillsPaidInRange')->once()->andReturn('-1');
-        $repository->shouldReceive('getBillsUnpaidInRange')->once()->andReturn('2');
-        $generator->shouldReceive('pieChart')->once()->andReturn([]);
+        $amounts = [
+            1 => '100',
+            2 => '100',
+        ];
+
+        $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1))->withArgs([1]);
+        $currencyRepos->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(2))->withArgs([2]);
+
+        $repository->shouldReceive('getBillsPaidInRangePerCurrency')->once()->andReturn($amounts);
+        $repository->shouldReceive('getBillsUnpaidInRangePerCurrency')->once()->andReturn($amounts);
+        $generator->shouldReceive('multiCurrencyPieChart')->once()->andReturn([]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -72,11 +83,11 @@ class BillControllerTest extends TestCase
     {
         $transaction = factory(Transaction::class)->make();
         $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setBills')->andReturnSelf()->once();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]))->once();
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
 
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 

@@ -112,10 +112,10 @@ trait TransactionValidation
     {
         $data               = $validator->getData();
         $transactions       = $data['transactions'] ?? [];
-        $journalDescription = (string)($data['description'] ?? '');
+        $journalDescription = (string)($data['description'] ?? null);
         $validDescriptions  = 0;
         foreach ($transactions as $index => $transaction) {
-            if (\strlen((string)($transaction['description'] ?? '')) > 0) {
+            if (\strlen((string)($transaction['description'] ?? null)) > 0) {
                 $validDescriptions++;
             }
         }
@@ -157,9 +157,9 @@ trait TransactionValidation
     {
         $data               = $validator->getData();
         $transactions       = $data['transactions'] ?? [];
-        $journalDescription = (string)($data['description'] ?? '');
+        $journalDescription = (string)($data['description'] ?? null);
         foreach ($transactions as $index => $transaction) {
-            $description = (string)($transaction['description'] ?? '');
+            $description = (string)($transaction['description'] ?? null);
             // description cannot be equal to journal description.
             if ($description === $journalDescription) {
                 $validator->errors()->add('transactions.' . $index . '.description', (string)trans('validation.equal_description'));
@@ -249,7 +249,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         foreach ($transactions as $index => $transaction) {
-            $description = (string)($transaction['description'] ?? '');
+            $description = (string)($transaction['description'] ?? null);
             // filled description is mandatory for split transactions.
             if ('' === $description && \count($transactions) > 1) {
                 $validator->errors()->add(
@@ -338,13 +338,13 @@ trait TransactionValidation
         if ($accountId < 1 && '' === $accountName) {
             return null;
         }
-        if ($accountId !== 0) {
+        if (0 !== $accountId) {
             // ID belongs to user and is $type account:
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
             $repository->setUser($admin);
             $set = $repository->getAccountsById([$accountId]);
-            if ($set->count() === 1) {
+            if (1 === $set->count()) {
                 /** @var Account $first */
                 $first = $set->first();
                 if ($first->accountType->type !== $type) {

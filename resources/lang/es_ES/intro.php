@@ -103,12 +103,12 @@ return [
     'bills_show_billChart'                                    => 'Este gráfico muestra las transacciones vinculadas con esta factura.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
+    'bills_create_intro'                                      => 'Use cuentas para rastrear la cantidad de dinero correspondiente a cada periodo. Piense en gastos como renta, seguro o pagos de credito de vivienda.',
     'bills_create_name'                                       => 'Use un nombre descriptivo como "alquiler" o "seguro de salud".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Seleccione un monto mínimo y uno máximo para esta factura.',
     'bills_create_repeat_freq_holder'                         => 'Muchas facturas se repiten mensualmente, pero usted puede establecer otra frecuencia aquí.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_skip_holder'                                => 'Si una cuenta se repite cada 2 semanas, el campo "saltar" debe estar marcado como "1" para saltar una semana y generar el gasto cada 2.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III le permite administrar reglas, que automáticamente se aplicaran para cualquier transacción que cree o edite.',

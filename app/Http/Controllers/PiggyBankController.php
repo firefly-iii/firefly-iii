@@ -208,7 +208,7 @@ class PiggyBankController extends Controller
                       'targetamount' => $piggyBank->targetamount,
                       'targetdate'   => $targetDate,
                       'startdate'    => $startDate,
-                      'note'         => null === $note ? '' : $note->text,
+                      'notes'        => null === $note ? '' : $note->text,
         ];
         session()->flash('preFilled', $preFilled);
 

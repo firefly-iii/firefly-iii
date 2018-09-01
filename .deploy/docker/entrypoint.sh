@@ -22,8 +22,8 @@ chmod -R 775 $FIREFLY_PATH/storage
 # remove any lingering files that may break upgrades:
 rm -f $FIREFLY_PATH/storage/logs/laravel.log
 
-cat .env.docker | envsubst > .env && cat .env
+cat .env.docker | envsubst > .env
 composer dump-autoload
 php artisan package:discover
 php artisan firefly:instructions install
-exec apache2-foreground
+exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf --nodaemon

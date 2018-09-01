@@ -46,7 +46,7 @@ class DebugControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\DebugController::displayError
+     * @covers \FireflyIII\Http\Controllers\DebugController
      */
     public function testDisplayError(): void
     {
@@ -60,7 +60,7 @@ class DebugControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\DebugController::flush
+     * @covers \FireflyIII\Http\Controllers\DebugController
      */
     public function testFlush(): void
     {
@@ -74,10 +74,7 @@ class DebugControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\DebugController::index
-     * @covers \FireflyIII\Http\Controllers\DebugController::__construct
-     * @covers \FireflyIII\Http\Controllers\DebugController::errorReporting
-     * @covers \FireflyIII\Http\Controllers\DebugController::collectPackages
+     * @covers \FireflyIII\Http\Controllers\DebugController
      */
     public function testIndex(): void
     {
@@ -87,7 +84,7 @@ class DebugControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\DebugController::routes()
+     * @covers \FireflyIII\Http\Controllers\DebugController
      */
     public function testRoutes(): void
     {
@@ -97,7 +94,7 @@ class DebugControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\DebugController::testFlash
+     * @covers \FireflyIII\Http\Controllers\DebugController
      */
     public function testTestFlash(): void
     {

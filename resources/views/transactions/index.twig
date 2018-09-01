@@ -31,7 +31,12 @@
                         {% endif %}
                     </div>
                     {# actual list #}
-                    {% include 'list.journals' with {'journals': journals} %}
+                    {% if periods.count > 0 %}
+                        {# page is not "all"-overview#}
+                        {% include 'list.transactions' %}
+                    {% else %}
+                        {% include 'list.transactions' with {showCategories: true, showBudgets: true, showBill:true} %}
+                    {% endif %}
                 </div>
                 <div class="box-footer">
                     {# links for other views #}

@@ -288,7 +288,7 @@
              */
             store() {
                 this.persistClient(
-                    'post', './oauth/clients' + '?_token=' + window.Laravel,
+                    'post', './oauth/clients' + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content,
                     this.createForm, '#modal-create-client'
                 );
             },
@@ -309,7 +309,7 @@
              */
             update() {
                 this.persistClient(
-                    'put', './oauth/clients/' + this.editForm.id + '?_token=' + window.Laravel,
+                    'put', './oauth/clients/' + this.editForm.id + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content,
                     this.editForm, '#modal-edit-client'
                 );
             },

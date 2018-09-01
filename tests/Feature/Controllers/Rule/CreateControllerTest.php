@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace tests\Feature\Controllers\Rule;
 
 
-use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -62,26 +61,6 @@ class CreateControllerTest extends TestCase
         $response = $this->get(route('rules.create', [1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertViewHas('returnToBill', false);
-        $response->assertViewHas('bill', null);
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Rule\CreateController
-     */
-    public function testCreateBill(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $billRepos    = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $billRepos->shouldReceive('find')->withArgs([1])->andReturn(Bill::find(1))->once();
-
-        $this->be($this->user());
-        $response = $this->get(route('rules.create', [1]) . '?return=true&fromBill=1');
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertViewHas('returnToBill', true);
     }
 
     /**
@@ -110,24 +89,6 @@ class CreateControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Rule\CreateController
-     */
-    public function testCreateReturn(): void
-    {
-        // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $billRepos    = $this->mock(BillRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-        $this->be($this->user());
-        $response = $this->get(route('rules.create', [1]) . '?return=true');
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-        $response->assertViewHas('returnToBill', true);
-    }
-
-
-    /**
      * @covers       \FireflyIII\Http\Controllers\Rule\CreateController
      * @covers       \FireflyIII\Http\Requests\RuleFormRequest
      */
@@ -139,7 +100,6 @@ class CreateControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('store')->andReturn(new Rule);
-        $repository->shouldReceive('find')->withArgs([0])->andReturn(new Rule)->once();
 
         $this->session(['rules.create.uri' => 'http://localhost']);
         $data = [

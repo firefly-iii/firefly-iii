@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -129,7 +129,7 @@ class BillTransformer extends TransformerAbstract
         $pageSize = (int)app('preferences')->getForUser($bill->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($bill->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
@@ -138,9 +138,9 @@ class BillTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
-        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**
@@ -174,6 +174,7 @@ class BillTransformer extends TransformerAbstract
             'name'                => $bill->name,
             'currency_id'         => $bill->transaction_currency_id,
             'currency_code'       => $bill->transactionCurrency->code,
+            'currency_symbol'     => $bill->transactionCurrency->symbol,
             'amount_min'          => round((float)$bill->amount_min, 2),
             'amount_max'          => round((float)$bill->amount_max, 2),
             'date'                => $bill->date->format('Y-m-d'),

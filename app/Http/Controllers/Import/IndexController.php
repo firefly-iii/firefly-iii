@@ -37,7 +37,7 @@ use Log;
  */
 class IndexController extends Controller
 {
-    /** @var array */
+    /** @var array All available providers */
     public $providers;
     /** @var ImportJobRepositoryInterface The import job repository */
     public $repository;
@@ -76,22 +76,28 @@ class IndexController extends Controller
      */
     public function create(string $importProvider)
     {
-        Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
 
-        $importJob = $this->repository->create($importProvider);
-        $hasPreReq = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
-        $hasConfig = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
+
+        $hasPreReq      = (bool)config(sprintf('import.has_prereq.%s', $importProvider));
+        $hasConfig      = (bool)config(sprintf('import.has_job_config.%s', $importProvider));
+        $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $importProvider));
+        $isDemoUser     = $this->userRepository->hasRole(auth()->user(), 'demo');
+
+        Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
+        Log::debug(sprintf('Is demo user? %s',var_export($isDemoUser, true)));
+        Log::debug(sprintf('Is allowed for user? %s',var_export($allowedForDemo, true)));
+        Log::debug(sprintf('Has prerequisites? %s',var_export($hasPreReq, true)));
+        Log::debug(sprintf('Has config? %s',var_export($hasConfig, true)));
+
+
+        if ($isDemoUser && !$allowedForDemo) {
+            Log::debug('User is demo and this provider doesnt work for demo users.');
+            return redirect(route('import.index'));
+        }
+
+        $importJob      = $this->repository->create($importProvider);
 
         Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
-
-        // no prerequisites and no config:
-        if (false === $hasPreReq && false === $hasConfig) {
-            Log::debug('Provider needs no configuration for job. Job is ready to start.');
-            $this->repository->updateStatus($importJob, 'ready_to_run');
-            Log::debug('Redirect to status-page.');
-
-            return redirect(route('import.job.status.index', [$importJob->key]));
-        }
 
         // no prerequisites but job has config:
         if (false === $hasPreReq && false !== $hasConfig) {
@@ -124,7 +130,7 @@ class IndexController extends Controller
         if (false === $hasConfig) {
             // @codeCoverageIgnoreStart
             Log::debug('Provider has no configuration. Job is ready to start.');
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
             Log::debug('Redirect to status-page.');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
@@ -180,7 +186,8 @@ class IndexController extends Controller
         $providers    = $this->providers;
         $subTitle     = (string)trans('import.index_breadcrumb');
         $subTitleIcon = 'fa-home';
+        $isDemoUser   = $this->userRepository->hasRole(auth()->user(), 'demo');
 
-        return view('import.index', compact('subTitle', 'subTitleIcon', 'providers'));
+        return view('import.index', compact('subTitle', 'subTitleIcon', 'providers', 'isDemoUser'));
     }
 }

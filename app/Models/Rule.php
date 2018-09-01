@@ -70,14 +70,16 @@ class Rule extends Model
             'id'              => 'int',
             'strict'          => 'boolean',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['rule_group_id', 'order', 'active', 'title', 'description', 'user_id', 'strict'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Rule
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Rule
     {
@@ -86,7 +88,7 @@ class Rule extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Rule $rule */
-            $rule   = $user->rules()->find($ruleId);
+            $rule = $user->rules()->find($ruleId);
             if (null !== $rule) {
                 return $rule;
             }

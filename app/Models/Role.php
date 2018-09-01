@@ -45,14 +45,12 @@ class Role extends Model
             'updated_at' => 'datetime',
         ];
 
-    /**
-     * @var array
-     */
+    /** @var array Fields that can be filled */
     protected $fillable = ['name', 'display_name', 'description'];
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
     public function users(): BelongsToMany
     {

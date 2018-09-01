@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'html_language'         => 'id',
-    'locale'                => 'id, Bahasa Indonesia, id_ID, id_ID.utf8, id_ID.UTF-8',
+    'locale'                => 'id, Bahasa Indonesia, id_ID.utf8, id_ID.UTF-8',
     'month'                 => '%B %Y',
     'month_and_day'         => '%e %B %Y',
     'month_and_date_day'    => '%A %B %e, %Y',

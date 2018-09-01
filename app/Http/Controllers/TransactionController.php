@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
@@ -35,6 +35,8 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -50,6 +52,7 @@ use View;
  */
 class TransactionController extends Controller
 {
+    use ModelInformation, PeriodOverview;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
@@ -104,17 +107,17 @@ class TransactionController extends Controller
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
         $subTitle = (string)trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
-        $periods  = $this->getPeriodOverview($what, $end);
+        $periods  = $this->getTransactionPeriodOverview($what, $end);
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->addFilter(SplitIndicatorFilter::class);
         $collector->addFilter(CountAttachmentsFilter::class);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end'));
@@ -140,15 +143,15 @@ class TransactionController extends Controller
         $end          = new Carbon;
         $subTitle     = (string)trans('firefly.all_' . $what);
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($start, $end)
                   ->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
                   ->withBudgetInformation()->withCategoryInformation();
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->addFilter(SplitIndicatorFilter::class);
         $collector->addFilter(CountAttachmentsFilter::class);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath($path);
 
         return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'start', 'end'));
@@ -226,12 +229,12 @@ class TransactionController extends Controller
         $links     = $linkTypeRepository->getLinks($journal);
 
         // get transactions using the collector:
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
         $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getJournals();
+        $set          = $collector->getTransactions();
         $transactions = [];
         $transformer  = new TransactionTransformer(new ParameterBag);
         /** @var Transaction $transaction */
@@ -246,98 +249,5 @@ class TransactionController extends Controller
         return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }
 
-    /**
-     * Get period overview for index.
-     *
-     * @param string $what
-     *
-     * @param Carbon $date
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function getPeriodOverview(string $what, Carbon $date): Collection
-    {
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $first = $this->repository->firstNull();
-        $start = Carbon::create()->subYear();
-        $types   = config('firefly.transactionTypesByWhat.' . $what);
-        $entries = new Collection;
-        if (null !== $first) {
-            $start = $first->date;
-        }
-        if ($date < $start) {
-            [$start, $date] = [$date, $start]; // @codeCoverageIgnore
-        }
 
-        /** @var array $dates */
-        $dates = app('navigation')->blockPeriods($start, $date, $range);
-
-        foreach ($dates as $currentDate) {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withOpposingAccount()->setTypes($types);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $journals = $collector->getJournals();
-
-            if ($journals->count() > 0) {
-                $sums     = $this->sumPerCurrency($journals);
-                $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-                $sum      = $journals->sum('transaction_amount');
-                /** @noinspection PhpUndefinedMethodInspection */
-                $entries->push(
-                    [
-                        'name' => $dateName,
-                        'sums' => $sums,
-                        'sum'  => $sum,
-                        'start' => $currentDate['start']->format('Y-m-d'),
-                        'end'   => $currentDate['end']->format('Y-m-d'),
-                    ]
-                );
-            }
-        }
-
-        return $entries;
-    }
-
-    /**
-     * Collect the sum per currency.
-     *
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    private function sumPerCurrency(Collection $collection): array
-    {
-        $return = [];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $currencyId = (int)$transaction->transaction_currency_id;
-
-            // save currency information:
-            if (!isset($return[$currencyId])) {
-                $currencySymbol      = $transaction->transaction_currency_symbol;
-                $decimalPlaces       = $transaction->transaction_currency_dp;
-                $currencyCode        = $transaction->transaction_currency_code;
-                $return[$currencyId] = [
-                    'currency' => [
-                        'id'     => $currencyId,
-                        'code'   => $currencyCode,
-                        'symbol' => $currencySymbol,
-                        'dp'     => $decimalPlaces,
-                    ],
-                    'sum'      => '0',
-                    'count'    => 0,
-                ];
-            }
-            // save amount:
-            $return[$currencyId]['sum'] = bcadd($return[$currencyId]['sum'], $transaction->transaction_amount);
-            ++$return[$currencyId]['count'];
-        }
-        asort($return);
-
-        return $return;
-    }
 }

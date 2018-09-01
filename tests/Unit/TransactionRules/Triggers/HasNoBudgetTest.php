@@ -33,7 +33,7 @@ use Tests\TestCase;
 class HasNoBudgetTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testTriggeredBudget(): void
     {
@@ -49,7 +49,7 @@ class HasNoBudgetTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testTriggeredNoBudget(): void
     {
@@ -68,14 +68,14 @@ class HasNoBudgetTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testTriggeredTransaction(): void
     {
         $loopCount = 0;
         do {
-            $journal     = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
-            $count       = $journal->transactions()->count();
+            $journal = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
+            $count   = $journal->transactions()->count();
         } while ($loopCount < 30 && $count !== 2);
 
         $transactions = $journal->transactions()->get();
@@ -95,7 +95,7 @@ class HasNoBudgetTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\HasNoBudget
      */
     public function testWillMatchEverythingNull(): void
     {

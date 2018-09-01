@@ -26,9 +26,12 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ * @codeCoverageIgnore
  */
 class MonthReportGenerator implements ReportGeneratorInterface
 {
@@ -43,7 +46,6 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -53,11 +55,17 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
         $reportType = 'default';
 
-        // continue!
-        return view(
-            'reports.default.month',
-            compact('bills', 'accountIds', 'reportType')
-        )->with('start', $this->start)->with('end', $this->end)->render();
+        try {
+            return view(
+                'reports.default.month',
+                compact('bills', 'accountIds', 'reportType')
+            )->with('start', $this->start)->with('end', $this->end)->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.default.month: %s', $e->getMessage()));
+            $result = 'Could not render report view.';
+        }
+
+        return $result;
     }
 
     /**

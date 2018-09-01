@@ -36,7 +36,7 @@ use Tests\TestCase;
 class AssetAccountIbansTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Mapper\AssetAccountIbans::getMap()
+     * @covers \FireflyIII\Import\Mapper\AssetAccountIbans
      */
     public function testGetMapBasic(): void
     {

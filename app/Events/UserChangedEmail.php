@@ -29,6 +29,8 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class UserChangedEmail.
+ *
+ * @codeCoverageIgnore
  */
 class UserChangedEmail extends Event
 {

@@ -1,0 +1,58 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+    <div class="row">
+        <form class="form-horizontal" action="{{ route('import.job.configuration.post',[importJob.key]) }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ trans('import.job_config_ynab_select_budgets') }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row">
+                            <div class="col-lg-6">
+                                <p>
+                                    {{ trans('import.job_config_ynab_select_budgets_text', {count: data.total}) }}
+                                </p>
+                                {% if data.available|length == 0 %}
+                                    <p class="text-danger">
+                                        {{ trans('import.job_config_ynab_no_budgets') }}
+                                    </p>
+                                {% else %}
+                                    {{ ExpandedForm.select('budget_id', data.available) }}
+                                {% endif %}
+
+                                {% if data.not_available|length > 0 %}
+                                <p class="text-warning">
+                                    {{ trans('import.job_config_ynab_bad_currency') }}
+                                </p>
+                                    <ul>
+                                        {% for budget in data.not_available %}
+                                            <li>{{ budget }}</li>
+                                        {% endfor %}
+                                    </ul>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="box-footer">
+                            {% if data.available|length != 0 %}
+                            <button type="submit" class="btn pull-right btn-success">
+                                {{ ('submit')|_ }}
+                            </button>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+{% block scripts %}
+{% endblock %}
+{% block styles %}
+{% endblock %}

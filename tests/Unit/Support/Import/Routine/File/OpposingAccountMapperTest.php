@@ -62,7 +62,7 @@ class OpposingAccountMapperTest extends TestCase
      */
     public function testAccountIdBadType(): void
     {
-        $expected     = $this->user()->accounts()->where('account_type_id', 5)->inRandomOrder()->first();
+        $expected       = $this->user()->accounts()->where('account_type_id', 5)->inRandomOrder()->first();
         $expected->iban = null;
         $expected->save();
         $amount       = '-12.34';
@@ -161,30 +161,6 @@ class OpposingAccountMapperTest extends TestCase
     }
 
     /**
-     * Amount = negative
-     * ID = null
-     * other data = null
-     * Should call store() with "(no name") for expense account
-     *
-     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
-     */
-    public function testFindByAccountNumber(): void
-    {
-        $expected       = $this->user()->accounts()->where('account_type_id', 4)->inRandomOrder()->first();
-        $amount       = '-12.34';
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('findByAccountNumber')->withArgs(['12345', [AccountType::EXPENSE]])
-            ->andReturn($expected)->once();
-
-
-        $mapper = new OpposingAccountMapper;
-        $mapper->setUser($this->user());
-        $result = $mapper->map(null, $amount, ['number' => '12345']);
-        $this->assertEquals($result->id, $expected->id);
-    }
-
-    /**
      * Amount = positive
      * ID = null
      * other data = null
@@ -214,6 +190,30 @@ class OpposingAccountMapperTest extends TestCase
         $mapper = new OpposingAccountMapper;
         $mapper->setUser($this->user());
         $mapper->map(null, $amount, []);
+    }
+
+    /**
+     * Amount = negative
+     * ID = null
+     * other data = null
+     * Should call store() with "(no name") for expense account
+     *
+     * @covers \FireflyIII\Support\Import\Routine\File\OpposingAccountMapper
+     */
+    public function testFindByAccountNumber(): void
+    {
+        $expected   = $this->user()->accounts()->where('account_type_id', 4)->inRandomOrder()->first();
+        $amount     = '-12.34';
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findByAccountNumber')->withArgs(['12345', [AccountType::EXPENSE]])
+                   ->andReturn($expected)->once();
+
+
+        $mapper = new OpposingAccountMapper;
+        $mapper->setUser($this->user());
+        $result = $mapper->map(null, $amount, ['number' => '12345']);
+        $this->assertEquals($result->id, $expected->id);
     }
 
 }

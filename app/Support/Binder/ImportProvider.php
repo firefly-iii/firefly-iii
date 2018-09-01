@@ -54,21 +54,18 @@ class ImportProvider implements BinderInterface
         foreach ($providerNames as $providerName) {
             // only consider enabled providers
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
-            $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
             if (false === $enabled) {
                 continue;
             }
 
-            if (true === $isDemoUser && false === $allowedForDemo) {
-                continue;
-            }
             if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
                 continue; // @codeCoverageIgnore
             }
 
             $providers[$providerName] = [
-                'has_prereq' => (bool)config('import.has_prereq.' . $providerName),
+                'has_prereq'       => (bool)config('import.has_prereq.' . $providerName),
+                'allowed_for_demo' => (bool)config(sprintf('import.allowed_for_demo.%s', $providerName)),
             ];
             $class                    = (string)config(sprintf('import.prerequisites.%s', $providerName));
             $result                   = false;

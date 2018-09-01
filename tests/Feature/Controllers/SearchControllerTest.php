@@ -47,8 +47,8 @@ class SearchControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\SearchController::index
-     * @covers \FireflyIII\Http\Controllers\SearchController::__construct
+     * @covers \FireflyIII\Http\Controllers\SearchController
+     * @covers \FireflyIII\Http\Controllers\SearchController
      */
     public function testIndex(): void
     {
@@ -62,8 +62,8 @@ class SearchControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\SearchController::search
-     * @covers \FireflyIII\Http\Controllers\SearchController::__construct
+     * @covers \FireflyIII\Http\Controllers\SearchController
+     * @covers \FireflyIII\Http\Controllers\SearchController
      */
     public function testSearch(): void
     {

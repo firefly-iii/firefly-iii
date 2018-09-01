@@ -25,9 +25,12 @@ namespace FireflyIII\Generator\Report\Standard;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ * @codeCoverageIgnore
  */
 class MultiYearReportGenerator implements ReportGeneratorInterface
 {
@@ -42,7 +45,6 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -50,11 +52,17 @@ class MultiYearReportGenerator implements ReportGeneratorInterface
         $accountIds = implode(',', $this->accounts->pluck('id')->toArray());
         $reportType = 'default';
 
-        // continue!
-        return view(
-            'reports.default.multi-year',
-            compact('accountIds', 'reportType')
-        )->with('start', $this->start)->with('end', $this->end)->render();
+        try {
+            return view(
+                'reports.default.multi-year',
+                compact('accountIds', 'reportType')
+            )->with('start', $this->start)->with('end', $this->end)->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.default.multi-year: %s', $e->getMessage()));
+            $result = 'Could not render report view.';
+        }
+
+        return $result;
     }
 
     /**

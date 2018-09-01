@@ -27,6 +27,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class BalanceHeader.
+ *
+ * @codeCoverageIgnore
  */
 class BalanceHeader
 {

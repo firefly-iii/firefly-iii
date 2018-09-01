@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -34,6 +35,16 @@ use Tests\TestCase;
  */
 class TransactionJournalMetaFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
@@ -90,7 +101,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
                 'data'                   => 'bye!',
             ]
         );
-        $count = $journal->transactionJournalMeta()->count();
+        $count   = $journal->transactionJournalMeta()->count();
 
         $set = [
             'journal' => $journal,
@@ -101,7 +112,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);
 
-        $this->assertEquals($count-1, $journal->transactionJournalMeta()->count());
+        $this->assertEquals($count - 1, $journal->transactionJournalMeta()->count());
     }
 
     /**

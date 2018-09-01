@@ -42,12 +42,12 @@
 
                         {# show source if withdrawal or transfer #}
                         {% if preFilled.what == 'withdrawal' or preFilled.what == 'transfer' %}
-                            {{ ExpandedForm.activeAssetAccountList('journal_source_id', preFilled.journal_source_id) }}
+                            {{ ExpandedForm.activeLongAccountList('journal_source_id', preFilled.journal_source_id) }}
                         {% endif %}
 
                         {# show destination account id, if deposit (is asset): #}
                         {% if preFilled.what == 'deposit' or preFilled.what == 'transfer' %}
-                            {{ ExpandedForm.activeAssetAccountList('journal_destination_id', preFilled.journal_destination_id) }}
+                            {{ ExpandedForm.activeLongAccountList('journal_destination_id', preFilled.journal_destination_id) }}
                         {% endif %}
 
                         {# show amount and some helper text when making splits: #}
@@ -264,7 +264,7 @@
                                                    value="{{ transaction.foreign_currency_id }}">
                                         {% endif %}
                                         <input type="hidden" name="transactions[{{ loop.index0 }}][transaction_currency_id]"
-                                               value="{{ transaction.transaction_currency_id }}">
+                                               value="{{ transaction.currency_id }}">
                                     </div>
                                     {# budget #}
                                     {% if preFilled.what == 'withdrawal' %}

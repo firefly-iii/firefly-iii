@@ -34,7 +34,7 @@ use Tests\TestCase;
 class IsSandstormUserTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\IsSandStormUser::handle
+     * @covers \FireflyIII\Http\Middleware\IsSandStormUser
      */
     public function testMiddlewareNotAuthenticated(): void
     {
@@ -44,7 +44,7 @@ class IsSandstormUserTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\IsSandStormUser::handle
+     * @covers \FireflyIII\Http\Middleware\IsSandStormUser
      */
     public function testMiddlewareNotSandStorm(): void
     {
@@ -55,7 +55,7 @@ class IsSandstormUserTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\IsSandStormUser::handle
+     * @covers \FireflyIII\Http\Middleware\IsSandStormUser
      */
     public function testMiddlewareSandstorm(): void
     {

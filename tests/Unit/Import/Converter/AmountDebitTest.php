@@ -31,7 +31,7 @@ use Tests\TestCase;
 class AmountDebitTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Converter\AmountDebit::convert()
+     * @covers \FireflyIII\Import\Converter\AmountDebit
      */
     public function testConvert(): void
     {
@@ -173,7 +173,7 @@ class AmountDebitTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\AmountDebit::convert()
+     * @covers \FireflyIII\Import\Converter\AmountDebit
      */
     public function testConvertNull(): void
     {

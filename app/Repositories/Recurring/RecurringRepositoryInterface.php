@@ -79,15 +79,15 @@ interface RecurringRepositoryInterface
     public function getCategory(RecurrenceTransaction $recTransaction): ?string;
 
     /**
-     * Returns the journals created for this recurrence, possibly limited by time.
+     * Returns the count of journals created for this recurrence, possibly limited by time.
      *
      * @param Recurrence  $recurrence
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return Collection
+     * @return int
      */
-    public function getJournals(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): Collection;
+    public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int;
 
     /**
      * Get the notes.

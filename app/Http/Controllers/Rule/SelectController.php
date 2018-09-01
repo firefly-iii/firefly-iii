@@ -32,6 +32,7 @@ use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\RequestInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\User;
@@ -48,7 +49,7 @@ use Throwable;
  */
 class SelectController extends Controller
 {
-    use RuleManagement;
+    use RuleManagement, RequestInformation;
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
 
@@ -118,12 +119,11 @@ class SelectController extends Controller
     {
         // does the user have shared accounts?
         $first    = session('first')->format('Y-m-d');
-        $today    = Carbon::create()->format('Y-m-d');
+        $today    = Carbon::now()->format('Y-m-d');
         $subTitle = (string)trans('firefly.apply_rule_selection', ['title' => $rule->title]);
 
         return view('rules.rule.select-transactions', compact('first', 'today', 'rule', 'subTitle'));
     }
-
 
     /**
      * This method allows the user to test a certain set of rule triggers. The rule triggers are passed along
@@ -152,11 +152,13 @@ class SelectController extends Controller
         $limit                = (int)config('firefly.test-triggers.limit');
         $range                = (int)config('firefly.test-triggers.range');
         $matchingTransactions = new Collection;
+        $strict               = $request->get('strict') === '1';
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
         $matcher->setLimit($limit);
         $matcher->setRange($range);
         $matcher->setTriggers($triggers);
+        $matcher->setStrict($strict);
         try {
             $matchingTransactions = $matcher->findTransactionsByTriggers();
             // @codeCoverageIgnoreStart
@@ -257,32 +259,4 @@ class SelectController extends Controller
     }
 
 
-    /**
-     * Get a list of triggers.
-     *
-     * @param TestRuleFormRequest $request
-     *
-     * @return array
-     */
-    private function getValidTriggerList(TestRuleFormRequest $request): array
-    {
-        $triggers = [];
-        $data     = [
-            'rule-triggers'       => $request->get('rule-trigger'),
-            'rule-trigger-values' => $request->get('rule-trigger-value'),
-            'rule-trigger-stop'   => $request->get('rule-trigger-stop'),
-        ];
-        if (\is_array($data['rule-triggers'])) {
-            foreach ($data['rule-triggers'] as $index => $triggerType) {
-                $data['rule-trigger-stop'][$index] = (int)($data['rule-trigger-stop'][$index] ?? 0.0);
-                $triggers[]                        = [
-                    'type'           => $triggerType,
-                    'value'          => $data['rule-trigger-values'][$index],
-                    'stopProcessing' => 1 === (int)$data['rule-trigger-stop'][$index],
-                ];
-            }
-        }
-
-        return $triggers;
-    }
 }

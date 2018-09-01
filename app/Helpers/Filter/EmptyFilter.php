@@ -26,6 +26,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class EmptyFilter.
+ *
+ * @codeCoverageIgnore
  */
 class EmptyFilter implements FilterInterface
 {

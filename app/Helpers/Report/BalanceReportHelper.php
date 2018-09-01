@@ -34,6 +34,8 @@ use Log;
 
 /**
  * Class BalanceReportHelper.
+ *
+ * @codeCoverageIgnore
  */
 class BalanceReportHelper implements BalanceReportHelperInterface
 {
@@ -160,6 +162,7 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     {
         $set    = $balance->getBalanceLines();
         $newSet = new Collection;
+        /** @var BalanceLine $entry */
         foreach ($set as $entry) {
             if (null !== $entry->getBudget()->id) {
                 $sum = '0';

@@ -24,6 +24,7 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Twig\Extension\Account as AccountExtension;
 use League\CommonMark\CommonMarkConverter;
 use Route;
@@ -64,6 +65,7 @@ class General extends Twig_Extension
             $this->activeRoutePartialWhat(),
             $this->formatDate(),
             new Twig_SimpleFunction('accountGetMetaField', [AccountExtension::class, 'getMetaField']),
+            $this->hasRole(),
         ];
     }
 
@@ -101,9 +103,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRoutePartialWhat',
             function ($context): string {
-                $args       = \func_get_args();
-                $route      = $args[1]; // name of the route.
-                $what       = $args[2]; // name of the route.
+                [, $route, $what] = \func_get_args();
                 $activeWhat = $context['what'] ?? false;
 
                 if ($what === $activeWhat && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
@@ -231,6 +231,26 @@ class General extends Twig_Extension
             'getCurrencySymbol',
             function (): string {
                 return app('amount')->getCurrencySymbol();
+            }
+        );
+    }
+
+    /**
+     * Will return true if the user is of role X.
+     *
+     * @return Twig_SimpleFunction
+     */
+    protected function hasRole(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'hasRole',
+            function (string $role): bool {
+                $repository = app(UserRepositoryInterface::class);
+                if ($repository->hasRole(auth()->user(), $role)) {
+                    return true;
+                }
+
+                return false;
             }
         );
     }

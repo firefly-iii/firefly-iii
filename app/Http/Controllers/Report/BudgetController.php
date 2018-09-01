@@ -27,13 +27,17 @@ use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class BudgetController.
  */
 class BudgetController extends Controller
 {
+    use BasicDataSupport;
 
     /**
      * Show partial overview of budgets.
@@ -43,7 +47,6 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -58,8 +61,12 @@ class BudgetController extends Controller
         }
         $helper  = app(BudgetReportHelperInterface::class);
         $budgets = $helper->getBudgetReport($start, $end, $accounts);
-
-        $result = view('reports.partials.budgets', compact('budgets'))->render();
+        try {
+            $result = view('reports.partials.budgets', compact('budgets'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         $cache->store($result);
 
         return $result;
@@ -74,7 +81,6 @@ class BudgetController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function period(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -93,39 +99,17 @@ class BudgetController extends Controller
         $budgets    = $repository->getBudgets();
         $data       = $repository->getBudgetPeriodReport($budgets, $accounts, $start, $end);
         $data[0]    = $repository->getNoBudgetPeriodReport($accounts, $start, $end); // append report data for "no budget"
-        $report     = $this->filterBudgetPeriodReport($data);
+        $report     = $this->filterPeriodReport($data);
         $periods    = app('navigation')->listOfPeriods($start, $end);
-
-        $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
+        try {
+            $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         $cache->store($result);
 
         return $result;
     }
 
-    /**
-     * Filters empty results from getBudgetPeriodReport.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function filterBudgetPeriodReport(array $data): array
-    {
-        /**
-         * @var int
-         * @var array $set
-         */
-        foreach ($data as $budgetId => $set) {
-            $sum = '0';
-            foreach ($set['entries'] as $amount) {
-                $sum = bcadd($amount, $sum);
-            }
-            $data[$budgetId]['sum'] = $sum;
-            if (0 === bccomp('0', $sum)) {
-                unset($data[$budgetId]);
-            }
-        }
-
-        return $data;
-    }
 }

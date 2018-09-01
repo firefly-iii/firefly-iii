@@ -30,6 +30,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class SplitIndicatorFilter
+ *
+ * @codeCoverageIgnore
  */
 class SplitIndicatorFilter implements FilterInterface
 {

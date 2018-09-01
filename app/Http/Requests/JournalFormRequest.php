@@ -270,7 +270,7 @@ class JournalFormRequest extends Request
      */
     private function validateDeposit(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data             = $validator->getData();
         $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
         $accountCurrency  = (int)($data['destination_account_currency'] ?? 0);
         $nativeAmount     = (string)($data['native_amount'] ?? '');
@@ -290,7 +290,7 @@ class JournalFormRequest extends Request
      */
     private function validateTransfer(Validator $validator): void
     {
-        $data = $validator->getData();
+        $data                = $validator->getData();
         $sourceCurrency      = (int)($data['source_account_currency'] ?? 0);
         $destinationCurrency = (int)($data['destination_account_currency'] ?? 0);
         $sourceAmount        = (string)($data['source_amount'] ?? '');

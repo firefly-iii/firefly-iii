@@ -51,8 +51,8 @@ class MassControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::delete
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::__construct
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testDelete(): void
     {
@@ -72,7 +72,7 @@ class MassControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::destroy
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testDestroy(): void
     {
@@ -98,7 +98,7 @@ class MassControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testEdit(): void
     {
@@ -135,7 +135,7 @@ class MassControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::edit
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testEditMultiple(): void
     {
@@ -178,7 +178,7 @@ class MassControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\MassController::update
+     * @covers \FireflyIII\Http\Controllers\Transaction\MassController
      */
     public function testUpdate(): void
     {
@@ -202,8 +202,8 @@ class MassControllerTest extends TestCase
             'amount'                                    => [$deposit->id => 1600],
             'amount_currency_id_amount_' . $deposit->id => 1,
             'date'                                      => [$deposit->id => '2014-07-24'],
-            'source_name'                       => [$deposit->id => 'Job'],
-            'destination_id'                    => [$deposit->id => 1],
+            'source_name'                               => [$deposit->id => 'Job'],
+            'destination_id'                            => [$deposit->id => 1],
             'category'                                  => [$deposit->id => 'Salary'],
         ];
 

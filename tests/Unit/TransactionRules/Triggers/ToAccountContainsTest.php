@@ -34,7 +34,7 @@ use Tests\TestCase;
 class ToAccountContainsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains
      */
     public function testTriggered(): void
     {
@@ -53,7 +53,7 @@ class ToAccountContainsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains
      */
     public function testTriggeredNot(): void
     {
@@ -72,35 +72,35 @@ class ToAccountContainsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains
      */
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = ToAccountContains::willMatchEverything($value);
+        $value      = '';
+        $result     = ToAccountContains::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains
      */
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = ToAccountContains::willMatchEverything($value);
+        $value      = 'x';
+        $result     = ToAccountContains::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountContains
      */
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = ToAccountContains::willMatchEverything($value);
+        $value      = null;
+        $result     = ToAccountContains::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

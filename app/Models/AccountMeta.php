@@ -44,11 +44,9 @@ class AccountMeta extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['account_id', 'name', 'data'];
-    /**
-     * @var string
-     */
+    /** @var string The table to store the data in */
     protected $table = 'account_meta';
 
     /**

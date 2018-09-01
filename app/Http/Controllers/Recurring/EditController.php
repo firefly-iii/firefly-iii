@@ -86,7 +86,7 @@ class EditController extends Controller
         $budgets     = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
         /** @var RecurrenceRepetition $repetition */
-        $repetition            = $recurrence->recurrenceRepetitions()->first();
+        $repetition     = $recurrence->recurrenceRepetitions()->first();
         $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
             $currentRepType .= ',' . $repetition->repetition_moment;

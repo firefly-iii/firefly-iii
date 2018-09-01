@@ -18,11 +18,18 @@
                         {% for name, provider in providers %}
                             {# button for each import thing: #}
                             <div class="col-lg-1 col-md-4 col-sm-6 text-center">
+                                {% if not provider.allowed_for_demo and isDemoUser %}
+                                    <img src="images/logos/{{ name }}.png" alt="{{ trans(('import.button_'~name)) }}"/><br/>
+                                    {{ trans(('import.button_'~name)) }}<br>
+                                    ({{ trans('import.disabled_for_demo_user') }})
+                                {% else %}
                                 <a href="{{ route('import.create', [name]) }}">
                                     <img src="images/logos/{{ name }}.png" alt="{{ trans(('import.button_'~name)) }}"/><br/>
                                     {{ trans(('import.button_'~name)) }}
                                 </a>
+                                    {% endif %}
                             </div>
+
                         {% endfor %}
                     </div>
                 </div>

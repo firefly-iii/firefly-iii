@@ -109,7 +109,7 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $data     = [
+        $data = [
             'name'  => 'permission_update_check',
             'value' => 1,
 
@@ -135,7 +135,57 @@ class ConfigurationControllerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check'])->andReturn($permConfig)->once();
         FireflyConfig::shouldReceive('get')->withArgs(['last_update_check'])->andReturn($lastConfig)->once();
         FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode'])->andReturn($singleConfig)->once();
-        FireflyConfig::shouldReceive('set')->once()->withArgs(['permission_update_check',1]);
+        FireflyConfig::shouldReceive('set')->once()->withArgs(['permission_update_check', 1]);
+
+
+        $expected = [
+            'data' => [
+                'is_demo_site'            => false,
+                'permission_update_check' => -1,
+                'last_update_check'       => 123456789,
+                'single_user_mode'        => true,
+            ],
+        ];
+
+        $response = $this->post('/api/v1/configuration', $data);
+        $response->assertStatus(200);
+        $response->assertExactJson($expected);
+    }
+
+    /**
+     * Set configuration variables.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     */
+    public function testUpdateBoolean(): void
+    {
+        $data = [
+            'name'  => 'single_user_mode',
+            'value' => 'true',
+
+        ];
+
+        $demoConfig       = new Configuration;
+        $demoConfig->name = 'is_demo_site';
+        $demoConfig->data = false;
+
+        $permConfig       = new Configuration;
+        $permConfig->name = 'permission_update_check';
+        $permConfig->data = -1;
+
+        $lastConfig       = new Configuration;
+        $lastConfig->name = 'last_update_check';
+        $lastConfig->data = 123456789;
+
+        $singleConfig       = new Configuration;
+        $singleConfig->name = 'single_user_mode';
+        $singleConfig->data = true;
+
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site'])->andReturn($demoConfig)->once();
+        FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check'])->andReturn($permConfig)->once();
+        FireflyConfig::shouldReceive('get')->withArgs(['last_update_check'])->andReturn($lastConfig)->once();
+        FireflyConfig::shouldReceive('get')->withArgs(['single_user_mode'])->andReturn($singleConfig)->once();
+        FireflyConfig::shouldReceive('set')->once()->withArgs(['single_user_mode', true]);
 
 
         $expected = [

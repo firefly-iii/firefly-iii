@@ -106,7 +106,6 @@ class EditControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $rule         = Rule::find(1);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('find')->withArgs([1])->andReturn($rule)->once();
         $repository->shouldReceive('update');
 
         $data = [

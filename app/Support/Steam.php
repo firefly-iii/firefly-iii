@@ -31,6 +31,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Log;
+use stdClass;
 
 /**
  * Class Steam.
@@ -162,6 +163,13 @@ class Steam
 
         $balances[$formatted] = $startBalance;
         $currencyId           = (int)$repository->getMetaValue($account, 'currency_id');
+
+        // use system default currency:
+        if (0 === $currencyId) {
+            $currency   = app('amount')->getDefaultCurrencyByUser($account->user);
+            $currencyId = $currency->id;
+        }
+
         $start->addDay();
 
         // query!
@@ -212,6 +220,38 @@ class Steam
     }
 
     /**
+     * @param \FireflyIII\Models\Account $account
+     * @param \Carbon\Carbon             $date
+     *
+     * @return string
+     */
+    public function balancePerCurrency(Account $account, Carbon $date): array
+    {
+
+        // abuse chart properties:
+        $cache = new CacheProperties;
+        $cache->addProperty($account->id);
+        $cache->addProperty('balance-per-currency');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        $query    = $account->transactions()
+                            ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                            ->where('transaction_journals.date', '<=', $date->format('Y-m-d 23:59:59'))
+                            ->groupBy('transactions.transaction_currency_id');
+        $balances = $query->get(['transactions.transaction_currency_id', DB::raw('SUM(transactions.amount) as sum_for_currency')]);
+        $return   = [];
+        /** @var stdClass $entry */
+        foreach ($balances as $entry) {
+            $return[(int)$entry->transaction_currency_id] = $entry->sum_for_currency;
+        }
+        $cache->store($return);
+
+        return $return;
+    }
+
+    /**
      * This method always ignores the virtual balance.
      *
      * @param \Illuminate\Support\Collection $accounts
@@ -236,6 +276,38 @@ class Steam
         /** @var Account $account */
         foreach ($accounts as $account) {
             $result[$account->id] = $this->balance($account, $date);
+        }
+
+        $cache->store($result);
+
+        return $result;
+    }
+
+    /**
+     * Same as above, but also groups per currency.
+     *
+     * @param \Illuminate\Support\Collection $accounts
+     * @param \Carbon\Carbon                 $date
+     *
+     * @return array
+     */
+    public function balancesPerCurrencyByAccounts(Collection $accounts, Carbon $date): array
+    {
+        $ids = $accounts->pluck('id')->toArray();
+        // cache this property.
+        $cache = new CacheProperties;
+        $cache->addProperty($ids);
+        $cache->addProperty('balances-per-currency');
+        $cache->addProperty($date);
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        // need to do this per account.
+        $result = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $result[$account->id] = $this->balancePerCurrency($account, $date);
         }
 
         $cache->store($result);
@@ -367,7 +439,6 @@ class Steam
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             // do not care.
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
         }
 
         return $value;

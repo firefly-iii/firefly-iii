@@ -26,13 +26,16 @@ use FireflyIII\Import\JobConfiguration\BunqJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
 use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
+use FireflyIII\Import\JobConfiguration\YnabJobConfiguration;
 use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
+use FireflyIII\Import\Prerequisites\YnabPrerequisites;
 use FireflyIII\Import\Routine\BunqRoutine;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
 use FireflyIII\Import\Routine\SpectreRoutine;
+use FireflyIII\Import\Routine\YnabRoutine;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 
 return [
@@ -42,6 +45,7 @@ return [
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
+        'ynab'    => true,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -53,6 +57,7 @@ return [
         'file'    => false,
         'bunq'    => false,
         'spectre' => false,
+        'ynab'    => false,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -63,6 +68,7 @@ return [
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
+        'ynab'    => true,
         'plaid'   => true,
         'quovo'   => true,
         'yodlee'  => true,
@@ -73,6 +79,7 @@ return [
         'file'    => false,
         'bunq'    => true,
         'spectre' => true,
+        'ynab'    => true,
         'plaid'   => true,
         'quovo'   => true,
         'yodlee'  => true,
@@ -83,6 +90,7 @@ return [
         'file'    => false,
         'bunq'    => BunqPrerequisites::class,
         'spectre' => SpectrePrerequisites::class,
+        'ynab'    => YnabPrerequisites::class,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -93,6 +101,7 @@ return [
         'file'    => true,
         'bunq'    => true,
         'spectre' => true,
+        'ynab'    => true,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -103,6 +112,7 @@ return [
         'file'    => FileJobConfiguration::class,
         'bunq'    => BunqJobConfiguration::class,
         'spectre' => SpectreJobConfiguration::class,
+        'ynab'    => YnabJobConfiguration::class,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -113,6 +123,7 @@ return [
         'file'    => FileRoutine::class,
         'bunq'    => BunqRoutine::class,
         'spectre' => SpectreRoutine::class,
+        'ynab'    => YnabRoutine::class,
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
@@ -139,6 +150,10 @@ return [
         ],
         'spectre' => [
             'server' => 'www.saltedge.com',
+        ],
+        'ynab'    => [
+            'live'    => 'api.youneedabudget.com',
+            'version' => 'v1',
         ],
         'plaid'   => [],
         'quovo'   => [],

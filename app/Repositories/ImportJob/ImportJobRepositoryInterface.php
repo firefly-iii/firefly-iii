@@ -46,6 +46,16 @@ interface ImportJobRepositoryInterface
     public function addErrorMessage(ImportJob $job, string $error): ImportJob;
 
     /**
+     * Append transactions to array instead of replacing them.
+     *
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function appendTransactions(ImportJob $job, array $transactions): ImportJob;
+
+    /**
      * @param string $importProvider
      *
      * @return ImportJob
@@ -54,6 +64,7 @@ interface ImportJobRepositoryInterface
 
     /**
      * @param string $key
+     *
      * @return ImportJob|null
      */
     public function findByKey(string $key): ?ImportJob;
@@ -153,12 +164,5 @@ interface ImportJobRepositoryInterface
      */
     public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag;
 
-    /**
-     * @param ImportJob $job
-     * @param string    $status
-     *
-     * @return ImportJob
-     */
-    public function updateStatus(ImportJob $job, string $status): ImportJob;
 
 }

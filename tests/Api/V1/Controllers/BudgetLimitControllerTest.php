@@ -124,7 +124,7 @@ class BudgetLimitControllerTest extends TestCase
             'start' => '2018-01-01',
             'end'   => '2018-01-31',
         ];
-        $uri = '/api/v1/budget_limits?' . http_build_query($params);
+        $uri      = '/api/v1/budget_limits?' . http_build_query($params);
         $response = $this->get($uri);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -149,9 +149,9 @@ class BudgetLimitControllerTest extends TestCase
 
         // call API
         $params   = [
-            'budget_id'  => $budget->id,
-            'start' => '2018-01-01',
-            'end'   => '2018-01-31',
+            'budget_id' => $budget->id,
+            'start'     => '2018-01-01',
+            'end'       => '2018-01-31',
         ];
         $response = $this->get('/api/v1/budget_limits?' . http_build_query($params));
         $response->assertStatus(200);
@@ -191,6 +191,7 @@ class BudgetLimitControllerTest extends TestCase
      * Store new budget limit.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testStore(): void
     {
@@ -229,6 +230,7 @@ class BudgetLimitControllerTest extends TestCase
      * Store new budget limit, but give error
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testStoreBadBudget(): void
     {
@@ -257,6 +259,7 @@ class BudgetLimitControllerTest extends TestCase
      * Test update of budget limit.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testUpdate(): void
     {
@@ -296,6 +299,7 @@ class BudgetLimitControllerTest extends TestCase
      * Test update of budget limit but submit bad budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetLimitController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
      */
     public function testUpdateBadBudget(): void
     {

@@ -34,7 +34,7 @@ use Tests\TestCase;
 class RedirectIfAuthenticatedTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated::handle
+     * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated
      */
     public function testMiddleware(): void
     {
@@ -43,7 +43,7 @@ class RedirectIfAuthenticatedTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated::handle
+     * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated
      */
     public function testMiddlewareAuthenticated(): void
     {

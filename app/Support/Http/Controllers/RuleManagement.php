@@ -32,7 +32,6 @@ use Throwable;
 /**
  * Trait RuleManagement
  *
- * @package FireflyIII\Support\Http\Controllers
  */
 trait RuleManagement
 {
@@ -47,36 +46,36 @@ trait RuleManagement
         if (0 === $ruleRepository->count()) {
             $data = [
                 'rule_group_id'   => $ruleRepository->getFirstRuleGroup()->id,
-                'stop-processing' => 0,
+                'stop_processing' => 0,
                 'title'           => (string)trans('firefly.default_rule_name'),
                 'description'     => (string)trans('firefly.default_rule_description'),
                 'trigger'         => 'store-journal',
                 'strict'          => true,
-                'rule-triggers'   => [
+                'rule_triggers'   => [
                     [
                         'name'            => 'description_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_description'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
 
                     ],
                     [
                         'name'            => 'from_account_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_from_account'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
 
                     ],
 
                 ],
-                'rule-actions'    => [
+                'rule_actions'    => [
                     [
                         'name'            => 'prepend_description',
                         'value'           => (string)trans('firefly.default_rule_action_prepend'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
                     ],
                     [
                         'name'            => 'set_category',
                         'value'           => (string)trans('firefly.default_rule_action_set_category'),
-                        'stop-processing' => false,
+                        'stop_processing' => false,
                     ],
                 ],
             ];
@@ -93,33 +92,30 @@ trait RuleManagement
      */
     protected function getPreviousActions(Request $request): array
     {
-        $newIndex = 0;
-        $actions  = [];
-        /** @var array $oldActions */
-        $oldActions = \is_array($request->old('rule-action')) ? $request->old('rule-action') : [];
-        foreach ($oldActions as $index => $entry) {
-            $count   = ($newIndex + 1);
-            $checked = isset($request->old('rule-action-stop')[$index]) ? true : false;
-            try {
-                $actions[] = view(
-                    'rules.partials.action',
-                    [
-                        'oldAction'  => $entry,
-                        'oldValue'   => $request->old('rule-action-value')[$index],
-                        'oldChecked' => $checked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
-                Log::error($e->getTraceAsString());
+        $index    = 0;
+        $triggers = [];
+        $oldInput = $request->old('rule_actions');
+        if (\is_array($oldInput)) {
+            foreach ($oldInput as $oldAction) {
+                try {
+                    $triggers[] = view(
+                        'rules.partials.action',
+                        [
+                            'oldAction'  => $oldAction['name'],
+                            'oldValue'   => $oldAction['value'],
+                            'oldChecked' => 1 === (int)($oldAction['stop_processing'] ?? '0'),
+                            'count'      => $index + 1,
+                        ]
+                    )->render();
+                } catch (Throwable $e) {
+                    Log::debug(sprintf('Throwable was thrown in getPreviousActions(): %s', $e->getMessage()));
+                    Log::error($e->getTraceAsString());
+                }
+                $index++;
             }
-            // @codeCoverageIgnoreEnd
-            ++$newIndex;
         }
 
-        return $actions;
+        return $triggers;
     }
 
     /**
@@ -129,30 +125,27 @@ trait RuleManagement
      */
     protected function getPreviousTriggers(Request $request): array
     {
-        $newIndex = 0;
+        $index    = 0;
         $triggers = [];
-        /** @var array $oldTriggers */
-        $oldTriggers = \is_array($request->old('rule-trigger')) ? $request->old('rule-trigger') : [];
-        foreach ($oldTriggers as $index => $entry) {
-            $count      = ($newIndex + 1);
-            $oldChecked = isset($request->old('rule-trigger-stop')[$index]) ? true : false;
-            try {
-                $triggers[] = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $entry,
-                        'oldValue'   => $request->old('rule-trigger-value')[$index],
-                        'oldChecked' => $oldChecked,
-                        'count'      => $count,
-                    ]
-                )->render();
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $e) {
-                Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
-                Log::error($e->getTraceAsString());
+        $oldInput = $request->old('rule_triggers');
+        if (\is_array($oldInput)) {
+            foreach ($oldInput as $oldTrigger) {
+                try {
+                    $triggers[] = view(
+                        'rules.partials.trigger',
+                        [
+                            'oldTrigger' => $oldTrigger['name'],
+                            'oldValue'   => $oldTrigger['value'],
+                            'oldChecked' => 1 === (int)($oldTrigger['stop_processing'] ?? '0'),
+                            'count'      => $index + 1,
+                        ]
+                    )->render();
+                } catch (Throwable $e) {
+                    Log::debug(sprintf('Throwable was thrown in getPreviousTriggers(): %s', $e->getMessage()));
+                    Log::error($e->getTraceAsString());
+                }
+                $index++;
             }
-            // @codeCoverageIgnoreEnd
-            ++$newIndex;
         }
 
         return $triggers;

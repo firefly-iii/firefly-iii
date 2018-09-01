@@ -26,7 +26,7 @@ namespace FireflyIII\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
@@ -145,9 +145,9 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
-     * @return Collection
+     * @return int
      */
-    public function getJournals(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): Collection
+    public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int
     {
         $query = TransactionJournal
             ::leftJoin('journal_meta', 'journal_meta.transaction_journal_id', '=', 'transaction_journals.id')
@@ -162,7 +162,7 @@ class RecurringRepository implements RecurringRepositoryInterface
             $query->where('transaction_journals.date', '<=', $end->format('Y-m-d 00:00:00'));
         }
 
-        return $query->get(['transaction_journals.*']);
+        return $query->get(['transaction_journals.*'])->count();
     }
 
     /**
@@ -266,15 +266,15 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = ['id' => (int)$journalId];
         }
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($recurrence->user);
         $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
         // filter on specific journals.
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->setJournals(new Collection($search));
 
-        return $collector->getPaginatedJournals();
+        return $collector->getPaginatedTransactions();
     }
 
     /**
@@ -295,15 +295,15 @@ class RecurringRepository implements RecurringRepositoryInterface
         foreach ($journalMeta as $journalId) {
             $search[] = ['id' => (int)$journalId];
         }
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($recurrence->user);
         $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation();
         // filter on specific journals.
         $collector->removeFilter(InternalTransferFilter::class);
         $collector->setJournals(new Collection($search));
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**
@@ -375,7 +375,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         }
         if ('yearly' === $repetition->repetition_type) {
             //
-            $today       = Carbon::create()->endOfYear();
+            $today       = Carbon::now()->endOfYear();
             $repDate     = Carbon::createFromFormat('Y-m-d', $repetition->repetition_moment);
             $diffInYears = $today->diffInYears($repDate);
             $repDate->addYears($diffInYears); // technically not necessary.

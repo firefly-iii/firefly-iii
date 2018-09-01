@@ -25,6 +25,7 @@ namespace Tests\Unit\Factory;
 
 
 use FireflyIII\Factory\PiggyBankFactory;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -32,6 +33,16 @@ use Tests\TestCase;
  */
 class PiggyBankFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Put in ID, return it.
      *

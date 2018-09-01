@@ -25,7 +25,7 @@ namespace Tests\Feature\Controllers\Category;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -63,7 +63,7 @@ class NoCategoryControllerTest extends TestCase
     {
         Log::debug(sprintf('Test noCategory(%s)', $range));
         // mock stuff
-        $collector     = $this->mock(JournalCollectorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -78,8 +78,8 @@ class NoCategoryControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withoutCategory')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
@@ -104,7 +104,7 @@ class NoCategoryControllerTest extends TestCase
     {
         Log::debug('Test nocategoryAll()');
         // mock stuff
-        $collector     = $this->mock(JournalCollectorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -115,8 +115,8 @@ class NoCategoryControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withoutCategory')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
@@ -140,7 +140,7 @@ class NoCategoryControllerTest extends TestCase
     {
         Log::debug('Test nocategorydate()');
         // mock stuff
-        $collector     = $this->mock(JournalCollectorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -151,8 +151,8 @@ class NoCategoryControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withoutCategory')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();

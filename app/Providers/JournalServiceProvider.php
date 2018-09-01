@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
-use FireflyIII\Helpers\Collector\JournalCollector;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Foundation\Application;
@@ -57,10 +57,10 @@ class JournalServiceProvider extends ServiceProvider
     private function registerCollector(): void
     {
         $this->app->bind(
-            JournalCollectorInterface::class,
+            TransactionCollectorInterface::class,
             function (Application $app) {
-                /** @var JournalCollectorInterface $collector */
-                $collector = app(JournalCollector::class);
+                /** @var TransactionCollectorInterface $collector */
+                $collector = app(TransactionCollector::class);
                 if ($app->auth->check()) {
                     $collector->setUser(auth()->user());
                 }

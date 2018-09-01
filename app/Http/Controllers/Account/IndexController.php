@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -36,6 +37,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class IndexController extends Controller
 {
+    use BasicDataSupport;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -75,9 +77,18 @@ class IndexController extends Controller
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $collection   = $this->repository->getAccountsByType($types);
         $total        = $collection->count();
-        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
+
+        // sort collection:
+        $collection = $collection->sortBy(
+            function (Account $account) {
+                return ($account->active ? '0' : '1') . $account->name;
+            }
+        );
+
+
+        $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+        $accounts = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());
@@ -92,10 +103,13 @@ class IndexController extends Controller
 
         $accounts->each(
             function (Account $account) use ($activities, $startBalances, $endBalances) {
-                $account->lastActivityDate = $this->isInArray($activities, $account->id);
-                $account->startBalance     = $this->isInArray($startBalances, $account->id);
-                $account->endBalance       = $this->isInArray($endBalances, $account->id);
-                $account->difference       = bcsub($account->endBalance, $account->startBalance);
+                $account->lastActivityDate  = $this->isInArray($activities, $account->id);
+                $account->startBalance      = $this->isInArray($startBalances, $account->id);
+                $account->endBalance        = $this->isInArray($endBalances, $account->id);
+                $account->difference        = bcsub($account->endBalance, $account->startBalance);
+                $account->interest          = round($this->repository->getMetaValue($account, 'interest'), 6);
+                $account->interestPeriod    = (string)trans('firefly.interest_calc_' . $this->repository->getMetaValue($account, 'interest_period'));
+                $account->accountTypeString = (string)trans('firefly.account_type_' . $account->accountType->type);
             }
         );
 
@@ -104,25 +118,6 @@ class IndexController extends Controller
         $accounts->setPath(route('accounts.index', [$what]));
 
         return view('accounts.index', compact('what', 'subTitleIcon', 'subTitle', 'page', 'accounts'));
-    }
-
-
-    /**
-     * Find the ID in a given array. Return '0' of not there (amount).
-     *
-     * @param array $array
-     * @param int   $entryId
-     *
-     * @return null|mixed
-     */
-    protected function isInArray(array $array, int $entryId)
-    {
-        $result = '0';
-        if (isset($array[$entryId])) {
-            $result = $array[$entryId];
-        }
-
-        return $result;
     }
 
 

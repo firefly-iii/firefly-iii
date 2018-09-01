@@ -426,8 +426,8 @@
                             <div class="col-sm-10">
                                 <select id="link_type" class="form-control" name="link_type">
                                     {% for linkType in linkTypes %}
-                                        <option label="{{ linkType.inward }}" value="{{ linkType.id }}_inward">{{ linkType.inward }}</option>
-                                        <option label="{{ linkType.outward }}" value="{{ linkType.id }}_outward">{{ linkType.outward }}</option>
+                                        <option label="{{ journalLinkTranslation('inward', linkType.inward) }}" value="{{ linkType.id }}_inward">{{ journalLinkTranslation('inward', linkType.inward) }}</option>
+                                        <option label="{{ journalLinkTranslation('outward', linkType.outward) }}" value="{{ linkType.id }}_outward">{{ journalLinkTranslation('outward', linkType.outward) }}</option>
                                     {% endfor %}
                                 </select>
                             </div>

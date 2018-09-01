@@ -25,6 +25,8 @@ namespace FireflyIII\Models;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -60,16 +62,16 @@ class Tag extends Model
             'date'       => 'date',
             'zoomLevel'  => 'int',
         ];
-    /** @var array */
-    protected $dates = ['date'];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Tag
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Tag
     {
@@ -146,18 +148,18 @@ class Tag extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class);
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

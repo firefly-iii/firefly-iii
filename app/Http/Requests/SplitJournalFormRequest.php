@@ -95,7 +95,7 @@ class SplitJournalFormRequest extends Request
                 'foreign_currency_code' => null,
                 'reconciled'            => false,
                 'identifier'            => $index,
-                'currency_id'           => $this->integer('journal_currency_id'),
+                'currency_id'           => (int)$transaction['transaction_currency_id'],
                 'currency_code'         => null,
                 'description'           => $transaction['transaction_description'] ?? '',
                 'amount'                => $transaction['amount'] ?? '',

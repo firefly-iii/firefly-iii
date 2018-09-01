@@ -101,7 +101,7 @@ class RuleController extends Controller
 
         // make paginator:
         $paginator = new LengthAwarePaginator($rules, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.piggy_banks.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.rules.index') . $this->buildParams());
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

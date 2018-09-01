@@ -22,11 +22,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers;
 
-use Carbon\Carbon;
 use FireflyIII\Http\Requests\NewUserFormRequest;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\CreateStuff;
 use View;
 
 /**
@@ -34,6 +33,7 @@ use View;
  */
 class NewUserController extends Controller
 {
+    use CreateStuff;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -120,87 +120,4 @@ class NewUserController extends Controller
         return redirect(route('index'));
     }
 
-    /**
-     * Creates an asset account.
-     *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
-    private function createAssetAccount(NewUserFormRequest $request, TransactionCurrency $currency): bool
-    {
-        $assetAccount = [
-            'name'               => $request->get('bank_name'),
-            'iban'               => null,
-            'accountType'        => 'asset',
-            'virtualBalance'     => 0,
-            'account_type_id'    => null,
-            'active'             => true,
-            'accountRole'        => 'defaultAsset',
-            'openingBalance'     => $request->input('bank_balance'),
-            'openingBalanceDate' => new Carbon,
-            'currency_id'        => $currency->id,
-        ];
-
-        $this->repository->store($assetAccount);
-
-        return true;
-    }
-
-    /**
-     * Creates a cash wallet.
-     *
-     * @param TransactionCurrency $currency
-     * @param string              $language
-     *
-     * @return bool
-     */
-    private function createCashWalletAccount(TransactionCurrency $currency, string $language): bool
-    {
-        $assetAccount = [
-            'name'               => (string)trans('firefly.cash_wallet', [], $language),
-            'iban'               => null,
-            'accountType'        => 'asset',
-            'virtualBalance'     => 0,
-            'account_type_id'    => null,
-            'active'             => true,
-            'accountRole'        => 'cashWalletAsset',
-            'openingBalance'     => null,
-            'openingBalanceDate' => null,
-            'currency_id'        => $currency->id,
-        ];
-
-        $this->repository->store($assetAccount);
-
-        return true;
-    }
-
-    /**
-     * Create a savings account.
-     *
-     * @param NewUserFormRequest  $request
-     * @param TransactionCurrency $currency
-     * @param string              $language
-     *
-     * @return bool
-     */
-    private function createSavingsAccount(NewUserFormRequest $request, TransactionCurrency $currency, string $language): bool
-    {
-        $savingsAccount = [
-            'name'               => (string)trans('firefly.new_savings_account', ['bank_name' => $request->get('bank_name')], $language),
-            'iban'               => null,
-            'accountType'        => 'asset',
-            'account_type_id'    => null,
-            'virtualBalance'     => 0,
-            'active'             => true,
-            'accountRole'        => 'savingAsset',
-            'openingBalance'     => $request->input('savings_balance'),
-            'openingBalanceDate' => new Carbon,
-            'currency_id'        => $currency->id,
-        ];
-        $this->repository->store($savingsAccount);
-
-        return true;
-    }
 }

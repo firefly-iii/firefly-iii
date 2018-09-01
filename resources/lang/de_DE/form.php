@@ -50,8 +50,9 @@ return [
     'source_account'              => 'Quellkonto',
     'destination_account'         => 'Zielkonto',
     'journal_destination_id'      => 'Anlagenkonto (Ziel)',
-    'asset_destination_account'   => 'Bestandskonto (Ziel)',
-    'asset_source_account'        => 'Bestandskonto (Quelle)',
+    'asset_destination_account'   => 'Zielkonto',
+    'include_net_worth'           => 'Im Nettovermögen enthalten',
+    'asset_source_account'        => 'Quellkonto',
     'journal_description'         => 'Beschreibung',
     'note'                        => 'Notizen',
     'split_journal'               => 'Diese Überweisung aufteilen',
@@ -84,6 +85,9 @@ return [
     'verification'                => 'Bestätigung',
     'api_key'                     => 'API-Schlüssel',
     'remember_me'                 => 'Angemeldet bleiben',
+    'liability_type_id'           => 'Haftungsart',
+    'interest'                    => 'Zinsen',
+    'interest_period'             => 'Verzinsungszeitraum',
 
     'source_account_asset'        => 'Quellkonto (Bestandskonto)',
     'destination_account_expense' => 'Zielkonto (Unkostenkonto)',
@@ -237,5 +241,6 @@ return [
     'repetitions'             => 'Wiederholungen',
     'calendar'                => 'Kalender',
     'weekend'                 => 'Wochenende',
+    'client_secret'           => 'Kundengeheimnis',
 
 ];

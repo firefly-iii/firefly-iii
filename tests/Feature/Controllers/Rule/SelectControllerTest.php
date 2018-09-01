@@ -103,9 +103,11 @@ class SelectControllerTest extends TestCase
     public function testTestTriggers(): void
     {
         $data = [
-            'rule-trigger'       => ['description_is'],
-            'rule-trigger-value' => ['Bla bla'],
-            'rule-trigger-stop'  => ['1'],
+            'rule_triggers' => [
+                'name'            => 'description',
+                'value'           => 'Bla bla',
+                'stop_processing' => 1,
+            ],
         ];
 
         // mock stuff
@@ -113,6 +115,7 @@ class SelectControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
+        $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
         $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
@@ -165,9 +168,11 @@ class SelectControllerTest extends TestCase
     public function testTestTriggersMax(): void
     {
         $data = [
-            'rule-trigger'       => ['description_is'],
-            'rule-trigger-value' => ['Bla bla'],
-            'rule-trigger-stop'  => ['1'],
+            'rule_triggers' => [
+                'name'            => 'description',
+                'value'           => 'Bla bla',
+                'stop_processing' => 1,
+            ],
         ];
         $set  = factory(Transaction::class, 10)->make();
 
@@ -175,6 +180,8 @@ class SelectControllerTest extends TestCase
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
 
         $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();

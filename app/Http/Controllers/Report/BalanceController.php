@@ -27,6 +27,8 @@ use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class BalanceController.
@@ -42,7 +44,6 @@ class BalanceController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function general(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -58,8 +59,12 @@ class BalanceController extends Controller
         }
         $helper  = app(BalanceReportHelperInterface::class);
         $balance = $helper->getBalanceReport($accounts, $start, $end);
-
-        $result = view('reports.partials.balance', compact('balance'))->render();
+        try {
+            $result = view('reports.partials.balance', compact('balance'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.balance: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         $cache->store($result);
 
         return $result;

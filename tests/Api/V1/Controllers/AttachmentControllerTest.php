@@ -199,7 +199,6 @@ class AttachmentControllerTest extends TestCase
         // test API
         $response = $this->get('/api/v1/attachments/' . $attachment->id);
         $response->assertStatus(200);
-        $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'attachments', 'links' => true],]);
         $response->assertSee($attachment->filename); // attachment file name
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -210,6 +209,7 @@ class AttachmentControllerTest extends TestCase
      * Store a new attachment.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AttachmentController
+     * @covers \FireflyIII\Api\V1\Requests\AttachmentRequest
      */
     public function testStore(): void
     {

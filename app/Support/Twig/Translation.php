@@ -70,6 +70,7 @@ class Translation extends Twig_Extension
             function (string $direction, string $original) {
                 $key         = sprintf('firefly.%s_%s', $original, $direction);
                 $translation = trans($key);
+
                 if ($key === $translation) {
                     return $original;
                 }

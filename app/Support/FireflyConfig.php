@@ -118,9 +118,11 @@ class FireflyConfig
     public function set(string $name, $value): Configuration
     {
         Log::debug('Set new value for ', ['name' => $name]);
+        /** @var Configuration $config */
         $config = Configuration::whereName($name)->first();
         if (null === $config) {
             Log::debug('Does not exist yet ', ['name' => $name]);
+            /** @var Configuration $item */
             $item       = new Configuration;
             $item->name = $name;
             $item->data = $value;
@@ -130,7 +132,7 @@ class FireflyConfig
 
             return $item;
         }
-        Log::debug('Exists already ', ['name' => $name]);
+        Log::debug('Exists already, overwrite value.', ['name' => $name]);
         $config->data = $value;
         $config->save();
         Cache::forget('ff-config-' . $name);

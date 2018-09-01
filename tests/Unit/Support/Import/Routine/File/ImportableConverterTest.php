@@ -146,9 +146,10 @@ class ImportableConverterTest extends TestCase
 
         $assetMapper->shouldReceive('map')->once()->withArgs([null, $nullAccount])->andReturn($asset);
         $opposingMapper->shouldReceive('map')->once()->withArgs([null, '45.67', $nullAccount])->andReturn($other);
+
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn(null);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
-        $currencyMapper->shouldReceive('map')->times(2)->withArgs([$euro->id, []])->andReturn($euro);
+        $currencyMapper->shouldReceive('map')->times(1)->withArgs([$euro->id, []])->andReturn($euro);
 
 
         $converter = new ImportableConverter;

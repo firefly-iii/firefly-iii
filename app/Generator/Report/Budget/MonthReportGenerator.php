@@ -27,7 +27,7 @@ namespace FireflyIII\Generator\Report\Budget;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
@@ -35,9 +35,12 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
+use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ *
+ * @codeCoverageIgnore
  */
 class MonthReportGenerator extends Support implements ReportGeneratorInterface
 {
@@ -64,7 +67,6 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      * Generates the report.
      *
      * @return string
-     * @throws \Throwable
      */
     public function generate(): string
     {
@@ -77,11 +79,18 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $topExpenses     = $this->getTopExpenses();
 
         // render!
-        return view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
-            ->with('start', $this->start)->with('end', $this->end)
-            ->with('budgets', $this->budgets)
-            ->with('accounts', $this->accounts)
-            ->render();
+        try {
+            $result = view('reports.budget.month', compact('accountIds', 'budgetIds', 'accountSummary', 'budgetSummary', 'averageExpenses', 'topExpenses'))
+                ->with('start', $this->start)->with('end', $this->end)
+                ->with('budgets', $this->budgets)
+                ->with('accounts', $this->accounts)
+                ->render();
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
+            $result = 'Could not render report view.';
+        }
+
+        return $result;
     }
 
     /**
@@ -189,8 +198,8 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             return $this->expenses;
         }
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
                   ->setTypes([TransactionType::WITHDRAWAL])
                   ->setBudgets($this->budgets)->withOpposingAccount();
@@ -199,7 +208,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(PositiveAmountFilter::class);
 
-        $transactions   = $collector->getJournals();
+        $transactions   = $collector->getTransactions();
         $this->expenses = $transactions;
 
         return $transactions;

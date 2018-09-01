@@ -25,6 +25,7 @@ namespace Tests\Unit\Factory;
 
 
 use FireflyIII\Factory\TagFactory;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -32,6 +33,16 @@ use Tests\TestCase;
  */
 class TagFactoryTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Factory\TagFactory
      */

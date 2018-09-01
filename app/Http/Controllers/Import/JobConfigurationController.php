@@ -24,9 +24,9 @@ namespace FireflyIII\Http\Controllers\Import;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Import\JobConfiguration\JobConfigurationInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\CreateStuff;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\MessageBag;
@@ -37,6 +37,7 @@ use Log;
  */
 class JobConfigurationController extends Controller
 {
+    use CreateStuff;
     /** @var ImportJobRepositoryInterface The import job repository */
     public $repository;
 
@@ -87,7 +88,7 @@ class JobConfigurationController extends Controller
         if (!(bool)config(sprintf('import.has_job_config.%s', $importProvider))) {
             // @codeCoverageIgnoreStart
             Log::debug('Job needs no config, is ready to run!');
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
             // @codeCoverageIgnoreEnd
@@ -96,7 +97,7 @@ class JobConfigurationController extends Controller
         $configurator = $this->makeConfigurator($importJob);
         if ($configurator->configurationComplete()) {
             Log::debug('Config is complete, set status to ready_to_run.');
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
         }
@@ -136,7 +137,7 @@ class JobConfigurationController extends Controller
 
         // is the job already configured?
         if ($configurator->configurationComplete()) {
-            $this->repository->updateStatus($importJob, 'ready_to_run');
+            $this->repository->setStatus($importJob, 'ready_to_run');
 
             return redirect(route('import.job.status.index', [$importJob->key]));
         }
@@ -161,27 +162,5 @@ class JobConfigurationController extends Controller
         return redirect(route('import.job.configuration.index', [$importJob->key]));
     }
 
-    /**
-     * Make a configurator object.
-     *
-     * @param ImportJob $importJob
-     *
-     * @return JobConfigurationInterface
-     *
-     * @throws FireflyException
-     */
-    private function makeConfigurator(ImportJob $importJob): JobConfigurationInterface
-    {
-        $key       = sprintf('import.configuration.%s', $importJob->provider);
-        $className = (string)config($key);
-        if (null === $className || !class_exists($className)) {
-            throw new FireflyException(sprintf('Cannot find configurator class for job with provider "%s".', $importJob->provider)); // @codeCoverageIgnore
-        }
-        Log::debug(sprintf('Going to create class "%s"', $className));
-        /** @var JobConfigurationInterface $configurator */
-        $configurator = app($className);
-        $configurator->setImportJob($importJob);
 
-        return $configurator;
-    }
 }

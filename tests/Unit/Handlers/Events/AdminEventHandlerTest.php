@@ -31,15 +31,24 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
 use Mockery;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class AdminEventHandlerTest
  */
 class AdminEventHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
+    }
+
 
     /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler::sendTestMessage
+     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
      * @covers \FireflyIII\Events\AdminRequestedTestMessage
      */
     public function testSendNoMessage(): void
@@ -55,7 +64,7 @@ class AdminEventHandlerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Handlers\Events\AdminEventHandler::sendTestMessage
+     * @covers \FireflyIII\Handlers\Events\AdminEventHandler
      * @covers \FireflyIII\Events\AdminRequestedTestMessage
      */
     public function testSendTestMessage(): void
@@ -77,6 +86,6 @@ class AdminEventHandlerTest extends TestCase
         }
         );
 
-    }
 
+    }
 }

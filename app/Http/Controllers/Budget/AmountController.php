@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
@@ -36,6 +36,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class AmountController
@@ -80,23 +81,33 @@ class AmountController extends Controller
      */
     public function amount(Request $request, BudgetRepositoryInterface $repository, Budget $budget): JsonResponse
     {
-        $amount        = (string)$request->get('amount');
-        $start         = Carbon::createFromFormat('Y-m-d', $request->get('start'));
-        $end           = Carbon::createFromFormat('Y-m-d', $request->get('end'));
-        $budgetLimit   = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
-        $spent         = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
-        $currency      = app('amount')->getDefaultCurrency();
-        $left          = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
-        $largeDiff     = false;
-        $warnText      = '';
-        $leftPerDay    = null;
-        $periodLength  = $start->diffInDays($end);
-        $dayDifference = $this->getDayDifference($start, $end);
+        // grab vars from URI
+        $amount = (string)$request->get('amount');
+        $start  = Carbon::createFromFormat('Y-m-d', $request->get('start'));
+        $end    = Carbon::createFromFormat('Y-m-d', $request->get('end'));
+
+        // grab other useful vars
+        $currency       = app('amount')->getDefaultCurrency();
+        $activeDaysLeft = $this->activeDaysLeft($start, $end);
+        $periodLength   = $start->diffInDays($end) + 1; // absolute period length.
+
+        // update limit amount:
+        $budgetLimit = $this->repository->updateLimitAmount($budget, $start, $end, $amount);
+
+        // calculate what the user has spent in current period.
+        $spent = $repository->spentInPeriod(new Collection([$budget]), new Collection, $start, $end);
+
+        // given the new budget, this is what they have left (and left per day?)
+        $left       = app('amount')->formatAnything($currency, bcadd($amount, $spent), true);
+        $leftPerDay = null; //
 
         // If the user budgets ANY amount per day for this budget (anything but zero) Firefly III calculates how much he could spend per day.
         if (1 === bccomp(bcadd($amount, $spent), '0')) {
-            $leftPerDay = app('amount')->formatAnything($currency, bcdiv(bcadd($amount, $spent), (string)$dayDifference), true);
+            $leftPerDay = app('amount')->formatAnything($currency, bcdiv(bcadd($amount, $spent), (string)$activeDaysLeft), true);
         }
+
+        $largeDiff = false;
+        $warnText  = '';
 
         // Get the average amount of money the user budgets for this budget. And calculate the same for the current amount.
         // If the difference is very large, give the user a notification.
@@ -116,8 +127,17 @@ class AmountController extends Controller
         app('preferences')->mark();
 
         return response()->json(
-            ['left'    => $left, 'name' => $budget->name, 'limit' => $budgetLimit ? $budgetLimit->id : 0, 'amount' => $amount, 'current' => $current,
-             'average' => $average, 'large_diff' => $largeDiff, 'left_per_day' => $leftPerDay, 'warn_text' => $warnText,]
+            [
+                'left'         => $left,
+                'name'         => $budget->name,
+                'limit'        => $budgetLimit ? $budgetLimit->id : 0,
+                'amount'       => $amount,
+                'current'      => $current,
+                'average'      => $average,
+                'large_diff'   => $largeDiff,
+                'left_per_day' => $leftPerDay,
+                'warn_text'    => $warnText,
+            ]
         );
     }
 
@@ -141,27 +161,36 @@ class AmountController extends Controller
         $average            = $this->repository->getAverageAvailable($start, $end);
         $available          = bcmul($average, (string)$daysInPeriod);
 
+        Log::debug(sprintf('Average is %s, so total available is %s because days is %d.', $average, $available, $daysInPeriod));
+
         // amount earned in this period:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-        $earned = (string)$collector->getJournals()->sum('transaction_amount');
+        $earned = (string)$collector->getTransactions()->sum('transaction_amount');
         // Total amount earned divided by the number of days in the whole search period is the average amount earned per day.
         // This is multiplied by the number of days in the current period, showing you the average.
         $earnedAverage = bcmul(bcdiv($earned, (string)$daysInSearchPeriod), (string)$daysInPeriod);
 
+        Log::debug(sprintf('Earned is %s, earned average is %s', $earned, $earnedAverage));
+
         // amount spent in period
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-        $spent        = (string)$collector->getJournals()->sum('transaction_amount');
+        $spent        = (string)$collector->getTransactions()->sum('transaction_amount');
         $spentAverage = app('steam')->positive(bcmul(bcdiv($spent, (string)$daysInSearchPeriod), (string)$daysInPeriod));
+
+        Log::debug(sprintf('Spent is %s, spent average is %s', $earned, $earnedAverage));
 
         // the default suggestion is the money the user has spent, on average, over this period.
         $suggested = $spentAverage;
 
+        Log::debug(sprintf('Suggested is now %s (spent average)',$suggested));
+
         // if the user makes less per period, suggest that amount instead.
         if (1 === bccomp($spentAverage, $earnedAverage)) {
+            Log::debug(sprintf('Because earned average (%s) is less than spent average (%s) will suggest earned average instead.', $earnedAverage, $spentAverage));
             $suggested = $earnedAverage;
         }
 

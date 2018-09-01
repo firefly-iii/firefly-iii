@@ -64,7 +64,7 @@ class ReportControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::accountReport()
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testAccountReport(): void
     {
@@ -88,7 +88,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::auditReport
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testAuditReport(): void
     {
@@ -110,7 +110,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::budgetReport
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testBudgetReport(): void
     {
@@ -132,7 +132,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::categoryReport
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testCategoryReport(): void
     {
@@ -154,7 +154,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::defaultReport
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testDefaultReport(): void
     {
@@ -175,7 +175,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::defaultReport
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testDefaultReportBadDate(): void
     {
@@ -192,8 +192,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::index
-     * @covers \FireflyIII\Http\Controllers\ReportController::__construct
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testIndex(): void
     {
@@ -214,8 +213,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::options
-     * @covers \FireflyIII\Http\Controllers\ReportController::noReportOptions
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testOptions(): void
     {
@@ -230,8 +228,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::options
-     * @covers \FireflyIII\Http\Controllers\ReportController::accountReportOptions()
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testOptionsAccount(): void
     {
@@ -254,8 +251,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::options
-     * @covers \FireflyIII\Http\Controllers\ReportController::budgetReportOptions
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testOptionsBudget(): void
     {
@@ -274,8 +270,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::options
-     * @covers \FireflyIII\Http\Controllers\ReportController::categoryReportOptions
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testOptionsCategory(): void
     {
@@ -293,8 +288,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::options
-     * @covers \FireflyIII\Http\Controllers\ReportController::tagReportOptions
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testOptionsTag(): void
     {
@@ -312,7 +306,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexAccountOK(): void
@@ -339,7 +333,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexAuditOK(): void
@@ -365,7 +359,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexBudgetError(): void
@@ -394,7 +388,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexBudgetOK(): void
@@ -423,7 +417,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexCategoryError(): void
@@ -452,7 +446,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexCategoryOK(): void
@@ -480,7 +474,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexDefaultOK(): void
@@ -506,7 +500,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexDefaultStartEnd(): void
@@ -532,7 +526,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexTagError(): void
@@ -560,7 +554,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexTagOK(): void
@@ -570,6 +564,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        /** @var Tag $tag */
         $tag              = $this->user()->tags()->find(1);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -585,11 +580,11 @@ class ReportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('reports.index.post'), $data);
         $response->assertStatus(302);
-        $response->assertRedirect(route('reports.report.tag', ['1', $tag->tag, '20160101', '20160131']));
+        $response->assertRedirect(route('reports.report.tag', ['1', $tag->id, '20160101', '20160131']));
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\ReportController::postIndex
+     * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
     public function testPostIndexZeroAccounts(): void
@@ -615,7 +610,7 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ReportController::tagReport
+     * @covers \FireflyIII\Http\Controllers\ReportController
      */
     public function testTagReport(): void
     {

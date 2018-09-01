@@ -27,6 +27,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class OperationsController.
@@ -38,7 +40,7 @@ class OperationsController extends Controller
     private $tasker;
 
     /**
-     *
+     * OperationsController constructor.
      */
     public function __construct()
     {
@@ -63,7 +65,6 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function expenses(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -78,7 +79,12 @@ class OperationsController extends Controller
         }
         $entries = $this->tasker->getExpenseReport($start, $end, $accounts);
         $type    = 'expense-entry';
-        $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+        try {
+            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         $cache->store($result);
 
         return $result;
@@ -92,7 +98,6 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return string
-     * @throws \Throwable
      */
     public function income(Collection $accounts, Carbon $start, Carbon $end): string
     {
@@ -107,7 +112,12 @@ class OperationsController extends Controller
         }
         $entries = $this->tasker->getIncomeReport($start, $end, $accounts);
         $type    = 'income-entry';
-        $result  = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+        try {
+            $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
 
         $cache->store($result);
 
@@ -122,7 +132,6 @@ class OperationsController extends Controller
      * @param Carbon     $end
      *
      * @return mixed|string
-     * @throws \Throwable
      */
     public function operations(Collection $accounts, Carbon $start, Carbon $end)
     {
@@ -155,8 +164,12 @@ class OperationsController extends Controller
                 $expenses
             )
         );
-
-        $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
+        try {
+            $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
+            $result = 'Could not render view.';
+        }
         $cache->store($result);
 
         return $result;

@@ -32,6 +32,8 @@ use Log;
  * This filter removes any filters that are from A to B or from B to A given a set of
  * account id's (in $parameters) where A and B are mentioned. So transfers between the mentioned
  * accounts will be removed.
+ *
+ * @codeCoverageIgnore
  */
 class InternalTransferFilter implements FilterInterface
 {

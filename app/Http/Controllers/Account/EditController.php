@@ -27,6 +27,7 @@ namespace FireflyIII\Http\Controllers\Account;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Http\Request;
@@ -85,6 +86,26 @@ class EditController extends Controller
             $roles[$role] = (string)trans('firefly.account_role_' . $role);
         }
 
+        // types of liability:
+        $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
+        $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
+        $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
+        $creditCard     = $this->repository->getAccountTypeByType(AccountType::CREDITCARD);
+        $liabilityTypes = [
+            $debt->id       => (string)trans('firefly.account_type_' . AccountType::DEBT),
+            $loan->id       => (string)trans('firefly.account_type_' . AccountType::LOAN),
+            $mortgage->id   => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
+            $creditCard->id => (string)trans('firefly.account_type_' . AccountType::CREDITCARD),
+        ];
+        asort($liabilityTypes);
+
+        // interest calculation periods:
+        $interestPeriods = [
+            'daily'   => (string)trans('firefly.interest_calc_daily'),
+            'monthly' => (string)trans('firefly.interest_calc_monthly'),
+            'yearly'  => (string)trans('firefly.interest_calc_yearly'),
+        ];
+
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('accounts.edit.fromUpdate')) {
             $this->rememberPreviousUri('accounts.edit.uri');
@@ -95,6 +116,11 @@ class EditController extends Controller
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
         $default              = app('amount')->getDefaultCurrency();
         $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
+
+        // include this account in net-worth charts?
+        $includeNetWorth = $repository->getMetaValue($account, 'include_net_worth');
+        $includeNetWorth = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+
         if (null === $currency) {
             $currency = $default;
         }
@@ -108,16 +134,25 @@ class EditController extends Controller
             'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
             'BIC'                  => $repository->getMetaValue($account, 'BIC'),
             'openingBalanceDate'   => $openingBalanceDate,
+            'liability_type_id'    => $account->account_type_id,
             'openingBalance'       => $openingBalanceAmount,
             'virtualBalance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
+            'include_net_worth'    => $includeNetWorth,
+            'interest'             => $repository->getMetaValue($account, 'interest'),
+            'interest_period'      => $repository->getMetaValue($account, 'interest_period'),
             'notes'                => $this->repository->getNoteText($account),
             'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
+        if ('liabilities' === $what) {
+            $preFilled['openingBalance'] = bcmul($preFilled['openingBalance'], '-1');
+        }
 
         $request->session()->flash('preFilled', $preFilled);
 
-        return view('accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled'));
+        return view(
+            'accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods')
+        );
     }
 
 

@@ -24,6 +24,7 @@ namespace FireflyIII\Models;
 
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -37,7 +38,11 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  */
 class ExportJob extends Model
 {
-    /** @var array */
+    /**
+     * The attributes that should be casted to native types.
+     *
+     * @var array
+     */
     protected $casts
         = [
             'created_at' => 'datetime',
@@ -45,6 +50,8 @@ class ExportJob extends Model
         ];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return ExportJob
@@ -67,9 +74,12 @@ class ExportJob extends Model
     }
 
     /**
-     * @codeCoverageIgnore
+     * Change the status of this export job.
      *
      * @param $status
+     *
+     * @deprecated
+     * @codeCoverageIgnore
      */
     public function change($status): void
     {
@@ -78,10 +88,13 @@ class ExportJob extends Model
     }
 
     /**
+     * Returns the user this objects belongs to.
+     *
+     *
+     * @return BelongsTo
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }

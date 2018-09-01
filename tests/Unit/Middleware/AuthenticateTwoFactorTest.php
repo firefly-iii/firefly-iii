@@ -36,7 +36,7 @@ use Tests\TestCase;
 class AuthenticateTwoFactorTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
+     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
     public function testMiddleware(): void
     {
@@ -54,7 +54,7 @@ class AuthenticateTwoFactorTest extends TestCase
      * cookie     : false
      *
      *
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
+     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
     public function testMiddlewareNoTwoFA(): void
     {
@@ -85,7 +85,7 @@ class AuthenticateTwoFactorTest extends TestCase
      * cookie     : false
      *
      *
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
+     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
     public function testMiddlewareTwoFAAuthed(): void
     {
@@ -118,7 +118,7 @@ class AuthenticateTwoFactorTest extends TestCase
      * cookie     : false
      *
      *
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
+     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
     public function testMiddlewareTwoFANoSecret(): void
     {
@@ -149,7 +149,7 @@ class AuthenticateTwoFactorTest extends TestCase
      * cookie     : false
      *
      *
-     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor::handle
+     * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
     public function testMiddlewareTwoFASecret(): void
     {

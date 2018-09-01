@@ -60,7 +60,7 @@ interface TagRepositoryInterface
      *
      * @return Tag|null
      */
-    public function findByTag(string $tag):?Tag;
+    public function findByTag(string $tag): ?Tag;
 
     /**
      * @param int $tagId

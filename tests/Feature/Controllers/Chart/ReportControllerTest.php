@@ -23,11 +23,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Log;
 use Steam;
 use Tests\TestCase;
-
+use Mockery;
 /**
  * Class ReportControllerTest
  */
@@ -47,13 +48,25 @@ class ReportControllerTest extends TestCase
      */
     public function testNetWorth(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        // mock calls:
+        $accountRepos->shouldReceive('setUser');
+
+        $accountRepos->shouldReceive('getMetaValue')->times(2)
+            ->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1','0');
+        $accountRepos->shouldReceive('getMetaValue')
+                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn(1);
+        $accountRepos->shouldReceive('getMetaValue')
+                     ->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
+
 
         Steam::shouldReceive('balancesByAccounts')->andReturn(['5', '10']);
-        $generator->shouldReceive('singleSet')->andReturn([]);
+        $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
-        $response = $this->get(route('chart.report.net-worth', [1, '20120101', '20120131']));
+        $response = $this->get(route('chart.report.net-worth', ['1,2', '20120101', '20120131']));
         $response->assertStatus(200);
     }
 

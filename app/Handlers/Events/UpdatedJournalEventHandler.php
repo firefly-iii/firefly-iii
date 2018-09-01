@@ -33,19 +33,6 @@ use FireflyIII\TransactionRules\Processor;
  */
 class UpdatedJournalEventHandler
 {
-    /** @var RuleGroupRepositoryInterface The rule group repository */
-    public $repository;
-
-    /**
-     * StoredJournalEventHandler constructor.
-     *
-     * @param RuleGroupRepositoryInterface $ruleGroupRepository
-     */
-    public function __construct(RuleGroupRepositoryInterface $ruleGroupRepository)
-    {
-        $this->repository = $ruleGroupRepository;
-    }
-
     /**
      * This method will check all the rules when a journal is updated.
      *
@@ -58,14 +45,21 @@ class UpdatedJournalEventHandler
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         $journal = $updatedJournalEvent->journal;
-        $groups  = $this->repository->getActiveGroups($journal->user);
+
+        /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
+        $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
+        $ruleGroupRepos->setUser($journal->user);
+
+        $groups  = $ruleGroupRepos->getActiveGroups($journal->user);
 
         /** @var RuleGroup $group */
         foreach ($groups as $group) {
-            $rules = $this->repository->getActiveUpdateRules($group);
+            $rules = $ruleGroupRepos->getActiveUpdateRules($group);
             /** @var Rule $rule */
             foreach ($rules as $rule) {
-                $processor = Processor::make($rule);
+                /** @var Processor $processor */
+                $processor = app(Processor::class);
+                $processor->make($rule);
                 $processor->handleTransactionJournal($journal);
 
                 if ($rule->stop_processing) {

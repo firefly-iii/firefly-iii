@@ -50,7 +50,7 @@ return [
     'at_least_one_action'            => 'Une règle doit avoir au moins une action.',
     'base64'                         => 'Il ne s\'agit pas de données base64 valides.',
     'model_id_invalid'               => 'L’ID fournit ne semble pas valide pour ce modèle.',
-    'more'                           => ':attribute doit être supérieur à :value.',
+    'more'                           => ':attribute doit être supérieur à zéro.',
     'less'                           => ':attribute doit être inférieur à 10 000 000',
     'active_url'                     => 'Le champ :attribute n\'est pas une URL valide.',
     'after'                          => 'Le champ :attribute doit être une date postérieure à :date.',

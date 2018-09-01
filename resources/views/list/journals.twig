@@ -28,7 +28,7 @@
     </thead>
     <tbody>
     {% for transaction in transactions %}
-        {% include 'partials.transaction-row' %}
+        {% include 'partials.journal-row' %}
     {% endfor %}
     </tbody>
 </table>
@@ -52,8 +52,9 @@
             <a href="#" class="btn btn-default mass_select"><i class="fa fa-fw fa-check-square-o"></i> {{ 'select_transactions'|_ }}</a>
             <a href="#" class="btn btn-default mass_stop_select" style="display:none;"><i class="fa faw-fw fa-square-o"
                 ></i> {{ 'stop_selection'|_ }}</a>
+
             {% if showReconcile == true %}
-                {% if moment == 'all' %}
+                {% if Route.getCurrentRoute.getName =='accounts.show.all' %}
                     <a href="{{ route('accounts.reconcile', [account.id, start.format('Ymd')]) }}" class="btn btn-info mass_reconcile"><i
                                 class="fa fa-fw fa-check"></i> {{ 'reconcile_this_account'|_ }}</a>
                 {% else %}

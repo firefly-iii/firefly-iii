@@ -33,7 +33,7 @@ use Tests\TestCase;
 class HasAnyCategoryTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory
      */
     public function testTriggered(): void
     {
@@ -49,7 +49,7 @@ class HasAnyCategoryTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory
      */
     public function testTriggeredNot(): void
     {
@@ -69,7 +69,7 @@ class HasAnyCategoryTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory
      */
     public function testTriggeredTransactions(): void
     {
@@ -98,7 +98,7 @@ class HasAnyCategoryTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\HasAnyCategory
      */
     public function testWillMatchEverything(): void
     {

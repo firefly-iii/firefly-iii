@@ -62,7 +62,7 @@ class Preferences
         try {
             Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
         } catch (Exception $e) {
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not delete preference: %s', $e->getMessage()));
             // don't care.
         }
 
@@ -171,10 +171,8 @@ class Preferences
         if (\is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
-        $hash = md5($lastActivity);
-        Log::debug(sprintf('Value of last activity is %s, hash is %s', $lastActivity, $hash));
 
-        return $hash;
+        return md5($lastActivity);
     }
 
     /**

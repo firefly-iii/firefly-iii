@@ -25,13 +25,11 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use Exception;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Log;
 
 /**
  *
@@ -58,6 +56,7 @@ class IndexController extends Controller
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
                 $this->repository = app(BudgetRepositoryInterface::class);
+                $this->repository->cleanupBudgets();
 
                 return $next($request);
             }
@@ -69,74 +68,67 @@ class IndexController extends Controller
      * Show all budgets.
      *
      * @param Request     $request
-     * @param string|null $moment
+     *
+     * @param Carbon|null $start
+     * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function index(Request $request, string $moment = null)
+    public function index(Request $request, Carbon $start = null, Carbon $end = null)
     {
-        /** @var string $range */
-        $range    = app('preferences')->get('viewRange', '1M')->data;
-        /** @var Carbon $start */
-        $start    = session('start', new Carbon);
-        /** @var Carbon $end */
-        $end      = session('end', new Carbon);
-        $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $moment   = $moment ?? '';
+        // collect some basic vars:
+        $range           = app('preferences')->get('viewRange', '1M')->data;
+        $start           = $start ?? session('start', Carbon::now()->startOfMonth());
+        $end             = $end ?? app('navigation')->endOfPeriod($start, $range);
+        $page            = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize        = (int)app('preferences')->get('listPageSize', 50)->data;
+        $defaultCurrency = app('amount')->getDefaultCurrency();
 
-        // make date if the data is given.
-        if ('' !== (string)$moment) {
-            try {
-                $start = new Carbon($moment);
-                /** @var Carbon $end */
-                $end   = app('navigation')->endOfPeriod($start, $range);
-            } catch (Exception $e) {
-                // start and end are already defined.
-                Log::debug(sprintf('start and end are already defined: %s', $e->getMessage()));
-            }
-        }
-
-        // if today is between start and end, use the diff in days between end and today (days left)
-        // otherwise, use diff between start and end.
-        $dayDifference = $this->getDayDifference($start, $end);
-
+        // make the next and previous period, and calculate the periods used for period navigation
         $next = clone $end;
         $next->addDay();
         $prev = clone $start;
         $prev->subDay();
-        $prev = app('navigation')->startOfPeriod($prev, $range);
-        $this->repository->cleanupBudgets();
-        $daysPassed        = $this->getDaysPassedInPeriod($start, $end);
-        $allBudgets        = $this->repository->getActiveBudgets();
-        $total             = $allBudgets->count();
-        $budgets           = $allBudgets->slice(($page - 1) * $pageSize, $pageSize);
-        $inactive          = $this->repository->getInactiveBudgets();
-        $periodStart       = $start->formatLocalized($this->monthAndDayFormat);
-        $periodEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $budgetInformation = $this->repository->collectBudgetInformation($allBudgets, $start, $end);
-        $defaultCurrency   = app('amount')->getDefaultCurrency();
-        $available         = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
-        $spent             = array_sum(array_column($budgetInformation, 'spent'));
-        $budgeted          = array_sum(array_column($budgetInformation, 'budgeted'));
-        $previousLoop      = $this->getPreviousPeriods($start, $range);
-        $nextLoop          = $this->getNextPeriods($end, $range);
-
-        // paginate budgets
-        $budgets = new LengthAwarePaginator($budgets, $total, $pageSize, $page);
-        $budgets->setPath(route('budgets.index'));
-        // display info
+        $prev         = app('navigation')->startOfPeriod($prev, $range);
+        $previousLoop = $this->getPreviousPeriods($start, $range);
+        $nextLoop     = $this->getNextPeriods($start, $range);
         $currentMonth = app('navigation')->periodShow($start, $range);
         $nextText     = app('navigation')->periodShow($next, $range);
         $prevText     = app('navigation')->periodShow($prev, $range);
 
+        // number of days for consistent budgeting.
+        $activeDaysPassed = $this->activeDaysPassed($start, $end); // see method description.
+        $activeDaysLeft   = $this->activeDaysLeft($start, $end); // see method description.
+
+        // get all budgets, and paginate them into $budgets.
+        $collection = $this->repository->getActiveBudgets();
+        $total      = $collection->count();
+        $budgets    = $collection->slice(($page - 1) * $pageSize, $pageSize);
+
+        // get all inactive budgets, and simply list them:
+        $inactive = $this->repository->getInactiveBudgets();
+
+        // collect budget info to fill bars and so on.
+        $budgetInformation = $this->repository->collectBudgetInformation($collection, $start, $end);
+
+        // to display available budget:
+        $available = $this->repository->getAvailableBudget($defaultCurrency, $start, $end);
+        $spent     = array_sum(array_column($budgetInformation, 'spent'));
+        $budgeted  = array_sum(array_column($budgetInformation, 'budgeted'));
+
+
+        // paginate budgets
+        $paginator = new LengthAwarePaginator($budgets, $total, $pageSize, $page);
+        $paginator->setPath(route('budgets.index'));
+
         return view(
             'budgets.index', compact(
-                               'available', 'currentMonth', 'next', 'nextText', 'prev', 'allBudgets', 'prevText', 'periodStart', 'periodEnd', 'dayDifference',
-                               'page',
-                               'budgetInformation', 'daysPassed',
+                               'available', 'currentMonth', 'next', 'nextText', 'prev', 'paginator',
+                               'prevText',
+                               'page', 'activeDaysPassed', 'activeDaysLeft',
+                               'budgetInformation',
                                'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
                            )
         );

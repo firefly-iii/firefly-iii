@@ -221,6 +221,11 @@ class AccountController extends Controller
             'special'                    => [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION,
                                              AccountType::LOAN,],
             'hidden'                     => [AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION, AccountType::LOAN,],
+            'liability'                  => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
+            'liabilities'                => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
+            'cc'                         => [AccountType::CREDITCARD],
+            'creditcard'                 => [AccountType::CREDITCARD],
+            'credit_card'                => [AccountType::CREDITCARD],
             AccountType::DEFAULT         => [AccountType::DEFAULT],
             AccountType::CASH            => [AccountType::CASH],
             AccountType::ASSET           => [AccountType::ASSET],
@@ -231,6 +236,10 @@ class AccountController extends Controller
             AccountType::IMPORT          => [AccountType::IMPORT],
             AccountType::RECONCILIATION  => [AccountType::RECONCILIATION],
             AccountType::LOAN            => [AccountType::LOAN],
+            AccountType::MORTGAGE        => [AccountType::MORTGAGE],
+            AccountType::DEBT            => [AccountType::DEBT],
+            AccountType::CREDITCARD      => [AccountType::CREDITCARD],
+
         ];
         $return = $types['all'];
         if (isset($types[$type])) {

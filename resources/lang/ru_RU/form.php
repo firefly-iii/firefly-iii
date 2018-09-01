@@ -50,8 +50,9 @@ return [
     'source_account'              => 'Исходный счёт',
     'destination_account'         => 'Счёт назначения',
     'journal_destination_id'      => 'Asset account (destination)',
-    'asset_destination_account'   => 'Основной счёт (назначение)',
-    'asset_source_account'        => 'Основной счёт (источник)',
+    'asset_destination_account'   => 'Destination account',
+    'include_net_worth'           => 'Include in net worth',
+    'asset_source_account'        => 'Source account',
     'journal_description'         => 'Описание',
     'note'                        => 'Заметки',
     'split_journal'               => 'Разделить эту транзакцию',
@@ -84,6 +85,9 @@ return [
     'verification'                => 'Проверка',
     'api_key'                     => 'API-ключ',
     'remember_me'                 => 'Запомнить меня',
+    'liability_type_id'           => 'Liability type',
+    'interest'                    => 'Interest',
+    'interest_period'             => 'Interest period',
 
     'source_account_asset'        => 'Исходный счёт (основной счёт)',
     'destination_account_expense' => 'Счёт назначения (счёт расхода)',
@@ -237,5 +241,6 @@ return [
     'repetitions'             => 'Повторения',
     'calendar'                => 'Календарь',
     'weekend'                 => 'Weekend',
+    'client_secret'           => 'Client secret',
 
 ];

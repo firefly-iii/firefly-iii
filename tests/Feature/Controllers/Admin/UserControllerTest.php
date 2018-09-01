@@ -49,7 +49,7 @@ class UserControllerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
         $this->be($this->user());
         $response = $this->get(route('admin.users.delete', [1]));
         $response->assertStatus(200);
@@ -80,7 +80,7 @@ class UserControllerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
         $response->assertStatus(200);
@@ -94,9 +94,8 @@ class UserControllerTest extends TestCase
     public function testIndex(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        //$repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
-        $user       = $this->user();
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(3)->andReturn(true);
+        $user = $this->user();
         $repository->shouldReceive('all')->andReturn(new Collection([$user]));
 
         $this->be($user);
@@ -112,7 +111,7 @@ class UserControllerTest extends TestCase
     public function testShow(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
         $repository->shouldReceive('getUserData')->andReturn(
             [
                 'export_jobs_success' => 0,

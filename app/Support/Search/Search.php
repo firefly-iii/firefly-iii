@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
@@ -111,8 +111,8 @@ class Search implements SearchInterface
         $result    = new Collection();
         $startTime = microtime(true);
         do {
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
             if ($this->hasModifiers()) {
                 $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
@@ -122,7 +122,7 @@ class Search implements SearchInterface
             $collector = $this->applyModifiers($collector);
 
             $collector->removeFilter(InternalTransferFilter::class);
-            $set = $collector->getPaginatedJournals()->getCollection();
+            $set = $collector->getPaginatedTransactions()->getCollection();
 
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
@@ -185,12 +185,12 @@ class Search implements SearchInterface
     }
 
     /**
-     * @param JournalCollectorInterface $collector
+     * @param TransactionCollectorInterface $collector
      *
-     * @return JournalCollectorInterface
+     * @return TransactionCollectorInterface
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    private function applyModifiers(JournalCollectorInterface $collector): JournalCollectorInterface
+    private function applyModifiers(TransactionCollectorInterface $collector): TransactionCollectorInterface
     {
         foreach ($this->modifiers as $modifier) {
             switch ($modifier['type']) {
@@ -246,7 +246,7 @@ class Search implements SearchInterface
     private function extractModifier(string $string): void
     {
         $parts = explode(':', $string);
-        if (2 === \count($parts) && \strlen(trim((string)$parts[0])) > 0 && '' !== trim((string)$parts[1])) {
+        if (2 === \count($parts) && '' !== trim((string)$parts[1]) && \strlen(trim((string)$parts[0])) > 0) {
             $type  = trim((string)$parts[0]);
             $value = trim((string)$parts[1]);
             if (\in_array($type, $this->validModifiers, true)) {

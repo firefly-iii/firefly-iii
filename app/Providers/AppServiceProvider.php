@@ -25,6 +25,7 @@ namespace FireflyIII\Providers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Passport\Passport;
+use URL;
 
 /**
  * @codeCoverageIgnore
@@ -38,6 +39,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Schema::defaultStringLength(191);
+        if ('heroku' === env('APP_ENV')) {
+            URL::forceScheme('https');
+        }
     }
 
     /**

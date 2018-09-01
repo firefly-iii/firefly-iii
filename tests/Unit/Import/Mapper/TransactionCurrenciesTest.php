@@ -35,7 +35,7 @@ use Tests\TestCase;
 class TransactionCurrenciesTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Mapper\TransactionCurrencies::getMap()
+     * @covers \FireflyIII\Import\Mapper\TransactionCurrencies
      */
     public function testGetMapBasic(): void
     {

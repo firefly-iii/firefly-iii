@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -78,18 +78,19 @@ class ShowControllerTest extends TestCase
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
         $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(false);
 
 
         $transaction = factory(Transaction::class)->make();
-        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -97,6 +98,40 @@ class ShowControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testShowLiability(string $range): void
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+        $account  = $this->user()->accounts()->where('account_type_id', 12)->whereNull('deleted_at')->first();
+
+        // mock stuff:
+        $tasker        = $this->mock(AccountTaskerInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(true);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('accounts.show', [$account->id]));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('accounts.show.all', [$account->id]));
     }
 
 
@@ -125,18 +160,19 @@ class ShowControllerTest extends TestCase
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
         $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(false);
 
 
         $transaction = factory(Transaction::class)->make();
-        $collector   = $this->mock(JournalCollectorInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection([$transaction]));
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10));
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -147,7 +183,7 @@ class ShowControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
+     * @covers                   \FireflyIII\Http\Controllers\Account\ShowController
      * @expectedExceptionMessage End is after start!
      */
     public function testShowBrokenBadDates(): void
@@ -165,8 +201,7 @@ class ShowControllerTest extends TestCase
     }
 
     /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
-     * @expectedExceptionMessage Expected a transaction
+     * @covers                   \FireflyIII\Http\Controllers\Account\ShowController
      */
     public function testShowBrokenInitial(): void
     {
@@ -180,7 +215,9 @@ class ShowControllerTest extends TestCase
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id', 'ASC')->whereNull('deleted_at')->first();
         $response = $this->get(route('accounts.show', [$account->id]));
-        $response->assertStatus(500);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('index'));
+        $response->assertSessionHas('error');
     }
 
     /**
@@ -192,7 +229,7 @@ class ShowControllerTest extends TestCase
     public function testShowByDateEmpty(string $range): void
     {
         // mock stuff
-        $collector     = $this->mock(JournalCollectorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -200,15 +237,16 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedJournals')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
 
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
         $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(false);
 
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('getJournals')->andReturn(new Collection);
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 

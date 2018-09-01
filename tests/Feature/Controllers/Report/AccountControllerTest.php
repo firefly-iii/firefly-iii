@@ -45,7 +45,7 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Report\AccountController::general
+     * @covers \FireflyIII\Http\Controllers\Report\AccountController
      */
     public function testGeneral(): void
     {

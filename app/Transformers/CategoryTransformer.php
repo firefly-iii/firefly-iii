@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Category;
 use Illuminate\Support\Collection;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -78,7 +78,7 @@ class CategoryTransformer extends TransformerAbstract
         $pageSize = (int)app('preferences')->getForUser($category->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($category->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();
@@ -87,9 +87,9 @@ class CategoryTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
-        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**

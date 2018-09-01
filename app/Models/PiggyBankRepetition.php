@@ -25,6 +25,7 @@ namespace FireflyIII\Models;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 /**
  * Class PiggyBankRepetition.
@@ -44,20 +45,17 @@ class PiggyBankRepetition extends Model
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
             'startdate'  => 'date',
             'targetdate' => 'date',
         ];
-    /** @var array */
-    protected $dates = ['startdate', 'targetdate'];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['piggy_bank_id', 'startdate', 'targetdate', 'currentamount'];
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function piggyBank(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function piggyBank(): BelongsTo
     {
         return $this->belongsTo(PiggyBank::class);
     }

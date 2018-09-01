@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Suma transferów',
     'reconcile'               => 'Uzgodnij',
     'account_on_spectre'      => 'Konto (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Importuj z tego konta',
     'sepa-ct-id'              => 'SEPA End to End Identifier',
     'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
@@ -129,4 +130,7 @@ return [
     'transaction_s'           => 'Transakcja(e)',
     'field'                   => 'Pole',
     'value'                   => 'Wartość',
+    'interest'                => 'Interest',
+    'interest_period'         => 'interest period',
+    'liability_type'          => 'Type of liability',
 ];

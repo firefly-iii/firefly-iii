@@ -32,7 +32,7 @@ use Tests\TestCase;
 class DescriptionIsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs
      */
     public function testTriggeredCase(): void
     {
@@ -44,7 +44,7 @@ class DescriptionIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs
      */
     public function testTriggeredClose(): void
     {
@@ -56,7 +56,7 @@ class DescriptionIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs
      */
     public function testTriggeredDefault(): void
     {
@@ -68,7 +68,7 @@ class DescriptionIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs
      */
     public function testTriggeredNot(): void
     {
@@ -80,7 +80,7 @@ class DescriptionIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -90,7 +90,7 @@ class DescriptionIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\DescriptionIs
      */
     public function testWillMatchEverythingNull(): void
     {

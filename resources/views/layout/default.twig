@@ -18,23 +18,34 @@
 
     </title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
-    <link href="css/app.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    {# CSS things #}
+    {# libraries #}
+    <link href="lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# the theme #}
     <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     <link href="lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
-    <link href="css/daterangepicker.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# Firefly III customisations #}
     <link href="css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# Extra CSS for the demo: #}
     {% if not shownDemo %}
         <link href="lib/intro/introjs.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
     {% endif %}
 
+    {# Any local custom CSS.  #}
     {% block styles %}{% endblock %}
     <!--[if lt IE 9]>
     <script src="js/lib/html5shiv.min.js?v={{ FF_VERSION }}"></script>
     <script src="js/lib/respond.min.js?v={{ FF_VERSION }}"></script>
     <![endif]-->
-    <script type="text/javascript">
-        var forceDemoOff = false;
-    </script>
+
+    {# this entry is in the header so it's loaded early #}
+    {# SHA256: C45493A8175B10AC47EEDFC7C20AC31FAE5C804FB6C4F75468DB0F95112664BF #}
+    <script type="text/javascript">var forceDemoOff = false;</script>
 
     {# favicons #}
     {% include('partials.favicons') %}
@@ -54,7 +65,7 @@
         </a>
 
         <nav class="navbar navbar-static-top" role="navigation">
-            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+            <a href="#" class="sidebar-toggle" data-toggle="push-menu" role="button">
                 <span class="sr-only">{{ 'toggleNavigation'|_ }}</span>
             </a>
             <div class="navbar-custom-menu">
@@ -156,31 +167,29 @@
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    window.Laravel = "{{ csrf_token()  }}";
-</script>
+
+{# Java libraries and stuff: #}
+
+{# Moment JS #}
 <script src="js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script src="js/ff/moment/{{ language }}.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+
+{# All kinds of variables. #}
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript"></script>
+
+{# big fat JS thing courtesy of Vue#}
 <script src="js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 
+{# date range picker, current template, etc.#}
 <script src="js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-<script src="lib/adminlte/js/app.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
 <script type="text/javascript" src="js/lib/accounting.min.js?v={{ FF_VERSION }}"></script>
 
+{# Firefly III code#}
 <script type="text/javascript" src="js/ff/firefly.js?v={{ FF_VERSION }}"></script>
-<script type="text/javascript">
-    var helpPageTitle = "{{ trans('firefly.help_for_this_page')|escape('js') }}";
-    var noHelpForPage = "{{ trans('firefly.no_help_could_be_found')|escape('js') }}";
-    var noHelpForPageTitle = "{{ trans('firefly.no_help_title')|escape('js') }}";
-</script>
 <script type="text/javascript" src="js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}
     <script type="text/javascript">
-        var nextLabel = "{{ trans('firefly.intro_next_label')|escape('js') }}";
-        var prevLabel = "{{ trans('firefly.intro_prev_label')|escape('js') }}";
-        var skipLabel = "{{ trans('firefly.intro_skip_label')|escape('js') }}";
-        var doneLabel = "{{ trans('firefly.intro_done_label')|escape('js') }}";
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
         var routeForFinishedTour = "{{ route('json.intro.finished', [current_route_name, what|default("")]) }}";

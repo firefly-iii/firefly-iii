@@ -101,7 +101,7 @@ class NewFileJobHandler implements FileConfigurationInterface
     }
 
     /**
-     * @param ImportJob $job
+     * @param ImportJob $importJob
      */
     public function setImportJob(ImportJob $importJob): void
     {
@@ -114,7 +114,6 @@ class NewFileJobHandler implements FileConfigurationInterface
     /**
      * Store config from job.
      *
-     * @throws FireflyException
      */
     public function storeConfiguration(): void
     {

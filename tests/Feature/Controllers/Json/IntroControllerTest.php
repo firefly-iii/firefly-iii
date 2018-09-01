@@ -44,10 +44,7 @@ class IntroControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getIntroSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getBasicSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getSpecificSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::hasOutroStep
+     * @covers \FireflyIII\Http\Controllers\Json\IntroController
      */
     public function testGetIntroSteps(): void
     {
@@ -57,10 +54,7 @@ class IntroControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getIntroSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getBasicSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getSpecificSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::hasOutroStep
+     * @covers \FireflyIII\Http\Controllers\Json\IntroController
      */
     public function testGetIntroStepsAsset(): void
     {
@@ -70,10 +64,7 @@ class IntroControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getIntroSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getBasicSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::getSpecificSteps
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::hasOutroStep
+     * @covers \FireflyIII\Http\Controllers\Json\IntroController
      */
     public function testGetIntroStepsOutro(): void
     {
@@ -83,7 +74,7 @@ class IntroControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::postEnable
+     * @covers \FireflyIII\Http\Controllers\Json\IntroController
      */
     public function testPostEnable(): void
     {
@@ -93,7 +84,7 @@ class IntroControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Json\IntroController::postFinished
+     * @covers \FireflyIII\Http\Controllers\Json\IntroController
      */
     public function testPostFinished(): void
     {

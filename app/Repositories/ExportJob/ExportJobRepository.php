@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\ExportJob;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
@@ -47,18 +48,18 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     public function changeStatus(ExportJob $job, string $status): bool
     {
         Log::debug(sprintf('Change status of job #%d to "%s"', $job->id, $status));
-        $job->change($status);
+        $job->status = $status;
+        $job->save();
 
         return true;
     }
 
     /**
      * @return bool
-     * @throws \Exception
      */
     public function cleanup(): bool
     {
-        $dayAgo = Carbon::create()->subDay();
+        $dayAgo = Carbon::now()->subDay();
         $set    = ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
                            ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
                            ->get();
@@ -74,7 +75,11 @@ class ExportJobRepository implements ExportJobRepositoryInterface
                     unlink(storage_path('export') . DIRECTORY_SEPARATOR . $file);
                 }
             }
-            $entry->delete();
+            try {
+                $entry->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Could not delete object: %s', $e->getMessage()));
+            }
         }
 
         return true;
@@ -142,8 +147,8 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function getContent(ExportJob $job): string
     {
-        $disk    = Storage::disk('export');
-        $file    = $job->key . '.zip';
+        $disk = Storage::disk('export');
+        $file = $job->key . '.zip';
 
         try {
             $content = $disk->get($file);

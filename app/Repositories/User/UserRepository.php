@@ -54,14 +54,15 @@ class UserRepository implements UserRepositoryInterface
     {
         $roleObject = Role::where('name', $role)->first();
         if (null === $roleObject) {
+            Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
             return false;
         }
 
         try {
-            $user->roles()->attach($role);
+            $user->roles()->attach($roleObject);
         } catch (QueryException $e) {
             // don't care
-            Log::info(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
+            Log::error(sprintf('Query exception when giving user a role: %s', $e->getMessage()));
         }
 
         return true;
@@ -77,6 +78,7 @@ class UserRepository implements UserRepositoryInterface
      * @see updateEmail
      *
      * @return bool
+     * @throws \Exception
      */
     public function changeEmail(User $user, string $newEmail): bool
     {

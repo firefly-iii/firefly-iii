@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -95,7 +95,8 @@ class PiggyBankEventTransformer extends TransformerAbstract
         $pageSize = (int)app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($journal->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();
@@ -104,9 +105,9 @@ class PiggyBankEventTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
-        return $this->item($journals->first(), new TransactionTransformer($this->parameters), 'transactions');
+        return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**
@@ -129,7 +130,8 @@ class PiggyBankEventTransformer extends TransformerAbstract
             /** @var CurrencyRepositoryInterface $repository */
             $repository = app(CurrencyRepositoryInterface::class);
             $repository->setUser($account->user);
-            $currency      = $repository->findNull($currencyId);
+            $currency = $repository->findNull($currencyId);
+            /** @noinspection NullPointerExceptionInspection */
             $decimalPlaces = $currency->decimal_places;
         }
 

@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Jumlah transfer',
     'reconcile'               => 'Menyesuaikan',
     'account_on_spectre'      => 'Account (Spectre)',
+    'account_on_ynab'         => 'Account (YNAB)',
     'do_import'               => 'Import from this account',
     'sepa-ct-id'              => 'SEPA End to End Identifier',
     'sepa-ct-op'              => 'SEPA Opposing Account Identifier',
@@ -129,4 +130,7 @@ return [
     'transaction_s'           => 'Transaction(s)',
     'field'                   => 'Field',
     'value'                   => 'Value',
+    'interest'                => 'Interest',
+    'interest_period'         => 'interest period',
+    'liability_type'          => 'Type of liability',
 ];

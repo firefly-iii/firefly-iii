@@ -57,16 +57,17 @@ class AdminEventHandler
                 Log::debug('Trying to send message...');
                 Mail::to($email)->send(new AdminTestMail($email, $ipAddress));
                 // @codeCoverageIgnoreStart
+                // Laravel cannot pretend this process failed during testing.
             } catch (Exception $e) {
                 Log::debug('Send message failed! :(');
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
                 Session::flash('error', 'Possible email error: ' . $e->getMessage());
             }
+            // @codeCoverageIgnoreEnd
             Log::debug('If no error above this line, message was sent.');
         }
 
-        // @codeCoverageIgnoreEnd
         return true;
     }
 }

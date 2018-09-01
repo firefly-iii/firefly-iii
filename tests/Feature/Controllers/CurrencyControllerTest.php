@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -51,7 +52,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::create
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testCannotCreate(): void
     {
@@ -70,7 +71,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::delete
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testCannotDelete(): void
     {
@@ -90,7 +91,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::destroy
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testCannotDestroy(): void
     {
@@ -111,7 +112,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::create
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testCreate(): void
     {
@@ -121,7 +122,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.create'));
@@ -131,7 +132,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::defaultCurrency
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testDefaultCurrency(): void
     {
@@ -149,7 +150,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::delete
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testDelete(): void
     {
@@ -160,7 +161,7 @@ class CurrencyControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.delete', [2]));
@@ -170,7 +171,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::destroy
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testDestroy(): void
     {
@@ -182,7 +183,7 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
         $repository->shouldReceive('destroy')->andReturn(true)->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(1)->andReturn(true);
 
         $this->session(['currencies.delete.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -192,7 +193,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::edit
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testEdit(): void
     {
@@ -202,7 +203,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.edit', [1]));
@@ -212,8 +213,8 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::index
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::__construct
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndex(): void
     {
@@ -227,7 +228,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn($currencies->first());
         $repository->shouldReceive('get')->andReturn($currencies);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.index'));
@@ -237,8 +238,8 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::index
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::__construct
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndexNoRights(): void
     {
@@ -250,7 +251,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn(new TransactionCurrency);
         $repository->shouldReceive('get')->andReturn(new Collection);
-        $userRepos->shouldReceive('hasRole')->once()->andReturn(false);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('currencies.index'));
@@ -261,7 +262,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::store
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
     public function testStore(): void
@@ -289,7 +290,35 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::store
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
+     */
+    public function testStoreError(): void
+    {
+        // mock stuff
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('store')->andReturnNull();
+        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+
+        $this->session(['currencies.create.uri' => 'http://localhost']);
+        $data = [
+            'name'           => 'XX',
+            'code'           => 'XXX',
+            'symbol'         => 'x',
+            'decimal_places' => 2,
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('currencies.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('error','Could not store the new currency.');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
     public function testStoreNoRights(): void
@@ -317,7 +346,7 @@ class CurrencyControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\CurrencyController::update
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
      */
     public function testUpdate(): void

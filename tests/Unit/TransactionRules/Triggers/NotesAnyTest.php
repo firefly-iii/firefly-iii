@@ -33,7 +33,7 @@ use Tests\TestCase;
 class NotesAnyTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny
      */
     public function testTriggered(): void
     {
@@ -49,7 +49,7 @@ class NotesAnyTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny
      */
     public function testTriggeredEmpty(): void
     {
@@ -65,7 +65,7 @@ class NotesAnyTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny
      */
     public function testTriggeredNone(): void
     {
@@ -77,7 +77,7 @@ class NotesAnyTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\NotesAny
      */
     public function testWillMatchEverythingNull(): void
     {

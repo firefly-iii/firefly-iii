@@ -24,11 +24,10 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Http\RedirectResponse;
@@ -51,8 +50,6 @@ class BillController extends Controller
     private $attachments;
     /** @var BillRepositoryInterface Bill repository */
     private $billRepository;
-    /** @var RuleGroupRepositoryInterface Rule group repository */
-    private $ruleGroupRepos;
 
     /**
      * BillController constructor.
@@ -72,7 +69,6 @@ class BillController extends Controller
                 app('view')->share('mainTitleIcon', 'fa-calendar-o');
                 $this->attachments    = app(AttachmentHelperInterface::class);
                 $this->billRepository = app(BillRepositoryInterface::class);
-                $this->ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -204,7 +200,10 @@ class BillController extends Controller
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
             function (Bill $bill) use ($transformer) {
-                return $transformer->transform($bill);
+                $return             = $transformer->transform($bill);
+                $return['currency'] = $bill->transactionCurrency;
+
+                return $return;
             }
         );
         $bills = $bills->sortBy(
@@ -276,10 +275,10 @@ class BillController extends Controller
     public function show(Request $request, Bill $bill)
     {
         // add info about rules:
-        $rules          = $this->billRepository->getRulesForBill($bill);
-        $subTitle       = $bill->name;
+        $rules    = $this->billRepository->getRulesForBill($bill);
+        $subTitle = $bill->name;
         /** @var Carbon $start */
-        $start          = session('start');
+        $start = session('start');
         /** @var Carbon $end */
         $end            = session('end');
         $year           = $start->year;
@@ -295,15 +294,16 @@ class BillController extends Controller
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
-        $resource = new Item($bill, new BillTransformer($parameters), 'bill');
-        $object   = $manager->createData($resource)->toArray();
+        $resource                   = new Item($bill, new BillTransformer($parameters), 'bill');
+        $object                     = $manager->createData($resource)->toArray();
+        $object['data']['currency'] = $bill->transactionCurrency;
 
         // use collector:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
                   ->withCategoryInformation();
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('bills.show', [$bill->id]));
 
 
@@ -342,30 +342,7 @@ class BillController extends Controller
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
-        // do return to original bill form?
-        $return = 'false';
-        if (1 === (int)$request->get('create_another')) {
-            $return = 'true';
-        }
-
-        $group = null;
-        // find first rule group, or create one:
-        $count = $this->ruleGroupRepos->count();
-        if (0 === $count) {
-            $data  = [
-                'title'       => (string)trans('firefly.rulegroup_for_bills_title'),
-                'description' => (string)trans('firefly.rulegroup_for_bills_description'),
-            ];
-            $group = $this->ruleGroupRepos->store($data);
-        }
-        if ($count > 0) {
-            $group = $this->ruleGroupRepos->getActiveGroups($bill->user)->first();
-        }
-
-        // redirect to page that will create a new rule.
-        $params = http_build_query(['fromBill' => $bill->id, 'return' => $return]);
-
-        return redirect(route('rules.create', [$group->id]) . '?' . $params);
+        return redirect(route('rules.create-from-bill', [$bill->id]));
     }
 
     /**

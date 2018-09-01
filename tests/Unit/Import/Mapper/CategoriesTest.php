@@ -35,7 +35,7 @@ use Tests\TestCase;
 class CategoriesTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Mapper\Categories::getMap()
+     * @covers \FireflyIII\Import\Mapper\Categories
      */
     public function testGetMapBasic(): void
     {

@@ -220,18 +220,10 @@ class IndexControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $repository->shouldReceive('cleanupBudgets');
-        $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection([$budget]));
-        $repository->shouldReceive('getInactiveBudgets')->andReturn(new Collection);
-        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
-        $repository->shouldReceive('spentInPeriod')->andReturn('-1');
-        $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
-        $repository->shouldReceive('collectBudgetInformation')->andReturn($budgetInfo);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('budgets.index', ['Hello-there']));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
+        $response->assertStatus(404);
     }
 }

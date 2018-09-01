@@ -102,4 +102,72 @@ class CurrencyExchangeRateControllerTest extends TestCase
         );
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\CurrencyExchangeRateController
+     */
+    public function testIndexBadDestination(): void
+    {
+        // mock repository
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $service    = $this->mock(ExchangeRateInterface::class);
+
+        $rate                   = new CurrencyExchangeRate();
+        $rate->date             = new Carbon();
+        $rate->updated_at       = new Carbon();
+        $rate->created_at       = new Carbon();
+        $rate->rate             = '0.5';
+        $rate->to_currency_id   = 1;
+        $rate->from_currency_id = 2;
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(TransactionCurrency::whereCode('USD')->first())->once();
+        $repository->shouldReceive('findByCodeNull')->withArgs(['USD'])->andReturn(null)->once();
+
+        // test API
+        $params   = [
+            'from' => 'EUR',
+            'to'   => 'USD',
+            'date' => '2018-01-01',
+        ];
+        $response = $this->get('/api/v1/cer?' . http_build_query($params), ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('Unknown destination currency.');
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\CurrencyExchangeRateController
+     */
+    public function testIndexBadSource(): void
+    {
+        // mock repository
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $service    = $this->mock(ExchangeRateInterface::class);
+
+        $rate                   = new CurrencyExchangeRate();
+        $rate->date             = new Carbon();
+        $rate->updated_at       = new Carbon();
+        $rate->created_at       = new Carbon();
+        $rate->rate             = '0.5';
+        $rate->to_currency_id   = 1;
+        $rate->from_currency_id = 2;
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(null)->once();
+        $repository->shouldReceive('findByCodeNull')->withArgs(['USD'])->andReturn(TransactionCurrency::whereCode('USD')->first())->once();
+
+        // test API
+        $params   = [
+            'from' => 'EUR',
+            'to'   => 'USD',
+            'date' => '2018-01-01',
+        ];
+        $response = $this->get('/api/v1/cer?' . http_build_query($params), ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('Unknown source currency.');
+        $response->assertHeader('Content-Type', 'application/json');
+    }
 }

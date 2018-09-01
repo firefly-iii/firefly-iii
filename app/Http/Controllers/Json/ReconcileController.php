@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -34,9 +34,12 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  *
@@ -46,7 +49,7 @@ use Illuminate\Support\Collection;
  */
 class ReconcileController extends Controller
 {
-
+    use UserNavigation;
     /** @var AccountRepositoryInterface The account repository */
     private $accountRepos;
     /** @var CurrencyRepositoryInterface The currency repository */
@@ -90,7 +93,6 @@ class ReconcileController extends Controller
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @throws \Throwable
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
@@ -117,21 +119,32 @@ class ReconcileController extends Controller
         /** @var Transaction $transaction */
         foreach ($cleared as $transaction) {
             if ($transaction->transactionJournal->date <= $end) {
-                $clearedAmount = bcadd($clearedAmount, $transaction->amount);
+                $clearedAmount = bcadd($clearedAmount, $transaction->amount); // @codeCoverageIgnore
                 ++$countCleared;
             }
         }
         $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
         $diffCompare = bccomp($difference, '0');
-        $return      = [
-            'post_uri' => $route,
-            'html'     => view(
+
+        try {
+            $view = view(
                 'accounts.reconcile.overview', compact(
                                                  'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount',
                                                  'startBalance', 'endBalance', 'amount',
                                                  'route', 'countCleared'
                                              )
-            )->render(),
+            )->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('View error: %s', $e->getMessage()));
+            $view = 'Could not render accounts.reconcile.overview';
+        }
+        // @codeCoverageIgnoreEnd
+
+
+        $return = [
+            'post_uri' => $route,
+            'html'     => $view,
         ];
 
         return response()->json($return);
@@ -148,7 +161,6 @@ class ReconcileController extends Controller
      * @return mixed
      *
      * @throws FireflyException
-     * @throws \Throwable
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
@@ -175,43 +187,22 @@ class ReconcileController extends Controller
         $selectionEnd->addDays(3);
 
         // grab transactions:
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))
                   ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
-        $transactions = $collector->getJournals();
-        $html         = view(
-            'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
-        )->render();
+        $transactions = $collector->getTransactions();
+        try {
+            $html = view(
+                'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+            )->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render: %s', $e->getMessage()));
+            $html = 'Could not render accounts.reconcile.transactions';
+        }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
-    }
-
-    /**
-     * Redirect to actual account.
-     *
-     * @param Account $account
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws FireflyException
-     */
-    private function redirectToOriginalAccount(Account $account)
-    {
-        /** @var Transaction $transaction */
-        $transaction = $account->transactions()->first();
-        if (null === $transaction) {
-            throw new FireflyException(sprintf('Expected a transaction. Account #%d has none. BEEP, error.', $account->id)); // @codeCoverageIgnore
-        }
-
-        $journal = $transaction->transactionJournal;
-        /** @var Transaction $opposingTransaction */
-        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
-
-        if (null === $opposingTransaction) {
-            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
-        }
-
-        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
     }
 }

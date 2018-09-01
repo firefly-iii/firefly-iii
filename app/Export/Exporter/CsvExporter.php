@@ -30,6 +30,9 @@ use Storage;
 
 /**
  * Class CsvExporter.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class CsvExporter extends BasicExporter implements ExporterInterface
 {

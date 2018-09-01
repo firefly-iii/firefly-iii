@@ -35,9 +35,9 @@ $(function () {
     "use strict";
     lineChart(chartUri, 'overview-chart');
     if (!showAll) {
-        pieChart(incomeCategoryUri, 'account-cat-in');
-        pieChart(expenseCategoryUri, 'account-cat-out');
-        pieChart(expenseBudgetUri, 'account-budget-out');
+        neutralPieChart(incomeCategoryUri, 'account-cat-in');
+        neutralPieChart(expenseCategoryUri, 'account-cat-out');
+        neutralPieChart(expenseBudgetUri, 'account-budget-out');
     }
 
     // sortable!

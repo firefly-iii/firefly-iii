@@ -37,6 +37,8 @@ use Log;
 
 /**
  * Class CreateImport.
+ *
+ * @codeCoverageIgnore
  */
 class CreateImport extends Command
 {
@@ -150,7 +152,7 @@ class CreateImport extends Command
 
 
         if (true === $this->option('start')) {
-            $this->infoLine('The has started. The process is not visible. Please wait.');
+            $this->infoLine('The import routine has started. The process is not visible. Please wait.');
             Log::debug('Go for import!');
 
             // run it!

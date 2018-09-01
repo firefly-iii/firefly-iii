@@ -32,7 +32,7 @@ use FireflyIII\Export\Collector\AttachmentCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Export\Exporter\ExporterInterface;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\ExportJob;
@@ -49,12 +49,15 @@ use ZipArchive;
  * Class ExpandedProcessor.
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects) // its doing a lot.
+ *
+ * @codeCoverageIgnore
+ * @deprecated
  */
 class ExpandedProcessor implements ProcessorInterface
 {
     /** @var Collection All accounts */
     public $accounts;
-    /** @var string The export format*/
+    /** @var string The export format */
     public $exportFormat;
     /** @var bool Should include attachments */
     public $includeAttachments;
@@ -62,7 +65,7 @@ class ExpandedProcessor implements ProcessorInterface
     public $includeOldUploads;
     /** @var ExportJob The export job itself */
     public $job;
-    /** @var array The settings*/
+    /** @var array The settings */
     public $settings;
     /** @var Collection The entries to export. */
     private $exportEntries;
@@ -107,13 +110,13 @@ class ExpandedProcessor implements ProcessorInterface
     public function collectJournals(): bool
     {
         // use journal collector thing.
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->job->user);
         $collector->setAccounts($this->accounts)->setRange($this->settings['startDate'], $this->settings['endDate'])
                   ->withOpposingAccount()->withBudgetInformation()->withCategoryInformation()
                   ->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         // get some more meta data for each entry:
         $ids         = $transactions->pluck('journal_id')->toArray();
         $assetIds    = $transactions->pluck('account_id')->toArray();
@@ -222,7 +225,7 @@ class ExpandedProcessor implements ProcessorInterface
     {
         $exporterClass = config('firefly.export_formats.' . $this->exportFormat);
         /** @var ExporterInterface $exporter */
-        $exporter      = app($exporterClass);
+        $exporter = app($exporterClass);
         $exporter->setJob($this->job);
         $exporter->setEntries($this->exportEntries);
         $exporter->run();
@@ -260,7 +263,7 @@ class ExpandedProcessor implements ProcessorInterface
     /**
      * Delete files.
      */
-    private function deleteFiles():void
+    private function deleteFiles(): void
     {
         $disk = Storage::disk('export');
         foreach ($this->getFiles() as $file) {

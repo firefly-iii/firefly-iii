@@ -36,8 +36,7 @@ use Tests\TestCase;
 class SetBudgetTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetBudget::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetBudget::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetBudget
      */
     public function testAct(): void
     {

@@ -41,7 +41,6 @@ use Illuminate\Support\HtmlString;
 use Illuminate\Support\MessageBag;
 use Log;
 use RuntimeException;
-use Session;
 use Throwable;
 
 /**
@@ -67,12 +66,12 @@ class ExpandedForm
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
-        $assetAccounts   = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accountList     = $repository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
         /** @var Account $account */
-        foreach ($assetAccounts as $account) {
+        foreach ($accountList as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
@@ -80,6 +79,54 @@ class ExpandedForm
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
+
+            if (null === $currency) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function activeLongAccountList(string $name, $value = null, array $options = null): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $accountList     = $repository->getActiveAccountsByType(
+            [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
+        );
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = $repository->getMetaValue($account, 'accountRole');
+            if ('' === $role && !\in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+
             if (null === $currency) {
                 $currency = $defaultCurrency;
             }
@@ -193,12 +240,12 @@ class ExpandedForm
         /** @var CurrencyRepositoryInterface $currencyRepos */
         $currencyRepos = app(CurrencyRepositoryInterface::class);
 
-        $assetAccounts   = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
+        $accountList     = $repository->getAccountsByType([AccountType::ASSET, AccountType::DEFAULT]);
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
         /** @var Account $account */
-        foreach ($assetAccounts as $account) {
+        foreach ($accountList as $account) {
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
@@ -206,6 +253,7 @@ class ExpandedForm
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
+
             if (null === $currency) {
                 $currency = $defaultCurrency;
             }
@@ -230,7 +278,6 @@ class ExpandedForm
         return $this->currencyField($name, 'balance', $value, $options);
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param int    $value
@@ -246,7 +293,7 @@ class ExpandedForm
         $value              = $value ?? 1;
         $options['checked'] = true === $checked;
 
-        if (Session::has('preFilled')) {
+        if (app('session')->has('preFilled')) {
             $preFilled          = session('preFilled');
             $options['checked'] = $preFilled[$name] ?? $options['checked'];
         }
@@ -266,6 +313,8 @@ class ExpandedForm
 
         return $html;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param string $name
@@ -412,6 +461,53 @@ class ExpandedForm
         }
 
         return $html;
+    }
+
+    /**
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     */
+    public function longAccountList(string $name, $value = null, array $options = null): string
+    {
+        // make repositories
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        $accountList     = $repository->getAccountsByType(
+            [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
+        );
+        $liabilityTypes  = [AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN];
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+        $grouped         = [];
+        // group accounts:
+        /** @var Account $account */
+        foreach ($accountList as $account) {
+            $balance    = app('steam')->balance($account, new Carbon);
+            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency   = $currencyRepos->findNull($currencyId);
+            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            if ('' === $role) {
+                $role = 'no_account_type'; // @codeCoverageIgnore
+            }
+
+            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+                $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            }
+
+            if (null === $currency) {
+                $currency = $defaultCurrency;
+            }
+
+            $key                         = (string)trans('firefly.opt_group_' . $role);
+            $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
+        }
+
+        return $this->select($name, $grouped, $value, $options);
     }
 
     /**
@@ -565,6 +661,34 @@ class ExpandedForm
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render password(): %s', $e->getMessage()));
             $html = 'Could not render password.';
+        }
+
+        return $html;
+    }
+
+    /**
+     * Function to render a percentage.
+     *
+     * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     *
+     */
+    public function percentage(string $name, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        unset($options['placeholder']);
+        try {
+            $html = view('form.percentage', compact('classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render percentage(): %s', $e->getMessage()));
+            $html = 'Could not render percentage.';
         }
 
         return $html;
@@ -761,6 +885,11 @@ class ExpandedForm
         $classes         = $this->getHolderClasses($name);
         $value           = $this->fillFieldValue($name, $value);
         $options['rows'] = 4;
+
+        if (null === $value) {
+            $value = '';
+        }
+
         try {
             $html = view('form.textarea', compact('classes', 'name', 'label', 'value', 'options'))->render();
         } catch (Throwable $e) {
@@ -771,6 +900,7 @@ class ExpandedForm
         return $html;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
      * @param string $view
@@ -791,7 +921,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         /** @var Collection $currencies */
-        $currencies      = app('amount')->getAllCurrencies();
+        $currencies = app('amount')->getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
@@ -850,12 +980,13 @@ class ExpandedForm
      * @return mixed
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function fillFieldValue(string $name, $value)
+    protected function fillFieldValue(string $name, $value = null)
     {
-        if (Session::has('preFilled')) {
+        if (app('session')->has('preFilled')) {
             $preFilled = session('preFilled');
             $value     = isset($preFilled[$name]) && null === $value ? $preFilled[$name] : $value;
         }
+
         try {
             if (null !== request()->old($name)) {
                 $value = request()->old($name);
@@ -864,6 +995,7 @@ class ExpandedForm
             // don't care about session errors.
             Log::debug(sprintf('Run time: %s', $e->getMessage()));
         }
+
         if ($value instanceof Carbon) {
             $value = $value->format('Y-m-d');
         }

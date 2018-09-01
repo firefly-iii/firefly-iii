@@ -27,6 +27,8 @@ use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
+use Throwable;
 
 /**
  * Class SearchController.
@@ -77,7 +79,6 @@ class SearchController extends Controller
      * @param SearchInterface $searcher
      *
      * @return \Illuminate\Http\JsonResponse
-     * @throws \Throwable
      */
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
@@ -99,8 +100,14 @@ class SearchController extends Controller
             $transactions = $searcher->searchTransactions();
             $cache->store($transactions);
         }
-
-        $html = view('search.search', compact('transactions'))->render();
+        try {
+            $html = view('search.search', compact('transactions'))->render();
+            // @codeCoverageIgnoreStart
+        } catch (Throwable $e) {
+            Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
+            $html = 'Could not render view.';
+        }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['count' => $transactions->count(), 'html' => $html]);
     }

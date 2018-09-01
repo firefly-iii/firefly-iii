@@ -33,8 +33,7 @@ use Tests\TestCase;
 class SetDescriptionTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\SetDescription::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\SetDescription::act()
+     * @covers \FireflyIII\TransactionRules\Actions\SetDescription
      */
     public function testAct(): void
     {

@@ -26,9 +26,10 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
@@ -82,17 +83,42 @@ class CategoryControllerTest extends TestCase
      */
     public function testFrontpage(string $range): void
     {
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $generator    = $this->mock(GeneratorInterface::class);
-        $category     = factory(Category::class)->make();
-        $account      = factory(Account::class)->make();
+        $repository    = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));
-        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
-        $repository->shouldReceive('spentInPeriod')->andReturn('0');
-        $repository->shouldReceive('spentInPeriodWithoutCategory')->andReturn('0');
-        $generator->shouldReceive('singleSet')->andReturn([]);
+        // spent per currency data:
+        $spentData = [
+            1 => '-123.45',
+            2 => '567.21',
+        ];
+
+        // grab two categories from the user
+        $categories = $this->user()->categories()->take(2)->get();
+
+        // grab two the users asset accounts:
+        $accounts = $this->user()->accounts()->where('account_type_id', 3)->take(2)->get();
+
+        // repository will return these.
+        $repository->shouldReceive('getCategories')->andReturn($categories)->once();
+        $accountRepos->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::ASSET, AccountType::DEFAULT]])->andReturn($accounts);
+
+        $repository->shouldReceive('spentInPeriodPerCurrency')
+                   ->times(2)->andReturn($spentData);
+        $repository->shouldReceive('spentInPeriodPcWoCategory')->once()->andReturn($spentData);
+
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([2])->once()->andReturn(TransactionCurrency::find(2));
+
+        //$category     = factory(Category::class)->make();
+        //$account      = factory(Account::class)->make();
+
+
+        //        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
+        //        $repository->shouldReceive('spentInPeriod')->andReturn('0');
+        //        $repository->shouldReceive('spentInPeriodWithoutCategory')->andReturn('0');
+        $generator->shouldReceive('multiSet')->andReturn([]);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

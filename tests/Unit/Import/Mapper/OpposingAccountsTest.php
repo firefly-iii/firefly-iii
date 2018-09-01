@@ -36,7 +36,7 @@ use Tests\TestCase;
 class OpposingAccountsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\Import\Mapper\OpposingAccounts::getMap()
+     * @covers \FireflyIII\Import\Mapper\OpposingAccounts
      */
     public function testGetMapBasic(): void
     {

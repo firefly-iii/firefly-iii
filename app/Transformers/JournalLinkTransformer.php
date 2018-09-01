@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalLink;
 use Illuminate\Support\Collection;
@@ -75,12 +75,12 @@ class JournalLinkTransformer extends TransformerAbstract
     {
         // need to use the collector to get the transaction :(
         // journals always use collector and limited using URL parameters.
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($link->source->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals(new Collection([$link->source]));
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
     }
@@ -104,12 +104,12 @@ class JournalLinkTransformer extends TransformerAbstract
     {
         // need to use the collector to get the transaction :(
         // journals always use collector and limited using URL parameters.
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($link->source->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals(new Collection([$link->destination]));
-        $transactions = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
     }

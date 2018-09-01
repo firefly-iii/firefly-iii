@@ -27,7 +27,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\TransactionRules\Triggers\ToAccountIs;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ToAccountIsTest
@@ -35,7 +34,7 @@ use Log;
 class ToAccountIsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testTriggered(): void
     {
@@ -48,14 +47,13 @@ class ToAccountIsTest extends TestCase
         $repository->shouldReceive('getJournalDestinationAccounts')->once()->andReturn($collection);
 
 
-
         $trigger = ToAccountIs::makeFromStrings($account->name, false);
         $result  = $trigger->triggered($journal);
         $this->assertTrue($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testTriggeredNot(): void
     {
@@ -73,35 +71,35 @@ class ToAccountIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = ToAccountIs::willMatchEverything($value);
+        $value      = '';
+        $result     = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = ToAccountIs::willMatchEverything($value);
+        $value      = 'x';
+        $result     = ToAccountIs::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\ToAccountIs
      */
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = ToAccountIs::willMatchEverything($value);
+        $value      = null;
+        $result     = ToAccountIs::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

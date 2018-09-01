@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Helpers\Report;
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
@@ -33,6 +33,8 @@ use Illuminate\Support\Collection;
 
 /**
  * Class PopupReport.
+ *
+ * @codeCoverageIgnore
  */
 class PopupReport implements PopupReportInterface
 {
@@ -47,11 +49,11 @@ class PopupReport implements PopupReportInterface
      */
     public function balanceForBudget(Budget $budget, Account $account, array $attributes): Collection
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])->setBudget($budget);
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**
@@ -64,15 +66,15 @@ class PopupReport implements PopupReportInterface
      */
     public function balanceForNoBudget(Account $account, array $attributes): Collection
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector
             ->setAccounts(new Collection([$account]))
             ->setTypes([TransactionType::WITHDRAWAL])
             ->setRange($attributes['startDate'], $attributes['endDate'])
             ->withoutBudget();
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**
@@ -85,8 +87,8 @@ class PopupReport implements PopupReportInterface
      */
     public function byBudget(Budget $budget, array $attributes): Collection
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
 
         $collector->setAccounts($attributes['accounts'])->setRange($attributes['startDate'], $attributes['endDate']);
 
@@ -97,7 +99,7 @@ class PopupReport implements PopupReportInterface
             $collector->setBudget($budget);
         }
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**
@@ -110,13 +112,13 @@ class PopupReport implements PopupReportInterface
      */
     public function byCategory(Category $category, array $attributes): Collection
     {
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts($attributes['accounts'])->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setRange($attributes['startDate'], $attributes['endDate'])->withOpposingAccount()
                   ->setCategory($category);
 
-        return $collector->getJournals();
+        return $collector->getTransactions();
     }
 
     /**
@@ -133,17 +135,17 @@ class PopupReport implements PopupReportInterface
         $repository = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
 
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
 
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
         $report = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter for transfers and withdrawals TO the given $account
-        $journals = $journals->filter(
+        $transactions = $transactions->filter(
             function (Transaction $transaction) use ($report, $repository) {
                 // get the destinations:
                 $sources = $repository->getJournalSourceAccounts($transaction->transactionJournal)->pluck('id')->toArray();
@@ -153,7 +155,7 @@ class PopupReport implements PopupReportInterface
             }
         );
 
-        return $journals;
+        return $transactions;
     }
 
     /**
@@ -169,15 +171,15 @@ class PopupReport implements PopupReportInterface
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $repository->setUser($account->user);
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setRange($attributes['startDate'], $attributes['endDate'])
                   ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
         $report   = $attributes['accounts']->pluck('id')->toArray(); // accounts used in this report
 
         // filter the set so the destinations outside of $attributes['accounts'] are not included.
-        $journals = $journals->filter(
+        $transactions = $transactions->filter(
             function (Transaction $transaction) use ($report, $repository) {
                 // get the destinations:
                 $journal      = $transaction->transactionJournal;
@@ -188,6 +190,6 @@ class PopupReport implements PopupReportInterface
             }
         );
 
-        return $journals;
+        return $transactions;
     }
 }

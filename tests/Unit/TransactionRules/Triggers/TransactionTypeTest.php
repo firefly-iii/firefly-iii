@@ -32,7 +32,7 @@ use Tests\TestCase;
 class TransactionTypeTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType
      */
     public function testTriggered(): void
     {
@@ -44,7 +44,7 @@ class TransactionTypeTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType
      */
     public function testTriggeredFalse(): void
     {
@@ -55,7 +55,7 @@ class TransactionTypeTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -65,7 +65,7 @@ class TransactionTypeTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\TransactionType
      */
     public function testWillMatchEverythingNull(): void
     {

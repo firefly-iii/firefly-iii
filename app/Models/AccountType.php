@@ -35,46 +35,32 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  */
 class AccountType extends Model
 {
-    /**
-     *
-     */
+    /** @var string */
     public const DEFAULT = 'Default account';
-    /**
-     *
-     */
+    /** @var string */
     public const CASH = 'Cash account';
-    /**
-     *
-     */
+    /** @var string */
     public const ASSET = 'Asset account';
-    /**
-     *
-     */
+    /** @var string */
     public const EXPENSE = 'Expense account';
-    /**
-     *
-     */
+    /** @var string */
     public const REVENUE = 'Revenue account';
-    /**
-     *
-     */
+    /** @var string */
     public const INITIAL_BALANCE = 'Initial balance account';
-    /**
-     *
-     */
+    /** @var string */
     public const BENEFICIARY = 'Beneficiary account';
-    /**
-     *
-     */
+    /** @var string */
     public const IMPORT = 'Import account';
-    /**
-     *
-     */
+    /** @var string */
     public const RECONCILIATION = 'Reconciliation account';
-    /**
-     *
-     */
+    /** @var string */
     public const LOAN = 'Loan';
+    /** @var string */
+    public const DEBT = 'Debt';
+    /** @var string */
+    public const MORTGAGE = 'Mortgage';
+    /** @var string */
+    public const CREDITCARD = 'Credit card';
     /**
      * The attributes that should be casted to native types.
      *
@@ -85,7 +71,7 @@ class AccountType extends Model
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['type'];
 
     /**

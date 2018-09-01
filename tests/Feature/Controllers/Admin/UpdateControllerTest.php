@@ -89,6 +89,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheck(): void
     {
@@ -97,8 +98,8 @@ class UpdateControllerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['last_update_check', Mockery::any()])->once()->andReturn(new Configuration);
 
-        $version  = config('firefly.version');
-        $date = new Carbon;
+        $version = config('firefly.version');
+        $date    = new Carbon;
         $date->subDays(5);
         $releases = [
             new Release(['id' => 'x', 'title' => $version . '.1', 'content' => '', 'updated' => $date]),
@@ -118,6 +119,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheckCurrent(): void
     {
@@ -145,6 +147,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheckError(): void
     {
@@ -167,6 +170,7 @@ class UpdateControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UpdateController
+     * @covers \FireflyIII\Helpers\Update\UpdateTrait
      */
     public function testUpdateCheckNewer(): void
     {

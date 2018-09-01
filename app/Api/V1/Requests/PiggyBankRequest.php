@@ -57,7 +57,7 @@ class PiggyBankRequest extends Request
             'current_amount' => $this->string('current_amount'),
             'start_date'     => $this->date('start_date'),
             'target_date'    => $this->date('target_date'),
-            'note'           => $this->string('notes'),
+            'notes'           => $this->string('notes'),
         ];
     }
 

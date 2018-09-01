@@ -27,6 +27,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\BasicDataSupport;
 use Illuminate\Support\Collection;
 use Log;
 use Throwable;
@@ -36,6 +37,7 @@ use Throwable;
  */
 class CategoryController extends Controller
 {
+    use BasicDataSupport;
 
     /**
      * Show overview of expenses in category.
@@ -61,7 +63,7 @@ class CategoryController extends Controller
         $categories = $repository->getCategories();
         $data       = $repository->periodExpenses($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodExpensesNoCategory($accounts, $start, $end);
-        $report     = $this->filterReport($data);
+        $report     = $this->filterPeriodReport($data);
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
@@ -101,7 +103,7 @@ class CategoryController extends Controller
         $categories = $repository->getCategories();
         $data       = $repository->periodIncome($categories, $accounts, $start, $end);
         $data[0]    = $repository->periodIncomeNoCategory($accounts, $start, $end);
-        $report     = $this->filterReport($data);
+        $report     = $this->filterPeriodReport($data);
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
@@ -166,26 +168,5 @@ class CategoryController extends Controller
         return $result;
     }
 
-    /**
-     * Filters empty results from category period report.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    private function filterReport(array $data): array
-    {
-        foreach ($data as $categoryId => $set) {
-            $sum = '0';
-            foreach ($set['entries'] as $amount) {
-                $sum = bcadd($amount, $sum);
-            }
-            $data[$categoryId]['sum'] = $sum;
-            if (0 === bccomp('0', $sum)) {
-                unset($data[$categoryId]);
-            }
-        }
 
-        return $data;
-    }
 }

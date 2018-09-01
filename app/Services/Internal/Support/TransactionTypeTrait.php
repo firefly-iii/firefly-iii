@@ -22,6 +22,7 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
+
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionTypeFactory;
 use FireflyIII\Models\TransactionType;

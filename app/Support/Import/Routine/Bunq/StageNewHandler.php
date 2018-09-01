@@ -68,7 +68,6 @@ class StageNewHandler
             $config             = $this->repository->getConfiguration($this->importJob);
             $config['accounts'] = $accounts;
             $this->repository->setConfiguration($this->importJob, $config);
-
             return;
         }
         throw new FireflyException('The bunq API context is unexpectedly empty.'); // @codeCoverageIgnore
@@ -150,6 +149,7 @@ class StageNewHandler
             'balance'       => $mab->getBalance(),
             'status'        => $mab->getStatus(),
             'type'          => 'MonetaryAccountBank',
+            'iban'          => null,
             'aliases'       => [],
         ];
 
@@ -168,6 +168,11 @@ class StageNewHandler
                     'name'  => $alias->getName(),
                     'value' => $alias->getValue(),
                 ];
+
+                // store IBAN alias separately:
+                if ('IBAN' === $alias->getType()) {
+                    $return['iban'] = $alias->getValue();
+                }
             }
         }
 

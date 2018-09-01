@@ -130,7 +130,7 @@ class IndexController extends Controller
 
     /**
      * Move rule ip.
-     * 
+     *
      * @param Rule $rule
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector

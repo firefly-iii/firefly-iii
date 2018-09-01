@@ -18,6 +18,7 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Models;
@@ -27,6 +28,7 @@ use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -37,7 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int         $id
  * @property float       $spent // used in category reports
  * @property Carbon|null lastActivity
- * @property bool encrypted
+ * @property bool        encrypted
  */
 class Category extends Model
 {
@@ -55,16 +57,18 @@ class Category extends Model
             'deleted_at' => 'datetime',
             'encrypted'  => 'boolean',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'name'];
-    /** @var array */
+    /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
     /**
+     * Route binder. Converts the key in the URL to the specified object (or throw 404).
+     *
      * @param string $value
      *
      * @return Category
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @throws NotFoundHttpException
      */
     public static function routeBinder(string $value): Category
     {
@@ -73,7 +77,7 @@ class Category extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var Category $category */
-            $category   = $user->categories()->find($categoryId);
+            $category = $user->categories()->find($categoryId);
             if (null !== $category) {
                 return $category;
             }
@@ -114,18 +118,18 @@ class Category extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function transactionJournals(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function transactionJournals(): BelongsToMany
     {
         return $this->belongsToMany(TransactionJournal::class, 'category_transaction_journal', 'category_id');
     }
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return BelongsToMany
      */
-    public function transactions(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    public function transactions(): BelongsToMany
     {
         return $this->belongsToMany(Transaction::class, 'category_transaction', 'category_id');
     }

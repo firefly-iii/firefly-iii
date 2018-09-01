@@ -45,11 +45,11 @@ use Validator;
 trait AccountServiceTrait
 {
     /** @var array */
-    public $validAssetFields = ['accountRole', 'accountNumber', 'currency_id', 'BIC'];
+    public $validAssetFields = ['accountRole', 'accountNumber', 'currency_id', 'BIC', 'include_net_worth'];
     /** @var array */
-    public $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC'];
+    public $validCCFields = ['accountRole', 'ccMonthlyPaymentDate', 'ccType', 'accountNumber', 'currency_id', 'BIC', 'include_net_worth'];
     /** @var array */
-    public $validFields = ['accountNumber', 'currency_id', 'BIC'];
+    public $validFields = ['accountNumber', 'currency_id', 'BIC', 'interest', 'interest_period', 'include_net_worth'];
 
     /**
      * @param Account $account
@@ -332,6 +332,7 @@ trait AccountServiceTrait
      * @param string  $note
      *
      * @return bool
+     * @throws \Exception
      */
     public function updateNote(Account $account, string $note): bool
     {

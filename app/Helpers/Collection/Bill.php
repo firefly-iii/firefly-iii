@@ -29,6 +29,8 @@ use Log;
 
 /**
  * Class Bill.
+ *
+ * @codeCoverageIgnore
  */
 class Bill
 {

@@ -33,7 +33,7 @@ use Tests\TestCase;
 class TagIsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs
      */
     public function testNotTriggered(): void
     {
@@ -47,7 +47,7 @@ class TagIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs
      */
     public function testTriggered(): void
     {
@@ -70,7 +70,7 @@ class TagIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs
      */
     public function testWillMatchEverythingEmpty(): void
     {
@@ -80,7 +80,7 @@ class TagIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs
      */
     public function testWillMatchEverythingNotNull(): void
     {
@@ -90,7 +90,7 @@ class TagIsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\TagIs::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\TagIs
      */
     public function testWillMatchEverythingNull(): void
     {

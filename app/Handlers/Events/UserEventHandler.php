@@ -61,6 +61,7 @@ class UserEventHandler
 
         // first user ever?
         if (1 === $repository->count()) {
+            Log::debug('User count is one, attach role.');
             $repository->attachRole($event->user, 'owner');
         }
 
@@ -145,8 +146,8 @@ class UserEventHandler
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
         // @codeCoverageIgnoreEnd
+
         return true;
     }
 
@@ -171,8 +172,8 @@ class UserEventHandler
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
         // @codeCoverageIgnoreEnd
+
         return true;
     }
 
@@ -198,7 +199,6 @@ class UserEventHandler
         } catch (Exception $e) {
             Log::error($e->getMessage());
         }
-
         // @codeCoverageIgnoreEnd
 
         return true;

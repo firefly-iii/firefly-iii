@@ -61,7 +61,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool       $isAdmin used in admin user controller.
  * @property bool       $has2FA  used in admin user controller.
  * @property array      $prefs   used in admin user controller.
- * @property string      password
+ * @property string     password
  * @property Collection roles
  * @property string     blocked_code
  * @property bool       blocked
@@ -216,7 +216,7 @@ class User extends Authenticatable
     {
         $bytes = random_bytes(16);
 
-        return (string)bin2hex($bytes);
+        return bin2hex($bytes);
     }
 
     /**
@@ -302,7 +302,7 @@ class User extends Authenticatable
      *
      * @param string $token
      */
-    public function sendPasswordResetNotification($token)
+    public function sendPasswordResetNotification($token): void
     {
         $ipAddress = Request::ip();
 

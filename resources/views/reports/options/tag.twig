@@ -3,7 +3,7 @@
     <div class="col-sm-9">
         <select id="inputTags" name="tag[]" multiple="multiple" class="form-control">
             {% for tag in tags %}
-                <option value="{{ tag.tag }}" label="{{ tag.tag }}">{{ tag.tag }}</option>
+                <option value="{{ tag.id }}" label="{{ tag.tag|e('html') }}">{{ tag.tag|e('html') }}</option>
             {% endfor %}
         </select>
     </div>

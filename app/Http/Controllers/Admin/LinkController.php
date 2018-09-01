@@ -55,6 +55,7 @@ class LinkController extends Controller
 
     /**
      * Make a new link form.
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function create()

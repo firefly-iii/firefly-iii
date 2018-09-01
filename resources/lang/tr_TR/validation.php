@@ -50,7 +50,7 @@ return [
     'at_least_one_action'            => 'Rule must have at least one action.',
     'base64'                         => 'Bu geçerli Base64 olarak kodlanmış veri değildir.',
     'model_id_invalid'               => 'Verilen kimlik bu model için geçersiz görünüyor.',
-    'more'                           => ':attribute must be larger than :value.',
+    'more'                           => ':attribute must be larger than zero.',
     'less'                           => ':attribute must be less than 10,000,000',
     'active_url'                     => ':attribute geçerli bir URL değil.',
     'after'                          => ':attribute :date tarihinden sonrası için tarihlendirilmelidir.',

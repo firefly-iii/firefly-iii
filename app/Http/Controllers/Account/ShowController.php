@@ -25,15 +25,14 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
+use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use View;
@@ -45,6 +44,8 @@ use View;
  */
 class ShowController extends Controller
 {
+    use UserNavigation, PeriodOverview;
+
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var AccountRepositoryInterface The account repository */
@@ -90,10 +91,15 @@ class ShowController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account);
         }
+        // a basic thing to determin if this account is a liability:
+        if ($this->repository->isLiability($account)) {
+            return redirect(route('accounts.show.all', [$account->id]));
+        }
+
         /** @var Carbon $start */
         $start = $start ?? session('start');
         /** @var Carbon $end */
-        $end   = $end ?? session('end');
+        $end = $end ?? session('end');
         if ($end < $start) {
             throw new FireflyException('End is after start!'); // @codeCoverageIgnore
         }
@@ -112,18 +118,22 @@ class ShowController extends Controller
         $fEnd     = $end->formatLocalized($this->monthAndDayFormat);
         $subTitle = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $periods  = $this->getPeriodOverview($account, $end);
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        $periods  = $this->getAccountPeriodOverview($account, $end);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
         $collector->setRange($start, $end);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
         $showAll = false;
 
+
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end', 'chartUri')
+            compact(
+                'account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end',
+                'chartUri'
+            )
         );
     }
 
@@ -143,9 +153,10 @@ class ShowController extends Controller
         if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
             return $this->redirectToOriginalAccount($account); // @codeCoverageIgnore
         }
+        $isLiability  = $this->repository->isLiability($account);
         $end          = new Carbon;
         $today        = new Carbon;
-        $start        = $this->repository->oldestJournalDate($account);
+        $start        = $this->repository->oldestJournalDate($account) ?? Carbon::now()->startOfMonth();
         $subTitleIcon = config('firefly.subIconsByIdentifier.' . $account->accountType->type);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
@@ -156,118 +167,18 @@ class ShowController extends Controller
         }
         $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods  = new Collection;
-        /** @var JournalCollectorInterface $collector */
-        $collector = app(JournalCollectorInterface::class);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        $transactions = $collector->getPaginatedJournals();
+        $transactions = $collector->getPaginatedTransactions();
         $transactions->setPath(route('accounts.show.all', [$account->id]));
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll  = true;
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
+            compact('account', 'showAll','isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
         );
     }
 
-
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * This method returns "period entries", so nov-2015, dec-2015, etc etc (this depends on the users session range)
-     * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
-     * performance reasons.
-     *
-     * @param Account     $account the account involved
-     *
-     * @param Carbon|null $date
-     *
-     * @return Collection
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    private function getPeriodOverview(Account $account, ?Carbon $date): Collection
-    {
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $start = $this->repository->oldestJournalDate($account);
-        $end   = $date ?? new Carbon;
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
-        }
-
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('account-show-period-entries');
-        $cache->addProperty($account->id);
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        /** @var array $dates */
-        $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-        // loop dates
-        foreach ($dates as $currentDate) {
-
-            // try a collector for income:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
-                      ->withOpposingAccount();
-            $earned = (string)$collector->getJournals()->sum('transaction_amount');
-
-            // try a collector for expenses:
-            /** @var JournalCollectorInterface $collector */
-            $collector = app(JournalCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
-                      ->withOpposingAccount();
-            $spent = (string)$collector->getJournals()->sum('transaction_amount');
-
-            $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-            /** @noinspection PhpUndefinedMethodInspection */
-            $entries->push(
-                [
-                    'name'   => $dateName,
-                    'spent'  => $spent,
-                    'earned' => $earned,
-                    'start'  => $currentDate['start']->format('Y-m-d'),
-                    'end'    => $currentDate['end']->format('Y-m-d'),
-                ]
-            );
-        }
-
-        $cache->store($entries);
-
-        return $entries;
-    }
-
-    /**
-     * Redirect to the original account.
-     *
-     * @param Account $account
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
-     *
-     * @throws FireflyException
-     */
-    private function redirectToOriginalAccount(Account $account)
-    {
-        /** @var Transaction $transaction */
-        $transaction = $account->transactions()->first();
-        if (null === $transaction) {
-            throw new FireflyException('Expected a transaction. This account has none. BEEP, error.');
-        }
-
-        $journal = $transaction->transactionJournal;
-        /** @var Transaction $opposingTransaction */
-        $opposingTransaction = $journal->transactions()->where('transactions.id', '!=', $transaction->id)->first();
-
-        if (null === $opposingTransaction) {
-            throw new FireflyException('Expected an opposing transaction. This account has none. BEEP, error.'); // @codeCoverageIgnore
-        }
-
-        return redirect(route('accounts.show', [$opposingTransaction->account_id]));
-    }
 }

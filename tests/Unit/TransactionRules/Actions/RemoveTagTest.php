@@ -34,8 +34,7 @@ use Tests\TestCase;
 class RemoveTagTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag::act()
+     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag
      */
     public function testAct(): void
     {
@@ -61,8 +60,8 @@ class RemoveTagTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag::act()
+     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag()
+     * @covers \FireflyIII\TransactionRules\Actions\RemoveTag
      */
     public function testActNoTag(): void
     {

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\JournalCollectorInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Tag;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -77,7 +77,7 @@ class TagTransformer extends TransformerAbstract
         $pageSize = (int)app('preferences')->getForUser($tag->user, 'listPageSize', 50)->data;
 
         // journals always use collector and limited using URL parameters.
-        $collector = app(JournalCollectorInterface::class);
+        $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($tag->user);
         $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
         $collector->setAllAssetAccounts();
@@ -86,9 +86,9 @@ class TagTransformer extends TransformerAbstract
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $journals = $collector->getJournals();
+        $transactions = $collector->getTransactions();
 
-        return $this->collection($journals, new TransactionTransformer($this->parameters), 'transactions');
+        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**
@@ -121,7 +121,7 @@ class TagTransformer extends TransformerAbstract
             'tag'         => $tag->tag,
             'tag_mode'    => $tag->tagMode,
             'date'        => $date,
-            'description' => $tag->description === '' ? null : $tag->description,
+            'description' => '' === $tag->description ? null : $tag->description,
             'latitude'    => (float)$tag->latitude,
             'longitude'   => (float)$tag->longitude,
             'zoom_level'  => (int)$tag->zoomLevel,

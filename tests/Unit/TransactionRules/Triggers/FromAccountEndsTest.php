@@ -34,7 +34,7 @@ use Tests\TestCase;
 class FromAccountEndsTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testTriggered(): void
     {
@@ -51,7 +51,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testTriggeredLonger(): void
     {
@@ -69,7 +69,7 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::triggered
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testTriggeredNot(): void
     {
@@ -87,35 +87,35 @@ class FromAccountEndsTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testWillMatchEverythingEmpty(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = '';
-        $result = FromAccountEnds::willMatchEverything($value);
+        $value      = '';
+        $result     = FromAccountEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testWillMatchEverythingNotNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = 'x';
-        $result = FromAccountEnds::willMatchEverything($value);
+        $value      = 'x';
+        $result     = FromAccountEnds::willMatchEverything($value);
         $this->assertFalse($result);
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds::willMatchEverything
+     * @covers \FireflyIII\TransactionRules\Triggers\FromAccountEnds
      */
     public function testWillMatchEverythingNull(): void
     {
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $value  = null;
-        $result = FromAccountEnds::willMatchEverything($value);
+        $value      = null;
+        $result     = FromAccountEnds::willMatchEverything($value);
         $this->assertTrue($result);
     }
 }

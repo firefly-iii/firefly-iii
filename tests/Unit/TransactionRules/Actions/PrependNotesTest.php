@@ -34,8 +34,7 @@ use Tests\TestCase;
 class PrependNotesTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes::act()
+     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes
      */
     public function testAct(): void
     {
@@ -63,8 +62,8 @@ class PrependNotesTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes::act()
+     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes()
+     * @covers \FireflyIII\TransactionRules\Actions\PrependNotes
      */
     public function testActNewNote(): void
     {

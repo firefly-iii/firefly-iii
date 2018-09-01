@@ -34,8 +34,7 @@ use Tests\TestCase;
 class ClearBudgetTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\ClearBudget::__construct()
-     * @covers \FireflyIII\TransactionRules\Actions\ClearBudget::act()
+     * @covers \FireflyIII\TransactionRules\Actions\ClearBudget
      */
     public function testAct(): void
     {
@@ -56,7 +55,7 @@ class ClearBudgetTest extends TestCase
         $this->assertEquals(0, $journal->budgets()->count());
 
         /** @var Transaction $transaction */
-        foreach($journal->transactions as $transaction) {
+        foreach ($journal->transactions as $transaction) {
             $this->assertEquals(0, $transaction->budgets()->count());
         }
 

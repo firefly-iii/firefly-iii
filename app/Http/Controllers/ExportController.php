@@ -78,7 +78,7 @@ class ExportController extends Controller
         }
         $content = $repository->getContent($job);
 
-        $job->change('export_downloaded');
+        $repository->changeStatus($job, 'export_downloaded');
         /** @var LaravelResponse $response */
         $response = response($content, 200);
         $response
@@ -125,7 +125,7 @@ class ExportController extends Controller
         $formats       = array_keys(config('firefly.export_formats'));
         $defaultFormat = app('preferences')->get('export_format', config('firefly.default_export_format'))->data;
         $first         = session('first')->format('Y-m-d');
-        $today         = Carbon::create()->format('Y-m-d');
+        $today         = Carbon::now()->format('Y-m-d');
 
         return view('export.index', compact('job', 'formats', 'defaultFormat', 'first', 'today'));
     }

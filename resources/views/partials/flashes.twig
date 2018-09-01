@@ -14,7 +14,15 @@
         <button type="button" class="close" data-dismiss="alert">
             <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
         </button>
-        <strong>{{ 'flash_success'|_ }}</strong> {{ session('success') }}
+        <strong>{{ 'flash_success'|_ }}</strong>
+        {% if session_has('success_uri') %}
+            <a href="{{ session('success_uri') }}">
+        {% endif %}
+                {{ session('success') }}
+        {% if session_has('success_uri') %}
+            </a>
+        {% endif %}
+
     </div>
 {% endif %}
 

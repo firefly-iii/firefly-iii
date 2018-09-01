@@ -42,7 +42,7 @@ class PiggyBankTransformerTest extends TestCase
     /**
      * Test basic transformer.
      *
-     * @covers \FireflyIII\Transformers\PiggyBankTransformer::transform()
+     * @covers \FireflyIII\Transformers\PiggyBankTransformer
      */
     public function testBasic(): void
     {
@@ -87,7 +87,7 @@ class PiggyBankTransformerTest extends TestCase
     /**
      * Test basic transformer with currency preference
      *
-     * @covers \FireflyIII\Transformers\PiggyBankTransformer::transform()
+     * @covers \FireflyIII\Transformers\PiggyBankTransformer()
      */
     public function testBasicWithCurrency(): void
     {
@@ -146,7 +146,7 @@ class PiggyBankTransformerTest extends TestCase
     /**
      * Test basic transformer with currency preference and a note
      *
-     * @covers \FireflyIII\Transformers\PiggyBankTransformer::transform()
+     * @covers \FireflyIII\Transformers\PiggyBankTransformer
      */
     public function testBasicWithCurrencyAndNote(): void
     {

@@ -49,9 +49,9 @@ class TransactionJournalMeta extends Model
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
         ];
-    /** @var array */
+    /** @var array Fields that can be filled */
     protected $fillable = ['transaction_journal_id', 'name', 'data', 'hash'];
-    /** @var string */
+    /** @var string The table to store the data in */
     protected $table = 'journal_meta';
 
     /**
@@ -80,7 +80,7 @@ class TransactionJournalMeta extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
     public function transactionJournal(): BelongsTo
     {

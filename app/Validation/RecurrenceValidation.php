@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Validation\Validator;
 use InvalidArgumentException;
+use Log;
 
 /**
  * Trait RecurrenceValidation
@@ -36,6 +37,39 @@ use InvalidArgumentException;
  */
 trait RecurrenceValidation
 {
+    /**
+     * Adds an error to the validator when there are no repetitions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    public function validateOneRepetition(Validator $validator): void
+    {
+        $data        = $validator->getData();
+        $repetitions = $data['repetitions'] ?? [];
+        // need at least one transaction
+        if (0 === \count($repetitions)) {
+            $validator->errors()->add('description', (string)trans('validation.at_least_one_repetition'));
+        }
+    }
+
+    /**
+     * Validates that the recurrence has valid repetition information. It either doesn't stop,
+     * or stops after X times or at X date. Not both of them.,
+     *
+     * @param Validator $validator
+     */
+    public function validateRecurrenceRepetition(Validator $validator): void
+    {
+        $data        = $validator->getData();
+        $repetitions = $data['nr_of_repetitions'] ?? null;
+        $repeatUntil = $data['repeat_until'] ?? null;
+        if (null !== $repetitions && null !== $repeatUntil) {
+            // expect a date OR count:
+            $validator->errors()->add('repeat_until', (string)trans('validation.require_repeat_until'));
+            $validator->errors()->add('nr_of_repetitions', (string)trans('validation.require_repeat_until'));
+        }
+    }
+
     /**
      * @param Validator $validator
      */
@@ -69,39 +103,6 @@ trait RecurrenceValidation
                     $this->validateYearly($validator, $index, (string)$repetition['moment']);
                     break;
             }
-        }
-    }
-
-    /**
-     * Adds an error to the validator when there are no repetitions in the array of data.
-     *
-     * @param Validator $validator
-     */
-    public function validateOneRepetition(Validator $validator): void
-    {
-        $data        = $validator->getData();
-        $repetitions = $data['repetitions'] ?? [];
-        // need at least one transaction
-        if (\count($repetitions) === 0) {
-            $validator->errors()->add('description', (string)trans('validation.at_least_one_repetition'));
-        }
-    }
-
-    /**
-     * Validates that the recurrence has valid repetition information. It either doesn't stop,
-     * or stops after X times or at X date. Not both of them.,
-     *
-     * @param Validator $validator
-     */
-    public function validateRecurrenceRepetition(Validator $validator): void
-    {
-        $data        = $validator->getData();
-        $repetitions = $data['nr_of_repetitions'] ?? null;
-        $repeatUntil = $data['repeat_until'] ?? null;
-        if (null !== $repetitions && null !== $repeatUntil) {
-            // expect a date OR count:
-            $validator->errors()->add('repeat_until', (string)trans('validation.require_repeat_until'));
-            $validator->errors()->add('nr_of_repetitions', (string)trans('validation.require_repeat_until'));
         }
     }
 
@@ -144,7 +145,7 @@ trait RecurrenceValidation
     protected function validateNdom(Validator $validator, int $index, string $moment): void
     {
         $parameters = explode(',', $moment);
-        if (\count($parameters) !== 2) {
+        if (2 !== \count($parameters)) {
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
 
             return;
@@ -187,6 +188,7 @@ trait RecurrenceValidation
         try {
             Carbon::createFromFormat('Y-m-d', $moment);
         } catch (InvalidArgumentException|Exception $e) {
+            Log::debug(sprintf('Invalid argument for Carbon: %s', $e->getMessage()));
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
         }
     }

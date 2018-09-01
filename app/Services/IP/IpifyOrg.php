@@ -27,7 +27,7 @@ use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Log;
-use RunTimeException;
+use RuntimeException;
 
 /**
  * Class IpifyOrg
@@ -58,7 +58,7 @@ class IpifyOrg implements IPRetrievalInterface
         }
         try {
             $body = (string)$res->getBody()->getContents();
-        } catch (RunTimeException $e) {
+        } catch (RuntimeException $e) {
             Log::error(sprintf('Could not get body from ipify.org result: %s', $e->getMessage()));
             $body = null;
         }

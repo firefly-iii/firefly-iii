@@ -50,12 +50,12 @@ class BunqRoutine implements RoutineInterface
      */
     public function run(): void
     {
-        Log::debug(sprintf('Now in SpectreRoutine::run() with status "%s" and stage "%s".', $this->importJob->status, $this->importJob->stage));
+        Log::debug(sprintf('Now in BunqRoutine::run() with status "%s" and stage "%s".', $this->importJob->status, $this->importJob->stage));
         $valid = ['ready_to_run']; // should be only ready_to_run
         if (\in_array($this->importJob->status, $valid, true)) {
             switch ($this->importJob->stage) {
                 default:
-                    throw new FireflyException(sprintf('SpectreRoutine cannot handle stage "%s".', $this->importJob->stage)); // @codeCoverageIgnore
+                    throw new FireflyException(sprintf('BunqRoutine cannot handle stage "%s".', $this->importJob->stage)); // @codeCoverageIgnore
                 case 'new':
                     // list all of the users accounts.
                     $this->repository->setStatus($this->importJob, 'running');
@@ -77,10 +77,19 @@ class BunqRoutine implements RoutineInterface
                     $handler->setImportJob($this->importJob);
                     $handler->run();
                     $transactions = $handler->getTransactions();
+                    // could be that more transactions will arrive in a second run.
+                    if (true === $handler->stillRunning) {
+                        Log::debug('Handler indicates that it is still working.');
+                        $this->repository->setStatus($this->importJob, 'ready_to_run');
+                        $this->repository->setStage($this->importJob, 'go-for-import');
+                    }
+                    $this->repository->appendTransactions($this->importJob, $transactions);
+                    if (false === $handler->stillRunning) {
+                        Log::info('Handler indicates that its done!');
+                        $this->repository->setStatus($this->importJob, 'provider_finished');
+                        $this->repository->setStage($this->importJob, 'final');
+                    }
 
-                    $this->repository->setTransactions($this->importJob, $transactions);
-                    $this->repository->setStatus($this->importJob, 'provider_finished');
-                    $this->repository->setStage($this->importJob, 'final');
 
                     return;
             }

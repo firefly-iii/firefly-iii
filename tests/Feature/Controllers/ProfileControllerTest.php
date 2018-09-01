@@ -53,7 +53,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::changeEmail()
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testChangeEmail(): void
     {
@@ -64,7 +64,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::changePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testChangePassword(): void
     {
@@ -79,8 +79,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::code
-     * @covers \FireflyIII\Http\Controllers\ProfileController::getDomain
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testCode(): void
     {
@@ -97,7 +96,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController
      * @expectedExceptionMessage Invalid token
      */
     public function testConfirmEmailChangeNoToken(): void
@@ -109,7 +108,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::confirmEmailChange()
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testConfirmEmailWithToken(): void
     {
@@ -127,7 +126,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::deleteAccount
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testDeleteAccount(): void
     {
@@ -142,7 +141,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::deleteCode
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testDeleteCode(): void
     {
@@ -164,7 +163,7 @@ class ProfileControllerTest extends TestCase
     public function testEnable2FANoSecret(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->twice()->andReturn(false);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
         // ask about language:
         $langPreference       = new Preference;
@@ -206,7 +205,7 @@ class ProfileControllerTest extends TestCase
     public function testEnable2FASecret(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->twice()->andReturn(false);
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
         // ask about language:
         $langPreference       = new Preference;
@@ -228,9 +227,9 @@ class ProfileControllerTest extends TestCase
         $listPref->data = '50';
         Preferences::shouldReceive('get')->withArgs(['list-length', '10'])->andReturn($listPref)->once();
 
-        $secretPref= new Preference;
+        $secretPref       = new Preference;
         $secretPref->data = 'X';
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturn(null,$secretPref);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturn(null, $secretPref);
 
         // set pref
         Preferences::shouldReceive('set')->once()->withArgs(['twoFactorAuthEnabled', 1]);
@@ -267,7 +266,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostChangeEmail(): void
     {
@@ -287,7 +286,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostChangeEmailExisting(): void
     {
@@ -307,13 +306,13 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangeEmail
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostChangeEmailSame(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
-        $data       = [
+        $data = [
             'email' => $this->user()->email,
         ];
         $this->be($this->user());
@@ -324,8 +323,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
-     * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostChangePassword(): void
     {
@@ -348,8 +346,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
-     * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostChangePasswordNotCorrect(): void
     {
@@ -372,8 +369,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postChangePassword
-     * @covers \FireflyIII\Http\Controllers\ProfileController::validatePassword
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostChangePasswordSameNew(): void
     {
@@ -396,7 +392,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postCode
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostCode(): void
     {
@@ -423,7 +419,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostDeleteAccount(): void
     {
@@ -443,7 +439,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::postDeleteAccount
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testPostDeleteAccountWrong(): void
     {
@@ -463,11 +459,11 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::regenerate()
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testRegenerate(): void
     {
-        $repository   = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $token        = '';
         $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
@@ -490,7 +486,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @covers \FireflyIII\Http\Controllers\ProfileController
      */
     public function testUndoEmailChange(): void
     {
@@ -519,7 +515,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController
      * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadHash(): void
@@ -544,7 +540,7 @@ class ProfileControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\ProfileController::undoEmailChange()
+     * @covers                   \FireflyIII\Http\Controllers\ProfileController
      * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadToken(): void

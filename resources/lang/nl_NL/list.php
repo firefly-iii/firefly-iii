@@ -104,6 +104,7 @@ return [
     'sum_transfers'           => 'Som van overschrijvingen',
     'reconcile'               => 'Afstemmen',
     'account_on_spectre'      => 'Rekening (Spectre)',
+    'account_on_ynab'         => 'Rekening (YNAB)',
     'do_import'               => 'Importeer van deze rekening',
     'sepa-ct-id'              => 'SEPA end-to-end identificatie',
     'sepa-ct-op'              => 'SEPA identificatie tegenpartij',
@@ -129,4 +130,7 @@ return [
     'transaction_s'           => 'Transactie(s)',
     'field'                   => 'Veld',
     'value'                   => 'Waarde',
+    'interest'                => 'Rente',
+    'interest_period'         => 'renteperiode',
+    'liability_type'          => 'Type passiva',
 ];
