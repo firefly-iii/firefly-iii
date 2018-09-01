@@ -183,6 +183,9 @@ return [
     'scopes_will_be_able'                        => 'Esta aplicação será capaz de:',
     'button_authorize'                           => 'Autorizar',
     'none_in_select_list'                        => '(none)',
+    'name_in_currency'                           => ':name in :currency',
+    'paid_in_currency'                           => 'Paid in :currency',
+    'unpaid_in_currency'                         => 'Unpaid in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Verificar Atualizações',
@@ -810,7 +813,7 @@ return [
     'no_bulk_tags'                            => 'Não atualize a(s) tag(s)',
     'bulk_edit'                               => 'Editar vários',
     'cannot_edit_other_fields'                => 'Você não pode editar em massa outros campos que não esse aqui, porque não há espaço para mostrá-los. Por favor siga o link e editá-los por um por um, se você precisar editar esses campos.',
-    'no_budget'                               => '(sem orçamento)',
+    'no_budget'                               => '(no budget)',
     'no_budget_squared'                       => '(sem orçamento)',
     'perm-delete-many'                        => 'Exclusão de muitos itens de uma só vez pode ser muito perturbador. Por favor, seja cauteloso.',
     'mass_deleted_transactions_success'       => 'Excluído :amount de transação(ões).',

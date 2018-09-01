@@ -184,6 +184,9 @@ return [
     'scopes_will_be_able'                        => 'Bu uygulama şunları yapabilir:',
     'button_authorize'                           => 'İzin ver',
     'none_in_select_list'                        => '(Yok)',
+    'name_in_currency'                           => ':name in :currency',
+    'paid_in_currency'                           => 'Paid in :currency',
+    'unpaid_in_currency'                         => 'Unpaid in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Güncellemeleri kontrol et',
@@ -813,7 +816,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'no_bulk_tags'                            => 'Don\'t update tag(s)',
     'bulk_edit'                               => 'Toplu düzenle',
     'cannot_edit_other_fields'                => 'Gösterecek yer olmadığı için, bu dosya dışındaki dosyaları toplu olarak düzenleyemezsiniz. Eğer o alanları düzenlemeniz gerekliyse lütfen linki takip edin ve onları teker teker düzenleyin.',
-    'no_budget'                               => 'hiçbiri',
+    'no_budget'                               => '(no budget)',
     'no_budget_squared'                       => '(Bütçe yok)',
     'perm-delete-many'                        => 'Birden fazla öğeyi tek seferde silmek sıkıntı olabilir. Lütfen temkinli olun.',
     'mass_deleted_transactions_success'       => 'Silinen :amount işlem(ler).',
