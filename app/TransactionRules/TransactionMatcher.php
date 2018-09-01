@@ -48,34 +48,17 @@ class TransactionMatcher
     private $range = 200;
     /** @var Rule The rule to apply */
     private $rule;
+    /** @var bool */
+    private $strict;
     /** @var array Types that can be matched using this matcher */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
     /** @var array List of triggers to match */
     private $triggers = [];
-    /** @var bool */
-    private $strict;
 
     public function __construct()
     {
         $this->strict = false;
     }
-
-    /**
-     * @return bool
-     */
-    public function isStrict(): bool
-    {
-        return $this->strict;
-    }
-
-    /**
-     * @param bool $strict
-     */
-    public function setStrict(bool $strict): void
-    {
-        $this->strict = $strict;
-    }
-
 
     /**
      * This method will search the user's transaction journal (with an upper limit of $range) for
@@ -92,8 +75,10 @@ class TransactionMatcher
         }
 
         // Variables used within the loop
-        $processor = Processor::make($this->rule, false);
-        $result    = $this->runProcessor($processor);
+        /** @var Processor $processor */
+        $processor = app(Processor::class);
+        $processor->make($this->rule, false);
+        $result = $this->runProcessor($processor);
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list
@@ -200,6 +185,22 @@ class TransactionMatcher
         $this->triggers = $triggers;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStrict(): bool
+    {
+        return $this->strict;
+    }
+
+    /**
+     * @param bool $strict
+     */
+    public function setStrict(bool $strict): void
+    {
+        $this->strict = $strict;
     }
 
     /**
