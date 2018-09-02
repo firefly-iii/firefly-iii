@@ -63,10 +63,12 @@ class BudgetController extends Controller
         $budgets = $helper->getBudgetReport($start, $end, $accounts);
         try {
             $result = view('reports.partials.budgets', compact('budgets'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budgets: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;
@@ -103,10 +105,12 @@ class BudgetController extends Controller
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.budget-period', compact('report', 'periods'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.budget-period: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;

@@ -105,10 +105,10 @@ class EditController extends Controller
             'times'      => (string)trans('firefly.repeat_times'),
         ];
         if (null !== $recurrence->repeat_until) {
-            $repetitionEnd = 'until_date';
+            $repetitionEnd = 'until_date'; // @codeCoverageIgnore
         }
         if ($recurrence->repetitions > 0) {
-            $repetitionEnd = 'times';
+            $repetitionEnd = 'times'; // @codeCoverageIgnore
         }
 
         $weekendResponses = [

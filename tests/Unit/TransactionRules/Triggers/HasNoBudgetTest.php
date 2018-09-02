@@ -72,25 +72,21 @@ class HasNoBudgetTest extends TestCase
      */
     public function testTriggeredTransaction(): void
     {
-        $loopCount = 0;
-        do {
-            $journal = $this->user()->transactionJournals()->inRandomOrder()->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
-        } while ($loopCount < 30 && $count !== 2);
+        $withdrawal = $this->getRandomWithdrawal();
 
-        $transactions = $journal->transactions()->get();
-        $budget       = $journal->user->budgets()->first();
+        $transactions = $withdrawal->transactions()->get();
+        $budget       = $withdrawal->user->budgets()->first();
 
-        $journal->budgets()->detach();
+        $withdrawal->budgets()->detach();
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             $transaction->budgets()->sync([$budget->id]);
             $this->assertEquals(1, $transaction->budgets()->count());
         }
-        $this->assertEquals(0, $journal->budgets()->count());
+        $this->assertEquals(0, $withdrawal->budgets()->count());
 
         $trigger = HasNoBudget::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
+        $result  = $trigger->triggered($withdrawal);
         $this->assertFalse($result);
     }
 
