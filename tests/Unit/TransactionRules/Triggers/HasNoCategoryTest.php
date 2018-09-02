@@ -75,7 +75,7 @@ class HasNoCategoryTest extends TestCase
      */
     public function testTriggeredTransaction(): void
     {
-        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal  = $this->getRandomWithdrawal();
         $transaction = $withdrawal->transactions()->first();
         $category    = $withdrawal->user->categories()->first();
 

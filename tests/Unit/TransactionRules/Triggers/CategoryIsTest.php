@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\CategoryIs;
 use Tests\TestCase;
 
@@ -69,7 +68,7 @@ class CategoryIsTest extends TestCase
      */
     public function testTriggeredTransaction(): void
     {
-        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal  = $this->getRandomWithdrawal();
         $transaction = $withdrawal->transactions()->first();
         $category    = $withdrawal->user->categories()->first();
 

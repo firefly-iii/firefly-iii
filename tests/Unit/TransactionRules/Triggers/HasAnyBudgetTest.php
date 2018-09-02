@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasAnyBudget;
 use Log;
 use Tests\TestCase;

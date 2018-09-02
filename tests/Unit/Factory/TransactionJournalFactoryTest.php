@@ -163,7 +163,7 @@ class TransactionJournalFactoryTest extends TestCase
             'transactions'    => [
                 [
                     'amount' => '',
-                ]
+                ],
             ],
         ];
 

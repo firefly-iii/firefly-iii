@@ -36,6 +36,20 @@ use Tests\TestCase;
 class RedirectIf2FAAuthenticatedTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware(RedirectIfTwoFactorAuthenticated::class)->any(
+            '/_test/authenticate', function () {
+            return 'OK';
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated
      */
     public function testMiddleware(): void
@@ -76,19 +90,5 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
         $this->be($this->user());
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(RedirectIfTwoFactorAuthenticated::class)->any(
-            '/_test/authenticate', function () {
-            return 'OK';
-        }
-        );
     }
 }

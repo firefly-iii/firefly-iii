@@ -75,7 +75,7 @@ class CreateControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
-        $response = $this->get(route('rules.create-from-bill', [1,1]));
+        $response = $this->get(route('rules.create-from-bill', [1, 1]));
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }

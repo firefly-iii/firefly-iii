@@ -47,7 +47,7 @@ class ConvertControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -410,7 +410,7 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexTransferDeposit(): void
     {
         // find transfer:
-        $transfer =$this->getRandomTransfer();
+        $transfer = $this->getRandomTransfer();
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);

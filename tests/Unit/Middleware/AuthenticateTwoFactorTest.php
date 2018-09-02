@@ -36,6 +36,20 @@ use Tests\TestCase;
 class AuthenticateTwoFactorTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware(AuthenticateTwoFactor::class)->any(
+            '/_test/authenticate', function () {
+            return 'OK';
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
     public function testMiddleware(): void
@@ -173,19 +187,5 @@ class AuthenticateTwoFactorTest extends TestCase
         $response = $this->call('GET', '/_test/authenticate', [], $cookie);
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertRedirect(route('two-factor.index'));
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(AuthenticateTwoFactor::class)->any(
-            '/_test/authenticate', function () {
-            return 'OK';
-        }
-        );
     }
 }

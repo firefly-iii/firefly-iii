@@ -122,17 +122,27 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return TransactionJournal
      */
+    public function getRandomTransfer(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::TRANSFER);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
     public function getRandomWithdrawal(): TransactionJournal
     {
         return $this->getRandomJournal(TransactionType::WITHDRAWAL);
     }
 
     /**
-     * @return TransactionJournal
+     *
      */
-    public function getRandomTransfer(): TransactionJournal
+    public function setUp(): void
     {
-        return $this->getRandomJournal(TransactionType::TRANSFER);
+        parent::setUp();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
     }
 
     /**
@@ -166,16 +176,6 @@ abstract class TestCase extends BaseTestCase
     {
         //$this->app->instance($class, $externalMock);
         return Mockery::mock('overload:' . $class);
-    }
-
-    /**
-     *
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
     }
 
     /**

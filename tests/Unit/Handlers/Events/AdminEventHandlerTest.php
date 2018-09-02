@@ -29,9 +29,10 @@ use FireflyIII\Handlers\Events\AdminEventHandler;
 use FireflyIII\Mail\AdminTestMail;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Facades\Mail;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class AdminEventHandlerTest
  */

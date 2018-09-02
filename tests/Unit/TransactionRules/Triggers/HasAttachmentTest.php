@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasAttachment;
 use Tests\TestCase;
 

@@ -36,6 +36,20 @@ use Tests\TestCase;
 class SandstormTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware(Sandstorm::class)->any(
+            '/_test/sandstorm', function () {
+            return view('test.test');
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm
      */
     public function testMiddlewareBasic(): void
@@ -55,19 +69,5 @@ class SandstormTest extends TestCase
         $response->assertSee('sandstorm-anon: false');
 
         putenv('SANDSTORM=0');
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Route::middleware(Sandstorm::class)->any(
-            '/_test/sandstorm', function () {
-            return view('test.test');
-        }
-        );
     }
 }

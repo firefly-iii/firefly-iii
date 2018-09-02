@@ -239,7 +239,7 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::first());
 
         $data = [
-            'name' => 'new pigy bank ' . random_int(1, 10000),
+            'name'          => 'new pigy bank ' . random_int(1, 10000),
             'account_id'    => 1,
             'target_amount' => '100',
         ];

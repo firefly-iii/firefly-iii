@@ -26,9 +26,10 @@ use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Log;
+use Mockery;
 use Steam;
 use Tests\TestCase;
-use Mockery;
+
 /**
  * Class ReportControllerTest
  */
@@ -37,7 +38,7 @@ class ReportControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -55,7 +56,7 @@ class ReportControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
 
         $accountRepos->shouldReceive('getMetaValue')->times(2)
-            ->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1','0');
+                     ->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1', '0');
         $accountRepos->shouldReceive('getMetaValue')
                      ->withArgs([Mockery::any(), 'currency_id'])->andReturn(1);
         $accountRepos->shouldReceive('getMetaValue')
