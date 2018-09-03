@@ -60,6 +60,10 @@ RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/00-curl.conf && ldconfig
 COPY .deploy/docker/supervisord.conf /etc/supervisor/supervisord.conf
 RUN mkdir -p /etc/supervisor/conf.d /var/log/supervisor
 
+# Fix the link to curl:
+RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/x86_64-linux-gnu/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
+
+
 # copy Firefly III supervisor conf file.
 COPY ./.deploy/docker/firefly-iii.conf /etc/supervisor/conf.d/firefly-iii.conf
 
