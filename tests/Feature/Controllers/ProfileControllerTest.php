@@ -49,7 +49,7 @@ class ProfileControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -97,7 +97,6 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\ProfileController
-     * @expectedExceptionMessage Invalid token
      */
     public function testConfirmEmailChangeNoToken(): void
     {
@@ -541,7 +540,6 @@ class ProfileControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\ProfileController
-     * @expectedExceptionMessage Invalid token
      */
     public function testUndoEmailChangeBadToken(): void
     {

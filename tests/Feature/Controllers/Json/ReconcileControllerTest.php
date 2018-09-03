@@ -44,7 +44,7 @@ class ReconcileControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -74,7 +74,6 @@ class ReconcileControllerTest extends TestCase
      * Test overview when it's not an asset.
      *
      * @covers                   \FireflyIII\Http\Controllers\Json\ReconcileController
-     * @expectedExceptionMessage is not an asset account
      */
     public function testOverviewNotAsset(): void
     {

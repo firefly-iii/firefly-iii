@@ -50,7 +50,7 @@ class IndexControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -71,7 +71,7 @@ class IndexControllerTest extends TestCase
         $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');

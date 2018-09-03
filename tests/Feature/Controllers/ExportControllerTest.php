@@ -49,7 +49,7 @@ class ExportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -74,7 +74,6 @@ class ExportControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\ExportController
-     * @expectedExceptionMessage Against all expectations
      */
     public function testDownloadFailed(): void
     {

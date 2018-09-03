@@ -49,7 +49,7 @@ class BudgetControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -95,7 +95,6 @@ class BudgetControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\Chart\BudgetController
-     * @expectedExceptionMessage This budget limit is not part of this budget.
      */
     public function testBudgetLimitWrongLimit(): void
     {

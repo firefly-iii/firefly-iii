@@ -45,7 +45,7 @@ class AttachmentControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -99,7 +99,6 @@ class AttachmentControllerTest extends TestCase
      * Download attachment but file doesn't exist.
      *
      * @covers                   \FireflyIII\Api\V1\Controllers\AttachmentController
-     * @expectedExceptionMessage Some error message
      */
     public function testDownloadNotExisting(): void
     {
