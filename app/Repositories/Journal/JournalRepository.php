@@ -54,6 +54,16 @@ class JournalRepository implements JournalRepositoryInterface
     /** @var User */
     private $user;
 
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionJournal $journal

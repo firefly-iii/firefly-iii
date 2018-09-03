@@ -34,6 +34,20 @@ use Tests\TestCase;
 class IsAdminTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware(IsAdmin::class)->any(
+            '/_test/is-admin', function () {
+            return 'OK';
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\IsAdmin
      */
     public function testMiddleware(): void
@@ -76,19 +90,5 @@ class IsAdminTest extends TestCase
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/is-admin');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(IsAdmin::class)->any(
-            '/_test/is-admin', function () {
-            return 'OK';
-        }
-        );
     }
 }

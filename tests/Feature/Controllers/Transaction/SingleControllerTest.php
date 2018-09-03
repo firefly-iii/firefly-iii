@@ -57,7 +57,7 @@ class SingleControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -249,7 +249,9 @@ class SingleControllerTest extends TestCase
         // mock new account list:
         $currency = TransactionCurrency::first();
         $accountRepos->shouldReceive('getAccountsByType')
-                     ->withArgs([[AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]])->andReturn(new Collection([$account]))->once();
+                     ->withArgs(
+                         [[AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]]
+                     )->andReturn(new Collection([$account]))->once();
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency)->times(6);
 
         $this->be($this->user());
@@ -867,13 +869,7 @@ class SingleControllerTest extends TestCase
         }
 
         // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $withdrawal = $this->getRandomWithdrawal();
         $journalRepos->shouldReceive('update')->andReturn($withdrawal);
 
         $this->session(['transactions.edit.uri' => 'http://localhost']);

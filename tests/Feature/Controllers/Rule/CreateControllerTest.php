@@ -63,6 +63,23 @@ class CreateControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Rule\CreateController
+     */
+    public function testCreateFromBill(): void
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $this->be($this->user());
+        $response = $this->get(route('rules.create-from-bill', [1, 1]));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
     /**
      * @covers \FireflyIII\Http\Controllers\Rule\CreateController
      */

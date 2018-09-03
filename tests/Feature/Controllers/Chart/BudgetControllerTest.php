@@ -46,10 +46,10 @@ class BudgetControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug('Now in Feature/Controllers/Chart/Test.');
+        Log::debug(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**

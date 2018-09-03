@@ -37,6 +37,16 @@ use Log;
 class UserRepository implements UserRepositoryInterface
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * @return Collection
      */
     public function all(): Collection
@@ -55,6 +65,7 @@ class UserRepository implements UserRepositoryInterface
         $roleObject = Role::where('name', $role)->first();
         if (null === $roleObject) {
             Log::error(sprintf('Could not find role "%s" in attachRole()', $role));
+
             return false;
         }
 

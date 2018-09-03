@@ -29,8 +29,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -57,9 +59,12 @@ class DeleteControllerTest extends TestCase
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
 
         $this->be($this->user());
         $account  = $this->user()->accounts()->where('account_type_id', 3)->whereNull('deleted_at')->first();
@@ -78,7 +83,6 @@ class DeleteControllerTest extends TestCase
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('findNull')->withArgs([0])->once()->andReturn(null);
         $repository->shouldReceive('destroy')->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);

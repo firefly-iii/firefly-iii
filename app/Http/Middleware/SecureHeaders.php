@@ -57,7 +57,7 @@ class SecureHeaders
             "form-action 'self'",
             "font-src 'self'",
             "connect-src 'self'",
-            "img-src 'self'",
+            "img-src 'self' data:",
         ];
 
         $featurePolicies = [

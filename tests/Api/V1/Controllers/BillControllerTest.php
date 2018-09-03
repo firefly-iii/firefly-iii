@@ -40,7 +40,7 @@ class BillControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Passport::actingAs($this->user());

@@ -152,8 +152,8 @@ class AttachmentHelperTest extends TestCase
         // mock calls:
         Storage::fake('upload');
 
-        $path       = public_path('browserconfig.xml');
-        $helper     = new AttachmentHelper;
+        $path   = public_path('browserconfig.xml');
+        $helper = new AttachmentHelper;
 
         // make new attachment:
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();

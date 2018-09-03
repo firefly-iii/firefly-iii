@@ -56,7 +56,7 @@ class ReportControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -565,7 +565,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         /** @var Tag $tag */
-        $tag              = $this->user()->tags()->find(1);
+        $tag = $this->user()->tags()->find(1);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
         $tagRepos->shouldReceive('findByTag')->andReturn($tag)->twice();

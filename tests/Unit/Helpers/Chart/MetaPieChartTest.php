@@ -34,8 +34,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class MetaPieChartTest

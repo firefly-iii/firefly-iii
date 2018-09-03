@@ -45,7 +45,7 @@ class CurrencyControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -314,7 +314,7 @@ class CurrencyControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('currencies.store'), $data);
         $response->assertStatus(302);
-        $response->assertSessionHas('error','Could not store the new currency.');
+        $response->assertSessionHas('error', 'Could not store the new currency.');
     }
 
     /**

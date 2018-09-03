@@ -193,7 +193,7 @@ class ChooseAccountsHandlerTest extends TestCase
         ];
         $expected               = $config;
         $expected['mapping'][0] = 456;
-        $expected['bunq-iban']     = [];
+        $expected['bunq-iban']  = [];
 
         // mock stuff
         $repository    = $this->mock(ImportJobRepositoryInterface::class);

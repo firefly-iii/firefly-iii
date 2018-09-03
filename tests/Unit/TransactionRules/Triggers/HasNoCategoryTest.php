@@ -75,21 +75,17 @@ class HasNoCategoryTest extends TestCase
      */
     public function testTriggeredTransaction(): void
     {
-        $count = 0;
-        while ($count === 0) {
-            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
-        }
-        $transaction = $journal->transactions()->first();
-        $category    = $journal->user->categories()->first();
+        $withdrawal  = $this->getRandomWithdrawal();
+        $transaction = $withdrawal->transactions()->first();
+        $category    = $withdrawal->user->categories()->first();
 
-        $journal->categories()->detach();
+        $withdrawal->categories()->detach();
         $transaction->categories()->sync([$category->id]);
-        $this->assertEquals(0, $journal->categories()->count());
+        $this->assertEquals(0, $withdrawal->categories()->count());
         $this->assertEquals(1, $transaction->categories()->count());
 
         $trigger = HasNoCategory::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
+        $result  = $trigger->triggered($withdrawal);
         $this->assertFalse($result);
     }
 

@@ -35,6 +35,20 @@ use Tests\TestCase;
 class IsDemoUserTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        Route::middleware([StartFireflySession::class, IsDemoUser::class])->any(
+            '/_test/is-demo', function () {
+            return 'OK';
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\IsDemoUser
      */
     public function testMiddlewareAuthenticated(): void
@@ -62,19 +76,5 @@ class IsDemoUserTest extends TestCase
     {
         $response = $this->get('/_test/is-demo');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware([StartFireflySession::class, IsDemoUser::class])->any(
-            '/_test/is-demo', function () {
-            return 'OK';
-        }
-        );
     }
 }

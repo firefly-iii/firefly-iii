@@ -24,9 +24,11 @@ declare(strict_types=1);
 namespace Tests;
 
 use Carbon\Carbon;
+use DB;
 use Exception;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -40,7 +42,6 @@ use Mockery;
  */
 abstract class TestCase extends BaseTestCase
 {
-
 
     /**
      * @param User   $user
@@ -76,8 +77,6 @@ abstract class TestCase extends BaseTestCase
         }
     }
 
-    use CreatesApplication;
-
     /**
      * @return array
      */
@@ -94,6 +93,8 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
+    use CreatesApplication;
+
     /**
      * @return User
      */
@@ -108,6 +109,40 @@ abstract class TestCase extends BaseTestCase
     public function emptyUser(): User
     {
         return User::find(2);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomDeposit(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::DEPOSIT);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomTransfer(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::TRANSFER);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomWithdrawal(): TransactionJournal
+    {
+        return $this->getRandomJournal(TransactionType::WITHDRAWAL);
+    }
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
     }
 
     /**
@@ -144,12 +179,30 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @param string $type
      *
+     * @return TransactionJournal
      */
-    protected function setUp()
+    private function getRandomJournal(string $type): TransactionJournal
     {
-        parent::setUp();
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
+        $query  = DB::table('transactions')
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                    ->where('transaction_journals.user_id', $this->user()->id)
+                    ->whereNull('transaction_journals.deleted_at')
+                    ->whereNull('transactions.deleted_at')
+                    ->where('transaction_types.type', $type)
+                    ->groupBy('transactions.transaction_journal_id')
+                    ->having('ct', '=', 2)
+                    ->inRandomOrder()->take(1);
+        $result = $query->get(
+            [
+                'transactions.transaction_journal_id',
+                'transaction_journalstransaction_type_id',
+                DB::raw('COUNT(transaction_journal_id) as ct'),
+            ]
+        )->first();
+
+        return TransactionJournal::find((int)$result->transaction_journal_id);
     }
 }

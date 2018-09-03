@@ -32,9 +32,11 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -68,6 +70,10 @@ class ShowControllerTest extends TestCase
         $tasker        = $this->mock(AccountTaskerInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
@@ -106,41 +112,6 @@ class ShowControllerTest extends TestCase
      *
      * @param string $range
      */
-    public function testShowLiability(string $range): void
-    {
-        $date = new Carbon;
-        $this->session(['start' => $date, 'end' => clone $date]);
-        $account  = $this->user()->accounts()->where('account_type_id', 12)->whereNull('deleted_at')->first();
-
-        // mock stuff:
-        $tasker        = $this->mock(AccountTaskerInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
-        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
-
-        $repository = $this->mock(AccountRepositoryInterface::class);
-        $repository->shouldReceive('getMetaValue')->andReturn('');
-        $repository->shouldReceive('isLiability')->andReturn(true);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('accounts.show', [$account->id]));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('accounts.show.all', [$account->id]));
-    }
-
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
     public function testShowAll(string $range): void
     {
         $date = new Carbon;
@@ -150,6 +121,10 @@ class ShowControllerTest extends TestCase
         $tasker        = $this->mock(AccountTaskerInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
@@ -189,9 +164,8 @@ class ShowControllerTest extends TestCase
     public function testShowBrokenBadDates(): void
     {
         // mock
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $this->session(['start' => '2018-01-01', 'end' => '2017-12-01']);
 
         $this->be($this->user());
@@ -207,7 +181,6 @@ class ShowControllerTest extends TestCase
     {
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -232,6 +205,12 @@ class ShowControllerTest extends TestCase
         $collector     = $this->mock(TransactionCollectorInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -239,7 +218,7 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
 
-        $repository = $this->mock(AccountRepositoryInterface::class);
+
         $repository->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
         $repository->shouldReceive('getMetaValue')->andReturn('');
         $repository->shouldReceive('isLiability')->andReturn(false);
@@ -265,8 +244,7 @@ class ShowControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -275,6 +253,41 @@ class ShowControllerTest extends TestCase
         $account  = $this->user()->accounts()->where('account_type_id', 6)->orderBy('id', 'DESC')->whereNull('deleted_at')->first();
         $response = $this->get(route('accounts.show', [$account->id]));
         $response->assertStatus(302);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Account\ShowController
+     * @dataProvider dateRangeProvider
+     *
+     * @param string $range
+     */
+    public function testShowLiability(string $range): void
+    {
+        $date = new Carbon;
+        $this->session(['start' => $date, 'end' => clone $date]);
+        $account = $this->user()->accounts()->where('account_type_id', 12)->whereNull('deleted_at')->first();
+
+        // mock stuff:
+        $tasker        = $this->mock(AccountTaskerInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
+
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $tasker->shouldReceive('amountOutInPeriod')->withAnyArgs()->andReturn('-1');
+        $tasker->shouldReceive('amountInInPeriod')->withAnyArgs()->andReturn('1');
+
+
+        $repository->shouldReceive('getMetaValue')->andReturn('');
+        $repository->shouldReceive('isLiability')->andReturn(true);
+
+        $this->be($this->user());
+        $this->changeDateRange($this->user(), $range);
+        $response = $this->get(route('accounts.show', [$account->id]));
+        $response->assertStatus(302);
+        $response->assertRedirect(route('accounts.show.all', [$account->id]));
     }
 
 }

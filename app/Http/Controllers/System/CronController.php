@@ -49,7 +49,8 @@ class CronController
      */
     private function runRecurring(): string
     {
-        $recurring = new RecurringCronjob;
+        /** @var RecurringCronjob $recurring */
+        $recurring = app(RecurringCronjob::class);
         try {
             $result = $recurring->fire();
         } catch (FireflyException $e) {

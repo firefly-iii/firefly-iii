@@ -29,6 +29,7 @@ use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class RuleRepository.
@@ -39,6 +40,16 @@ class RuleRepository implements RuleRepositoryInterface
 {
     /** @var User */
     private $user;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /**
      * @return int

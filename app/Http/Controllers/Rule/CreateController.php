@@ -258,10 +258,13 @@ class CreateController extends Controller
                         'count'      => $index + 1,
                     ]
                 )->render();
+                // @codeCoverageIgnoreStart
             } catch (Throwable $e) {
+
                 Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
                 Log::debug($e->getTraceAsString());
                 $string = '';
+                // @codeCoverageIgnoreEnd
             }
             if ('' !== $string) {
                 $result[] = $string;

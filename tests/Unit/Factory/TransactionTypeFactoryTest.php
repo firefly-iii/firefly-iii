@@ -54,7 +54,7 @@ class TransactionTypeFactoryTest extends TestCase
         /** @var TransactionTypeFactory $factory */
         $factory = app(TransactionTypeFactory::class);
 
-        $result  = $factory->find($type->type);
+        $result = $factory->find($type->type);
 
         $this->assertEquals($result->id, $type->id);
     }

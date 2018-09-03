@@ -66,7 +66,7 @@ class HelpTest extends TestCase
         // now let's see what happens:
         $help   = new Help;
         $result = $help->getFromGitHub('test-route', 'en_US');
-        $this->assertEquals('<p>Some help text.</p>'."\n", $result);
+        $this->assertEquals('<p>Some help text.</p>' . "\n", $result);
     }
 
     /**

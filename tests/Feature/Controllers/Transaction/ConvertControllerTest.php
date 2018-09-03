@@ -47,7 +47,7 @@ class ConvertControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Log::debug(sprintf('Now in %s.', \get_class($this)));
@@ -56,7 +56,6 @@ class ConvertControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexDepositTransfer(): void
     {
@@ -64,13 +63,7 @@ class ConvertControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // find deposit:
-        $loop = 0;
-        do {
-            $deposit = TransactionJournal::where('transaction_type_id', 2)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count   = $deposit->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $deposit = $this->getRandomDeposit();
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -102,13 +95,7 @@ class ConvertControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // find deposit:
-        $loop = 0;
-        do {
-            $deposit = TransactionJournal::where('transaction_type_id', 2)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count   = $deposit->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $deposit = $this->getRandomDeposit();
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -135,13 +122,7 @@ class ConvertControllerTest extends TestCase
         // mock stuff:
 
         // find deposit:
-        $loop = 0;
-        do {
-            $deposit = TransactionJournal::where('transaction_type_id', 2)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count   = $deposit->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $deposit      = $this->getRandomDeposit();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
@@ -190,13 +171,7 @@ class ConvertControllerTest extends TestCase
         // mock stuff:
 
         // find transfer:
-        $loop = 0;
-        do {
-            $transfer = TransactionJournal::where('transaction_type_id', 3)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count    = $transfer->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $transfer     = $this->getRandomTransfer();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->andReturn($transfer);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
@@ -215,13 +190,7 @@ class ConvertControllerTest extends TestCase
     public function testIndexTransferWithdrawal(): void
     {
         // find transfer:
-        $loop = 0;
-        do {
-            $transfer = TransactionJournal::where('transaction_type_id', 3)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count    = $transfer->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $transfer = $this->getRandomTransfer();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
@@ -247,13 +216,7 @@ class ConvertControllerTest extends TestCase
     {
 
         // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $withdrawal = $this->getRandomWithdrawal();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
@@ -278,13 +241,7 @@ class ConvertControllerTest extends TestCase
     public function testIndexWithdrawalTransfer(): void
     {
         // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $withdrawal = $this->getRandomWithdrawal();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
@@ -379,13 +336,7 @@ class ConvertControllerTest extends TestCase
         $account      = $this->user()->accounts()->first();
 
         // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $withdrawal = $this->getRandomWithdrawal();
 
         // mock stuff
         $messageBag = new MessageBag;
@@ -459,12 +410,7 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexTransferDeposit(): void
     {
         // find transfer:
-        $loop = 0;
-        do {
-            $transfer = TransactionJournal::where('transaction_type_id', 3)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count    = $transfer->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
+        $transfer = $this->getRandomTransfer();
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);

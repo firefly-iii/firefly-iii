@@ -95,34 +95,13 @@ class ChartJsGeneratorTest extends TestCase
     /**
      * @covers \FireflyIII\Generator\Chart\Basic\ChartJsGenerator
      */
-    public function testPieChart(): void
-    {
-
-        $data = [
-            'one'   => -1,
-            'two'   => -2,
-            'three' => -3,
-        ];
-
-        /** @var ChartJsGenerator $generator */
-        $generator = new ChartJsGenerator();
-        $result    = $generator->pieChart($data);
-
-        $this->assertEquals('three', $result['labels'][0]);
-        $this->assertEquals(3.0, $result['datasets'][0]['data'][0]);
-
-    }
-
-    /**
-     * @covers \FireflyIII\Generator\Chart\Basic\ChartJsGenerator
-     */
     public function testMultiCurrencyPieChart(): void
     {
 
         $data = [
-            'one'   => ['amount' => -1,'currency_symbol' => 'a'],
-            'two'   => ['amount' => -2,'currency_symbol' => 'b'],
-            'three' => ['amount' => -3,'currency_symbol' => 'c'],
+            'one'   => ['amount' => -1, 'currency_symbol' => 'a'],
+            'two'   => ['amount' => -2, 'currency_symbol' => 'b'],
+            'three' => ['amount' => -3, 'currency_symbol' => 'c'],
         ];
 
         /** @var ChartJsGenerator $generator */
@@ -141,14 +120,35 @@ class ChartJsGeneratorTest extends TestCase
     {
 
         $data = [
-            'one'   => ['amount' => 1,'currency_symbol' => 'a'],
-            'two'   => ['amount' => 2,'currency_symbol' => 'b'],
-            'three' => ['amount' => 3,'currency_symbol' => 'c'],
+            'one'   => ['amount' => 1, 'currency_symbol' => 'a'],
+            'two'   => ['amount' => 2, 'currency_symbol' => 'b'],
+            'three' => ['amount' => 3, 'currency_symbol' => 'c'],
         ];
 
         /** @var ChartJsGenerator $generator */
         $generator = new ChartJsGenerator();
         $result    = $generator->multiCurrencyPieChart($data);
+
+        $this->assertEquals('three', $result['labels'][0]);
+        $this->assertEquals(3.0, $result['datasets'][0]['data'][0]);
+
+    }
+
+    /**
+     * @covers \FireflyIII\Generator\Chart\Basic\ChartJsGenerator
+     */
+    public function testPieChart(): void
+    {
+
+        $data = [
+            'one'   => -1,
+            'two'   => -2,
+            'three' => -3,
+        ];
+
+        /** @var ChartJsGenerator $generator */
+        $generator = new ChartJsGenerator();
+        $result    = $generator->pieChart($data);
 
         $this->assertEquals('three', $result['labels'][0]);
         $this->assertEquals(3.0, $result['datasets'][0]['data'][0]);

@@ -31,6 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -56,11 +57,16 @@ class EditControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
-        $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
+        $repository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
@@ -97,9 +103,13 @@ class EditControllerTest extends TestCase
      */
     public function testEditLiability(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
         $repository->shouldReceive('get')->andReturn(new Collection);
@@ -139,9 +149,13 @@ class EditControllerTest extends TestCase
     public function testEditNull(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(2));
         $repository->shouldReceive('findNull')->once()->andReturn(null);
@@ -187,6 +201,7 @@ class EditControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $repository->shouldReceive('update')->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 

@@ -90,7 +90,7 @@ class RuleGroupControllerTest extends TestCase
     public function testShow(): void
     {
         /** @var RuleGroup $ruleGroup */
-        $ruleGroup = $this->user()->ruleGroups()->first();
+        $ruleGroup      = $this->user()->ruleGroups()->first();
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $ruleGroupRepos->shouldReceive('setUser')->once();
 

@@ -67,10 +67,12 @@ class CategoryController extends Controller
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = 'An error prevented Firefly III from rendering. Apologies.';
         }
+        // @codeCoverageIgnoreEnd
 
         $cache->store($result);
 
@@ -107,10 +109,12 @@ class CategoryController extends Controller
         $periods    = app('navigation')->listOfPeriods($start, $end);
         try {
             $result = view('reports.partials.category-period', compact('report', 'periods'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = 'An error prevented Firefly III from rendering. Apologies.';
         }
+        // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;
@@ -160,10 +164,12 @@ class CategoryController extends Controller
         try {
             $result = view('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = 'An error prevented Firefly III from rendering. Apologies.';
         }
+        // @codeCoverageIgnoreEnd
 
         return $result;
     }

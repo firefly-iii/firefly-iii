@@ -1,7 +1,7 @@
 <?php
 /**
- * HomeControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * DeleteControllerTest.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,19 +18,21 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace Tests\Feature\Controllers\Admin;
+namespace Tests\Feature\Controllers\Recurring;
 
-use Event;
-use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class HomeControllerTest
+ *
+ * Class DeleteControllerTest
  */
-class HomeControllerTest extends TestCase
+class DeleteControllerTest extends TestCase
 {
     /**
      *
@@ -42,28 +44,34 @@ class HomeControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\HomeController
+     * @covers \FireflyIII\Http\Controllers\Recurring\DeleteController
      */
-    public function testIndex(): void
+    public function testDelete(): void
     {
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $recurringRepos->shouldReceive('getTransactions')->andReturn(new Collection())->once();
+
+
         $this->be($this->user());
-        $response = $this->get(route('admin.index'));
+        $response = $this->get(route('recurring.delete', [1]));
         $response->assertStatus(200);
-        // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Admin\HomeController
+     * @covers \FireflyIII\Http\Controllers\Recurring\DeleteController
      */
-    public function testTestMessage(): void
+    public function testDestroy(): void
     {
-        Event::fake();
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $recurringRepos->shouldReceive('destroy')->once();
+
 
         $this->be($this->user());
-        $response = $this->post(route('admin.test-message'));
+        $response = $this->post(route('recurring.destroy', [1]));
         $response->assertStatus(302);
-
-        Event::assertDispatched(AdminRequestedTestMessage::class);
+        $response->assertSessionHas('success');
     }
+
+
 }

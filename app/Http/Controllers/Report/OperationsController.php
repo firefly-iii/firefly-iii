@@ -81,10 +81,12 @@ class OperationsController extends Controller
         $type    = 'expense-entry';
         try {
             $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expense: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;
@@ -114,10 +116,12 @@ class OperationsController extends Controller
         $type    = 'income-entry';
         try {
             $result = view('reports.partials.income-expenses', compact('entries', 'type'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.income-expenses: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
 
         $cache->store($result);
 
@@ -166,10 +170,12 @@ class OperationsController extends Controller
         );
         try {
             $result = view('reports.partials.operations', compact('incomeSum', 'expensesSum'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render reports.partials.operations: %s', $e->getMessage()));
             $result = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
         $cache->store($result);
 
         return $result;
