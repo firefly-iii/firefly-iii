@@ -1216,7 +1216,7 @@ return [
     'no_accounts_create_revenue'            => 'Crea conto entrate',
     'no_accounts_title_liabilities'         => 'Creiamo una passività!',
     'no_accounts_intro_liabilities'         => 'Non hai ancora delle passività. Le passività sono conti che registrano le tue carte di credito, i prestiti (studenteschi) e altri debiti.',
-    'no_accounts_imperative_liabilities'    => 'Non è necessario che usi questa funzionalità ma può essere utile se vuoi tenere traccia queste cose.',
+    'no_accounts_imperative_liabilities'    => 'Non è necessario che usi questa funzionalità ma può essere utile se vuoi tenere traccia di queste cose.',
     'no_accounts_create_liabilities'        => 'Crea una passività',
     'no_budgets_title_default'              => 'Creiamo un budget',
     'no_budgets_intro_default'              => 'Non hai ancora budget. I budget sono usati per organizzare le tue spese in gruppi logici, ai quali puoi dare un tetto indicativo per limitare le tue spese.',
