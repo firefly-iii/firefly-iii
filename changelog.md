@@ -2,6 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+
+## [4.7.6.1] - 2018-09-02
+### Fixed
+- An issue where I switched variables from the Docker `.env` file to the normal `.env` file and vice versa -- breaking both.
+- [Issue 1649](https://github.com/firefly-iii/firefly-iii/issues/1649) 2FA QR code would not show up due to very strict security policy headers
+- Docker build gave a cURL error whenever it runs PHP commands.
+
 ## [4.7.6] - 2018-09-02
 ### Added
 - [Issue 145](https://github.com/firefly-iii/firefly-iii/issues/145) You can now download transactions from YNAB.
