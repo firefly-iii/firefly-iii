@@ -33,9 +33,10 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Mockery;
+
 /**
  *
  * Class CreateControllerTest
@@ -48,7 +49,7 @@ class CreateControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -66,7 +67,7 @@ class CreateControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -90,8 +91,8 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         // mock stuff
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
 
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -119,8 +120,8 @@ class CreateControllerTest extends TestCase
     public function testStoreAnother(): void
     {
         // mock stuff
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
 
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);

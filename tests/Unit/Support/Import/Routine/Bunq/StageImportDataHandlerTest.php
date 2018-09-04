@@ -44,12 +44,22 @@ use FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class StageImportDataHandlerTest
  */
 class StageImportDataHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler
      */

@@ -26,6 +26,7 @@ namespace Tests\Feature\Controllers\Import;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -43,7 +44,7 @@ class JobConfigurationControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -62,6 +63,9 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();
@@ -94,8 +98,10 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        // mock calls:
+
+
 
         $this->be($this->user());
         $response = $this->get(route('import.job.configuration.index', [$job->key]));
@@ -120,6 +126,7 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();
@@ -152,6 +159,7 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();
@@ -186,6 +194,7 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // call thing.
         $this->be($this->user());
@@ -212,6 +221,8 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
 
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();
@@ -245,6 +256,7 @@ class JobConfigurationControllerTest extends TestCase
         // mock repositories and configuration handling classes:
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $configurator->shouldReceive('setImportJob')->once();

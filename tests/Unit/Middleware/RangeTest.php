@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class RangeTest
@@ -41,7 +42,7 @@ class RangeTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        Log::info(sprintf('Now in %s.', \get_class($this)));
         Route::middleware(Range::class)->any(
             '/_test/range', function () {
             return view('test.test');

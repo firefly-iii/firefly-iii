@@ -34,12 +34,22 @@ use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Services\Internal\Update\TransactionUpdateService;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class JournalUpdateServiceTest
  */
 class JournalUpdateServiceTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Services\Internal\Update\JournalUpdateService
      * @covers \FireflyIII\Services\Internal\Support\JournalServiceTrait

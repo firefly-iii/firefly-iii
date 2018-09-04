@@ -24,9 +24,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Recurring;
 
 use FireflyIII\Models\Configuration;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -41,7 +44,7 @@ class IndexControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -50,7 +53,13 @@ class IndexControllerTest extends TestCase
     public function testIndex(): void
     {
 
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $budgetRepos->shouldReceive('findNull')->withAnyArgs()->andReturn($this->user()->budgets()->first())->atLeast()->once();
 
         $config       = new Configuration;
         $config->data = 0;
@@ -79,7 +88,14 @@ class IndexControllerTest extends TestCase
 
     public function testShow(): void
     {
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $budgetRepos->shouldReceive('findNull')->withAnyArgs()->andReturn($this->user()->budgets()->first())->atLeast()->once();
+
+
         $recurrence = $this->user()->recurrences()->first();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getNoteText')->andReturn('Notes');

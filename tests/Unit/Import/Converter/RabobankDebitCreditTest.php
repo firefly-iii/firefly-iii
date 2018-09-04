@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\Converter;
 
 use FireflyIII\Import\Converter\RabobankDebitCredit;
+use Log;
 use Tests\TestCase;
 
 /**
@@ -31,6 +32,16 @@ use Tests\TestCase;
  */
 class RabobankDebitCreditTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Import\Converter\RabobankDebitCredit
      */

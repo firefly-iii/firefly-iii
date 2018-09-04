@@ -28,12 +28,21 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Import\Placeholder\ColumnValue;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class ImportTransactionTest
  */
 class ImportTransactionTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Test what happens when you set the account-id using a ColumnValue.
      * Since this field can be mapped. Test with both the mapped and unmapped variant.

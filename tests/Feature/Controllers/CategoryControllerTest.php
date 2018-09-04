@@ -28,8 +28,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -47,7 +49,7 @@ class CategoryControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -60,7 +62,10 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('categories.create'));
@@ -79,7 +84,10 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('categories.delete', [1]));
@@ -98,8 +106,9 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $categoryRepos->shouldReceive('destroy')->andReturn(true);
 
         $this->session(['categories.delete.uri' => 'http://localhost']);
@@ -119,7 +128,10 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('categories.edit', [1]));
@@ -139,9 +151,12 @@ class CategoryControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]))->once();
         $categoryRepos->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('categories.index'));
@@ -160,6 +175,8 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('findNull')->andReturn(new Category);
         $repository->shouldReceive('store')->andReturn(new Category);
@@ -186,6 +203,8 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('update');
         $repository->shouldReceive('findNull')->andReturn($category);

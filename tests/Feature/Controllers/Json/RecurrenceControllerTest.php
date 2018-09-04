@@ -42,7 +42,7 @@ class RecurrenceControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -158,6 +158,8 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testEventsStartAfterEnd(): void
     {
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+
         $parameters = [
             'start'      => '2018-01-01',
             'end'        => '2018-01-31',
@@ -336,6 +338,8 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testSuggest(): void
     {
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+
         $this->be($this->user());
 
         $parameters = [

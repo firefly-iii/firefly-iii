@@ -36,12 +36,21 @@ use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class StageImportDataHandlerTest
  */
 class StageImportDataHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
     /**
      * @covers \FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler
      */

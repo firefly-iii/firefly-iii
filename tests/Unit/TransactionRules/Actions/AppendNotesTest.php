@@ -27,12 +27,21 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class AppendNotesTest
  */
 class AppendNotesTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes
      */
@@ -62,7 +71,6 @@ class AppendNotesTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\AppendNotes()
      * @covers \FireflyIII\TransactionRules\Actions\AppendNotes
      */
     public function testActNewNote(): void

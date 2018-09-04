@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Github\Object\Release;
 use FireflyIII\Services\Github\Request\UpdateRequest;
 use Log;
@@ -43,7 +44,7 @@ class UpdateControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -51,6 +52,10 @@ class UpdateControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $this->be($this->user());
 
         $config       = new Configuration;
@@ -74,6 +79,11 @@ class UpdateControllerTest extends TestCase
      */
     public function testPost(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
 
@@ -93,6 +103,11 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdateCheck(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
@@ -123,6 +138,11 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdateCheckCurrent(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
@@ -151,6 +171,11 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdateCheckError(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
@@ -174,6 +199,11 @@ class UpdateControllerTest extends TestCase
      */
     public function testUpdateCheckNewer(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);

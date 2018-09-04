@@ -24,11 +24,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Recurring;
 
 use Carbon\Carbon;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -43,7 +47,7 @@ class EditControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -53,6 +57,11 @@ class EditControllerTest extends TestCase
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  =$this->mock(AccountRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $recurringRepos->shouldReceive('setUser');
         $recurringRepos->shouldReceive('getNoteText')->andReturn('Note!');
@@ -80,6 +89,9 @@ class EditControllerTest extends TestCase
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
         $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  =$this->mock(AccountRepositoryInterface::class);
 
         $recurringRepos->shouldReceive('update')->once();
 

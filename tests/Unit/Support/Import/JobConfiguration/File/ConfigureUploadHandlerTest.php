@@ -30,12 +30,21 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
 use Mockery;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class ConfigureUploadHandlerTest
  */
 class ConfigureUploadHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler
      */

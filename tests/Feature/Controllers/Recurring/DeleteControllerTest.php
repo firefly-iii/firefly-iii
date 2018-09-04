@@ -24,8 +24,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Recurring;
 
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -40,7 +42,7 @@ class DeleteControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -49,8 +51,10 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $recurringRepos->shouldReceive('getTransactions')->andReturn(new Collection())->once();
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
+        $recurringRepos->shouldReceive('getTransactions')->andReturn(new Collection())->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('recurring.delete', [1]));
@@ -64,6 +68,8 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
         $recurringRepos->shouldReceive('destroy')->once();
 
 

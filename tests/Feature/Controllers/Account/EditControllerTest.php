@@ -49,7 +49,7 @@ class EditControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -57,10 +57,10 @@ class EditControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
 
@@ -103,10 +103,10 @@ class EditControllerTest extends TestCase
      */
     public function testEditLiability(): void
     {
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
@@ -149,10 +149,10 @@ class EditControllerTest extends TestCase
     public function testEditNull(): void
     {
         // mock stuff
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();

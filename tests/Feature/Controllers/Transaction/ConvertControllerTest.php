@@ -30,9 +30,11 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -50,7 +52,7 @@ class ConvertControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -61,6 +63,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // find deposit:
         $deposit = $this->getRandomDeposit();
@@ -93,6 +97,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // find deposit:
         $deposit = $this->getRandomDeposit();
@@ -124,6 +130,8 @@ class ConvertControllerTest extends TestCase
         // find deposit:
         $deposit      = $this->getRandomDeposit();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
 
@@ -141,6 +149,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
 
@@ -173,6 +183,9 @@ class ConvertControllerTest extends TestCase
         // find transfer:
         $transfer     = $this->getRandomTransfer();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn($transfer);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -193,6 +206,9 @@ class ConvertControllerTest extends TestCase
         $transfer = $this->getRandomTransfer();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -219,6 +235,9 @@ class ConvertControllerTest extends TestCase
         $withdrawal = $this->getRandomWithdrawal();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -244,6 +263,9 @@ class ConvertControllerTest extends TestCase
         $withdrawal = $this->getRandomWithdrawal();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -272,6 +294,7 @@ class ConvertControllerTest extends TestCase
         // mock stuff
 
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -293,6 +316,8 @@ class ConvertControllerTest extends TestCase
         // mock stuff
 
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -315,6 +340,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -333,6 +360,8 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexErrored(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $account      = $this->user()->accounts()->first();
 
         // find withdrawal:
@@ -365,6 +394,8 @@ class ConvertControllerTest extends TestCase
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -386,6 +417,8 @@ class ConvertControllerTest extends TestCase
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -414,6 +447,8 @@ class ConvertControllerTest extends TestCase
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -438,6 +473,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -456,6 +493,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -474,6 +513,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('convert')->andReturn(new MessageBag);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 

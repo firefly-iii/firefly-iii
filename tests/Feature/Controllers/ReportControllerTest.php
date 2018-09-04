@@ -40,8 +40,10 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -59,7 +61,7 @@ class ReportControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -69,6 +71,7 @@ class ReportControllerTest extends TestCase
     public function testAccountReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $generator    = $this->mock(AcYRG::class);
@@ -93,6 +96,7 @@ class ReportControllerTest extends TestCase
     public function testAuditReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $generator    = $this->mock(AYRG::class);
@@ -115,6 +119,7 @@ class ReportControllerTest extends TestCase
     public function testBudgetReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $generator    = $this->mock(BYRG::class);
@@ -137,6 +142,8 @@ class ReportControllerTest extends TestCase
     public function testCategoryReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $generator    = $this->mock(CYRG::class);
@@ -159,6 +166,8 @@ class ReportControllerTest extends TestCase
     public function testDefaultReport(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $generator    = $this->mock(SYRG::class);
@@ -180,6 +189,8 @@ class ReportControllerTest extends TestCase
     public function testDefaultReportBadDate(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $budgetRepository->shouldReceive('cleanupBudgets');
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -197,7 +208,10 @@ class ReportControllerTest extends TestCase
     public function testIndex(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $budgetRepository->shouldReceive('cleanupBudgets');
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $helper       = $this->mock(ReportHelperInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -218,6 +232,8 @@ class ReportControllerTest extends TestCase
     public function testOptions(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -233,6 +249,8 @@ class ReportControllerTest extends TestCase
     public function testOptionsAccount(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $account       = new Account();
         $account->name = 'Something';
@@ -256,6 +274,8 @@ class ReportControllerTest extends TestCase
     public function testOptionsBudget(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -275,6 +295,8 @@ class ReportControllerTest extends TestCase
     public function testOptionsCategory(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -293,6 +315,8 @@ class ReportControllerTest extends TestCase
     public function testOptionsTag(): void
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -316,6 +340,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->times(3);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -343,6 +369,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -369,6 +397,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -398,6 +428,7 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -427,6 +458,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -456,6 +489,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $categoryRepos->shouldReceive('findNull')->andReturn($this->user()->categories()->find(1))->twice();
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -484,6 +519,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -510,6 +547,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -536,6 +575,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -564,6 +605,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         /** @var Tag $tag */
         $tag = $this->user()->tags()->find(1);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -594,6 +637,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $data = [
@@ -620,7 +665,9 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $generator        = $this->mock(TYRG::class);
-        $tag              = $this->user()->tags()->find(1);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
+        $tag = $this->user()->tags()->find(1);
 
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));

@@ -27,12 +27,14 @@ namespace Tests\Unit\Support\Import\Routine\File;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
 use FireflyIII\Support\Import\Routine\File\AssetAccountMapper;
 use FireflyIII\Support\Import\Routine\File\CurrencyMapper;
 use FireflyIII\Support\Import\Routine\File\ImportableConverter;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
+use Log;
 use Mockery;
 use Tests\TestCase;
 
@@ -46,6 +48,15 @@ use Tests\TestCase;
  */
 class ImportableConverterTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Basic test. Should match a withdrawal. Amount is negative.
      *
@@ -71,6 +82,9 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -128,6 +142,10 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('getMetaValue')
+            ->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -149,7 +167,7 @@ class ImportableConverterTest extends TestCase
 
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['name' => null, 'code' => null, 'symbol' => null]])->andReturn(null);
         $currencyMapper->shouldReceive('map')->once()->withArgs([null, ['code' => null]])->andReturn(null);
-        $currencyMapper->shouldReceive('map')->times(1)->withArgs([$euro->id, []])->andReturn($euro);
+        $currencyMapper->shouldReceive('map')->times(2)->withArgs([$euro->id, []])->andReturn($euro);
 
 
         $converter = new ImportableConverter;
@@ -189,6 +207,8 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -251,6 +271,8 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -308,6 +330,8 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -379,6 +403,8 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -444,6 +470,8 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();
@@ -492,7 +520,10 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
-        $euro           = TransactionCurrency::whereCode('EUR')->first();
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
+
+        $euro = TransactionCurrency::whereCode('EUR')->first();
         Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro)->once();
         $repository->shouldReceive('setUser')->once();
         $assetMapper->shouldReceive('setUser')->once();
@@ -522,7 +553,10 @@ class ImportableConverterTest extends TestCase
         $assetMapper    = $this->mock(AssetAccountMapper::class);
         $opposingMapper = $this->mock(OpposingAccountMapper::class);
         $currencyMapper = $this->mock(CurrencyMapper::class);
-        $euro           = TransactionCurrency::whereCode('EUR')->first();
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
+
+        $euro = TransactionCurrency::whereCode('EUR')->first();
         Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn($euro)->once();
         $repository->shouldReceive('setUser')->once();
         $assetMapper->shouldReceive('setUser')->once();

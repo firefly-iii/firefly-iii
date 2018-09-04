@@ -37,12 +37,21 @@ use FireflyIII\Support\Import\JobConfiguration\Bunq\ChooseAccountsHandler;
 use Illuminate\Support\Collection;
 use Mockery;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class ChooseAccountsHandlerTest
  */
 class ChooseAccountsHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\Bunq\ChooseAccountsHandler
      */

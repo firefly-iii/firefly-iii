@@ -49,7 +49,7 @@ class IndexControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -323,6 +323,7 @@ class IndexControllerTest extends TestCase
         $spectrePrerequisites = $this->mock(SpectrePrerequisites::class);
         $filePrerequisites    = $this->mock(FilePrerequisites::class);
         $ynabPrerequisites    = $this->mock(YnabPrerequisites::class);
+        $repository           = $this->mock(ImportJobRepositoryInterface::class);
 
         // call methods:
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false);
@@ -357,6 +358,7 @@ class IndexControllerTest extends TestCase
         $filePrerequisites    = $this->mock(FilePrerequisites::class);
         $userRepository       = $this->mock(UserRepositoryInterface::class);
         $ynabPrerequisites    = $this->mock(YnabPrerequisites::class);
+        $repository           = $this->mock(ImportJobRepositoryInterface::class);
 
         // call methods:
         $fakePrerequisites->shouldReceive('setUser')->once();

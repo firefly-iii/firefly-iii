@@ -29,12 +29,22 @@ use FireflyIII\Models\Preference;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class SpectrePrerequisitesTest
  */
 class SpectrePrerequisitesTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Import\Prerequisites\SpectrePrerequisites
      */

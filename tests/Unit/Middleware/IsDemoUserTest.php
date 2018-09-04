@@ -28,6 +28,7 @@ use FireflyIII\Http\Middleware\StartFireflySession;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class IsDemoUserTest
@@ -40,7 +41,7 @@ class IsDemoUserTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        Log::info(sprintf('Now in %s.', \get_class($this)));
         Route::middleware([StartFireflySession::class, IsDemoUser::class])->any(
             '/_test/is-demo', function () {
             return 'OK';

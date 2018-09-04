@@ -28,12 +28,22 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class TransactionCurrenciesTest
  */
 class TransactionCurrenciesTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Import\Mapper\TransactionCurrencies
      */

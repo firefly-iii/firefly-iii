@@ -51,7 +51,7 @@ class ShowControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -67,13 +67,15 @@ class ShowControllerTest extends TestCase
         $this->session(['start' => $date, 'end' => clone $date]);
 
         // mock stuff:
-        $tasker        = $this->mock(AccountTaskerInterface::class);
+
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $tasker        = $this->mock(AccountTaskerInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
 
         // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
@@ -121,10 +123,11 @@ class ShowControllerTest extends TestCase
         $tasker        = $this->mock(AccountTaskerInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1));
 
@@ -159,12 +162,16 @@ class ShowControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\Account\ShowController
-     * @expectedExceptionMessage End is after start!
      */
     public function testShowBrokenBadDates(): void
     {
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('isLiability')->atLeast()->once()->andReturn(false);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $this->session(['start' => '2018-01-01', 'end' => '2017-12-01']);
 
@@ -172,6 +179,7 @@ class ShowControllerTest extends TestCase
         $account  = $this->user()->accounts()->where('account_type_id', 3)->orderBy('id', 'ASC')->whereNull('deleted_at')->first();
         $response = $this->get(route('accounts.show', [$account->id, '2018-01-01', '2017-12-01']));
         $response->assertStatus(500);
+        $response->assertSee('End is after start!');
     }
 
     /**
@@ -181,6 +189,9 @@ class ShowControllerTest extends TestCase
     {
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
@@ -209,7 +220,7 @@ class ShowControllerTest extends TestCase
         $repository    = $this->mock(AccountRepositoryInterface::class);
 
         // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(),'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
@@ -244,6 +255,8 @@ class ShowControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $date = new Carbon;

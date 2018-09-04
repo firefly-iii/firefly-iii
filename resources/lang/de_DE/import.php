@@ -167,13 +167,13 @@ return [
     'job_config_ynab_apply_rules_text'     => 'Standardmäßig werden Ihre Regeln auf die Buchungen angewendet, die während dieser Importroutine erstellt wurden. Wenn Sie dies nicht möchten, deaktivieren Sie dieses Kontrollkästchen.',
 
     // job configuration for YNAB:
-    'job_config_ynab_select_budgets'       => 'Wählen Sie Ihren Kostenrahmen aus',
-    'job_config_ynab_select_budgets_text'  => 'Sie haben :count Kostenrahmen bei YNAB gespeichert. Bitte wählen Sie diejenige aus, aus der Firefly III die Buchungen importieren soll.',
-    'job_config_ynab_no_budgets'           => 'Es sind keine Kostenrahmen verfügbar, aus denen importiert werden kann.',
+    'job_config_ynab_select_budgets'       => 'Wählen Sie Ihr Budget aus',
+    'job_config_ynab_select_budgets_text'  => 'Sie haben :count Budgets bei YNAB gespeichert. Bitte wählen Sie dasjenige aus, aus dem Firefly III die Buchungen importieren soll.',
+    'job_config_ynab_no_budgets'           => 'Es sind keine Budgets verfügbar, aus denen importiert werden kann.',
     'ynab_no_mapping'                      => 'Es wurden keine Konten zum Importieren ausgewählt.',
-    'job_config_ynab_bad_currency'         => 'Aus de(n/m) folgenden Kostenrahmen kann nicht importieren werden, da Sie über keine Konten mit der gleichen Währung wie diese Kostenrahmen verfügen.',
+    'job_config_ynab_bad_currency'         => 'Aus de(n/m) folgenden Budget(s) kann nicht importieren werden, da Sie über keine Konten mit der gleichen Währung wie diese(s) Budget(s) verfügen.',
     'job_config_ynab_accounts_title'       => 'Konten auswählen',
-    'job_config_ynab_accounts_text'        => 'In diesem Kostenrahmen stehen Ihnen die folgenden Konten zur Verfügung. Bitte wählen Sie aus, von welchen Konten Sie importieren möchten und wo die Buchungen gespeichert werden sollen.',
+    'job_config_ynab_accounts_text'        => 'In diesem Budget stehen Ihnen die folgenden Konten zur Verfügung. Bitte wählen Sie aus, von welchen Konten Sie importieren möchten und wo die Buchungen gespeichert werden sollen.',
 
 
     // keys from "extra" array:
@@ -261,13 +261,13 @@ return [
     'column_account-bic'                   => 'Bestandskonto (BIC)',
     'column_amount'                        => 'Betrag',
     'column_amount_foreign'                => 'Betrag (in Fremdwährung)',
-    'column_amount_debit'                  => 'Betrag (Debitoren-Spalte)',
+    'column_amount_debit'                  => 'Betrag (Ausgabe)',
     'column_amount_credit'                 => 'Betrag (Guthaben-Spalte)',
     'column_amount-comma-separated'        => 'Betrag (Komma als Dezimaltrennzeichen)',
     'column_bill-id'                       => 'Rechnung (ID übereinstimmend mit FF3)',
     'column_bill-name'                     => 'Rechnungsname',
-    'column_budget-id'                     => 'Kostenrahmen-ID (übereinstimmend mit FF3)',
-    'column_budget-name'                   => 'Kostenrahmenname',
+    'column_budget-id'                     => 'Budget-ID (übereinstimmend mit FF3)',
+    'column_budget-name'                   => 'Budgetname',
     'column_category-id'                   => 'Kategorie (ID übereinstimmend mit FF3)',
     'column_category-name'                 => 'Kategorie (Name)',
     'column_currency-code'                 => 'Währungsstandard (ISO 4217)',

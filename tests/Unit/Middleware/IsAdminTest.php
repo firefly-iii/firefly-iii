@@ -24,9 +24,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\IsAdmin;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Mockery;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class IsAdminTest
@@ -39,12 +42,13 @@ class IsAdminTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        Log::info(sprintf('Now in %s.', \get_class($this)));
         Route::middleware(IsAdmin::class)->any(
             '/_test/is-admin', function () {
             return 'OK';
         }
         );
+
     }
 
     /**
@@ -52,6 +56,8 @@ class IsAdminTest extends TestCase
      */
     public function testMiddleware(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/is-admin');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
@@ -63,6 +69,8 @@ class IsAdminTest extends TestCase
      */
     public function testMiddlewareAjax(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $server = ['HTTP_X-Requested-With' => 'XMLHttpRequest'];
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/is-admin', $server);
@@ -74,6 +82,9 @@ class IsAdminTest extends TestCase
      */
     public function testMiddlewareNotOwner(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
+
         $this->withoutExceptionHandling();
         $this->be($this->emptyUser());
         $response = $this->get('/_test/is-admin');
@@ -86,6 +97,9 @@ class IsAdminTest extends TestCase
      */
     public function testMiddlewareOwner(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $this->be($this->user());
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/is-admin');

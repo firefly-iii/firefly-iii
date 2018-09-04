@@ -33,12 +33,23 @@ use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class SpectreRoutineTest
  */
 class SpectreRoutineTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Import\Routine\SpectreRoutine
      */

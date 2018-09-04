@@ -29,6 +29,7 @@ use Preferences;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AuthenticateTwoFactorTest
@@ -41,7 +42,7 @@ class AuthenticateTwoFactorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        Log::info(sprintf('Now in %s.', \get_class($this)));
         Route::middleware(AuthenticateTwoFactor::class)->any(
             '/_test/authenticate', function () {
             return 'OK';

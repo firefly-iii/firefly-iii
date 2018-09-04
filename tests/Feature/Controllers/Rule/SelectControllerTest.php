@@ -31,9 +31,11 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Queue;
 use Tests\TestCase;
 
@@ -49,7 +51,7 @@ class SelectControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -60,6 +62,8 @@ class SelectControllerTest extends TestCase
         $account      = $this->user()->accounts()->find(1);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
         $this->session(['first' => new Carbon('2010-01-01')]);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         Queue::fake();
@@ -88,6 +92,9 @@ class SelectControllerTest extends TestCase
     public function testSelectTransactions(): void
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
 
         $this->be($this->user());
@@ -113,6 +120,9 @@ class SelectControllerTest extends TestCase
         // mock stuff
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
@@ -132,8 +142,8 @@ class SelectControllerTest extends TestCase
      */
     public function testTestTriggersByRule(): void
     {
-
         $matcher = $this->mock(TransactionMatcher::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
@@ -154,6 +164,9 @@ class SelectControllerTest extends TestCase
     public function testTestTriggersError(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -179,6 +192,9 @@ class SelectControllerTest extends TestCase
         // mock stuff
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
