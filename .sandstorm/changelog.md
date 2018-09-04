@@ -1,3 +1,7 @@
+# 4.7.6.2
+- Docker file builds again.
+- Fix CSS of OAuth2 authorization view.
+
 # 4.7.6.1
 - An issue where I switched variables from the Docker `.env` file to the normal `.env` file and vice versa -- breaking both.
 - [Issue 1649](https://github.com/firefly-iii/firefly-iii/issues/1649) 2FA QR code would not show up due to very strict security policy headers

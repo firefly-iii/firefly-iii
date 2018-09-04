@@ -122,7 +122,7 @@ return [
     'date_format'                 => 'Format de la date',
     'specifix'                    => 'Banque - ou déposer des corrections spécifiques',
     'attachments[]'               => 'Pièces jointes',
-    'store_new_withdrawal'        => 'Enregistrer un nouveau retrait',
+    'store_new_withdrawal'        => 'Enregistrer une nouvelle dépense',
     'store_new_deposit'           => 'Enregistrer un nouveau dépôt',
     'store_new_transfer'          => 'Enregistrer un nouveau transfert',
     'add_new_withdrawal'          => 'Ajouter un nouveau retrait',

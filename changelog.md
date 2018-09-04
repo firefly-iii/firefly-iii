@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.6.2] - 2018-09-03
+### Fixed
+- Docker file builds again.
+- Fix CSS of OAuth2 authorization view.
 
 ## [4.7.6.1] - 2018-09-02
 ### Fixed
