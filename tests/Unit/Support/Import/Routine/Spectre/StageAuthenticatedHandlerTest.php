@@ -38,12 +38,22 @@ use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class StageAuthenticatedHandlerTest
  */
 class StageAuthenticatedHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Already have logins in configuration.
      *

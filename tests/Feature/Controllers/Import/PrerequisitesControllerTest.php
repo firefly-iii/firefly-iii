@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Import;
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 use Mockery;
@@ -53,6 +54,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $userRepos         = $this->mock(UserRepositoryInterface::class);
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'A_pre_job_' . random_int(1, 10000);
@@ -65,6 +67,10 @@ class PrerequisitesControllerTest extends TestCase
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
 
         $prereq->shouldReceive('setUser')->times(2);
         $prereq->shouldReceive('isComplete')->times(2)->andReturn(false);
@@ -83,6 +89,8 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndexBadState(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'B_pre_job_' . random_int(1, 10000);
@@ -91,6 +99,10 @@ class PrerequisitesControllerTest extends TestCase
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
 
         $this->be($this->user());
         $response = $this->get(route('import.prerequisites.index', ['fake', $job->key]));
@@ -103,6 +115,8 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndexComplete(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'C_pre_job_' . random_int(1, 10000);
@@ -115,6 +129,8 @@ class PrerequisitesControllerTest extends TestCase
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'has_prereq']);
         $prereq->shouldReceive('setUser')->times(2);
@@ -134,6 +150,8 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPost(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'D_pre_job_' . random_int(1, 10000);
@@ -146,6 +164,9 @@ class PrerequisitesControllerTest extends TestCase
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
 
         $prereq->shouldReceive('setUser')->times(2);
         $prereq->shouldReceive('storePrerequisites')->once()->andReturn(new MessageBag);
@@ -165,6 +186,8 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostBadState(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'D_pre_job_' . random_int(1, 10000);
@@ -173,6 +196,8 @@ class PrerequisitesControllerTest extends TestCase
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
@@ -195,9 +220,13 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostNoJob(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
         $prereq->shouldReceive('setUser')->once();
         $prereq->shouldReceive('storePrerequisites')->once()->andReturn(new MessageBag);
@@ -218,6 +247,8 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostWithMessages(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'D_pre_job_' . random_int(1, 10000);
@@ -233,6 +264,8 @@ class PrerequisitesControllerTest extends TestCase
         // mock stuff
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
         $prereq->shouldReceive('setUser')->times(1);
         $prereq->shouldReceive('isComplete')->times(1)->andReturn(false);

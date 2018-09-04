@@ -25,12 +25,22 @@ namespace Tests\Unit\Import\MapperPreProcess;
 
 use FireflyIII\Import\MapperPreProcess\TagsSpace;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class TagsSpaceTest
  */
 class TagsSpaceTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
 
     /**
      * \FireflyIII\Import\MapperPreProcess\TagsSpace

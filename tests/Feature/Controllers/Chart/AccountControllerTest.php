@@ -37,6 +37,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Preferences;
 use Steam;
 use Tests\TestCase;
@@ -66,6 +67,7 @@ class AccountControllerTest extends TestCase
         $generator     = $this->mock(GeneratorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
 
         // grab two expense accounts from the current user.
         $accounts = $this->user()->accounts()->where('account_type_id', 4)->take(2)->get();
@@ -103,9 +105,12 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudget(string $range): void
     {
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(TransactionCollectorInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $transaction = factory(Transaction::class)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
@@ -134,6 +139,7 @@ class AccountControllerTest extends TestCase
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $transaction  = factory(Transaction::class)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
@@ -164,6 +170,9 @@ class AccountControllerTest extends TestCase
         $generator     = $this->mock(GeneratorInterface::class);
         $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -193,6 +202,8 @@ class AccountControllerTest extends TestCase
         $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -249,6 +260,9 @@ class AccountControllerTest extends TestCase
         $generator     = $this->mock(GeneratorInterface::class);
         $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -278,6 +292,7 @@ class AccountControllerTest extends TestCase
         $collector     = $this->mock(TransactionCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -304,6 +319,7 @@ class AccountControllerTest extends TestCase
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
@@ -321,8 +337,14 @@ class AccountControllerTest extends TestCase
     public function testReport(): void
     {
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1), null);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $generator = $this->mock(GeneratorInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1')->atLeast()->once();
+
+        $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1), null);
+
         $generator->shouldReceive('multiSet')->andReturn([]);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
 

@@ -61,6 +61,8 @@ class BoxControllerTest extends TestCase
             ],
         ];
         $repository = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $repository->shouldReceive('collectBudgetInformation')->andReturn($return);
@@ -82,6 +84,8 @@ class BoxControllerTest extends TestCase
             ],
         ];
         $repository = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $repository->shouldReceive('getAvailableBudget')->andReturn('1000');
         $repository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $repository->shouldReceive('collectBudgetInformation')->andReturn($return);
@@ -99,6 +103,8 @@ class BoxControllerTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
 
         // try a collector for income:
 
@@ -124,6 +130,10 @@ class BoxControllerTest extends TestCase
 
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+
 
         // try a collector for income:
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
@@ -143,6 +153,8 @@ class BoxControllerTest extends TestCase
     public function testBills(): void
     {
         $billRepos = $this->mock(BillRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $billRepos->shouldReceive('getBillsPaidInRange')->andReturn('0');
         $billRepos->shouldReceive('getBillsUnpaidInRange')->andReturn('0');
 
@@ -165,6 +177,7 @@ class BoxControllerTest extends TestCase
 
 
         $netWorthHelper = $this->mock(NetWorthInterface::class);
+
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 

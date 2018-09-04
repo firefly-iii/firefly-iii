@@ -56,10 +56,13 @@ class IndexControllerTest extends TestCase
     public function testDown(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveDown');
+
+
 
         $this->be($this->user());
         $response = $this->get(route('rules.down', [1]));
@@ -97,8 +100,10 @@ class IndexControllerTest extends TestCase
     public function testReorderRuleActions(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $data = ['actions' => [1, 2, 3]];
@@ -115,8 +120,9 @@ class IndexControllerTest extends TestCase
     public function testReorderRuleTriggers(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $data = ['triggers' => [1, 2, 3]];
@@ -134,8 +140,10 @@ class IndexControllerTest extends TestCase
     public function testUp(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveUp');
 

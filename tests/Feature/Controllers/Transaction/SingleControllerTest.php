@@ -38,10 +38,12 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
+use Mockery;
 use Steam;
 use Tests\TestCase;
 
@@ -75,6 +77,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $account = $this->user()->accounts()->first();
@@ -107,6 +111,9 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         Steam::shouldReceive('phpBytes')->andReturn(2048);
@@ -133,6 +140,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         Steam::shouldReceive('phpBytes')->andReturn(2048);
@@ -158,6 +167,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         Steam::shouldReceive('phpBytes')->andReturn(2048);
@@ -182,6 +193,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -203,6 +216,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('destroy')->once();
@@ -228,6 +243,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $account = $this->user()->accounts()->first();
@@ -273,6 +290,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('setUser')->once();
 
@@ -320,6 +339,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('setUser')->once();
 
@@ -367,6 +388,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Reconciliation')->once();
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
@@ -393,6 +416,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('setUser')->once();
 
@@ -423,6 +448,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -443,6 +470,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('setUser')->once();
 
@@ -491,6 +520,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('setUser')->once();
 
@@ -533,6 +564,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('setUser')->once();
 
@@ -583,6 +616,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
@@ -619,6 +654,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
@@ -674,6 +711,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
@@ -729,6 +768,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
@@ -785,6 +826,8 @@ class SingleControllerTest extends TestCase
         $attRepos      = $this->mock(AttachmentHelperInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
 
         // mock results:
@@ -845,6 +888,8 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $linkRepos     = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');

@@ -32,6 +32,7 @@ use Illuminate\Support\Collection;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class BinderTest
@@ -51,6 +52,7 @@ class BinderTest extends TestCase
             return 'OK';
         }
         );
+        Log::info(sprintf('Now in %s.', \get_class($this)));
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/1');

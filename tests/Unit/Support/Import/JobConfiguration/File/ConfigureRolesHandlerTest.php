@@ -36,12 +36,22 @@ use Illuminate\Support\Collection;
 use League\Csv\Reader;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ConfigureRolesHandlerTest
  */
 class ConfigureRolesHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */

@@ -37,6 +37,7 @@ use League\Csv\Exception;
 use League\Csv\Reader;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ConfigureMappingHandlerTest
@@ -44,6 +45,15 @@ use Tests\TestCase;
  */
 class ConfigureMappingHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureMappingHandler
      */

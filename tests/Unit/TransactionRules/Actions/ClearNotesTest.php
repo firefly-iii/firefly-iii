@@ -28,12 +28,23 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
 use Tests\TestCase;
+use Log;
+
 
 /**
  * Class ClearNotesTest
  */
 class ClearNotesTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\TransactionRules\Actions\ClearNotes
      */

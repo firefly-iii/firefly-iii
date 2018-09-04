@@ -23,8 +23,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Log;
 use Mockery;
 use Steam;
@@ -51,6 +53,10 @@ class ReportControllerTest extends TestCase
     {
         $generator    = $this->mock(GeneratorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $currencyRepos->shouldReceive('setUser');
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
 
         // mock calls:
         $accountRepos->shouldReceive('setUser');
@@ -78,6 +84,8 @@ class ReportControllerTest extends TestCase
     {
         $generator = $this->mock(GeneratorInterface::class);
         $tasker    = $this->mock(AccountTaskerInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $income    = [1 => ['sum' => '100']];
         $expense   = [2 => ['sum' => '-100']];
         $tasker->shouldReceive('getIncomeReport')->once()->andReturn($income);
@@ -96,6 +104,8 @@ class ReportControllerTest extends TestCase
     {
         $generator = $this->mock(GeneratorInterface::class);
         $tasker    = $this->mock(AccountTaskerInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
 
         $income  = [];
         $expense = [];

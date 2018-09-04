@@ -28,6 +28,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AddTagTest
@@ -35,7 +36,15 @@ use Tests\TestCase;
 class AddTagTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\AddTag
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * @covers \FireflyIII\TransactionRules\Actions\AddTag
      */
     public function testActExistingTag(): void

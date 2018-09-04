@@ -32,12 +32,23 @@ use FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Bunq\StageNewHandler;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class BunqRoutineTest
  */
 class BunqRoutineTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+
     /**
      * @covers \FireflyIII\Import\Routine\BunqRoutine
      */

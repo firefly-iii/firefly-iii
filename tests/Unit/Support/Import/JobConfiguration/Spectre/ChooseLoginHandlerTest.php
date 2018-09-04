@@ -38,12 +38,22 @@ use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ChooseLoginHandlerTest
  */
 class ChooseLoginHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler
      */

@@ -39,13 +39,21 @@ use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class StageNewHandlerTest
  */
 class StageNewHandlerTest extends TestCase
 {
-
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
     // todo run() with zero logins and an existing customer (must be retrieved from Spectre).
     // todo run() with one login and an existing customer (must be retrieved from Spectre).
 

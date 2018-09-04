@@ -35,6 +35,7 @@ use FireflyIII\Support\Import\Routine\File\ImportableConverter;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * todo test foreign currency
@@ -46,6 +47,15 @@ use Tests\TestCase;
  */
 class ImportableConverterTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Basic test. Should match a withdrawal. Amount is negative.
      *

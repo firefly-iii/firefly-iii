@@ -28,12 +28,21 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Routine\File\MappingConverger;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class MappingConvergerTest
  */
 class MappingConvergerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\Routine\File\MappingConverger
      */

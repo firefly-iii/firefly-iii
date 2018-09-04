@@ -26,12 +26,16 @@ namespace Tests\Feature\Controllers\Recurring;
 
 use Carbon\Carbon;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -56,6 +60,13 @@ class CreateControllerTest extends TestCase
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection)->once();
         \Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(1));
 
@@ -76,6 +87,11 @@ class CreateControllerTest extends TestCase
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
         $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
+
         $tomorrow       = Carbon::create()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
@@ -125,6 +141,13 @@ class CreateControllerTest extends TestCase
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
         $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
+        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
+
+
         $tomorrow       = Carbon::create()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
@@ -176,6 +199,13 @@ class CreateControllerTest extends TestCase
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
         $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
+        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
+
+
         $tomorrow       = Carbon::create()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
@@ -228,6 +258,12 @@ class CreateControllerTest extends TestCase
         $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
         $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
+
+
         $tomorrow       = Carbon::create()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [

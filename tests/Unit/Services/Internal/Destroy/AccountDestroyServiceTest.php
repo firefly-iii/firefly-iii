@@ -28,12 +28,21 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class AccountDestroyServiceTest
  */
 class AccountDestroyServiceTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Services\Internal\Destroy\AccountDestroyService
      */

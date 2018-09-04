@@ -44,12 +44,22 @@ use Mockery;
 use Preferences;
 use Tests\Object\FakeApiContext;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class StageNewHandlerTest
  */
 class StageNewHandlerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\Routine\Bunq\StageNewHandler
      */

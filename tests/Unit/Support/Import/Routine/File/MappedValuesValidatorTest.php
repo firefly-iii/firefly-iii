@@ -35,12 +35,22 @@ use FireflyIII\Support\Import\Routine\File\MappedValuesValidator;
 use Illuminate\Support\Collection;
 use stdClass;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class MappedValuesValidatorTest
  */
 class MappedValuesValidatorTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Support\Import\Routine\File\MappedValuesValidator
      */

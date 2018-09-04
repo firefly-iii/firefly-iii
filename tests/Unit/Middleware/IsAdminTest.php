@@ -27,6 +27,7 @@ use FireflyIII\Http\Middleware\IsAdmin;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class IsAdminTest
@@ -39,12 +40,13 @@ class IsAdminTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-
+        Log::info(sprintf('Now in %s.', \get_class($this)));
         Route::middleware(IsAdmin::class)->any(
             '/_test/is-admin', function () {
             return 'OK';
         }
         );
+
     }
 
     /**

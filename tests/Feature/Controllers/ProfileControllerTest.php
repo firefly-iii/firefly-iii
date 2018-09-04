@@ -57,6 +57,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testChangeEmail(): void
     {
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
         $this->be($this->user());
         $response = $this->get(route('profile.change-email'));
         $response->assertStatus(200);
@@ -70,7 +74,10 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
         $response = $this->get(route('profile.change-password'));
@@ -85,6 +92,10 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         Google2FA::shouldReceive('generateSecretKey')->andReturn('secret');
         Google2FA::shouldReceive('getQRCodeInline')->andReturn('long-data-url');
@@ -100,6 +111,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testConfirmEmailChangeNoToken(): void
     {
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+
+
         Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection());
         // email_change_confirm_token
         $response = $this->get(route('profile.confirm-email-change', ['some-fake-token']));
@@ -112,6 +127,7 @@ class ProfileControllerTest extends TestCase
     public function testConfirmEmailWithToken(): void
     {
         $repository = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('unblockUser');
         $preference       = new Preference;
         $preference->data = 'existing-token';
@@ -131,6 +147,11 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -146,6 +167,10 @@ class ProfileControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -256,6 +281,11 @@ class ProfileControllerTest extends TestCase
         Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->delete();
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -273,6 +303,7 @@ class ProfileControllerTest extends TestCase
             'email' => 'new@example.com',
         ];
         $repository = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('findByEmail')->once()->andReturn(null);
         $repository->shouldReceive('changeEmail')->once()->andReturn(true);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
@@ -395,6 +426,8 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostCode(): void
     {
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
         $secret = '0123456789abcde';
         $key    = '123456';
 

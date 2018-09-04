@@ -41,12 +41,22 @@ use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Mockery;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class ImportArrayStorageTest
  */
 class ImportArrayStorageTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+
 
     /**
      * Very basic storage routine. Doesn't call store()

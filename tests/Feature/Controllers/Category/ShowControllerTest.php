@@ -32,9 +32,11 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Navigation;
 use Tests\TestCase;
 
@@ -67,6 +69,11 @@ class ShowControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+
         $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         // mock stuff
@@ -119,6 +126,9 @@ class ShowControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
@@ -157,7 +167,11 @@ class ShowControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $month        = new Carbon();
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $month = new Carbon();
         $month->startOfMonth();
         $journal = TransactionJournal::where('date', '>=', $month->format('Y-m-d') . ' 00:00:00')->first();
         $journalRepos->shouldReceive('firstNull')->twice()->andReturn($journal);
@@ -201,19 +215,20 @@ class ShowControllerTest extends TestCase
         $latestJournal = $this->user()->transactionJournals()
                               ->orderBy('date', 'DESC')->first();
 
-        Log::debug(sprintf('Test testShowEmpty(%s)', $range));
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->twice()->andReturn($latestJournal);
 
         // mock stuff
-        $repository = $this->mock(CategoryRepositoryInterface::class);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
         $repository->shouldReceive('earnedInPeriod')->andReturn('0');
-
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
-
-        $collector = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast(1);
@@ -225,7 +240,6 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(1);
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
         $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
-
         $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast(1);
 
         $this->be($this->user());

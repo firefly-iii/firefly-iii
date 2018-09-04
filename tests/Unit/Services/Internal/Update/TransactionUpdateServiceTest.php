@@ -30,12 +30,22 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Update\TransactionUpdateService;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class TransactionUpdateServiceTest
  */
 class TransactionUpdateServiceTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
      */
