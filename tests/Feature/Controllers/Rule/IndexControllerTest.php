@@ -27,8 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -59,9 +61,9 @@ class IndexControllerTest extends TestCase
         $repository     = $this->mock(RuleRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveDown');
-
 
 
         $this->be($this->user());
@@ -80,6 +82,9 @@ class IndexControllerTest extends TestCase
         $repository     = $this->mock(RuleRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $ruleGroupRepos->shouldReceive('count')->andReturn(0);
         $ruleGroupRepos->shouldReceive('store');
@@ -103,6 +108,7 @@ class IndexControllerTest extends TestCase
         $repository     = $this->mock(RuleRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -123,6 +129,7 @@ class IndexControllerTest extends TestCase
         $repository     = $this->mock(RuleRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $data = ['triggers' => [1, 2, 3]];
@@ -143,6 +150,8 @@ class IndexControllerTest extends TestCase
         $repository     = $this->mock(RuleRepositoryInterface::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('moveUp');

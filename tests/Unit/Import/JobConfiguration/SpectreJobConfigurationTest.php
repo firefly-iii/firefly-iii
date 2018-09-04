@@ -26,6 +26,7 @@ namespace Tests\Unit\Import\JobConfiguration;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\AuthenticatedHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
@@ -55,6 +56,8 @@ class SpectreJobConfigurationTest extends TestCase
      */
     public function testConfigurationComplete(): void
     {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_A' . random_int(1, 10000);
@@ -84,6 +87,8 @@ class SpectreJobConfigurationTest extends TestCase
      */
     public function testConfigureJob(): void
     {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_B' . random_int(1, 10000);
@@ -116,6 +121,8 @@ class SpectreJobConfigurationTest extends TestCase
      */
     public function testGetNextData(): void
     {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_C' . random_int(1, 10000);
@@ -146,6 +153,8 @@ class SpectreJobConfigurationTest extends TestCase
      */
     public function testGetNextView(): void
     {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_D' . random_int(1, 10000);
@@ -175,6 +184,8 @@ class SpectreJobConfigurationTest extends TestCase
      */
     public function testGetNextViewAccount(): void
     {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'spectre_jc_E' . random_int(1, 10000);

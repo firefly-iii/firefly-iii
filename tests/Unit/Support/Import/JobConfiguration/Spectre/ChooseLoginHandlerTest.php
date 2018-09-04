@@ -59,6 +59,7 @@ class ChooseLoginHandlerTest extends TestCase
      */
     public function testCCFalse(): void
     {
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'slh-A' . random_int(1, 10000);
@@ -205,6 +206,8 @@ class ChooseLoginHandlerTest extends TestCase
      */
     public function testGetNextData(): void
     {
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
         // fake login:
         $holder  = new Holder([]);
         $attempt = new Attempt(

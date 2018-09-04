@@ -38,10 +38,12 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class ImportArrayStorageTest
  */
@@ -57,7 +59,6 @@ class ImportArrayStorageTest extends TestCase
     }
 
 
-
     /**
      * Very basic storage routine. Doesn't call store()
      *
@@ -65,6 +66,10 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasic(): void
     {
+        // mock stuff
+        $repository   = $this->mock(ImportJobRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
@@ -77,9 +82,6 @@ class ImportArrayStorageTest extends TestCase
         $job->transactions  = [];
         $job->save();
 
-        // mock stuff
-        $repository   = $this->mock(ImportJobRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -94,6 +96,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreDoubleTransferWithRules(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // get a transfer:
         /** @var TransactionJournal $transfer */
         $transfer = $this->user()->transactionJournals()
@@ -183,6 +188,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreIsDouble(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // make fake job
         $transactions = [$this->singleWithdrawal(), $this->singleWithdrawal()];
         $job          = new ImportJob;
@@ -245,6 +253,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreNothing(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
@@ -284,6 +295,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreNothingWithRules(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
@@ -326,6 +340,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreSingleWithNoRules(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
@@ -377,6 +394,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreSingleWithRules(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
@@ -433,6 +453,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreTransferWithRules(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
+
         // make fake job
         $job = new ImportJob;
         $job->user()->associate($this->user());
