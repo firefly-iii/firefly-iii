@@ -201,6 +201,12 @@ class MappingConverger
                 Log::debug('Column skipped because value is empty.');
             }
         }
+        // add a special column value for the "source"
+        $columnValue = new ColumnValue;
+        $columnValue->setValue(sprintf('csv-import-v%s', config('firefly.version')));
+        $columnValue->setMappedValue(0);
+        $columnValue->setRole('original-source');
+        $return[] = $columnValue;
 
         return $return;
     }
