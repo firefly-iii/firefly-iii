@@ -35,6 +35,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Rule;
@@ -63,6 +64,7 @@ use UnexpectedValueException;
  * Upgrade user database.
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  * @codeCoverageIgnore
  */
 class UpgradeDatabase extends Command
@@ -95,6 +97,7 @@ class UpgradeDatabase extends Command
         $this->migrateNotes();
         $this->migrateAttachmentData();
         $this->migrateBillsToRules();
+        $this->budgetLimitCurrency();
 
         $this->info('Firefly III database is up to date.');
 
@@ -433,6 +436,31 @@ class UpgradeDatabase extends Command
                 );
             }
         );
+    }
+
+    /**
+     *
+     */
+    private function budgetLimitCurrency(): void
+    {
+        $budgetLimits = BudgetLimit::get();
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($budgetLimits as $budgetLimit) {
+            if (null === $budgetLimit->transaction_currency_id) {
+                $budget = $budgetLimit->budget;
+                if (null !== $budget) {
+                    $user = $budget->user;
+                    if (null !== $user) {
+                        $currency                             = \Amount::getDefaultCurrencyByUser($user);
+                        $budgetLimit->transaction_currency_id = $currency->id;
+                        $budgetLimit->save();
+                        $this->line(
+                            sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
+                        );
+                    }
+                }
+            }
+        }
     }
 
     private function createNewTypes(): void
