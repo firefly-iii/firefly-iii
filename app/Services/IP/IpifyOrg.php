@@ -35,6 +35,16 @@ use RuntimeException;
 class IpifyOrg implements IPRetrievalInterface
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * Returns the user's IP address.
      *
      * @noinspection MultipleReturnStatementsInspection

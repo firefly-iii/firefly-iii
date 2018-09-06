@@ -38,6 +38,16 @@ use Log;
 class AccountDestroyService
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * @param Account      $account
      * @param Account|null $moveTo
      *

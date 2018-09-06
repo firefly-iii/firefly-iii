@@ -34,6 +34,16 @@ use RuntimeException;
 class PwndVerifierV2 implements Verifier
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * Verify the given password against (some) service.
      *
      * @param string $password

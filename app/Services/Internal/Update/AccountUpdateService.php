@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
+use Log;
 
 /**
  * Class AccountUpdateService
@@ -32,7 +33,15 @@ use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 class AccountUpdateService
 {
     use AccountServiceTrait;
-
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /**
      * Update account data.

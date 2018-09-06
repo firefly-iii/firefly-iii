@@ -23,12 +23,22 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Chart\Basic;
 
 use FireflyIII\Support\ChartColour;
-
+use Log;
 /**
  * Class ChartJsGenerator.
  */
 class ChartJsGenerator implements GeneratorInterface
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /**
      * Will generate a Chart JS compatible array from the given input. Expects this format.
      *

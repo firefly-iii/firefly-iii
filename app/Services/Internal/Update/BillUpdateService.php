@@ -25,7 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
-
+use Log;
 /**
  * @codeCoverageIgnore
  * Class BillUpdateService
@@ -33,6 +33,16 @@ use FireflyIII\Services\Internal\Support\BillServiceTrait;
 class BillUpdateService
 {
     use BillServiceTrait;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /**
      * @param Bill  $bill

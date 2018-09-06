@@ -30,7 +30,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
-
+use Log;
 /**
  * Class PopupReport.
  *
@@ -38,6 +38,16 @@ use Illuminate\Support\Collection;
  */
 class PopupReport implements PopupReportInterface
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /**
      * Collect the tranactions for one account and one budget.
      *

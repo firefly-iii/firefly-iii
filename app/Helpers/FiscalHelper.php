@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers;
 
 use Carbon\Carbon;
+use Log;
 
 /**
  * Class FiscalHelper.
@@ -38,6 +39,10 @@ class FiscalHelper implements FiscalHelperInterface
     public function __construct()
     {
         $this->useCustomFiscalYear = app('preferences')->get('customFiscalYear', false)->data;
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**

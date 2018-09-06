@@ -89,6 +89,7 @@ class ExportControllerTest extends TestCase
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('exists')->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('export.download', ['testExport']));
