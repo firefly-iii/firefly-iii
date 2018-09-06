@@ -42,7 +42,7 @@ trait UserNavigation
      *
      * - If the $identifier contains the word "delete" then a remembered uri with the text "/show/" in it will not be returned but instead the index (/)
      *   will be returned.
-     * - If the remembered uri contains "javascript/" the remembered uri will not be returned but instead the index (/) will be returned.
+     * - If the remembered uri contains "jscript/" the remembered uri will not be returned but instead the index (/) will be returned.
      *
      * @param string $identifier
      *
@@ -50,8 +50,28 @@ trait UserNavigation
      */
     protected function getPreviousUri(string $identifier): string
     {
+        // "forbidden" words for specific identifiers:
+        // if these are in the previous URI, don't refer back there.
+        $array     = [
+            'accounts.delete.uri'          => '/accounts/show/',
+            'transactions.delete.uri'      => '/transactions/show/',
+            'attachments.delete.uri'       => '/attachments/show/',
+            'bills.delete.uri'             => '/bills/show/',
+            'budgets.delete.uri'           => '/budgets/show/',
+            'categories.delete.uri'        => '/categories/show/',
+            'currencies.delete.uri'        => '/currencies/show/',
+            'piggy-banks.delete.uri'       => '/piggy-banks/show/',
+            'tags.delete.uri'              => '/tags/show/',
+            'rules.delete.uri'             => '/rules/edit/',
+            'transactions.mass-delete.uri' => '/transactions/show/',
+        ];
+        $forbidden = $array[$identifier] ?? '/show/';
+
+
         $uri = (string)session($identifier);
-        if (!(false === strpos($identifier, 'delete')) && !(false === strpos($uri, '/show/'))) {
+        if (
+            !(false === strpos($identifier, 'delete'))
+            && !(false === strpos($uri, $forbidden))) {
             $uri = $this->redirectUri;
         }
         if (!(false === strpos($uri, 'jscript'))) {
