@@ -44,7 +44,7 @@
 - [Issue 1639](https://github.com/firefly-iii/firefly-iii/issues/1639) Firefly III trusts the Heroku load balancer, fixing deployment on Heroku.
 - [Issue 1642](https://github.com/firefly-iii/firefly-iii/issues/1642) Fix issue with split journals.
 - [Issue 1643](https://github.com/firefly-iii/firefly-iii/issues/1643) Fix reconciliation issue.
-- Users can no longer give expenses a budget.
+- Users can no longer give income a budget.
 - Fix bug in Spectre import.
 - Heroku would not make you owner.
 - Add `.htaccess` files to all public directories.
