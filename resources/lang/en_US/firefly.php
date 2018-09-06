@@ -28,6 +28,8 @@ return [
     'actions'                                    => 'Actions',
     'edit'                                       => 'Edit',
     'delete'                                     => 'Delete',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
     'welcomeBack'                                => 'What\'s playing?',
     'everything'                                 => 'Everything',
     'today'                                      => 'today',
