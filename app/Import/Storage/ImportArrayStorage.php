@@ -190,7 +190,7 @@ class ImportArrayStorage
      */
     private function getHash(array $transaction): string
     {
-        unset($transaction['importHashV2']);
+        unset($transaction['importHashV2'], $transaction['original-source']);
         $json = json_encode($transaction);
         if (false === $json) {
             /** @noinspection ForgottenDebugOutputInspection */
