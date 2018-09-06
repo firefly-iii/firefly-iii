@@ -41,10 +41,10 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\Bunq\Payment;
 use FireflyIII\Support\Import\Routine\Bunq\StageImportDataHandler;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class StageImportDataHandlerTest
@@ -158,6 +158,7 @@ class StageImportDataHandlerTest extends TestCase
                         'identifier'            => 0,
                     ],
                 ],
+                'original-source'    => 'bunq-v' . config('firefly.version'),
             ],
         ];
 
@@ -382,6 +383,7 @@ class StageImportDataHandlerTest extends TestCase
                         'identifier'            => 0,
                     ],
                 ],
+                'original-source'    => 'bunq-v' . config('firefly.version'),
             ],
         ];
 
