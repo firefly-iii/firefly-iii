@@ -30,6 +30,8 @@ return [
     'delete'                                     => 'Delete',
     'split'                                      => 'Split',
     'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'What\'s playing?',
     'everything'                                 => 'Everything',
     'today'                                      => 'today',
