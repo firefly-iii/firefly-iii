@@ -40,7 +40,7 @@ class HasAttachmentTest extends TestCase
 
         $attachment = $withdrawal->user->attachments()->first();
         $withdrawal->attachments()->save($attachment);
-        $this->assertEquals(1, $withdrawal->attachments()->count());
+        $this->assertGreaterThanOrEqual(1, $withdrawal->attachments()->count());
 
         $trigger = HasAttachment::makeFromStrings('1', false);
         $result  = $trigger->triggered($withdrawal);
