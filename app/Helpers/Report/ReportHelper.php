@@ -98,6 +98,7 @@ class ReportHelper implements ReportHelperInterface
 
                 $billLine = new BillLine;
                 $billLine->setBill($bill);
+                $billLine->setCurrency($bill->transactionCurrency);
                 $billLine->setPayDate($payDate);
                 $billLine->setEndOfPayDate($endOfPayPeriod);
                 $billLine->setMin((string)$bill->amount_min);

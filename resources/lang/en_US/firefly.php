@@ -1013,6 +1013,8 @@ return [
     'in_out_per_category'                     => 'Earned and spent per category',
     'out_per_budget'                          => 'Spent per budget',
     'select_expense_revenue'                  => 'Select expense/revenue account',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Chart',

@@ -26,7 +26,11 @@
             {% endif %}
         </td>
         <td data-value="{{ entry.sum }}" style="text-align: right;">
-            {{ (entry.sum)|formatAmount }}
+            {% if entry.currencies == 1 %}
+                {{ formatAmountByCurrency(entry.single_currency, entry.sum) }}
+            {% else %}
+                {{ (entry.sum)|formatAmount }}
+            {% endif %}
         </td>
         <td class="hidden-xs" data-value="{{ entry.average }}" style="text-align: right;">
             {% if entry.count > 1 %}
@@ -53,6 +57,9 @@
     <tr>
         <td><em>{{ 'sum'|_ }}</em></td>
         <td style="text-align: right;">{{ (sum)|formatAmount }}</td>
+    </tr>
+    <tr>
+        <td colspan="4"><small class="text-warning">{{ 'sum_in_default_currency'|_ }}</small></td>
     </tr>
     </tfoot>
 </table>
