@@ -87,6 +87,7 @@ class Sandstorm
      * @param string $email
      *
      * @return User
+     * @codeCoverageIgnore
      */
     private function createUser(string $email): User
     {

@@ -161,6 +161,7 @@ class ConvertController extends Controller
         $errors = $this->repository->convert($journal, $destinationType, $source, $destination);
 
         if ($errors->count() > 0) {
+            Log::error('Errors while converting: ', $errors->toArray());
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 

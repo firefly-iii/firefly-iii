@@ -26,6 +26,8 @@ namespace Tests;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -112,11 +114,43 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return Account
+     */
+    public function getRandomAsset(): Account
+    {
+        return $this->getRandomAccount(AccountType::ASSET);
+    }
+
+    /**
      * @return TransactionJournal
      */
     public function getRandomDeposit(): TransactionJournal
     {
         return $this->getRandomJournal(TransactionType::DEPOSIT);
+    }
+
+    /**
+     * @return Account
+     */
+    public function getRandomExpense(): Account
+    {
+        return $this->getRandomAccount(AccountType::EXPENSE);
+    }
+
+    /**
+     * @return Account
+     */
+    public function getRandomRevenue(): Account
+    {
+        return $this->getRandomAccount(AccountType::REVENUE);
+    }
+
+    /**
+     * @return TransactionJournal
+     */
+    public function getRandomSplitWithdrawal(): TransactionJournal
+    {
+        return $this->getRandomSplitJournal(TransactionType::WITHDRAWAL);
     }
 
     /**
@@ -181,6 +215,24 @@ abstract class TestCase extends BaseTestCase
     /**
      * @param string $type
      *
+     * @return Account
+     */
+    private function getRandomAccount(string $type): Account
+    {
+        $query  = Account::
+        leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
+                         ->whereNull('accounts.deleted_at')
+                         ->where('accounts.user_id', $this->user()->id)
+                         ->where('account_types.type', $type)
+                         ->inRandomOrder()->take(1);
+        $result = $query->first();
+
+        return $result;
+    }
+
+    /**
+     * @param string $type
+     *
      * @return TransactionJournal
      */
     private function getRandomJournal(string $type): TransactionJournal
@@ -194,6 +246,34 @@ abstract class TestCase extends BaseTestCase
                     ->where('transaction_types.type', $type)
                     ->groupBy('transactions.transaction_journal_id')
                     ->having('ct', '=', 2)
+                    ->inRandomOrder()->take(1);
+        $result = $query->get(
+            [
+                'transactions.transaction_journal_id',
+                'transaction_journalstransaction_type_id',
+                DB::raw('COUNT(transaction_journal_id) as ct'),
+            ]
+        )->first();
+
+        return TransactionJournal::find((int)$result->transaction_journal_id);
+    }
+
+    /**
+     * @param string $type
+     *
+     * @return TransactionJournal
+     */
+    private function getRandomSplitJournal(string $type): TransactionJournal
+    {
+        $query  = DB::table('transactions')
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+                    ->where('transaction_journals.user_id', $this->user()->id)
+                    ->whereNull('transaction_journals.deleted_at')
+                    ->whereNull('transactions.deleted_at')
+                    ->where('transaction_types.type', $type)
+                    ->groupBy('transactions.transaction_journal_id')
+                    ->having('ct', '>', 2)
                     ->inRandomOrder()->take(1);
         $result = $query->get(
             [

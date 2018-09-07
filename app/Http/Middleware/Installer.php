@@ -33,6 +33,8 @@ use Log;
 
 /**
  * Class Installer
+ * @codeCoverageIgnore
+ *
  */
 class Installer
 {
@@ -48,6 +50,7 @@ class Installer
      *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
      */
     public function handle($request, Closure $next)
     {
