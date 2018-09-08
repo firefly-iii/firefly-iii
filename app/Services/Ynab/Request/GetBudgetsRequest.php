@@ -56,10 +56,11 @@ class GetBudgetsRequest extends YnabRequest
         $rawBudgets   = $result['data']['budgets'] ?? [];
         $freshBudgets = [];
         foreach ($rawBudgets as $rawBudget) {
+            Log::debug('Raw content of budget is:', $rawBudget);
             $freshBudgets[] = [
                 'id'            => $rawBudget['id'],
                 'name'          => $rawBudget['name'],
-                'currency_code' => $rawBudget['currency_format']['iso_code'],
+                'currency_code' => $rawBudget['currency_format']['iso_code'] ?? 'EUR',
             ];
         }
         $this->budgets = $freshBudgets;
