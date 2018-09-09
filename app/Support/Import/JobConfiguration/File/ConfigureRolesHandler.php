@@ -74,7 +74,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
             if ('_ignore' !== $role) {
                 ++$assigned;
             }
-            if (\in_array($role, ['amount', 'amount_credit', 'amount_debit'])) {
+            if (\in_array($role, ['amount', 'amount_credit', 'amount_debit', 'amount_negated'])) {
                 $hasAmount = true;
             }
             if ('foreign-currency-code' === $role) {

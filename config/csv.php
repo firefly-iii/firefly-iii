@@ -339,6 +339,12 @@ return [
             'converter'       => 'AmountCredit',
             'field'           => 'amount_credit',
         ],
+        'amount_negated'      => [
+            'mappable'        => false,
+            'pre-process-map' => false,
+            'converter'       => 'AmountNegated',
+            'field'           => 'amount_negated',
+        ],
         'amount_foreign'     => [
             'mappable'        => false,
             'pre-process-map' => false,

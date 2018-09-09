@@ -263,6 +263,7 @@ return [
     'column_amount_foreign'                => 'Amount (in foreign currency)',
     'column_amount_debit'                  => 'Amount (debit column)',
     'column_amount_credit'                 => 'Amount (credit column)',
+    'column_amount_negated'                => 'Amount (negated column)',
     'column_amount-comma-separated'        => 'Amount (comma as decimal separator)',
     'column_bill-id'                       => 'Bill ID (matching FF3)',
     'column_bill-name'                     => 'Bill name',

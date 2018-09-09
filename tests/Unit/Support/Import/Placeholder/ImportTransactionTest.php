@@ -382,6 +382,7 @@ class ImportTransactionTest extends TestCase
             'account-number'        => 'accountNumber',
             'amount_debit'          => 'amountDebit',
             'amount_credit'         => 'amountCredit',
+            'amount_negated'        => 'amountNegated',
             'amount'                => 'amount',
             'amount_foreign'        => 'foreignAmount',
             'bill-name'             => 'billName',
@@ -469,6 +470,38 @@ class ImportTransactionTest extends TestCase
         $importTransaction->amountDebit = '1.01';
         try {
             $this->assertEquals('-1.01', $importTransaction->calculateAmount());
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+    
+    /**
+     * Basic amount info. Should return something like '1.0'.
+     *
+     * @covers \FireflyIII\Support\Import\Placeholder\ImportTransaction
+     */
+    public function testCalculateAmountNegatedPositive(): void
+    {
+        $importTransaction               = new ImportTransaction;
+        $importTransaction->amountNegated = '1.56';
+        try {
+            $this->assertEquals('-1.56', $importTransaction->calculateAmount());
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+    
+    /**
+     * Basic amount info. Should return something like '1.0'.
+     *
+     * @covers \FireflyIII\Support\Import\Placeholder\ImportTransaction
+     */
+    public function testCalculateAmountNegatedNegative(): void
+    {
+        $importTransaction               = new ImportTransaction;
+        $importTransaction->amountNegated = '-1.56';
+        try {
+            $this->assertEquals('1.56', $importTransaction->calculateAmount());
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }
