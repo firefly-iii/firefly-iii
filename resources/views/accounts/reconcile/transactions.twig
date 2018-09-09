@@ -91,10 +91,12 @@
                 {% if transaction.reconciled %}
                     {{ transaction|transactionReconciled }}
                     <input type="hidden" name="cleared[]" data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
+                           data-inrange="{% if transaction.date >= start and transaction.date <= end  %}true{% else %}false"{% endif %}"
                            class="cleared" data-id="{{ transaction.id }}" value="{{ transactionAmount }}">
                 {% else %}
                     <input type="checkbox" name="reconciled[]"
                            data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
+                           data-inrange="{% if transaction.date >= start and transaction.date <= end  %}true{% else %}false"{% endif %}"
                            value="{{ transactionAmount }}" data-id="{{ transaction.id }}" disabled class="reconcile_checkbox">
                 {% endif %}
             </td>
