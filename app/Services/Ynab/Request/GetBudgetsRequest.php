@@ -50,17 +50,19 @@ class GetBudgetsRequest extends YnabRequest
         Log::debug(sprintf('URI is %s', $uri));
 
         $result = $this->authenticatedGetRequest($uri, []);
-        //Log::debug('Raw GetBudgetsRequest result', $result);
+        Log::debug('Raw GetBudgetsRequest result', $result);
 
         // expect data in [data][budgets]
         $rawBudgets   = $result['data']['budgets'] ?? [];
         $freshBudgets = [];
         foreach ($rawBudgets as $rawBudget) {
-            Log::debug('Raw content of budget is:', $rawBudget);
+            Log::debug(sprintf('Raw content of budget is: %s', json_encode($rawBudget, true)));
+            Log::debug(sprintf('Content of currency format is: %s', json_encode($rawBudget['currency_format'] ?? [], true)));
+            Log::debug(sprintf('ISO code is: %s', $rawBudget['currency_format']['iso_code'] ?? '(none)'));
             $freshBudgets[] = [
                 'id'            => $rawBudget['id'],
                 'name'          => $rawBudget['name'],
-                'currency_code' => $rawBudget['currency_format']['iso_code'] ?? 'EUR',
+                'currency_code' => $rawBudget['currency_format']['iso_code'] ?? null,
             ];
         }
         $this->budgets = $freshBudgets;
