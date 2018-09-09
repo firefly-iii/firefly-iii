@@ -25,7 +25,9 @@ namespace Tests\Feature\Controllers\Budget;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -46,7 +48,7 @@ class AmountControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -58,6 +60,7 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
@@ -80,6 +83,7 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
@@ -102,6 +106,7 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
@@ -125,6 +130,7 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('updateLimitAmount')->andReturn(new BudgetLimit);
         $repository->shouldReceive('spentInPeriod')->andReturn('0');
@@ -145,6 +151,23 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
+        $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(2);
+
+        // collect transactions to return. First an expense, then income.
+        $income                      = new Transaction;
+        $income->transaction_amount  = '150';
+        $incomeCollection            = new Collection([$income]);
+        $expense                     = new Transaction;
+        $expense->transaction_amount = '100';
+        $expenseCollection           = new Collection([$expense]);
+
+        $collector->shouldReceive('getTransactions')->andReturn($incomeCollection, $expenseCollection)->times(2);
+
 
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
@@ -168,10 +191,26 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
         $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
+        $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(2);
+
+        // collect transactions to return. First an expense, then income.
+        $income                      = new Transaction;
+        $income->transaction_amount  = '150';
+        $incomeCollection            = new Collection([$income]);
+        $expense                     = new Transaction;
+        $expense->transaction_amount = '100';
+        $expenseCollection           = new Collection([$expense]);
+
+        $collector->shouldReceive('getTransactions')->andReturn($incomeCollection, $expenseCollection)->times(2);
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -179,6 +218,42 @@ class AmountControllerTest extends TestCase
         $response->assertStatus(200);
     }
 
+    /**
+     * @covers \FireflyIII\Http\Controllers\Budget\AmountController
+     */
+    public function testInfoIncomeInversed(): void
+    {
+        Log::debug('Now in testInfoIncome()');
+        // mock stuff
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
+        $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
+        $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->times(2);
+
+        // collect transactions to return. First an expense, then income.
+        $income                      = new Transaction;
+        $income->transaction_amount  = '100';
+        $incomeCollection            = new Collection([$income]);
+        $expense                     = new Transaction;
+        $expense->transaction_amount = '150';
+        $expenseCollection           = new Collection([$expense]);
+
+        $collector->shouldReceive('getTransactions')->andReturn($incomeCollection, $expenseCollection)->times(2);
+
+
+        $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
+        $repository->shouldReceive('getAverageAvailable')->andReturn('100.123')->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('budgets.income.info', ['20170101', '20170131']));
+        $response->assertStatus(200);
+    }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Budget\AmountController
@@ -189,6 +264,7 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('setAvailableBudget');
         $repository->shouldReceive('cleanupBudgets');
@@ -212,6 +288,7 @@ class AmountControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAvailableBudget')->andReturn('1');
         $repository->shouldReceive('cleanupBudgets');

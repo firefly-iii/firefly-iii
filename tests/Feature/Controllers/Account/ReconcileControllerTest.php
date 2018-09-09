@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -46,7 +47,7 @@ class ReconcileControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -56,7 +57,14 @@ class ReconcileControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $repository  = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $journal     = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
         $transaction = $journal->transactions()->where('amount', '>', 0)->first();
         $repository->shouldReceive('firstNull')->andReturn($journal);
@@ -80,6 +88,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testEditRedirect(): void
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile.edit', [$journal->id]));
@@ -95,7 +106,16 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcile(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')
+                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile', [1, '20170101', '20170131']));
@@ -112,6 +132,10 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileInitialBalance(): void
     {
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                   ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);
         $this->be($this->user());
@@ -126,7 +150,16 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileNoDates(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')
+                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
 
         $this->be($this->user());
@@ -144,7 +177,16 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileNoEndDate(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')
+                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
 
         $this->be($this->user());
@@ -162,6 +204,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileNotAsset(): void
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $account = $this->user()->accounts()->where('account_type_id', '!=', 6)->where('account_type_id', '!=', 3)->first();
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile', [$account->id, '20170101', '20170131']));
@@ -175,8 +220,20 @@ class ReconcileControllerTest extends TestCase
      */
     public function testShow(): void
     {
-        $journal    = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $repository    = $this->mock(JournalRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')
+                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+        $currencyRepos->shouldReceive('findNull')->atLeast()->once()->withArgs([1])->andReturn(TransactionCurrency::find(1));
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
+        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
+
         $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAssetTransaction')->once()->andReturn($journal->transactions()->first());
 
@@ -188,6 +245,32 @@ class ReconcileControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+
+    /**
+     * Test show for actual reconciliation.
+     *
+     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
+     */
+    public function testShowError(): void
+    {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository    = $this->mock(JournalRepositoryInterface::class);
+
+        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
+
+        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
+        $repository->shouldReceive('getAssetTransaction')->once()->andReturnNull();
+
+        $this->be($this->user());
+        $response = $this->get(route('accounts.reconcile.show', [$journal->id]));
+        $response->assertStatus(500);
+
+        // has bread crumb
+        $response->assertSee('The transaction data is incomplete. This is probably a bug. Apologies.');
+    }
+
+
     /**
      * Test show for actual reconciliation, but its not a reconciliation.
      *
@@ -195,6 +278,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testShowSomethingElse(): void
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile.show', [$journal->id]));
@@ -210,8 +296,10 @@ class ReconcileControllerTest extends TestCase
      */
     public function testSubmit(): void
     {
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('reconcileById')->andReturn(true);
         $journalRepos->shouldReceive('store')->andReturn(new TransactionJournal);
@@ -239,7 +327,10 @@ class ReconcileControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([new Account]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([new Account]));
@@ -262,10 +353,11 @@ class ReconcileControllerTest extends TestCase
      */
     public function testUpdateNotReconcile(): void
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
-        $data    = [
-            'amount' => '5',
-        ];
+        $data    = ['amount' => '5',];
 
         $this->be($this->user());
         $response = $this->post(route('accounts.reconcile.update', [$journal->id]), $data);
@@ -279,10 +371,11 @@ class ReconcileControllerTest extends TestCase
      */
     public function testUpdateZero(): void
     {
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-        $data    = [
-            'amount' => '0',
-        ];
+        $data    = ['amount' => '0',];
 
         $this->be($this->user());
         $response = $this->post(route('accounts.reconcile.update', [$journal->id]), $data);

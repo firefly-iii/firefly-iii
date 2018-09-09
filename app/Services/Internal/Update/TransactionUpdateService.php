@@ -26,13 +26,23 @@ namespace FireflyIII\Services\Internal\Update;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\User;
-
+use Log;
 /**
  * Class TransactionUpdateService
  */
 class TransactionUpdateService
 {
     use TransactionServiceTrait;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /** @var User */
     private $user;

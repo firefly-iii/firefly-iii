@@ -49,10 +49,12 @@ class JsonController extends Controller
         }
         try {
             $view = view('rules.partials.action', compact('actions', 'count'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view]);
     }
@@ -78,10 +80,12 @@ class JsonController extends Controller
 
         try {
             $view = view('rules.partials.trigger', compact('triggers', 'count'))->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view]);
     }

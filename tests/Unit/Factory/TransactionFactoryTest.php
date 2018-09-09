@@ -50,7 +50,7 @@ class TransactionFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -987,9 +987,9 @@ class TransactionFactoryTest extends TestCase
     public function testCreatePairSameBadType(): void
     {
         // objects:
-        $expense     = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $expense = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue = $this->user()->accounts()->where('account_type_id', 5)->first();
-        $euro        = TransactionCurrency::first();
+        $euro    = TransactionCurrency::first();
 
         // mocked classes
         $accountRepos    = $this->mock(AccountRepositoryInterface::class);

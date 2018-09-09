@@ -46,7 +46,7 @@ class AttachmentHelperTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -152,8 +152,8 @@ class AttachmentHelperTest extends TestCase
         // mock calls:
         Storage::fake('upload');
 
-        $path       = public_path('browserconfig.xml');
-        $helper     = new AttachmentHelper;
+        $path   = public_path('browserconfig.xml');
+        $helper = new AttachmentHelper;
 
         // make new attachment:
         $journal    = $this->user()->transactionJournals()->inRandomOrder()->first();

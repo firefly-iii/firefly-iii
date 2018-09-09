@@ -74,6 +74,7 @@ abstract class YnabRequest
         }
         try {
             $content = trim($res->getBody()->getContents());
+            Log::debug(sprintf('Raw body is: %s', $content));
         } catch (RuntimeException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

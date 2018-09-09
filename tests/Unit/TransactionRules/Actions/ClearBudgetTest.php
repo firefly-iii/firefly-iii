@@ -27,12 +27,22 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ClearBudgetTest
  */
 class ClearBudgetTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\TransactionRules\Actions\ClearBudget
      */

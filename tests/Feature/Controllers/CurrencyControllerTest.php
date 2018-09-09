@@ -45,10 +45,10 @@ class CurrencyControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -287,6 +287,34 @@ class CurrencyControllerTest extends TestCase
         $response = $this->post(route('currencies.store'), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     * @covers \FireflyIII\Http\Requests\CurrencyFormRequest
+     */
+    public function testStoreError(): void
+    {
+        // mock stuff
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository->shouldReceive('store')->andReturnNull();
+        $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
+
+        $this->session(['currencies.create.uri' => 'http://localhost']);
+        $data = [
+            'name'           => 'XX',
+            'code'           => 'XXX',
+            'symbol'         => 'x',
+            'decimal_places' => 2,
+        ];
+        $this->be($this->user());
+        $response = $this->post(route('currencies.store'), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('error', 'Could not store the new currency.');
     }
 
     /**

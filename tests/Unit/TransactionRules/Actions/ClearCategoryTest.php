@@ -27,12 +27,21 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class ClearCategoryTest
  */
 class ClearCategoryTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\TransactionRules\Actions\ClearCategory
      */

@@ -27,8 +27,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -43,10 +45,10 @@ class MassControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -57,6 +59,9 @@ class MassControllerTest extends TestCase
     public function testDelete(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->once();
@@ -82,6 +87,8 @@ class MassControllerTest extends TestCase
 
         // mock deletion:
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
         $repository->shouldReceive('destroy')->times(2);
@@ -103,6 +110,8 @@ class MassControllerTest extends TestCase
     public function testEdit(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
         $transfersArray = $transfers->pluck('id')->toArray();
@@ -140,6 +149,9 @@ class MassControllerTest extends TestCase
     public function testEditMultiple(): void
     {
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -188,6 +200,8 @@ class MassControllerTest extends TestCase
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->once();
         $repository->shouldReceive('findNull')->once()->andReturn($deposit);

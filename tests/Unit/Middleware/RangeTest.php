@@ -29,12 +29,27 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class RangeTest
  */
 class RangeTest extends TestCase
 {
+    /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Route::middleware(Range::class)->any(
+            '/_test/range', function () {
+            return view('test.test');
+        }
+        );
+    }
+
     /**
      * @covers \FireflyIII\Http\Middleware\Range
      */
@@ -61,19 +76,5 @@ class RangeTest extends TestCase
         $this->withoutExceptionHandling();
         $response = $this->get('/_test/range');
         $this->assertEquals(Response::HTTP_OK, $response->getStatusCode());
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(Range::class)->any(
-            '/_test/range', function () {
-            return view('test.test');
-        }
-        );
     }
 }

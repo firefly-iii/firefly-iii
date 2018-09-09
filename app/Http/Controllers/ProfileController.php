@@ -190,17 +190,10 @@ class ProfileController extends Controller
     /**
      * Enable 2FA screen.
      *
-     * @param UserRepositoryInterface $repository
-     *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    public function enable2FA(UserRepositoryInterface $repository)
+    public function enable2FA()
     {
-        /** @var User $user */
-        $user = auth()->user();
-        if ($repository->hasRole($user, 'demo')) {
-            return redirect(route('profile.index'));
-        }
         $hasSecret = (null !== app('preferences')->get('twoFactorAuthSecret'));
 
         // if we don't have a valid secret yet, redirect to the code page to get one.

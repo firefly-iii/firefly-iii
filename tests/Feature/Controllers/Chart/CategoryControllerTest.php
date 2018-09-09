@@ -42,10 +42,10 @@ class CategoryControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -90,7 +90,7 @@ class CategoryControllerTest extends TestCase
 
         // spent per currency data:
         $spentData = [
-            1 => '123.45',
+            1 => '-123.45',
             2 => '567.21',
         ];
 

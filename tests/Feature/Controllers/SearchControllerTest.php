@@ -22,9 +22,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\SearchInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -39,10 +41,10 @@ class SearchControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -53,6 +55,10 @@ class SearchControllerTest extends TestCase
     public function testIndex(): void
     {
         $search = $this->mock(SearchInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('getWordsAsString')->once()->andReturn('test');
         $this->be($this->user());
@@ -68,6 +74,8 @@ class SearchControllerTest extends TestCase
     public function testSearch(): void
     {
         $search = $this->mock(SearchInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('setLimit')->withArgs([50])->once();
         $search->shouldReceive('searchTransactions')->once()->andReturn(new Collection);

@@ -26,6 +26,8 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
@@ -56,8 +58,6 @@ class ReportController extends Controller
      * This chart, by default, is shown on the multi-year and year report pages,
      * which means that giving it a 2 week "period" should be enough granularity.
      *
-     * TODO this chart is not multi-currency aware.
-     *
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
@@ -81,9 +81,26 @@ class ReportController extends Controller
         $helper = app(NetWorthInterface::class);
         $helper->setUser(auth()->user());
 
+        // filter accounts on having the preference for being included.
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $filtered = $accounts->filter(
+            function (Account $account) use ($accountRepository) {
+                $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
+                $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
+                if (false === $result) {
+                    Log::debug(sprintf('Will not include "%s" in net worth charts.', $account->name));
+                }
+
+                return $result;
+            }
+        );
+
+
+
         while ($current < $end) {
             // get balances by date, grouped by currency.
-            $result = $helper->getNetWorthByCurrency($accounts, $current);
+            $result = $helper->getNetWorthByCurrency($filtered, $current);
 
             // loop result, add to array.
             /** @var array $netWorthItem */

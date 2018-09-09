@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Exception;
 use FireflyIII\Factory\BillFactory;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
@@ -128,7 +129,11 @@ trait JournalServiceTrait
         }
         $note = $journal->notes()->first();
         if (null !== $note) {
-            $note->delete();
+            try {
+                $note->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Journal service trait could not delete note: %s', $e->getMessage()));
+            }
         }
 
 

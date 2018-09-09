@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -50,10 +51,10 @@ class SplitControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -66,7 +67,10 @@ class SplitControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
@@ -112,6 +116,10 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+
         $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
         $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
         $account            = $destination->account;
@@ -207,6 +215,8 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
 
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn($opening);
@@ -225,6 +235,9 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $transactions = factory(Transaction::class, 1)->make();
         $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
@@ -269,6 +282,8 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
 
         $billRepos->shouldReceive('scan');
         $ruleRepos->shouldReceive('setUser')->once();
@@ -323,6 +338,8 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
@@ -367,6 +384,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
         $ruleRepos->shouldReceive('setUser')->once();
@@ -424,6 +442,8 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
 
         $billRepos->shouldReceive('scan');
         $ruleRepos->shouldReceive('setUser')->once();

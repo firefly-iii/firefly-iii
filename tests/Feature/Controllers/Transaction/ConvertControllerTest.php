@@ -30,9 +30,11 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -47,30 +49,25 @@ class ConvertControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testIndexDepositTransfer(): void
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // find deposit:
-        $loop = 0;
-        do {
-            $deposit = TransactionJournal::where('transaction_type_id', 2)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count   = $deposit->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $deposit = $this->getRandomDeposit();
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -100,15 +97,11 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // find deposit:
-        $loop = 0;
-        do {
-            $deposit = TransactionJournal::where('transaction_type_id', 2)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count   = $deposit->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $deposit = $this->getRandomDeposit();
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -135,14 +128,10 @@ class ConvertControllerTest extends TestCase
         // mock stuff:
 
         // find deposit:
-        $loop = 0;
-        do {
-            $deposit = TransactionJournal::where('transaction_type_id', 2)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count   = $deposit->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $deposit      = $this->getRandomDeposit();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn($deposit);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
 
@@ -160,6 +149,8 @@ class ConvertControllerTest extends TestCase
     {
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
 
@@ -190,14 +181,11 @@ class ConvertControllerTest extends TestCase
         // mock stuff:
 
         // find transfer:
-        $loop = 0;
-        do {
-            $transfer = TransactionJournal::where('transaction_type_id', 3)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count    = $transfer->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $transfer     = $this->getRandomTransfer();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn($transfer);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -215,15 +203,12 @@ class ConvertControllerTest extends TestCase
     public function testIndexTransferWithdrawal(): void
     {
         // find transfer:
-        $loop = 0;
-        do {
-            $transfer = TransactionJournal::where('transaction_type_id', 3)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count    = $transfer->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $transfer = $this->getRandomTransfer();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -247,15 +232,12 @@ class ConvertControllerTest extends TestCase
     {
 
         // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $withdrawal = $this->getRandomWithdrawal();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -278,15 +260,12 @@ class ConvertControllerTest extends TestCase
     public function testIndexWithdrawalTransfer(): void
     {
         // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
+        $withdrawal = $this->getRandomWithdrawal();
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1')->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->once();
@@ -312,16 +291,25 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexDepositTransfer(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('find')->andReturn(new Account);
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $data    = ['source_account_asset' => 1];
+
+        // get journal:
+        $deposit     = $this->getRandomDeposit();
+        $source      = $this->getRandomRevenue();
+        $destination = $this->getRandomAsset();
+
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('findNull')->andReturn(new Account)->atLeast()->once();
+
+
+        $data = ['source_account_asset' => 1];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['transfer', $deposit->id]), $data);
         $response->assertStatus(302);
@@ -333,18 +321,25 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexDepositWithdrawal(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('store')->andReturn(new Account);
-        $account = $this->user()->accounts()->first();
 
-        $deposit = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $data    = ['destination_account_expense' => 'New expense name.'];
+        // get journal:
+        $deposit     = $this->getRandomDeposit();
+        $source      = $this->getRandomRevenue();
+        $destination = $this->getRandomAsset();
+        $expense     = $this->getRandomExpense();
+
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('store')->atLeast()->once()->andReturn($expense);
+
+        $data = ['destination_account_expense' => 'New expense name.'];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['withdrawal', $deposit->id]), $data);
         $response->assertStatus(302);
@@ -356,47 +351,58 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexDepositWithdrawalEmptyName(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $data         = ['destination_account_expense' => ''];
+
+        // get journal:
+        $deposit     = $this->getRandomDeposit();
+        $source      = $this->getRandomRevenue();
+        $destination = $this->getRandomAsset();
+        $expense     = $this->getRandomExpense();
+
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($expense);
+
+        $data = ['destination_account_expense' => ''];
         $this->be($this->user());
         $response = $this->post(route('transactions.convert.index', ['withdrawal', $deposit->id]), $data);
         $response->assertStatus(302);
         $response->assertRedirect(route('transactions.show', [$deposit->id]));
     }
 
+
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
      */
     public function testPostIndexErrored(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
+        // mock stuff
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->user()->accounts()->first();
-
-        // find withdrawal:
-        $loop = 0;
-        do {
-            $withdrawal = TransactionJournal::where('transaction_type_id', 1)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count      = $withdrawal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
 
         // mock stuff
         $messageBag = new MessageBag;
         $messageBag->add('fake', 'fake error');
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn($messageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->twice();
-        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->twice();
-        $accountRepos->shouldReceive('findNull')->andReturn($account)->once();
+        // get journal:
+        $withdrawal  = $this->getRandomWithdrawal();
+        $source      = $this->getRandomRevenue();
+        $destination = $this->getRandomAsset();
+
+        $repository->shouldReceive('convert')->andReturn($messageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('findNull')->andReturn(new Account)->atLeast()->once();
+
         $data = [
             'destination_account_asset' => 2,
         ];
@@ -411,14 +417,17 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexSameType(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
-        $data       = [
+        // get journal:
+        $withdrawal = $this->getRandomWithdrawal();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+
+        $data = [
             'destination_account_asset' => 2,
         ];
         $this->be($this->user());
@@ -432,19 +441,17 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexSplit(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $withdrawal = TransactionJournal::where('transaction_type_id', 1)
-                                        ->whereNull('transaction_journals.deleted_at')
-                                        ->leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                        ->groupBy('transaction_journals.id')
-                                        ->orderBy('ct', 'DESC')
-                                        ->where('user_id', $this->user()->id)->first(['transaction_journals.id', DB::raw('count(transactions.`id`) as ct')]);
-        $data       = [
+        // get journal:
+        $withdrawal = $this->getRandomSplitWithdrawal();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+
+        $data = [
             'destination_account_asset' => 2,
         ];
         $this->be($this->user());
@@ -458,25 +465,25 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexTransferDeposit(): void
     {
-        // find transfer:
-        $loop = 0;
-        do {
-            $transfer = TransactionJournal::where('transaction_type_id', 3)->inRandomOrder()->where('user_id', $this->user()->id)->first();
-            $count    = $transfer->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
+        Log::info(sprintf('Now in test %s', __METHOD__));
+        // mock stuff
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('store')->andReturn(new Account)->once();
+        // get journal:
+        $transfer    = $this->getRandomTransfer();
+        $source      = $this->getRandomAsset();
+        $destination = $this->getRandomAsset();
+        $revenue     = $this->getRandomRevenue();
 
-        $account = $this->user()->accounts()->first();
-        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->twice();
-        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->twice();
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('store')->atLeast()->once()->andReturn($revenue);
 
         $data = ['source_account_revenue' => 'New rev'];
         $this->be($this->user());
@@ -491,54 +498,82 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexWithdrawalDeposit(): void
     {
         // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
-        $data       = ['source_account_revenue' => 'New revenue name.'];
-        $this->be($this->user());
-        $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
-        $response->assertStatus(302);
-        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
-     */
-    public function testPostIndexWithdrawalDepositEmptyName(): void
-    {
-        // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
-        $data       = ['source_account_revenue' => ''];
-        $this->be($this->user());
-        $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
-        $response->assertStatus(302);
-        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
-    }
-
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
-     */
-    public function testPostIndexWithdrawalTransfer(): void
-    {
-        // mock stuff
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('convert')->andReturn(new MessageBag);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('findNull')->andReturn(new Account);
 
-        $withdrawal = TransactionJournal::where('transaction_type_id', 1)->where('user_id', $this->user()->id)->first();
-        $data       = ['destination_account_asset' => 2,];
+        $withdrawal  = $this->getRandomWithdrawal();
+        $source      = $this->getRandomExpense();
+        $destination = $this->getRandomAsset();
+        $revenue     = $this->getRandomRevenue();
+
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('store')->atLeast()->once()->andReturn($revenue);
+
+
+        $data = ['source_account_revenue' => 'New revenue name.'];
         $this->be($this->user());
-        $response = $this->post(route('transactions.convert.index', ['transfer', $withdrawal->id]), $data);
+        $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
         $response->assertStatus(302);
         $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
     }
+
+        /**
+         * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
+         */
+        public function testPostIndexWithdrawalDepositEmptyName(): void
+        {
+            // mock stuff
+            $repository = $this->mock(JournalRepositoryInterface::class);
+            $userRepos  = $this->mock(UserRepositoryInterface::class);
+            $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+            $withdrawal  = $this->getRandomWithdrawal();
+            $source      = $this->getRandomExpense();
+            $destination = $this->getRandomAsset();
+            $revenue     = $this->getRandomRevenue();
+
+            $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+            $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+            $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+            $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+            $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($revenue);
+
+            $data       = ['source_account_revenue' => ''];
+            $this->be($this->user());
+            $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
+            $response->assertStatus(302);
+            $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
+        }
+
+        /**
+         * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
+         */
+        public function testPostIndexWithdrawalTransfer(): void
+        {
+            // mock stuff
+            $repository = $this->mock(JournalRepositoryInterface::class);
+            $userRepos  = $this->mock(UserRepositoryInterface::class);
+            $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+            $withdrawal  = $this->getRandomWithdrawal();
+            $source      = $this->getRandomExpense();
+            $destination = $this->getRandomAsset();
+            $newDest = $this->getRandomAsset();
+
+            $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+            $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+            $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+            $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+            $accountRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($newDest);
+
+            $data       = ['destination_account_asset' => 2,];
+            $this->be($this->user());
+            $response = $this->post(route('transactions.convert.index', ['transfer', $withdrawal->id]), $data);
+            $response->assertStatus(302);
+            $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
+        }
 }

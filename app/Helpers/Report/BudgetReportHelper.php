@@ -27,9 +27,12 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class BudgetReportHelper.
+ *
+ * @codeCoverageIgnore
  */
 class BudgetReportHelper implements BudgetReportHelperInterface
 {
@@ -44,6 +47,11 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     public function __construct(BudgetRepositoryInterface $repository)
     {
         $this->repository = $repository;
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+
     }
 
     /**

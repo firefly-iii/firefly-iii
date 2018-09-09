@@ -39,7 +39,7 @@ class ChartJsGeneratorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -90,6 +90,48 @@ class ChartJsGeneratorTest extends TestCase
 
         $this->assertEquals('X', $result['datasets'][1]['currency_symbol']);
         $this->assertEquals('#123456', $result['datasets'][1]['backgroundColor']);
+    }
+
+    /**
+     * @covers \FireflyIII\Generator\Chart\Basic\ChartJsGenerator
+     */
+    public function testMultiCurrencyPieChart(): void
+    {
+
+        $data = [
+            'one'   => ['amount' => -1, 'currency_symbol' => 'a'],
+            'two'   => ['amount' => -2, 'currency_symbol' => 'b'],
+            'three' => ['amount' => -3, 'currency_symbol' => 'c'],
+        ];
+
+        /** @var ChartJsGenerator $generator */
+        $generator = new ChartJsGenerator();
+        $result    = $generator->multiCurrencyPieChart($data);
+
+        $this->assertEquals('three', $result['labels'][0]);
+        $this->assertEquals(3.0, $result['datasets'][0]['data'][0]);
+
+    }
+
+    /**
+     * @covers \FireflyIII\Generator\Chart\Basic\ChartJsGenerator
+     */
+    public function testMultiCurrencyPieChartPositive(): void
+    {
+
+        $data = [
+            'one'   => ['amount' => 1, 'currency_symbol' => 'a'],
+            'two'   => ['amount' => 2, 'currency_symbol' => 'b'],
+            'three' => ['amount' => 3, 'currency_symbol' => 'c'],
+        ];
+
+        /** @var ChartJsGenerator $generator */
+        $generator = new ChartJsGenerator();
+        $result    = $generator->multiCurrencyPieChart($data);
+
+        $this->assertEquals('three', $result['labels'][0]);
+        $this->assertEquals(3.0, $result['datasets'][0]['data'][0]);
+
     }
 
     /**

@@ -28,9 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -46,11 +44,11 @@ class TransactionControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -1329,16 +1327,8 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowDeposit(): void
     {
-        $loop = 0;
-        do {
-            /** @var TransactionJournal $journal */
-            $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 2)->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-        $transaction = $journal->transactions()->first();
-
-
+        $deposit      = $this->getRandomDeposit();
+        $transaction  = $deposit->transactions()->first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
@@ -1350,7 +1340,7 @@ class TransactionControllerTest extends TestCase
         $collector->setUser($this->user());
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setAllAssetAccounts();
-        $collector->setJournals(new Collection([$journal]));
+        $collector->setJournals(new Collection([$deposit]));
         $collector->setLimit(5)->setPage(1);
         $transactions = $collector->getTransactions();
 
@@ -1374,7 +1364,7 @@ class TransactionControllerTest extends TestCase
             [
                 'data' => [[
                                'attributes' => [
-                                   'description' => $journal->description,
+                                   'description' => $deposit->description,
                                    'type'        => 'Deposit',
                                ],
                            ]],
@@ -1393,15 +1383,7 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowWithdrawal(): void
     {
-        $loop = 0;
-        do {
-            // this is kind of cheating but OK.
-            /** @var TransactionJournal $journal */
-            $journal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-        /** @var Transaction $transaction */
+        $journal                  = $this->getRandomWithdrawal();
         $transaction              = $journal->transactions()->first();
         $transaction->description = null;
         $transaction->save();
@@ -2441,7 +2423,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
-        $data = [
+        $data        = [
             'description'  => 'Some deposit #' . random_int(1, 10000),
             'date'         => '2018-01-01',
             'transactions' => [
@@ -2452,12 +2434,7 @@ class TransactionControllerTest extends TestCase
                 ],
             ],
         ];
-        do {
-            /** @var TransactionJournal $deposit */
-            $deposit = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 2)->first();
-            $count   = $deposit->transactions()->count();
-        } while ($count !== 2);
-
+        $deposit     = $this->getRandomDeposit();
         $transaction = $deposit->transactions()->first();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('update')->andReturn($deposit)->once();
@@ -2494,13 +2471,8 @@ class TransactionControllerTest extends TestCase
                 ],
             ],
         ];
-        do {
-            /** @var TransactionJournal $withdrawal */
-            $withdrawal = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 1)->first();
-            $count      = $withdrawal->transactions()->count();
-        } while ($count !== 2);
 
-
+        $withdrawal  = $this->getRandomWithdrawal();
         $transaction = $withdrawal->transactions()->first();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('update')->andReturn($withdrawal)->once();

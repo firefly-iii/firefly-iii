@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -42,10 +43,10 @@ class BulkControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -58,6 +59,9 @@ class BulkControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
@@ -83,6 +87,9 @@ class BulkControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')
@@ -119,6 +126,9 @@ class BulkControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $budgetRepos->shouldReceive('getActiveBudgets')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
@@ -154,6 +164,8 @@ class BulkControllerTest extends TestCase
         ];
 
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->times(4)->andReturn(new TransactionJournal);
 
@@ -192,6 +204,8 @@ class BulkControllerTest extends TestCase
         ];
 
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->times(4)->andReturn(new TransactionJournal, null);
 

@@ -45,10 +45,10 @@ class JavascriptControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -62,7 +62,9 @@ class JavascriptControllerTest extends TestCase
         $account       = factory(Account::class)->make();
 
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]))
-                     ->withArgs([[AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT,AccountType::LOAN,AccountType::MORTGAGE, AccountType::CREDITCARD]])->once();
+                     ->withArgs(
+                         [[AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]]
+                     )->once();
         $currencyRepos->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(new TransactionCurrency);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
 

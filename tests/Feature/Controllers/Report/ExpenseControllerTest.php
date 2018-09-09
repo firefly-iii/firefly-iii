@@ -42,10 +42,10 @@ class ExpenseControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -231,7 +231,6 @@ class ExpenseControllerTest extends TestCase
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn($collection);
-        //$collector->shouldReceive('')->andReturnSelf();
 
         $this->be($this->user());
         $response = $this->get(route('report-data.expense.expenses', ['1', $expense->id, '20170101', '20170131']));
@@ -247,6 +246,36 @@ class ExpenseControllerTest extends TestCase
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
+
+        // fake collection:
+        $transA                                  = new Transaction;
+        $transA->transaction_currency_id         = 1;
+        $transA->transaction_category_name       = 'Category';
+        $transA->transaction_category_id         = 1;
+        $transA->transaction_currency_symbol     = 'A';
+        $transA->transaction_currency_dp         = 2;
+        $transA->transaction_amount              = '100';
+        $transA->opposing_account_id             = $expense->id;
+        $transB                                  = new Transaction;
+        $transB->transaction_currency_id         = 2;
+        $transB->transaction_category_name       = null;
+        $transB->transaction_category_id         = 0;
+        $transB->transaction_journal_budget_name = 'Category2';
+        $transB->transaction_journal_budget_id   = 2;
+        $transB->transaction_currency_symbol     = 'A';
+        $transB->transaction_currency_dp         = 2;
+        $transB->transaction_amount              = '100';
+        $transB->opposing_account_id             = $expense->id;
+        $collection                              = new Collection([$transA, $transB]);
+
+        $collector = $this->mock(TransactionCollectorInterface::class);
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->andReturn($collection);
+        //$collector->shouldReceive('')->andReturnSelf();
+
 
         $this->be($this->user());
         $response = $this->get(route('report-data.expense.income', ['1', $expense->id, '20170101', '20170131']));

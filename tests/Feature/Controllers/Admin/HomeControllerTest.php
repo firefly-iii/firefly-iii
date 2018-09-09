@@ -24,7 +24,9 @@ namespace Tests\Feature\Controllers\Admin;
 
 use Event;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -35,10 +37,10 @@ class HomeControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -46,6 +48,10 @@ class HomeControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
         $this->be($this->user());
         $response = $this->get(route('admin.index'));
         $response->assertStatus(200);
@@ -58,6 +64,11 @@ class HomeControllerTest extends TestCase
      */
     public function testTestMessage(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         Event::fake();
 
         $this->be($this->user());

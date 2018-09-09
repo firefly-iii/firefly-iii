@@ -51,6 +51,7 @@ return [
     'destination_account'         => 'Konto docelowe',
     'journal_destination_id'      => 'Konto aktywów (przeznaczenie)',
     'asset_destination_account'   => 'Destination account',
+    'include_net_worth'           => 'Include in net worth',
     'asset_source_account'        => 'Source account',
     'journal_description'         => 'Opis',
     'note'                        => 'Notatki',

@@ -82,7 +82,6 @@ class JournalLinkRequest extends Request
         // fixed
         return [
             'link_type'       => sprintf('required|in:%s', $string),
-            'link_other'      => 'belongsToUser:transaction_journals',
             'link_journal_id' => 'belongsToUser:transaction_journals',
         ];
     }

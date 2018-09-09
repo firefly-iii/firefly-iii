@@ -43,7 +43,7 @@ class RuleControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -146,11 +146,10 @@ class RuleControllerTest extends TestCase
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
      * @covers \FireflyIII\Api\V1\Requests\RuleRequest
      */
-    public function testUpdate(): void
+    public function testStoreNoActions(): void
     {
         $ruleRepos = $this->mock(RuleRepositoryInterface::class);
         $ruleRepos->shouldReceive('setUser')->once();
-        /** @var Rule $rule */
         $rule = $this->user()->rules()->first();
         $data = [
             'title'           => 'Store new rule',
@@ -167,20 +166,12 @@ class RuleControllerTest extends TestCase
                 ],
             ],
             'rule_actions'    => [
-                [
-                    'name'            => 'add_tag',
-                    'value'           => 'A',
-                    'stop_processing' => 1,
-                ],
             ],
         ];
 
-        $ruleRepos->shouldReceive('update')->once()->andReturn($rule);
-
         // test API
-        $response = $this->put('/api/v1/rules/' . $rule->id, $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-
+        $response = $this->post('/api/v1/rules', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
     }
 
     /**
@@ -217,15 +208,15 @@ class RuleControllerTest extends TestCase
 
     }
 
-
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
      * @covers \FireflyIII\Api\V1\Requests\RuleRequest
      */
-    public function testStoreNoActions(): void
+    public function testUpdate(): void
     {
         $ruleRepos = $this->mock(RuleRepositoryInterface::class);
         $ruleRepos->shouldReceive('setUser')->once();
+        /** @var Rule $rule */
         $rule = $this->user()->rules()->first();
         $data = [
             'title'           => 'Store new rule',
@@ -242,12 +233,20 @@ class RuleControllerTest extends TestCase
                 ],
             ],
             'rule_actions'    => [
+                [
+                    'name'            => 'add_tag',
+                    'value'           => 'A',
+                    'stop_processing' => 1,
+                ],
             ],
         ];
 
+        $ruleRepos->shouldReceive('update')->once()->andReturn($rule);
+
         // test API
-        $response = $this->post('/api/v1/rules', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
+        $response = $this->put('/api/v1/rules/' . $rule->id, $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+
     }
 
 }

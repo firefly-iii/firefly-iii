@@ -46,15 +46,14 @@ class ReportControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
-     * @expectedExceptionMessage Could not parse end date
      */
     public function testBadEndDate(): void
     {
@@ -168,7 +167,6 @@ class ReportControllerTest extends TestCase
 
     /**
      * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
-     * @expectedExceptionMessage Firefly cannot handle this type of info-button
      */
     public function testBalanceAmountTagRole(): void
     {

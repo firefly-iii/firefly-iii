@@ -47,7 +47,7 @@ class SecureHeaders
         $google      = '';
         $analyticsId = env('ANALYTICS_ID', '');
         if ('' !== $analyticsId) {
-            $google = 'https://www.google-analytics.com/analytics.js';
+            $google = 'https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
         }
         $csp = [
             "default-src 'none'",
@@ -57,7 +57,7 @@ class SecureHeaders
             "form-action 'self'",
             "font-src 'self'",
             "connect-src 'self'",
-            "img-src 'self'",
+            "img-src 'self' data:",
         ];
 
         $featurePolicies = [

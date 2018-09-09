@@ -525,7 +525,7 @@ class FireflyValidator extends Validator
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
-            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+            //Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }
 
         return $value;

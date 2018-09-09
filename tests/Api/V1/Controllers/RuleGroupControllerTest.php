@@ -43,7 +43,7 @@ class RuleGroupControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -90,7 +90,7 @@ class RuleGroupControllerTest extends TestCase
     public function testShow(): void
     {
         /** @var RuleGroup $ruleGroup */
-        $ruleGroup = $this->user()->ruleGroups()->first();
+        $ruleGroup      = $this->user()->ruleGroups()->first();
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $ruleGroupRepos->shouldReceive('setUser')->once();
 

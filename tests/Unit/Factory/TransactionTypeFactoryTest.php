@@ -41,7 +41,7 @@ class TransactionTypeFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -54,7 +54,7 @@ class TransactionTypeFactoryTest extends TestCase
         /** @var TransactionTypeFactory $factory */
         $factory = app(TransactionTypeFactory::class);
 
-        $result  = $factory->find($type->type);
+        $result = $factory->find($type->type);
 
         $this->assertEquals($result->id, $type->id);
     }

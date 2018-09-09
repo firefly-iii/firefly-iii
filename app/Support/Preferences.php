@@ -62,7 +62,7 @@ class Preferences
         try {
             Preference::where('user_id', auth()->user()->id)->where('name', $name)->delete();
         } catch (Exception $e) {
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
+            Log::debug(sprintf('Could not delete preference: %s', $e->getMessage()));
             // don't care.
         }
 

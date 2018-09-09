@@ -40,6 +40,16 @@ use Log;
  */
 class TransactionFactory
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     use TransactionServiceTrait;
 
     /** @var User */
@@ -204,10 +214,11 @@ class TransactionFactory
             throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationType));
         }
         // source must be in this list AND dest must be in this list:
-        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::MORTGAGE, AccountType::LOAN, AccountType::MORTGAGE];
+        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::CREDITCARD, AccountType::CASH, AccountType::DEBT, AccountType::MORTGAGE,
+                 AccountType::LOAN, AccountType::MORTGAGE];
         if (
-            !\in_array($sourceType, $list, true) &&
-            !\in_array($destinationType, $list, true)) {
+            !\in_array($sourceType, $list, true)
+            && !\in_array($destinationType, $list, true)) {
             throw new FireflyException(sprintf('At least one of the accounts must be an asset account (%s, %s).', $sourceType, $destinationType));
         }
         // either of these must be asset or default account.

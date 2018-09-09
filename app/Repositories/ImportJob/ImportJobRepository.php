@@ -53,6 +53,10 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     {
         $this->maxUploadSize = (int)config('firefly.maxUploadSize');
         $this->uploadDisk    = Storage::disk('upload');
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -68,6 +72,33 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $errors      = $job->errors;
         $errors[]    = $error;
         $job->errors = $errors;
+        $job->save();
+
+        return $job;
+    }
+
+    /**
+     * Append transactions to array instead of replacing them.
+     *
+     * @param ImportJob $job
+     * @param array     $transactions
+     *
+     * @return ImportJob
+     */
+    public function appendTransactions(ImportJob $job, array $transactions): ImportJob
+    {
+        Log::debug(sprintf('Now in appendTransactions(%s)', $job->key));
+        $existingTransactions = $job->transactions;
+        if (!\is_array($existingTransactions)) {
+            $existingTransactions = [];
+        }
+        $new = array_merge($existingTransactions, $transactions);
+        Log::debug(sprintf('Old transaction count: %d', \count($existingTransactions)));
+        Log::debug(sprintf('To be added transaction count: %d', \count($transactions)));
+        Log::debug(sprintf('New count: %d', \count($new)));
+        $job->transactions = $new;
+
+
         $job->save();
 
         return $job;
@@ -352,19 +383,6 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         return new MessageBag;
     }
 
-    /**
-     * @param ImportJob $job
-     * @param string    $status
-     *
-     * @return ImportJob
-     */
-    public function updateStatus(ImportJob $job, string $status): ImportJob
-    {
-        $job->status = $status;
-        $job->save();
-
-        return $job;
-    }
 
     /**
      * @codeCoverageIgnore

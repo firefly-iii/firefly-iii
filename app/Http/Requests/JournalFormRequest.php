@@ -75,6 +75,7 @@ class JournalFormRequest extends Request
             'piggy_bank_name'    => null,
             'bill_id'            => null,
             'bill_name'          => null,
+            'original-source'    => sprintf('gui-v%s', config('firefly.version')),
 
             // transaction data:
             'transactions'       => [

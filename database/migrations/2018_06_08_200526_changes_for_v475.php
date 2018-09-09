@@ -29,7 +29,7 @@ class ChangesForV475 extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::create(
             'recurrences', function (Blueprint $table) {

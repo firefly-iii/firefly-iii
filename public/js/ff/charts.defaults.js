@@ -117,6 +117,20 @@ var defaultChartOptions = {
     }
 };
 
+var pieOptionsWithCurrency = {
+    tooltips: {
+        callbacks: {
+            label: function (tooltipItem, data) {
+                "use strict";
+                var value = data.datasets[0].data[tooltipItem.index];
+                return data.labels[tooltipItem.index] + ': ' + accounting.formatMoney(value, data.datasets[tooltipItem.datasetIndex].currency_symbol[tooltipItem.index]);
+            }
+        }
+    },
+    maintainAspectRatio: true,
+    responsive: true
+};
+
 var defaultPieOptions = {
     tooltips: {
         callbacks: {

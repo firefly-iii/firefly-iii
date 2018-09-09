@@ -61,6 +61,7 @@ class UserEventHandler
 
         // first user ever?
         if (1 === $repository->count()) {
+            Log::debug('User count is one, attach role.');
             $repository->attachRole($event->user, 'owner');
         }
 

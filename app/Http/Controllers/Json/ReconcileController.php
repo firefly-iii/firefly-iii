@@ -119,7 +119,7 @@ class ReconcileController extends Controller
         /** @var Transaction $transaction */
         foreach ($cleared as $transaction) {
             if ($transaction->transactionJournal->date <= $end) {
-                $clearedAmount = bcadd($clearedAmount, $transaction->amount);
+                $clearedAmount = bcadd($clearedAmount, $transaction->amount); // @codeCoverageIgnore
                 ++$countCleared;
             }
         }
@@ -134,10 +134,12 @@ class ReconcileController extends Controller
                                                  'route', 'countCleared'
                                              )
             )->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('View error: %s', $e->getMessage()));
             $view = 'Could not render accounts.reconcile.overview';
         }
+        // @codeCoverageIgnoreEnd
 
 
         $return = [
@@ -194,10 +196,12 @@ class ReconcileController extends Controller
             $html = view(
                 'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
+            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
             $html = 'Could not render accounts.reconcile.transactions';
         }
+        // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
     }

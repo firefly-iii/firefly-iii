@@ -51,6 +51,7 @@ return [
     'destination_account'         => 'Doelrekening',
     'journal_destination_id'      => 'Betaalrekening (doel)',
     'asset_destination_account'   => 'Doelrekening',
+    'include_net_worth'           => 'Meetellen in kapitaal',
     'asset_source_account'        => 'Bronrekening',
     'journal_description'         => 'Omschrijving',
     'note'                        => 'Notities',

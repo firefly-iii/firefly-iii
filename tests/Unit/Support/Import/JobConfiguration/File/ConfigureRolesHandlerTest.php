@@ -36,6 +36,7 @@ use Illuminate\Support\Collection;
 use League\Csv\Reader;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class ConfigureRolesHandlerTest
@@ -43,10 +44,22 @@ use Tests\TestCase;
 class ConfigureRolesHandlerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler
      */
     public function testConfigurationCompleteBasic(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
+
         $config  = [
             'column-count' => 5,
             'column-roles' => [
@@ -67,6 +80,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testConfigurationCompleteForeign(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         $config  = [
             'column-count' => 5,
             'column-roles' => [
@@ -91,6 +106,7 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testConfigurationCompleteNoAmount(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $config  = [
             'column-count' => 5,
             'column-roles' => [
@@ -115,6 +131,7 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testConfigureJob(): void
     {
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'role-B' . random_int(1, 10000);
@@ -168,7 +185,7 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testGetExampleFromLine(): void
     {
-
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $lines = [
             ['one', 'two', '', 'three'],
             ['four', 'five', '', 'six'],
@@ -191,6 +208,11 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testGetExamplesFromFile(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos->shouldReceive('setUser')->once();
+        $importRepos->shouldReceive('setConfiguration')->once()
+                    ->withAnyArgs();
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'role-x' . random_int(1, 10000);
@@ -229,6 +251,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testGetHeadersHas(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        //$importRepos->shouldReceive('setUser')->once();
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
         // 5 columns, of which #5 (index 4) is tags-space
@@ -250,6 +274,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testGetHeadersNone(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         // create a reader to use in method.
         // 5 columns, of which #4 (index 3) is budget-id
         // 5 columns, of which #5 (index 4) is tags-space
@@ -268,6 +294,7 @@ class ConfigureRolesHandlerTest extends TestCase
 
     public function testGetNextData(): void
     {
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'role-x' . random_int(1, 10000);
@@ -338,6 +365,7 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testGetReader(): void
     {
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'role-x' . random_int(1, 10000);
@@ -386,6 +414,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testIgnoreUnmappableColumns(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         $config   = [
             'column-count'      => 5,
             'column-roles'      => [
@@ -429,6 +459,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testIsMappingNecessaryNo(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         $config  = [
             'column-do-mapping' => [false, false, false],
         ];
@@ -442,6 +474,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testIsMappingNecessaryYes(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         $config  = [
             'column-do-mapping' => [false, true, false, false],
         ];
@@ -455,6 +489,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testMakeExamplesUnique(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         $lines = [
             ['one', 'two', '', 'three'],
             ['four', 'five', '', 'six'],
@@ -481,6 +517,8 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testProcessSpecifics(): void
     {
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+
         $line   = [];
         $config = [
             'specifics' => [
@@ -502,6 +540,7 @@ class ConfigureRolesHandlerTest extends TestCase
      */
     public function testSaveColumCount(): void
     {
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
         $job->key           = 'role-A' . random_int(1, 10000);

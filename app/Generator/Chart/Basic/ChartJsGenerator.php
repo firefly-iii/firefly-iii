@@ -23,12 +23,22 @@ declare(strict_types=1);
 namespace FireflyIII\Generator\Chart\Basic;
 
 use FireflyIII\Support\ChartColour;
-
+use Log;
 /**
  * Class ChartJsGenerator.
  */
 class ChartJsGenerator implements GeneratorInterface
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /**
      * Will generate a Chart JS compatible array from the given input. Expects this format.
      *
@@ -133,6 +143,46 @@ class ChartJsGenerator implements GeneratorInterface
             // make larger than 0
             $chartData['datasets'][0]['data'][]            = (float)app('steam')->positive((string)$value);
             $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $chartData['labels'][]                         = $key;
+            ++$index;
+        }
+
+        return $chartData;
+    }
+
+    /**
+     * Expects data as:.
+     *
+     * key => [value => x, 'currency_symbol' => 'x']
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    public function multiCurrencyPieChart(array $data): array
+    {
+        $chartData = [
+            'datasets' => [
+                0 => [],
+            ],
+            'labels'   => [],
+        ];
+
+        $amounts = array_column($data, 'amount');
+        $next = next($amounts);
+        $sortFlag = SORT_ASC;
+        if (!\is_bool($next) && 1 === bccomp((string)$next, '0')) {
+            $sortFlag = SORT_DESC;
+        }
+        array_multisort($amounts, $sortFlag, $data);
+        unset($next, $sortFlag, $amounts);
+
+        $index = 0;
+        foreach ($data as $key => $valueArray) {
+            // make larger than 0
+            $chartData['datasets'][0]['data'][]            = (float)app('steam')->positive((string)$valueArray['amount']);
+            $chartData['datasets'][0]['backgroundColor'][] = ChartColour::getColour($index);
+            $chartData['datasets'][0]['currency_symbol'][] = $valueArray['currency_symbol'];
             $chartData['labels'][]                         = $key;
             ++$index;
         }

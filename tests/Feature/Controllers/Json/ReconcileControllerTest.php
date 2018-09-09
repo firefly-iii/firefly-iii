@@ -27,9 +27,12 @@ namespace Tests\Feature\Controllers\Json;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -41,10 +44,10 @@ class ReconcileControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -54,6 +57,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testOverview(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $transactions = $this->user()->transactions()->inRandomOrder()->take(3)->get();
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
@@ -74,10 +80,13 @@ class ReconcileControllerTest extends TestCase
      * Test overview when it's not an asset.
      *
      * @covers                   \FireflyIII\Http\Controllers\Json\ReconcileController
-     * @expectedExceptionMessage is not an asset account
      */
     public function testOverviewNotAsset(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+
         $account    = $this->user()->accounts()->where('account_type_id', '!=', 3)->first();
         $parameters = [
             'startBalance' => '0',
@@ -99,6 +108,11 @@ class ReconcileControllerTest extends TestCase
     public function testTransactions(): void
     {
         $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
 
         $this->be($this->user());
@@ -111,6 +125,11 @@ class ReconcileControllerTest extends TestCase
      */
     public function testTransactionsInitialBalance(): void
     {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+
+
         $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                   ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);
         $this->be($this->user());

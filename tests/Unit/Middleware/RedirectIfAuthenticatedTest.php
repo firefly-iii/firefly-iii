@@ -27,12 +27,27 @@ use FireflyIII\Http\Middleware\RedirectIfAuthenticated;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class RedirectIfAuthenticatedTest
  */
 class RedirectIfAuthenticatedTest extends TestCase
 {
+    /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Route::middleware(RedirectIfAuthenticated::class)->any(
+            '/_test/authenticate', function () {
+            return 'OK';
+        }
+        );
+    }
+
     /**
      * @covers \FireflyIII\Http\Middleware\RedirectIfAuthenticated
      */
@@ -51,19 +66,5 @@ class RedirectIfAuthenticatedTest extends TestCase
         $response = $this->get('/_test/authenticate');
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertRedirect(route('index'));
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(RedirectIfAuthenticated::class)->any(
-            '/_test/authenticate', function () {
-            return 'OK';
-        }
-        );
     }
 }

@@ -189,6 +189,7 @@ class StageImportDataHandler
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
 
                 // transaction data:
                 'transactions'    => [

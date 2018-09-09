@@ -163,6 +163,13 @@ class Steam
 
         $balances[$formatted] = $startBalance;
         $currencyId           = (int)$repository->getMetaValue($account, 'currency_id');
+
+        // use system default currency:
+        if (0 === $currencyId) {
+            $currency   = app('amount')->getDefaultCurrencyByUser($account->user);
+            $currencyId = $currency->id;
+        }
+
         $start->addDay();
 
         // query!
@@ -432,7 +439,6 @@ class Steam
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             // do not care.
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
         }
 
         return $value;

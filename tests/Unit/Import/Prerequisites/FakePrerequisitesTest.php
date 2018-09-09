@@ -29,12 +29,22 @@ use FireflyIII\Models\Preference;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class FakePrerequisitesTest
  */
 class FakePrerequisitesTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Bad API key length in preferences
      *

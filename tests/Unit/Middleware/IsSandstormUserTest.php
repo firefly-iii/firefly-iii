@@ -27,12 +27,27 @@ use FireflyIII\Http\Middleware\IsSandStormUser;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class IsSandstormUserTest
  */
 class IsSandstormUserTest extends TestCase
 {
+    /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Route::middleware(IsSandStormUser::class)->any(
+            '/_test/is-sandstorm', function () {
+            return 'OK';
+        }
+        );
+    }
+
     /**
      * @covers \FireflyIII\Http\Middleware\IsSandStormUser
      */
@@ -68,19 +83,5 @@ class IsSandstormUserTest extends TestCase
         $response->assertSessionHas('warning', (string)trans('firefly.sandstorm_not_available'));
         $response->assertRedirect(route('index'));
         putenv('SANDSTORM=0');
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(IsSandStormUser::class)->any(
-            '/_test/is-sandstorm', function () {
-            return 'OK';
-        }
-        );
     }
 }

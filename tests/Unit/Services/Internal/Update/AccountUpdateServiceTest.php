@@ -32,12 +32,22 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AccountUpdateServiceTest
  */
 class AccountUpdateServiceTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * @covers \FireflyIII\Services\Internal\Update\AccountUpdateService
      * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait

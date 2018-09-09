@@ -89,6 +89,17 @@ interface BillRepositoryInterface
     public function getBillsPaidInRange(Carbon $start, Carbon $end): string;
 
     /**
+     * Get the total amount of money paid for the users active bills in the date range given,
+     * grouped per currency.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getBillsPaidInRangePerCurrency(Carbon $start, Carbon $end): array;
+
+    /**
      * Get the total amount of money due for the users active bills in the date range given.
      *
      * @param Carbon $start
@@ -97,6 +108,16 @@ interface BillRepositoryInterface
      * @return string
      */
     public function getBillsUnpaidInRange(Carbon $start, Carbon $end): string;
+
+    /**
+     * Get the total amount of money due for the users active bills in the date range given.
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getBillsUnpaidInRangePerCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Get all bills with these ID's.

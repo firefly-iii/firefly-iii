@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Actions',
     'edit'                                       => 'Edit',
     'delete'                                     => 'Delete',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'What\'s playing?',
     'everything'                                 => 'Everything',
     'today'                                      => 'today',
@@ -183,7 +187,9 @@ return [
     'scopes_will_be_able'                        => 'This application will be able to:',
     'button_authorize'                           => 'Authorize',
     'none_in_select_list'                        => '(none)',
-    'name_in_currency'                        => ':name in :currency',
+    'name_in_currency'                           => ':name in :currency',
+    'paid_in_currency'                           => 'Paid in :currency',
+    'unpaid_in_currency'                         => 'Unpaid in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Check for updates',
@@ -1007,6 +1013,8 @@ return [
     'in_out_per_category'                     => 'Earned and spent per category',
     'out_per_budget'                          => 'Spent per budget',
     'select_expense_revenue'                  => 'Select expense/revenue account',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Chart',

@@ -26,12 +26,23 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\User;
+use Log;
 
 /**
  * Class PiggyBankFactory
  */
 class PiggyBankFactory
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /** @var User */
     private $user;
 

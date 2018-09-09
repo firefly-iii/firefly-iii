@@ -30,8 +30,10 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Preferences;
 use Tests\TestCase;
 
@@ -47,7 +49,7 @@ class CreateControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
 
@@ -60,8 +62,12 @@ class CreateControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        // mock hasRole for user repository:
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -76,7 +82,6 @@ class CreateControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
-
     /**
      * @covers \FireflyIII\Http\Controllers\Account\CreateController
      * @covers \FireflyIII\Http\Requests\AccountFormRequest
@@ -85,9 +90,9 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         // mock stuff
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -114,9 +119,9 @@ class CreateControllerTest extends TestCase
     public function testStoreAnother(): void
     {
         // mock stuff
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+
         $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -129,6 +134,38 @@ class CreateControllerTest extends TestCase
         ];
 
         $response = $this->post(route('accounts.store', ['asset']), $data);
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Account\CreateController
+     * @covers \FireflyIII\Http\Requests\AccountFormRequest
+     * @covers \FireflyIII\Http\Controllers\Controller
+     */
+    public function testStoreLiability(): void
+    {
+        // mock stuff
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+
+        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        // change the preference:
+        Preferences::setForUser($this->user(), 'frontPageAccounts', [1]);
+
+        $this->session(['accounts.create.uri' => 'http://localhost']);
+        $this->be($this->user());
+        $data = [
+            'name'              => 'new liability account ' . random_int(1000, 9999),
+            'what'              => 'liabilities',
+            'liability_type_id' => AccountType::where('type', AccountType::LOAN)->first()->id,
+            'openingBalance'    => '100',
+            'openingBalanceDate' => '2018-01-01',
+        ];
+
+        $response = $this->post(route('accounts.store', ['liabilities']), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }

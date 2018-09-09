@@ -40,11 +40,11 @@ class UserControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
 
     }
 
@@ -56,13 +56,13 @@ class UserControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepository->shouldReceive('destroy')->once();
         // create a user first:
-        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
-
         // call API
-        $response = $this->delete('/api/v1/users/' . $user->id);
+        $response = $this->delete('/api/v1/users/' . $this->user()->id);
         $response->assertStatus(204);
-        $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 
     /**
@@ -73,6 +73,8 @@ class UserControllerTest extends TestCase
      */
     public function testDeleteNoAdmin(): void
     {
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
         Passport::actingAs($this->emptyUser());
 
         // create a user first:

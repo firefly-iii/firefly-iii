@@ -29,12 +29,17 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
 
+/**
+ *
+ * Class RecurrenceControllerTest
+ */
 class RecurrenceControllerTest extends TestCase
 {
     /**
@@ -44,7 +49,7 @@ class RecurrenceControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
 
     }
 
@@ -54,7 +59,9 @@ class RecurrenceControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -77,7 +84,15 @@ class RecurrenceControllerTest extends TestCase
         $recurrences = $this->user()->recurrences()->get();
 
         // mock stuff:
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+
+        $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
+            ->andReturn($this->user()->budgets()->first());
+
+        $piggyRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
+                    ->andReturn($this->user()->piggyBanks()->first());
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -103,7 +118,12 @@ class RecurrenceControllerTest extends TestCase
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+
+        $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
+                    ->andReturn($this->user()->budgets()->first());
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -134,6 +154,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -211,6 +232,8 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -287,7 +310,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -366,6 +389,8 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+
 
         $assetAccount   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
@@ -447,6 +472,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
@@ -526,6 +552,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -617,6 +644,8 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -691,6 +720,8 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -764,6 +795,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -851,6 +883,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -924,6 +957,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -997,6 +1031,8 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1070,6 +1106,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1143,6 +1180,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1216,6 +1254,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1286,6 +1325,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1359,6 +1399,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1436,6 +1477,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1501,6 +1543,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1564,6 +1607,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $otherAssetAccount = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $assetAccount->id)->first();
@@ -1644,6 +1688,7 @@ class RecurrenceControllerTest extends TestCase
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 

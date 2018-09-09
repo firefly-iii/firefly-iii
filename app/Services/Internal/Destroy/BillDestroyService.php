@@ -34,6 +34,16 @@ use Log;
 class BillDestroyService
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * @param Bill $bill
      */
     public function destroy(Bill $bill): void

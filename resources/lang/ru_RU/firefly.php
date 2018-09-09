@@ -37,7 +37,7 @@ return [
     'cancel'                                     => 'Отмена',
     'from'                                       => 'От',
     'to'                                         => 'Куда',
-    'help_translating'                           => 'Этот текст справки пока не доступен на вашем языке. Но вы <a href="https://crowdin.com/project/firefly-iii-help">можете помочь с переводом.</a>',
+    'help_translating'                           => 'Этот текст справки пока не доступен на русском языке. Но вы <a href="https://crowdin.com/project/firefly-iii-help">можете помочь с переводом.</a>',
     'showEverything'                             => 'Показать всё',
     'never'                                      => 'Никогда',
     'no_results_for_empty_search'                => 'Результатов не найдено.',
@@ -183,6 +183,9 @@ return [
     'scopes_will_be_able'                        => 'Это приложение будет иметь возможность:',
     'button_authorize'                           => 'Авторизация',
     'none_in_select_list'                        => '(нет)',
+    'name_in_currency'                           => ':name in :currency',
+    'paid_in_currency'                           => 'Paid in :currency',
+    'unpaid_in_currency'                         => 'Unpaid in :currency',
 
     // check for updates:
     'update_check_title'                         => 'Проверить обновления',

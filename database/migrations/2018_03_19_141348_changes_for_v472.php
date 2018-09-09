@@ -35,7 +35,7 @@ class ChangesForV472 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         //
     }
@@ -45,7 +45,7 @@ class ChangesForV472 extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(
             'attachments',

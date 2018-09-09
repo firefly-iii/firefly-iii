@@ -24,12 +24,22 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\TransactionCurrency;
-
+use Log;
 /**
  * Class CurrencyUpdateService
  */
 class CurrencyUpdateService
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /**
      * @param TransactionCurrency $currency
      * @param array               $data

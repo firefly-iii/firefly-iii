@@ -34,7 +34,7 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('oauth_personal_access_clients');
     }
@@ -42,7 +42,7 @@ class CreateOauthPersonalAccessClientsTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create(
             'oauth_personal_access_clients', function (Blueprint $table) {

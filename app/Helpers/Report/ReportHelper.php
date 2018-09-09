@@ -32,9 +32,11 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-
+use Log;
 /**
  * Class ReportHelper.
+ *
+ * @codeCoverageIgnore
  */
 class ReportHelper implements ReportHelperInterface
 {
@@ -50,6 +52,12 @@ class ReportHelper implements ReportHelperInterface
     public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
         $this->budgetRepository = $budgetRepository;
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+
+
     }
 
     /**
@@ -90,6 +98,7 @@ class ReportHelper implements ReportHelperInterface
 
                 $billLine = new BillLine;
                 $billLine->setBill($bill);
+                $billLine->setCurrency($bill->transactionCurrency);
                 $billLine->setPayDate($payDate);
                 $billLine->setEndOfPayDate($endOfPayPeriod);
                 $billLine->setMin((string)$bill->amount_min);

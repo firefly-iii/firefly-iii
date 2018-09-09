@@ -101,7 +101,7 @@ class Modifier
         try {
             $compareDate = new Carbon($compare);
         } catch (Exception $e) {
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
+            Log::debug(sprintf('Not interesting in Modifier:dateAfter(): %s', $e->getMessage()));
 
             return false;
         }
@@ -120,7 +120,7 @@ class Modifier
         try {
             $compareDate = new Carbon($compare);
         } catch (Exception $e) {
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
+            Log::debug(sprintf('Not interesting in modifier:dateBefore(): %s', $e->getMessage()));
 
             return false;
         }
@@ -139,7 +139,7 @@ class Modifier
         try {
             $compareDate = new Carbon($compare);
         } catch (Exception $e) {
-            Log::debug(sprintf('Not interesting: %s', $e->getMessage()));
+            Log::debug(sprintf('Not interesting in Modifier:sameDate(): %s', $e->getMessage()));
 
             return false;
         }

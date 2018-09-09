@@ -26,20 +26,31 @@ namespace Tests\Unit\Support\Import\Routine\File;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\MappingConverger;
 use Tests\TestCase;
-
+use Log;
 /**
  * Class MappingConvergerTest
  */
 class MappingConvergerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * @covers \FireflyIII\Support\Import\Routine\File\MappingConverger
      */
     public function testConverge(): void
     {
-
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
         // configuration
         $config = [
             'column-roles'          => [

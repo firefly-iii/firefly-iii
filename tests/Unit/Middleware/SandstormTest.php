@@ -29,12 +29,27 @@ use Mockery;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class RangeTest
  */
 class SandstormTest extends TestCase
 {
+    /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Route::middleware(Sandstorm::class)->any(
+            '/_test/sandstorm', function () {
+            return view('test.test');
+        }
+        );
+    }
+
     /**
      * @covers \FireflyIII\Http\Middleware\Sandstorm
      */
@@ -55,19 +70,5 @@ class SandstormTest extends TestCase
         $response->assertSee('sandstorm-anon: false');
 
         putenv('SANDSTORM=0');
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        Route::middleware(Sandstorm::class)->any(
-            '/_test/sandstorm', function () {
-            return view('test.test');
-        }
-        );
     }
 }

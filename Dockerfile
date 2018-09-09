@@ -78,7 +78,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Generate locales supported by Firefly III
 RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\n\n" > /etc/locale.gen && locale-gen
 
-
 # copy Apache config to correct spot.
 COPY ./.deploy/docker/apache2.conf /etc/apache2/apache2.conf
 
@@ -100,6 +99,9 @@ RUN chown -R www-data:www-data /var/www && chmod -R 775 $FIREFLY_PATH/storage
 # Copy in Firefly Source
 WORKDIR $FIREFLY_PATH
 ADD . $FIREFLY_PATH
+
+# Fix the link to curl:
+RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/x86_64-linux-gnu/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
 
 # Run composer
 ENV COMPOSER_ALLOW_SUPERUSER 1

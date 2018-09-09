@@ -44,7 +44,7 @@ class AccountControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -262,6 +262,54 @@ class AccountControllerTest extends TestCase
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertSee('2018-01-01'); // opening balance date
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Send correct data. Should call account repository store method.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     */
+    public function testStoreLiability(): void
+    {
+        // mock repositories
+        $repository    = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $account       = $this->user()->accounts()->first();
+        // mock calls:
+        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('store')->once()->andReturn($account);
+        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
+        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
+        $currencyRepos->shouldReceive('setUser')->once();
+
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
+        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+
+        // data to submit
+        $data = [
+            'name'                 => 'Some new liability account #' . random_int(1, 10000),
+            'currency_id'          => 1,
+            'type'                 => 'liability',
+            'active'               => 1,
+            'include_net_worth'    => 1,
+            'liability_amount'     => '10000',
+            'liability_start_date' => '2016-01-01',
+            'liability_type'       => 'mortgage',
+            'interest'             => '1',
+            'interest_period'      => 'daily',
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
+        $response->assertSee($account->name);
+        $response->assertStatus(200);
+        $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+
     }
 
     /**

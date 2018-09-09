@@ -29,12 +29,27 @@ use Preferences;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AuthenticateTwoFactorTest
  */
 class AuthenticateTwoFactorTest extends TestCase
 {
+    /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Route::middleware(AuthenticateTwoFactor::class)->any(
+            '/_test/authenticate', function () {
+            return 'OK';
+        }
+        );
+    }
+
     /**
      * @covers \FireflyIII\Http\Middleware\AuthenticateTwoFactor
      */
@@ -173,19 +188,5 @@ class AuthenticateTwoFactorTest extends TestCase
         $response = $this->call('GET', '/_test/authenticate', [], $cookie);
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertRedirect(route('two-factor.index'));
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware(AuthenticateTwoFactor::class)->any(
-            '/_test/authenticate', function () {
-            return 'OK';
-        }
-        );
     }
 }

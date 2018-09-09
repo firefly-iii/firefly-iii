@@ -36,6 +36,16 @@ use Log;
  */
 class TransactionJournalFactory
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     use JournalServiceTrait, TransactionTypeTrait;
     /** @var User The user */
     private $user;
@@ -104,7 +114,7 @@ class TransactionJournalFactory
         // store date meta fields (if present):
         $fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
                    'due_date', 'recurrence_id', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash', 'importHashV2',
-                   'external_id', 'sepa-batch-id'];
+                   'external_id', 'sepa-batch-id','original-source'];
 
         foreach ($fields as $field) {
             $this->storeMeta($journal, $data, $field);

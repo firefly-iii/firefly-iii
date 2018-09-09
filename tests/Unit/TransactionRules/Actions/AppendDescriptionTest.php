@@ -26,6 +26,7 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class AppendDescriptionTest
@@ -33,7 +34,15 @@ use Tests\TestCase;
 class AppendDescriptionTest extends TestCase
 {
     /**
-     * @covers \FireflyIII\TransactionRules\Actions\AppendDescription
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * @covers \FireflyIII\TransactionRules\Actions\AppendDescription
      */
     public function testActExistingTag(): void

@@ -35,6 +35,16 @@ use Log;
 class RecurrenceDestroyService
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * Delete recurrence.
      *
      * @param Recurrence $recurrence

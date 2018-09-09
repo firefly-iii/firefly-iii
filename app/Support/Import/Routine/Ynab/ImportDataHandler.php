@@ -29,6 +29,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Ynab\Request\GetTransactionsRequest;
@@ -42,6 +43,8 @@ class ImportDataHandler
 {
     /** @var AccountRepositoryInterface */
     private $accountRepository;
+    /** @var TransactionCurrency */
+    private $defaultCurrency;
     /** @var ImportJob */
     private $importJob;
     /** @var OpposingAccountMapper */
@@ -56,8 +59,9 @@ class ImportDataHandler
      */
     public function run(): void
     {
-        $config = $this->repository->getConfiguration($this->importJob);
-        $token  = $config['access_token'];
+        $config                = $this->repository->getConfiguration($this->importJob);
+        $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->importJob->user);
+        $token                 = $config['access_token'];
         // make request for each mapping:
         $mapping = $config['mapping'] ?? [];
         $total   = [[]];
@@ -173,12 +177,13 @@ class ImportDataHandler
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
+                'original-source' => sprintf('ynab-v%s', config('firefly.version')),
 
                 // transaction data:
                 'transactions'    => [
                     [
                         'currency_id'           => null,
-                        'currency_code'         => $budget['currency_code'],
+                        'currency_code'         => $budget['currency_code'] ?? $this->defaultCurrency->code,
                         'description'           => null,
                         'amount'                => bcdiv((string)$transaction['amount'], '1000'),
                         'budget_id'             => null,

@@ -50,7 +50,7 @@ class RecurrenceFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -66,7 +66,7 @@ class RecurrenceFactoryTest extends TestCase
         $accountA  = $this->user()->accounts()->inRandomOrder()->first();
         $accountB  = $this->user()->accounts()->inRandomOrder()->first();
         $budget    = $this->user()->budgets()->inRandomOrder()->first();
-        $category= $this->user()->categories()->inRandomOrder()->first();
+        $category  = $this->user()->categories()->inRandomOrder()->first();
 
         // mock other factories:
         $piggyFactory    = $this->mock(PiggyBankFactory::class);
@@ -160,7 +160,7 @@ class RecurrenceFactoryTest extends TestCase
         $accountA  = $this->user()->accounts()->inRandomOrder()->first();
         $accountB  = $this->user()->accounts()->inRandomOrder()->first();
         $budget    = $this->user()->budgets()->inRandomOrder()->first();
-        $category= $this->user()->categories()->inRandomOrder()->first();
+        $category  = $this->user()->categories()->inRandomOrder()->first();
 
         // mock other factories:
         $piggyFactory    = $this->mock(PiggyBankFactory::class);
@@ -187,7 +187,7 @@ class RecurrenceFactoryTest extends TestCase
         $categoryFactory->shouldReceive('findOrCreate')->withArgs([2, 'Some category'])->once()->andReturn($category);
 
         // data for basic recurrence.
-        $data        = [
+        $data = [
             'recurrence'   => [
                 'type'         => 'deposit',
                 'first_date'   => Carbon::create()->addDay(),
@@ -244,19 +244,19 @@ class RecurrenceFactoryTest extends TestCase
     }
 
     /**
-     * Deposit. With piggy bank. With tags. With budget. With category.
+     * No piggy bank. With tags. With budget. With category.
      *
      * @covers \FireflyIII\Factory\RecurrenceFactory
      * @covers \FireflyIII\Services\Internal\Support\RecurringTransactionTrait
      */
-    public function testBasicTransfer(): void
+    public function testBasicNoPiggybank(): void
     {
         // objects to return:
         $piggyBank = $this->user()->piggyBanks()->inRandomOrder()->first();
         $accountA  = $this->user()->accounts()->inRandomOrder()->first();
         $accountB  = $this->user()->accounts()->inRandomOrder()->first();
         $budget    = $this->user()->budgets()->inRandomOrder()->first();
-        $category= $this->user()->categories()->inRandomOrder()->first();
+        $category  = $this->user()->categories()->inRandomOrder()->first();
 
         // mock other factories:
         $piggyFactory    = $this->mock(PiggyBankFactory::class);
@@ -268,7 +268,7 @@ class RecurrenceFactoryTest extends TestCase
         // mock calls:
         Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->once();
         $piggyFactory->shouldReceive('setUser')->once();
-        $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn($piggyBank);
+        $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn(null);
 
         $accountRepos->shouldReceive('setUser')->twice();
         $accountRepos->shouldReceive('findNull')->twice()->andReturn($accountA, $accountB);
@@ -285,7 +285,7 @@ class RecurrenceFactoryTest extends TestCase
         // data for basic recurrence.
         $data        = [
             'recurrence'   => [
-                'type'         => 'transfer',
+                'type'         => 'withdrawal',
                 'first_date'   => Carbon::create()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
@@ -328,10 +328,8 @@ class RecurrenceFactoryTest extends TestCase
                 ],
             ],
         ];
-
         $typeFactory = $this->mock(TransactionTypeFactory::class);
-        $typeFactory->shouldReceive('find')->once()->withArgs([ucfirst($data['recurrence']['type'])])->andReturn(TransactionType::find(3));
-
+        $typeFactory->shouldReceive('find')->once()->withArgs([ucfirst($data['recurrence']['type'])])->andReturn(TransactionType::find(1));
         $factory = new RecurrenceFactory;
         $factory->setUser($this->user());
 
@@ -352,7 +350,7 @@ class RecurrenceFactoryTest extends TestCase
         $accountA  = $this->user()->accounts()->inRandomOrder()->first();
         $accountB  = $this->user()->accounts()->inRandomOrder()->first();
         $budget    = $this->user()->budgets()->inRandomOrder()->first();
-        $category= $this->user()->categories()->inRandomOrder()->first();
+        $category  = $this->user()->categories()->inRandomOrder()->first();
 
         // mock other factories:
         $piggyFactory    = $this->mock(PiggyBankFactory::class);
@@ -434,19 +432,19 @@ class RecurrenceFactoryTest extends TestCase
     }
 
     /**
-     * No piggy bank. With tags. With budget. With category.
+     * Deposit. With piggy bank. With tags. With budget. With category.
      *
      * @covers \FireflyIII\Factory\RecurrenceFactory
      * @covers \FireflyIII\Services\Internal\Support\RecurringTransactionTrait
      */
-    public function testBasicNoPiggybank(): void
+    public function testBasicTransfer(): void
     {
         // objects to return:
         $piggyBank = $this->user()->piggyBanks()->inRandomOrder()->first();
         $accountA  = $this->user()->accounts()->inRandomOrder()->first();
         $accountB  = $this->user()->accounts()->inRandomOrder()->first();
         $budget    = $this->user()->budgets()->inRandomOrder()->first();
-        $category= $this->user()->categories()->inRandomOrder()->first();
+        $category  = $this->user()->categories()->inRandomOrder()->first();
 
         // mock other factories:
         $piggyFactory    = $this->mock(PiggyBankFactory::class);
@@ -458,7 +456,7 @@ class RecurrenceFactoryTest extends TestCase
         // mock calls:
         Amount::shouldReceive('getDefaultCurrencyByUser')->andReturn(TransactionCurrency::find(1))->once();
         $piggyFactory->shouldReceive('setUser')->once();
-        $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn(null);
+        $piggyFactory->shouldReceive('find')->withArgs([1, 'Bla bla'])->andReturn($piggyBank);
 
         $accountRepos->shouldReceive('setUser')->twice();
         $accountRepos->shouldReceive('findNull')->twice()->andReturn($accountA, $accountB);
@@ -473,9 +471,9 @@ class RecurrenceFactoryTest extends TestCase
         $categoryFactory->shouldReceive('findOrCreate')->withArgs([2, 'Some category'])->once()->andReturn($category);
 
         // data for basic recurrence.
-        $data        = [
+        $data = [
             'recurrence'   => [
-                'type'         => 'withdrawal',
+                'type'         => 'transfer',
                 'first_date'   => Carbon::create()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
@@ -518,8 +516,10 @@ class RecurrenceFactoryTest extends TestCase
                 ],
             ],
         ];
+
         $typeFactory = $this->mock(TransactionTypeFactory::class);
-        $typeFactory->shouldReceive('find')->once()->withArgs([ucfirst($data['recurrence']['type'])])->andReturn(TransactionType::find(1));
+        $typeFactory->shouldReceive('find')->once()->withArgs([ucfirst($data['recurrence']['type'])])->andReturn(TransactionType::find(3));
+
         $factory = new RecurrenceFactory;
         $factory->setUser($this->user());
 

@@ -73,6 +73,7 @@ class TransactionRequest extends Request
             'invoice_date'       => $this->date('invoice_date'),
             'internal_reference' => $this->string('internal_reference'),
             'notes'              => $this->string('notes'),
+            'original-source'    => sprintf('api-v%s', config('firefly.api_version')),
             'transactions'       => $this->getTransactionData(),
         ];
 

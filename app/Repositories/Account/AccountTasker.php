@@ -24,8 +24,10 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -37,6 +39,16 @@ class AccountTasker implements AccountTaskerInterface
 {
     /** @var User */
     private $user;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /**
      * @param Collection $accounts
@@ -58,18 +70,28 @@ class AccountTasker implements AccountTaskerInterface
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
+        /** @var CurrencyRepositoryInterface $currencyRepository */
+        $currencyRepository = app(CurrencyRepositoryInterface::class);
+        $defaultCurrency    = app('amount')->getDefaultCurrencyByUser($this->user);
+
         $return = [
+            'currencies' => [],
             'start'      => '0',
             'end'        => '0',
             'difference' => '0',
             'accounts'   => [],
         ];
 
+        /** @var Account $account */
         foreach ($accounts as $account) {
-            $id    = $account->id;
-            $entry = [
+            $id                     = $account->id;
+            $currencyId             = (int)$repository->getMetaValue($account, 'currency_id');
+            $currency               = $currencyRepository->findNull($currencyId);
+            $return['currencies'][] = $currencyId;
+            $entry                  = [
                 'name'          => $account->name,
                 'id'            => $account->id,
+                'currency'      => $currency ?? $defaultCurrency,
                 'start_balance' => '0',
                 'end_balance'   => '0',
             ];
@@ -90,7 +112,7 @@ class AccountTasker implements AccountTaskerInterface
 
             $return['accounts'][$id] = $entry;
         }
-
+        $return['currencies'] = count(array_unique($return['currencies']));
         $return['difference'] = bcsub($return['end'], $return['start']);
 
         return $return;
@@ -196,29 +218,51 @@ class AccountTasker implements AccountTaskerInterface
      */
     private function groupByOpposing(Collection $transactions): array
     {
-        $expenses = [];
-        // join the result together:
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+        $currencies    = [$defaultCurrency->id => $defaultCurrency,];
+        $expenses      = [];
+        $countAccounts = []; // if count remains 0 use original name, not the name with the currency.
+
+
+        /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $opposingId = $transaction->opposing_account_id;
-            $name       = $transaction->opposing_account_name;
-            if (!isset($expenses[$opposingId])) {
-                $expenses[$opposingId] = [
-                    'id'      => $opposingId,
-                    'name'    => $name,
-                    'sum'     => '0',
-                    'average' => '0',
-                    'count'   => 0,
+            $opposingId                 = (int)$transaction->opposing_account_id;
+            $currencyId                 = (int)$transaction->transaction_currency_id;
+            $key                        = sprintf('%s-%s', $opposingId, $currencyId);
+            $name                       = sprintf('%s (%s)', $transaction->opposing_account_name, $transaction->transaction_currency_code);
+            $countAccounts[$opposingId] = isset($countAccounts[$opposingId]) ? $countAccounts[$opposingId] + 1 : 1;
+            if (!isset($expenses[$key])) {
+                $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepos->findNull($currencyId);
+                $expenses[$key]          = [
+                    'id'              => $opposingId,
+                    'name'            => $name,
+                    'original'        => $transaction->opposing_account_name,
+                    'sum'             => '0',
+                    'average'         => '0',
+                    'currencies'      => [],
+                    'single_currency' => $currencies[$currencyId],
+                    'count'           => 0,
                 ];
             }
-            $expenses[$opposingId]['sum'] = bcadd($expenses[$opposingId]['sum'], $transaction->transaction_amount);
-            ++$expenses[$opposingId]['count'];
+            $expenses[$key]['currencies'][] = (int)$transaction->transaction_currency_id;
+            $expenses[$key]['sum']          = bcadd($expenses[$key]['sum'], $transaction->transaction_amount);
+            ++$expenses[$key]['count'];
         }
         // do averages:
         $keys = array_keys($expenses);
         foreach ($keys as $key) {
+            $opposingId = $expenses[$key]['id'];
+            if(1===$countAccounts[$opposingId]) {
+                $expenses[$key]['name'] = $expenses[$key]['original'];
+            }
+
             if ($expenses[$key]['count'] > 1) {
                 $expenses[$key]['average'] = bcdiv($expenses[$key]['sum'], (string)$expenses[$key]['count']);
             }
+            $expenses[$key]['currencies']     = \count(array_unique($expenses[$key]['currencies']));
+            $expenses[$key]['all_currencies'] = \count($currencies);
         }
 
         return $expenses;

@@ -34,6 +34,20 @@ use Tests\TestCase;
 class AuthenticateTest extends TestCase
 {
     /**
+     * Set up test
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Route::middleware('auth')->any(
+            '/_test/authenticate', function () {
+            return 'OK';
+        }
+        );
+    }
+
+    /**
      * @covers \FireflyIII\Http\Middleware\Authenticate
      */
     public function testMiddleware(): void
@@ -97,19 +111,5 @@ class AuthenticateTest extends TestCase
         $this->assertEquals(Response::HTTP_FOUND, $response->getStatusCode());
         $response->assertSessionHas('logoutMessage', (string)trans('firefly.email_changed_logout'));
         $response->assertRedirect(route('login'));
-    }
-
-    /**
-     * Set up test
-     */
-    protected function setUp()
-    {
-        parent::setUp();
-
-        Route::middleware('auth')->any(
-            '/_test/authenticate', function () {
-            return 'OK';
-        }
-        );
     }
 }

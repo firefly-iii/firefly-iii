@@ -29,12 +29,22 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class OpposingAccountMapperTest
  */
 class OpposingAccountMapperTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      *
      * Should return account with given ID (which is of correct type).

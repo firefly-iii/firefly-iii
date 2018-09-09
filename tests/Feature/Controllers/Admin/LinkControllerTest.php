@@ -24,8 +24,10 @@ namespace Tests\Feature\Controllers\Admin;
 
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -36,10 +38,10 @@ class LinkControllerTest extends TestCase
     /**
      *
      */
-    public function setUp()
+    public function setUp(): void
     {
         parent::setUp();
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -47,7 +49,10 @@ class LinkControllerTest extends TestCase
      */
     public function testCreate(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
         $this->be($this->user());
         $response = $this->get(route('admin.links.create'));
         $response->assertStatus(200);
@@ -58,9 +63,13 @@ class LinkControllerTest extends TestCase
      */
     public function testDeleteEditable(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         // create editable link type just in case:
         LinkType::create(['editable' => 1, 'inward' => 'hello', 'outward' => 'bye', 'name' => 'Test type']);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
 
         $linkType = LinkType::where('editable', 1)->first();
         $repository->shouldReceive('get')->once()->andReturn(new Collection([$linkType]));
@@ -75,8 +84,12 @@ class LinkControllerTest extends TestCase
      */
     public function testDeleteNonEditable(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $linkType   = LinkType::where('editable', 0)->first();
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
         $this->be($this->user());
         $response = $this->get(route('admin.links.delete', [$linkType->id]));
         $response->assertStatus(302);
@@ -88,7 +101,11 @@ class LinkControllerTest extends TestCase
      */
     public function testDestroy(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
 
         // create editable link type just in case:
         LinkType::create(['editable' => 1, 'inward' => 'hellox', 'outward' => 'byex', 'name' => 'Test typeX']);
@@ -108,6 +125,11 @@ class LinkControllerTest extends TestCase
      */
     public function testEditEditable(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         // create editable link type just in case:
         LinkType::create(['editable' => 1, 'inward' => 'hello Y', 'outward' => 'bye Y', 'name' => 'Test type Y']);
 
@@ -122,6 +144,11 @@ class LinkControllerTest extends TestCase
      */
     public function testEditNonEditable(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         $linkType = LinkType::where('editable', 0)->first();
         $this->be($this->user());
         $response = $this->get(route('admin.links.edit', [$linkType->id]));
@@ -134,6 +161,11 @@ class LinkControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
+
         $linkTypes  = LinkType::inRandomOrder()->take(3)->get();
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $repository->shouldReceive('get')->andReturn($linkTypes);
@@ -148,6 +180,11 @@ class LinkControllerTest extends TestCase
      */
     public function testShow(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
+
         $linkType = LinkType::first();
         $this->be($this->user());
         $response = $this->get(route('admin.links.show', [$linkType->id]));
@@ -160,8 +197,13 @@ class LinkControllerTest extends TestCase
      */
     public function testStore(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
-        $data       = [
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
+        $data = [
             'name'    => 'test ' . random_int(1, 10000),
             'inward'  => 'test inward' . random_int(1, 10000),
             'outward' => 'test outward' . random_int(1, 10000),
@@ -182,8 +224,13 @@ class LinkControllerTest extends TestCase
      */
     public function testStoreRedirect(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
-        $data       = [
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
+        $data = [
             'name'           => 'test ' . random_int(1, 10000),
             'inward'         => 'test inward' . random_int(1, 10000),
             'outward'        => 'test outward' . random_int(1, 10000),
@@ -203,7 +250,11 @@ class LinkControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
 
         // create editable link type just in case:
         $linkType = LinkType::create(['editable' => 1, 'inward' => 'helloxz', 'outward' => 'bzyex', 'name' => 'Test tyzpeX']);
@@ -227,8 +278,13 @@ class LinkControllerTest extends TestCase
      */
     public function testUpdateNonEditable(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
-        $linkType   = LinkType::where('editable', 0)->first();
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
+        $linkType = LinkType::where('editable', 0)->first();
 
         $data = [
             'name'           => 'test ' . random_int(1, 10000),
@@ -249,7 +305,12 @@ class LinkControllerTest extends TestCase
      */
     public function testUpdateRedirect(): void
     {
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
+
         // create editable link type just in case:
         $linkType = LinkType::create(['editable' => 1, 'inward' => 'healox', 'outward' => 'byaex', 'name' => 'Test tyapeX']);
 

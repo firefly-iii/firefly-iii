@@ -118,7 +118,7 @@ class RecurrenceFormRequest extends Request
         // fill in source and destination account data
         switch ($this->string('transaction_type')) {
             default:
-                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type')));
+                throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
             case 'withdrawal':
                 $return['transactions'][0]['source_id']        = $this->integer('source_id');
                 $return['transactions'][0]['destination_name'] = $this->string('destination_name');
@@ -227,8 +227,6 @@ class RecurrenceFormRequest extends Request
             $rules['title']      = 'required|between:1,255|uniqueObjectForUser:recurrences,title,' . $recurrence->id;
             $rules['first_date'] = 'required|date';
         }
-
-
         return $rules;
     }
 

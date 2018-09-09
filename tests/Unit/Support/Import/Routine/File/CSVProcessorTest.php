@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Support\Import\Routine\File;
 
 
+use Log;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
@@ -41,6 +42,14 @@ use Tests\TestCase;
  */
 class CSVProcessorTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
     /**
      * @covers \FireflyIII\Support\Import\Routine\File\CSVProcessor
      */

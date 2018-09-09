@@ -182,10 +182,10 @@ class ImportTransaction
         }
 
         $meta = ['sepa-ct-id', 'sepa-ct-op', 'sepa-db', 'sepa-cc', 'sepa-country', 'sepa-batch-id', 'sepa-ep', 'sepa-ci', 'internal-reference', 'date-interest',
-                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due',];
+                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due','original-source'];
         Log::debug(sprintf('Now going to check role "%s".', $role));
         if (\in_array($role, $meta, true)) {
-            Log::debug(sprintf('Role "%s" is in allowed meta roles, so store its value %s.', $role, $columnValue->getValue()));
+            Log::debug(sprintf('Role "%s" is in allowed meta roles, so store its value "%s".', $role, $columnValue->getValue()));
             $this->meta[$role] = $columnValue->getValue();
 
             return;

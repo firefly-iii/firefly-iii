@@ -123,23 +123,6 @@ class YnabRoutine implements RoutineInterface
                 return;
             }
 
-            //            if ('match_accounts' === $this->importJob->stage) {
-            //                // $this->repository->setStatus($this->importJob, 'running');
-            //                /** @var StageGetBudgetsHandler $handler */
-            //                $handler = app(StageGetBudgetsHandler::class);
-            //                $handler->setImportJob($this->importJob);
-            //                $handler->run();
-            //                $this->repository->setStage($this->importJob, 'get_transactions');
-            //            }
-            //
-            //            if ('get_transactions' === $this->importJob->stage) {
-            //                // $this->repository->setStatus($this->importJob, 'running');
-            //                /** @var StageGetBudgetsHandler $handler */
-            //                $handler = app(StageGetBudgetsHandler::class);
-            //                $handler->setImportJob($this->importJob);
-            //                $handler->run();
-            //                $this->repository->setStage($this->importJob, 'get_transactions');
-            //            }
             throw new FireflyException(sprintf('YNAB import routine cannot handle stage "%s"', $this->importJob->stage));
         }
     }

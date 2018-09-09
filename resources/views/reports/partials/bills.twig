@@ -22,14 +22,14 @@
                             {{ trans('firefly.bill_expected_between', {start: line.getPayDate.formatLocalized(monthAndDayFormat), end: line.getEndOfPayDate.formatLocalized(monthAndDayFormat) }) }}
                         </small>
                     </td>
-                    <td class="hidden-xs" data-value="{{ line.getMin }}" style="text-align: right;">{{ line.getMin|formatAmount }}</td>
-                    <td class="hidden-xs" data-value="{{ line.getMax }}" style="text-align: right;">{{ line.getMax|formatAmount }}</td>
+                    <td class="hidden-xs" data-value="{{ line.getMin }}" style="text-align: right;">{{ formatAmountByCurrency(line.getCurrency, line.getMin) }}</td>
+                    <td class="hidden-xs" data-value="{{ line.getMax }}" style="text-align: right;">{{ formatAmountByCurrency(line.getCurrency, line.getMax) }}</td>
 
                     {# if bill is hit, show hit amount #}
                     {% if line.isHit %}
                         <td data-value="{{ line.getAmount }}" style="text-align: right;">
                             <a href="{{ route('transactions.show', line.getTransactionJournalId) }}">
-                                {{ line.getAmount|formatAmount }}
+                                {{ formatAmountByCurrency(line.getCurrency, line.getAmount) }}
                             </a>
                         </td>
                     {% endif %}
@@ -42,7 +42,7 @@
                     {% endif %}
                     <td data-value="{{ (line.getMax - line.getAmount) }}" style="text-align: right;" class="hidden-xs">
                         {% if line.isHit %}
-                            {{ (line.getMax + line.getAmount)|formatAmount }}
+                            {{ formatAmountByCurrency(line.getCurrency, (line.getMax + line.getAmount)) }}
                         {% endif %}
                     </td>
                 </tr>

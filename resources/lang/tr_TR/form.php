@@ -51,6 +51,7 @@ return [
     'destination_account'         => 'Hedef Hesap',
     'journal_destination_id'      => 'Asset account (destination)',
     'asset_destination_account'   => 'Destination account',
+    'include_net_worth'           => 'Include in net worth',
     'asset_source_account'        => 'Source account',
     'journal_description'         => 'Tanımlama',
     'note'                        => 'Notlar',

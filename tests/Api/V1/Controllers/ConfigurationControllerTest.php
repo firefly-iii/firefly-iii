@@ -25,8 +25,10 @@ namespace Tests\Api\V1\Controllers;
 
 use FireflyConfig;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
+use Mockery;
 use Tests\TestCase;
 
 /**
@@ -42,7 +44,7 @@ class ConfigurationControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
@@ -52,6 +54,9 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $demoConfig       = new Configuration;
         $demoConfig->name = 'is_demo_site';
         $demoConfig->data = false;
@@ -96,6 +101,9 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testIndexNotOwner(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
+
         Passport::actingAs($this->emptyUser());
         $response = $this->get('/api/v1/configuration');
         $response->assertStatus(500);
@@ -109,7 +117,9 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $data = [
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $data      = [
             'name'  => 'permission_update_check',
             'value' => 1,
 
@@ -159,6 +169,9 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testUpdateBoolean(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
         $data = [
             'name'  => 'single_user_mode',
             'value' => 'true',
@@ -209,6 +222,8 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testUpdateInvalid(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $data     = [
             'name'  => 'last_update_check',
             'value' => 'true',
@@ -225,6 +240,9 @@ class ConfigurationControllerTest extends TestCase
      */
     public function testUpdateNotOwner(): void
     {
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
+
         Passport::actingAs($this->emptyUser());
         $response = $this->post('/api/v1/configuration');
         $response->assertStatus(500);

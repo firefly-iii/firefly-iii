@@ -46,7 +46,7 @@ class CurrencyControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::debug(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', \get_class($this)));
 
     }
 
@@ -87,6 +87,7 @@ class CurrencyControllerTest extends TestCase
         $collection = TransactionCurrency::get();
         // mock stuff:
         $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -125,6 +126,7 @@ class CurrencyControllerTest extends TestCase
         // create stuff
         $currency   = TransactionCurrency::first();
         $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -152,6 +154,7 @@ class CurrencyControllerTest extends TestCase
 
         $currency   = TransactionCurrency::first();
         $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -182,8 +185,10 @@ class CurrencyControllerTest extends TestCase
      */
     public function testStoreWithDefault(): void
     {
-        $currency         = TransactionCurrency::first();
-        $repository       = $this->mock(CurrencyRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+
         $preference       = new Preference;
         $preference->data = 'EUR';
         // mock calls:
@@ -221,6 +226,7 @@ class CurrencyControllerTest extends TestCase
     {
         $currency   = TransactionCurrency::first();
         $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -253,6 +259,7 @@ class CurrencyControllerTest extends TestCase
     {
         $currency         = TransactionCurrency::first();
         $repository       = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
         $preference       = new Preference;
         $preference->data = 'EUR';
 

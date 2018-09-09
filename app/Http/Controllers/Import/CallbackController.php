@@ -48,10 +48,13 @@ class CallbackController extends Controller
     {
         $code      = (string)$request->get('code');
         $jobKey    = (string)$request->get('state');
-        $importJob = $repository->findByKey($jobKey);
+
         if ('' === $code) {
             return view('error')->with('message', 'You Need A Budget did not reply with a valid authorization code. Firefly III cannot continue.');
         }
+
+        $importJob = $repository->findByKey($jobKey);
+
         if ('' === $jobKey || null === $importJob) {
             return view('error')->with('message', 'You Need A Budget did not reply with the correct state identifier. Firefly III cannot continue.');
         }

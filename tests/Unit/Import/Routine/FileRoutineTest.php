@@ -31,12 +31,22 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
 use Mockery;
 use Tests\TestCase;
+use Log;
 
 /**
  * Class FileRoutineTest
  */
 class FileRoutineTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
 
     /**
      * @covers \FireflyIII\Import\Routine\FileRoutine

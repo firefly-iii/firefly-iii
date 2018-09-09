@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace Tests\Unit\TransactionRules\Triggers;
 
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasAnyBudget;
 use Log;
 use Tests\TestCase;
@@ -38,21 +37,15 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggered(): void
     {
-        $loop = 0;
-        do {
-            /** @var TransactionJournal $journal */
-            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
+        $withdrawal = $this->getRandomWithdrawal();
 
-        $budget = $journal->user->budgets()->first();
-        $journal->budgets()->detach();
-        $journal->budgets()->save($budget);
+        $budget = $withdrawal->user->budgets()->first();
+        $withdrawal->budgets()->detach();
+        $withdrawal->budgets()->save($budget);
 
-        $this->assertEquals(1, $journal->budgets()->count());
+        $this->assertEquals(1, $withdrawal->budgets()->count());
         $trigger = HasAnyBudget::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
+        $result  = $trigger->triggered($withdrawal);
         $this->assertTrue($result);
 
     }
@@ -62,25 +55,18 @@ class HasAnyBudgetTest extends TestCase
      */
     public function testTriggeredNot(): void
     {
-        $loop = 0;
-        do {
-            /** @var TransactionJournal $journal */
-            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-
-        $journal->budgets()->detach();
-        $this->assertEquals(0, $journal->budgets()->count());
+        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal->budgets()->detach();
+        $this->assertEquals(0, $withdrawal->budgets()->count());
 
         // also detach all transactions:
         /** @var Transaction $transaction */
-        foreach ($journal->transactions()->get() as $transaction) {
+        foreach ($withdrawal->transactions()->get() as $transaction) {
             $transaction->budgets()->detach();
         }
 
         $trigger = HasAnyBudget::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
+        $result  = $trigger->triggered($withdrawal);
         $this->assertFalse($result);
     }
 
@@ -90,28 +76,17 @@ class HasAnyBudgetTest extends TestCase
     public function testTriggeredTransactions(): void
     {
         Log::debug('Now in testTriggeredTransactions()');
-        $loop = 0;
-        do {
-            Log::debug(sprintf('Loop is now at #%d', $loop));
-            /** @var TransactionJournal $journal */
-            $journal = TransactionJournal::inRandomOrder()->whereNull('deleted_at')->first();
-            $count   = $journal->transactions()->count();
+        $withdrawal = $this->getRandomWithdrawal();
 
-            Log::debug(sprintf('Found journal #%d with %d transactions', $journal->id, $count));
-
-            $loop++;
-        } while ($count !== 2 && $loop < 30);
-        Log::debug('end of loop!');
-
-        $budget = $journal->user->budgets()->first();
+        $budget = $withdrawal->user->budgets()->first();
         Log::debug(sprintf('First budget is %d ("%s")', $budget->id, $budget->name));
-        $journal->budgets()->detach();
-        $this->assertEquals(0, $journal->budgets()->count());
+        $withdrawal->budgets()->detach();
+        $this->assertEquals(0, $withdrawal->budgets()->count());
         Log::debug('Survived the assumption.');
 
         // append to transaction
         Log::debug('Do transaction loop.');
-        foreach ($journal->transactions()->get() as $index => $transaction) {
+        foreach ($withdrawal->transactions()->get() as $index => $transaction) {
             Log::debug(sprintf('Now at index #%d, transaction #%d', $index, $transaction->id));
             $transaction->budgets()->detach();
             if (0 === $index) {
@@ -121,7 +96,7 @@ class HasAnyBudgetTest extends TestCase
         }
         Log::debug('Done with loop, make trigger');
         $trigger = HasAnyBudget::makeFromStrings('', false);
-        $result  = $trigger->triggered($journal);
+        $result  = $trigger->triggered($withdrawal);
         $this->assertTrue($result);
     }
 

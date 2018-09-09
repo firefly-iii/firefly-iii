@@ -298,7 +298,7 @@ class AccountController extends Controller
 
         foreach ($result as $row) {
             $categoryId        = $row['category_id'];
-            $name              = $names[$categoryId];
+            $name              = $names[$categoryId] ?? '(unknown)';
             $label             = (string)trans('firefly.name_in_currency', ['name' => $name, 'currency' => $row['currency']]);
             $chartData[$label] = $row['total'];
         }
@@ -328,8 +328,6 @@ class AccountController extends Controller
 
     /**
      * Shows the balances for all the user's frontpage accounts.
-     *
-     * TODO this chart is not multi-currency aware.
      *
      * @param AccountRepositoryInterface $repository
      *
