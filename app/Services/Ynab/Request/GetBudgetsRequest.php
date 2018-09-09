@@ -56,8 +56,8 @@ class GetBudgetsRequest extends YnabRequest
         $rawBudgets   = $result['data']['budgets'] ?? [];
         $freshBudgets = [];
         foreach ($rawBudgets as $rawBudget) {
-            Log::debug(sprintf('Raw content of budget is: %s', json_encode($rawBudget, true)));
-            Log::debug(sprintf('Content of currency format is: %s', json_encode($rawBudget['currency_format'] ?? [], true)));
+            Log::debug(sprintf('Raw content of budget is: %s', json_encode($rawBudget)));
+            Log::debug(sprintf('Content of currency format is: %s', json_encode($rawBudget['currency_format'] ?? [])));
             Log::debug(sprintf('ISO code is: %s', $rawBudget['currency_format']['iso_code'] ?? '(none)'));
             $freshBudgets[] = [
                 'id'            => $rawBudget['id'],
