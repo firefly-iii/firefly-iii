@@ -77,7 +77,7 @@ class PiggyBankRequest extends Request
             'target_amount'  => 'required|numeric|more:0',
             'current_amount' => 'numeric|more:0|lte:target_amount',
             'start_date'     => 'date|nullable',
-            'target_date'    => 'date|nullable',
+            'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',
         ];
 
