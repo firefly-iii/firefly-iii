@@ -63,7 +63,7 @@ class AmountNegatedTest extends TestCase
             '1,234.5'                 => '-1234.5',
             '1,234.56'                => '-1234.56',
             '123,456,789'             => '-123456789',
-            '0,0'                     => '-0.0',
+            '0,0'                     => '0.0',
             '0,1'                     => '-0.1',
             ',2'                      => '-0.2',
             '0,01'                    => '-0.01',
@@ -82,6 +82,7 @@ class AmountNegatedTest extends TestCase
             '1.234'                   => '-1.234', // will no longer match as 1234, but as 1.234
             '1.234,5'                 => '-1234.5',
             '1.234,56'                => '-1234.56',
+
             // many decimals
             '2.00'                    => '-2.00',
             '3.000'                   => '-3.000',
@@ -104,7 +105,8 @@ class AmountNegatedTest extends TestCase
             '20.16334567898'          => '-20.16334567898',
             '21.16364567898'          => '-21.16364567898',
             '22.163644567898'         => '-22.163644567898',
-            '22.1636445670069'        => '-22.1636445670069',
+            '22.1636445670069'        => '-22.163644567006',
+
             // many decimals, mixed, large numbers
             '63522.00'                => '-63522.00',
             '63523.000'               => '-63523.000',
@@ -127,6 +129,7 @@ class AmountNegatedTest extends TestCase
             '635220.16334567898'      => '-635220.16334567898',
             '635221.16364567898'      => '-635221.16364567898',
             '635222.163644567898'     => '-635222.163644567898',
+
             // many decimals, mixed, also mixed thousands separators
             '63 522.00'               => '-63522.00',
             '63 523.000'              => '-63523.000',
@@ -169,7 +172,7 @@ class AmountNegatedTest extends TestCase
         foreach ($values as $value => $expected) {
             $converter = new AmountNegated;
             $result    = $converter->convert($value);
-            //$this->assertEquals($expected, $result, sprintf('The original value was %s, expected was %s', $value, $expected));
+            $this->assertEquals($expected, $result, sprintf('The original value was %s, expected was %s', $value, $expected));
         }
     }
 
