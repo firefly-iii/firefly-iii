@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\Converter\Amount;
 use FireflyIII\Import\Converter\AmountCredit;
 use FireflyIII\Import\Converter\AmountDebit;
+use FireflyIII\Import\Converter\AmountNegated;
 use FireflyIII\Import\Converter\ConverterInterface;
 use Log;
 
@@ -51,6 +52,8 @@ class ImportTransaction
     public $amountCredit;
     /** @var string */
     public $amountDebit;
+    /** @var string */
+    public $amountNegated;
     /** @var int */
     public $billId;
     /** @var string */
@@ -140,6 +143,7 @@ class ImportTransaction
             'account-number'        => 'accountNumber',
             'amount_debit'          => 'amountDebit',
             'amount_credit'         => 'amountCredit',
+            'amount_negated'        => 'amountNegated',
             'amount'                => 'amount',
             'amount_foreign'        => 'foreignAmount',
             'bill-name'             => 'billName',
@@ -403,6 +407,11 @@ class ImportTransaction
             Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
             $converterClass = AmountCredit::class;
             $info['amount'] = $this->amountCredit;
+        }
+        if (null !== $this->amountNegated) {
+            Log::debug('Amount NEGATED value is not NULL, assume this is the correct value (overrules Amount and AmountDebit and AmountCredit).');
+            $converterClass = AmountNegated::class;
+            $info['amount'] = $this->amountNegated;
         }
         $info['class'] = $converterClass;
 
