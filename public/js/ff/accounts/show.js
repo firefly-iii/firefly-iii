@@ -35,9 +35,9 @@ $(function () {
     "use strict";
     lineChart(chartUri, 'overview-chart');
     if (!showAll) {
-        neutralPieChart(incomeCategoryUri, 'account-cat-in');
-        neutralPieChart(expenseCategoryUri, 'account-cat-out');
-        neutralPieChart(expenseBudgetUri, 'account-budget-out');
+        multiCurrencyPieChart(incomeCategoryUri, 'account-cat-in');
+        multiCurrencyPieChart(expenseCategoryUri, 'account-cat-out');
+        multiCurrencyPieChart(expenseBudgetUri, 'account-budget-out');
     }
 
     // sortable!
