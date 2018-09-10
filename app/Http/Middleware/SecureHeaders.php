@@ -47,7 +47,7 @@ class SecureHeaders
         $google      = '';
         $analyticsId = env('ANALYTICS_ID', '');
         if ('' !== $analyticsId) {
-            $google = 'https://www.google-analytics.com/analytics.js'; // @codeCoverageIgnore
+            $google = 'www.googletagmanager.com/gtag/js'; // @codeCoverageIgnore
         }
         $csp = [
             "default-src 'none'",
