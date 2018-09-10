@@ -96,7 +96,7 @@ class Navigation
         }
         $periods = [];
         /*
-         * Start looping per months for 1 year + the rest of the year:
+         * Start looping per month for 1 year + the rest of the year:
          */
         $perMonthEnd   = clone $end;
         $perMonthStart = clone $end;

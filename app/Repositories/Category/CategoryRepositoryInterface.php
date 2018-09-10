@@ -51,6 +51,17 @@ interface CategoryRepositoryInterface
      */
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
+
     /**
      * Find a category.
      *
@@ -157,6 +168,17 @@ interface CategoryRepositoryInterface
      * @return string
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return Collection
+     */
+    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
 
     /** @noinspection MoreThanThreeArgumentsInspection */
 
