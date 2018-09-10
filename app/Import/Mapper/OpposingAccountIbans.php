@@ -44,7 +44,8 @@ class OpposingAccountIbans implements MapperInterface
             [
                 AccountType::DEFAULT, AccountType::ASSET,
                 AccountType::EXPENSE, AccountType::BENEFICIARY,
-                AccountType::REVENUE,
+                AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT,
+                AccountType::CREDITCARD, AccountType::MORTGAGE,
             ]
         );
         $topList           = [];
@@ -55,10 +56,23 @@ class OpposingAccountIbans implements MapperInterface
             $iban      = $account->iban ?? '';
             $accountId = (int)$account->id;
             if (\strlen($iban) > 0) {
-                $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
+                $name = $account->iban . ' (' . $account->name . ')';
+
+                // is a liability?
+                if (\in_array($account->accountType->type, [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE], true)) {
+                    $name = $name . ' (' . strtolower(trans('import.import_liability_select')) . ')';
+                }
+
+                $topList[$accountId] = $name;
+
             }
             if ('' === $iban) {
-                $list[$accountId] = $account->name;
+                $name = $account->name;
+                // is a liability?
+                if (\in_array($account->accountType->type, [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE], true)) {
+                    $name = $name . ' (' . strtolower(trans('import.import_liability_select')) . ')';
+                }
+                $list[$accountId] = $name;
             }
         }
         /** @noinspection AdditionOperationOnArraysInspection */

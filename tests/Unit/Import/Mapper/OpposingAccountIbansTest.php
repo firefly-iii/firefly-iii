@@ -28,8 +28,8 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class OpposingAccountIbansTest
@@ -51,18 +51,25 @@ class OpposingAccountIbansTest extends TestCase
      */
     public function testGetMapBasic(): void
     {
-        $one        = new Account;
-        $one->id    = 21;
-        $one->name  = 'Something';
-        $one->iban  = 'IBAN';
-        $two        = new Account;
-        $two->id    = 17;
-        $two->name  = 'Else';
+        $asset                = AccountType::where('type', AccountType::ASSET)->first();
+        $loan                 = AccountType::where('type', AccountType::LOAN)->first();
+        $one                  = new Account;
+        $one->id              = 21;
+        $one->name            = 'Something';
+        $one->iban            = 'IBAN';
+        $one->account_type_id = $asset->id;
+
+        $two                  = new Account;
+        $two->id              = 17;
+        $two->name            = 'Else';
+        $two->account_type_id = $loan->id;
+
         $collection = new Collection([$one, $two]);
 
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->withArgs(
-            [[AccountType::DEFAULT, AccountType::ASSET, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::REVENUE,]]
+            [[AccountType::DEFAULT, AccountType::ASSET, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::REVENUE, AccountType::LOAN,
+              AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE,]]
         )->andReturn($collection)->once();
 
         $mapper  = new OpposingAccountIbans();
@@ -71,7 +78,7 @@ class OpposingAccountIbansTest extends TestCase
         // assert this is what the result looks like:
         $result = [
             0  => (string)trans('import.map_do_not_map'),
-            17 => 'Else',
+            17 => 'Else (liability)',
             21 => 'IBAN (Something)',
         ];
         $this->assertEquals($result, $mapping);

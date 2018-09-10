@@ -40,7 +40,12 @@ class AssetAccountIbans implements MapperInterface
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $set               = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $set               = $accountRepository->getAccountsByType(
+            [AccountType::DEFAULT, AccountType::ASSET,
+             AccountType::LOAN, AccountType::DEBT,
+             AccountType::CREDITCARD, AccountType::MORTGAGE,
+            ]
+        );
         $topList           = [];
         $list              = [];
 
@@ -49,10 +54,22 @@ class AssetAccountIbans implements MapperInterface
             $iban      = $account->iban ?? '';
             $accountId = (int)$account->id;
             if (\strlen($iban) > 0) {
-                $topList[$accountId] = $account->iban . ' (' . $account->name . ')';
+                $name = $account->iban . ' (' . $account->name . ')';
+
+                // is a liability?
+                if (\in_array($account->accountType->type, [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE], true)) {
+                    $name = $name . ' (' . strtolower(trans('import.import_liability_select')) . ')';
+                }
+
+                $topList[$accountId] = $name;
             }
             if ('' === $iban) {
-                $list[$accountId] = $account->name;
+                $name = $account->name;
+                // is a liability?
+                if (\in_array($account->accountType->type, [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE], true)) {
+                    $name = $name . ' (' . strtolower(trans('import.import_liability_select')) . ')';
+                }
+                $list[$accountId] = $name;
             }
         }
         /** @noinspection AdditionOperationOnArraysInspection */
