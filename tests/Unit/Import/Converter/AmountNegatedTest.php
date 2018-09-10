@@ -1,6 +1,6 @@
 <?php
 /**
- * AmountCreditTest.php
+ * AmountNegatedTest.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.

@@ -27,8 +27,8 @@ use FireflyIII\Import\Mapper\TransactionCurrencies;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class TransactionCurrenciesTest
