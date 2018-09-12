@@ -42,6 +42,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ *
  * @codeCoverageIgnore
  */
 class MonthReportGenerator extends Support implements ReportGeneratorInterface
@@ -66,6 +67,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     {
         $this->expenses = new Collection;
         $this->income   = new Collection;
+        $this->tags     = new Collection;
     }
 
     /**
@@ -218,8 +220,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(PositiveAmountFilter::class);
 
-        $transactions = $collector->getTransactions();
-
+        $transactions   = $collector->getTransactions();
         $this->expenses = $transactions;
 
         return $transactions;
@@ -260,6 +261,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
      */
     protected function summarizeByTag(Collection $collection): array
     {
+        $tagIds = array_map('\intval', $this->tags->pluck('id')->toArray());
         $result = [];
         /** @var Transaction $transaction */
         foreach ($collection as $transaction) {
@@ -267,9 +269,11 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
             $journalTags = $journal->tags;
             /** @var Tag $journalTag */
             foreach ($journalTags as $journalTag) {
-                $journalTagId          = $journalTag->id;
-                $result[$journalTagId] = $result[$journalTagId] ?? '0';
-                $result[$journalTagId] = bcadd($transaction->transaction_amount, $result[$journalTagId]);
+                $journalTagId = (int)$journalTag->id;
+                if (\in_array($journalTagId, $tagIds, true)) {
+                    $result[$journalTagId] = $result[$journalTagId] ?? '0';
+                    $result[$journalTagId] = bcadd($transaction->transaction_amount, $result[$journalTagId]);
+                }
             }
         }
 
