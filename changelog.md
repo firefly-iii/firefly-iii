@@ -58,7 +58,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Users can no longer give income a budget.
 - Fix bug in Spectre import.
 - Heroku would not make you owner.
-
+- The rule "tester" will now also take the "strict"-checkbox into account.
+ 
 ### Security
 - Add `.htaccess` files to all public directories.
 - New secure headers will make Firefly III slightly more secure.

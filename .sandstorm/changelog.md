@@ -49,6 +49,7 @@
 - Heroku would not make you owner.
 - Add `.htaccess` files to all public directories.
 - New secure headers will make Firefly III slightly more secure.
+- The rule "tester" will now also take the "strict"-checkbox into account.
 
 # 4.7.5.3
 - [Issue 1527](https://github.com/firefly-iii/firefly-iii/issues/1527), fixed views for transactions without a budget.
