@@ -152,7 +152,7 @@ class SelectController extends Controller
         $limit                = (int)config('firefly.test-triggers.limit');
         $range                = (int)config('firefly.test-triggers.range');
         $matchingTransactions = new Collection;
-        $strict               = $request->get('strict') === '1';
+        $strict               = '1' === $request->get('strict');
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
         $matcher->setLimit($limit);

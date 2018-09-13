@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules;
 
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
@@ -267,6 +268,7 @@ class TransactionMatcher
             /** @var TransactionCollectorInterface $collector */
             $collector = app(TransactionCollectorInterface::class);
             $collector->setUser(auth()->user());
+            $collector->withOpposingAccount();
             $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
             if (null !== $this->maxAmount) {
                 Log::debug(sprintf('Amount must be less than %s', $this->maxAmount));
@@ -280,7 +282,7 @@ class TransactionMatcher
                 Log::debug(sprintf('Amount must be exactly %s', $this->exactAmount));
                 $collector->amountIs($this->exactAmount);
             }
-
+            $collector->removeFilter(InternalTransferFilter::class);
 
             $set = $collector->getPaginatedTransactions();
             Log::debug(sprintf('Found %d journals to check. ', $set->count()));
