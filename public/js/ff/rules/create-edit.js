@@ -173,11 +173,14 @@ function onAddNewAction() {
         updateActionInput(target)
     });
 
-    // $.each($('.rule-action-holder'), function (i, v) {
-    //     var holder = $(v);
-    //     var select = holder.find('select');
-    //     updateActionInput(select);
-    // });
+    // make sure each select thing is triggered at least once.
+    $.each($('.rule-action-holder'), function (i, v) {
+        var holder = $(v);
+        var select = holder.find('select');
+
+        console.log('Trigger updateActionInput() for select ' + select);
+        updateActionInput(select);
+    });
 }
 
 /**
@@ -198,11 +201,12 @@ function onAddNewTrigger() {
         updateTriggerInput(target)
     });
 
-    // $.each($('.rule-trigger-holder'), function (i, v) {
-    //     var holder = $(v);
-    //     var select = holder.find('select');
-    //     updateTriggerInput(select);
-    // });
+    $.each($('.rule-trigger-holder'), function (i, v) {
+        var holder = $(v);
+        var select = holder.find('select');
+        console.log('Trigger updateTriggerInput() for select ' + select);
+        updateTriggerInput(select);
+    });
 }
 
 /**
