@@ -88,7 +88,7 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
+                    <a id="billButtons" href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
                 </div>
             </div>
             {% if object.data.notes.data[0] %}
