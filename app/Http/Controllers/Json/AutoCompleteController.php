@@ -231,6 +231,31 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * List of revenue accounts.
+     *
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return JsonResponse
+     */
+    public function assetAccounts(AccountRepositoryInterface $repository): JsonResponse
+    {
+        $set      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $filtered = $set->filter(
+            function (Account $account) {
+                if (true === $account->active) {
+                    return $account;
+                }
+
+                return false; // @codeCoverageIgnore
+            }
+        );
+        $return   = array_unique($filtered->pluck('name')->toArray());
+        sort($return);
+
+        return response()->json($return);
+    }
+
+    /**
      * Returns a JSON list of all beneficiaries.
      *
      * @param TagRepositoryInterface $tagRepository

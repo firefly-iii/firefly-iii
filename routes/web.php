@@ -546,6 +546,7 @@ Route::group(
     Route::get('expense-accounts', ['uses' => 'Json\AutoCompleteController@expenseAccounts', 'as' => 'expense-accounts']);
     Route::get('all-accounts', ['uses' => 'Json\AutoCompleteController@allAccounts', 'as' => 'all-accounts']);
     Route::get('revenue-accounts', ['uses' => 'Json\AutoCompleteController@revenueAccounts', 'as' => 'revenue-accounts']);
+    Route::get('asset-accounts', ['uses' => 'Json\AutoCompleteController@assetAccounts', 'as' => 'asset-accounts']);
     Route::get('categories', ['uses' => 'Json\AutoCompleteController@categories', 'as' => 'categories']);
     Route::get('budgets', ['uses' => 'Json\AutoCompleteController@budgets', 'as' => 'budgets']);
     Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'tags']);

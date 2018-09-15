@@ -258,6 +258,18 @@ function updateActionInput(selectList) {
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/all-accounts');
             break;
+        case 'convert_withdrawal':
+            console.log('Select list value is ' + selectList.val() + ', so input needs expense accounts auto complete.');
+            createAutoComplete(inputResult, 'json/expense-accounts');
+            break;
+        case 'convert_deposit':
+            console.log('Select list value is ' + selectList.val() + ', so input needs revenue accounts auto complete.');
+            createAutoComplete(inputResult, 'json/revenue-accounts');
+            break;
+        case 'convert_transfer':
+            console.log('Select list value is ' + selectList.val() + ', so input needs asset accounts auto complete.');
+            createAutoComplete(inputResult, 'json/asset-accounts');
+            break;
         case 'link_to_bill':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/bills');

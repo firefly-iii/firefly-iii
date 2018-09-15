@@ -30,6 +30,9 @@ use FireflyIII\TransactionRules\Actions\AppendNotes;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
+use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
+use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
+use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
@@ -367,6 +370,9 @@ return [
         'prepend_notes'           => PrependNotes::class,
         'clear_notes'             => ClearNotes::class,
         'link_to_bill'            => LinkToBill::class,
+        'convert_withdrawal'      => ConvertToWithdrawal::class,
+        'convert_deposit'         => ConvertToDeposit::class,
+        'convert_transfer'        => ConvertToTransfer::class,
     ],
     'rule-actions-text'        => [
         'set_category',
