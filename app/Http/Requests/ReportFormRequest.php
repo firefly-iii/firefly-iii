@@ -208,8 +208,10 @@ class ReportFormRequest extends Request
         $repository = app(TagRepositoryInterface::class);
         $set        = $this->get('tag');
         $collection = new Collection;
+        Log::debug('Set is:', $set ?? []);
         if (\is_array($set)) {
             foreach ($set as $tagTag) {
+                Log::debug(sprintf('Now searching for "%s"', $tagTag));
                 $tag = $repository->findByTag($tagTag);
                 if (null !== $tag) {
                     $collection->push($tag);

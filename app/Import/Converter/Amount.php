@@ -91,11 +91,13 @@ class Amount implements ConverterInterface
 
             return $value;
         }
+        // @codeCoverageIgnoreStart
         Log::debug(sprintf('Final value is: "%s"', $value));
         $formatted = sprintf('%01.12f', $value);
         Log::debug(sprintf('Is formatted to : "%s"', $formatted));
 
         return $formatted;
+        // @codeCoverageIgnoreEnd
     }
 
     /**

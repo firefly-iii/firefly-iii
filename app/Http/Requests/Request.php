@@ -27,6 +27,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class Request.
+ * @codeCoverageIgnore
  *
  * @SuppressWarnings(PHPMD.NumberOfChildren)
  */
