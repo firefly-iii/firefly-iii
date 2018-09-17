@@ -47,39 +47,83 @@ function runModernizer() {
  */
 function setCommonAutocomplete() {
     console.log('In setCommonAutoComplete()');
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false,
-            },
-            autoSelect: false,
-        };
 
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
+    // do tags auto complete:
+    var tagTags = new Bloodhound({
+                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                     prefetch: {
+                                         url: 'json/tags',
+                                         filter: function (list) {
+                                             return $.map(list, function (tagTag) {
+                                                 return {name: tagTag};
+                                             });
+                                         }
+                                     }
+                                 });
+    tagTags.initialize();
+    $('input[name="tags"]').tagsinput({
+                                          typeaheadjs: {
+                                              name: 'tags',
+                                              displayKey: 'name',
+                                              valueKey: 'name',
+                                              source: tagTags.ttAdapter()
+                                          }
+                                      });
 
-
+    // do destination name (expense accounts):
     if ($('input[name="destination_name"]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_name"]').typeahead({source: data, autoSelect: false});
-        });
+        // do tags auto complete:
+        var destNames = new Bloodhound({
+                                           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                           queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                           prefetch: {
+                                               url: 'json/expense-accounts',
+                                               filter: function (list) {
+                                                   return $.map(list, function (name) {
+                                                       return {name: name};
+                                                   });
+                                               }
+                                           }
+                                       });
+        destNames.initialize();
+        $('input[name="destination_name"]').typeahead({}, {source: destNames, displayKey: 'name', autoSelect: false});
     }
 
+    // do source name (revenue accounts):
     if ($('input[name="source_name"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_name"]').typeahead({source: data, autoSelect: false});
-        });
+        // do tags auto complete:
+        var sourceNames = new Bloodhound({
+                                             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                             queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                             prefetch: {
+                                                 url: 'json/revenue-accounts',
+                                                 filter: function (list) {
+                                                     return $.map(list, function (name) {
+                                                         return {name: name};
+                                                     });
+                                                 }
+                                             }
+                                         });
+        sourceNames.initialize();
+        $('input[name="source_name"]').typeahead({}, {source: sourceNames, displayKey: 'name', autoSelect: false});
     }
 
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
+    // do categories auto complete:
+    var categories = new Bloodhound({
+                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                        prefetch: {
+                                            url: 'json/categories',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
+                                        }
+                                    });
+    categories.initialize();
+    $('input[name="category"]').typeahead({}, {source: categories, displayKey: 'name', autoSelect: false});
 }
 
 /**
@@ -108,9 +152,9 @@ function selectsForeignCurrency() {
 
         // both holders are shown to the user:
         $('#exchange_rate_instruction_holder').show();
-        if(what !== 'transfer') {
+        if (what !== 'transfer') {
             console.log('Show native amount holder.');
-        $('#native_amount_holder').show();
+            $('#native_amount_holder').show();
         }
 
         // if possible the amount is already exchanged for the foreign currency
