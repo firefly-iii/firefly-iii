@@ -31,23 +31,46 @@ $(document).ready(function () {
  */
 function setAutocompletes() {
 
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
 
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false,
-            }
-        };
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
+
+    // do categories auto complete:
+    var categories = new Bloodhound({
+                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                        prefetch: {
+                                            url: 'json/categories',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
+                                        }
+                                    });
+    categories.initialize();
+    $('input[name="category"]').typeahead({}, {source: categories, displayKey: 'name', autoSelect: false});
+
+
+    // do tags auto complete:
+    var tagTags = new Bloodhound({
+                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                     prefetch: {
+                                         url: 'json/tags',
+                                         filter: function (list) {
+                                             return $.map(list, function (tagTag) {
+                                                 return {name: tagTag};
+                                             });
+                                         }
+                                     }
+                                 });
+    tagTags.initialize();
+    $('input[name="tags"]').tagsinput({
+                                          typeaheadjs: {
+                                              name: 'tags',
+                                              displayKey: 'name',
+                                              valueKey: 'name',
+                                              source: tagTags.ttAdapter()
+                                          }
+                                      });
 }
 
