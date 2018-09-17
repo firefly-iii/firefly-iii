@@ -1,6 +1,6 @@
 /*
- * edit-reconciliation.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * convert.js
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -28,7 +28,7 @@ $(document).ready(function () {
  * Set the auto-complete JSON things.
  */
 function setAutocompletes() {
-    initCategoryAC();
-    initTagsAC();
+    initRevenueACField('source_account_revenue');
+    initExpenseACField('destination_account_expense');
 }
 

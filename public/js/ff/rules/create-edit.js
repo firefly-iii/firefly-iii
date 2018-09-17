@@ -362,13 +362,21 @@ function updateTriggerInput(selectList) {
 function createAutoComplete(input, URI) {
     console.log('Now in createAutoComplete().')
     input.typeahead('destroy');
-    $.getJSON(URI).done(function (data) {
-        console.log('Input now has auto complete from URI ' + URI);
-        input.typeahead({source: data, autoSelect: false});
-    }).fail(function () {
-        console.log('Could not grab URI ' + URI + ' so autocomplete will not work');
-    });
 
+    var source = new Bloodhound({
+                                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                    prefetch: {
+                                        url: URI,
+                                        filter: function (list) {
+                                            return $.map(list, function (name) {
+                                                return {name: name};
+                                            });
+                                        }
+                                    }
+                                });
+    source.initialize();
+    input.typeahead({}, {source: source, displayKey: 'name', autoSelect: false});
 }
 
 function testRuleTriggers() {
