@@ -83,12 +83,10 @@ class CreateController extends Controller
         $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
         $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
         $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
-        $creditCard     = $this->repository->getAccountTypeByType(AccountType::CREDITCARD);
         $liabilityTypes = [
             $debt->id       => (string)trans('firefly.account_type_' . AccountType::DEBT),
             $loan->id       => (string)trans('firefly.account_type_' . AccountType::LOAN),
             $mortgage->id   => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
-            $creditCard->id => (string)trans('firefly.account_type_' . AccountType::CREDITCARD),
         ];
         asort($liabilityTypes);
 
