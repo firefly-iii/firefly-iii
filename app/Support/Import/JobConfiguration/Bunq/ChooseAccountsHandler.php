@@ -79,7 +79,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $config     = $this->repository->getConfiguration($this->importJob);
         $accounts   = $config['accounts'] ?? [];
         $mapping    = $data['account_mapping'] ?? [];
-        $applyRules = 1 === (int)$data['apply_rules'];
+        $applyRules = 1 === (int)($data['apply_rules'] ?? 0);
         $final      = [];
 
         /*
