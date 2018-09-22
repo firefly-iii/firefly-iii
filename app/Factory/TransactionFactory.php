@@ -108,6 +108,7 @@ class TransactionFactory
     {
         Log::debug('Start of TransactionFactory::createPair()', $data);
         // all this data is the same for both transactions:
+        Log::debug('Searching for currency info.');
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $description = $journal->description === $data['description'] ? null : $data['description'];
 
@@ -164,6 +165,7 @@ class TransactionFactory
         }
 
         // set foreign currency
+        Log::debug('Trying to find foreign currency information.');
         $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
         $this->setForeignCurrency($source, $foreign);
         $this->setForeignCurrency($dest, $foreign);
