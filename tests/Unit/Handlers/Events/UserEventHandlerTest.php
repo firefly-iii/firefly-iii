@@ -81,7 +81,7 @@ class UserEventHandlerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->user();
-        $event      = new Login($user, true);
+        $event      = new Login(null, $user, true);
         $listener   = new UserEventHandler();
 
         // mock stuff
@@ -99,7 +99,7 @@ class UserEventHandlerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->emptyUser();
-        $event      = new Login($user, true);
+        $event      = new Login(null, $user, true);
         $listener   = new UserEventHandler();
 
         // mock stuff
@@ -121,7 +121,7 @@ class UserEventHandlerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->emptyUser();
-        $event      = new Login($user, true);
+        $event      = new Login(null, $user, true);
         $listener   = new UserEventHandler();
 
         // mock stuff
@@ -141,7 +141,7 @@ class UserEventHandlerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->user();
-        $event      = new Login($user, true);
+        $event      = new Login(null, $user, true);
         $listener   = new UserEventHandler();
 
         // mock stuff
@@ -159,7 +159,7 @@ class UserEventHandlerTest extends TestCase
     {
         $repository = $this->mock(UserRepositoryInterface::class);
         $user       = $this->emptyUser();
-        $event      = new Login($user, true);
+        $event      = new Login(null, $user, true);
         $listener   = new UserEventHandler();
 
         // mock stuff
