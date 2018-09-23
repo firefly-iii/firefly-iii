@@ -184,8 +184,16 @@ span.info-box-text a:hover, span.info-box-number a:hover {
 }
 
 .twitter-typeahead {
-    display:block !important;
+    width:100%;
 }
+span.twitter-typeahead {
+    display: inline !important;width:100%;
+
+}
+.tt-input {
+    background-color:#fff !important;
+}
+
 
 .twitter-typeahead .tt-query,
 .twitter-typeahead .tt-hint {

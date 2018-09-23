@@ -49,81 +49,15 @@ function setCommonAutocomplete() {
     console.log('In setCommonAutoComplete()');
 
     // do tags auto complete:
-    var tagTags = new Bloodhound({
-                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                     prefetch: {
-                                         url: 'json/tags',
-                                         filter: function (list) {
-                                             return $.map(list, function (tagTag) {
-                                                 return {name: tagTag};
-                                             });
-                                         }
-                                     }
-                                 });
-    tagTags.initialize();
-    $('input[name="tags"]').tagsinput({
-                                          typeaheadjs: {
-                                              name: 'tags',
-                                              displayKey: 'name',
-                                              valueKey: 'name',
-                                              source: tagTags.ttAdapter()
-                                          }
-                                      });
-
+    initTagsAC();
     // do destination name (expense accounts):
-    if ($('input[name="destination_name"]').length > 0) {
-        // do tags auto complete:
-        var destNames = new Bloodhound({
-                                           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                           queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                           prefetch: {
-                                               url: 'json/expense-accounts',
-                                               filter: function (list) {
-                                                   return $.map(list, function (name) {
-                                                       return {name: name};
-                                                   });
-                                               }
-                                           }
-                                       });
-        destNames.initialize();
-        $('input[name="destination_name"]').typeahead({}, {source: destNames, displayKey: 'name', autoSelect: false});
-    }
+    initExpenseAC();
 
     // do source name (revenue accounts):
-    if ($('input[name="source_name"]').length > 0) {
-        // do tags auto complete:
-        var sourceNames = new Bloodhound({
-                                             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                             queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                             prefetch: {
-                                                 url: 'json/revenue-accounts',
-                                                 filter: function (list) {
-                                                     return $.map(list, function (name) {
-                                                         return {name: name};
-                                                     });
-                                                 }
-                                             }
-                                         });
-        sourceNames.initialize();
-        $('input[name="source_name"]').typeahead({}, {source: sourceNames, displayKey: 'name', autoSelect: false});
-    }
+    initRevenueAC();
 
     // do categories auto complete:
-    var categories = new Bloodhound({
-                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                        prefetch: {
-                                            url: 'json/categories',
-                                            filter: function (list) {
-                                                return $.map(list, function (name) {
-                                                    return {name: name};
-                                                });
-                                            }
-                                        }
-                                    });
-    categories.initialize();
-    $('input[name="category"]').typeahead({}, {source: categories, displayKey: 'name', autoSelect: false});
+    initCategoryAC();
 }
 
 /**

@@ -360,7 +360,7 @@ function updateTriggerInput(selectList) {
  * @param URI
  */
 function createAutoComplete(input, URI) {
-    console.log('Now in createAutoComplete().')
+    console.log('Now in createAutoComplete("' + URI + '").');
     input.typeahead('destroy');
 
     var source = new Bloodhound({
@@ -373,10 +373,19 @@ function createAutoComplete(input, URI) {
                                                 return {name: name};
                                             });
                                         }
+                                    },
+                                    remote: {
+                                        url: URI + '?search=%QUERY',
+                                        wildcard: '%QUERY',
+                                        filter: function (list) {
+                                            return $.map(list, function (name) {
+                                                return {name: name};
+                                            });
+                                        }
                                     }
                                 });
     source.initialize();
-    input.typeahead({}, {source: source, displayKey: 'name', autoSelect: false});
+    input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
 }
 
 function testRuleTriggers() {

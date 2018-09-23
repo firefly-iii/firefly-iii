@@ -32,11 +32,20 @@ $(function () {
                                                       return {name: name};
                                                   });
                                               }
+                                          },
+                                          remote: {
+                                              url: autoCompleteUri + '?search=%QUERY',
+                                              wildcard: '%QUERY',
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
                                           }
                                       });
     transactions.initialize();
     var input=$("#link_other");
-    input.typeahead({}, {source: transactions, displayKey: 'name', autoSelect: false});
+    input.typeahead({hint: true, highlight: true,}, {source: transactions, displayKey: 'name', autoSelect: false});
 
     input.change(function () {
             var current = input.typeahead("getActive");

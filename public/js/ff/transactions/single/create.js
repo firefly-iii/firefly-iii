@@ -148,10 +148,19 @@ function updateDescription() {
                                                       return {name: name};
                                                   });
                                               }
+                                          },
+                                          remote: {
+                                              url: 'json/transaction-journals/' + what + '?search=%QUERY',
+                                              wildcard: '%QUERY',
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
                                           }
                                       });
     journalNames.initialize();
-    $('input[name="description"]').typeahead('destroy').typeahead({}, {source: journalNames, displayKey: 'name', autoSelect: false});
+    $('input[name="description"]').typeahead('destroy').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
     $('#ffInput_description').focus();
 }
 

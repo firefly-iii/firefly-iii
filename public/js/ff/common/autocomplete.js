@@ -22,6 +22,7 @@
  * Do tags auto complete.
  */
 function initTagsAC() {
+    console.log('initTagsAC()');
     var tagTags = new Bloodhound({
                                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                      queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -32,11 +33,22 @@ function initTagsAC() {
                                                  return {name: tagTag};
                                              });
                                          }
+                                     },
+                                     remote: {
+                                         url: 'json/tags?search=%QUERY',
+                                         wildcard: '%QUERY',
+                                         filter: function (list) {
+                                             return $.map(list, function (name) {
+                                                 return {name: name};
+                                             });
+                                         }
                                      }
                                  });
     tagTags.initialize();
     $('input[name="tags"]').tagsinput({
                                           typeaheadjs: {
+                                              hint: true,
+                                              highlight: true,
                                               name: 'tags',
                                               displayKey: 'name',
                                               valueKey: 'name',
@@ -56,8 +68,8 @@ function initExpenseAC() {
  * Do destination name (expense accounts) auto complete.
  */
 function initExpenseACField(fieldName) {
+    console.log('initExpenseACField("' + fieldName + '")');
     if ($('input[name="' + fieldName + '"]').length > 0) {
-        console.log('Init expense AC for field "'+fieldName+'"');
         var destNames = new Bloodhound({
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -68,10 +80,19 @@ function initExpenseACField(fieldName) {
                                                        return {name: name};
                                                    });
                                                }
+                                           },
+                                           remote: {
+                                               url: 'json/expense-accounts?search=%QUERY',
+                                               wildcard: '%QUERY',
+                                               filter: function (list) {
+                                                   return $.map(list, function (name) {
+                                                       return {name: name};
+                                                   });
+                                               }
                                            }
                                        });
         destNames.initialize();
-        $('input[name="' + fieldName + '"]').typeahead({}, {source: destNames, displayKey: 'name', autoSelect: false});
+        $('input[name="' + fieldName + '"]').typeahead({hint: true, highlight: true,}, {source: destNames, displayKey: 'name', autoSelect: false});
     }
 }
 
@@ -86,9 +107,8 @@ function initRevenueAC() {
  * Do source name (revenue accounts) auto complete.
  */
 function initRevenueACField(fieldName) {
-
+    console.log('initRevenueACField("' + fieldName + '")');
     if ($('input[name="' + fieldName + '"]').length > 0) {
-        console.log('Init revenue AC for field "'+fieldName+'"');
         var sourceNames = new Bloodhound({
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -99,10 +119,19 @@ function initRevenueACField(fieldName) {
                                                          return {name: name};
                                                      });
                                                  }
+                                             },
+                                             remote: {
+                                                 url: 'json/revenue-accounts?search=%QUERY',
+                                                 wildcard: '%QUERY',
+                                                 filter: function (list) {
+                                                     return $.map(list, function (name) {
+                                                         return {name: name};
+                                                     });
+                                                 }
                                              }
                                          });
         sourceNames.initialize();
-        $('input[name="' + fieldName + '"]').typeahead({}, {source: sourceNames, displayKey: 'name', autoSelect: false});
+        $('input[name="' + fieldName + '"]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
     }
 }
 
@@ -120,8 +149,17 @@ function initCategoryAC() {
                                                     return {name: name};
                                                 });
                                             }
+                                        },
+                                        remote: {
+                                            url: 'json/categories?search=%QUERY',
+                                            wildcard: '%QUERY',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
                                         }
                                     });
     categories.initialize();
-    $('input[name="category"]').typeahead({}, {source: categories, displayKey: 'name', autoSelect: false});
+    $('input[name="category"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
 }
