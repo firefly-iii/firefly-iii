@@ -67,7 +67,7 @@ function goToMassEdit() {
         baseHref = bases[0].href;
     }
 
-    window.location.href = baseHref + '/transactions/mass/edit/' + checkedArray;
+    window.location.href = baseHref + 'transactions/mass/edit/' + checkedArray;
     return false;
 }
 
@@ -87,7 +87,7 @@ function goToBulkEdit() {
         baseHref = bases[0].href;
     }
 
-    window.location.href = baseHref + '/transactions/bulk/edit/' + checkedArray;
+    window.location.href = baseHref + 'transactions/bulk/edit/' + checkedArray;
     return false;
 }
 
@@ -106,7 +106,7 @@ function goToMassDelete() {
     if (bases.length > 0) {
         baseHref = bases[0].href;
     }
-    window.location.href = baseHref + '/transactions/mass/delete/' + checkedArray;
+    window.location.href = baseHref + 'transactions/mass/delete/' + checkedArray;
     return false;
 }
 
