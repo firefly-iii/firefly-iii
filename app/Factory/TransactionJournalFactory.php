@@ -36,6 +36,11 @@ use Log;
  */
 class TransactionJournalFactory
 {
+    /** @var User The user */
+    private $user;
+
+    use JournalServiceTrait, TransactionTypeTrait;
+
     /**
      * Constructor.
      */
@@ -45,10 +50,6 @@ class TransactionJournalFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    use JournalServiceTrait, TransactionTypeTrait;
-    /** @var User The user */
-    private $user;
 
     /**
      * Store a new transaction journal.
@@ -67,13 +68,15 @@ class TransactionJournalFactory
         $type            = $this->findTransactionType($data['type']);
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
         Log::debug(sprintf('Going to store a %s', $type->type));
-        $journal = TransactionJournal::create(
+        $description = app('steam')->cleanString($data['description']);
+        $description = str_replace(["\n", "\t", "\r"], "\x20", $description);
+        $journal     = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],
                 'transaction_type_id'     => $type->id,
                 'bill_id'                 => null,
                 'transaction_currency_id' => $defaultCurrency->id,
-                'description'             => $data['description'],
+                'description'             => $description,
                 'date'                    => $data['date']->format('Y-m-d'),
                 'order'                   => 0,
                 'tag_count'               => 0,
@@ -114,7 +117,7 @@ class TransactionJournalFactory
         // store date meta fields (if present):
         $fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
                    'due_date', 'recurrence_id', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash', 'importHashV2',
-                   'external_id', 'sepa-batch-id','original-source'];
+                   'external_id', 'sepa-batch-id', 'original-source'];
 
         foreach ($fields as $field) {
             $this->storeMeta($journal, $data, $field);
