@@ -182,13 +182,17 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Save attachments that get uploaded with models, through the app.
      *
-     * @param Model      $model
+     * @param object     $model
      * @param array|null $files
      *
      * @return bool
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function saveAttachmentsForModel(Model $model, ?array $files): bool
+    public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
+        if(!($model instanceof Model)) {
+            return false;
+        }
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
         if (\is_array($files)) {
             Log::debug('$files is an array.');
