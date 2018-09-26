@@ -64,7 +64,13 @@ class OpposingAccountIbansTest extends TestCase
         $two->name            = 'Else';
         $two->account_type_id = $loan->id;
 
-        $collection = new Collection([$one, $two]);
+        $three                  = new Account;
+        $three->id              = 66;
+        $three->name            = 'I have IBAN';
+        $three->iban            = 'IBAN';
+        $three->account_type_id = $loan->id;
+
+        $collection = new Collection([$one, $two, $three]);
 
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->withArgs(
@@ -74,11 +80,12 @@ class OpposingAccountIbansTest extends TestCase
 
         $mapper  = new OpposingAccountIbans();
         $mapping = $mapper->getMap();
-        $this->assertCount(3, $mapping);
+        $this->assertCount(4, $mapping);
         // assert this is what the result looks like:
         $result = [
             0  => (string)trans('import.map_do_not_map'),
             17 => 'Else (liability)',
+            66 => 'IBAN (I have IBAN) (liability)',
             21 => 'IBAN (Something)',
         ];
         $this->assertEquals($result, $mapping);
