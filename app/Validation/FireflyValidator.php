@@ -292,9 +292,10 @@ class FireflyValidator extends Validator
         if ('convert_transfer' === $actionType) {
             /** @var AccountRepositoryInterface $repository */
             $repository = app(AccountRepositoryInterface::class);
-            $account    = $repository->findByName($value,
-                                                  [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
-                                                   AccountType::CREDITCARD]
+            $account    = $repository->findByName(
+                $value,
+                [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
+                 AccountType::CREDITCARD]
             );
 
             return null !== $account;
@@ -344,9 +345,9 @@ class FireflyValidator extends Validator
 
         // check transaction type.
         if ('transaction_type' === $triggerType) {
-            $count = TransactionType::where('type', $value)->count();
+            $count = TransactionType::where('type', strtolower($value))->count();
 
-            return 1 !== $count;
+            return 1 === $count;
         }
 
         // and finally a "will match everything check":
