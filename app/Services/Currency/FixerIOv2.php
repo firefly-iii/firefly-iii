@@ -64,8 +64,10 @@ class FixerIOv2 implements ExchangeRateInterface
         $exchangeRate->user()->associate($this->user);
         $exchangeRate->fromCurrency()->associate($fromCurrency);
         $exchangeRate->toCurrency()->associate($toCurrency);
-        $exchangeRate->date = $date;
-        $exchangeRate->rate = $rate;
+        $exchangeRate->date       = $date;
+        $exchangeRate->rate       = $rate;
+        $exchangeRate->updated_at = new Carbon;
+        $exchangeRate->created_at = new Carbon;
 
         // get API key
         $apiKey = env('FIXER_API_KEY', '');
