@@ -53,7 +53,7 @@
     "ext-intl": "*",
     "ext-xml": "*",
     "ext-zip": "*",
-    "bacon/bacon-qr-code": "2.*",
+    "bacon/bacon-qr-code": "1.*",
     "bunq/sdk_php": "dev-master#8c1faefc111d9b970168a1837ca165d854954941",
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
