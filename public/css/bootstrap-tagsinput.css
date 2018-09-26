@@ -1,6 +1,6 @@
 /*
- * bootstrap-tagsinput v0.8.0
- * 
+ * bootstrap-tagsinput v0.9.1
+ *
  */
 
 .bootstrap-tagsinput {
@@ -16,7 +16,6 @@
     line-height: 22px;
     cursor: text;
 }
-
 .bootstrap-tagsinput input {
     border: none;
     box-shadow: none;
@@ -27,44 +26,35 @@
     width: auto;
     max-width: inherit;
 }
-
 .bootstrap-tagsinput.form-control input::-moz-placeholder {
     color: #777;
     opacity: 1;
 }
-
 .bootstrap-tagsinput.form-control input:-ms-input-placeholder {
     color: #777;
 }
-
 .bootstrap-tagsinput.form-control input::-webkit-input-placeholder {
     color: #777;
 }
-
 .bootstrap-tagsinput input:focus {
     border: none;
     box-shadow: none;
 }
-
 .bootstrap-tagsinput .tag {
     margin-right: 2px;
     color: white;
 }
-
 .bootstrap-tagsinput .tag [data-role="remove"] {
     margin-left: 8px;
     cursor: pointer;
 }
-
 .bootstrap-tagsinput .tag [data-role="remove"]:after {
     content: "x";
     padding: 0px 2px;
 }
-
 .bootstrap-tagsinput .tag [data-role="remove"]:hover {
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 1px 2px rgba(0, 0, 0, 0.05);
 }
-
 .bootstrap-tagsinput .tag [data-role="remove"]:hover:active {
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
 }

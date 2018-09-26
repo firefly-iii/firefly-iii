@@ -21,53 +21,152 @@
 
 /** global: originalSum,originalForeignSum, accounting, what, Modernizr, currencySymbol, foreignCurrencySymbol */
 
-var destAccounts = {};
-var srcAccounts = {};
-var categories = {};
-var descriptions = {};
+var destNames;
+var sourceNames;
+var categories;
+var journalNames;
 
 $(document).ready(function () {
     "use strict";
     $('.btn-do-split').click(cloneDivRow);
     $('.remove-current-split').click(removeDivRow);
 
-    $.getJSON('json/expense-accounts').done(function (data) {
-        destAccounts = data;
-        $('input[name$="destination_name]"]').typeahead({source: destAccounts, autoSelect: false});
-    });
+    // auto complete destination name (expense accounts):
+    destNames = new Bloodhound({
+                                       datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                       queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                       prefetch: {
+                                           url: 'json/expense-accounts',
+                                           filter: function (list) {
+                                               return $.map(list, function (name) {
+                                                   return {name: name};
+                                               });
+                                           }
+                                       },
+                                       remote: {
+                                           url: 'json/expense-accounts?search=%QUERY',
+                                           wildcard: '%QUERY',
+                                           filter: function (list) {
+                                               return $.map(list, function (name) {
+                                                   return {name: name};
+                                               });
+                                           }
+                                       }
+                                   });
+    destNames.initialize();
+    $('input[name$="destination_name]"]').typeahead({hint: true, highlight: true,}, {source: destNames, displayKey: 'name', autoSelect: false});
 
-    $.getJSON('json/revenue-accounts').done(function (data) {
-        srcAccounts = data;
-        $('input[name$="source_name]"]').typeahead({source: srcAccounts, autoSelect: false});
-    });
+    // auto complete source name (revenue accounts):
+    sourceNames = new Bloodhound({
+                                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                         queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                         prefetch: {
+                                             url: 'json/revenue-accounts',
+                                             filter: function (list) {
+                                                 return $.map(list, function (name) {
+                                                     return {name: name};
+                                                 });
+                                             }
+                                         },
+                                         remote: {
+                                             url: 'json/revenue-accounts?search=%QUERY',
+                                             wildcard: '%QUERY',
+                                             filter: function (list) {
+                                                 return $.map(list, function (name) {
+                                                     return {name: name};
+                                                 });
+                                             }
+                                         }
+                                     });
+    sourceNames.initialize();
+    $('input[name$="source_name]"]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
 
-    $.getJSON('json/categories').done(function (data) {
-        categories = data;
-        $('input[name$="category_name]"]').typeahead({source: categories, autoSelect: false});
-    });
+    // auto complete category fields:
+    categories = new Bloodhound({
+                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                        prefetch: {
+                                            url: 'json/categories',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
+                                        },
+                                        remote: {
+                                            url: 'json/categories?search=%QUERY',
+                                            wildcard: '%QUERY',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
+                                        }
+                                    });
+    categories.initialize();
+    $('input[name$="category_name]"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
 
-    $.getJSON('json/transaction-journals/' + what).done(function (data) {
-        descriptions = data;
-        $('input[name="journal_description"]').typeahead({source: descriptions, autoSelect: false});
-        $('input[name$="transaction_description]"]').typeahead({source: descriptions, autoSelect: false});
-    });
+    // get transaction journal name things:
+    journalNames = new Bloodhound({
+                                          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                          prefetch: {
+                                              url: 'json/transaction-journals/' + what,
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
+                                          },
+                                          remote: {
+                                              url: 'json/transaction-journals/' + what + '?search=%QUERY',
+                                              wildcard: '%QUERY',
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
+                                          }
+                                      });
+    journalNames.initialize();
 
-    $.getJSON('json/tags').done(function (data) {
+    $('input[name="journal_description"]').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
+    $('input[name$="transaction_description]"]').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
 
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false
-            }
-        };
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
-
+    // get tags:
+    console.log('initTagsAC()');
+    var tagTags = new Bloodhound({
+                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                     prefetch: {
+                                         url: 'json/tags',
+                                         filter: function (list) {
+                                             return $.map(list, function (tagTag) {
+                                                 return {name: tagTag};
+                                             });
+                                         }
+                                     },
+                                     remote: {
+                                         url: 'json/tags?search=%QUERY',
+                                         wildcard: '%QUERY',
+                                         filter: function (list) {
+                                             return $.map(list, function (name) {
+                                                 return {name: name};
+                                             });
+                                         }
+                                     }
+                                 });
+    tagTags.initialize();
+    $('input[name="tags"]').tagsinput({
+                                          typeaheadjs: {
+                                              hint: true,
+                                              highlight: true,
+                                              name: 'tags',
+                                              displayKey: 'name',
+                                              valueKey: 'name',
+                                              source: tagTags.ttAdapter()
+                                          }
+                                      });
 
     $('input[name$="][amount]"]').on('change', calculateBothSums);
     $('input[name$="][foreign_amount]"]').on('change', calculateBothSums);
@@ -128,18 +227,18 @@ function cloneDivRow() {
 
     source.find('input[name$="][amount]"]').val("").on('change', calculateBothSums);
     source.find('input[name$="][foreign_amount]"]').val("").on('change', calculateBothSums);
-    if (destAccounts.length > 0) {
-        source.find('input[name$="destination_name]"]').typeahead({source: destAccounts, autoSelect: false});
+    if (destNames) {
+        source.find('input[name$="destination_name]"]').typeahead({hint: true, highlight: true,}, {source: destNames, displayKey: 'name', autoSelect: false});
     }
 
-    if (srcAccounts.length > 0) {
-        source.find('input[name$="source_name]"]').typeahead({source: srcAccounts, autoSelect: false});
+    if (sourceNames) {
+        source.find('input[name$="source_name]"]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
     }
-    if (categories.length > 0) {
-        source.find('input[name$="category_name]"]').typeahead({source: categories, autoSelect: false});
+    if (categories) {
+        source.find('input[name$="category_name]"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
     }
-    if (descriptions.length > 0) {
-        source.find('input[name$="transaction_description]"]').typeahead({source: descriptions, autoSelect: false});
+    if (journalNames) {
+        source.find('input[name$="transaction_description]"]').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
     }
 
     $('div.split_row_holder').append(source);

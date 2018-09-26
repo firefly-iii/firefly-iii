@@ -31,6 +31,7 @@ return [
                 '4.7.3' => 'This version of Firefly III handles bills differently. See http://bit.ly/FF3-new-bills for more information.',
                 '4.7.4' => 'This version of Firefly III has a new import routine. See http://bit.ly/FF3-new-import for more information.',
                 '4.7.6' => 'This will be the last version to require PHP7.1. Future versions will require PHP7.2 minimum.',
+                '4.7.7' => 'This version of Firefly III requires PHP7.2.',
             ],
         'install' =>
             [
@@ -40,6 +41,7 @@ return [
                 '4.7.3' => 'This version of Firefly III handles bills differently. See http://bit.ly/FF3-new-bills for more information.',
                 '4.7.4' => 'This version of Firefly III has a new import routine. See http://bit.ly/FF3-new-import for more information.',
                 '4.7.6' => 'This will be the last version to require PHP7.1. Future versions will require PHP7.2 minimum.',
+                '4.7.7' => 'This version of Firefly III requires PHP7.2.',
             ],
     ],
 ];

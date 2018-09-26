@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Attachments;
 
 use FireflyIII\Models\Attachment;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 
@@ -84,10 +83,10 @@ interface AttachmentHelperInterface
     /**
      * Save attachments that got uploaded.
      *
-     * @param Model      $model
+     * @param object     $model
      * @param null|array $files
      *
      * @return bool
      */
-    public function saveAttachmentsForModel(Model $model, ?array $files): bool;
+    public function saveAttachmentsForModel(object $model, ?array $files): bool;
 }

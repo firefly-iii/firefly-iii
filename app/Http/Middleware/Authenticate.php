@@ -68,7 +68,7 @@ class Authenticate
      */
     public function handle($request, Closure $next, ...$guards)
     {
-        $this->authenticate($guards);
+        $this->authenticate($request, $guards);
 
         return $next($request);
     }
@@ -86,7 +86,7 @@ class Authenticate
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    protected function authenticate(array $guards)
+    protected function authenticate($request, array $guards)
     {
 
         if (empty($guards)) {

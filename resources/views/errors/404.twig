@@ -7,9 +7,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
     <base href="{{ route('index') }}/">
-    <link rel="stylesheet" href="css/app.css?v={{ FF_VERSION }}" type="text/css" media="all"/>
+
+    {# libraries #}
+    <link href="lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# the theme #}
     <link href="lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# Firefly III customisations #}
     <link href="css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
     {% include('partials.favicons') %}
 </head>
 <body class="ff-error-page">

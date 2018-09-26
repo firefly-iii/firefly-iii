@@ -1,6 +1,6 @@
 /*
- * edit.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * autocomplete.js
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,13 +18,58 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: what */
+/**
+ * Do tags auto complete.
+ */
+function initTagsAC() {
+    console.log('initTagsAC()');
+    var tagTags = new Bloodhound({
+                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                     prefetch: {
+                                         url: 'json/tags',
+                                         filter: function (list) {
+                                             return $.map(list, function (tagTag) {
+                                                 return {name: tagTag};
+                                             });
+                                         }
+                                     },
+                                     remote: {
+                                         url: 'json/tags?search=%QUERY',
+                                         wildcard: '%QUERY',
+                                         filter: function (list) {
+                                             return $.map(list, function (name) {
+                                                 return {name: name};
+                                             });
+                                         }
+                                     }
+                                 });
+    tagTags.initialize();
+    $('input[name="tags"]').tagsinput({
+                                          typeaheadjs: {
+                                              hint: true,
+                                              highlight: true,
+                                              name: 'tags',
+                                              displayKey: 'name',
+                                              valueKey: 'name',
+                                              source: tagTags.ttAdapter()
+                                          }
+                                      });
+}
 
-$(document).ready(function () {
-    "use strict";
+/**
+ * Do destination name (expense accounts) auto complete.
+ */
+function initExpenseAC() {
+    initExpenseACField('destination_name');
+}
 
-    // destination account names:
-    if ($('input[name^="destination_name["]').length > 0) {
+/**
+ * Do destination name (expense accounts) auto complete.
+ */
+function initExpenseACField(fieldName) {
+    console.log('initExpenseACField("' + fieldName + '")');
+    if ($('input[name="' + fieldName + '"]').length > 0) {
         var destNames = new Bloodhound({
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -47,12 +92,23 @@ $(document).ready(function () {
                                            }
                                        });
         destNames.initialize();
-        $('input[name^="destination_name["]').typeahead({hint: true, highlight: true,}, {source: destNames, displayKey: 'name', autoSelect: false});
+        $('input[name="' + fieldName + '"]').typeahead({hint: true, highlight: true,}, {source: destNames, displayKey: 'name', autoSelect: false});
     }
+}
 
-    // source account name
-    if ($('input[name^="source_name["]').length > 0) {
+/**
+ * Do source name (revenue accounts) auto complete.
+ */
+function initRevenueAC() {
+    initRevenueACField('source_name');
+}
 
+/**
+ * Do source name (revenue accounts) auto complete.
+ */
+function initRevenueACField(fieldName) {
+    console.log('initRevenueACField("' + fieldName + '")');
+    if ($('input[name="' + fieldName + '"]').length > 0) {
         var sourceNames = new Bloodhound({
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -75,10 +131,14 @@ $(document).ready(function () {
                                              }
                                          });
         sourceNames.initialize();
-
-        $('input[name^="source_name["]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
+        $('input[name="' + fieldName + '"]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
     }
+}
 
+/**
+ * Do categories auto complete.
+ */
+function initCategoryAC() {
     var categories = new Bloodhound({
                                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                         queryTokenizer: Bloodhound.tokenizers.whitespace,
@@ -101,7 +161,5 @@ $(document).ready(function () {
                                         }
                                     });
     categories.initialize();
-
-    $('input[name^="category["]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
-
-});
+    $('input[name="category"]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
+}

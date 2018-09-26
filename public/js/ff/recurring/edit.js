@@ -109,11 +109,11 @@ function respondToFirstDateChange() {
 
     // preselected value:
     var preSelected = currentRepType;
-    if(preSelected === '') {
+    if (preSelected === '') {
         preSelected = select.val();
     }
 
-    $.getJSON(suggestUri, {date: date,pre_select: preSelected,past:true}).fail(function () {
+    $.getJSON(suggestUri, {date: date, pre_select: preSelected, past: true}).fail(function () {
         console.error('Could not load repetition suggestions');
         alert('Could not load repetition suggestions');
     }).done(parseRepetitionSuggestions);
@@ -128,8 +128,8 @@ function parseRepetitionSuggestions(data) {
         if (data.hasOwnProperty(k)) {
             console.log('label: ' + data[k].label + ', selected: ' + data[k].selected);
             opt = $('<option>').val(k).attr('label', data[k].label).text(data[k].label);
-            if(data[k].selected) {
-                opt.attr('selected','selected');
+            if (data[k].selected) {
+                opt.attr('selected', 'selected');
             }
             select.append(opt);
         }
@@ -138,39 +138,10 @@ function parseRepetitionSuggestions(data) {
 }
 
 function initializeAutoComplete() {
-    // auto complete things:
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false,
-            },
-            autoSelect: false,
-        };
-
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
-
-    if ($('input[name="destination_name"]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_name"]').typeahead({source: data, autoSelect: false});
-        });
-    }
-
-    if ($('input[name="source_name"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_name"]').typeahead({source: data, autoSelect: false});
-        });
-    }
-
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
+    initTagsAC();
+    initExpenseAC();
+    initRevenueAC();
+    initCategoryAC();
 }
 
 /**

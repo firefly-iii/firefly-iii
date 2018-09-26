@@ -73,7 +73,6 @@ class CreateControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Loan'])->andReturn(AccountType::find(9))->once();
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Mortgage'])->andReturn(AccountType::find(12))->once();
-        $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Credit card'])->andReturn(AccountType::find(13))->once();
 
         $this->be($this->user());
         $response = $this->get(route('accounts.create', ['asset']));
