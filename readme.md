@@ -130,6 +130,7 @@ Several users have built pretty awesome stuff around the Firefly III API. Check 
 
 * [An Android app by Mike Conway](https://play.google.com/store/apps/details?id=com.zerobyte.firefly)
 * [A Telegram bot by Igor Tsupko](https://github.com/may-cat/firefly-iii-telegram-bot)
+* [An Android app by Daniel Quah](https://github.com/emansih/FireflyMobile)
 
 Want to be in this list? Let me know!
 
