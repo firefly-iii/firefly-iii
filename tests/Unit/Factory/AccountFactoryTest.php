@@ -574,7 +574,7 @@ class AccountFactoryTest extends TestCase
     public function testFindOrCreate(): void
     {
         /** @var Account $account */
-        $account = $this->user()->accounts()->inRandomOrder()->first();
+        $account = $this->getRandomAsset();
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user());

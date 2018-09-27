@@ -238,7 +238,7 @@ class CreateRecurringTransactions implements ShouldQueue
         /** @var RecurrenceTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             $single   = [
-                'currency_id'           => $transaction->transaction_currency_id,
+                'currency_id'           => (int)$transaction->transaction_currency_id,
                 'currency_code'         => null,
                 'description'           => null,
                 'amount'                => $transaction->amount,

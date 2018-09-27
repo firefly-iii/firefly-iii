@@ -92,7 +92,7 @@ class Request extends FormRequest
      */
     public function string(string $field): string
     {
-        return app('steam')->cleanString($this->get($field) ?? '');
+        return app('steam')->cleanString((string)($this->get($field) ?? ''));
     }
 
     /**
