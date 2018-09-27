@@ -177,8 +177,9 @@ class AttachmentControllerTest extends TestCase
 
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser');
         $repository->shouldReceive('get')->once()->andReturn($attachments);
+        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
 
         // test API
         $response = $this->get('/api/v1/attachments');
@@ -205,7 +206,8 @@ class AttachmentControllerTest extends TestCase
 
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
 
         // test API
         $response = $this->get('/api/v1/attachments/' . $attachment->id);
@@ -234,9 +236,9 @@ class AttachmentControllerTest extends TestCase
 
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($attachment);
-
+        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
         $journalRepos->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('findNull')->once()->andReturn($this->user()->transactionJournals()->find(1));
 
@@ -274,9 +276,9 @@ class AttachmentControllerTest extends TestCase
         $attachment = $this->user()->attachments()->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('update')->once()->andReturn($attachment);
-
+        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
         // data to submit
         $data = [
             'filename'    => $attachment->filename,
