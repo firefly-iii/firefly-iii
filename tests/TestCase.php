@@ -225,7 +225,7 @@ abstract class TestCase extends BaseTestCase
                          ->where('accounts.user_id', $this->user()->id)
                          ->where('account_types.type', $type)
                          ->inRandomOrder()->take(1);
-        $result = $query->first();
+        $result = $query->first(['accounts.*']);
 
         return $result;
     }
