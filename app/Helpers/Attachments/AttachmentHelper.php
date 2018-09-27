@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Attachments;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
@@ -245,6 +246,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return Attachment|null
      * @throws \Illuminate\Contracts\Encryption\EncryptException
+     * @throws FireflyException
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {
@@ -266,6 +268,11 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             $fileObject = $file->openFile('r');
             $fileObject->rewind();
+
+            if(0 === $file->getSize()) {
+                throw new FireflyException('Cannot upload empty or non-existent file.');
+            }
+
             $content   = $fileObject->fread($file->getSize());
             $encrypted = Crypt::encrypt($content);
             Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));
