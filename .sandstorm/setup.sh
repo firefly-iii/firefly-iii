@@ -37,7 +37,7 @@ wget -O /etc/apt/trusted.gpg.d/php.gpg https://packages.sury.org/php/apt.gpg
 echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/php.list
 
 # install packages.
-apt-get updater
+apt-get update
 apt-get install -y nginx php7.2-fpm php7.2-mysql php7.2-gd php7.2-cli php7.2-curl git php7.2-dev php7.2-zip php7.2-intl php7.2-dom php7.2-mbstring php7.2-bcmath mysql-server
 service nginx stop
 service php7.2-fpm stop
