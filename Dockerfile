@@ -1,4 +1,4 @@
-FROM php:7.1-apache
+FROM php:7.2-apache
 
 # If building on a RPi, use --build-arg cores=3 to use all cores when compiling
 # to speed up the image build
