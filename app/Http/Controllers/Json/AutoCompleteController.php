@@ -416,7 +416,9 @@ class AutoCompleteController extends Controller
             $return = array_values(
                 array_unique(
                     array_filter(
-                        $return, function (string $value) use ($search) {
+                        $return, function (array $array) use ($search) {
+                        $value = $array['name'];
+
                         return !(false === stripos($value, $search));
                     }, ARRAY_FILTER_USE_BOTH
                     )
