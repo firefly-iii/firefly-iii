@@ -48,8 +48,6 @@ function runModernizer() {
 function setCommonAutocomplete() {
     console.log('In setCommonAutoComplete()');
 
-    // do tags auto complete:
-    initTagsAC();
     // do destination name (expense accounts):
     initExpenseAC();
 
@@ -58,6 +56,9 @@ function setCommonAutocomplete() {
 
     // do categories auto complete:
     initCategoryAC();
+
+    // do tags auto complete:
+    initTagsAC();
 }
 
 /**
