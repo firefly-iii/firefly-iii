@@ -87,6 +87,7 @@ return [
     'max.array'                      => 'El campo :attribute debe contener al menos :max elementos.',
     'mimes'                          => 'El campo :attribute debe ser un archivo de tipo :values.',
     'min.numeric'                    => 'El campo :attribute debe ser al menos :min.',
+    'lte.numeric'                    => 'The :attribute must be less than or equal :value.',
     'min.file'                       => 'El campo :attribute debe ser al menos :min kilobytes.',
     'min.string'                     => 'El campo :attribute debe contener al menos :min caracteres.',
     'min.array'                      => 'El campo :attribute debe tener al menos :min elementos.',

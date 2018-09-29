@@ -37,6 +37,7 @@ return [
     // index page:
     'general_index_title'                 => 'Importeer een bestand',
     'general_index_intro'                 => 'Dit is de import-routine van Firefly III. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
+
     // import provider strings (index):
     'button_fake'                         => 'Nepdata importeren',
     'button_file'                         => 'Importeer een bestand',
@@ -110,6 +111,7 @@ return [
     'job_config_file_upload_type_help'    => 'Selecteer het type bestand dat je zal uploaden',
     'job_config_file_upload_submit'       => 'Bestanden uploaden',
     'import_file_type_csv'                => 'CSV (kommagescheiden waardes)',
+    'import_file_type_ofx'                => 'OFX',
     'file_not_utf8'                       => 'Het bestand dat je hebt geüpload, is niet gecodeerd als UTF-8 of ASCII. Firefly III kan dergelijke bestanden niet verwerken. Gebruik Notepad ++ of Sublime om je bestand naar UTF-8 te converteren.',
     'job_config_uc_title'                 => 'Importinstellingen (2/4) - Algemene importinstellingen',
     'job_config_uc_text'                  => 'Om je bestand goed te kunnen importeren moet je deze opties verifiëren.',
@@ -123,6 +125,7 @@ return [
     'job_config_uc_specifics_txt'         => 'Sommige banken leveren slecht geformatteerde bestanden aan. Firefly III kan deze automatisch corrigeren. Als jouw bank dergelijke bestanden levert, maar deze hier niet wordt vermeld, open dan een issue op GitHub.',
     'job_config_uc_submit'                => 'Volgende',
     'invalid_import_account'              => 'Je hebt een ongeldige betaalrekening geselecteerd om in te importeren.',
+    'import_liability_select'             => 'Passiva',
     // job configuration for Spectre:
     'job_config_spectre_login_title'      => 'Kies je login',
     'job_config_spectre_login_text'       => 'Firefly III heeft :count bestaande login(s) gevonden in je Spectre-account. Welke wil je gebruiken om van te importeren?',
@@ -263,6 +266,7 @@ return [
     'column_amount_foreign'                => 'Bedrag (in vreemde valuta)',
     'column_amount_debit'                  => 'Bedrag (debetkolom)',
     'column_amount_credit'                 => 'Bedrag (creditkolom)',
+    'column_amount_negated'                => 'Bedrag (omgekeerd)',
     'column_amount-comma-separated'        => 'Bedrag (komma as decimaalscheidingsteken)',
     'column_bill-id'                       => 'Contract (ID gelijk aan FF3)',
     'column_bill-name'                     => 'Contractnaam',

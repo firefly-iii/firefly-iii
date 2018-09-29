@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Azioni',
     'edit'                                       => 'Modifica',
     'delete'                                     => 'Elimina',
+    'split'                                      => 'Dividi',
+    'clone'                                      => 'Clona',
+    'last_seven_days'                            => 'Ultimi sette giorni',
+    'last_thirty_days'                           => 'Ultimi trenta giorni',
     'welcomeBack'                                => 'La tua situazione finanziaria',
     'everything'                                 => 'Tutto',
     'today'                                      => 'oggi',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Collega ad una bolletta...',
     'rule_action_link_to_bill'                   => 'Collegamento alla bolletta ":action_value"',
     'rule_action_set_notes'                      => 'Imposta le note su ":action_value"',
+    'rule_action_convert_deposit_choice'         => 'Converti la transazione in un deposito',
+    'rule_action_convert_deposit'                => 'Converti la transazione in un deposito da ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Converti la transazione in un prelievo',
+    'rule_action_convert_withdrawal'             => 'Converti la transazione in un prelievo da ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Converti la transazione in un trasferimento',
+    'rule_action_convert_transfer'               => 'Converti la transazione in un trasferimento con ":action_value"',
 
     'rules_have_read_warning'                 => 'Hai letto l\'avvertimento?',
     'apply_rule_warning'                      => 'Avvertenza: l\'esecuzione di una regola (gruppo) su una vasta selezione di transazioni potrebbe richiedere anni e potrebbe scadere. In caso affermativo, la regola (gruppo) verrà applicata solo a un sottoinsieme sconosciuto delle tue transazioni. Questo potrebbe lasciare la tua amministrazione finanziaria a brandelli. Fate attenzione.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Guadagnati e spesi per categoria',
     'out_per_budget'                          => 'Speso per budget',
     'select_expense_revenue'                  => 'Seleziona conto spese/entrate',
+    'multi_currency_report_sum'               => 'Poiché questo elenco contiene conti con più valute, le somme potrebbero non avere senso. Il rapporto ripiegherà sempre sulla valuta predefinita.',
+    'sum_in_default_currency'                 => 'La somma sarà sempre nella tua valuta predefinita.',
 
     // charts:
     'chart'                                   => 'Grafico',

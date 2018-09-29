@@ -87,6 +87,7 @@ return [
     'max.array'                      => ':attribute tidak boleh memiliki lebih dari item :max.',
     'mimes'                          => ':attribute harus jenis file: :values.',
     'min.numeric'                    => ':attribute harus sedikitnya :min.',
+    'lte.numeric'                    => 'The :attribute must be less than or equal :value.',
     'min.file'                       => 'Atribut harus minimal kilobyte :min.',
     'min.string'                     => ':attribute harus minimal karakter :min.',
     'min.array'                      => ':attribute harus minimal item :min.',

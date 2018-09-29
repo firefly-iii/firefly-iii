@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Akcje',
     'edit'                                       => 'Modyfikuj',
     'delete'                                     => 'Usuń',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'Co jest grane?',
     'everything'                                 => 'Wszystko',
     'today'                                      => 'dzisiaj',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Powiąż z rachunkiem..',
     'rule_action_link_to_bill'                   => 'Powiąż z rachunkiem ":action_value"',
     'rule_action_set_notes'                      => 'Ustaw notatki na ":action_value"',
+    'rule_action_convert_deposit_choice'         => 'Convert the transaction to a deposit',
+    'rule_action_convert_deposit'                => 'Convert the transaction to a deposit from ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Convert the transaction to a withdrawal',
+    'rule_action_convert_withdrawal'             => 'Convert the transaction to a withdrawal to ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Convert the transaction to a transfer',
+    'rule_action_convert_transfer'               => 'Convert the transaction to a transfer with ":action_value"',
 
     'rules_have_read_warning'                 => 'Czy przeczytałeś ostrzeżenie?',
     'apply_rule_warning'                      => 'Ostrzeżenie: uruchomienie reguły (lub grupy reguł) na dużej liczbie transakcji może potrwać wieki i może przekroczyć limit czasu. W takiej sytuacji reguła (lub grupa reguł) zostanie zastosowana do nieznanego podzbioru Twoich transakcji. To może zostawić Twoją administrację finansową w strzępach. Proszę, bądź ostrożny.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Zarobione oraz wydane wg kategorii',
     'out_per_budget'                          => 'Wydane wg budżetu',
     'select_expense_revenue'                  => 'Wybierz konto wydatków/przychodów',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Wykres',

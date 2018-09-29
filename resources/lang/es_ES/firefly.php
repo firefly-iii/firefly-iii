@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Acciones',
     'edit'                                       => 'Editar',
     'delete'                                     => 'Eliminar',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => '¿Qué está pasando?',
     'everything'                                 => 'Todo',
     'today'                                      => 'hoy',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Enlace a una factura..',
     'rule_action_link_to_bill'                   => 'Enlace a una factura ":action_value"',
     'rule_action_set_notes'                      => 'Establecer notas para:action_value',
+    'rule_action_convert_deposit_choice'         => 'Convert the transaction to a deposit',
+    'rule_action_convert_deposit'                => 'Convert the transaction to a deposit from ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Convert the transaction to a withdrawal',
+    'rule_action_convert_withdrawal'             => 'Convert the transaction to a withdrawal to ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Convert the transaction to a transfer',
+    'rule_action_convert_transfer'               => 'Convert the transaction to a transfer with ":action_value"',
 
     'rules_have_read_warning'                 => '¿Has leído la advertencia?',
     'apply_rule_warning'                      => 'Advertencia: Ejecutando una regla (grupo) en una gran selección de transacciones podría tomar años, y podría exceder el tiempo de espera. Si lo hace, la regla (grupo) solo se aplicara a un subconjunto desconocido de sus transacciones. Esto podría dejar a su administración financiera en ruinas. por favor tenga cuidado.',
@@ -1010,6 +1020,8 @@ return [
     'in_out_per_category'                     => 'Ganado y gastado por categoría',
     'out_per_budget'                          => 'Gasto por presupuesto',
     'select_expense_revenue'                  => 'Seleccione cuenta de gastos/ingresos',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Grafico',

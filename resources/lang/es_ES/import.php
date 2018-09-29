@@ -37,6 +37,7 @@ return [
     // index page:
     'general_index_title'                 => 'Importar un archivo',
     'general_index_intro'                 => 'Welcome to Firefly III\'s import routine. There are a few ways of importing data into Firefly III, displayed here as buttons.',
+
     // import provider strings (index):
     'button_fake'                         => 'Fake an import',
     'button_file'                         => 'Importar un archivo',
@@ -110,6 +111,7 @@ return [
     'job_config_file_upload_type_help'    => 'Select the type of file you will upload',
     'job_config_file_upload_submit'       => 'Upload files',
     'import_file_type_csv'                => 'CSV (valores separados por comas)',
+    'import_file_type_ofx'                => 'OFX',
     'file_not_utf8'                       => 'The file you have uploaded is not encoded as UTF-8 or ASCII. Firefly III cannot handle such files. Please use Notepad++ or Sublime to convert your file to UTF-8.',
     'job_config_uc_title'                 => 'Import setup (2/4) - Basic file setup',
     'job_config_uc_text'                  => 'To be able to import your file correctly, please validate the options below.',
@@ -123,6 +125,7 @@ return [
     'job_config_uc_specifics_txt'         => 'Some banks deliver badly formatted files. Firefly III can fix those automatically. If your bank delivers such files but it\'s not listed here, please open an issue on GitHub.',
     'job_config_uc_submit'                => 'Continue',
     'invalid_import_account'              => 'You have selected an invalid account to import into.',
+    'import_liability_select'             => 'Liability',
     // job configuration for Spectre:
     'job_config_spectre_login_title'      => 'Choose your login',
     'job_config_spectre_login_text'       => 'Firefly III has found :count existing login(s) in your Spectre account. Which one would you like to use to import from?',
@@ -263,6 +266,7 @@ return [
     'column_amount_foreign'                => 'Monto ( en moneda extranjera)',
     'column_amount_debit'                  => 'Cantidad (columna de débito)',
     'column_amount_credit'                 => 'Cantidad (columna de crédito)',
+    'column_amount_negated'                => 'Amount (negated column)',
     'column_amount-comma-separated'        => 'Cantidad (coma como decimal separador)',
     'column_bill-id'                       => 'ID factura (coincide FF3)',
     'column_bill-name'                     => 'Nombre de la factura',

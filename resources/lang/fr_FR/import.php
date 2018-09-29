@@ -37,6 +37,7 @@ return [
     // index page:
     'general_index_title'                 => 'Importer un fichier',
     'general_index_intro'                 => 'Bienvenue dans la routine d\'importation de Firefly III. Il existe différentes façons d\'importer des données dans Firefly III, affichées ici sous forme de boutons.',
+
     // import provider strings (index):
     'button_fake'                         => 'Simuler une importation',
     'button_file'                         => 'Importer un fichier',
@@ -110,6 +111,7 @@ return [
     'job_config_file_upload_type_help'    => 'Sélectionnez le type de fichier que vous allez télécharger',
     'job_config_file_upload_submit'       => 'Envoyer des fichiers',
     'import_file_type_csv'                => 'CSV (valeurs séparées par des virgules)',
+    'import_file_type_ofx'                => 'OFX',
     'file_not_utf8'                       => 'Le fichier téléchargé n\'est pas encodé en UTF-8 ou en ASCII. Firefly ne peut pas gérer un tel fichier. Veuillez utiliser Notepad++ ou Sublime Text pour convertir votre fichier en UTF-8.',
     'job_config_uc_title'                 => 'Configuration de l\'importation (2/4) - Configuration du fichier importé',
     'job_config_uc_text'                  => 'Pour pouvoir importer votre fichier correctement, veuillez valider les options ci-dessous.',
@@ -123,6 +125,7 @@ return [
     'job_config_uc_specifics_txt'         => 'Certaines banques délivrent des fichiers mal formatés. Firefly III peut les corriger automatiquement. Si votre banque délivre de tels fichiers mais qu\'elle n\'est pas listée ici, merci d\'ouvrir une demande sur GitHub.',
     'job_config_uc_submit'                => 'Continuer',
     'invalid_import_account'              => 'Vous avez sélectionné un compte non valide pour l\'importation.',
+    'import_liability_select'             => 'Passif',
     // job configuration for Spectre:
     'job_config_spectre_login_title'      => 'Choisissez votre identifiant',
     'job_config_spectre_login_text'       => 'Firefly III a trouvé :count identifiant·s dans votre compte Spectre. Lequel voulez-vous utiliser pour importer des données ?',
@@ -263,6 +266,7 @@ return [
     'column_amount_foreign'                => 'Montant (en devise étrangère)',
     'column_amount_debit'                  => 'Montant (colonne débit)',
     'column_amount_credit'                 => 'Montant (colonne de crédit)',
+    'column_amount_negated'                => 'Montant (colonne aux valeurs opposées)',
     'column_amount-comma-separated'        => 'Montant (virgule comme séparateur décimal)',
     'column_bill-id'                       => 'Facture (ID correspondant à FF3)',
     'column_bill-name'                     => 'Nom de la facture',

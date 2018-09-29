@@ -37,6 +37,7 @@ return [
     // index page:
     'general_index_title'                 => 'Datei importieren',
     'general_index_intro'                 => 'Willkommen beim Importassistenten von Firefly III. Es gibt einige Möglichkeiten, Daten in Firefly III zu importieren, die hier als Schaltflächen angezeigt werden.',
+
     // import provider strings (index):
     'button_fake'                         => 'Importfunktion testen',
     'button_file'                         => 'Datei importieren',
@@ -110,6 +111,7 @@ return [
     'job_config_file_upload_type_help'    => 'Typ der hochzuladenden Datei auswählen',
     'job_config_file_upload_submit'       => 'Dateien hochladen',
     'import_file_type_csv'                => 'CSV (Kommagetrennte Werte)',
+    'import_file_type_ofx'                => 'OFX',
     'file_not_utf8'                       => 'Die hochgeladene Datei ist nicht als UTF-8 oder ASCII kodiert. Firefly III kann mit solchen Dateien nicht umgehen. Bitte verwenden Sie „Notepad++” oder „Sublime”, um Ihre Datei in UTF-8 zu konvertieren.',
     'job_config_uc_title'                 => 'Import einrichten (2/4) • Allgemeine Datei-Einstellungen',
     'job_config_uc_text'                  => 'Um Ihre Datei korrekt importieren zu können, überprüfen Sie bitte die folgenden Optionen.',
@@ -123,6 +125,7 @@ return [
     'job_config_uc_specifics_txt'         => 'Einige Banken liefern schlecht formatierte Dateien. Firefly III kann diese automatisch korrigieren. Wenn Ihre Bank solche Dateien liefert, diese aber hier nicht aufgeführt sind, öffnen Sie bitte einen Fehlerbericht auf GitHub.',
     'job_config_uc_submit'                => 'Fortsetzen',
     'invalid_import_account'              => 'Sie haben ein ungültiges Konto zum Importieren ausgewählt.',
+    'import_liability_select'             => 'Verbindlichkeit',
     // job configuration for Spectre:
     'job_config_spectre_login_title'      => 'Wählen Sie Ihre Zugangsdaten',
     'job_config_spectre_login_text'       => 'Firefly III hat :count bestehende Zugangsdaten in Ihrem Spectre-Konto gefunden. Von welchem möchten Sie importieren?',
@@ -263,6 +266,7 @@ return [
     'column_amount_foreign'                => 'Betrag (in Fremdwährung)',
     'column_amount_debit'                  => 'Betrag (Ausgabe)',
     'column_amount_credit'                 => 'Betrag (Guthaben-Spalte)',
+    'column_amount_negated'                => 'Betrag (Spalte mit negativen Werten)',
     'column_amount-comma-separated'        => 'Betrag (Komma als Dezimaltrennzeichen)',
     'column_bill-id'                       => 'Rechnung (ID übereinstimmend mit FF3)',
     'column_bill-name'                     => 'Rechnungsname',

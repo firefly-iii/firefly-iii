@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Ações',
     'edit'                                       => 'Editar',
     'delete'                                     => 'Apagar',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'O que está passando?',
     'everything'                                 => 'Tudo',
     'today'                                      => 'hoje',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Vincular a uma fatura..',
     'rule_action_link_to_bill'                   => 'Vincular à fatura ":action_value"',
     'rule_action_set_notes'                      => 'Defina notas para ":action_value"',
+    'rule_action_convert_deposit_choice'         => 'Convert the transaction to a deposit',
+    'rule_action_convert_deposit'                => 'Convert the transaction to a deposit from ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Convert the transaction to a withdrawal',
+    'rule_action_convert_withdrawal'             => 'Convert the transaction to a withdrawal to ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Convert the transaction to a transfer',
+    'rule_action_convert_transfer'               => 'Convert the transaction to a transfer with ":action_value"',
 
     'rules_have_read_warning'                 => 'Você leu o aviso?',
     'apply_rule_warning'                      => 'Aviso: executar uma regra (grupo) em uma grande seleção de transações pode levar tempo, e pode atingir um tempo limite. Se o fizer, a regra (grupo) só será aplicada a um subconjunto desconhecido de suas transações. Isso pode deixar a sua administração financeira aos pedaços. Por favor, seja cuidadoso.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Ganhou e gastou por categoria',
     'out_per_budget'                          => 'Gasto por orçamento',
     'select_expense_revenue'                  => 'Selecione conta de despesa/receita',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Gráfico',

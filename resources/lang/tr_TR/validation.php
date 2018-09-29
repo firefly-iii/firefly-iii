@@ -87,6 +87,7 @@ return [
     'max.array'                      => ':attribute :max öğeden daha fazlasına sahip olamaz.',
     'mimes'                          => ':attribute :values türünde bir dosya olmalı.',
     'min.numeric'                    => ':attribute en az :min olmalıdır.',
+    'lte.numeric'                    => 'The :attribute must be less than or equal :value.',
     'min.file'                       => ':attribute en az :min kilobayt olmalıdır.',
     'min.string'                     => ':attribute en az :min karakter olmalıdır.',
     'min.array'                      => ':attribute en az :min öğe içermelidir.',
