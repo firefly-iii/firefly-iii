@@ -36,7 +36,9 @@ $(function () {
     Respond to changes in balance statements.
      */
     $('input[type="number"]').on('change', function () {
+        console.log('On type=number change.');
         if (reconcileStarted) {
+            console.log('Reconcile has started.');
             calculateBalanceDifference();
             difference = balanceDifference - selectedAmount;
             updateDifference();
@@ -49,7 +51,9 @@ $(function () {
     Respond to changes in the date range.
      */
     $('input[type="date"]').on('change', function () {
+        console.log('On type=date change.');
         if (reconcileStarted) {
+            console.log('Reconcile has started.');
             // hide original instructions.
             $('.select_transactions_instruction').hide();
 
@@ -68,15 +72,24 @@ $(function () {
 });
 
 function storeReconcile() {
+    console.log('in storeReconcile()');
     // get modal HTML:
     var ids = [];
     $.each($('.reconcile_checkbox:checked'), function (i, v) {
-        ids.push($(v).data('id'));
+        var obj = $(v);
+        if(obj.data('inrange') === true){
+        console.log('Added item with amount to list of checked ' + obj.val());
+        ids.push(obj.data('id'));
+        } else {
+            console.log('Ignored item with amount because is not in range ' + obj.val());
+        }
     });
     var cleared = [];
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
-        //cleared.push(obj.data('id'));
+        console.log('Added item with amount to list of cleared ' + obj.val());
+        // todo here we need to check previous transactions etc.
+        cleared.push(obj.data('id'));
     });
 
     var variables = {
@@ -100,16 +113,21 @@ function storeReconcile() {
  * @param e
  */
 function checkReconciledBox(e) {
+
     var el = $(e.target);
     var amount = parseFloat(el.val());
+    console.log('in checkReconciledBox() with amount ' + amount + ' and selected amount ' + selectedAmount);
     // if checked, add to selected amount
     if (el.prop('checked') === true && el.data('younger') === false) {
         selectedAmount = selectedAmount - amount;
+        console.log('checked = true and younger = false so selected amount = ' + selectedAmount);
     }
     if (el.prop('checked') === false && el.data('younger') === false) {
         selectedAmount = selectedAmount + amount;
+        console.log('checked = false and younger = false so selected amount = ' + selectedAmount);
     }
     difference = balanceDifference - selectedAmount;
+    console.log('Difference is now ' + difference);
     updateDifference();
 }
 
@@ -119,6 +137,7 @@ function checkReconciledBox(e) {
  * and put it in balanceDifference.
  */
 function calculateBalanceDifference() {
+    console.log('in calculateBalanceDifference()');
     var startBalance = parseFloat($('input[name="start_balance"]').val());
     var endBalance = parseFloat($('input[name="end_balance"]').val());
     balanceDifference = startBalance - endBalance;
@@ -129,6 +148,7 @@ function calculateBalanceDifference() {
  * This more or less resets the reconciliation.
  */
 function getTransactionsForRange() {
+    console.log('in getTransactionsForRange()');
     // clear out the box:
     $('#transactions_holder').empty().append($('<p>').addClass('text-center').html('<i class="fa fa-fw fa-spin fa-spinner"></i>'));
     var uri = transactionsUri.replace('%start%', $('input[name="start_date"]').val()).replace('%end%', $('input[name="end_date"]').val());
@@ -138,16 +158,35 @@ function getTransactionsForRange() {
     $.getJSON(uri).done(placeTransactions);
 }
 
+// /**
+//  * Loop over all transactions that have already been cleared (in the range)
+//  * and add this to the selectedAmount.
+//  *
+//  */
+// function includeClearedTransactions() {
+//     $.each($('input[class="cleared"]'), function (i, v) {
+//         var obj = $(v);
+//         if (obj.data('younger') === false) {
+//             //selectedAmount = selectedAmount - parseFloat(obj.val());
+//         }
+//     });
+// }
+
 /**
  * Loop over all transactions that have already been cleared (in the range)
  * and add this to the selectedAmount.
  *
  */
 function includeClearedTransactions() {
+    console.log('in includeClearedTransactions()');
     $.each($('input[class="cleared"]'), function (i, v) {
         var obj = $(v);
-        if (obj.data('younger') === false) {
-            //selectedAmount = selectedAmount - parseFloat(obj.val());
+        var amount = parseFloat(obj.val());
+        if (obj.data('inrange') === true) {
+            console.log('Amount is ' + amount + '  and inrange = true');
+            selectedAmount = selectedAmount - amount;
+        } else {
+            console.log('Amount is ' + amount + '  but inrange = FALSE so ignore.');
         }
     });
 }
@@ -157,6 +196,7 @@ function includeClearedTransactions() {
  * @param data
  */
 function placeTransactions(data) {
+    console.log('in placeTransactions()');
     $('#transactions_holder').empty().html(data.html);
     selectedAmount = 0;
     // update start + end balance when user has not touched them.
@@ -188,6 +228,7 @@ function placeTransactions(data) {
  * @returns {boolean}
  */
 function startReconcile() {
+    console.log('in startReconcile()');
     reconcileStarted = true;
 
     // hide the start button.
@@ -209,6 +250,7 @@ function startReconcile() {
 }
 
 function updateDifference() {
+    console.log('in updateDifference()');
     var addClass = 'text-info';
     if (difference > 0) {
         addClass = 'text-success';

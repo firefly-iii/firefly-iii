@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use Exception;
+use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
@@ -1459,6 +1462,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $bill = $this->user()->bills()->first();
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -1500,6 +1509,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $bill = $this->user()->bills()->first();
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -1539,6 +1554,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -1581,6 +1602,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -1619,6 +1646,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -1660,6 +1693,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('findByName')->andReturn($account);
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
 
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -1700,6 +1739,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -1738,6 +1783,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -1778,6 +1830,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -1817,6 +1876,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -1856,6 +1922,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -1891,6 +1964,12 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1935,6 +2014,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'        => 'Some transaction #' . random_int(1, 10000),
             'date'               => '2018-01-01',
@@ -1981,6 +2067,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $name = 'Some new category #' . random_int(1, 10000);
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -2021,6 +2113,14 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+
         $name = 'New opposing account #' . random_int(1, 10000);
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
@@ -2061,6 +2161,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2100,6 +2206,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2140,6 +2253,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2179,6 +2298,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $piggy = $this->user()->piggyBanks()->first();
         $data  = [
             'description'     => 'Some deposit #' . random_int(1, 10000),
@@ -2220,6 +2346,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $piggy = $this->user()->piggyBanks()->first();
         $data  = [
             'description'   => 'Some transfer #' . random_int(1, 10000),
@@ -2260,6 +2392,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $piggy = $this->user()->piggyBanks()->first();
         $data  = [
             'description'     => 'Some transfer #' . random_int(1, 10000),
@@ -2297,6 +2435,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2335,6 +2480,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2387,6 +2539,13 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        try {
+            $this->expectsEvents(StoredTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2434,6 +2593,13 @@ class TransactionControllerTest extends TestCase
                 ],
             ],
         ];
+
+        try {
+            $this->expectsEvents(UpdatedTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
         $deposit     = $this->getRandomDeposit();
         $transaction = $deposit->transactions()->first();
         $repository->shouldReceive('setUser');
@@ -2459,6 +2625,12 @@ class TransactionControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
+
+        try {
+            $this->expectsEvents(UpdatedTransactionJournal::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
 
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),

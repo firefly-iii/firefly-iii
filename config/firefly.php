@@ -30,6 +30,9 @@ use FireflyIII\TransactionRules\Actions\AppendNotes;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
 use FireflyIII\TransactionRules\Actions\ClearCategory;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
+use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
+use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
+use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
@@ -88,9 +91,9 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'               => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                  => '4.7.6.2',
-    'api_version'              => '0.7',
-    'db_version'               => 4,
+    'version'                  => '4.7.7',
+    'api_version'              => '0.8',
+    'db_version'               => 5,
     'maxUploadSize'            => 15242880,
     'allowedMimes'             => [
         /* plain files */
@@ -367,6 +370,9 @@ return [
         'prepend_notes'           => PrependNotes::class,
         'clear_notes'             => ClearNotes::class,
         'link_to_bill'            => LinkToBill::class,
+        'convert_withdrawal'      => ConvertToWithdrawal::class,
+        'convert_deposit'         => ConvertToDeposit::class,
+        'convert_transfer'        => ConvertToTransfer::class,
     ],
     'rule-actions-text'        => [
         'set_category',

@@ -174,6 +174,7 @@ class BillControllerTest extends TestCase
         $collection = new Collection([$bill]);
         $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
         $repository->shouldReceive('setUser');
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
         $repository->shouldReceive('getRulesForBills')->andReturn([]);
 
@@ -259,12 +260,14 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('getOverallAverage')->andReturn('0');
         $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection);
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setBills')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
+
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
@@ -276,6 +279,8 @@ class BillControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+        $response->assertSee('Hi there');
+
     }
 
     /**

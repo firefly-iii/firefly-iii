@@ -87,6 +87,7 @@ return [
     'max.array'                      => 'Le tableau :attribute ne peut avoir plus de :max éléments.',
     'mimes'                          => 'Le champ :attribute doit être un fichier de type : :values.',
     'min.numeric'                    => 'La valeur de :attribute doit être supérieure à :min.',
+    'lte.numeric'                    => ':attribute doit être inférieur ou égal à :value.',
     'min.file'                       => 'Le fichier :attribute doit être plus gros que :min kilo-octets.',
     'min.string'                     => 'Le texte :attribute doit contenir au moins :min caractères.',
     'min.array'                      => 'Le tableau :attribute doit avoir au moins :min éléments.',

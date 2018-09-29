@@ -29,6 +29,7 @@ use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  *
@@ -82,12 +83,10 @@ class CreateController extends Controller
         $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
         $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
         $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
-        $creditCard     = $this->repository->getAccountTypeByType(AccountType::CREDITCARD);
         $liabilityTypes = [
             $debt->id       => (string)trans('firefly.account_type_' . AccountType::DEBT),
             $loan->id       => (string)trans('firefly.account_type_' . AccountType::LOAN),
             $mortgage->id   => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
-            $creditCard->id => (string)trans('firefly.account_type_' . AccountType::CREDITCARD),
         ];
         asort($liabilityTypes);
 
@@ -131,6 +130,8 @@ class CreateController extends Controller
         $account = $this->repository->store($data);
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         app('preferences')->mark();
+
+
 
         // update preferences if necessary:
         $frontPage = app('preferences')->get('frontPageAccounts', [])->data;

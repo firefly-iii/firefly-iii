@@ -75,6 +75,7 @@ class BillTransformerTest extends TestCase
         // mock stuff
         $repository = $this->mock(BillRepositoryInterface::class);
         $repository->shouldReceive('setUser')->andReturnSelf();
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         $repository->shouldReceive('getPaidDatesInRange')->andReturn(new Collection([new Carbon('2018-01-02')]));
         $bill       = Bill::create(
             [

@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Tindakan',
     'edit'                                       => 'Edit',
     'delete'                                     => 'Menghapus',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'Apa yang sedang diputar?',
     'everything'                                 => 'Segala sesuatu',
     'today'                                      => 'hari ini',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Link to a bill..',
     'rule_action_link_to_bill'                   => 'Link to bill ":action_value"',
     'rule_action_set_notes'                      => 'Tetapkan catatan ke ":action_value"',
+    'rule_action_convert_deposit_choice'         => 'Convert the transaction to a deposit',
+    'rule_action_convert_deposit'                => 'Convert the transaction to a deposit from ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Convert the transaction to a withdrawal',
+    'rule_action_convert_withdrawal'             => 'Convert the transaction to a withdrawal to ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Convert the transaction to a transfer',
+    'rule_action_convert_transfer'               => 'Convert the transaction to a transfer with ":action_value"',
 
     'rules_have_read_warning'                 => 'Sudahkah anda membaca peringatannya?',
     'apply_rule_warning'                      => 'Peringatan: menjalankan aturan (grup) pada banyak pilihan transaksi bisa memakan waktu lama, dan bisa time-out. Jika ya, aturan (grup) hanya akan diterapkan ke subkumpulan transaksi yang tidak diketahui. Ini mungkin akan membuat administrasi keuangan Anda berantakan. Tolong hati-hati.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Diperoleh dan dibelanjakan per kategori',
     'out_per_budget'                          => 'Menghabiskan per anggaran',
     'select_expense_revenue'                  => 'Pilih akun biaya / pendapatan',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Grafik',

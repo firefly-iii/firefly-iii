@@ -173,6 +173,7 @@ class StageImportDataHandler
             'external_id'        => $paymentId,
             'notes'              => null,
             'bunq_payment_id'    => $paymentId,
+            'original-source'    => sprintf('bunq-v%s', config('firefly.version')),
             'transactions'       => [
                 // single transaction:
                 [

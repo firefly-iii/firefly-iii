@@ -27,8 +27,9 @@ use FireflyIII\Import\Mapper\Tags;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class TagsTest
  */

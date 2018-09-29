@@ -87,6 +87,7 @@ return [
     'max.array'                      => 'The :attribute may not have more than :max items.',
     'mimes'                          => 'The :attribute must be a file of type: :values.',
     'min.numeric'                    => 'The :attribute must be at least :min.',
+    'lte.numeric'                    => 'The :attribute must be less than or equal :value.',
     'min.file'                       => 'The :attribute must be at least :min kilobytes.',
     'min.string'                     => 'The :attribute must be at least :min characters.',
     'min.array'                      => 'The :attribute must have at least :min items.',

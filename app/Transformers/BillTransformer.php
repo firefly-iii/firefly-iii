@@ -44,16 +44,19 @@ class BillTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['attachments', 'transactions', 'user', 'notes', 'rules'];
+    protected $availableIncludes = ['attachments', 'transactions', 'user', 'rules'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['notes', 'rules'];
+    protected $defaultIncludes = ['rules'];
 
     /** @var ParameterBag */
     protected $parameters;
+
+    /** @var BillRepositoryInterface */
+    private $repository;
 
     /**
      * BillTransformer constructor.
@@ -65,6 +68,7 @@ class BillTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
+        $this->repository = app(BillRepositoryInterface::class);
     }
 
     /**
@@ -83,20 +87,6 @@ class BillTransformer extends TransformerAbstract
     }
 
     /**
-     * Attach the notes.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Bill $bill
-     *
-     * @return FractalCollection
-     */
-    public function includeNotes(Bill $bill): FractalCollection
-    {
-        return $this->collection($bill->notes, new NoteTransformer($this->parameters), 'notes');
-    }
-
-    /**
      * Attach the rules.
      *
      * @codeCoverageIgnore
@@ -107,11 +97,9 @@ class BillTransformer extends TransformerAbstract
      */
     public function includeRules(Bill $bill): FractalCollection
     {
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $repository->setUser($bill->user);
+        $this->repository->setUser($bill->user);
         // add info about rules:
-        $rules = $repository->getRulesForBill($bill);
+        $rules = $this->repository->getRulesForBill($bill);
 
         return $this->collection($rules, new RuleTransformer($this->parameters), 'rules');
     }
@@ -167,7 +155,8 @@ class BillTransformer extends TransformerAbstract
     {
         $paidData = $this->paidData($bill);
         $payDates = $this->payDates($bill);
-        $data     = [
+        $this->repository->setUser($bill->user);
+        $data = [
             'id'                  => (int)$bill->id,
             'updated_at'          => $bill->updated_at->toAtomString(),
             'created_at'          => $bill->created_at->toAtomString(),
@@ -184,6 +173,7 @@ class BillTransformer extends TransformerAbstract
             'active'              => $bill->active,
             'attachments_count'   => $bill->attachments()->count(),
             'pay_dates'           => $payDates,
+            'notes'               => $this->repository->getNoteText($bill),
             'paid_dates'          => $paidData['paid_dates'],
             'next_expected_match' => $paidData['next_expected_match'],
             'links'               => [

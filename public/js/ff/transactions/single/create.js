@@ -60,7 +60,7 @@ $(document).ready(function () {
 
 
     // overrule click on currency:
-    if(useAccountCurrency === false) {
+    if (useAccountCurrency === false) {
         $('.currency-option[data-id="' + overruleCurrency + '"]').click();
         $('[data-toggle="dropdown"]').parent().removeClass('open');
     }
@@ -136,9 +136,31 @@ function getExchangeInstructions() {
  *
  */
 function updateDescription() {
-    $.getJSON('json/transaction-journals/' + what).done(function (data) {
-        $('input[name="description"]').typeahead('destroy').typeahead({source: data, autoSelect: false});
-    });
+
+    // do description auto complete:
+    var journalNames = new Bloodhound({
+                                          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                          prefetch: {
+                                              url: 'json/transaction-journals/' + what,
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
+                                          },
+                                          remote: {
+                                              url: 'json/transaction-journals/' + what + '?search=%QUERY',
+                                              wildcard: '%QUERY',
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
+                                          }
+                                      });
+    journalNames.initialize();
+    $('input[name="description"]').typeahead('destroy').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
     $('#ffInput_description').focus();
 }
 

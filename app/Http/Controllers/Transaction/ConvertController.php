@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -161,8 +162,13 @@ class ConvertController extends Controller
         $errors = $this->repository->convert($journal, $destinationType, $source, $destination);
 
         if ($errors->count() > 0) {
+            Log::error('Errors while converting: ', $errors->toArray());
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
+
+        // Success? Fire rules!
+        event(new UpdatedTransactionJournal($journal));
+
 
         session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
 

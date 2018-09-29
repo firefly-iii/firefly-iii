@@ -47,7 +47,7 @@ class SecureHeaders
         $google      = '';
         $analyticsId = env('ANALYTICS_ID', '');
         if ('' !== $analyticsId) {
-            $google = 'https://www.google-analytics.com/analytics.js';
+            $google = 'www.googletagmanager.com/gtag/js'; // @codeCoverageIgnore
         }
         $csp = [
             "default-src 'none'",
@@ -57,7 +57,7 @@ class SecureHeaders
             "form-action 'self'",
             "font-src 'self'",
             "connect-src 'self'",
-            "img-src 'self' data:",
+            "img-src 'self' data: https://api.tiles.mapbox.com",
         ];
 
         $featurePolicies = [

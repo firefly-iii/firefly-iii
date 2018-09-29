@@ -38,37 +38,37 @@ echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sou
 
 # install packages.
 apt-get update
-apt-get install -y nginx php7.1-fpm php7.1-mysql php7.1-gd php7.1-cli php7.1-curl git php7.1-dev php7.1-zip php7.1-intl php7.1-dom php7.1-mbstring php7.1-bcmath mysql-server
+apt-get install -y nginx php7.2-fpm php7.2-mysql php7.2-gd php7.2-cli php7.2-curl git php7.2-dev php7.2-zip php7.2-intl php7.2-dom php7.2-mbstring php7.2-bcmath mysql-server
 service nginx stop
-service php7.1-fpm stop
+service php7.2-fpm stop
 service mysql stop
 systemctl disable nginx
-systemctl disable php7.1-fpm
+systemctl disable php7.2-fpm
 systemctl disable mysql
 
 # make php.ini display errors:
-sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/7.1/fpm/php.ini
+sed -i 's/display_errors = Off/display_errors = On/g' /etc/php/7.2/fpm/php.ini
 
-# patch /etc/php/7.1/fpm/pool.d/www.conf to not change uid/gid to www-data
+# patch /etc/php/7.2/fpm/pool.d/www.conf to not change uid/gid to www-data
 sed --in-place='' \
        --expression='s/^listen.owner = www-data/;listen.owner = www-data/' \
        --expression='s/^listen.group = www-data/;listen.group = www-data/' \
-       /etc/php/7.1/fpm/pool.d/www.conf
-# patch /etc/php/7.1/fpm/php-fpm.conf to not have a pidfile
+       /etc/php/7.2/fpm/pool.d/www.conf
+# patch /etc/php/7.2/fpm/php-fpm.conf to not have a pidfile
 sed --in-place='' \
        --expression='s/^pid =/;pid =/' \
-       /etc/php/7.1/fpm/php-fpm.conf
+       /etc/php/7.2/fpm/php-fpm.conf
 
 # move sock file to better dir:
 sed --in-place='' \
-       --expression='s/^listen = \/run\/php\/php7.1-fpm.sock/listen = \/var\/run\/php7.1-fpm.sock/' \
-       /etc/php/7.1/fpm/pool.d/www.conf
+       --expression='s/^listen = \/run\/php\/php7.2-fpm.sock/listen = \/var\/run\/php7.2-fpm.sock/' \
+       /etc/php/7.2/fpm/pool.d/www.conf
 
-# patch /etc/php/7.1/fpm/pool.d/www.conf to no clear environment variables
+# patch /etc/php/7.2/fpm/pool.d/www.conf to no clear environment variables
 # so we can pass in SANDSTORM=1 to apps
 sed --in-place='' \
        --expression='s/^;clear_env = no/clear_env=no/' \
-       /etc/php/7.1/fpm/pool.d/www.conf
+       /etc/php/7.2/fpm/pool.d/www.conf
 # patch mysql conf to not change uid, and to use /var/tmp over /tmp
 # for secure-file-priv see https://github.com/sandstorm-io/vagrant-spk/issues/195
 sed --in-place='' \

@@ -44,7 +44,8 @@ class OpposingAccounts implements MapperInterface
             [
                 AccountType::DEFAULT, AccountType::ASSET,
                 AccountType::EXPENSE, AccountType::BENEFICIARY,
-                AccountType::REVENUE,
+                AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT,
+                AccountType::CREDITCARD, AccountType::MORTGAGE,
             ]
         );
         $list              = [];
@@ -56,6 +57,10 @@ class OpposingAccounts implements MapperInterface
             $iban      = $account->iban ?? '';
             if (\strlen($iban) > 0) {
                 $name .= ' (' . $iban . ')';
+            }
+            // is a liability?
+            if (\in_array($account->accountType->type, [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE], true)) {
+                $name = trans('import.import_liability_select') . ': ' . $name;
             }
             $list[$accountId] = $name;
         }

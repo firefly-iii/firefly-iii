@@ -148,9 +148,31 @@ function getAccountId() {
  * Set the auto-complete JSON things.
  */
 function setAutocompletes() {
-    $.getJSON('json/transaction-journals/' + what).done(function (data) {
-        $('input[name="description"]').typeahead({source: data, autoSelect: false});
-    });
+
+    // do description auto complete:
+    var journalNames = new Bloodhound({
+                                          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                          queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                          prefetch: {
+                                              url: 'json/transaction-journals/' + what,
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
+                                          },
+                                          remote: {
+                                              url: 'json/transaction-journals/' + what + '?search=%QUERY',
+                                              wildcard: '%QUERY',
+                                              filter: function (list) {
+                                                  return $.map(list, function (name) {
+                                                      return {name: name};
+                                                  });
+                                              }
+                                          }
+                                      });
+    journalNames.initialize();
+    $('input[name="description"]').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
 }
 
 /**

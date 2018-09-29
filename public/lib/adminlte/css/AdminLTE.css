@@ -30,7 +30,7 @@
  * -------------------------
  */
 
-@import url('../../../css/google-fonts.css');
+@import url('../../../css/gf-source.css');
 
 html,
 body {
@@ -42,7 +42,7 @@ body {
 }
 body {
   font-family: 'Source Sans Pro', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  font-weight: 300;
+  font-weight: 400;
   overflow-x: hidden;
   overflow-y: auto;
 }

@@ -235,7 +235,7 @@ class ImportableConverter
             'payment_date'       => $this->convertDateValue($importable->meta['date-payment'] ?? null),
             'invoice_date'       => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
             'external_id'        => $importable->externalId,
-
+            'original-source'    => $importable->meta['original-source'] ?? null,
             // journal data:
             'description'        => $importable->description,
             'piggy_bank_id'      => null,

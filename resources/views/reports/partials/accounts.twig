@@ -13,10 +13,15 @@
             <td data-value="{{ account.name }}">
                 <a href="{{ route('accounts.show',account.id) }}" title="{{ account.name }}">{{ account.name }}</a>
             </td>
-            <td class="hidden-xs" data-value="{{ account.start_balance }}" style="text-align: right;">{{ account.start_balance|formatAmount }}</td>
-            <td class="hidden-xs" data-value="{{ account.end_balance }}" style="text-align: right;">{{ account.end_balance|formatAmount }}</td>
+            <td class="hidden-xs" data-value="{{ account.start_balance }}" style="text-align: right;">
+                {{ formatAmountByCurrency(account.currency, account.start_balance) }}
+            </td>
+            <td class="hidden-xs" data-value="{{ account.end_balance }}" style="text-align: right;">
+                {{ formatAmountByCurrency(account.currency, account.end_balance) }}</td>
             <td style="text-align: right;"
-                data-value="{{ (account.end_balance - account.start_balance) }}">{{ (account.end_balance - account.start_balance)|formatAmount }}</td>
+                data-value="{{ (account.end_balance - account.start_balance) }}">
+                {{ formatAmountByCurrency(account.currency, (account.end_balance - account.start_balance)) }}
+            </td>
         </tr>
     {% endfor %}
     </tbody>
@@ -27,5 +32,10 @@
         <td class="hidden-xs" style="text-align: right;">{{ accountReport.end|formatAmount }}</td>
         <td style="text-align: right;">{{ accountReport.difference|formatAmount }}</td>
     </tr>
+    {% if accountReport.currencies > 1 %}
+    <tr>
+        <td colspan="4"><small class="text-warning">{{ 'multi_currency_report_sum'|_ }}</small></td>
+    </tr>
+    {% endif %}
     </tfoot>
 </table>

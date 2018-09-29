@@ -24,13 +24,23 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\Category;
-
+use Log;
 
 /**
  * Class CategoryUpdateService
  */
 class CategoryUpdateService
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /**
      * @param Category $category
      * @param array    $data

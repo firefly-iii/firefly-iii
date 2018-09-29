@@ -22,21 +22,6 @@
 
 $(document).ready(function () {
     "use strict";
-
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
-
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            source: data,
-            afterSelect: function () {
-                this.$element.val("");
-            },
-            autoSelect: false
-        };
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
+    initTagsAC();
+    initCategoryAC();
 });

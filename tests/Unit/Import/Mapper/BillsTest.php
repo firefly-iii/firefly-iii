@@ -27,8 +27,8 @@ use FireflyIII\Import\Mapper\Bills;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class BillsTest

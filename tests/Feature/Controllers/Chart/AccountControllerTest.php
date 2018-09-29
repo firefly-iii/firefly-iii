@@ -118,7 +118,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('pieChart')->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
 
         $this->be($this->user());
@@ -147,7 +147,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('pieChart')->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
 
@@ -179,7 +179,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('pieChart')->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
 
         $this->be($this->user());
@@ -210,7 +210,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('pieChart')->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
 
@@ -269,7 +269,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('pieChart')->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
 
         $this->be($this->user());
@@ -299,7 +299,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('pieChart')->andReturn([]);
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
 

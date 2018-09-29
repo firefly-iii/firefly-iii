@@ -87,6 +87,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getPaginator')->withAnyArgs()->andReturn($paginator)->once();
         $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
 
         // test API
         $response = $this->get('/api/v1/bills');
@@ -113,6 +114,7 @@ class BillControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         // test API
         $response = $this->get('/api/v1/bills/' . $bill->id);
         $response->assertStatus(200);
@@ -140,6 +142,7 @@ class BillControllerTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('store')->andReturn($bill);
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
 
         // data to submit:
         $data = [
@@ -183,8 +186,9 @@ class BillControllerTest extends TestCase
         $repository = $this->mock(BillRepositoryInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->times(2);
+        $repository->shouldReceive('setUser')->atLeast()->times(2);
         $repository->shouldReceive('store')->andReturn($bill);
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
         // data to submit:
         $data = [
@@ -222,7 +226,8 @@ class BillControllerTest extends TestCase
         $repository = $this->mock(BillRepositoryInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->times(2);
+        $repository->shouldReceive('setUser')->atleast()->times(2);
+        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         $repository->shouldReceive('update')->andReturn($bill);
         $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
         // data to submit:

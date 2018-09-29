@@ -342,6 +342,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
      * @param UploadedFile $file
      *
      * @return MessageBag
+     * @throws FireflyException
      */
     public function storeFileUpload(ImportJob $job, string $name, UploadedFile $file): MessageBag
     {
@@ -374,6 +375,12 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->save();
         $fileObject = $file->openFile('r');
         $fileObject->rewind();
+
+
+        if(0 === $file->getSize()) {
+            throw new FireflyException('Cannot upload empty or non-existent file.');
+        }
+
         $content   = $fileObject->fread($file->getSize());
         $encrypted = Crypt::encrypt($content);
         $this->uploadDisk->put($attachment->fileName(), $encrypted);

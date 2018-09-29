@@ -31,7 +31,7 @@ use FireflyIII\Models\TransactionJournal;
 interface ActionInterface
 {
     /**
-     * TriggerInterface constructor.
+     * ActionInterface constructor.
      *
      * @param RuleAction $action
      */

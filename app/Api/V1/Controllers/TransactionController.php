@@ -25,6 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\TransactionRequest;
+use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -192,6 +194,8 @@ class TransactionController extends Controller
         $data['user'] = auth()->user()->id;
         $journal      = $repository->store($data);
 
+        event(new StoredTransactionJournal($journal, 0));
+
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -240,6 +244,8 @@ class TransactionController extends Controller
         $manager      = new Manager();
         $baseUrl      = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        event(new UpdatedTransactionJournal($journal));
 
         // add include parameter:
         $include = $request->get('include') ?? '';

@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Acties',
     'edit'                                       => 'Wijzig',
     'delete'                                     => 'Verwijder',
+    'split'                                      => 'Splitsen',
+    'clone'                                      => 'Dupliceren',
+    'last_seven_days'                            => 'Laatste zeven dagen',
+    'last_thirty_days'                           => 'Laatste dertig dagen',
     'welcomeBack'                                => 'Hoe staat het er voor?',
     'everything'                                 => 'Alles',
     'today'                                      => 'vandaag',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Link naar een contract..',
     'rule_action_link_to_bill'                   => 'Link naar contract ":action_value"',
     'rule_action_set_notes'                      => 'Verander notitie in ":action_value"',
+    'rule_action_convert_deposit_choice'         => 'Verander de transactie in inkomsten',
+    'rule_action_convert_deposit'                => 'Verander de transactie in inkomsten van ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Verander de transactie in een uitgave',
+    'rule_action_convert_withdrawal'             => 'Verander de transactie in een uitgave bij ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Verander de transactie in een overschrijving',
+    'rule_action_convert_transfer'               => 'Verander de transactie in een overschrijving met ":action_value"',
 
     'rules_have_read_warning'                 => 'Heb je de waarschuwing gelezen?',
     'apply_rule_warning'                      => 'Let op! Het kan heel lang duren voor een regel(groep) is toegepast op een grote selectie transacties. Er kan een time-out optreden. Als dat gebeurt is de regel(groep) niet toegepast op alle transacties, en dat kan je administratie behoorlijk verprutsen. Wees dus voorzichtig.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Verdiend en uitgegeven per categorie',
     'out_per_budget'                          => 'Uitgaven per budget',
     'select_expense_revenue'                  => 'Selecteer debiteur+crediteur',
+    'multi_currency_report_sum'               => 'Omdat deze tabel rekeningen met diverse valuta bevat, kan het zijn dat de optelsommen nergens op slaan. De pagina valt altijd terug op je standaardvaluta.',
+    'sum_in_default_currency'                 => 'Deze lijst is altijd in je standaardvaluta.',
 
     // charts:
     'chart'                                   => 'Diagram',

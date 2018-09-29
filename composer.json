@@ -46,7 +46,7 @@
     }
   ],
   "require": {
-    "php": ">=7.1.0",
+    "php": ">=7.2.0",
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-gd": "*",
@@ -58,9 +58,9 @@
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
-    "laravel/framework": "5.6.*",
-    "laravel/passport": "^5.0",
-    "laravelcollective/html": "5.6.*",
+    "laravel/framework": "5.7.*",
+    "laravel/passport": "^7.0",
+    "laravelcollective/html": "5.7.*",
     "league/commonmark": "0.*",
     "league/csv": "9.*",
     "league/fractal": "^0.17.0",
@@ -74,9 +74,9 @@
     "filp/whoops": "2.*",
     "fzaninotto/faker": "1.*",
     "johnkary/phpunit-speedtrap": "^3.0",
-    "mockery/mockery": "^1.0",
+    "mockery/mockery": "1.*",
     "php-coveralls/php-coveralls": "^2.0",
-    "phpunit/phpunit": "~7.0",
+    "phpunit/phpunit": "7.*",
     "roave/security-advisories": "dev-master"
   },
   "autoload": {
@@ -112,13 +112,13 @@
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
     ],
     "post-update-cmd": [
-      "php artisan firefly:upgrade-database",
-      "php artisan firefly:verify",
-      "php artisan firefly:instructions update",
-      "php artisan passport:install"
+      "@php artisan firefly:upgrade-database",
+      "@php artisan firefly:verify",
+      "@php artisan firefly:instructions update",
+      "@php artisan passport:install"
     ],
     "post-install-cmd": [
-      "php artisan firefly:instructions install"
+      "@php artisan firefly:instructions install"
     ]
   },
   "config": {

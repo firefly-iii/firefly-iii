@@ -47,39 +47,18 @@ function runModernizer() {
  */
 function setCommonAutocomplete() {
     console.log('In setCommonAutoComplete()');
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false,
-            },
-            autoSelect: false,
-        };
 
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
+    // do destination name (expense accounts):
+    initExpenseAC();
 
+    // do source name (revenue accounts):
+    initRevenueAC();
 
-    if ($('input[name="destination_name"]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_name"]').typeahead({source: data, autoSelect: false});
-        });
-    }
+    // do categories auto complete:
+    initCategoryAC();
 
-    if ($('input[name="source_name"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_name"]').typeahead({source: data, autoSelect: false});
-        });
-    }
-
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
+    // do tags auto complete:
+    initTagsAC();
 }
 
 /**
@@ -108,9 +87,9 @@ function selectsForeignCurrency() {
 
         // both holders are shown to the user:
         $('#exchange_rate_instruction_holder').show();
-        if(what !== 'transfer') {
+        if (what !== 'transfer') {
             console.log('Show native amount holder.');
-        $('#native_amount_holder').show();
+            $('#native_amount_holder').show();
         }
 
         // if possible the amount is already exchanged for the foreign currency

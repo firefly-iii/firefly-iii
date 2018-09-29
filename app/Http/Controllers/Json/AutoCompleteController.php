@@ -36,8 +36,10 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 /**
+ * TODO refactor so each auto-complete thing is a function call because lots of code duplication.
  * Class AutoCompleteController.
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
@@ -49,18 +51,40 @@ class AutoCompleteController extends Controller
     /**
      * Returns a JSON list of all accounts.
      *
+     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function allAccounts(AccountRepositoryInterface $repository): JsonResponse
+    public function allAccounts(Request $request, AccountRepositoryInterface $repository): JsonResponse
     {
-        $return = array_unique(
-            $repository->getAccountsByType(
-                [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]
-            )->pluck('name')->toArray()
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-all-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
+        $return = array_values(
+            array_unique(
+                $repository->getAccountsByType(
+                    [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET]
+                )->pluck('name')->toArray()
+            )
         );
-        sort($return);
+        if ('' !== $search) {
+            $return = array_values(
+                array_filter(
+                    $return, function (string $value) use ($search) {
+                    return !(false === stripos($value, $search));
+                }, ARRAY_FILTER_USE_BOTH
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -68,15 +92,86 @@ class AutoCompleteController extends Controller
     /**
      * List of all journals.
      *
+     * @param Request                       $request
      * @param TransactionCollectorInterface $collector
      *
      * @return JsonResponse
      */
-    public function allTransactionJournals(TransactionCollectorInterface $collector): JsonResponse
+    public function allTransactionJournals(Request $request, TransactionCollectorInterface $collector): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-all-journals');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $collector->setLimit(250)->setPage(1);
-        $return = array_unique($collector->getTransactions()->pluck('description')->toArray());
-        sort($return);
+        $return = array_values(array_unique($collector->getTransactions()->pluck('description')->toArray()));
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
+
+        return response()->json($return);
+    }
+
+    /**
+     * List of revenue accounts.
+     *
+     * @param Request                    $request
+     * @param AccountRepositoryInterface $repository
+     *
+     * @return JsonResponse
+     */
+    public function assetAccounts(Request $request, AccountRepositoryInterface $repository): JsonResponse
+    {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-asset-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
+        $set      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $filtered = $set->filter(
+            function (Account $account) {
+                if (true === $account->active) {
+                    return $account;
+                }
+
+                return false; // @codeCoverageIgnore
+            }
+        );
+        $return   = array_values(array_unique($filtered->pluck('name')->toArray()));
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -84,16 +179,37 @@ class AutoCompleteController extends Controller
     /**
      * Returns a JSON list of all bills.
      *
+     * @param Request                 $request
      * @param BillRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function bills(BillRepositoryInterface $repository): JsonResponse
+    public function bills(Request $request, BillRepositoryInterface $repository): JsonResponse
     {
-        $return = array_unique(
-            $repository->getActiveBills()->pluck('name')->toArray()
-        );
-        sort($return);
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-bills');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
+        $return = array_unique($repository->getActiveBills()->pluck('name')->toArray());
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -101,14 +217,37 @@ class AutoCompleteController extends Controller
     /**
      * List of budgets.
      *
+     * @param Request                   $request
      * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function budgets(BudgetRepositoryInterface $repository): JsonResponse
+    public function budgets(Request $request, BudgetRepositoryInterface $repository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-budgets');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $return = array_unique($repository->getBudgets()->pluck('name')->toArray());
-        sort($return);
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -116,14 +255,34 @@ class AutoCompleteController extends Controller
     /**
      * Returns a list of categories.
      *
+     * @param Request                     $request
      * @param CategoryRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function categories(CategoryRepositoryInterface $repository): JsonResponse
+    public function categories(Request $request, CategoryRepositoryInterface $repository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-categories');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $return = array_unique($repository->getCategories()->pluck('name')->toArray());
-        sort($return);
+        if ('' !== $search) {
+            $return = array_values(
+                array_filter(
+                    $return, function (string $value) use ($search) {
+                    return !(false === stripos($value, $search));
+                }, ARRAY_FILTER_USE_BOTH
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -131,14 +290,38 @@ class AutoCompleteController extends Controller
     /**
      * List of currency names.
      *
+     * @param Request                     $request
      * @param CurrencyRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function currencyNames(CurrencyRepositoryInterface $repository): JsonResponse
+    public function currencyNames(Request $request, CurrencyRepositoryInterface $repository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-currency-names');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $return = $repository->get()->pluck('name')->toArray();
         sort($return);
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -146,12 +329,23 @@ class AutoCompleteController extends Controller
     /**
      * Returns a JSON list of all beneficiaries.
      *
+     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function expenseAccounts(AccountRepositoryInterface $repository): JsonResponse
+    public function expenseAccounts(Request $request, AccountRepositoryInterface $repository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-expense-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $set      = $repository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
         $filtered = $set->filter(
             function (Account $account) {
@@ -166,27 +360,43 @@ class AutoCompleteController extends Controller
 
         sort($return);
 
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
+
         return response()->json($return);
     }
-
 
     /**
      * List of journals with their ID.
      *
+     * @param Request                       $request
      * @param TransactionCollectorInterface $collector
-     * @param TransactionJournal        $except
+     * @param TransactionJournal            $except
      *
      * @return JsonResponse
      */
-    public function journalsWithId(TransactionCollectorInterface $collector, TransactionJournal $except): JsonResponse
+    public function journalsWithId(Request $request, TransactionCollectorInterface $collector, TransactionJournal $except): JsonResponse
     {
-        $cache = new CacheProperties;
-        $cache->addProperty('recent-journals-id');
-
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-expense-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get());
         }
-
+        // find everything:
         $collector->setLimit(400)->setPage(1);
         $set    = $collector->getTransactions()->pluck('description', 'journal_id')->toArray();
         $return = [];
@@ -200,6 +410,21 @@ class AutoCompleteController extends Controller
             }
         }
 
+        sort($return);
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (array $array) use ($search) {
+                        $value = $array['name'];
+
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
         $cache->store($return);
 
         return response()->json($return);
@@ -208,12 +433,23 @@ class AutoCompleteController extends Controller
     /**
      * List of revenue accounts.
      *
+     * @param Request                    $request
      * @param AccountRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function revenueAccounts(AccountRepositoryInterface $repository): JsonResponse
+    public function revenueAccounts(Request $request, AccountRepositoryInterface $repository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-revenue-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $set      = $repository->getAccountsByType([AccountType::REVENUE]);
         $filtered = $set->filter(
             function (Account $account) {
@@ -227,20 +463,57 @@ class AutoCompleteController extends Controller
         $return   = array_unique($filtered->pluck('name')->toArray());
         sort($return);
 
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
+
         return response()->json($return);
     }
 
     /**
      * Returns a JSON list of all beneficiaries.
      *
+     * @param Request                $request
      * @param TagRepositoryInterface $tagRepository
      *
      * @return JsonResponse
      */
-    public function tags(TagRepositoryInterface $tagRepository): JsonResponse
+    public function tags(Request $request, TagRepositoryInterface $tagRepository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-revenue-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $return = array_unique($tagRepository->get()->pluck('tag')->toArray());
         sort($return);
+
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
 
         return response()->json($return);
     }
@@ -248,13 +521,24 @@ class AutoCompleteController extends Controller
     /**
      * List of journals by type.
      *
+     * @param Request                       $request
      * @param TransactionCollectorInterface $collector
-     * @param string                    $what
+     * @param string                        $what
      *
      * @return JsonResponse
      */
-    public function transactionJournals(TransactionCollectorInterface $collector, string $what): JsonResponse
+    public function transactionJournals(Request $request, TransactionCollectorInterface $collector, string $what): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-revenue-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $type  = config('firefly.transactionTypesByWhat.' . $what);
         $types = [$type];
 
@@ -262,21 +546,60 @@ class AutoCompleteController extends Controller
         $return = array_unique($collector->getTransactions()->pluck('description')->toArray());
         sort($return);
 
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
+
         return response()->json($return);
     }
 
     /**
      * List if transaction types.
      *
+     * @param Request                    $request
      * @param JournalRepositoryInterface $repository
      *
      * @return JsonResponse
      */
-    public function transactionTypes(JournalRepositoryInterface $repository): JsonResponse
+    public function transactionTypes(Request $request, JournalRepositoryInterface $repository): JsonResponse
     {
+        $search = (string)$request->get('search');
+        $cache  = new CacheProperties;
+        $cache->addProperty('ac-revenue-accounts');
+        // very unlikely a user will actually search for this string.
+        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
+        $cache->addProperty($key);
+        if ($cache->has()) {
+            return response()->json($cache->get());
+        }
+        // find everything:
         $return = array_unique($repository->getTransactionTypes()->pluck('type')->toArray());
         sort($return);
 
+        if ('' !== $search) {
+            $return = array_values(
+                array_unique(
+                    array_filter(
+                        $return, function (string $value) use ($search) {
+                        return !(false === stripos($value, $search));
+                    }, ARRAY_FILTER_USE_BOTH
+                    )
+                )
+            );
+        }
+        $cache->store($return);
+
         return response()->json($return);
+
+
     }
 }

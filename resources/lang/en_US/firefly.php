@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Actions',
     'edit'                                       => 'Edit',
     'delete'                                     => 'Delete',
+    'split'                                      => 'Split',
+    'clone'                                      => 'Clone',
+    'last_seven_days'                            => 'Last seven days',
+    'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'What\'s playing?',
     'everything'                                 => 'Everything',
     'today'                                      => 'today',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Link to a bill..',
     'rule_action_link_to_bill'                   => 'Link to bill ":action_value"',
     'rule_action_set_notes'                      => 'Set notes to ":action_value"',
+    'rule_action_convert_deposit_choice'         => 'Convert the transaction to a deposit',
+    'rule_action_convert_deposit'                => 'Convert the transaction to a deposit from ":action_value"',
+    'rule_action_convert_withdrawal_choice'      => 'Convert the transaction to a withdrawal',
+    'rule_action_convert_withdrawal'             => 'Convert the transaction to a withdrawal to ":action_value"',
+    'rule_action_convert_transfer_choice'        => 'Convert the transaction to a transfer',
+    'rule_action_convert_transfer'               => 'Convert the transaction to a transfer with ":action_value"',
 
     'rules_have_read_warning'                 => 'Have you read the warning?',
     'apply_rule_warning'                      => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Earned and spent per category',
     'out_per_budget'                          => 'Spent per budget',
     'select_expense_revenue'                  => 'Select expense/revenue account',
+    'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
+    'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
 
     // charts:
     'chart'                                   => 'Chart',

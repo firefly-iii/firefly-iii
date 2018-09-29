@@ -38,6 +38,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class MetaPieChart.
@@ -88,6 +89,11 @@ class MetaPieChart implements MetaPieChartInterface
         $this->budgets    = new Collection;
         $this->categories = new Collection;
         $this->tags       = new Collection;
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+
     }
 
     /**

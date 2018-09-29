@@ -27,12 +27,23 @@ namespace FireflyIII\Factory;
 use FireflyIII\Models\Tag;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TagFactory
  */
 class TagFactory
 {
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
     /** @var Collection */
     private $tags;
     /** @var User */

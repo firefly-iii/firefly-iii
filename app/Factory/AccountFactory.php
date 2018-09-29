@@ -41,9 +41,20 @@ use Log;
  */
 class AccountFactory
 {
-    use AccountServiceTrait;
     /** @var User */
     private $user;
+
+    use AccountServiceTrait;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /**
      * @param array $data
@@ -141,17 +152,23 @@ class AccountFactory
      */
     public function findOrCreate(string $accountName, string $accountType): Account
     {
+        Log::debug(sprintf('Searching for "%s" of type "%s"', $accountName, $accountType));
         $type     = AccountType::whereType($accountType)->first();
         $accounts = $this->user->accounts()->where('account_type_id', $type->id)->get(['accounts.*']);
         $return   = null;
+
+        Log::debug(sprintf('Account type is #%d', $type->id));
+
         /** @var Account $object */
         foreach ($accounts as $object) {
             if ($object->name === $accountName) {
+                Log::debug(sprintf('Found account #%d "%s".', $object->id, $object->name));
                 $return = $object;
                 break;
             }
         }
         if (null === $return) {
+            Log::debug('Found nothing. Will create a new one.');
             $return = $this->create(
                 [
                     'user_id'         => $this->user->id,

@@ -137,39 +137,10 @@ function parseRepetitionSuggestions(data) {
 }
 
 function initializeAutoComplete() {
-    // auto complete things:
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false,
-            },
-            autoSelect: false,
-        };
-
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
-
-    if ($('input[name="destination_name"]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name="destination_name"]').typeahead({source: data, autoSelect: false});
-        });
-    }
-
-    if ($('input[name="source_name"]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name="source_name"]').typeahead({source: data, autoSelect: false});
-        });
-    }
-
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
+    initTagsAC();
+    initExpenseAC();
+    initRevenueAC();
+    initCategoryAC();
 }
 
 /**

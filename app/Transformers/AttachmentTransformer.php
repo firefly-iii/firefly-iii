@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Attachment;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
@@ -40,16 +41,19 @@ class AttachmentTransformer extends TransformerAbstract
      *
      * @var array
      */
-    protected $availableIncludes = ['user', 'notes'];
+    protected $availableIncludes = ['user'];
     /**
      * List of resources to automatically include
      *
      * @var array
      */
-    protected $defaultIncludes = ['user', 'notes'];
+    protected $defaultIncludes = ['user'];
 
     /** @var ParameterBag */
     protected $parameters;
+
+    /** @var AttachmentRepositoryInterface */
+    private $repository;
 
     /**
      * BillTransformer constructor.
@@ -61,20 +65,7 @@ class AttachmentTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Attach the notes.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Attachment $attachment
-     *
-     * @return FractalCollection
-     */
-    public function includeNotes(Attachment $attachment): FractalCollection
-    {
-        return $this->collection($attachment->notes, new NoteTransformer($this->parameters), 'notes');
+        $this->repository = app(AttachmentRepositoryInterface::class);
     }
 
     /**
@@ -100,6 +91,8 @@ class AttachmentTransformer extends TransformerAbstract
      */
     public function transform(Attachment $attachment): array
     {
+        $this->repository->setUser($attachment->user);
+
         return [
             'id'              => (int)$attachment->id,
             'updated_at'      => $attachment->updated_at->toAtomString(),
@@ -111,6 +104,7 @@ class AttachmentTransformer extends TransformerAbstract
             'upload_uri'      => route('api.v1.attachments.upload', [$attachment->id]),
             'title'           => $attachment->title,
             'mime'            => $attachment->mime,
+            'notes'           => $this->repository->getNoteText($attachment),
             'size'            => (int)$attachment->size,
             'links'           => [
                 [

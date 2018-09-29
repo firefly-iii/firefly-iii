@@ -27,6 +27,7 @@ namespace FireflyIII\Support\Http\Controllers;
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -102,6 +103,7 @@ trait RenderPartialViews
                 break;
             case BalanceLine::ROLE_DEFAULTROLE === $role && null === $budget && null !== $account:
                 // normal row without a budget:
+                $budget = new Budget;
                 $journals     = $popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = (string)trans('firefly.no_budget');
                 break;
@@ -156,7 +158,7 @@ trait RenderPartialViews
 
         $budget = $budgetRepository->findNull((int)$attributes['budgetId']);
         if (null === $budget) {
-            return 'This is an unknown budget. Apologies.';
+            $budget = new Budget;
         }
         $journals = $popupHelper->byBudget($budget, $attributes);
         try {

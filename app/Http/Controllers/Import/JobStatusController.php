@@ -47,6 +47,8 @@ class JobStatusController extends Controller
     public function __construct()
     {
         parent::__construct();
+        // set time limit to zero to prevent timeouts.
+        set_time_limit(0);
 
         $this->middleware(
             function ($request, $next) {

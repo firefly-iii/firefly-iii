@@ -24,6 +24,7 @@ namespace FireflyIII\Helpers\Collection;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Bill as BillModel;
+use FireflyIII\Models\TransactionCurrency;
 
 /**
  * Class BillLine.
@@ -42,6 +43,8 @@ class BillLine
     protected $max;
     /** @var string What was the min amount. */
     protected $min;
+    /** @var TransactionCurrency The transaction currency */
+    private $currency;
     /** @var Carbon Latest date that payment is expected. */
     private $endOfPayDate;
     /** @var Carbon Date of last hit */
@@ -97,6 +100,22 @@ class BillLine
     public function setBill(BillModel $bill): void
     {
         $this->bill = $bill;
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    public function getCurrency(): TransactionCurrency
+    {
+        return $this->currency;
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     */
+    public function setCurrency(TransactionCurrency $currency): void
+    {
+        $this->currency = $currency;
     }
 
     /**

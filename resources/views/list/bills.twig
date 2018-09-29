@@ -18,11 +18,12 @@
     {% set sum_max =0 %}
     {% set expected_total = 0 %}
     {% set count = 0 %}
+
     {% for entry in bills %}
         {% if entry.active %}
             {% set count = count + 1 %}
             {% set sum_min = sum_min + entry.amount_min %}
-            {% set sum_max = sum_min + entry.amount_max %}
+            {% set sum_max = sum_max + entry.amount_max %}
             {% set expected_total = expected_total + ((entry.amount_min + entry.amount_max) / 2) %}
         {% endif %}
         <tr>

@@ -173,11 +173,14 @@ function onAddNewAction() {
         updateActionInput(target)
     });
 
-    // $.each($('.rule-action-holder'), function (i, v) {
-    //     var holder = $(v);
-    //     var select = holder.find('select');
-    //     updateActionInput(select);
-    // });
+    // make sure each select thing is triggered at least once.
+    $.each($('.rule-action-holder'), function (i, v) {
+        var holder = $(v);
+        var select = holder.find('select');
+
+        console.log('Trigger updateActionInput() for select ' + select);
+        updateActionInput(select);
+    });
 }
 
 /**
@@ -198,11 +201,12 @@ function onAddNewTrigger() {
         updateTriggerInput(target)
     });
 
-    // $.each($('.rule-trigger-holder'), function (i, v) {
-    //     var holder = $(v);
-    //     var select = holder.find('select');
-    //     updateTriggerInput(select);
-    // });
+    $.each($('.rule-trigger-holder'), function (i, v) {
+        var holder = $(v);
+        var select = holder.find('select');
+        console.log('Trigger updateTriggerInput() for select ' + select);
+        updateTriggerInput(select);
+    });
 }
 
 /**
@@ -253,6 +257,18 @@ function updateActionInput(selectList) {
         case 'set_destination_account':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/all-accounts');
+            break;
+        case 'convert_withdrawal':
+            console.log('Select list value is ' + selectList.val() + ', so input needs expense accounts auto complete.');
+            createAutoComplete(inputResult, 'json/expense-accounts');
+            break;
+        case 'convert_deposit':
+            console.log('Select list value is ' + selectList.val() + ', so input needs revenue accounts auto complete.');
+            createAutoComplete(inputResult, 'json/revenue-accounts');
+            break;
+        case 'convert_transfer':
+            console.log('Select list value is ' + selectList.val() + ', so input needs asset accounts auto complete.');
+            createAutoComplete(inputResult, 'json/asset-accounts');
             break;
         case 'link_to_bill':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
@@ -344,15 +360,32 @@ function updateTriggerInput(selectList) {
  * @param URI
  */
 function createAutoComplete(input, URI) {
-    console.log('Now in createAutoComplete().')
+    console.log('Now in createAutoComplete("' + URI + '").');
     input.typeahead('destroy');
-    $.getJSON(URI).done(function (data) {
-        console.log('Input now has auto complete from URI ' + URI);
-        input.typeahead({source: data, autoSelect: false});
-    }).fail(function () {
-        console.log('Could not grab URI ' + URI + ' so autocomplete will not work');
-    });
 
+    var source = new Bloodhound({
+                                    datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                    queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                    prefetch: {
+                                        url: URI,
+                                        filter: function (list) {
+                                            return $.map(list, function (name) {
+                                                return {name: name};
+                                            });
+                                        }
+                                    },
+                                    remote: {
+                                        url: URI + '?search=%QUERY',
+                                        wildcard: '%QUERY',
+                                        filter: function (list) {
+                                            return $.map(list, function (name) {
+                                                return {name: name};
+                                            });
+                                        }
+                                    }
+                                });
+    source.initialize();
+    input.typeahead({hint: true, highlight: true,}, {source: source, displayKey: 'name', autoSelect: false});
 }
 
 function testRuleTriggers() {

@@ -87,44 +87,7 @@
         </div>
         {% if periods.count > 0 %}
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
-                {% for period in periods %}
-                    {% if period.spent != 0 or period.earned != 0 or period.sum != 0 %}
-                        <div class="box {% if period.date == end %}box-solid box-primary{% endif %}">
-                            <div class="box-header with-border">
-                                <h3 class="box-title"><a href="{{ route('categories.show',[category.id, period.start.format('Y-m-d'),period.end.format('Y-m-d')]) }}">{{ period.name }}</a>
-                                </h3>
-                            </div>
-                            <div class="box-body no-padding">
-                                <table class="table table-hover">
-                                    {% if period.spent != 0 %}
-                                        <tr>
-                                            <td style="width:33%;">{{ 'spent'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.spent|formatAmount }}</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if period.earned != 0 %}
-                                        <tr>
-                                            <td style="width:33%;">{{ 'earned'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.earned|formatAmount }}</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if period.earned != 0 and period.spent != 0 %}
-                                        <tr>
-                                            <td style="width:33%;">{{ 'sum'|_ }}</td>
-                                            <td style="text-align: right;">{{ period.sum|formatAmount }}</td>
-                                        </tr>
-                                    {% endif %}
-                                    {% if period.transferred != 0 %}
-                                        <tr>
-                                            <td style="width:33%;">{{ 'transferred'|_ }}</td>
-                                            <td style="text-align: right;" class="text-info">{{ period.transferred|formatAmountPlain }}</td>
-                                        </tr>
-                                    {% endif %}
-                                </table>
-                            </div>
-                        </div>
-                    {% endif %}
-                {% endfor %}
+                {% include 'list.periods' %}
             </div>
         {% endif %}
     </div>

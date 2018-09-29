@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Attachments;
 
 use Crypt;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
@@ -63,7 +64,12 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->messages      = new MessageBag;
         $this->attachments   = new Collection;
         $this->uploadDisk    = Storage::disk('upload');
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
+
 
     /**
      * Returns the content of an attachment.
@@ -177,13 +183,17 @@ class AttachmentHelper implements AttachmentHelperInterface
     /**
      * Save attachments that get uploaded with models, through the app.
      *
-     * @param Model      $model
+     * @param object     $model
      * @param array|null $files
      *
      * @return bool
+     * @throws \Illuminate\Contracts\Encryption\EncryptException
      */
-    public function saveAttachmentsForModel(Model $model, ?array $files): bool
+    public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
+        if(!($model instanceof Model)) {
+            return false;
+        }
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
         if (\is_array($files)) {
             Log::debug('$files is an array.');
@@ -236,6 +246,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      *
      * @return Attachment|null
      * @throws \Illuminate\Contracts\Encryption\EncryptException
+     * @throws FireflyException
      */
     protected function processFile(UploadedFile $file, Model $model): ?Attachment
     {
@@ -257,6 +268,11 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             $fileObject = $file->openFile('r');
             $fileObject->rewind();
+
+            if(0 === $file->getSize()) {
+                throw new FireflyException('Cannot upload empty or non-existent file.');
+            }
+
             $content   = $fileObject->fread($file->getSize());
             $encrypted = Crypt::encrypt($content);
             Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));

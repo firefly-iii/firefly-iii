@@ -65,6 +65,9 @@ class TransactionCurrencySeeder extends Seeder
         $currencies[] = ['code' => 'BCH', 'name' => 'Bitcoin cash', 'symbol' => '₿C', 'decimal_places' => 8];
         $currencies[] = ['code' => 'ETH', 'name' => 'Ethereum', 'symbol' => 'Ξ', 'decimal_places' => 12];
 
+        // PLEASE ADD NEW CURRENCIES BELOW THIS LINE
+        $currencies[] = ['code' => 'ILS', 'name' => 'Israeli new shekel', 'symbol' => '₪', 'decimal_places' => 2];
+
         foreach ($currencies as $currency) {
             try {
                 TransactionCurrency::create($currency);

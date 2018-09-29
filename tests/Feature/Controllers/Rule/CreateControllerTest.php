@@ -80,8 +80,8 @@ class CreateControllerTest extends TestCase
     public function testCreateFromBill(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $billRepos    = $this->mock(BillRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $billRepos      = $this->mock(BillRepositoryInterface::class);
         $ruleRepos      = $this->mock(RuleRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
@@ -114,7 +114,7 @@ class CreateControllerTest extends TestCase
         $this->session(['_old_input' => $old]);
 
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos      = $this->mock(RuleRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
@@ -138,8 +138,8 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(RuleRepositoryInterface::class);
+        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
 
@@ -149,22 +149,26 @@ class CreateControllerTest extends TestCase
 
         $this->session(['rules.create.uri' => 'http://localhost']);
         $data = [
-            'rule_group_id'      => 1,
-            'active'             => 1,
-            'title'              => 'A',
-            'trigger'            => 'store-journal',
-            'description'        => 'D',
-            'rule-trigger'       => [
-                1 => 'from_account_starts',
+            'rule_group_id' => 1,
+            'active'        => 1,
+            'title'         => 'A',
+            'trigger'       => 'store-journal',
+            'description'   => 'D',
+            'rule_triggers' => [
+                [
+                    'name'            => 'description_is',
+                    'value'           => 'A',
+                    'stop_processing' => '0',
+
+                ],
             ],
-            'rule-trigger-value' => [
-                1 => 'B',
-            ],
-            'rule-action'        => [
-                1 => 'set_category',
-            ],
-            'rule-action-value'  => [
-                1 => 'C',
+            'rule_actions'  => [
+                [
+                    'name'            => 'set_category',
+                    'value'           => 'C',
+                    'stop_processing' => '0',
+
+                ],
             ],
         ];
         $this->be($this->user());

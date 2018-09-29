@@ -75,6 +75,7 @@ class JournalFormRequest extends Request
             'piggy_bank_name'    => null,
             'bill_id'            => null,
             'bill_name'          => null,
+            'original-source'    => sprintf('gui-v%s', config('firefly.version')),
 
             // transaction data:
             'transactions'       => [
@@ -274,7 +275,12 @@ class JournalFormRequest extends Request
         $selectedCurrency = (int)($data['amount_currency_id_amount'] ?? 0);
         $accountCurrency  = (int)($data['destination_account_currency'] ?? 0);
         $nativeAmount     = (string)($data['native_amount'] ?? '');
+
+        Log::debug('Now in validateDeposit.');
+        Log::debug(sprintf('SelectedCurrency is "%s", accountCurrency is "%s", native amount is "%s".', $selectedCurrency, $accountCurrency, $nativeAmount));
+
         if ($selectedCurrency !== $accountCurrency && '' === $nativeAmount && 0 !== $selectedCurrency && 0 !== $accountCurrency) {
+            Log::debug('Adding an error about missing native amount.');
             $validator->errors()->add('native_amount', (string)trans('validation.numeric_native'));
 
             return;

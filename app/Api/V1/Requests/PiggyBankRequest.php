@@ -50,14 +50,17 @@ class PiggyBankRequest extends Request
      */
     public function getAll(): array
     {
+        $current = $this->string('current_amount');
+        $current = '' === $current ? '0' : $current;
+
         return [
             'name'           => $this->string('name'),
             'account_id'     => $this->integer('account_id'),
             'targetamount'   => $this->string('target_amount'),
-            'current_amount' => $this->string('current_amount'),
+            'current_amount' => $current,
             'start_date'     => $this->date('start_date'),
             'target_date'    => $this->date('target_date'),
-            'notes'           => $this->string('notes'),
+            'notes'          => $this->string('notes'),
         ];
     }
 
@@ -74,7 +77,7 @@ class PiggyBankRequest extends Request
             'target_amount'  => 'required|numeric|more:0',
             'current_amount' => 'numeric|more:0|lte:target_amount',
             'start_date'     => 'date|nullable',
-            'target_date'    => 'date|nullable',
+            'target_date'    => 'date|nullable|after:start_date',
             'notes'          => 'max:65000',
         ];
 

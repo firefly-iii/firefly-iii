@@ -87,6 +87,7 @@ return [
     'max.array'                      => ':attribute potrebbe non avere più di :max voce.',
     'mimes'                          => ':attribute deve essere un file di tipo: :values.',
     'min.numeric'                    => ':attribute deve essere almeno :min.',
+    'lte.numeric'                    => 'Il campo :attribute deve essere minore o uguale a :value.',
     'min.file'                       => ':attribute deve essere almeno :min kilobytes.',
     'min.string'                     => ':attribute deve essere almeno :min caratteri.',
     'min.array'                      => ':attribute deve avere almeno :min voci.',

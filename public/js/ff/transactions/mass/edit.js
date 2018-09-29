@@ -25,19 +25,83 @@ $(document).ready(function () {
 
     // destination account names:
     if ($('input[name^="destination_name["]').length > 0) {
-        $.getJSON('json/expense-accounts').done(function (data) {
-            $('input[name^="destination_name["]').typeahead({source: data, autoSelect: false});
-        });
+        var destNames = new Bloodhound({
+                                           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                           queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                           prefetch: {
+                                               url: 'json/expense-accounts',
+                                               filter: function (list) {
+                                                   return $.map(list, function (name) {
+                                                       return {name: name};
+                                                   });
+                                               }
+                                           },
+                                           remote: {
+                                               url: 'json/expense-accounts?search=%QUERY',
+                                               wildcard: '%QUERY',
+                                               filter: function (list) {
+                                                   return $.map(list, function (name) {
+                                                       return {name: name};
+                                                   });
+                                               }
+                                           }
+                                       });
+        destNames.initialize();
+        $('input[name^="destination_name["]').typeahead({hint: true, highlight: true,}, {source: destNames, displayKey: 'name', autoSelect: false});
     }
 
     // source account name
     if ($('input[name^="source_name["]').length > 0) {
-        $.getJSON('json/revenue-accounts').done(function (data) {
-            $('input[name^="source_name["]').typeahead({source: data, autoSelect: false});
-        });
+
+        var sourceNames = new Bloodhound({
+                                             datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                             queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                             prefetch: {
+                                                 url: 'json/revenue-accounts',
+                                                 filter: function (list) {
+                                                     return $.map(list, function (name) {
+                                                         return {name: name};
+                                                     });
+                                                 }
+                                             },
+                                             remote: {
+                                                 url: 'json/revenue-accounts?search=%QUERY',
+                                                 wildcard: '%QUERY',
+                                                 filter: function (list) {
+                                                     return $.map(list, function (name) {
+                                                         return {name: name};
+                                                     });
+                                                 }
+                                             }
+                                         });
+        sourceNames.initialize();
+
+        $('input[name^="source_name["]').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
     }
 
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name^="category["]').typeahead({source: data, autoSelect: false});
-    });
+    var categories = new Bloodhound({
+                                        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                        queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                        prefetch: {
+                                            url: 'json/categories',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
+                                        },
+                                        remote: {
+                                            url: 'json/categories?search=%QUERY',
+                                            wildcard: '%QUERY',
+                                            filter: function (list) {
+                                                return $.map(list, function (name) {
+                                                    return {name: name};
+                                                });
+                                            }
+                                        }
+                                    });
+    categories.initialize();
+
+    $('input[name^="category["]').typeahead({hint: true, highlight: true,}, {source: categories, displayKey: 'name', autoSelect: false});
+
 });

@@ -168,6 +168,16 @@ trait GetConfigurationData
             $ranges[ucfirst((string)trans('firefly.today'))] = [$todayStart, $todayEnd];
         }
 
+        // last seven days:
+        $seven          = Carbon::create()->subDays(7);
+        $index          = (string)trans('firefly.last_seven_days');
+        $ranges[$index] = [$seven, new Carbon];
+
+        // last 30 days:
+        $thirty         = Carbon::create()->subDays(30);
+        $index          = (string)trans('firefly.last_thirty_days');
+        $ranges[$index] = [$thirty, new Carbon];
+
         // everything
         $index          = (string)trans('firefly.everything');
         $ranges[$index] = [$first, new Carbon];
@@ -259,9 +269,10 @@ trait GetConfigurationData
         $now      = time();
         if (0 === $lastTime) {
             request()->session()->flash('info', trans('firefly.recurring_never_cron'));
+
             return;
         }
-        if($now - $lastTime > 129600) {
+        if ($now - $lastTime > 129600) {
             request()->session()->flash('warning', trans('firefly.recurring_cron_long_ago'));
         }
     }

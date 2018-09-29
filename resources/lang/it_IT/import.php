@@ -37,6 +37,7 @@ return [
     // index page:
     'general_index_title'                 => 'Importa un file',
     'general_index_intro'                 => 'Benvenuti nella routine di importazione di Firefly III. Esistono alcuni modi per importare dati in Firefly III, visualizzati qui come pulsanti.',
+
     // import provider strings (index):
     'button_fake'                         => 'Esegui un\'importazione fittizia',
     'button_file'                         => 'Importa un file',
@@ -110,6 +111,7 @@ return [
     'job_config_file_upload_type_help'    => 'Seleziona il tipo di file che caricherai',
     'job_config_file_upload_submit'       => 'Carica i file',
     'import_file_type_csv'                => 'CSV (valori separati da virgola)',
+    'import_file_type_ofx'                => 'OFX',
     'file_not_utf8'                       => 'Il file che hai caricato non è codificato come UTF-8 o ASCII. Firefly III non può gestire tali file. Utilizzare Notepad++ o Sublime per convertire il file in UTF-8.',
     'job_config_uc_title'                 => 'Configurazione di importazione (2/4) - Impostazione di base dei file',
     'job_config_uc_text'                  => 'Per poter importare correttamente il tuo file, ti preghiamo di convalidare le opzioni di seguito.',
@@ -123,6 +125,7 @@ return [
     'job_config_uc_specifics_txt'         => 'Alcune banche forniscono file formattati in modo errato. Firefly III può sistemarli automaticamente. Se la tua banca rende disponibili tali file ma non è elencata qui, ti preghiamo di segnalare il problema su GitHub.',
     'job_config_uc_submit'                => 'Continua',
     'invalid_import_account'              => 'Hai selezionato un conto non valido su cui effettuare l\'importazione.',
+    'import_liability_select'             => 'Passività',
     // job configuration for Spectre:
     'job_config_spectre_login_title'      => 'Scegli il tuo login',
     'job_config_spectre_login_text'       => 'Firefly III ha rilevato :count login esistenti nel tuo account Spectre. Quale vorresti usare per l\'importazione?',
@@ -263,6 +266,7 @@ return [
     'column_amount_foreign'                => 'Importo (in altra valuta)',
     'column_amount_debit'                  => 'Importo (colonna debito)',
     'column_amount_credit'                 => 'Importo (colonna credito)',
+    'column_amount_negated'                => 'Importo (negato)',
     'column_amount-comma-separated'        => 'Importo (virgola come separatore decimale)',
     'column_bill-id'                       => 'ID bolletta (mappa FF3)',
     'column_bill-name'                     => 'Nome bolletta',

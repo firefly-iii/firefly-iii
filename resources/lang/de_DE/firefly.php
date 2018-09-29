@@ -28,6 +28,10 @@ return [
     'actions'                                    => 'Aktionen',
     'edit'                                       => 'Bearbeiten',
     'delete'                                     => 'Löschen',
+    'split'                                      => 'Teilen',
+    'clone'                                      => 'Duplizieren',
+    'last_seven_days'                            => 'Letzte sieben Tage',
+    'last_thirty_days'                           => 'Letzte 30 Tage',
     'welcomeBack'                                => 'Was ist gerade los?',
     'everything'                                 => 'Alle',
     'today'                                      => 'Heute',
@@ -421,6 +425,12 @@ return [
     'rule_action_link_to_bill_choice'            => 'Mit einer Rechnung verknüpfen..',
     'rule_action_link_to_bill'                   => 'Mit Rechnung „:action_value” verknüpfen',
     'rule_action_set_notes'                      => 'Notizen auf „:action_value” festlegen',
+    'rule_action_convert_deposit_choice'         => 'Buchung in eine Einzahlung umwandeln',
+    'rule_action_convert_deposit'                => 'Buchung in eine Einzahlung von ":action_value" umwandeln',
+    'rule_action_convert_withdrawal_choice'      => 'Buchung in eine Auszahlung umwandeln',
+    'rule_action_convert_withdrawal'             => 'Buchung in eine Auszahlung von ":action_value" umwandeln',
+    'rule_action_convert_transfer_choice'        => 'Buchung in eine Umbuchung umwandeln',
+    'rule_action_convert_transfer'               => 'Buchung in eine Umbuchung von ":action_value" umwandeln',
 
     'rules_have_read_warning'                 => 'Haben Sie die Warnung gelesen?',
     'apply_rule_warning'                      => 'Zur Beachtung: Das Ausführen einer Regel (Gruppe) für eine große Auswahl von Buchungen kann sehr lange dauern, und es kann zu einer Zeitüberschreitung kommen. Wenn dies der Fall ist, wird die Regel (-Gruppe) nur auf eine unbekannte Teilmenge Ihrer Buchungen angewendet. Dies könnte Ihre Finanzverwaltung komplett zerstören. Bitte seien Sie vorsichtig.',
@@ -1009,6 +1019,8 @@ return [
     'in_out_per_category'                     => 'Einnahmen und Ausgaben je Kategorie',
     'out_per_budget'                          => 'Ausgaben je Budget',
     'select_expense_revenue'                  => 'Aufwands-/Erlöskonto auswählen',
+    'multi_currency_report_sum'               => 'Da diese Liste Konten mit mehreren Währungen enthält, ergeben die Summe(n), die angezeigt werden, möglicherweise keinen Sinn. Der Bericht wird immer auf Ihre Standardwährung zurückgesetzt.',
+    'sum_in_default_currency'                 => 'Der Betrag wird immer in Ihrer Standardwährung angegeben.',
 
     // charts:
     'chart'                                   => 'Diagram',
@@ -1179,7 +1191,7 @@ return [
     '(partially) reimburses_outward'        => '(Teil-)Erstattungen',
 
     // split a transaction:
-    'splits'                                => 'Geteilte',
+    'splits'                                => 'Teile',
     'add_another_split'                     => 'Eine weitere Aufteilung hinzufügen',
     'split-transactions'                    => 'Buchungen aufteilen',
     'do_split'                              => 'Aufteilen',

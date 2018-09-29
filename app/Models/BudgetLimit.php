@@ -39,6 +39,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string $amount
  * @property int    $budget_id
  * @property string spent
+ * @property int $transaction_currency_id
  */
 class BudgetLimit extends Model
 {
@@ -88,5 +89,14 @@ class BudgetLimit extends Model
     public function budget(): BelongsTo
     {
         return $this->belongsTo(Budget::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function transactionCurrency(): BelongsTo
+    {
+        return $this->belongsTo(TransactionCurrency::class);
     }
 }

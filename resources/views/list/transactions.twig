@@ -4,8 +4,11 @@
 <table class="table table-hover table-condensed {% if sorting %}sortable-table{% endif %}">
     <thead>
     <tr class="ignore">
-        <th class="hidden-xs no_select_boxes" colspan="2">&nbsp;</th>
-        <th class="hidden-xs select_boxes" colspan="2" style="display: none;"><input name="select_all" class="select_all" type="checkbox"/></th>
+        {# hidden row for checkboxes #}
+        <th class="hidden-xs select_boxes" style="display: none;"><input name="select_all" class="select_all" type="checkbox"/></th>
+
+        {# header for icon #}
+        <th class="hidden-xs"></th>
         <th>{{ trans('list.description') }}</th>
         <th style="text-align:right;">{{ trans('list.amount') }}</th>
         <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
@@ -26,6 +29,9 @@
         {% if showBill %}
             <th class="hidden-xs"><i class="fa fa-fw fa-calendar-o" title="{{ trans('list.bill') }}"></i></th>
         {% endif %}
+
+        {# visible row for edit/delete buttons #}
+        <th class="hidden-xs no_select_boxes">&nbsp;</th>
     </tr>
     </thead>
     <tbody>
@@ -72,8 +78,3 @@
         {{ transactions.render|raw }}
     </div>
 </div>
-<script type="text/javascript">
-    var edit_selected_txt = "{{ trans('firefly.edit')|escape('js') }}";
-    var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
-    var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
-</script>

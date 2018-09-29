@@ -24,7 +24,9 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\TransactionViewFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\MassDeleteJournalRequest;
 use FireflyIII\Http\Requests\MassEditJournalRequest;
@@ -147,6 +149,9 @@ class MassController extends Controller
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
         $collector->addFilter(TransactionViewFilter::class);
+        $collector->addFilter(TransferFilter::class);
+
+
         $collection   = $collector->getTransactions();
         $transactions = $collection->map(
             function (Transaction $transaction) use ($transformer) {

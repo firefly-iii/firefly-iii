@@ -600,6 +600,7 @@ class ReportControllerTest extends TestCase
      */
     public function testPostIndexTagOK(): void
     {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
@@ -608,14 +609,18 @@ class ReportControllerTest extends TestCase
         $userRepos        = $this->mock(UserRepositoryInterface::class);
 
         /** @var Tag $tag */
-        $tag = $this->user()->tags()->find(1);
+        $tag  = $this->user()->tags()->find(1);
+        $tag2 = $this->user()->tags()->find(3);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
-        $tagRepos->shouldReceive('findByTag')->andReturn($tag)->twice();
+
+        $tagRepos->shouldReceive('findByTag')->andReturn($tag, null)->times(4);
+        $tagRepos->shouldReceive('findNull')->andReturn($tag2)->times(3);
 
         $data = [
             'accounts'    => ['1'],
-            'tag'         => ['housing'],
+            'tag'         => ['housing', '3'],
             'daterange'   => '2016-01-01 - 2016-01-31',
             'report_type' => 'tag',
         ];
@@ -623,7 +628,44 @@ class ReportControllerTest extends TestCase
         $this->be($this->user());
         $response = $this->post(route('reports.index.post'), $data);
         $response->assertStatus(302);
-        $response->assertRedirect(route('reports.report.tag', ['1', $tag->id, '20160101', '20160131']));
+        $response->assertRedirect(route('reports.report.tag', ['1', $tag->id . ',' . $tag2->id, '20160101', '20160131']));
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\ReportController
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
+     */
+    public function testPostIndexTagOKNoID(): void
+    {
+        Log::debug(sprintf('Now in test %s', __METHOD__));
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
+        $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+
+        /** @var Tag $tag */
+        $tag  = $this->user()->tags()->find(1);
+        $tag2 = $this->user()->tags()->find(3);
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
+
+        $tagRepos->shouldReceive('findByTag')->andReturn(null)->times(4);
+        $tagRepos->shouldReceive('findNull')->andReturn($tag2)->times(4);
+
+        $data = [
+            'accounts'    => ['1'],
+            'tag'         => ['housing', '3'],
+            'daterange'   => '2016-01-01 - 2016-01-31',
+            'report_type' => 'tag',
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('reports.index.post'), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('reports.report.tag', ['1', $tag2->id . ',' . $tag2->id, '20160101', '20160131']));
     }
 
     /**

@@ -36,6 +36,16 @@ use Log;
 class JournalDestroyService
 {
     /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
+
+    /**
      * @param TransactionJournal $journal
      */
     public function destroy(TransactionJournal $journal): void

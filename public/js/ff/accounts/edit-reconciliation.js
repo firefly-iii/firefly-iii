@@ -18,8 +18,6 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: what, Modernizr, selectsForeignCurrency, convertForeignToNative, validateCurrencyForTransfer, convertSourceToDestination, journalData, journal, accountInfo, exchangeRateInstructions, currencyInfo */
-
 $(document).ready(function () {
     "use strict";
     setAutocompletes();
@@ -30,24 +28,7 @@ $(document).ready(function () {
  * Set the auto-complete JSON things.
  */
 function setAutocompletes() {
-
-    $.getJSON('json/categories').done(function (data) {
-        $('input[name="category"]').typeahead({source: data, autoSelect: false});
-    });
-
-    $.getJSON('json/tags').done(function (data) {
-        var opt = {
-            typeahead: {
-                source: data,
-                afterSelect: function () {
-                    this.$element.val("");
-                },
-                autoSelect: false,
-            }
-        };
-        $('input[name="tags"]').tagsinput(
-            opt
-        );
-    });
+    initCategoryAC();
+    initTagsAC();
 }
 

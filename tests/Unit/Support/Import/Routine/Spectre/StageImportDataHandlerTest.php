@@ -34,9 +34,9 @@ use FireflyIII\Services\Spectre\Object\Transaction as SpectreTransaction;
 use FireflyIII\Services\Spectre\Request\ListTransactionsRequest;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class StageImportDataHandlerTest
@@ -51,6 +51,7 @@ class StageImportDataHandlerTest extends TestCase
         parent::setUp();
         Log::info(sprintf('Now in %s.', \get_class($this)));
     }
+
     /**
      * @covers \FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler
      */
@@ -156,7 +157,7 @@ class StageImportDataHandlerTest extends TestCase
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
-
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
                 // transaction data:
                 'transactions'    => [
                     [
@@ -179,6 +180,7 @@ class StageImportDataHandlerTest extends TestCase
                         'identifier'            => 0,
                     ],
                 ],
+
             ],
             1 => [
                 'type'            => 'deposit',
@@ -193,7 +195,7 @@ class StageImportDataHandlerTest extends TestCase
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
-
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
                 // transaction data:
                 'transactions'    => [
                     [
@@ -216,6 +218,7 @@ class StageImportDataHandlerTest extends TestCase
                         'identifier'            => 0,
                     ],
                 ],
+
             ],
         ];
         $accountRepos->shouldReceive('setUser')->once();
@@ -357,6 +360,7 @@ class StageImportDataHandlerTest extends TestCase
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
 
                 // transaction data:
                 'transactions'    => [
@@ -394,6 +398,7 @@ class StageImportDataHandlerTest extends TestCase
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
 
                 // transaction data:
                 'transactions'    => [
@@ -553,6 +558,7 @@ class StageImportDataHandlerTest extends TestCase
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
 
                 // transaction data:
                 'transactions'    => [
@@ -590,6 +596,7 @@ class StageImportDataHandlerTest extends TestCase
                 'piggy_bank_name' => null,
                 'bill_id'         => null,
                 'bill_name'       => null,
+                'original-source' => sprintf('spectre-v%s', config('firefly.version')),
 
                 // transaction data:
                 'transactions'    => [

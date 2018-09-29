@@ -23,13 +23,11 @@
     <td style="position: relative;">
 
         <input autocomplete="off" type="text" value="{{ oldValue }}" name="rule_triggers[{{ count }}][value]" class="form-control">
-        {#
-        {% if errors.has(('rule-trigger-value.'~count)) %}
+        {% if errors.has('rule_triggers.'~count~'.value') %}
             <p class="text-danger">
-                {{ errors.first('rule-trigger-value.'~count) }}
+                {{ errors.first('rule_triggers.'~count~'.value') }}
             </p>
         {% endif %}
-        #}
     </td>
     <td style="width:20%;">
         <div class="checkbox">

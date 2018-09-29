@@ -88,16 +88,16 @@
                     {% endif %}
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
+                    <a id="billButtons" href="{{ route('bills.rescan',object.data.id) }}" class="btn btn-default">{{ 'rescan_old'|_ }}</a>
                 </div>
             </div>
-            {% if object.data.notes.data[0] %}
+            {% if object.data.notes %}
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'notes'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive">
-                    {{ object.data.notes.data[0].markdown|raw }}
+                    {{ object.data.notes|markdown }}
                 </div>
             </div>
             {% endif %}

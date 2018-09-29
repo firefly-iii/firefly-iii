@@ -51,6 +51,11 @@ class BalanceReportHelper implements BalanceReportHelperInterface
     public function __construct(BudgetRepositoryInterface $budgetRepository)
     {
         $this->budgetRepository = $budgetRepository;
+
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+
     }
 
     /**

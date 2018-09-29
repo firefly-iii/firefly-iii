@@ -31,6 +31,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Services\Password\Verifier;
@@ -40,7 +41,6 @@ use Google2FA;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
-use Log;
 
 /**
  * Class FireflyValidator.
@@ -249,9 +249,10 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateRuleActionValue(string $attribute, string $value): bool
+    public function validateRuleActionValue(string $attribute, string $value = null): bool
     {
         // first, get the index from this string:
+        $value = $value ?? '';
         $parts = explode('.', $attribute);
         $index = (int)($parts[1] ?? '0');
 
@@ -285,6 +286,19 @@ class FireflyValidator extends Validator
             $bill       = $repository->findByName($value);
 
             return null !== $bill;
+        }
+
+        // if it's convert_transfer, it must be a valid asset account name.
+        if ('convert_transfer' === $actionType) {
+            /** @var AccountRepositoryInterface $repository */
+            $repository = app(AccountRepositoryInterface::class);
+            $account    = $repository->findByName(
+                $value,
+                [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
+                 AccountType::CREDITCARD]
+            );
+
+            return null !== $account;
         }
 
         // return true for the rest.
@@ -331,9 +345,9 @@ class FireflyValidator extends Validator
 
         // check transaction type.
         if ('transaction_type' === $triggerType) {
-            $count = TransactionType::where('type', $value)->count();
+            $count = TransactionType::where('type', strtolower($value))->count();
 
-            return 1 !== $count;
+            return 1 === $count;
         }
 
         // and finally a "will match everything check":

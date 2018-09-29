@@ -40,7 +40,7 @@ class AssetAccounts implements MapperInterface
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $set               = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $set               = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE,]);
         $list              = [];
 
         /** @var Account $account */
@@ -51,6 +51,12 @@ class AssetAccounts implements MapperInterface
             if (\strlen($iban) > 0) {
                 $name .= ' (' . $iban . ')';
             }
+
+            // is a liability?
+            if (\in_array($account->accountType->type, [AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE], true)) {
+                $name = trans('import.import_liability_select') . ': ' . $name;
+            }
+
             $list[$accountId] = $name;
         }
         asort($list);
