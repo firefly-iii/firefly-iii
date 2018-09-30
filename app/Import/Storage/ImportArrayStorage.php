@@ -193,9 +193,11 @@ class ImportArrayStorage
         unset($transaction['importHashV2'], $transaction['original-source']);
         $json = json_encode($transaction);
         if (false === $json) {
+            // @codeCoverageIgnoreStart
             /** @noinspection ForgottenDebugOutputInspection */
             Log::error('Could not encode import array.', print_r($transaction, true));
-            throw new FireflyException('Could not encode import array. Please see the logs.'); // @codeCoverageIgnore
+            throw new FireflyException('Could not encode import array. Please see the logs.');
+            // @codeCoverageIgnoreEnd
         }
         $hash = hash('sha256', $json, false);
         Log::debug(sprintf('The hash is: %s', $hash));

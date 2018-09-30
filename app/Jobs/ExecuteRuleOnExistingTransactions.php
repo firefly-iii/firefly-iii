@@ -179,10 +179,6 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
                 ++$misses;
             }
             Log::info(sprintf('Current progress: %d Transactions. Hits: %d, misses: %d', $total, $hits, $misses));
-            // Stop processing this group if the rule specifies 'stop_processing'
-            if ($processor->getRule()->stop_processing) {
-                break;
-            }
         }
         Log::info(sprintf('Total transactions: %d. Hits: %d, misses: %d', $total, $hits, $misses));
     }

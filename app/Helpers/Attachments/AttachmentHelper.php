@@ -192,7 +192,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
         if(!($model instanceof Model)) {
-            return false;
+            return false; // @codeCoverageIgnore
         }
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
         if (\is_array($files)) {
@@ -270,7 +270,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             $fileObject->rewind();
 
             if(0 === $file->getSize()) {
-                throw new FireflyException('Cannot upload empty or non-existent file.');
+                throw new FireflyException('Cannot upload empty or non-existent file.'); // @codeCoverageIgnore
             }
 
             $content   = $fileObject->fread($file->getSize());
