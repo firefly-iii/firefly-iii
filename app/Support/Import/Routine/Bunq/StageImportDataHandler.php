@@ -81,6 +81,14 @@ class StageImportDataHandler
     }
 
     /**
+     * @return bool
+     */
+    public function isStillRunning(): bool
+    {
+        return $this->stillRunning;
+    }
+
+    /**
      *
      * @throws FireflyException
      */

@@ -71,12 +71,58 @@ class BunqRoutineTest extends TestCase
 
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running']);
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished']);
+        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final']);
+        $repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
+
         $handler->shouldReceive('setImportJob')->once();
         $handler->shouldReceive('run')->once();
         $handler->shouldReceive('getTransactions')->once()->andReturn(['a' => 'c']);
-        //$repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'provider_finished'])->once();
-        //$repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'final'])->once();
+        $handler->shouldReceive('isStillRunning')->andReturn(false);
+        $routine = new BunqRoutine;
+        $routine->setImportJob($job);
+        try {
+            $routine->run();
+        } catch (FireflyException $e) {
+            $this->assertFalse(true, $e->getMessage());
+        }
+
+    }
+
+    /**
+     * @covers \FireflyIII\Import\Routine\BunqRoutine
+     */
+    public function testRunImportStillRunning(): void
+    {
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'brY_' . random_int(1, 10000);
+        $job->status        = 'ready_to_run';
+        $job->stage         = 'go-for-import';
+        $job->provider      = 'bunq';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->save();
+
+        // mock stuff:
+        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $handler    = $this->mock(StageImportDataHandler::class);
+
+
+
+        $handler->shouldReceive('setImportJob')->once();
+        $handler->shouldReceive('run')->once();
+        $handler->shouldReceive('getTransactions')->once()->andReturn(['a' => 'c']);
+        $handler->shouldReceive('isStillRunning')->andReturn(true);
+
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'ready_to_run']);
+        $repository->shouldReceive('setStage')->withArgs([Mockery::any(), 'go-for-import']);
+
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setStatus')->withArgs([Mockery::any(), 'running']);
         $repository->shouldReceive('appendTransactions')->withArgs([Mockery::any(), ['a' => 'c']])->once();
+
+
 
         $routine = new BunqRoutine;
         $routine->setImportJob($job);
@@ -87,6 +133,7 @@ class BunqRoutineTest extends TestCase
         }
 
     }
+
 
     /**
      * @covers \FireflyIII\Import\Routine\BunqRoutine

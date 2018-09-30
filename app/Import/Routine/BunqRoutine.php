@@ -78,13 +78,13 @@ class BunqRoutine implements RoutineInterface
                     $handler->run();
                     $transactions = $handler->getTransactions();
                     // could be that more transactions will arrive in a second run.
-                    if (true === $handler->stillRunning) {
+                    if (true === $handler->isStillRunning()) {
                         Log::debug('Handler indicates that it is still working.');
                         $this->repository->setStatus($this->importJob, 'ready_to_run');
                         $this->repository->setStage($this->importJob, 'go-for-import');
                     }
                     $this->repository->appendTransactions($this->importJob, $transactions);
-                    if (false === $handler->stillRunning) {
+                    if (false === $handler->isStillRunning()) {
                         Log::info('Handler indicates that its done!');
                         $this->repository->setStatus($this->importJob, 'provider_finished');
                         $this->repository->setStage($this->importJob, 'final');
@@ -96,6 +96,8 @@ class BunqRoutine implements RoutineInterface
         }
         throw new FireflyException(sprintf('bunq import routine cannot handle status "%s"', $this->importJob->status)); // @codeCoverageIgnore
     }
+
+
 
 
     /**
