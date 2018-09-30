@@ -29,7 +29,7 @@ $(function () {
                                               url: autoCompleteUri,
                                               filter: function (list) {
                                                   return $.map(list, function (name) {
-                                                      return {name: name};
+                                                      return {name: name.name};
                                                   });
                                               }
                                           },
@@ -38,7 +38,7 @@ $(function () {
                                               wildcard: '%QUERY',
                                               filter: function (list) {
                                                   return $.map(list, function (name) {
-                                                      return {name: name};
+                                                      return {name: name.name};
                                                   });
                                               }
                                           }
