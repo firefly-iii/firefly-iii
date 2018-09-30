@@ -206,17 +206,14 @@ class AutoCompleteController extends Controller
         sort($return);
 
         if ('' !== $search) {
-            $return = array_values(
-                array_unique(
-                    array_filter(
-                        $return, function (array $array) use ($search) {
-                        $value = $array['name'];
-
-                        return !(false === stripos($value, $search));
-                    }, ARRAY_FILTER_USE_BOTH
-                    )
-                )
+            $return = array_filter(
+                $return, function (array $array) use ($search) {
+                $haystack = $array['name'];
+                $result = stripos($haystack, $search);
+                return !(false === $result);
+            }
             );
+
         }
         $cache->store($return);
 
@@ -311,10 +308,12 @@ class AutoCompleteController extends Controller
         // find everything:
         /** @var Collection $collection */
         $collection = $repository->getAccountsByType($types);
-        $filtered  =$collection->filter(function(Account $account) {
-            return $account->active === true;
-        });
-        $return = array_values(array_unique($filtered->pluck('name')->toArray()));
+        $filtered   = $collection->filter(
+            function (Account $account) {
+                return $account->active === true;
+            }
+        );
+        $return     = array_values(array_unique($filtered->pluck('name')->toArray()));
 
         return $return;
 
