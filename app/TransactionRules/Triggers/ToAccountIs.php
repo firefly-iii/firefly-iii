@@ -90,7 +90,7 @@ final class ToAccountIs extends AbstractTrigger implements TriggerInterface
             return true;
         }
 
-        Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is NOT "%s", return true.', $journal->id, $toAccountName, $search));
+        Log::debug(sprintf('RuleTrigger ToAccountIs for journal #%d: "%s" is NOT "%s", return false.', $journal->id, $toAccountName, $search));
 
         return false;
     }
