@@ -199,7 +199,14 @@ return [
     'spectre_extra_key_units'              => 'Units',
     'spectre_extra_key_unit_price'         => 'Unit price',
     'spectre_extra_key_transactions_count' => 'Transaction count',
-
+    //job configuration for finTS
+    'fints_connection_failed'              => 'An error occurred while trying to connecting to your bank. Please mak sure that all the data you entered is correct. Original error message: :originalError',
+    'button_fints'                         => 'FinTS',
+    'job_config_fints_url_help'            => 'E.g. https://banking-dkb.s-fints-pt-dkb.de/fints30',
+    'job_config_fints_username_help'       => 'For many banks this is your account number.',
+    'job_config_fints_port_help'           => 'The default port is 443.',
+    'job_config_fints_account_help'        => 'Choose the bank account for which you want to import transactions.',
+    'job_config_local_account_help'        => 'Choose the Firefly III account corresponding to your bank account chosen above.',
     // specifics:
     'specific_ing_name'                    => 'ING NL',
     'specific_ing_descr'                   => 'Create better descriptions in ING exports',

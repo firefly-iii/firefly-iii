@@ -25,6 +25,7 @@ declare(strict_types=1);
 use FireflyIII\Import\JobConfiguration\BunqJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FakeJobConfiguration;
 use FireflyIII\Import\JobConfiguration\FileJobConfiguration;
+use FireflyIII\Import\JobConfiguration\FinTSJobConfiguration;
 use FireflyIII\Import\JobConfiguration\SpectreJobConfiguration;
 use FireflyIII\Import\JobConfiguration\YnabJobConfiguration;
 use FireflyIII\Import\Prerequisites\BunqPrerequisites;
@@ -34,6 +35,7 @@ use FireflyIII\Import\Prerequisites\YnabPrerequisites;
 use FireflyIII\Import\Routine\BunqRoutine;
 use FireflyIII\Import\Routine\FakeRoutine;
 use FireflyIII\Import\Routine\FileRoutine;
+use FireflyIII\Import\Routine\FinTSRoutine;
 use FireflyIII\Import\Routine\SpectreRoutine;
 use FireflyIII\Import\Routine\YnabRoutine;
 use FireflyIII\Support\Import\Routine\File\CSVProcessor;
@@ -49,6 +51,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'fints'   => true,
         'bad'     => false, // always disabled
     ],
     // demo user can use these import providers (when enabled):
@@ -61,6 +64,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'fints'   => false,
     ],
     // a normal user user can use these import providers (when enabled):
     'allowed_for_user' => [
@@ -72,6 +76,7 @@ return [
         'plaid'   => true,
         'quovo'   => true,
         'yodlee'  => true,
+        'fints'   => true,
     ],
     // some providers have pre-requisites.
     'has_prereq'       => [
@@ -83,6 +88,7 @@ return [
         'plaid'   => true,
         'quovo'   => true,
         'yodlee'  => true,
+        'fints'   => false,
     ],
     // if so, there must be a class to handle them.
     'prerequisites'    => [
@@ -94,6 +100,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'fints'   => false,
     ],
     // some providers may need extra configuration per job
     'has_job_config'   => [
@@ -105,6 +112,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'fints'   => true,
     ],
     // if so, this is the class that handles it.
     'configuration'    => [
@@ -116,6 +124,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'fints'   => FinTSJobConfiguration::class,
     ],
     // this is the routine that runs the actual import.
     'routine'          => [
@@ -127,6 +136,7 @@ return [
         'plaid'   => false,
         'quovo'   => false,
         'yodlee'  => false,
+        'fints'   => FinTSRoutine::class,
     ],
 
     'options' => [

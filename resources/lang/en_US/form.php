@@ -222,6 +222,16 @@ return [
     'public_key'            => 'Public key',
     'country_code'          => 'Country code',
     'provider_code'         => 'Bank or data-provider',
+    'fints_url'             => 'FinTS API URL',
+    'fints_port'            => 'Port',
+    'fints_bank_code'       => 'Bank code',
+    'fints_username'        => 'Username',
+    'fints_password'        => 'PIN / Password',
+    'fints_account'         => 'FinTS account',
+    'local_account'         => 'Firefly III account',
+    'from_date'             => 'Date from',
+    'to_date'               => 'Date to',
+    
 
     'due_date'                => 'Due date',
     'payment_date'            => 'Payment date',
