@@ -34,6 +34,7 @@ use FireflyIII\TransactionRules\Actions\ConvertToDeposit;
 use FireflyIII\TransactionRules\Actions\ConvertToTransfer;
 use FireflyIII\TransactionRules\Actions\ConvertToWithdrawal;
 use FireflyIII\TransactionRules\Actions\LinkToBill;
+use FireflyIII\TransactionRules\Actions\NotifyWebhook;
 use FireflyIII\TransactionRules\Actions\PrependDescription;
 use FireflyIII\TransactionRules\Actions\PrependNotes;
 use FireflyIII\TransactionRules\Actions\RemoveAllTags;
@@ -373,6 +374,7 @@ return [
         'convert_withdrawal'      => ConvertToWithdrawal::class,
         'convert_deposit'         => ConvertToDeposit::class,
         'convert_transfer'        => ConvertToTransfer::class,
+        'notify_webhook'          => NotifyWebhook::class,
     ],
     'rule-actions-text'        => [
         'set_category',
@@ -383,6 +385,7 @@ return [
         'set_description',
         'append_description',
         'prepend_description',
+        'notify_webhook',
     ],
     'test-triggers'            => [
         'limit' => 10,

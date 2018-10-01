@@ -431,6 +431,8 @@ return [
     'rule_action_convert_withdrawal'             => 'Convert the transaction to a withdrawal to ":action_value"',
     'rule_action_convert_transfer_choice'        => 'Convert the transaction to a transfer',
     'rule_action_convert_transfer'               => 'Convert the transaction to a transfer with ":action_value"',
+    'rule_action_notify_webhook_choice'          => 'Notify about event to webhook..',
+    'rule_action_notify_webhook'                 => 'Notify about event to webhook ":action_value"',
 
     'rules_have_read_warning'                 => 'Have you read the warning?',
     'apply_rule_warning'                      => 'Warning: running a rule(group) on a large selection of transactions could take ages, and it could time-out. If it does, the rule(group) will only be applied to an unknown subset of your transactions. This might leave your financial administration in tatters. Please be careful.',
