@@ -58,6 +58,7 @@
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
     "fideloper/proxy": "4.*",
+    "guzzlehttp/guzzle": "~6.0",
     "laravel/framework": "5.7.*",
     "laravel/passport": "^7.0",
     "laravelcollective/html": "5.7.*",
