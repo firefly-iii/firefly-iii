@@ -103,11 +103,11 @@ class NotifyWebhook implements ActionInterface
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         
         $body = $manager->createData($resource)->toArray();
-        $request = new Request('POST', $this->action->action_value, ['json' => $body]);
+        
         try {
             Log::debug(sprintf('RuleAction NotifyWebhook posting to "%s"...', $this->action->action_value));
             $client = new Client();
-            $response = $client->send($request);
+            $response = $client->request('POST', $this->action->action_value, ['json' => $body]);
             if ($response->getStatusCode() !== 200) {
                 Log::debug(sprintf('RuleAction NotifyWebhook posted to "%s" - Webhook received a non 200 response.', $this->action->action_value));
                 return false;
