@@ -110,6 +110,7 @@ class StageImportDataHandler
             'external_id' => null,
             'notes' => null,
             'bunq_payment_id' => null,
+            'original-source' => sprintf('fints-v%s', config('firefly.version')),
             'transactions' => [
                 // single transaction:
                 [
