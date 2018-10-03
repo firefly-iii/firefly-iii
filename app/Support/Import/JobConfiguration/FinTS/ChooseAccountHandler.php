@@ -61,7 +61,7 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
             $finTS = new FinTS($this->importJob->configuration);
             $finTS->getAccount($config['fints_account']);
         } catch (FireflyException $e) {
-            return new MessageBag($e->getMessage());
+            return new MessageBag([$e->getMessage()]);
         }
 
         $this->repository->setStage($this->importJob, FinTSConfigurationSteps::GO_FOR_IMPORT);
