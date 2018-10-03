@@ -71,7 +71,7 @@ class StageImportDataHandler
     {
         Log::debug(sprintf('Start converting transaction %s', $transaction->getDescription1()));
 
-        $amount        = $transaction->getAmount();
+        $amount        = (string) $transaction->getAmount();
         $debitOrCredit = $transaction->getCreditDebit();
 
         Log::debug(sprintf('Amount is %s', $amount));
@@ -79,7 +79,7 @@ class StageImportDataHandler
             $type = TransactionType::DEPOSIT;
         } else {
             $type   = TransactionType::WITHDRAWAL;
-            $amount = -$amount;
+            $amount = bcmul($amount, '-1');
         }
 
         $destination = $this->mapper->map(
