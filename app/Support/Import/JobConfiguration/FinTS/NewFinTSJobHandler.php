@@ -85,10 +85,10 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
     {
         $config = $this->importJob->configuration;
         return [
-            'fints_url' => $config['fints_url'] ?? "",
-            'fints_port' => $config['fints_port'] ?? "443",
-            'fints_bank_code' => $config['fints_bank_code'] ?? "",
-            'fints_username' => $config['fints_username'] ?? ""
+            'fints_url' => $config['fints_url'] ?? '',
+            'fints_port' => $config['fints_port'] ?? '443',
+            'fints_bank_code' => $config['fints_bank_code'] ?? '',
+            'fints_username' => $config['fints_username'] ?? ''
         ];
     }
 
