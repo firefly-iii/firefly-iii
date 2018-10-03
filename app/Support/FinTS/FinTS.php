@@ -3,6 +3,7 @@
 
 namespace FireflyIII\Support\FinTS;
 
+use Fhp\Model\SEPAAccount;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Support\Facades\Crypt;
 
@@ -46,7 +47,7 @@ class FinTS
     }
 
     /**
-     * @return \Fhp\Model\SEPAAccount[]
+     * @return SEPAAccount[]
      * @throws FireflyException
      */
     public function getAccounts()
@@ -60,13 +61,13 @@ class FinTS
 
     /**
      * @param string $accountNumber
-     * @return \Fhp\Model\SEPAAccount
+     * @return SEPAAccount
      * @throws FireflyException
      */
-    public function getAccount($accountNumber)
+    public function getAccount(string $accountNumber)
     {
         $accounts         = $this->getAccounts();
-        $filteredAccounts = array_filter($accounts, function ($account) use ($accountNumber) {
+        $filteredAccounts = array_filter($accounts, function (SEPAAccount $account) use ($accountNumber) {
             return $account->getAccountNumber() == $accountNumber;
         });
         if (count($filteredAccounts) != 1) {
@@ -76,13 +77,13 @@ class FinTS
     }
 
     /**
-     * @param \Fhp\Model\SEPAAccount $account
+     * @param SEPAAccount $account
      * @param \DateTime $from
      * @param \DateTIme $to
      * @return \Fhp\Model\StatementOfAccount\StatementOfAccount|null
      * @throws FireflyException
      */
-    public function getStatementOfAccount(\Fhp\Model\SEPAAccount $account, \DateTime $from, \DateTIme $to)
+    public function getStatementOfAccount(SEPAAccount $account, \DateTime $from, \DateTIme $to)
     {
         try {
             return $this->finTS->getStatementOfAccount($account, $from, $to);
