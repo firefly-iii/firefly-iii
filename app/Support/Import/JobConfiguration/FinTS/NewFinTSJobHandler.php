@@ -28,6 +28,7 @@ use FireflyIII\Import\JobConfiguration\FinTSConfigurationSteps;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\FinTS\FinTS;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\MessageBag;
 
 class NewFinTSJobHandler implements FinTSConfigurationInterface
@@ -53,7 +54,7 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['fints_port']      = (int)($data['fints_port'] ?? '');
         $config['fints_bank_code'] = (string)($data['fints_bank_code'] ?? '');
         $config['fints_username']  = (string)($data['fints_username'] ?? '');
-        $config['fints_password']  = (string)($data['fints_password'] ?? '');
+        $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? '');
 
         $this->repository->setConfiguration($this->importJob, $config);
 
@@ -87,8 +88,7 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
             'fints_url' => $config['fints_url'] ?? "",
             'fints_port' => $config['fints_port'] ?? "443",
             'fints_bank_code' => $config['fints_bank_code'] ?? "",
-            'fints_username' => $config['fints_username'] ?? "",
-            'fints_password' => $config['fints_password'] ?? "",
+            'fints_username' => $config['fints_username'] ?? ""
         ];
     }
 
