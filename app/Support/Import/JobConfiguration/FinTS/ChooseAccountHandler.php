@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Import\JobConfiguration\FinTS;
 
 
+use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\JobConfiguration\FinTSConfigurationSteps;
 use FireflyIII\Models\AccountType;
@@ -98,8 +99,8 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
             'fints_account' => $this->importJob->configuration['fints_account'] ?? null,
             'local_accounts' => $localAccounts,
             'local_account' => $this->importJob->configuration['local_account'] ?? null,
-            'from_date' => $this->importJob->configuration['from_date'] ?? (new \DateTime('now - 1 month'))->format('Y-m-d'),
-            'to_date' => $this->importJob->configuration['to_date'] ?? (new \DateTime('now'))->format('Y-m-d')
+            'from_date' => $this->importJob->configuration['from_date'] ?? (new Carbon('now - 1 month'))->format('Y-m-d'),
+            'to_date' => $this->importJob->configuration['to_date'] ?? (new Carbon('now'))->format('Y-m-d')
         ];
         return $data;
     }
