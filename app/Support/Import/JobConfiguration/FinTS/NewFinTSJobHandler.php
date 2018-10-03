@@ -83,7 +83,6 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
     public function getNextData(): array
     {
         $config = $this->importJob->configuration;
-        var_dump($config);
         return [
             'fints_url' => $config['fints_url'] ?? "",
             'fints_port' => $config['fints_port'] ?? "443",
