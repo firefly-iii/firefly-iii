@@ -53,7 +53,6 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
         $config                  = $this->importJob->configuration;
         $config['fints_account'] = (string)($data['fints_account'] ?? '');
         $config['local_account'] = (string)($data['local_account'] ?? '');
-        $config['local_account'] = (string)($data['local_account'] ?? '');
         $config['from_date']     = (string)($data['from_date'] ?? '');
         $config['to_date']       = (string)($data['to_date'] ?? '');
         $this->repository->setConfiguration($this->importJob, $config);
