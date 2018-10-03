@@ -60,7 +60,7 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
 
         $incomplete = false;
         foreach ($config as $value) {
-            $incomplete = $value == '' or $incomplete;
+            $incomplete = $value === '' or $incomplete;
         }
         if ($incomplete) {
             return new MessageBag([trans('import.incomplete_fints_form')]);
