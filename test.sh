@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 DATABASE=./storage/database/database.sqlite
 DATABASECOPY=./storage/database/databasecopy.sqlite
