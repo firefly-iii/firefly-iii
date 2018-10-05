@@ -1,0 +1,105 @@
+<?php
+/**
+ * NewFinTSJobHandler.php
+ * Copyright (c) 2017 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ */
+declare(strict_types=1);
+
+
+namespace FireflyIII\Support\Import\JobConfiguration\FinTS;
+
+
+use FireflyIII\Import\JobConfiguration\FinTSConfigurationSteps;
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Support\FinTS\FinTS;
+use Illuminate\Support\Facades\Crypt;
+use Illuminate\Support\MessageBag;
+
+class NewFinTSJobHandler implements FinTSConfigurationInterface
+{
+    /** @var ImportJob */
+    private $importJob;
+    /** @var ImportJobRepositoryInterface */
+    private $repository;
+
+    /**
+     * Store data associated with current stage.
+     *
+     * @param array $data
+     *
+     * @return MessageBag
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    public function configureJob(array $data): MessageBag
+    {
+        $config = [];
+
+        $config['fints_url']       = trim($data['fints_url'] ?? '');
+        $config['fints_port']      = (int)($data['fints_port'] ?? '');
+        $config['fints_bank_code'] = (string)($data['fints_bank_code'] ?? '');
+        $config['fints_username']  = (string)($data['fints_username'] ?? '');
+        $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? '');
+
+        $this->repository->setConfiguration($this->importJob, $config);
+
+        $incomplete = false;
+        foreach ($config as $value) {
+            $incomplete = $value === '' or $incomplete;
+        }
+        if ($incomplete) {
+            return new MessageBag([trans('import.incomplete_fints_form')]);
+        }
+
+        $finTS = app(FinTS::class, ['config' => $this->importJob->configuration]);
+        if (($checkConnection = $finTS->checkConnection()) !== true) {
+            return new MessageBag([trans('import.fints_connection_failed', ['originalError' => $checkConnection])]);
+        }
+
+        $this->repository->setStage($this->importJob, FinTSConfigurationSteps::CHOOSE_ACCOUNT);
+
+        return new MessageBag();
+    }
+
+    /**
+     * Get the data necessary to show the configuration screen.
+     *
+     * @return array
+     */
+    public function getNextData(): array
+    {
+        $config = $this->importJob->configuration;
+        return [
+            'fints_url' => $config['fints_url'] ?? '',
+            'fints_port' => $config['fints_port'] ?? '443',
+            'fints_bank_code' => $config['fints_bank_code'] ?? '',
+            'fints_username' => $config['fints_username'] ?? ''
+        ];
+    }
+
+    /**
+     * @param ImportJob $importJob
+     */
+    public function setImportJob(ImportJob $importJob): void
+    {
+        $this->importJob  = $importJob;
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($importJob->user);
+    }
+
+}
