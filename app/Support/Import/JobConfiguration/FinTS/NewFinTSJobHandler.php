@@ -1,7 +1,7 @@
 <?php
 /**
  * NewFinTSJobHandler.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 https://github.com/bnw
  *
  * This file is part of Firefly III.
  *
@@ -31,6 +31,10 @@ use FireflyIII\Support\FinTS\FinTS;
 use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\MessageBag;
 
+/**
+ *
+ * Class NewFinTSJobHandler
+ */
 class NewFinTSJobHandler implements FinTSConfigurationInterface
 {
     /** @var ImportJob */
@@ -60,14 +64,14 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
 
         $incomplete = false;
         foreach ($config as $value) {
-            $incomplete = $value === '' or $incomplete;
+            $incomplete = '' === $value or $incomplete;
         }
         if ($incomplete) {
             return new MessageBag([trans('import.incomplete_fints_form')]);
         }
 
         $finTS = app(FinTS::class, ['config' => $this->importJob->configuration]);
-        if (($checkConnection = $finTS->checkConnection()) !== true) {
+        if (true !== ($checkConnection = $finTS->checkConnection())) {
             return new MessageBag([trans('import.fints_connection_failed', ['originalError' => $checkConnection])]);
         }
 
@@ -84,11 +88,12 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
     public function getNextData(): array
     {
         $config = $this->importJob->configuration;
+
         return [
-            'fints_url' => $config['fints_url'] ?? '',
-            'fints_port' => $config['fints_port'] ?? '443',
+            'fints_url'       => $config['fints_url'] ?? '',
+            'fints_port'      => $config['fints_port'] ?? '443',
             'fints_bank_code' => $config['fints_bank_code'] ?? '',
-            'fints_username' => $config['fints_username'] ?? ''
+            'fints_username'  => $config['fints_username'] ?? '',
         ];
     }
 

@@ -1,7 +1,7 @@
 <?php
 /**
  * FinTSRoutine.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2017 https://github.com/bnw
  *
  * This file is part of Firefly III.
  *
@@ -30,6 +30,10 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\FinTS\StageImportDataHandler;
 use Illuminate\Support\Facades\Log;
 
+/**
+ *
+ * Class FinTSRoutine
+ */
 class FinTSRoutine implements RoutineInterface
 {
     /** @var ImportJob */

@@ -1,7 +1,7 @@
 <?php
 /**
  * FinTSJobConfiguration.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 https://github.com/bnw
  *
  * This file is part of Firefly III.
  *
@@ -29,13 +29,10 @@ use FireflyIII\Support\Import\JobConfiguration\FinTS\FinTSConfigurationInterface
 use FireflyIII\Support\Import\JobConfiguration\FinTS\NewFinTSJobHandler;
 use Illuminate\Support\MessageBag;
 
-abstract class FinTSConfigurationSteps
-{
-    const NEW = 'new';
-    const CHOOSE_ACCOUNT = 'choose_account';
-    const GO_FOR_IMPORT = 'go-for-import';
-}
-
+/**
+ *
+ * Class FinTSJobConfiguration
+ */
 class FinTSJobConfiguration implements JobConfigurationInterface
 {
     /** @var ImportJob */
@@ -48,7 +45,7 @@ class FinTSJobConfiguration implements JobConfigurationInterface
      */
     public function configurationComplete(): bool
     {
-        return $this->importJob->stage == FinTSConfigurationSteps::GO_FOR_IMPORT;
+        return $this->importJob->stage === FinTSConfigurationSteps::GO_FOR_IMPORT;
     }
 
     /**

@@ -1,7 +1,7 @@
 <?php
 /**
  * ChooseAccountHandler.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2018 https://github.com/bnw
  *
  * This file is part of Firefly III.
  *
@@ -28,19 +28,23 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Import\JobConfiguration\FinTSConfigurationSteps;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\FinTS\FinTS;
 use Illuminate\Support\MessageBag;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 
+/**
+ *
+ * Class ChooseAccountHandler
+ */
 class ChooseAccountHandler implements FinTSConfigurationInterface
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
     /** @var ImportJob */
     private $importJob;
     /** @var ImportJobRepositoryInterface */
     private $repository;
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
 
     /**
      * Store data associated with current stage.
@@ -51,7 +55,7 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
      */
     public function configureJob(array $data): MessageBag
     {
-        $config                  = $this->importJob->configuration;
+        $config                  = $this->repository->getConfiguration($this->importJob);
         $config['fints_account'] = (string)($data['fints_account'] ?? '');
         $config['local_account'] = (string)($data['local_account'] ?? '');
         $config['from_date']     = (string)($data['from_date'] ?? '');
@@ -59,7 +63,7 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
         $this->repository->setConfiguration($this->importJob, $config);
 
         try {
-            $finTS = app(FinTS::class, ['config' => $this->importJob->configuration]);
+            $finTS = app(FinTS::class, ['config' => $config]);
             $finTS->getAccount($config['fints_account']);
         } catch (FireflyException $e) {
             return new MessageBag([$e->getMessage()]);
@@ -89,19 +93,20 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
         foreach ($this->accountRepository->getAccountsByType([AccountType::ASSET]) as $localAccount) {
             $display_name = $localAccount->name;
             if ($localAccount->iban) {
-                $display_name .= " - $localAccount->iban";
+                $display_name .= sprintf(' - %s', $localAccount->iban);
             }
             $localAccounts[$localAccount->id] = $display_name;
         }
 
         $data = [
             'fints_accounts' => $finTSAccountsData,
-            'fints_account' => $this->importJob->configuration['fints_account'] ?? null,
+            'fints_account'  => $this->importJob->configuration['fints_account'] ?? null,
             'local_accounts' => $localAccounts,
-            'local_account' => $this->importJob->configuration['local_account'] ?? null,
-            'from_date' => $this->importJob->configuration['from_date'] ?? (new Carbon('now - 1 month'))->format('Y-m-d'),
-            'to_date' => $this->importJob->configuration['to_date'] ?? (new Carbon('now'))->format('Y-m-d')
+            'local_account'  => $this->importJob->configuration['local_account'] ?? null,
+            'from_date'      => $this->importJob->configuration['from_date'] ?? (new Carbon('now - 1 month'))->format('Y-m-d'),
+            'to_date'        => $this->importJob->configuration['to_date'] ?? (new Carbon('now'))->format('Y-m-d'),
         ];
+
         return $data;
     }
 
@@ -115,6 +120,4 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
     }
-
-
 }

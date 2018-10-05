@@ -231,7 +231,7 @@ return [
     'local_account'         => 'Firefly III account',
     'from_date'             => 'Date from',
     'to_date'               => 'Date to',
-    
+
 
     'due_date'                => 'Due date',
     'payment_date'            => 'Payment date',
