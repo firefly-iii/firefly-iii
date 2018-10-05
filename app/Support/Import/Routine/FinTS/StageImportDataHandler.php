@@ -54,7 +54,7 @@ class StageImportDataHandler
         Log::debug('Now in StageImportDataHandler::run()');
 
         $localAccount       = $this->accountRepository->find($this->importJob->configuration['local_account']);
-        $finTS              = new FinTS($this->importJob->configuration);
+        $finTS              = app(FinTS::class, ['config' => $this->importJob->configuration]);
         $fintTSAccount      = $finTS->getAccount($this->importJob->configuration['fints_account']);
         $statementOfAccount = $finTS->getStatementOfAccount($fintTSAccount, new \DateTime($this->importJob->configuration['from_date']), new \DateTime($this->importJob->configuration['to_date']));
         $collection         = [];

@@ -59,7 +59,7 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
         $this->repository->setConfiguration($this->importJob, $config);
 
         try {
-            $finTS = new FinTS($this->importJob->configuration);
+            $finTS = app(FinTS::class, ['config' => $this->importJob->configuration]);
             $finTS->getAccount($config['fints_account']);
         } catch (FireflyException $e) {
             return new MessageBag([$e->getMessage()]);
@@ -78,7 +78,7 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
      */
     public function getNextData(): array
     {
-        $finTS             = new FinTS($this->importJob->configuration);
+        $finTS             = app(FinTS::class, ['config' => $this->importJob->configuration]);
         $finTSAccounts     = $finTS->getAccounts();
         $finTSAccountsData = [];
         foreach ($finTSAccounts as $account) {

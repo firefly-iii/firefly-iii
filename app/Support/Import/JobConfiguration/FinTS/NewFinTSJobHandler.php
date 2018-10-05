@@ -66,7 +66,7 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
             return new MessageBag([trans('import.incomplete_fints_form')]);
         }
 
-        $finTS = new FinTS($this->importJob->configuration);
+        $finTS = app(FinTS::class, ['config' => $this->importJob->configuration]);
         if (($checkConnection = $finTS->checkConnection()) !== true) {
             return new MessageBag([trans('import.fints_connection_failed', ['originalError' => $checkConnection])]);
         }
