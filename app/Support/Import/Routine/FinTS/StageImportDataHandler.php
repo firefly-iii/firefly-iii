@@ -6,6 +6,7 @@ namespace FireflyIII\Support\Import\Routine\FinTS;
 
 use Fhp\Model\StatementOfAccount\Transaction as FinTSTransaction;
 use Fhp\Model\StatementOfAccount\Transaction;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
@@ -47,13 +48,16 @@ class StageImportDataHandler
     }
 
     /**
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function run()
     {
         Log::debug('Now in StageImportDataHandler::run()');
 
-        $localAccount       = $this->accountRepository->find($this->importJob->configuration['local_account']);
+        $localAccount = $this->accountRepository->findNull($this->importJob->configuration['local_account']);
+        if ($localAccount === null) {
+            throw new FireflyException('Cannot find Firefly account with id ' . $this->importJob->configuration['local_account']);
+        }
         $finTS              = app(FinTS::class, ['config' => $this->importJob->configuration]);
         $fintTSAccount      = $finTS->getAccount($this->importJob->configuration['fints_account']);
         $statementOfAccount = $finTS->getStatementOfAccount($fintTSAccount, new \DateTime($this->importJob->configuration['from_date']), new \DateTime($this->importJob->configuration['to_date']));
