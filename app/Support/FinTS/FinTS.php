@@ -73,7 +73,7 @@ class FinTS
         if (count($filteredAccounts) != 1) {
             throw new FireflyException("Cannot find account with number " . $accountNumber);
         }
-        return $filteredAccounts[0];
+        return reset($filteredAccounts);
     }
 
     /**
