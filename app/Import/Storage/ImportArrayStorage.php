@@ -116,7 +116,7 @@ class ImportArrayStorage
         app('preferences')->mark();
 
         // email about this:
-        event(new RequestedReportOnJournals($this->importJob->user_id, $collection));
+        event(new RequestedReportOnJournals((int)$this->importJob->user_id, $collection));
 
         return $collection;
     }

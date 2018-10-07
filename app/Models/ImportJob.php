@@ -56,6 +56,7 @@ class ImportJob extends Model
      */
     protected $casts
         = [
+            'user_id'         => 'int',
             'created_at'      => 'datetime',
             'updated_at'      => 'datetime',
             'configuration'   => 'array',
