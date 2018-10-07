@@ -202,8 +202,9 @@ return [
     'spectre_extra_key_units'              => 'Units',
     'spectre_extra_key_unit_price'         => 'Unit price',
     'spectre_extra_key_transactions_count' => 'Transaction count',
+
     //job configuration for finTS
-    'fints_connection_failed'              => 'An error occurred while trying to connecting to your bank. Please mak sure that all the data you entered is correct. Original error message: :originalError',
+    'fints_connection_failed'              => 'An error occurred while trying to connecting to your bank. Please make sure that all the data you entered is correct. Original error message: :originalError',
 
     'job_config_fints_url_help'       => 'E.g. https://banking-dkb.s-fints-pt-dkb.de/fints30',
     'job_config_fints_username_help'  => 'For many banks this is your account number.',
