@@ -66,6 +66,9 @@ COPY ./.deploy/docker/firefly-iii.conf /etc/supervisor/conf.d/firefly-iii.conf
 # copy cron job supervisor conf file.
 COPY ./.deploy/docker/cronjob.conf /etc/supervisor/conf.d/cronjob.conf
 
+# copy ca certs to correct location
+COPY ./.deploy/docker/cacert.pem /usr/local/ssl/cert.pem
+
 # test crons added via crontab
 RUN echo "0 3 * * * /usr/local/bin/php /var/www/firefly-iii/artisan firefly:cron" | crontab -
 #RUN (crontab -l ; echo "*/1 * * * * free >> /var/www/firefly-iii/public/cron.html") 2>&1 | crontab -
