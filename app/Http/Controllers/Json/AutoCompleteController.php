@@ -99,6 +99,7 @@ class AutoCompleteController extends Controller
         $search     = (string)$request->get('search');
         $unfiltered = null;
         $filtered   = null;
+
         $cache      = new CacheProperties;
         $cache->addProperty($subject);
         // very unlikely a user will actually search for this string.
@@ -156,7 +157,9 @@ class AutoCompleteController extends Controller
         if ('transaction_types' === $subject) {
             $unfiltered = $this->getTransactionTypes();
         }
-
+        if ('transaction-types' === $subject) {
+            $unfiltered = $this->getTransactionTypes();
+        }
 
         // filter results
         $filtered = $this->filterResult($unfiltered, $search);
