@@ -100,14 +100,6 @@ class AutoCompleteController extends Controller
         $unfiltered = null;
         $filtered   = null;
 
-        $cache      = new CacheProperties;
-        $cache->addProperty($subject);
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
         // search for all accounts.
         if ('all-accounts' === $subject) {
             $unfiltered = $this->getAccounts(
@@ -167,7 +159,6 @@ class AutoCompleteController extends Controller
         if (null === $filtered) {
             throw new FireflyException(sprintf('Auto complete handler cannot handle "%s"', $subject)); // @codeCoverageIgnore
         }
-        $cache->store($filtered);
 
         return response()->json($filtered);
     }
