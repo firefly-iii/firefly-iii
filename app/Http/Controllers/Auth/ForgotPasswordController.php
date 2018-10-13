@@ -58,6 +58,13 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
+        $loginProvider = getenv('LOGIN_PROVIDER');
+        if ('eloquent' !== $loginProvider) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+
+            return view('error', compact('message'));
+        }
+
         $this->validateEmail($request);
 
         // verify if the user is not a demo user. If so, we give him back an error.
@@ -90,6 +97,13 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
+        $loginProvider = getenv('LOGIN_PROVIDER');
+        if ('eloquent' !== $loginProvider) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+
+            return view('error', compact('message'));
+        }
+
         // is allowed to?
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();

@@ -71,9 +71,19 @@ class RegisterController extends Controller
     public function register(Request $request)
     {
         // is allowed to?
-        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $userCount      = User::count();
-        if (true === $singleUserMode && $userCount > 0) {
+        $allowRegistration = true;
+        $loginProvider     = getenv('LOGIN_PROVIDER');
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
+        if (true === $singleUserMode && $userCount > 0 && 'eloquent' === $loginProvider) {
+            $allowRegistration = false;
+        }
+
+        if ('eloquent' !== $loginProvider) {
+            $allowRegistration = false;
+        }
+
+        if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
             return view('error', compact('message'));
@@ -102,13 +112,25 @@ class RegisterController extends Controller
      */
     public function showRegistrationForm(Request $request)
     {
-        // is demo site?
-        $isDemoSite = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $allowRegistration = true;
+        $loginProvider     = getenv('LOGIN_PROVIDER');
+        $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $userCount         = User::count();
 
-        // is allowed to?
-        $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
-        $userCount      = User::count();
-        if (true === $singleUserMode && $userCount > 0) {
+        if (true === $isDemoSite) {
+            $allowRegistration = false;
+        }
+
+        if (true === $singleUserMode && $userCount > 0 && 'eloquent' === $loginProvider) {
+            $allowRegistration = false;
+        }
+
+        if ('eloquent' !== $loginProvider) {
+            $allowRegistration = false;
+        }
+
+        if (false === $allowRegistration) {
             $message = 'Registration is currently not available.';
 
             return view('error', compact('message'));

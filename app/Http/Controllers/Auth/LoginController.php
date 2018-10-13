@@ -129,8 +129,9 @@ class LoginController extends Controller
      */
     public function showLoginForm(Request $request)
     {
-        $count = DB::table('users')->count();
-        if (0 === $count) {
+        $count         = DB::table('users')->count();
+        $loginProvider = getenv('LOGIN_PROVIDER');
+        if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
 
@@ -141,13 +142,20 @@ class LoginController extends Controller
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
+        $allowReset        = true;
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
+        }
+
+        // single user mode is ignored when the user is not using eloquent:
+        if ('eloquent' !== $loginProvider) {
+            $allowRegistration = false;
+            $allowReset        = false;
         }
 
         $email    = $request->old('email');
         $remember = $request->old('remember');
 
-        return view('auth.login', compact('allowRegistration', 'email', 'remember'));
+        return view('auth.login', compact('allowRegistration', 'email', 'remember','allowReset'));
     }
 }

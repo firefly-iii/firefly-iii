@@ -191,6 +191,7 @@ return [
     'password_confirmation' => 'Password (again)',
     'blocked'               => 'Is blocked?',
     'blocked_code'          => 'Reason for block',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Apply rules',

@@ -95,6 +95,7 @@ return [
     'api_version'              => '0.8',
     'db_version'               => 5,
     'maxUploadSize'            => 15242880,
+    'login_provider'           => env('LOGIN_PROVIDER', 'eloquent'),
     'allowedMimes'             => [
         /* plain files */
         'text/plain',

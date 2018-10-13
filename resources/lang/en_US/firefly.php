@@ -551,6 +551,8 @@ return [
     'email_changed_logout'                    => 'Until you verify your email address, you cannot login.',
     'login_with_new_email'                    => 'You can now login with your new email address.',
     'login_with_old_email'                    => 'You can now login with your old email address again.',
+    'login_provider_local_only'               => 'This action is not available when authenticating through ":login_provider".',
+    'delete_local_info_only'                  => 'Because you authenticate through ":login_provider", this will only delete local Firefly III information.',
 
     // attachments
     'nr_of_attachments'                       => 'One attachment|:count attachments',
