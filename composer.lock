@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f8b29d89e3421b9a03cbaf4c1ae3fba4",
+    "content-hash": "f28fdf6ec034460c012d2734231029b7",
     "packages": [
         {
             "name": "adldap2/adldap2",
@@ -219,7 +219,179 @@
                 "payment",
                 "sepa"
             ],
-            "time": "2018-10-05T13:50:22+00:00"
+            "time": "2018-09-01T12:54:04+00:00"
+        },
+        {
+            "name": "danhunsaker/laravel-flysystem-others",
+            "version": "v1.3.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danhunsaker/laravel-flysystem-others.git",
+                "reference": "43c5e3bf8cbb9bc22a2e228cb644882f0be52f29"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danhunsaker/laravel-flysystem-others/zipball/43c5e3bf8cbb9bc22a2e228cb644882f0be52f29",
+                "reference": "43c5e3bf8cbb9bc22a2e228cb644882f0be52f29",
+                "shasum": ""
+            },
+            "require": {
+                "danhunsaker/laravel-flysystem-service": "^1.1",
+                "illuminate/filesystem": "^5.0",
+                "illuminate/support": "^5.0",
+                "league/flysystem": "^1.0"
+            },
+            "suggest": {
+                "aliyuncs/aliyun-oss-flysystem": "One of the options to use the 'oss' adapter (^1.2)",
+                "aobozhang/aliyun-oss-adapter": "One of the options to use the 'oss' adapter (^1.0)",
+                "apollopy/flysystem-aliyun-oss": "One of the options to use the 'oss' adapter (^1.2)",
+                "argentcrusade/flysystem-selectel": "Required to use the 'selectel' adapter (^1.2)",
+                "arhitector/yandex-disk-flysystem": "Required to use the 'yandex' adapter (^1.0)",
+                "boofw/flysystem-qiniu": "One of the options to use the 'qiniu' adapter (^1.0)",
+                "carlosocarvalho/flysystem-cloudinary": "One of the options to use the 'cloudinary' adapter (^1.0)",
+                "cedricziel/flysystem-gcs": "One of the options to use the 'google' adapter (^2.0)",
+                "danhunsaker/flysystem-redis": "Required to use the 'redis' adapter (^1.0)",
+                "emgag/flysystem-tempdir": "Required to use the 'temp' adapter (^0.1)",
+                "engineor/flysystem-runabove": "Required to use the 'runabove' adapter (^1.0)",
+                "enl/flysystem-cloudinary": "One of the options to use the 'cloudinary' adapter (^1.1)",
+                "eqingdan/flysystem-qiniu": "One of the options to use the 'qiniu' adapter (^0.1)",
+                "freyo/flysystem-qcloud-cos-v3": "One of the options to use the 'qcloud' adapter (^)",
+                "freyo/flysystem-qcloud-cos-v4": "One of the options to use the 'qcloud' adapter (^)",
+                "freyo/flysystem-qcloud-cos-v5": "One of the options to use the 'qcloud' adapter (^)",
+                "ignited/flysystem-google-drive": "One of the options to use the 'gdrive' adapter (dev-master)",
+                "ignited/flysystem-onedrive": "One of the options to use the 'onedrive' adapter (dev-master)",
+                "integral/flysystem-pdo-adapter": "One of the options to use the 'pdo' adapter (^1.0)",
+                "jacekbarecki/flysystem-onedrive": "One of the options to use the 'onedrive' adapter (^1.0)",
+                "jellybool/flysystem-upyun": "Required to use the 'upyun' adapter (^1.0)",
+                "kapersoft/flysystem-sharefile": "Required to use the 'sharefile' adapter (^1.1)",
+                "litipk/flysystem-fallback-adapter": "Required to use the 'fallback' adapter, and with league/flysystem-replicate-adapter, the 'mirror' adapter (^0.1)",
+                "mgriego/flysystem-clamav": "Scans files for viruses before storing them on an actual filesystem (^1.0)",
+                "mhetreramesh/flysystem-backblaze": "Required to use the 'backblaze' adapter (^1.1)",
+                "monster/flysystem-aliyun-oss": "One of the options to use the 'oss' adapter, but not recommended, since it uses the League namespace without being a Leage package (^1.0)",
+                "nao-pon/flysystem-google-drive": "One of the options to use the 'gdrive' adapter (^1.1)",
+                "nicolasbeauvais/flysystem-onedrive": "One of the options to use the 'onedrive' adapter (^1.0)",
+                "nimbusoft/flysystem-openstack-swift": "Required to use the 'openstack' adapter (^0.2)",
+                "orzcc/aliyun-oss": "One of the options to use the 'oss' adapter (dev-master)",
+                "overtrue/flysystem-qiniu": "One of the options to use the 'qiniu' adapter (^1.0)",
+                "phlib/flysystem-pdo": "One of the options to use the 'pdo' adapter (^1.1)",
+                "potherca/flysystem-github": "Required to use the 'github' adapter (^0.2)",
+                "private-it/flysystem-google-drive": "One of the options to use the 'gdrive' adapter (dev-master)",
+                "robgridley/flysystem-smb": "Required to use the 'smb' adapter (dev-master)",
+                "rokde/flysystem-local-database-adapter": "Required to use the 'eloquent' adapter (^0.0)",
+                "shion/aliyun-oss": "One of the options to use the 'oss' adapter (dev-master)",
+                "spatie/flysystem-dropbox": "Required to use the 'dropbox' adapter in PHP 7 (^1.0)",
+                "srmklive/flysystem-dropbox-v2": "Required to use the 'dropbox' adapter in PHP 5 (^1.0)",
+                "superbalist/flysystem-google-storage": "One of the options to use the 'google' adapter (^7.0)",
+                "t3chnik/flysystem-cloudinary-adapter": "One of the options to use the 'cloudinary' adapter (dev-master)",
+                "twistor/flysystem-guzzle": "One of the options to use the (read-only) 'http' adapter (^6.0)",
+                "twistor/flysystem-http": "One of the options to use the (read-only) 'http' adapter (^0.2)",
+                "twistor/flysystem-stream-wrapper": "Allows access to Flysystem drives using 'drive://path' streams (^1.0)",
+                "xxtime/flysystem-aliyun-oss": "One of the options to use the 'oss' adapter (^1.2)",
+                "zhuxiaoqiao/flysystem-baidu-bos": "Required to use the 'bos' adapter (^1.0)"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Danhunsaker\\Laravel\\Flysystem\\FlysystemOtherServiceProvider"
+                    ],
+                    "dont-discover": [
+                        "danhunsaker/laravel-flysystem-service"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Danhunsaker\\Laravel\\Flysystem\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Hunsaker",
+                    "email": "danhunsaker@gmail.com"
+                }
+            ],
+            "description": "Automatically registers every third-party Flysystem adapter it recognizes as a Laravel Filesystem Driver.",
+            "keywords": [
+                "Flysystem",
+                "laravel"
+            ],
+            "time": "2018-08-16T11:20:15+00:00"
+        },
+        {
+            "name": "danhunsaker/laravel-flysystem-service",
+            "version": "v1.2.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danhunsaker/laravel-flysystem-service.git",
+                "reference": "0d077a0ddadc08e80fa2f152da2ee7aaaea37735"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danhunsaker/laravel-flysystem-service/zipball/0d077a0ddadc08e80fa2f152da2ee7aaaea37735",
+                "reference": "0d077a0ddadc08e80fa2f152da2ee7aaaea37735",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/filesystem": "^5.0",
+                "illuminate/support": "^5.0",
+                "league/flysystem": "^1.0"
+            },
+            "suggest": {
+                "league/flysystem-aws-s3-v3": "Required to use the 's3' adapter (^1.0)",
+                "league/flysystem-azure-blob-storage": "Required to use the 'azure' adapter (^1.0)",
+                "league/flysystem-cached-adapter": "Required to use metadata caching (^1.0)",
+                "league/flysystem-eventable-filesystem": "Required to hook into filesystem Events (^1.0)",
+                "league/flysystem-gridfs": "Required to use the 'gridfs' adapter (^1.0)",
+                "league/flysystem-memory": "Required to use the 'memory' adapter (^1.0)",
+                "league/flysystem-phpcr": "Required to use the 'phpcr' adapter (^1.0)",
+                "league/flysystem-rackspace": "Required to use the 'rackspace' adapter (^1.0)",
+                "league/flysystem-replicate-adapter": "Required to use the 'replicate' adapter (^1.0)",
+                "league/flysystem-sftp": "Required to use the 'sftp' adapter (^1.0)",
+                "league/flysystem-vfs": "Required to use the 'vfs' adapter (^1.0)",
+                "league/flysystem-webdav": "Required to use the 'webdav' adapter (^1.0)",
+                "league/flysystem-ziparchive": "Required to use the 'zip' adapter (^1.0)",
+                "madewithlove/illuminate-psr-cache-bridge": "Required to use Laravel's cache implementation for Flysystem caching (^1.0)"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.x-dev"
+                },
+                "laravel": {
+                    "providers": [
+                        "Danhunsaker\\Laravel\\Flysystem\\FlysystemServiceProvider"
+                    ]
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Danhunsaker\\Laravel\\Flysystem\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Hunsaker",
+                    "email": "danhunsaker@gmail.com"
+                }
+            ],
+            "description": "Automatically registers every Flysystem adapter it recognizes as a Laravel Filesystem Driver.",
+            "keywords": [
+                "Flysystem",
+                "laravel"
+            ],
+            "time": "2018-08-13T22:27:45+00:00"
         },
         {
             "name": "davejamesmiller/laravel-breadcrumbs",
@@ -1733,6 +1905,94 @@
             "time": "2018-09-14T15:30:29+00:00"
         },
         {
+            "name": "league/flysystem-replicate-adapter",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-replicate-adapter.git",
+                "reference": "864e80409c0918b0ed6921c3941247017d9db77c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-replicate-adapter/zipball/864e80409c0918b0ed6921c3941247017d9db77c",
+                "reference": "864e80409c0918b0ed6921c3941247017d9db77c",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\Replicate\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for Replica's",
+            "time": "2015-08-18T21:07:17+00:00"
+        },
+        {
+            "name": "league/flysystem-sftp",
+            "version": "1.0.16",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thephpleague/flysystem-sftp.git",
+                "reference": "322839636847e0dba0f714e9ad0db813d65efcf2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thephpleague/flysystem-sftp/zipball/322839636847e0dba0f714e9ad0db813d65efcf2",
+                "reference": "322839636847e0dba0f714e9ad0db813d65efcf2",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0",
+                "php": ">=5.6.0",
+                "phpseclib/phpseclib": "~2.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "^5.7.25"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "League\\Flysystem\\Sftp\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Frank de Jonge",
+                    "email": "info@frenky.net"
+                }
+            ],
+            "description": "Flysystem adapter for SFTP",
+            "time": "2018-07-08T21:01:51+00:00"
+        },
+        {
             "name": "league/fractal",
             "version": "0.17.0",
             "source": {
@@ -1865,6 +2125,47 @@
                 "server"
             ],
             "time": "2018-06-23T16:57:59+00:00"
+        },
+        {
+            "name": "litipk/flysystem-fallback-adapter",
+            "version": "0.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Litipk/flysystem-fallback-adapter.git",
+                "reference": "1fdeb9352990deb8cba2a2c57cc94e2ff7e1381b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Litipk/flysystem-fallback-adapter/zipball/1fdeb9352990deb8cba2a2c57cc94e2ff7e1381b",
+                "reference": "1fdeb9352990deb8cba2a2c57cc94e2ff7e1381b",
+                "shasum": ""
+            },
+            "require": {
+                "league/flysystem": "~1.0",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "mockery/mockery": "0.9.*",
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Litipk\\Flysystem\\Fallback\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Andrés Correa Casablanca",
+                    "email": "castarco@litipk.com"
+                }
+            ],
+            "description": "Flysystem adapter for fallback filesystems",
+            "time": "2016-06-23T00:18:01+00:00"
         },
         {
             "name": "monolog/monolog",
