@@ -123,7 +123,7 @@ class StageImportDataHandlerTest extends TestCase
         $revenue            = $this->user()->accounts()->where('account_type_id', 5)->first();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'sid_a_' . random_int(1, 10000);
+        $job->key           = 'sid_a__' . random_int(1, 100000);
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'spectre';
