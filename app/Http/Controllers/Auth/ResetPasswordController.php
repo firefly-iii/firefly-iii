@@ -71,7 +71,7 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        $loginProvider = getenv('LOGIN_PROVIDER');
+        $loginProvider = env('LOGIN_PROVIDER','eloquent');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 
@@ -103,7 +103,7 @@ class ResetPasswordController extends Controller
      */
     public function reset(Request $request)
     {
-        $loginProvider = getenv('LOGIN_PROVIDER');
+        $loginProvider = env('LOGIN_PROVIDER','eloquent');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 

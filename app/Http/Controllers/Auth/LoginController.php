@@ -130,7 +130,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         $count         = DB::table('users')->count();
-        $loginProvider = getenv('LOGIN_PROVIDER');
+        $loginProvider = env('LOGIN_PROVIDER','eloquent');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore
         }
