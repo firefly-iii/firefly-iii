@@ -23,17 +23,37 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Log;
 
 /**
  * Trait VerifiesAccessToken.
  *
  * Verifies user access token for sensitive commands.
+ *
  * @codeCoverageIgnore
  */
 trait VerifiesAccessToken
 {
+    /**
+     * @return User
+     * @throws FireflyException
+     */
+    public function getUser(): User
+    {
+        $userId = (int)$this->option('user');
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+        $user       = $repository->findNull($userId);
+        if (null === $user) {
+            throw new FireflyException('User is unexpectedly NULL');
+        }
+
+        return $user;
+    }
+
     /**
      * Abstract method to make sure trait knows about method "option".
      *
