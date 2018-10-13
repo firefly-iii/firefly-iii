@@ -34,7 +34,7 @@ use FireflyIII\User;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
 use Log;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class AttachmentRepository.
@@ -66,9 +66,9 @@ class AttachmentRepository implements AttachmentRepositoryInterface
         /** @var AttachmentHelperInterface $helper */
         $helper = app(AttachmentHelperInterface::class);
 
-        $file = $helper->getAttachmentLocation($attachment);
+        $path = $helper->getAttachmentLocation($attachment);
         try {
-            unlink($file);
+            Storage::disk('upload')->delete($path);
         } catch (Exception $e) {
             Log::error(sprintf('Could not delete file for attachment %d: %s', $attachment->id, $e->getMessage()));
         }

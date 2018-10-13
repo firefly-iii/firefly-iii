@@ -30,7 +30,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -94,7 +94,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     }
 
     /**
-     * Returns the file location for an attachment,
+     * Returns the file path relative to upload disk for an attachment,
      *
      * @param Attachment $attachment
      *
@@ -102,8 +102,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        $path = sprintf('%s%sat-%d.data', storage_path('upload'), DIRECTORY_SEPARATOR, (int)$attachment->id);
-
+        $path = sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, (int)$attachment->id);
         return $path;
     }
 
