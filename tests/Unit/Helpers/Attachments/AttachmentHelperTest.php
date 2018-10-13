@@ -56,7 +56,7 @@ class AttachmentHelperTest extends TestCase
     {
         $attachment = Attachment::first();
         $helper     = new AttachmentHelper;
-        $path       = $path = sprintf('%s%sat-%d.data', storage_path('upload'), DIRECTORY_SEPARATOR, (int)$attachment->id);
+        $path       = $path = sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, (int)$attachment->id);
         $this->assertEquals($helper->getAttachmentLocation($attachment), $path);
     }
 

@@ -28,8 +28,8 @@ use FireflyIII\Models\ExportJob;
 use FireflyIII\User;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 use Log;
-use Storage;
 
 /**
  * Class ExportJobRepository.
@@ -74,15 +74,17 @@ class ExportJobRepository implements ExportJobRepositoryInterface
                            ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
                            ->get();
 
+        $disk = Storage::disk('export');
+        $files = $disk->files();
+
         // loop set:
         /** @var ExportJob $entry */
         foreach ($set as $entry) {
             $key   = $entry->key;
-            $files = scandir(storage_path('export'), SCANDIR_SORT_NONE);
-            /** @var string $file */
+            /** @var array $file */
             foreach ($files as $file) {
-                if (0 === strpos($file, $key)) {
-                    unlink(storage_path('export') . DIRECTORY_SEPARATOR . $file);
+                if (0 === strpos($file['basename'], $key)) {
+                    $disk->delete($file['path']);
                 }
             }
             try {
