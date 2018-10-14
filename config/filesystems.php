@@ -33,10 +33,9 @@ $exportDisk = [
 
 // setting the SFTP host is enough to trigger the SFTP option.
 if ('' !== env('SFTP_HOST', '')) {
-    $uploadDisk['disks'][] = 'sftp-upload';
-    $exportDisk['disks'][] = 'sftp-export';
+    array_unshift($uploadDisk['disks'], 'sftp-upload');
+    array_unshift($exportDisk['disks'], 'sftp-upload');
 }
-
 
 return [
 
