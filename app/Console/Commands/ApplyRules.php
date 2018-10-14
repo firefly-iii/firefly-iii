@@ -6,6 +6,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -49,6 +50,10 @@ class ApplyRules extends Command
     /** @var Carbon */
     private $endDate;
     /** @var Collection */
+    private $results;
+    /** @var Collection */
+    private $ruleGroups;
+    /** @var Collection */
     private $rules;
     /** @var Carbon */
     private $startDate;
@@ -61,8 +66,10 @@ class ApplyRules extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->accounts = new Collection;
-        $this->rules    = new Collection;
+        $this->accounts   = new Collection;
+        $this->rules      = new Collection;
+        $this->ruleGroups = new Collection;
+        $this->results    = new Collection;
     }
 
     /**
@@ -84,6 +91,7 @@ class ApplyRules extends Command
             return 1;
         }
 
+
         // get transactions from asset accounts.
         /** @var TransactionCollectorInterface $collector */
         $collector = app(TransactionCollectorInterface::class);
@@ -92,40 +100,40 @@ class ApplyRules extends Command
         $collector->setRange($this->startDate, $this->endDate);
         $transactions = $collector->getTransactions();
         $count        = $transactions->count();
-        $bar          = $this->output->createProgressBar($count * $this->rules->count());
-        $results      = new Collection;
-        $this->line(sprintf('Will apply %d rules to %d transactions', $this->rules->count(), $transactions->count()));
 
+        // first run all rule groups:
+        /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
+        $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
+        $ruleGroupRepos->setUser($this->getUser());
 
-        foreach ($this->rules as $rule) {
-            /** @var Processor $processor */
-            $processor = app(Processor::class);
-            $processor->make($rule, true);
-
-            /** @var Transaction $transaction */
-            foreach ($transactions as $transaction) {
-                /** @var Rule $rule */
-                $bar->advance();
-                $result = $processor->handleTransaction($transaction);
-                if (true === $result) {
-                    $results->push($transaction);
-                }
-            }
+        /** @var RuleGroup $ruleGroup */
+        foreach ($this->ruleGroups as $ruleGroup) {
+            $this->line(sprintf('Going to apply rule group "%s" to %d transaction(s).', $ruleGroup->title, $count));
+            $rules = $ruleGroupRepos->getActiveStoreRules($ruleGroup);
+            $this->applyRuleSelection($rules, $transactions, true);
         }
-        $results = $results->unique(
+
+        // then run all rules (rule groups should be empty).
+        if ($this->rules->count() > 0) {
+
+            $this->line(sprintf('Will apply %d rule(s) to %d transaction(s)', $this->rules->count(), $transactions->count()));
+            $this->applyRuleSelection($this->rules, $transactions, false);
+        }
+
+        // filter results:
+        $this->results = $this->results->unique(
             function (Transaction $transaction) {
                 return (int)$transaction->journal_id;
             }
         );
 
-        $bar->finish();
         $this->line('');
-        if (0 === \count($results)) {
+        if (0 === $this->results->count()) {
             $this->line('The rules were fired but did not influence any transactions.');
         }
-        if (\count($results) > 0) {
-            $this->line(sprintf('The rules were fired, and influences %d transaction(s).', \count($results)));
-            foreach ($results as $result) {
+        if ($this->results->count() > 0) {
+            $this->line(sprintf('The rule(s) was/were fired, and influenced %d transaction(s).', $this->results->count()));
+            foreach ($this->results as $result) {
                 $this->line(
                     vsprintf(
                         'Transaction #%d: "%s" (%s %s)',
@@ -144,6 +152,40 @@ class ApplyRules extends Command
     }
 
     /**
+     * @param Collection $rules
+     * @param Collection $transactions
+     * @param bool       $breakProcessing
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    private function applyRuleSelection(Collection $rules, Collection $transactions, bool $breakProcessing): void
+    {
+        $bar = $this->output->createProgressBar($rules->count() * $transactions->count());
+        foreach ($rules as $rule) {
+            /** @var Processor $processor */
+            $processor = app(Processor::class);
+            $processor->make($rule, true);
+
+            /** @var Transaction $transaction */
+            foreach ($transactions as $transaction) {
+                /** @var Rule $rule */
+                $bar->advance();
+                $result = $processor->handleTransaction($transaction);
+                if (true === $result) {
+                    $this->results->push($transaction);
+                }
+            }
+            if (true === $rule->stop_processing && true === $breakProcessing) {
+                $this->line('');
+                $this->line(sprintf('Rule #%d ("%s") says to stop processing.', $rule->id, $rule->title));
+
+                return;
+            }
+        }
+        $this->line('');
+    }
+
+    /**
      *
      */
     private function grabAllRules(): void
@@ -153,6 +195,9 @@ class ApplyRules extends Command
             $ruleRepos = app(RuleRepositoryInterface::class);
             $ruleRepos->setUser($this->getUser());
             $this->rules = $ruleRepos->getAll();
+
+            // reset rule groups.
+            $this->ruleGroups = new Collection;
         }
     }
 
@@ -284,7 +329,6 @@ class ApplyRules extends Command
             // can be empty.
             return true;
         }
-        $finalList     = new Collection;
         $ruleGroupList = explode(',', $ruleGroupString);
 
         if (0 === \count($ruleGroupList)) {
@@ -299,12 +343,8 @@ class ApplyRules extends Command
         foreach ($ruleGroupList as $ruleGroupId) {
             $ruleGroupId = (int)$ruleGroupId;
             $ruleGroup   = $ruleGroupRepos->find($ruleGroupId);
-            if (null !== $ruleGroup) {
-                $rules     = $ruleGroupRepos->getActiveStoreRules($ruleGroup);
-                $finalList = $finalList->merge($rules);
-            }
+            $this->ruleGroups->push($ruleGroup);
         }
-        $this->rules = $finalList;
 
         return true;
     }
@@ -340,7 +380,9 @@ class ApplyRules extends Command
             }
         }
         if ($finalList->count() > 0) {
-            $this->rules = $finalList;
+            // reset rule groups.
+            $this->ruleGroups = new Collection;
+            $this->rules      = $finalList;
         }
 
         return true;
