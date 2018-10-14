@@ -75,32 +75,31 @@ class RuleFormRequest extends Request
         $validTriggers = array_keys(config('firefly.rule-triggers'));
         $validActions  = array_keys(config('firefly.rule-actions'));
 
-        // some actions require text:
-        $contextActions = implode(',', config('firefly.rule-actions-text'));
+        // some actions require text (aka context):
+        $contextActions = implode(',', config('firefly.context-rule-actions'));
 
-        $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title';
-        /** @var Rule $rule */
-        $rule = $this->route()->parameter('rule');
+        // some triggers require text (aka context):
+        $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
 
-        if (null !== $rule) {
-            $titleRule = 'required|between:1,100|uniqueObjectForUser:rules,title,' . $rule->id;
-        }
+        // initial set of rules:
         $rules = [
-            'title'                 => $titleRule,
+            'title'                 => 'required|between:1,100|uniqueObjectForUser:rules,title',
             'description'           => 'between:1,5000|nullable',
             'stop_processing'       => 'boolean',
             'rule_group_id'         => 'required|belongsToUser:rule_groups',
             'trigger'               => 'required|in:store-journal,update-journal',
             'rule_triggers.*.name'  => 'required|in:' . implode(',', $validTriggers),
-            'rule_triggers.*.value' => 'required|min:1|ruleTriggerValue',
+            'rule_triggers.*.value' => sprintf('required_if:rule_triggers.*.name,%s|min:1|ruleTriggerValue', $contextTriggers),
             'rule-actions.*.name'   => 'required|in:' . implode(',', $validActions),
+            'rule_actions.*.value'  => sprintf('required_if:rule_actions.*.name,%s|min:1|ruleActionValue', $contextActions),
             'strict'                => 'in:0,1',
         ];
-        // since Laravel does not support this stuff yet, here's a trick.
-        for ($i = 0; $i < 10; ++$i) {
-            $key         = sprintf('rule_actions.%d.value', $i);
-            $rule        = sprintf('required-if:rule_actions.%d.name,%s|ruleActionValue', $i, $contextActions);
-            $rules[$key] = $rule;
+
+        /** @var Rule $rule */
+        $rule = $this->route()->parameter('rule');
+
+        if (null !== $rule) {
+            $rules['title'] = 'required|between:1,100|uniqueObjectForUser:rules,title,' . $rule->id;
         }
 
         return $rules;
