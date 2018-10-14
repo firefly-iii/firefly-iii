@@ -8,9 +8,9 @@ ENV CORES ${CORES:-1}
 ENV FIREFLY_PATH /var/www/firefly-iii/
 ENV CURL_VERSION 7.60.0
 ENV OPENSSL_VERSION 1.1.1-pre6
+ENV COMPOSER_ALLOW_SUPERUSER 1
 
-LABEL version="1.0" maintainer="thegrumpydictator@gmail.com"
-
+LABEL version="1.1" maintainer="thegrumpydictator@gmail.com"
 
 # install packages
 RUN apt-get update -y && \
@@ -20,6 +20,7 @@ RUN apt-get update -y && \
                                                wget \
                                                libpng-dev \
                                                libicu-dev \
+                                               libldap2-dev \
                                                libedit-dev \
                                                libtidy-dev \
                                                libxml2-dev \
@@ -35,6 +36,8 @@ RUN apt-get update -y && \
                                                locales && \
                                                apt-get clean && \
                                                rm -rf /var/lib/apt/lists/*
+# LDAP install
+RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && docker-php-ext-install ldap
 
 # Install latest curl
 RUN cd /tmp && \
@@ -107,7 +110,6 @@ ADD . $FIREFLY_PATH
 RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/x86_64-linux-gnu/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
 
 # Run composer
-ENV COMPOSER_ALLOW_SUPERUSER 1
 RUN composer install --prefer-dist --no-dev --no-scripts --no-suggest
 
 # Expose port 80
