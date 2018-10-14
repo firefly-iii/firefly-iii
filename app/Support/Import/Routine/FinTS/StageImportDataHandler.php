@@ -69,7 +69,7 @@ class StageImportDataHandler
     {
         Log::debug('Now in StageImportDataHandler::run()');
 
-        $localAccount = $this->accountRepository->findNull($this->importJob->configuration['local_account']);
+        $localAccount = $this->accountRepository->findNull((int)$this->importJob->configuration['local_account']);
         if (null === $localAccount) {
             throw new FireflyException(sprintf('Cannot find Firefly account with id #%d ' , $this->importJob->configuration['local_account']));
         }
