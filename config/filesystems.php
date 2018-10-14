@@ -21,19 +21,20 @@
 
 declare(strict_types=1);
 
-$upload_disk = [
-            'driver' => 'mirror',
-            'disks'  => ['local-upload'],
+$uploadDisk = [
+    'driver' => 'mirror',
+    'disks'  => ['local-upload'],
 ];
 
-$export_disk = [
-            'driver' => 'mirror',
-            'disks'  => ['local-upload'],
+$exportDisk = [
+    'driver' => 'mirror',
+    'disks'  => ['local-upload'],
 ];
 
-if ('' !== env('SFTP_HOST','') && '' !== env('SFTP_FIREFLY_ROOT','')) {
-  $upload_disk['disks'][] = "sftp-upload";
-  $export_disk['disks'][] = "sftp-export";
+// setting the SFTP host is enough to trigger the SFTP option.
+if ('' !== env('SFTP_HOST', '')) {
+    $uploadDisk['disks'][] = 'sftp-upload';
+    $exportDisk['disks'][] = 'sftp-export';
 }
 
 
@@ -83,21 +84,59 @@ return [
     */
 
     'disks' => [
-
         'local' => [
             'driver' => 'local',
             'root'   => storage_path('app'),
         ],
-        
-        'local-upload'   => [
+
+        // local storage configuration for upload and export:
+        'local-upload' => [
             'driver' => 'local',
             'root'   => storage_path('upload'),
         ],
-        'local-export'   => [
+        'local-export' => [
             'driver' => 'local',
             'root'   => storage_path('export'),
         ],
 
+        // SFTP storage configuration for upload and export:
+        'sftp-upload' => [
+            'driver'     => 'sftp',
+            'host'       => env('SFTP_HOST', '127.0.0.1'),
+            'port'       => env('SFTP_PORT', 22),
+            'username'   => env('SFTP_USERNAME', 'anonymous'),
+            'password'   => env('SFTP_PASSWORD', ''),
+            'root'       => env('SFTP_UPLOAD_PATH', ''),
+            'privateKey' => env('SFTP_PRIV_KEY'),
+
+            // Optional SFTP Settings
+            // 'timeout'       => 30,
+            // 'directoryPerm' => 0755,
+            // 'permPublic'    => 0644,
+            // 'permPrivate'   => 0600,
+        ],
+
+        'sftp-export' => [
+            'driver'     => 'sftp',
+            'host'       => env('SFTP_HOST', '127.0.0.1'),
+            'port'       => env('SFTP_PORT', 22),
+            'username'   => env('SFTP_USERNAME', 'anonymous'),
+            'password'   => env('SFTP_PASSWORD', ''),
+            'root'       => env('SFTP_EXPORT_PATH', ''),
+            'privateKey' => env('SFTP_PRIV_KEY'),
+
+            // Optional SFTP Settings
+            // 'timeout'       => 30,
+            // 'directoryPerm' => 0755,
+            // 'permPublic'    => 0644,
+            // 'permPrivate'   => 0600,
+        ],
+
+        // final configuration of upload disk and export disk.
+        'upload' => $uploadDisk,
+        'export' => $exportDisk,
+
+        // various other paths:
         'database' => [
             'driver' => 'local',
             'root'   => storage_path('database'),
@@ -118,6 +157,9 @@ return [
             'visibility' => 'public',
         ],
 
+        // unused storage backends.
+        /*
+
         's3' => [
             'driver' => 's3',
             'key'    => env('AWS_KEY'),
@@ -125,43 +167,7 @@ return [
             'region' => env('AWS_REGION'),
             'bucket' => env('AWS_BUCKET'),
         ],
-        
-        'sftp-upload' => [
-            'driver'        => 'sftp',
-            'host'          => env('SFTP_HOST'),
-            'port'          => env('SFTP_PORT', 22),
-            'username'      => env('SFTP_USERNAME'),
-            'password'      => env('SFTP_PASSWORD'),
-            'root'          => env('SFTP_FIREFLY_ROOT') . '/upload',
-            // Optional SFTP Settings
-            // 'privateKey'    => 'path/to/or/contents/of/privatekey',
-            // 'port'          => 22,            
-            // 'timeout'       => 30,
-            // 'directoryPerm' => 0755,
-            // 'permPublic'    => 0644,
-            // 'permPrivate'   => 0600,
-        ],
-                
-        'upload' => $upload_disk,
-        
-        'sftp-export' => [
-            'driver'        => 'sftp',
-            'host'          => env('SFTP_HOST'),
-            'port'          => env('SFTP_PORT', 22),
-            'username'      => env('SFTP_USERNAME'),
-            'password'      => env('SFTP_PASSWORD'),
-            'root'          => env('SFTP_FIREFLY_ROOT') . '/export',
-            // Optional SFTP Settings
-            // 'privateKey'    => 'path/to/or/contents/of/privatekey',   
-            // 'timeout'       => 30,
-            // 'directoryPerm' => 0755,
-            // 'permPublic'    => 0644,
-            // 'permPrivate'   => 0600,
-        ],
-        
-        'export' => $upload_export,
 
-        /*
         'sftp' => [
             'driver'        => 'sftp',
             'host'          => 'sftp.example.com',
@@ -479,7 +485,7 @@ return [
         ],
         */
     ],
-    
+
     /*
     |--------------------------------------------------------------------------
     | Automatically Register Stream Wrappers
