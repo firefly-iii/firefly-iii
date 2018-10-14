@@ -29,6 +29,7 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\DoubleTransactionFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
@@ -216,9 +217,9 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
                   ->setTags($this->tags)->withOpposingAccount();
         $collector->removeFilter(TransferFilter::class);
-
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(PositiveAmountFilter::class);
+        $collector->addFilter(DoubleTransactionFilter::class);
 
         $transactions   = $collector->getTransactions();
         $this->expenses = $transactions;

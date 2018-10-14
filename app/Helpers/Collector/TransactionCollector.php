@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
+use FireflyIII\Helpers\Filter\DoubleTransactionFilter;
 use FireflyIII\Helpers\Filter\FilterInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\NegativeAmountFilter;
@@ -53,26 +54,14 @@ use Log;
 /**
  * Class TransactionCollector
  *
- * @codeCoverageIgnore 
+ * @codeCoverageIgnore
  */
 class TransactionCollector implements TransactionCollectorInterface
 {
-    /**
-     * Constructor.
-     */
-    public function __construct()
-    {
-        if ('testing' === env('APP_ENV')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
-        }
-    }
-
-
     /** @var array */
     private $accountIds = [];
     /** @var int */
     private $count = 0;
-
     /** @var array */
     private $fields
         = [
@@ -138,6 +127,16 @@ class TransactionCollector implements TransactionCollectorInterface
     private $run = false;
     /** @var User */
     private $user;
+
+    /**
+     * Constructor.
+     */
+    public function __construct()
+    {
+        if ('testing' === env('APP_ENV')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+    }
 
     /**
      * @param string $filter
@@ -254,6 +253,30 @@ class TransactionCollector implements TransactionCollectorInterface
     }
 
     /**
+     * @return LengthAwarePaginator
+     * @throws FireflyException
+     */
+    public function getPaginatedTransactions(): LengthAwarePaginator
+    {
+        if (true === $this->run) {
+            throw new FireflyException('Cannot getPaginatedTransactions after run in TransactionCollector.');
+        }
+        $this->count();
+        $set      = $this->getTransactions();
+        $journals = new LengthAwarePaginator($set, $this->count, $this->limit, $this->page);
+
+        return $journals;
+    }
+
+    /**
+     * @return EloquentBuilder
+     */
+    public function getQuery(): EloquentBuilder
+    {
+        return $this->query;
+    }
+
+    /**
      * @return Collection
      */
     public function getTransactions(): Collection
@@ -307,30 +330,6 @@ class TransactionCollector implements TransactionCollectorInterface
         $cache->store($set);
 
         return $set;
-    }
-
-    /**
-     * @return LengthAwarePaginator
-     * @throws FireflyException
-     */
-    public function getPaginatedTransactions(): LengthAwarePaginator
-    {
-        if (true === $this->run) {
-            throw new FireflyException('Cannot getPaginatedTransactions after run in TransactionCollector.');
-        }
-        $this->count();
-        $set      = $this->getTransactions();
-        $journals = new LengthAwarePaginator($set, $this->count, $this->limit, $this->page);
-
-        return $journals;
-    }
-
-    /**
-     * @return EloquentBuilder
-     */
-    public function getQuery(): EloquentBuilder
-    {
-        return $this->query;
     }
 
     /**
@@ -784,14 +783,15 @@ class TransactionCollector implements TransactionCollectorInterface
     {
         // create all possible filters:
         $filters = [
-            InternalTransferFilter::class => new InternalTransferFilter($this->accountIds),
-            OpposingAccountFilter::class  => new OpposingAccountFilter($this->accountIds),
-            TransferFilter::class         => new TransferFilter,
-            PositiveAmountFilter::class   => new PositiveAmountFilter,
-            NegativeAmountFilter::class   => new NegativeAmountFilter,
-            SplitIndicatorFilter::class   => new SplitIndicatorFilter,
-            CountAttachmentsFilter::class => new CountAttachmentsFilter,
-            TransactionViewFilter::class  => new TransactionViewFilter,
+            InternalTransferFilter::class  => new InternalTransferFilter($this->accountIds),
+            OpposingAccountFilter::class   => new OpposingAccountFilter($this->accountIds),
+            TransferFilter::class          => new TransferFilter,
+            PositiveAmountFilter::class    => new PositiveAmountFilter,
+            NegativeAmountFilter::class    => new NegativeAmountFilter,
+            SplitIndicatorFilter::class    => new SplitIndicatorFilter,
+            CountAttachmentsFilter::class  => new CountAttachmentsFilter,
+            TransactionViewFilter::class   => new TransactionViewFilter,
+            DoubleTransactionFilter::class => new DoubleTransactionFilter,
         ];
         Log::debug(sprintf('Will run %d filters on the set.', \count($this->filters)));
         foreach ($this->filters as $enabled) {
