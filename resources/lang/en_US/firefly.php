@@ -1023,6 +1023,7 @@ return [
     'select_expense_revenue'                  => 'Select expense/revenue account',
     'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
     'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
+    'net_filtered_prefs'                      => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
     // charts:
     'chart'                                   => 'Chart',
