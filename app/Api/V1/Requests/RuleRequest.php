@@ -75,8 +75,10 @@ class RuleRequest extends Request
         $validTriggers = array_keys(config('firefly.rule-triggers'));
         $validActions  = array_keys(config('firefly.rule-actions'));
 
-        // some actions require text:
-        $contextActions = implode(',', config('firefly.rule-actions-text'));
+        // some triggers and actions require text:
+        $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
+        $contextActions  = implode(',', config('firefly.context-rule-actions'));
+
 
         $rules = [
             'title'                           => 'required|between:1,100|uniqueObjectForUser:rules,title',
@@ -86,7 +88,7 @@ class RuleRequest extends Request
             'trigger'                         => 'required|in:store-journal,update-journal',
             'rule_triggers.*.name'            => 'required|in:' . implode(',', $validTriggers),
             'rule_triggers.*.stop_processing' => 'boolean',
-            'rule_triggers.*.value'           => 'required|min:1|ruleTriggerValue',
+            'rule_triggers.*.value'           => 'required_if:rule_actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
             'rule_actions.*.name'             => 'required|in:' . implode(',', $validActions),
             'rule_actions.*.value'            => 'required_if:rule_actions.*.type,' . $contextActions . '|ruleActionValue',
             'rule_actions.*.stop_processing'  => 'boolean',
