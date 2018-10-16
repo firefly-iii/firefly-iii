@@ -145,7 +145,7 @@ class StageImportDataHandler
             'user'               => $this->importJob->user_id,
             'type'               => $type,
             'date'               => $transaction->getValutaDate()->format('Y-m-d'),
-            'description'        => $transaction->getDescription1(),
+            'description'        => $this->getDescription($transaction),
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
             'bill_id'            => null,
@@ -181,5 +181,15 @@ class StageImportDataHandler
         ];
 
         return $storeData;
+    }
+
+    private function getDescription(FinTSTransaction $transaction)
+    {
+        //Given a description like 'EREF+AbcCRED+DE123SVWZ+DefABWA+Ghi' or 'EREF+AbcCRED+DE123SVWZ+Def' return 'Def'
+        $finTSDescription = $transaction->getDescription1();
+        if (preg_match('/SVWZ\+([^\+]*)([A-Z]{4}\+|$)/', $finTSDescription, $matches) === 1) {
+            return $matches[1];
+        }
+        return $finTSDescription;
     }
 }
