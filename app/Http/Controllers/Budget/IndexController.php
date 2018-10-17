@@ -28,6 +28,7 @@ use Carbon\Carbon;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -62,7 +63,6 @@ class IndexController extends Controller
             }
         );
     }
-
 
     /**
      * Show all budgets.
@@ -132,6 +132,30 @@ class IndexController extends Controller
                                'inactive', 'budgets', 'spent', 'budgeted', 'previousLoop', 'nextLoop', 'start', 'end'
                            )
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function reorder(Request $request, BudgetRepositoryInterface $repository): JsonResponse
+    {
+        $budgetIds = $request->get('budgetIds');
+        $page      = (int)$request->get('page');
+        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
+
+        $currentOrder = (($page - 1) * $pageSize) + 1;
+        foreach ($budgetIds as $budgetId) {
+            $budgetId = (int)$budgetId;
+            $budget   = $repository->findNull($budgetId);
+            if (null !== $budget) {
+                $repository->setBudgetOrder($budget, $currentOrder);
+            }
+            $currentOrder++;
+        }
+
+        return response()->json(['OK']);
     }
 
 
