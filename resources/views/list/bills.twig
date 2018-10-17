@@ -97,8 +97,11 @@
             #}
             {% if entry.paid_dates|length > 0 and entry.active %}
                 <td class="paid_in_period text-success" data-value="{{ entry.paid_dates[0] }}">
-                    {% for date in entry.paid_dates %}
-                        {{ formatDate(date, monthAndDayFormat) }}<br/>
+                    {% for transaction_id, date in entry.paid_dates %}
+                        <a href="{{ route('transactions.show',transaction_id) }}">
+                            {{ formatDate(date, monthAndDayFormat) }}
+                        </a>
+                        <br/>
                     {% endfor %}
                 </td>
                 <td class="expected_in_period hidden-sm hidden-xs" data-value="{{ entry.next_expected_match }}">

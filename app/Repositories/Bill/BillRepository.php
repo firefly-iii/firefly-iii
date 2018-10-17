@@ -381,7 +381,9 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        $dates = $bill->transactionJournals()->before($end)->after($start)->get(['transaction_journals.date'])->pluck('date');
+        $dates = $bill->transactionJournals()->before($end)->after($start)->get([
+            'transaction_journals.id','transaction_journals.date'
+        ])->pluck('date', 'id');
 
         return $dates;
     }
