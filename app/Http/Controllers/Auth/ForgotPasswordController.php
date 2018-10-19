@@ -59,7 +59,7 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
-        $loginProvider = env('LOGIN_PROVIDER','eloquent');
+        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
             Log::error($message);
@@ -98,7 +98,7 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        $loginProvider = env('LOGIN_PROVIDER','eloquent');
+        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 

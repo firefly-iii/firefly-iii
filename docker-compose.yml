@@ -14,7 +14,7 @@ services:
       - FF_DB_CONNECTION=pgsql
       - TZ=Europe/Amsterdam
       - APP_LOG_LEVEL=debug
-    image: jc5x/firefly-iii:develop
+    image: jc5x/firefly-iii
     links: 
       - firefly_iii_db
     networks: 

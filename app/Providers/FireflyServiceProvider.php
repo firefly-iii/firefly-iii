@@ -71,6 +71,7 @@ use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Twig;
+use Twig_Extension_Debug;
 use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
@@ -105,6 +106,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
         Twig::addExtension(new AmountFormat);
+        Twig::addExtension(new Twig_Extension_Debug);
     }
 
     /**
