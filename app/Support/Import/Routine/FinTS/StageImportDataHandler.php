@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\FinTS\FinTS;
+use FireflyIII\Support\FinTS\MetadataParser;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use Illuminate\Support\Facades\Log;
 
@@ -141,11 +142,14 @@ class StageImportDataHandler
             Log::debug('Both are assets, will make transfer.');
         }
 
+        $metadataParser = new MetadataParser();
+        $description = $metadataParser->getDescription($transaction);
+        
         $storeData = [
             'user'               => $this->importJob->user_id,
             'type'               => $type,
             'date'               => $transaction->getValutaDate()->format('Y-m-d'),
-            'description'        => $this->getDescription($transaction),
+            'description'        => $description,
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
             'bill_id'            => null,
@@ -181,15 +185,5 @@ class StageImportDataHandler
         ];
 
         return $storeData;
-    }
-
-    private function getDescription(FinTSTransaction $transaction)
-    {
-        //Given a description like 'EREF+AbcCRED+DE123SVWZ+DefABWA+Ghi' or 'EREF+AbcCRED+DE123SVWZ+Def' return 'Def'
-        $finTSDescription = $transaction->getDescription1();
-        if (preg_match('/SVWZ\+([^\+]*)([A-Z]{4}\+|$)/', $finTSDescription, $matches) === 1) {
-            return $matches[1];
-        }
-        return $finTSDescription;
     }
 }
