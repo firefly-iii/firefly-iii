@@ -34,7 +34,7 @@ services:
     environment: 
       - POSTGRES_PASSWORD=firefly
       - POSTGRES_USER=firefly
-    image: "postgres:latest"
+    image: "postgres:10"
     networks: 
       - firefly_iii_net
     volumes: 
