@@ -21,17 +21,29 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Support\FinTS;
+
 use Fhp\Model\StatementOfAccount\Transaction as FinTSTransaction;
 
+/**
+ *
+ * Class MetadataParser
+ */
 class MetadataParser
 {
-    function getDescription(FinTSTransaction $transaction)
+    /**
+     * @param FinTSTransaction $transaction
+     *
+     * @return string
+     */
+    public function getDescription(FinTSTransaction $transaction): string
     {
         //Given a description like 'EREF+AbcCRED+DE123SVWZ+DefABWA+Ghi' or 'EREF+AbcCRED+DE123SVWZ+Def' return 'Def'
         $finTSDescription = $transaction->getDescription1();
-        if (preg_match('/SVWZ\+([^\+]*)([A-Z]{4}\+|$)/', $finTSDescription, $matches) === 1) {
+        $matches          = [];
+        if (1 === preg_match('/SVWZ\+([^\+]*)([A-Z]{4}\+|$)/', $finTSDescription, $matches)) {
             return $matches[1];
         }
+
         return $finTSDescription;
     }
 }

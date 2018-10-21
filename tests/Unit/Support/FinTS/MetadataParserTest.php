@@ -23,11 +23,14 @@ declare(strict_types=1);
 namespace Tests\Unit\Support\FinTS;
 
 use Fhp\Model\StatementOfAccount\Transaction as FinTSTransaction;
-
 use FireflyIII\Support\FinTS\MetadataParser;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
+/**
+ *
+ * Class MetadataParserTest
+ */
 class MetadataParserTest extends TestCase
 {
 
@@ -44,28 +47,43 @@ class MetadataParserTest extends TestCase
         $this->metadataParser = new MetadataParser();
     }
 
-    public function testDescriptionIsCorrectlyExtractedFromBeginning()
+    /**
+     * @covers \FireflyIII\Support\FinTS\MetadataParser
+     */
+    public function testDescriptionIsCorrectlyExtractedFromBeginning(): void
     {
         $transaction = $this->createTransactionWithDescription1('SVWZ+DescriptionABWA+xxx');
         $this->assertEquals('Description', $this->metadataParser->getDescription($transaction));
     }
 
-    public function testDescriptionIsCorrectlyExtractedFromMiddle()
-    {
-        $transaction = $this->createTransactionWithDescription1('EREF+AbcCRED+DE123SVWZ+DescriptionABWA+Ghi');
-        $this->assertEquals('Description', $this->metadataParser->getDescription($transaction));
-    }
-
-    public function testDescriptionIsCorrectlyExtractedFromEnd()
+    /**
+     * @covers \FireflyIII\Support\FinTS\MetadataParser
+     */
+    public function testDescriptionIsCorrectlyExtractedFromEnd(): void
     {
         $transaction = $this->createTransactionWithDescription1('EREF+AbcCRED+DE123SVWZ+Description');
         $this->assertEquals('Description', $this->metadataParser->getDescription($transaction));
     }
 
-    private function createTransactionWithDescription1(string $description1)
+    /**
+     * @covers \FireflyIII\Support\FinTS\MetadataParser
+     */
+    public function testDescriptionIsCorrectlyExtractedFromMiddle(): void
+    {
+        $transaction = $this->createTransactionWithDescription1('EREF+AbcCRED+DE123SVWZ+DescriptionABWA+Ghi');
+        $this->assertEquals('Description', $this->metadataParser->getDescription($transaction));
+    }
+
+    /**
+     * @param string $description1
+     *
+     * @return FinTSTransaction
+     */
+    private function createTransactionWithDescription1(string $description1): FinTSTransaction
     {
         $transaction = $this->mock(FinTSTransaction::class);
         $transaction->shouldReceive('getDescription1')->atLeast()->once()->andReturn($description1);
+
         return $transaction;
     }
 }
