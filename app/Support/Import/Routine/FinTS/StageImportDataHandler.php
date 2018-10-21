@@ -34,6 +34,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\FinTS\FinTS;
+use FireflyIII\Support\FinTS\MetadataParser;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
 use Illuminate\Support\Facades\Log;
 
@@ -141,11 +142,14 @@ class StageImportDataHandler
             Log::debug('Both are assets, will make transfer.');
         }
 
+        $metadataParser = new MetadataParser();
+        $description = $metadataParser->getDescription($transaction);
+        
         $storeData = [
             'user'               => $this->importJob->user_id,
             'type'               => $type,
             'date'               => $transaction->getValutaDate()->format('Y-m-d'),
-            'description'        => $transaction->getDescription1(),
+            'description'        => $description,
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
             'bill_id'            => null,
