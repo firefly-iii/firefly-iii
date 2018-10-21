@@ -28,7 +28,7 @@ $username    = '';
 $password    = '';
 $database    = '';
 
-if (!($databaseUrl === false)) {
+if (!(false === $databaseUrl)) {
     $options  = parse_url($databaseUrl);
     $host     = $options['host'];
     $username = $options['user'];
