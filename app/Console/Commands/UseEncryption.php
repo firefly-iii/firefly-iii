@@ -79,7 +79,7 @@ class UseEncryption extends Command
         $fqn     = sprintf('FireflyIII\Models\%s', $class);
         $encrypt = true === config('firefly.encryption') ? 0 : 1;
         /** @noinspection PhpUndefinedMethodInspection */
-        $set = $fqn::where($indicator, $encrypt)->withDeleted()->get();
+        $set = $fqn::where($indicator, $encrypt)->withTrashed()->get();
 
         foreach ($set as $entry) {
             $newName       = $entry->$field;
