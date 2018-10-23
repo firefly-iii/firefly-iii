@@ -28,13 +28,13 @@ $uploadDisk = [
 
 $exportDisk = [
     'driver' => 'mirror',
-    'disks'  => ['local-upload'],
+    'disks'  => ['local-export'],
 ];
 
 // setting the SFTP host is enough to trigger the SFTP option.
 if ('' !== env('SFTP_HOST', '')) {
-    array_unshift($uploadDisk['disks'], 'sftp-upload');
-    array_unshift($exportDisk['disks'], 'sftp-export');
+    array_push($uploadDisk['disks'], 'sftp-upload');
+    array_push($exportDisk['disks'], 'sftp-export');
 }
 
 return [
