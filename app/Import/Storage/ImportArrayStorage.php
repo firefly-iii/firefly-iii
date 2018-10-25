@@ -72,11 +72,11 @@ class ImportArrayStorage
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $importJob;
-        $this->countTransfers();
-
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
+
+        $this->countTransfers();
 
         $this->journalRepos = app(JournalRepositoryInterface::class);
         $this->journalRepos->setUser($importJob->user);
@@ -157,7 +157,9 @@ class ImportArrayStorage
     {
         Log::debug('Now in countTransfers()');
         /** @var array $array */
-        $array = $this->importJob->transactions;
+        $array = $this->repository->getTransactions($this->importJob);
+
+
         $count = 0;
         foreach ($array as $index => $transaction) {
             if (strtolower(TransactionType::TRANSFER) === strtolower($transaction['type'])) {
@@ -418,7 +420,7 @@ class ImportArrayStorage
     private function storeArray(): Collection
     {
         /** @var array $array */
-        $array   = $this->importJob->transactions;
+        $array   = $this->repository->getTransactions($this->importJob);
         $count   = \count($array);
         $toStore = [];
 
@@ -541,8 +543,9 @@ class ImportArrayStorage
                 Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
 
                 // compare description:
-                Log::debug(sprintf('Comparing "%s" to "%s"', $description, $transfer->description));
-                if ($description !== $transfer->description) {
+                $comparison = '(empty description)' === $transfer->description ? '' : $transfer->description;
+                Log::debug(sprintf('Comparing "%s" to "%s" (original: "%s")', $description, $transfer->description, $comparison));
+                if ($description !== $comparison) {
                     continue; // @codeCoverageIgnore
                 }
                 ++$hits;

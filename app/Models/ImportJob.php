@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -45,6 +46,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property array  $errors
  * @property array  extended_status
  * @property int    id
+ * @property Carbon $created_at
  */
 class ImportJob extends Model
 {

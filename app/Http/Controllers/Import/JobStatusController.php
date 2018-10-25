@@ -85,7 +85,7 @@ class JobStatusController extends Controller
      */
     public function json(ImportJob $importJob): JsonResponse
     {
-        $count = \count($importJob->transactions);
+        $count = $this->repository->countTransactions($importJob);
         $json  = [
             'status'               => $importJob->status,
             'errors'               => $importJob->errors,
