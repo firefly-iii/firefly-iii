@@ -551,6 +551,8 @@ return [
     'email_changed_logout'                    => 'Je kan niet inloggen tot je je emailadres bevestigd.',
     'login_with_new_email'                    => 'Je kan nu inloggen met je nieuwe emailadres.',
     'login_with_old_email'                    => 'Je kan nu weer inloggen met je oude emailadres.',
+    'login_provider_local_only'               => 'Je kan dit niet doen als je inlogt via ":login_provider".',
+    'delete_local_info_only'                  => 'Omdat je inlogt via ":login_provider" verwijder je alleen lokale Firefly III informatie.',
 
     // attachments
     'nr_of_attachments'                       => 'Eén bijlage|:count bijlagen',
@@ -1021,6 +1023,7 @@ return [
     'select_expense_revenue'                  => 'Selecteer debiteur+crediteur',
     'multi_currency_report_sum'               => 'Omdat deze tabel rekeningen met diverse valuta bevat, kan het zijn dat de optelsommen nergens op slaan. De pagina valt altijd terug op je standaardvaluta.',
     'sum_in_default_currency'                 => 'Deze lijst is altijd in je standaardvaluta.',
+    'net_filtered_prefs'                      => 'Deze grafiek bevat nooit betaalrekeningen die je niet het vinkje "meetellen in kapitaal" hebt gegeven.',
 
     // charts:
     'chart'                                   => 'Diagram',

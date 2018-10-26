@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'password' => 'Passwörter müssen mindestens 6 Zeichen lang sein und übereinstimmen.',
     'user'     => 'Wir können keinen Benutzer mit dieser E-Mail Adresse finden.',
-    'token'    => 'Das Token zum Zurücksetzen des Passwortes ist ungültig.',
+    'token'    => 'Der Authentifizierungsschlüssel zum Zurücksetzen des Passwortes ist ungültig.',
     'sent'     => 'Wir haben Ihnen einen Link zum Zurücksetzen des Passworts zugesendet!',
     'reset'    => 'Ihr Passwort wurde zurückgesetzt!',
     'blocked'  => 'Netter Versuch.',

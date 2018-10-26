@@ -551,6 +551,8 @@ return [
     'email_changed_logout'                    => 'Vous ne pouvez pas vous connecter tant que vous n\'aurez pas vérifié votre adresse e-mail.',
     'login_with_new_email'                    => 'Vous pouvez désormais vous connecter avec votre nouvelle adresse e-mail.',
     'login_with_old_email'                    => 'Vous pouvez à nouveau vous connecter à l\'aide de votre ancienne adresse e-mail.',
+    'login_provider_local_only'               => 'This action is not available when authenticating through ":login_provider".',
+    'delete_local_info_only'                  => 'Because you authenticate through ":login_provider", this will only delete local Firefly III information.',
 
     // attachments
     'nr_of_attachments'                       => 'Une pièce jointe|:count pièces jointes',
@@ -1021,6 +1023,7 @@ return [
     'select_expense_revenue'                  => 'Sélectionner le compte de dépenses / recettes',
     'multi_currency_report_sum'               => 'Cette liste contenant des comptes dans des devises différentes, les sommes que vous voyez peuvent ne pas faire sens. Le rapport sera lui toujours généré dans votre devise par défaut.',
     'sum_in_default_currency'                 => 'La somme sera toujours dans votre devise par défaut.',
+    'net_filtered_prefs'                      => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
     // charts:
     'chart'                                   => 'Graphique',

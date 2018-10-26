@@ -64,7 +64,7 @@ return [
     'from'                    => 'Von',
     'piggy_bank'              => 'Sparschwein',
     'to'                      => 'An',
-    'budget'                  => 'Budget',
+    'budget'                  => 'Kostenrahmen',
     'category'                => 'Kategorie',
     'bill'                    => 'Rechnung',
     'withdrawal'              => 'Ausgabe',

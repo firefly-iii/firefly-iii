@@ -191,6 +191,7 @@ return [
     'password_confirmation' => 'Contraseña (otra vez)',
     'blocked'               => '¿Está bloqueado?',
     'blocked_code'          => 'Razón del bloqueo',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Apply rules',
@@ -222,6 +223,16 @@ return [
     'public_key'            => 'Llave pública',
     'country_code'          => 'Código del país',
     'provider_code'         => 'Banco o proveedor de datos',
+    'fints_url'             => 'FinTS API URL',
+    'fints_port'            => 'Port',
+    'fints_bank_code'       => 'Bank code',
+    'fints_username'        => 'Username',
+    'fints_password'        => 'PIN / Password',
+    'fints_account'         => 'FinTS account',
+    'local_account'         => 'Firefly III account',
+    'from_date'             => 'Date from',
+    'to_date'               => 'Date to',
+
 
     'due_date'                => 'Fecha de vencimiento',
     'payment_date'            => 'Fecha de pago',

@@ -554,6 +554,8 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'email_changed_logout'                    => 'E-posta adresinizi doğrulayana kadar giriş yapamazsınız.',
     'login_with_new_email'                    => 'Artık yeni e-posta adresinizle giriş yapabilirsiniz.',
     'login_with_old_email'                    => 'Artık eski e-posta adresinizle yeniden giriş yapabilirsiniz.',
+    'login_provider_local_only'               => 'This action is not available when authenticating through ":login_provider".',
+    'delete_local_info_only'                  => 'Because you authenticate through ":login_provider", this will only delete local Firefly III information.',
 
     // attachments
     'nr_of_attachments'                       => 'Bir eklenti |:count eklenti',
@@ -1024,6 +1026,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'select_expense_revenue'                  => 'Harcama / gelir hesabı seçin',
     'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
     'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
+    'net_filtered_prefs'                      => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
     // charts:
     'chart'                                   => 'Grafik',

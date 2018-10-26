@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Это некорректный IBAN.',
+    'zero_or_more'                   => 'The value cannot be negative.',
     'source_equals_destination'      => 'The source account equals the destination account.',
     'unique_account_number_for_user' => 'Этот номер счёта уже используется.',
     'unique_iban_for_user'           => 'Этот IBAN уже используется.',
