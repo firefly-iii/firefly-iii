@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\User;
+use Illuminate\Support\Facades\Lang;
 use Log;
 use Validator;
 
@@ -217,7 +218,7 @@ trait AccountServiceTrait
      */
     public function storeOpposingAccount(User $user, string $name): Account
     {
-        $name .= ' initial balance';
+        $name .= ' ' . strtolower(Lang::get('firefly.start_balance'));
         Log::debug('Going to create an opening balance opposing account.');
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
