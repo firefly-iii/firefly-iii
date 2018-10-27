@@ -123,7 +123,6 @@ class ReconcileController extends Controller
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @throws FireflyException
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
