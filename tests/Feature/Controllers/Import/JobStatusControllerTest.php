@@ -93,6 +93,8 @@ class JobStatusControllerTest extends TestCase
         $job->file_type    = '';
         $job->save();
 
+        $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
+
         // call thing.
         $this->be($this->user());
         $response = $this->get(route('import.job.status.json', [$job->key]));
@@ -120,6 +122,8 @@ class JobStatusControllerTest extends TestCase
         $job->tag()->associate($tag);
         $job->save();
 
+        $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
+
         // call thing.
         $this->be($this->user());
         $response = $this->get(route('import.job.status.json', [$job->key]));
@@ -142,6 +146,8 @@ class JobStatusControllerTest extends TestCase
         $journal = $this->user()->transactionJournals()->first();
         $second  = $this->user()->transactionJournals()->where('id', '!=', $journal->id)->first();
         $tag->transactionJournals()->sync([$journal->id, $second->id]);
+
+        $importRepos->shouldReceive('countTransactions')->once()->andReturn(2);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
@@ -174,6 +180,8 @@ class JobStatusControllerTest extends TestCase
         $tag     = $this->user()->tags()->first();
         $journal = $this->user()->transactionJournals()->first();
         $tag->transactionJournals()->sync([$journal->id]);
+
+        $importRepos->shouldReceive('countTransactions')->once()->andReturn(1);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;

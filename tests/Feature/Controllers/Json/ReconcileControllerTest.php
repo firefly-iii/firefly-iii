@@ -57,13 +57,21 @@ class ReconcileControllerTest extends TestCase
      */
     public function testOverview(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $transactions = $this->user()->transactions()->inRandomOrder()->take(3)->get();
-        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $transactions   = $this->user()->transactions()->inRandomOrder()->take(3)->get();
+        $transactions  =$transactions->each(
+            function (Transaction $transaction) {
+                $transaction->transaction_amount = '5';
+            }
+        );
+        $repository = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
+
+        $accountRepos->shouldReceive('findNull')->andReturn($this->getRandomAsset())->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->andReturn(1);
 
         $parameters = [
             'startBalance' => '0',
@@ -83,8 +91,8 @@ class ReconcileControllerTest extends TestCase
      */
     public function testOverviewNotAsset(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
 
         $account    = $this->user()->accounts()->where('account_type_id', '!=', 3)->first();
@@ -107,8 +115,8 @@ class ReconcileControllerTest extends TestCase
      */
     public function testTransactions(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
@@ -125,8 +133,8 @@ class ReconcileControllerTest extends TestCase
      */
     public function testTransactionsInitialBalance(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
 
 
