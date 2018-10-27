@@ -217,12 +217,12 @@ trait AccountServiceTrait
      */
     public function storeOpposingAccount(User $user, string $name): Account
     {
-        $opposingAccountName = trans('firefly.initial_balance_account', ['name' => $name]);
+        $opposingAccountName = (string)trans('firefly.initial_balance_account', ['name' => $name]);
         Log::debug('Going to create an opening balance opposing account.');
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
-
+    
         return $factory->findOrCreate($opposingAccountName, AccountType::INITIAL_BALANCE);
     }
 
