@@ -777,7 +777,7 @@ return [
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',
-    'initial_balance_account'                    => 'Saldo inicial de :name',
+    'initial_balance_account'                 => 'Saldo inicial de :name',
 
     // categories:
     'new_category'                            => 'Nova categoria',
