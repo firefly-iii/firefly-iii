@@ -779,7 +779,7 @@ return [
     'interest_calc_daily'                     => 'Täglich',
     'interest_calc_monthly'                   => 'Monatlich',
     'interest_calc_yearly'                    => 'Jährlich',
-    'initial_balance_account'                 => 'Initial balance account of :name',
+    'initial_balance_account'                 => 'Eröffnungssaldo von :name',
 
     // categories:
     'new_category'                            => 'Neue Kategorie',

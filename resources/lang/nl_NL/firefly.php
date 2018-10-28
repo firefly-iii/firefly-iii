@@ -779,7 +779,7 @@ return [
     'interest_calc_daily'                     => 'Per dag',
     'interest_calc_monthly'                   => 'Per maand',
     'interest_calc_yearly'                    => 'Per jaar',
-    'initial_balance_account'                 => 'Initial balance account of :name',
+    'initial_balance_account'                 => 'Startsaldorekening voor :name',
 
     // categories:
     'new_category'                            => 'Nieuwe categorie',
