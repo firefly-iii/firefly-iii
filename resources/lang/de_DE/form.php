@@ -191,7 +191,7 @@ return [
     'password_confirmation' => 'Passwort (wiederholen)',
     'blocked'               => 'Ist blockiert?',
     'blocked_code'          => 'Grund für Block',
-    'login_name'            => 'Benutzername',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Regeln anwenden',

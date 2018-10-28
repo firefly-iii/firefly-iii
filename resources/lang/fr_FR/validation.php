@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Il ne s\'agit pas d\'un IBAN valide.',
-    'zero_or_more'                   => 'The value cannot be negative.',
+    'zero_or_more'                   => 'Le montant ne peut pas être négatif.',
     'source_equals_destination'      => 'Le compte source est identique au compte de destination.',
     'unique_account_number_for_user' => 'Il semble que ce numéro de compte est déjà utilisé.',
     'unique_iban_for_user'           => 'Il semble que cet IBAN soit déjà utilisé.',
