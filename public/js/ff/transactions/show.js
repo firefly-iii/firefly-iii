@@ -29,7 +29,7 @@ $(function () {
                                               return obj.id;
                                           },
                                           prefetch: {
-                                              url: autoCompleteUri
+                                              url: autoCompleteUri + '?uid=' + uid,
                                               // filter: function (list) {
                                               //     return $.map(list, function (name) {
                                               //         return {name: name.name};
@@ -37,7 +37,7 @@ $(function () {
                                               // }
                                           },
                                           remote: {
-                                              url: autoCompleteUri + '?search=%QUERY',
+                                              url: autoCompleteUri + '?search=%QUERY&uid=' + uid,
                                               wildcard: '%QUERY'
                                               // filter: function (list) {
                                               //     return $.map(list, function (name) {

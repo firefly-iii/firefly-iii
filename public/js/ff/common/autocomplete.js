@@ -27,7 +27,7 @@ function initTagsAC() {
                                      datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                      queryTokenizer: Bloodhound.tokenizers.whitespace,
                                      prefetch: {
-                                         url: 'json/tags',
+                                         url: 'json/tags?uid=' + uid,
                                          filter: function (list) {
                                              return $.map(list, function (tagTag) {
                                                  return {name: tagTag};
@@ -35,7 +35,7 @@ function initTagsAC() {
                                          }
                                      },
                                      remote: {
-                                         url: 'json/tags?search=%QUERY',
+                                         url: 'json/tags?search=%QUERY&uid=' + uid,
                                          wildcard: '%QUERY',
                                          filter: function (list) {
                                              return $.map(list, function (name) {
@@ -74,7 +74,7 @@ function initExpenseACField(fieldName) {
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
                                            prefetch: {
-                                               url: 'json/expense-accounts',
+                                               url: 'json/expense-accounts?uid=' + uid,
                                                filter: function (list) {
                                                    return $.map(list, function (name) {
                                                        return {name: name};
@@ -82,7 +82,7 @@ function initExpenseACField(fieldName) {
                                                }
                                            },
                                            remote: {
-                                               url: 'json/expense-accounts?search=%QUERY',
+                                               url: 'json/expense-accounts?search=%QUERY&uid=' + uid,
                                                wildcard: '%QUERY',
                                                filter: function (list) {
                                                    return $.map(list, function (name) {
@@ -113,7 +113,7 @@ function initRevenueACField(fieldName) {
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
                                              prefetch: {
-                                                 url: 'json/revenue-accounts',
+                                                 url: 'json/revenue-accounts?uid=' + uid,
                                                  filter: function (list) {
                                                      return $.map(list, function (name) {
                                                          return {name: name};
@@ -121,7 +121,7 @@ function initRevenueACField(fieldName) {
                                                  }
                                              },
                                              remote: {
-                                                 url: 'json/revenue-accounts?search=%QUERY',
+                                                 url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
                                                  wildcard: '%QUERY',
                                                  filter: function (list) {
                                                      return $.map(list, function (name) {
@@ -143,7 +143,7 @@ function initCategoryAC() {
                                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                         queryTokenizer: Bloodhound.tokenizers.whitespace,
                                         prefetch: {
-                                            url: 'json/categories',
+                                            url: 'json/categories?uid=' + uid,
                                             filter: function (list) {
                                                 return $.map(list, function (name) {
                                                     return {name: name};
@@ -151,7 +151,7 @@ function initCategoryAC() {
                                             }
                                         },
                                         remote: {
-                                            url: 'json/categories?search=%QUERY',
+                                            url: 'json/categories?search=%QUERY&uid=' + uid,
                                             wildcard: '%QUERY',
                                             filter: function (list) {
                                                 return $.map(list, function (name) {

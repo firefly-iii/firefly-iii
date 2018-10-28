@@ -48,7 +48,9 @@ class JavascriptController extends Controller
      */
     public function accounts(AccountRepositoryInterface $repository, CurrencyRepositoryInterface $currencyRepository): Response
     {
-        $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT,AccountType::LOAN,AccountType::MORTGAGE, AccountType::CREDITCARD]);
+        $accounts   = $repository->getAccountsByType(
+            [AccountType::DEFAULT, AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD]
+        );
         $preference = app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR'));
         /** @noinspection NullPointerExceptionInspection */
         $default = $currencyRepository->findByCodeNull($preference->data);
@@ -124,6 +126,7 @@ class JavascriptController extends Controller
         /** @noinspection NullPointerExceptionInspection */
         $lang      = $pref->data;
         $dateRange = $this->getDateRangeConfig();
+        $uid       = substr(hash('sha256', auth()->user()->id . auth()->user()->email), 0, 12);
 
         $data = [
             'currencyCode'    => $currency->code,
@@ -133,6 +136,7 @@ class JavascriptController extends Controller
             'language'        => $lang,
             'dateRangeTitle'  => $dateRange['title'],
             'dateRangeConfig' => $dateRange['configuration'],
+            'uid'             => $uid,
         ];
         $request->session()->keep(['two-factor-secret']);
 
