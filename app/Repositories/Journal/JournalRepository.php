@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -594,7 +595,9 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var TransactionCollectorInterface $collector */
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($this->user);
-        $collector->addFilter(TransferFilter::class);
+        $collector->setAllAssetAccounts();
+        $collector->removeFilter(InternalTransferFilter::class);
+        //$collector->addFilter(TransferFilter::class);
 
         $collector->setJournals($journals)->withOpposingAccount();
         return $collector->getTransactions();

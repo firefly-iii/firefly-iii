@@ -63,9 +63,13 @@ class TransferFilter implements FilterInterface
             $key = $journalId . '-' . implode(',', $transactionIds) . '-' . implode(',', $accountIds) . '-' . $amount;
             Log::debug(sprintf('Current transaction key is "%s"', $key));
             if (!isset($count[$key])) {
+                Log::debug(sprintf('First instance of transaction #%d, add it.', $transaction->id));
                 // not yet counted? add to new set and count it:
                 $new->push($transaction);
                 $count[$key] = 1;
+            }
+            if (isset($count[$key])) {
+                Log::debug(sprintf('Second instance of transaction #%d, do NOT add it.', $transaction->id));
             }
         }
 

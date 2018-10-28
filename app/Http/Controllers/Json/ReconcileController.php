@@ -111,9 +111,11 @@ class ReconcileController extends Controller
         $cleared      = $this->repository->getTransactionsById($clearedIds);
         $countCleared = 0;
 
+        Log::debug('Start transaction loop');
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             // find the account and opposing account for this transaction
+            Log::debug(sprintf('Now at transaction #%d: %s', $transaction->journal_id, $transaction->description));
             $srcAccount  = $this->accountRepos->findNull((int)$transaction->account_id);
             $dstAccount  = $this->accountRepos->findNull((int)$transaction->opposing_account_id);
             $srcCurrency = (int)$this->accountRepos->getMetaValue($srcAccount, 'currency_id');
@@ -123,10 +125,12 @@ class ReconcileController extends Controller
             if ($account->id === $srcAccount->id) {
                 // source, and it matches the currency id or is 0
                 if ($srcCurrency === $transaction->transaction_currency_id || 0 === $srcCurrency) {
+                    Log::debug(sprintf('Source matches currency: %s', $transaction->transaction_amount));
                     $amount = bcadd($amount, $transaction->transaction_amount);
                 }
                 // destination, and it matches the foreign currency ID.
                 if ($srcCurrency === $transaction->foreign_currency_id) {
+                    Log::debug(sprintf('Source matches foreign currency: %s', $transaction->transaction_foreign_amount));
                     $amount = bcadd($amount, $transaction->transaction_foreign_amount);
                 }
             }
@@ -134,14 +138,17 @@ class ReconcileController extends Controller
             if ($account->id === $dstAccount->id) {
                 // destination, and it matches the currency id or is 0
                 if ($dstCurrency === $transaction->transaction_currency_id || 0 === $dstCurrency) {
-                    $amount = bcadd($amount, $transaction->transaction_amount);
+                    Log::debug(sprintf('Destination matches currency: %s', $transaction->transaction_amount));
+                    $amount = bcadd($amount, app('steam')->negative($transaction->transaction_amount));
                 }
                 // destination, and it matches the foreign currency ID.
                 if ($dstCurrency === $transaction->foreign_currency_id) {
+                    Log::debug(sprintf('Destination matches foreign currency: %s', $transaction->transaction_foreign_amount));
                     $amount = bcadd($amount, $transaction->transaction_foreign_amount);
                 }
             }
         }
+        Log::debug('End transaction loop');
         // make sure amount is positive.
         $amount = app('steam')->positive($amount);
         /** @var Transaction $transaction */
