@@ -551,6 +551,8 @@ return [
     'email_changed_logout'                    => 'Until you verify your email address, you cannot login.',
     'login_with_new_email'                    => 'You can now login with your new email address.',
     'login_with_old_email'                    => 'You can now login with your old email address again.',
+    'login_provider_local_only'               => 'This action is not available when authenticating through ":login_provider".',
+    'delete_local_info_only'                  => 'Because you authenticate through ":login_provider", this will only delete local Firefly III information.',
 
     // attachments
     'nr_of_attachments'                       => 'One attachment|:count attachments',
@@ -777,6 +779,7 @@ return [
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',
+    'initial_balance_account'                 => 'Initial balance account of :name',
 
     // categories:
     'new_category'                            => 'New category',
@@ -1021,6 +1024,7 @@ return [
     'select_expense_revenue'                  => 'Select expense/revenue account',
     'multi_currency_report_sum'               => 'Because this list contains accounts with multiple currencies, the sum(s) you see may not make sense. The report will always fall back to your default currency.',
     'sum_in_default_currency'                 => 'The sum will always be in your default currency.',
+    'net_filtered_prefs'                      => 'This chart will never include accounts that have the "Include in net worth"-option unchecked.',
 
     // charts:
     'chart'                                   => 'Chart',

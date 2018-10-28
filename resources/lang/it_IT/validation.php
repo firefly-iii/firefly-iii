@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Questo non è un IBAN valido.',
+    'zero_or_more'                   => 'Il valore non può essere negativo.',
     'source_equals_destination'      => 'Il conto di origine è uguale al conto di destinazione.',
     'unique_account_number_for_user' => 'Sembra che questo numero di conto sia già in uso.',
     'unique_iban_for_user'           => 'Sembra che questo IBAN sia già in uso.',
@@ -134,7 +135,7 @@ return [
         'piggy_bank_id'           => 'ID salvadanaio',
         'targetamount'            => 'importo obiettivo',
         'openingBalanceDate'      => 'data saldo di apertura',
-        'openingBalance'          => 'saldo apertura',
+        'openingBalance'          => 'saldo di apertura',
         'match'                   => 'abbinamento',
         'amount_min'              => 'importo minimo',
         'amount_max'              => 'importo massimo',

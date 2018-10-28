@@ -26,7 +26,7 @@ namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
 use League\Csv\Writer;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class CsvExporter.
@@ -57,15 +57,11 @@ class CsvExporter extends BasicExporter implements ExporterInterface
      */
     public function run(): bool
     {
-        // create temporary file:
-        $this->tempFile();
-
-        // necessary for CSV writer:
-        $fullPath = storage_path('export') . DIRECTORY_SEPARATOR . $this->fileName;
-
+        // choose file name:
+        $this->fileName = $this->job->key . '-records.csv';
 
         //we create the CSV into memory
-        $writer = Writer::createFromPath($fullPath);
+        $writer = Writer::createFromString('');
         $rows   = [];
 
         // get field names for header row:
@@ -86,18 +82,9 @@ class CsvExporter extends BasicExporter implements ExporterInterface
             $rows[] = $line;
         }
         $writer->insertAll($rows);
+        $disk = Storage::disk('export');
+        $disk->put($this->fileName, $writer->getContent());
 
         return true;
-    }
-
-    /**
-     * Make a temp file.
-     */
-    private function tempFile()
-    {
-        $this->fileName = $this->job->key . '-records.csv';
-        // touch file in export directory:
-        $disk = Storage::disk('export');
-        $disk->put($this->fileName, '');
     }
 }

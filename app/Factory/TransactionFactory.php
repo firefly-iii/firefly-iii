@@ -120,8 +120,8 @@ class TransactionFactory
         Log::debug(sprintf('Expect source destination to be of type "%s"', $destinationType));
 
         // find source and destination account:
-        $sourceAccount      = $this->findAccount($sourceType, $data['source_id'], $data['source_name']);
-        $destinationAccount = $this->findAccount($destinationType, $data['destination_id'], $data['destination_name']);
+        $sourceAccount      = $this->findAccount($sourceType, (int)$data['source_id'], $data['source_name']);
+        $destinationAccount = $this->findAccount($destinationType, (int)$data['destination_id'], $data['destination_name']);
 
         if (null === $sourceAccount || null === $destinationAccount) {
             $debugData                = $data;

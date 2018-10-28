@@ -142,7 +142,7 @@ function updateDescription() {
                                           datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                           queryTokenizer: Bloodhound.tokenizers.whitespace,
                                           prefetch: {
-                                              url: 'json/transaction-journals/' + what,
+                                              url: 'json/transaction-journals/' + what + '?uid=' + uid,
                                               filter: function (list) {
                                                   return $.map(list, function (name) {
                                                       return {name: name};
@@ -150,7 +150,7 @@ function updateDescription() {
                                               }
                                           },
                                           remote: {
-                                              url: 'json/transaction-journals/' + what + '?search=%QUERY',
+                                              url: 'json/transaction-journals/' + what + '?search=%QUERY&uid=' + uid,
                                               wildcard: '%QUERY',
                                               filter: function (list) {
                                                   return $.map(list, function (name) {

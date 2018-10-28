@@ -28,7 +28,7 @@ $username    = '';
 $password    = '';
 $database    = '';
 
-if (!($databaseUrl === false)) {
+if (!(false === $databaseUrl)) {
     $options  = parse_url($databaseUrl);
     $host     = $options['host'];
     $username = $options['user'];
@@ -57,7 +57,7 @@ return [
             'collation'   => 'utf8mb4_unicode_ci',
             'prefix'      => '',
             'strict'      => true,
-            'engine'      => null,
+            'engine'      => 'InnoDB',
         ],
         'pgsql'  => [
             'driver'   => 'pgsql',

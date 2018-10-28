@@ -313,10 +313,8 @@ class FireflyValidator extends Validator
      *
      * @return bool
      */
-    public function validateRuleTriggerValue(string $attribute, string $value): bool
+    public function validateRuleTriggerValue(string $attribute, string $value = null): bool
     {
-        //
-
         // first, get the index from this string:
         $parts = explode('.', $attribute);
         $index = (int)($parts[1] ?? '0');

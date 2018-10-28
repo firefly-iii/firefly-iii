@@ -154,15 +154,15 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
         $processors = $this->collectProcessors();
 
         // Execute the rules for each transaction
-        foreach ($transactions as $transaction) {
-            /** @var Processor $processor */
-            foreach ($processors as $processor) {
+        foreach ($processors as $processor) {
+            foreach ($transactions as $transaction) {
+                /** @var Processor $processor */
                 $processor->handleTransaction($transaction);
 
-                // Stop processing this group if the rule specifies 'stop_processing'
-                if ($processor->getRule()->stop_processing) {
-                    break;
-                }
+            }
+            // Stop processing this group if the rule specifies 'stop_processing'
+            if ($processor->getRule()->stop_processing) {
+                break;
             }
         }
     }
@@ -203,6 +203,7 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
                 /** @var Processor $processor */
                 $processor = app(Processor::class);
                 $processor->make($rule);
+
                 return $processor;
             },
             $rules->all()

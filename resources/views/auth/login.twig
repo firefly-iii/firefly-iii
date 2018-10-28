@@ -29,7 +29,7 @@
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
                     </button>
-                    <strong>{{ 'flash_error'|_ }}!</strong> {{ errors.get('email')[0] }}
+                    <strong>{{ 'flash_error'|_ }}</strong> {{ errors.get('email')[0] }}
                 </div>
             </div>
         </div>
@@ -54,7 +54,11 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
-                <input type="email" autocomplete="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
+                {% if env('LOGIN_PROVIDER', 'eloquent') == 'eloquent' %}
+                    <input type="email" autocomplete="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
+                {% else %}
+                    <input type="text" autocomplete="username" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>
+                {% endif %}
             </div>
             <div class="form-group has-feedback">
                 <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ trans('form.password') }}"/>
@@ -75,7 +79,9 @@
         {% if allowRegistration %}
             <a href="{{ URL.to('/register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
         {% endif %}
-        <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
+        {% if allowReset %}
+            <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
+        {% endif %}
     </div>
 {% endblock %}
 

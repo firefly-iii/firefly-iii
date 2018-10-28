@@ -60,12 +60,14 @@ trait PeriodOverview
      * and for each period, the amount of money spent and earned. This is a complex operation which is cached for
      * performance reasons.
      *
-     * @param Account $account the account involved
-     * @param Carbon  $date
+     * The method has been refactored recently for better performance.
+     *
+     * @param Account $account The account involved
+     * @param Carbon  $date    The start date.
      *
      * @return Collection
      */
-    protected function getAccountPeriodOverview(Account $account, Carbon $date): Collection // period overview
+    protected function getAccountPeriodOverview(Account $account, Carbon $date): Collection
     {
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
@@ -95,15 +97,15 @@ trait PeriodOverview
             $collector = app(TransactionCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
                       ->withOpposingAccount();
-            $set    = $collector->getTransactions();
-            $earned = $this->groupByCurrency($set);
+            $earnedSet = $collector->getTransactions();
+            $earned    = $this->groupByCurrency($earnedSet);
 
             /** @var TransactionCollectorInterface $collector */
             $collector = app(TransactionCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
                       ->withOpposingAccount();
-            $set   = $collector->getTransactions();
-            $spent = $this->groupByCurrency($set);
+            $spentSet = $collector->getTransactions();
+            $spent    = $this->groupByCurrency($spentSet);
 
             $title = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
             /** @noinspection PhpUndefinedMethodInspection */
@@ -115,7 +117,6 @@ trait PeriodOverview
                     'earned'       => $earned,
                     'transferred'  => '0',
                     'route'        => route('accounts.show', [$account->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-
                 ]
             );
         }
@@ -126,11 +127,84 @@ trait PeriodOverview
     }
 
     /**
-     * Gets period overview used for budgets.
+     * Overview for single category. Has been refactored recently.
+     *
+     * @param Category $category
+     * @param Carbon   $date
      *
      * @return Collection
      */
-    protected function getBudgetPeriodOverview(Carbon $date): Collection
+    protected function getCategoryPeriodOverview(Category $category, Carbon $date): Collection
+    {
+        /** @var JournalRepositoryInterface $journalRepository */
+        $journalRepository = app(JournalRepositoryInterface::class);
+        $range             = app('preferences')->get('viewRange', '1M')->data;
+        $first             = $journalRepository->firstNull();
+        $end               = null === $first ? new Carbon : $first->date;
+        $start             = clone $date;
+
+        if ($end < $start) {
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
+        }
+
+        // properties for entries with their amounts.
+        $cache = new CacheProperties();
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($range);
+        $cache->addProperty('category-show-period-entries');
+        $cache->addProperty($category->id);
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+        /** @var array $dates */
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
+        /** @var CategoryRepositoryInterface $categoryRepository */
+        $categoryRepository = app(CategoryRepositoryInterface::class);
+
+        foreach ($dates as $currentDate) {
+            $spent  = $categoryRepository->spentInPeriodCollection(new Collection([$category]), new Collection, $currentDate['start'], $currentDate['end']);
+            $earned = $categoryRepository->earnedInPeriodCollection(new Collection([$category]), new Collection, $currentDate['start'], $currentDate['end']);
+            $spent  = $this->groupByCurrency($spent);
+            $earned = $this->groupByCurrency($earned);
+
+            // amount transferred
+            /** @var TransactionCollectorInterface $collector */
+            $collector = app(TransactionCollectorInterface::class);
+            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
+                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
+            $collector->removeFilter(InternalTransferFilter::class);
+            $transferred = $this->groupByCurrency($collector->getTransactions());
+
+            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $entries->push(
+                [
+                    'transactions' => 0,
+                    'title'        => $title,
+                    'spent'        => $spent,
+                    'earned'       => $earned,
+                    'transferred'  => $transferred,
+                    'route'        => route('categories.show', [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                ]
+            );
+        }
+        $cache->store($entries);
+
+        return $entries;
+    }
+
+    /**
+     * Same as above, but for lists that involve transactions without a budget.
+     *
+     * This method has been refactored recently.
+     *
+     * @param Carbon $date
+     *
+     * @return Collection
+     */
+    protected function getNoBudgetPeriodOverview(Carbon $date): Collection
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
@@ -138,8 +212,12 @@ trait PeriodOverview
         $end        = null === $first ? new Carbon : $first->date;
         $start      = clone $date;
         $range      = app('preferences')->get('viewRange', '1M')->data;
-        $entries    = new Collection;
-        $cache      = new CacheProperties;
+
+        if ($end < $start) {
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
+        }
+
+        $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('no-budget-period-entries');
@@ -149,7 +227,8 @@ trait PeriodOverview
         }
 
         /** @var array $dates */
-        $dates = app('navigation')->blockPeriods($start, $end, $range);
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
         foreach ($dates as $currentDate) {
             /** @var TransactionCollectorInterface $collector */
             $collector = app(TransactionCollectorInterface::class);
@@ -162,12 +241,12 @@ trait PeriodOverview
             $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
             $entries->push(
                 [
-                    'route'        => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
                     'transactions' => $count,
                     'title'        => $title,
                     'spent'        => $spent,
                     'earned'       => '0',
                     'transferred'  => '0',
+                    'route'        => route('budgets.no-budget', [$currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
                 ]
             );
         }
@@ -177,133 +256,70 @@ trait PeriodOverview
     }
 
     /**
-     * Get a period overview for category.
-     *
-     * TODO refactor me.
-     *
-     * @param Category $category
-     * @param Carbon   $date
-     *
-     * @return Collection
-     */
-    protected function getCategoryPeriodOverview(Category $category, Carbon $date): Collection // periodOverview method
-    {
-        /** @var JournalRepositoryInterface $journalRepository */
-        $journalRepository = app(JournalRepositoryInterface::class);
-        /** @var CategoryRepositoryInterface $categoryRepository */
-        $categoryRepository = app(CategoryRepositoryInterface::class);
-
-
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $first = $journalRepository->firstNull();
-        $end   = null === $first ? new Carbon : $first->date;
-        $start = clone $date;
-
-        // properties for entries with their amounts.
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($range);
-        $cache->addProperty('categories.entries');
-        $cache->addProperty($category->id);
-
-        if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
-        }
-        /** @var array $dates */
-        $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-
-        foreach ($dates as $currentDate) {
-            $spent  = $categoryRepository->spentInPeriodCollection(new Collection([$category]), new Collection, $currentDate['start'], $currentDate['end']);
-            $earned = $categoryRepository->earnedInPeriodCollection(new Collection([$category]), new Collection, $currentDate['start'], $currentDate['end']);
-            $spent  = $this->groupByCurrency($spent);
-            $earned = $this->groupByCurrency($earned);
-            // amount transferred
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = $this->groupByCurrency($collector->getTransactions());
-            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $entries->push(
-                [
-                    'route'       => route('categories.show', [$category->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                    'title'       => $title,
-                    'spent'       => $spent,
-                    'earned'      => $earned,
-                    'transferred' => $transferred,
-                ]
-            );
-        }
-        $cache->store($entries);
-
-        return $entries;
-    }
-
-    /**
-     * Get overview of periods for tag.
-     *
-     * TODO refactor this.
+     * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
      * @param Tag $tag
      *
      * @return Collection
      */
-    protected function getTagPeriodOverview(Tag $tag): Collection // period overview for tags.
+    protected function getTagPeriodOverview(Tag $tag, Carbon $date): Collection // period overview for tags.
     {
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
-        // get first and last tag date from tag:
-        $range = app('preferences')->get('viewRange', '1M')->data;
+        $range      = app('preferences')->get('viewRange', '1M')->data;
         /** @var Carbon $end */
-        $end   = app('navigation')->endOfX($repository->lastUseDate($tag) ?? new Carbon, $range, null);
-        $start = $repository->firstUseDate($tag) ?? new Carbon;
+        $start = clone $date;
+        $end   = $repository->firstUseDate($tag) ?? new Carbon;
 
+
+        if ($end < $start) {
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
+        }
 
         // properties for entries with their amounts.
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('tag.entries');
+        $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
 
         if ($cache->has()) {
             return $cache->get(); // @codeCoverageIgnore
         }
 
-        $collection = new Collection;
-        $currentEnd = clone $end;
+        /** @var array $dates */
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
         // while end larger or equal to start
-        while ($currentEnd >= $start) {
-            $currentStart = app('navigation')->startOfPeriod($currentEnd, $range);
+        foreach ($dates as $currentDate) {
 
-            // get expenses and what-not in this period and this tag.
-            $arr = [
-                'string' => $end->format('Y-m-d'),
-                'name'   => app('navigation')->periodShow($currentEnd, $range),
-                'start'  => clone $currentStart,
-                'end'    => clone $currentEnd,
-                'date'   => clone $end,
-                'spent'  => $repository->spentInPeriod($tag, $currentStart, $currentEnd),
-                'earned' => $repository->earnedInPeriod($tag, $currentStart, $currentEnd),
-            ];
-            $collection->push($arr);
+            $spentSet       = $repository->expenseInPeriod($tag, $currentDate['start'], $currentDate['end']);
+            $spent          = $this->groupByCurrency($spentSet);
+            $earnedSet      = $repository->incomeInPeriod($tag, $currentDate['start'], $currentDate['end']);
+            $earned         = $this->groupByCurrency($earnedSet);
+            $transferredSet = $repository->transferredInPeriod($tag, $currentDate['start'], $currentDate['end']);
+            $transferred    = $this->groupByCurrency($transferredSet);
+            $title          = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
 
-            /** @var Carbon $currentEnd */
-            $currentEnd = clone $currentStart;
-            $currentEnd->subDay();
+            $entries->push(
+                [
+                    'transactions' => $spentSet->count() + $earnedSet->count() + $transferredSet->count(),
+                    'title'        => $title,
+                    'spent'        => $spent,
+                    'earned'       => $earned,
+                    'transferred'  => $transferred,
+                    'route'        => route('tags.show', [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                ]
+            );
+
         }
-        $cache->store($collection);
+        $cache->store($entries);
 
-        return $collection;
+        return $entries;
     }
 
     /**
-     * Get period overview for index.
-     *
-     * TODO refactor me.
+     * This list shows the overview of a type of transaction, for the period blocks on the list of transactions.
      *
      * @param string $what
      * @param Carbon $date
@@ -315,42 +331,60 @@ trait PeriodOverview
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $range      = app('preferences')->get('viewRange', '1M')->data;
-        $first      = $repository->firstNull();
-        $start      = Carbon::now()->subYear();
+        $endJournal = $repository->firstNull();
+        $end        = null === $endJournal ? new Carbon : $endJournal->date;
+        $start      = clone $date;
         $types      = config('firefly.transactionTypesByWhat.' . $what);
-        $entries    = new Collection;
-        if (null !== $first) {
-            $start = $first->date;
+
+
+        if ($end < $start) {
+            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
-        if ($date < $start) {
-            [$start, $date] = [$date, $start]; // @codeCoverageIgnore
-        }
+
+        // properties for entries with their amounts.
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('transactions-period-entries');
+        $cache->addProperty($what);
+
 
         /** @var array $dates */
-        $dates = app('navigation')->blockPeriods($start, $date, $range);
+        $dates   = app('navigation')->blockPeriods($start, $end, $range);
+        $entries = new Collection;
 
         foreach ($dates as $currentDate) {
+
+            // get all expenses, income or transfers:
             /** @var TransactionCollectorInterface $collector */
             $collector = app(TransactionCollectorInterface::class);
             $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withOpposingAccount()->setTypes($types);
             $collector->removeFilter(InternalTransferFilter::class);
             $transactions = $collector->getTransactions();
-
-            if ($transactions->count() > 0) {
-                $sums     = $this->sumPerCurrency($transactions);
-                $dateName = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
-                $sum      = $transactions->sum('transaction_amount');
-                /** @noinspection PhpUndefinedMethodInspection */
-                $entries->push(
-                    [
-                        'name'  => $dateName,
-                        'sums'  => $sums,
-                        'sum'   => $sum,
-                        'start' => $currentDate['start']->format('Y-m-d'),
-                        'end'   => $currentDate['end']->format('Y-m-d'),
-                    ]
-                );
+            $title        = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $grouped      = $this->groupByCurrency($transactions);
+            $spent        = [];
+            $earned       = [];
+            $transferred  = [];
+            if ('expenses' === $what || 'withdrawal' === $what) {
+                $spent = $grouped;
             }
+            if ('revenue' === $what || 'deposit' === $what) {
+                $earned = $grouped;
+            }
+            if ('transfer' === $what || 'transfers' === $what) {
+                $transferred = $grouped;
+            }
+            $entries->push(
+                [
+                    'transactions' => $transactions->count(),
+                    'title'        => $title,
+                    'spent'        => $spent,
+                    'earned'       => $earned,
+                    'transferred'  => $transferred,
+                    'route'        => route('transactions.index', [$what, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                ]
+            );
         }
 
         return $entries;

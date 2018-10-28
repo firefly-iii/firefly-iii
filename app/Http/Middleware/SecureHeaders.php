@@ -37,7 +37,6 @@ class SecureHeaders
      *
      * @param \Illuminate\Http\Request $request
      * @param \Closure                 $next
-     * @param string|null              $guard
      *
      * @return mixed
      */
@@ -51,6 +50,7 @@ class SecureHeaders
         }
         $csp = [
             "default-src 'none'",
+            "object-src 'self'",
             sprintf("script-src 'self' 'unsafe-eval' 'unsafe-inline' %s", $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",

@@ -88,7 +88,7 @@ class ShowController extends Controller
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
-        $periods  = $this->getBudgetPeriodOverview($end);
+        $periods  = $this->getNoBudgetPeriodOverview($end);
         $page     = (int)$request->get('page');
         $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
 

@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Rules\UniqueIban;
+use FireflyIII\Rules\ZeroOrMore;
 
 /**
  * Class AccountFormRequest.
@@ -116,7 +117,7 @@ class AccountFormRequest extends Request
         ];
 
         if ('liabilities' === $this->get('what')) {
-            $rules['openingBalance']     = 'numeric|required|more:0';
+            $rules['openingBalance']     = ['numeric', 'required', new ZeroOrMore];
             $rules['openingBalanceDate'] = 'date|required';
         }
 

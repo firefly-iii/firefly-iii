@@ -367,7 +367,7 @@ function createAutoComplete(input, URI) {
                                     datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                     queryTokenizer: Bloodhound.tokenizers.whitespace,
                                     prefetch: {
-                                        url: URI,
+                                        url: URI + '?uid=' + uid,
                                         filter: function (list) {
                                             return $.map(list, function (name) {
                                                 return {name: name};
@@ -375,7 +375,7 @@ function createAutoComplete(input, URI) {
                                         }
                                     },
                                     remote: {
-                                        url: URI + '?search=%QUERY',
+                                        url: URI + '?search=%QUERY&uid=' + uid,
                                         wildcard: '%QUERY',
                                         filter: function (list) {
                                             return $.map(list, function (name) {

@@ -27,6 +27,9 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankEvent;
@@ -581,14 +584,23 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getTransactionsById(array $transactionIds): Collection
     {
-        $set = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->whereIn('transactions.id', $transactionIds)
-                          ->where('transaction_journals.user_id', $this->user->id)
-                          ->whereNull('transaction_journals.deleted_at')
-                          ->whereNull('transactions.deleted_at')
-                          ->get(['transactions.*']);
+        $journalIds = Transaction::whereIn('id', $transactionIds)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $journals = new Collection;
+        foreach($journalIds as $journalId) {
+            $result = $this->findNull((int)$journalId);
+            if(null !== $result) {
+                $journals->push($result);
+            }
+        }
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setAllAssetAccounts();
+        $collector->removeFilter(InternalTransferFilter::class);
+        //$collector->addFilter(TransferFilter::class);
 
-        return $set;
+        $collector->setJournals($journals)->withOpposingAccount();
+        return $collector->getTransactions();
     }
 
     /**

@@ -27,6 +27,6 @@ return [
     'personal_access_tokens' => 'Tokens de acceso personal',
 
     // bills:
-    'not_expected_period'    => 'No se esperaba este período',
-    'not_or_not_yet'         => 'No (todavía)',
+    'not_expected_period'    => 'Período inesperado',
+    'not_or_not_yet'         => 'No (o todavía no)',
 ];

@@ -14,7 +14,7 @@ services:
       - FF_DB_CONNECTION=pgsql
       - TZ=Europe/Amsterdam
       - APP_LOG_LEVEL=debug
-    image: jc5x/firefly-iii:develop
+    image: jc5x/firefly-iii
     links: 
       - firefly_iii_db
     networks: 
@@ -34,7 +34,7 @@ services:
     environment: 
       - POSTGRES_PASSWORD=firefly
       - POSTGRES_USER=firefly
-    image: "postgres:latest"
+    image: "postgres:10"
     networks: 
       - firefly_iii_net
     volumes: 

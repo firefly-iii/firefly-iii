@@ -93,6 +93,23 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): Collection
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
+
+        return $collector->getTransactions();
+    }
+
+    /**
      * @param string $tag
      *
      * @return Tag|null
@@ -149,6 +166,23 @@ class TagRepository implements TagRepositoryInterface
         );
 
         return $tags;
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): Collection
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
+
+        return $collector->getTransactions();
     }
 
     /**
@@ -313,6 +347,23 @@ class TagRepository implements TagRepositoryInterface
         }
 
         return $return;
+    }
+
+    /**
+     * @param Tag    $tag
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): Collection
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->setAllAssetAccounts()->setTag($tag);
+
+        return $collector->getTransactions();
     }
 
     /**

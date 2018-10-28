@@ -27,7 +27,7 @@ use FireflyIII\Models\TransactionJournal;
 use Log;
 
 /**
- * Class AppendDescription.
+ * Class PrependDescription.
  */
 class PrependDescription implements ActionInterface
 {

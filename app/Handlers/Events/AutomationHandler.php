@@ -45,6 +45,12 @@ class AutomationHandler
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {
+        $sendReport = envNonEmpty('SEND_REPORT_JOURNALS', true);
+
+        if (false === $sendReport) {
+            return true;
+        }
+
         Log::debug('In reportJournals.');
         /** @var UserRepositoryInterface $repository */
         $repository = app(UserRepositoryInterface::class);

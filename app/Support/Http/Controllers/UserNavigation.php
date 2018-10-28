@@ -28,6 +28,7 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\ViewErrorBag;
 use Log;
 use URL;
 
@@ -141,6 +142,10 @@ trait UserNavigation
      */
     protected function rememberPreviousUri(string $identifier): void
     {
-        session()->put($identifier, URL::previous());
+        /** @var ViewErrorBag $errors */
+        $errors = session()->get('errors');
+        if(null === $errors || (null !== $errors && 0=== $errors->count())) {
+            session()->put($identifier, URL::previous());
+        }
     }
 }

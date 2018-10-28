@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Illuminate\Foundation\Auth\SendsPasswordResetEmails;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Password;
+use Log;
 
 /**
  * Class ForgotPasswordController
@@ -58,6 +59,13 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
+        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        if ('eloquent' !== $loginProvider) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+            Log::error($message);
+            return view('error', compact('message'));
+        }
+
         $this->validateEmail($request);
 
         // verify if the user is not a demo user. If so, we give him back an error.
@@ -90,6 +98,13 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
+        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        if ('eloquent' !== $loginProvider) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+
+            return view('error', compact('message'));
+        }
+
         // is allowed to?
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();

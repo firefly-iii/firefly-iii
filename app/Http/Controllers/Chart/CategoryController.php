@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 
@@ -40,6 +41,7 @@ use Illuminate\Support\Collection;
  */
 class CategoryController extends Controller
 {
+    use DateCalculation;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -97,17 +99,36 @@ class CategoryController extends Controller
                 'entries' => [], 'type' => 'line', 'fill' => false,
             ],
         ];
-
-        while ($start <= $end) {
-            $currentEnd                      = app('navigation')->endOfPeriod($start, $range);
-            $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
-            $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $currentEnd);
-            $sum                             = bcadd($spent, $earned);
-            $label                           = app('navigation')->periodShow($start, $range);
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
-            $chartData[1]['entries'][$label] = round($earned, 12);
-            $chartData[2]['entries'][$label] = round($sum, 12);
-            $start                           = app('navigation')->addPeriod($start, $range, 0);
+        $step      = $this->calculateStep($start, $end);
+        $current = clone $start;
+        switch ($step) {
+            case '1D':
+                while ($current <= $end) {
+                    $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $current);
+                    $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $current);
+                    $sum                             = bcadd($spent, $earned);
+                    $label                           = app('navigation')->periodShow($current, $step);
+                    $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
+                    $chartData[1]['entries'][$label] = round($earned, 12);
+                    $chartData[2]['entries'][$label] = round($sum, 12);
+                    $current->addDay();
+                }
+                break;
+            case '1W':
+            case '1M':
+            case '1Y':
+                while ($current <= $end) {
+                    $currentEnd                      = app('navigation')->endOfPeriod($current, $range);
+                    $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
+                    $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
+                    $sum                             = bcadd($spent, $earned);
+                    $label                           = app('navigation')->periodShow($current, $step);
+                    $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
+                    $chartData[1]['entries'][$label] = round($earned, 12);
+                    $chartData[2]['entries'][$label] = round($sum, 12);
+                    $current= app('navigation')->addPeriod($current, $step, 0);
+                }
+                break;
         }
 
         $data = $this->generator->multiSet($chartData);
@@ -135,7 +156,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // currency repos:
@@ -168,7 +189,7 @@ class CategoryController extends Controller
         $noCategory = $repository->spentInPeriodPcWoCategory(new Collection, $start, $end);
         foreach ($noCategory as $currencyId => $spent) {
             $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
-            $tempData[] = [
+            $tempData[]              = [
                 'name'        => trans('firefly.no_category'),
                 'spent'       => bcmul($spent, '-1'),
                 'spent_float' => (float)bcmul($spent, '-1'),

@@ -192,7 +192,7 @@ class TagController extends Controller
             'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                    'end' => $end->formatLocalized($this->monthAndDayFormat),]
         );
-        $periods      = $this->getTagPeriodOverview($tag);
+        $periods      = $this->getTagPeriodOverview($tag, $start);
         $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
         /** @var TransactionCollectorInterface $collector */

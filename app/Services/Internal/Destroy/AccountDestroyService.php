@@ -26,6 +26,7 @@ namespace FireflyIII\Services\Internal\Destroy;
 use DB;
 use Exception;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -96,6 +97,9 @@ class AccountDestroyService
                 $destroyService->destroyById((int)$recurrenceId);
             }
         }
+
+        // delete piggy banks:
+        PiggyBank::where('account_id', $account->id)->delete();
 
         try {
             $account->delete();

@@ -107,6 +107,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         } catch (Exception $e) {
             Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
+        Budget::where('order',0)->update(['order' => 100]);
 
         // do the clean up by hand because Sqlite can be tricky with this.
         $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
@@ -289,11 +290,14 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getActiveBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->where('active', 1)->get();
+        $set = $this->user->budgets()->where('active', 1)
+                          ->get();
 
         $set = $set->sortBy(
             function (Budget $budget) {
-                return strtolower($budget->name);
+                $str = str_pad((string)$budget->order, 4, '0', STR_PAD_LEFT) . strtolower($budget->name);
+
+                return $str;
             }
         );
 
@@ -554,7 +558,9 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         $set = $set->sortBy(
             function (Budget $budget) {
-                return strtolower($budget->name);
+                $str = str_pad((string)$budget->order, 4, '0', STR_PAD_LEFT) . strtolower($budget->name);
+
+                return $str;
             }
         );
 
@@ -583,7 +589,9 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         $set = $set->sortBy(
             function (Budget $budget) {
-                return strtolower($budget->name);
+                $str = str_pad((string)$budget->order, 4, '0', STR_PAD_LEFT) . strtolower($budget->name);
+
+                return $str;
             }
         );
 
@@ -653,6 +661,18 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Budget $budget
+     * @param int    $order
+     */
+    public function setBudgetOrder(Budget $budget, int $order): void
+    {
+        $budget->order = $order;
+        $budget->save();
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void
@@ -660,7 +680,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         $this->user = $user;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -825,6 +844,8 @@ class BudgetRepository implements BudgetRepositoryInterface
 
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param BudgetLimit $budgetLimit
      * @param array       $data
@@ -848,7 +869,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $budgetLimit;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Budget $budget
      * @param Carbon $start

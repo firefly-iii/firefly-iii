@@ -191,6 +191,7 @@ return [
     'password_confirmation' => 'Password (lagi)',
     'blocked'               => 'Apakah diblokir?',
     'blocked_code'          => 'Alasan untuk blok',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Apply rules',
@@ -222,6 +223,16 @@ return [
     'public_key'            => 'Kunci publik',
     'country_code'          => 'Kode negara',
     'provider_code'         => 'Bank atau penyedia data',
+    'fints_url'             => 'FinTS API URL',
+    'fints_port'            => 'Port',
+    'fints_bank_code'       => 'Bank code',
+    'fints_username'        => 'Username',
+    'fints_password'        => 'PIN / Password',
+    'fints_account'         => 'FinTS account',
+    'local_account'         => 'Firefly III account',
+    'from_date'             => 'Date from',
+    'to_date'               => 'Date to',
+
 
     'due_date'                => 'Batas tanggal terakhir',
     'payment_date'            => 'Tanggal pembayaran',

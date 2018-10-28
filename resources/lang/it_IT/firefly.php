@@ -195,14 +195,14 @@ return [
     'update_check_title'                         => 'Controlla aggiornamenti',
     'admin_update_check_title'                   => 'Controlla automaticamente aggiornamento',
     'admin_update_check_explain'                 => 'Firefly III può verificare automaticamente gli aggiornamenti. Quando attivi questa impostazione, contatterà Github per verificare se è disponibile una nuova versione di Firefly III. Quando lo sarà, riceverai una notifica. Puoi testare questa notifica usando il pulsante a destra. Indicare di seguito se si desidera che Firefly III controlli gli aggiornamenti.',
-    'check_for_updates_permission'               => 'Firefly III può controllare gli aggiornamenti, ma è necessario il tuo permesso per farlo. Vai alla <a href=":link">amministrazione</a> per indicare se desideri che questa funzione sia abilitata.',
+    'check_for_updates_permission'               => 'Firefly III può controllare gli aggiornamenti, ma è necessario il tuo permesso per farlo. Vai nell\'<a href=":link">amministrazione</a> per indicare se desideri che questa funzione sia abilitata.',
     'updates_ask_me_later'                       => 'Chiedimelo più tardi',
     'updates_do_not_check'                       => 'Non controllare gli aggiornamenti',
     'updates_enable_check'                       => 'Abilita il controllo degli aggiornamenti',
     'admin_update_check_now_title'               => 'Controlla gli aggiornamenti ora',
     'admin_update_check_now_explain'             => 'Se si preme il pulsante, Firefly III controllerà se la versione corrente è la più recente.',
     'check_for_updates_button'                   => 'Controlla ora!',
-    'update_new_version_alert'                   => 'È disponibile una nuova versione di Firefly III. Stai eseguendo v:your_version, l\'ultima versione è v:new_version che è stata rilasciata :date.',
+    'update_new_version_alert'                   => 'È disponibile una nuova versione di Firefly III. Stai eseguendo v:your_version, l\'ultima versione è v:new_version che è stata rilasciata il :date.',
     'update_current_version_alert'               => 'Stai eseguendo v:version, che è l\'ultima versione disponibile.',
     'update_newer_version_alert'                 => 'Stai eseguendo v:your_version, che è più recente rispetto all\'ultima versione, v:new_version.',
     'update_check_error'                         => 'Si è verificato un errore durante il controllo degli aggiornamenti. Si prega di visualizzare i file di log.',
@@ -365,7 +365,7 @@ return [
     'rule_trigger_currency_is'                   => 'La valuta della transazione è ":trigger_value"',
     'rule_trigger_has_attachments_choice'        => 'Ha almeno così tanti allegati',
     'rule_trigger_has_attachments'               => 'Ha almeno :trigger_value allegati',
-    'rule_trigger_store_journal'                 => 'Quando viene creata una transazione',
+    'rule_trigger_store_journal'                 => 'Quando una transazione viene creata',
     'rule_trigger_update_journal'                => 'Quando una transazione viene aggiornata',
     'rule_trigger_has_no_category_choice'        => 'Non ha categoria',
     'rule_trigger_has_no_category'               => 'La transazione non ha categoria',
@@ -468,7 +468,7 @@ return [
     'pref_6M'                                 => 'Sei mesi',
     'pref_1Y'                                 => 'Un anno',
     'pref_languages'                          => 'Lingue',
-    'pref_languages_help'                     => 'Firefly III supporta diverse lingue.',
+    'pref_languages_help'                     => 'Firefly III supporta diverse lingue. Quale di queste preferisci?',
     'pref_custom_fiscal_year'                 => 'Impostazioni anno fiscale',
     'pref_custom_fiscal_year_label'           => 'Abilita',
     'pref_custom_fiscal_year_help'            => 'Nei paesi che utilizzano un anno finanziario diverso rispetto al dal 1 gennaio al 31 dicembre, è possibile attivarlo e specificare i giorni di inizio / fine dell\'anno fiscale',
@@ -551,6 +551,8 @@ return [
     'email_changed_logout'                    => 'Fino a quando non verifichi il tuo indirizzo email, non puoi effettuare il login.',
     'login_with_new_email'                    => 'Ora puoi accedere con il tuo nuovo indirizzo email.',
     'login_with_old_email'                    => 'Ora puoi accedere nuovamente con il tuo vecchio indirizzo email.',
+    'login_provider_local_only'               => 'Questa azione non è disponibile quando ci si autenticato con ":login_provider".',
+    'delete_local_info_only'                  => 'Poiché ti sei autenticato con ":login_provider", questo eliminerà solamente le informazioni locali di Firefly III.',
 
     // attachments
     'nr_of_attachments'                       => 'Un allegato|:count attachments',
@@ -777,6 +779,7 @@ return [
     'interest_calc_daily'                     => 'Al giorno',
     'interest_calc_monthly'                   => 'Al mese',
     'interest_calc_yearly'                    => 'All\'anno',
+    'initial_balance_account'                 => 'Saldo iniziale del conto :name',
 
     // categories:
     'new_category'                            => 'Nuova categoria',
@@ -1021,6 +1024,7 @@ return [
     'select_expense_revenue'                  => 'Seleziona conto spese/entrate',
     'multi_currency_report_sum'               => 'Poiché questo elenco contiene conti con più valute, le somme potrebbero non avere senso. Il rapporto ripiegherà sempre sulla valuta predefinita.',
     'sum_in_default_currency'                 => 'La somma sarà sempre nella tua valuta predefinita.',
+    'net_filtered_prefs'                      => 'Questo grafico non includerà i conti che hanno l\'opzione "Includi nel patrimonio" non selezionata.',
 
     // charts:
     'chart'                                   => 'Grafico',
@@ -1045,7 +1049,7 @@ return [
     'balance'                                 => 'Saldo',
     'sum'                                     => 'Somma',
     'average'                                 => 'Media',
-    'balanceFor'                              => 'Saldo di :name',
+    'balanceFor'                              => 'Saldo per :name',
 
     // piggy banks:
     'add_money_to_piggy'                      => 'Aggiungi denaro al salvadanaio":name"',

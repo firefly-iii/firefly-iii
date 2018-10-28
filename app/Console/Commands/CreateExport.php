@@ -33,7 +33,7 @@ use FireflyIII\Repositories\ExportJob\ExportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Console\Command;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class CreateExport.
@@ -136,10 +136,14 @@ class CreateExport extends Command
         $processor->createZipFile();
         $disk     = Storage::disk('export');
         $fileName = sprintf('export-%s.zip', date('Y-m-d_H-i-s'));
-        $disk->move($job->key . '.zip', $fileName);
+        $localPath = storage_path('export') . '/' . $job->key . '.zip';
 
-        $this->line('The export has finished! You can find the ZIP file in this location:');
-        $this->line(storage_path(sprintf('export/%s', $fileName)));
+        // "move" from local to export disk
+        $disk->put($fileName, file_get_contents($localPath));
+        unlink($localPath);
+
+        $this->line('The export has finished! You can find the ZIP file in export disk with file name:');
+        $this->line($fileName);
 
         return 0;
     }

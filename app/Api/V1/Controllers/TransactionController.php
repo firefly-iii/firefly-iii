@@ -290,6 +290,7 @@ class TransactionController extends Controller
             'withdrawal'      => [TransactionType::WITHDRAWAL,],
             'withdrawals'     => [TransactionType::WITHDRAWAL,],
             'expense'         => [TransactionType::WITHDRAWAL,],
+            'expenses'        => [TransactionType::WITHDRAWAL,],
             'income'          => [TransactionType::DEPOSIT,],
             'deposit'         => [TransactionType::DEPOSIT,],
             'deposits'        => [TransactionType::DEPOSIT,],

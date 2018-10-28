@@ -551,6 +551,8 @@ return [
     'email_changed_logout'                    => 'Vous ne pouvez pas vous connecter tant que vous n\'aurez pas vérifié votre adresse e-mail.',
     'login_with_new_email'                    => 'Vous pouvez désormais vous connecter avec votre nouvelle adresse e-mail.',
     'login_with_old_email'                    => 'Vous pouvez à nouveau vous connecter à l\'aide de votre ancienne adresse e-mail.',
+    'login_provider_local_only'               => 'Cette action n’est pas disponible lors de l’authentification par ":login_provider".',
+    'delete_local_info_only'                  => 'Comme vous vous authentifiez via ":login_provider", cela ne supprimera que les informations locales de Firefly III.',
 
     // attachments
     'nr_of_attachments'                       => 'Une pièce jointe|:count pièces jointes',
@@ -777,6 +779,7 @@ return [
     'interest_calc_daily'                     => 'Par jour',
     'interest_calc_monthly'                   => 'Par mois',
     'interest_calc_yearly'                    => 'Par an',
+    'initial_balance_account'                 => 'Initial balance account of :name',
 
     // categories:
     'new_category'                            => 'Nouvelle catégorie',
@@ -1021,6 +1024,7 @@ return [
     'select_expense_revenue'                  => 'Sélectionner le compte de dépenses / recettes',
     'multi_currency_report_sum'               => 'Cette liste contenant des comptes dans des devises différentes, les sommes que vous voyez peuvent ne pas faire sens. Le rapport sera lui toujours généré dans votre devise par défaut.',
     'sum_in_default_currency'                 => 'La somme sera toujours dans votre devise par défaut.',
+    'net_filtered_prefs'                      => 'Ce graphique n’inclura jamais les comptes dont l\'option « inclure dans la valeur nette » n\'est pas cochée.',
 
     // charts:
     'chart'                                   => 'Graphique',

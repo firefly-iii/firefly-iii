@@ -191,6 +191,7 @@ return [
     'password_confirmation' => 'Пароль (ещё раз)',
     'blocked'               => 'Заблокирован?',
     'blocked_code'          => 'Причина блокировки',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Применить правила',
@@ -222,6 +223,16 @@ return [
     'public_key'            => 'Открытый ключ',
     'country_code'          => 'Код страны',
     'provider_code'         => 'Банк или поставщик данных',
+    'fints_url'             => 'FinTS API URL',
+    'fints_port'            => 'Port',
+    'fints_bank_code'       => 'Bank code',
+    'fints_username'        => 'Username',
+    'fints_password'        => 'PIN / Password',
+    'fints_account'         => 'FinTS account',
+    'local_account'         => 'Firefly III account',
+    'from_date'             => 'Date from',
+    'to_date'               => 'Date to',
+
 
     'due_date'                => 'Срок',
     'payment_date'            => 'Дата платежа',

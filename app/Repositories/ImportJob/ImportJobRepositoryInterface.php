@@ -35,6 +35,7 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface ImportJobRepositoryInterface
 {
+
     /**
      * Add message to job.
      *
@@ -54,6 +55,13 @@ interface ImportJobRepositoryInterface
      * @return ImportJob
      */
     public function appendTransactions(ImportJob $job, array $transactions): ImportJob;
+
+    /**
+     * @param ImportJob $job
+     *
+     * @return int
+     */
+    public function countTransactions(ImportJob $job): int;
 
     /**
      * @param string $importProvider
@@ -95,6 +103,15 @@ interface ImportJobRepositoryInterface
      * @return array
      */
     public function getExtendedStatus(ImportJob $job): array;
+
+    /**
+     * Return transactions from attachment.
+     *
+     * @param ImportJob $job
+     *
+     * @return array
+     */
+    public function getTransactions(ImportJob $job): array;
 
     /**
      * @param ImportJob $job

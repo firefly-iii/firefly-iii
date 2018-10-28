@@ -164,7 +164,9 @@ function getTransferExchangeInstructions() {
  * When the transaction to create is a transfer some more checks are necessary.
  */
 function validateCurrencyForTransfer() {
+    console.log('in validateCurrencyForTransfer()');
     if (what !== "transfer") {
+        console.log('is not a transfer, so return.');
         return;
     }
     $('#source_amount_holder').show();

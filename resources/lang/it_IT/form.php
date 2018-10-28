@@ -26,7 +26,7 @@ return [
     // new user:
     'bank_name'                   => 'Nome banca',
     'bank_balance'                => 'Saldo',
-    'savings_balance'             => 'Saldo risparmio',
+    'savings_balance'             => 'Saldo risparmi',
     'credit_card_limit'           => 'Limite carta di credito',
     'automatch'                   => 'Abbina automaticamente',
     'skip'                        => 'Salta ogni',
@@ -124,7 +124,7 @@ return [
     'attachments[]'               => 'Allegati',
     'store_new_withdrawal'        => 'Salva nuovo prelievo',
     'store_new_deposit'           => 'Salva nuovo deposito',
-    'store_new_transfer'          => 'Salva nuova trasferimento',
+    'store_new_transfer'          => 'Salva nuovo trasferimento',
     'add_new_withdrawal'          => 'Aggiungi nuovo prelievo',
     'add_new_deposit'             => 'Aggiungi nuovo deposito',
     'add_new_transfer'            => 'Aggiungi un nuovo trasferimento',
@@ -191,6 +191,7 @@ return [
     'password_confirmation' => 'Password (ancora)',
     'blocked'               => 'È bloccato?',
     'blocked_code'          => 'Motivo del blocco',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Applica regole',
@@ -222,6 +223,16 @@ return [
     'public_key'            => 'Chiave Pubblica',
     'country_code'          => 'Codice Nazione',
     'provider_code'         => 'Banca o fornitore di dati',
+    'fints_url'             => 'URL API FinTS',
+    'fints_port'            => 'Porta',
+    'fints_bank_code'       => 'Codice banca',
+    'fints_username'        => 'Nome utente',
+    'fints_password'        => 'PIN / Password',
+    'fints_account'         => 'Conto FinTS',
+    'local_account'         => 'Conto Firefly III',
+    'from_date'             => 'Data inizio',
+    'to_date'               => 'Alla data',
+
 
     'due_date'                => 'Data scadenza',
     'payment_date'            => 'Data pagamento',

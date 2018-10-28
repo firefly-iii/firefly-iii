@@ -15,8 +15,8 @@ const pkgdef :Spk.PackageDefinition = (
 
   manifest = (
     appTitle = (defaultText = "Firefly III"),
-    appVersion = 17,
-    appMarketingVersion = (defaultText = "4.7.7"),
+    appVersion = 18,
+    appMarketingVersion = (defaultText = "4.7.8"),
 
     actions = [
       # Define your "new document" handlers here.

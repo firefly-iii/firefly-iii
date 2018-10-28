@@ -62,7 +62,6 @@ return [
             'driver'   => 'session',
             'provider' => 'users',
         ],
-
         'api' => [
             'driver'   => 'passport',
             'provider' => 'users',
@@ -88,14 +87,9 @@ return [
 
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
+            'driver' => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),//'adldap',
             'model'  => FireflyIII\User::class,
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

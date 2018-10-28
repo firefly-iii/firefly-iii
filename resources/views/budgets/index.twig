@@ -17,7 +17,8 @@
                             <small>{{ 'budgeted'|_ }}: <span id="budgetedAmount" class="text-success">{{ budgeted|formatAmountPlain }}</span></small>
                         </div>
                         <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9" style="text-align:right;margin-bottom:3px;">
-                            <small id="availableBar">{{ trans('firefly.available_between',{start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}:
+                            <small id="availableBar">{{ trans('firefly.available_between',{start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                                :
                                 <span id="available" data-value="{{ available }}">{{ available|formatAmountPlain }}</span>
                                 <a href="#" class="updateIncome btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
                                 <a href="#" class="infoIncome btn btn-info btn-xs"><i class="fa fa-info-circle"></i></a>
@@ -39,7 +40,8 @@
                     </div>
                     <div class="row" id="spentBar">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <small>{{ trans('firefly.spent_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}: {{ spent|formatAmount }}</small>
+                            <small>{{ trans('firefly.spent_between', {start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat)}) }}
+                                : {{ spent|formatAmount }}</small>
                         </div>
                     </div>
                     <div class="row">
@@ -135,12 +137,12 @@
                 </div>
                 <div class="box-body no-padding">
                     <div style="padding:8px;">
-                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>  {{ 'createBudget'|_ }}</a>
+                        <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
                     </div>
                     <div style="padding-left:8px;">
                         {{ paginator.render|raw }}
                     </div>
-                    <table class="table table-bordered table-striped sortable" id="budgetList">
+                    <table class="table table-bordered sortable-table table-striped sortable" id="budgetList">
                         <thead>
                         <tr>
                             <th data-defaultsort="disabled" class="hidden-sm hidden-xs" style="width:10%;">&nbsp;</th>
@@ -151,53 +153,53 @@
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            {% for budget in paginator %}
-                        <tr>
-                            <td class="hidden-sm hidden-xs">
-                                <div class="btn-group btn-group-xs">
-                                    <a href="{{ route('budgets.edit',budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
-                                    <a href="{{ route('budgets.delete',budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
-                                </div>
-                            </td>
-                            <td data-value="{{ budget.name }}">
+                        {% for budget in paginator %}
+                            <tr data-id="{{ budget.id }}">
+                                <td class="hidden-sm hidden-xs">
+                                    <div class="btn-group btn-group-xs">
+                                        <a href="#" class="handle btn btn-default"><i class="fa fa-fw fa-arrows-v"></i></a>
+                                        <a href="{{ route('budgets.edit',budget.id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                                        <a href="{{ route('budgets.delete',budget.id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                                    </div>
+                                </td>
+                                <td data-value="{{ budget.name }}">
+                                    {% if budgetInformation[budget.id]['currentLimit'] %}
+                                        <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}"
+                                           class="budget-link"
+                                           data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                    {% else %}
+                                        <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                    {% endif %}
+                                </td>
                                 {% if budgetInformation[budget.id]['currentLimit'] %}
-                                    <a href="{{ route('budgets.show.limit', [budget.id, budgetInformation[budget.id]['currentLimit'].id]) }}"
-                                       class="budget-link"
-                                       data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                    {% set repAmount = budgetInformation[budget.id]['budgeted'] %}
                                 {% else %}
-                                    <a href="{{ route('budgets.show',budget.id) }}" class="budget-link" data-id="{{ budget.id }}">{{ budget.name }}</a>
+                                    {% set repAmount = '0' %}
                                 {% endif %}
-                            </td>
-                            {% if budgetInformation[budget.id]['currentLimit'] %}
-                                {% set repAmount = budgetInformation[budget.id]['budgeted'] %}
-                            {% else %}
-                                {% set repAmount = '0' %}
-                            {% endif %}
 
-                            <td data-value="{{ repAmount }}">
-                                <div class="input-group">
-                                    <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
-                                    <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
-                                    <input class="form-control budgetAmount" data-original="{{ repAmount }}"
-                                           data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
-                                           min="0" name="amount" type="number">
-                                </div>
-                                <span class="text-danger budget_warning" data-id="{{ budget.id }}" style="display:none;"></span>
-                            </td>
-                            <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
-                                data-value="{{ budgetInformation[budget.id]['spent'] }}">
-                                {{ budgetInformation[budget.id]['spent']|formatAmount }}
-                                ({{ (budgetInformation[budget.id]['spent'] / activeDaysPassed)|formatAmount }})
-                            </td>
-                            <td class="left" data-id="{{ budget.id }}"
-                                data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
-                                {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
-                                {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
-                                ({{ ((repAmount + budgetInformation[budget.id]['spent']) / activeDaysLeft)|formatAmount }})
-                                {% endif %}
-                            </td>
-                        </tr>
+                                <td data-value="{{ repAmount }}">
+                                    <div class="input-group">
+                                        <div class="input-group-addon">{{ defaultCurrency.symbol|raw }}</div>
+                                        <input type="hidden" name="balance_currency_id" value="{{ defaultCurrency.id }}"/>
+                                        <input class="form-control budgetAmount" data-original="{{ repAmount }}"
+                                               data-id="{{ budget.id }}" value="{{ repAmount }}" autocomplete="off"
+                                               min="0" name="amount" type="number">
+                                    </div>
+                                    <span class="text-danger budget_warning" data-id="{{ budget.id }}" style="display:none;"></span>
+                                </td>
+                                <td class="hidden-sm hidden-xs spent" data-id="{{ budget.id }}" data-spent="{{ budgetInformation[budget.id]['spent'] }}"
+                                    data-value="{{ budgetInformation[budget.id]['spent'] }}">
+                                    {{ budgetInformation[budget.id]['spent']|formatAmount }}
+                                    ({{ (budgetInformation[budget.id]['spent'] / activeDaysPassed)|formatAmount }})
+                                </td>
+                                <td class="left" data-id="{{ budget.id }}"
+                                    data-value="{{ (repAmount + budgetInformation[budget.id]['spent']) }}">
+                                    {{ (repAmount + budgetInformation[budget.id]['spent'])|formatAmount }}
+                                    {% if repAmount + budgetInformation[budget.id]['spent'] > 0 %}
+                                        ({{ ((repAmount + budgetInformation[budget.id]['spent']) / activeDaysLeft)|formatAmount }})
+                                    {% endif %}
+                                </td>
+                            </tr>
                         {% endfor %}
                         </tbody>
                     </table>
@@ -206,7 +208,7 @@
                     </div>
                 </div>
                 <div class="box-footer">
-                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i>  {{ 'createBudget'|_ }}</a>
+                    <a href="{{ route('budgets.create') }}" class="btn btn-success"><i class="fa fa-plus fa-fw"></i> {{ 'createBudget'|_ }}</a>
                 </div>
             </div>
         </div>
@@ -239,6 +241,7 @@
 {% endblock %}
 
 {% block scripts %}
+    <script src="js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
     <script type="text/javascript">
         // actually spent bar data:
         var spent = {{ spent * -1 }}; // must be positive for the calculation to work.

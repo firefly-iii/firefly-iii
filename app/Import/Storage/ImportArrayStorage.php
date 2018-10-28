@@ -46,7 +46,7 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Creates new transactions based upon arrays. Will first check the array for duplicates.
+ * Creates new transactions based on arrays.
  *
  * Class ImportArrayStorage
  *
@@ -58,11 +58,11 @@ class ImportArrayStorage
     private $checkForTransfers = false;
     /** @var ImportJob The import job */
     private $importJob;
-    /** @var JournalRepositoryInterface */
+    /** @var JournalRepositoryInterface Journal repository for storage. */
     private $journalRepos;
     /** @var ImportJobRepositoryInterface Import job repository */
     private $repository;
-    /** @var Collection The transfers. */
+    /** @var Collection The transfers the user already has. */
     private $transfers;
 
     /**
@@ -72,11 +72,11 @@ class ImportArrayStorage
      */
     public function setImportJob(ImportJob $importJob): void
     {
-        $this->importJob = $importJob;
-        $this->countTransfers();
-
+        $this->importJob  = $importJob;
         $this->repository = app(ImportJobRepositoryInterface::class);
         $this->repository->setUser($importJob->user);
+
+        $this->countTransfers();
 
         $this->journalRepos = app(JournalRepositoryInterface::class);
         $this->journalRepos->setUser($importJob->user);
@@ -116,7 +116,7 @@ class ImportArrayStorage
         app('preferences')->mark();
 
         // email about this:
-        event(new RequestedReportOnJournals($this->importJob->user_id, $collection));
+        event(new RequestedReportOnJournals((int)$this->importJob->user_id, $collection));
 
         return $collection;
     }
@@ -152,14 +152,14 @@ class ImportArrayStorage
 
     /**
      * Count the number of transfers in the array. If this is zero, don't bother checking for double transfers.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function countTransfers(): void
     {
-        Log::debug('Now in count transfers.');
+        Log::debug('Now in countTransfers()');
         /** @var array $array */
-        $array = $this->importJob->transactions;
+        $array = $this->repository->getTransactions($this->importJob);
+
+
         $count = 0;
         foreach ($array as $index => $transaction) {
             if (strtolower(TransactionType::TRANSFER) === strtolower($transaction['type'])) {
@@ -167,17 +167,44 @@ class ImportArrayStorage
                 Log::debug(sprintf('Row #%d is a transfer, increase count to %d', $index + 1, $count));
             }
         }
-        if (0 === $count) {
-            Log::debug('Count is zero, will not check for duplicate transfers.');
-        }
+        Log::debug(sprintf('Count of transfers in import array is %d.', $count));
         if ($count > 0) {
-            Log::debug(sprintf('Count is %d, will check for duplicate transfers.', $count));
             $this->checkForTransfers = true;
-
+            Log::debug('Will check for duplicate transfers.');
             // get users transfers. Needed for comparison.
             $this->getTransfers();
         }
+    }
 
+    /**
+     * @param int   $index
+     * @param array $transaction
+     *
+     * @return bool
+     * @throws FireflyException
+     */
+    private function duplicateDetected(int $index, array $transaction): bool
+    {
+        $hash       = $this->getHash($transaction);
+        $existingId = $this->hashExists($hash);
+        if (null !== $existingId) {
+            $message = sprintf('Row #%d ("%s") could not be imported. It already exists.', $index, $transaction['description']);
+            $this->logDuplicateObject($transaction, $existingId);
+            $this->repository->addErrorMessage($this->importJob, $message);
+
+            return true;
+        }
+
+        // do transfer detection:
+        if ($this->checkForTransfers && $this->transferExists($transaction)) {
+            $message = sprintf('Row #%d ("%s") could not be imported. Such a transfer already exists.', $index, $transaction['description']);
+            $this->logDuplicateTransfer($transaction);
+            $this->repository->addErrorMessage($this->importJob, $message);
+
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -193,9 +220,11 @@ class ImportArrayStorage
         unset($transaction['importHashV2'], $transaction['original-source']);
         $json = json_encode($transaction);
         if (false === $json) {
+            // @codeCoverageIgnoreStart
             /** @noinspection ForgottenDebugOutputInspection */
             Log::error('Could not encode import array.', print_r($transaction, true));
-            throw new FireflyException('Could not encode import array. Please see the logs.'); // @codeCoverageIgnore
+            throw new FireflyException('Could not encode import array. Please see the logs.');
+            // @codeCoverageIgnoreEnd
         }
         $hash = hash('sha256', $json, false);
         Log::debug(sprintf('The hash is: %s', $hash));
@@ -391,38 +420,21 @@ class ImportArrayStorage
     private function storeArray(): Collection
     {
         /** @var array $array */
-        $array   = $this->importJob->transactions;
+        $array   = $this->repository->getTransactions($this->importJob);
         $count   = \count($array);
         $toStore = [];
 
-        Log::debug(sprintf('Now in store(). Count of items is %d', $count));
+        Log::debug(sprintf('Now in store(). Count of items is %d.', $count));
 
+        /*
+         * Detect duplicates in initial array:
+         */
         foreach ($array as $index => $transaction) {
             Log::debug(sprintf('Now at item %d out of %d', $index + 1, $count));
-            $hash       = $this->getHash($transaction);
-            $existingId = $this->hashExists($hash);
-            if (null !== $existingId) {
-                $this->logDuplicateObject($transaction, $existingId);
-                $this->repository->addErrorMessage(
-                    $this->importJob, sprintf(
-                                        'Row #%d ("%s") could not be imported. It already exists.',
-                                        $index, $transaction['description']
-                                    )
-                );
+            if ($this->duplicateDetected($index, $transaction)) {
                 continue;
             }
-            if ($this->checkForTransfers && $this->transferExists($transaction)) {
-                $this->logDuplicateTransfer($transaction);
-                $this->repository->addErrorMessage(
-                    $this->importJob, sprintf(
-                                        'Row #%d ("%s") could not be imported. Such a transfer already exists.',
-                                        $index,
-                                        $transaction['description']
-                                    )
-                );
-                continue;
-            }
-            $transaction['importHashV2'] = $hash;
+            $transaction['importHashV2'] = $this->getHash($transaction);
             $toStore[]                   = $transaction;
         }
         $count = \count($toStore);
@@ -436,31 +448,8 @@ class ImportArrayStorage
         // now actually store them:
         $collection = new Collection;
         foreach ($toStore as $index => $store) {
-
             // do duplicate detection again!
-            $hash       = $this->getHash($store);
-            $existingId = $this->hashExists($hash);
-            if (null !== $existingId) {
-                $this->logDuplicateObject($store, $existingId);
-                $this->repository->addErrorMessage(
-                    $this->importJob, sprintf(
-                                        'Row #%d ("%s") could not be imported. It already exists.',
-                                        $index, $store['description']
-                                    )
-                );
-                continue;
-            }
-
-            // do transfer detection again!
-            if ($this->checkForTransfers && $this->transferExists($store)) {
-                $this->logDuplicateTransfer($store);
-                $this->repository->addErrorMessage(
-                    $this->importJob, sprintf(
-                                        'Row #%d ("%s") could not be imported. Such a transfer already exists.',
-                                        $index,
-                                        $store['description']
-                                    )
-                );
+            if ($this->duplicateDetected($index, $store)) {
                 continue;
             }
 
@@ -554,8 +543,9 @@ class ImportArrayStorage
                 Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
 
                 // compare description:
-                Log::debug(sprintf('Comparing "%s" to "%s"', $description, $transfer->description));
-                if ($description !== $transfer->description) {
+                $comparison = '(empty description)' === $transfer->description ? '' : $transfer->description;
+                Log::debug(sprintf('Comparing "%s" to "%s" (original: "%s")', $description, $transfer->description, $comparison));
+                if ($description !== $comparison) {
                     continue; // @codeCoverageIgnore
                 }
                 ++$hits;

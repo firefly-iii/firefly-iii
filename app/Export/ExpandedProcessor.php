@@ -42,7 +42,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
-use Storage;
+use Illuminate\Support\Facades\Storage;
 use ZipArchive;
 
 /**
@@ -184,7 +184,7 @@ class ExpandedProcessor implements ProcessorInterface
     }
 
     /**
-     * Create a ZIP file.
+     * Create a ZIP file locally (!) in storage_path('export').
      *
      * @return bool
      *
@@ -195,9 +195,9 @@ class ExpandedProcessor implements ProcessorInterface
     {
         $zip      = new ZipArchive;
         $file     = $this->job->key . '.zip';
-        $fullPath = storage_path('export') . '/' . $file;
+        $localPath = storage_path('export') . '/' . $file;
 
-        if (true !== $zip->open($fullPath, ZipArchive::CREATE)) {
+        if (true !== $zip->open($localPath, ZipArchive::CREATE)) {
             throw new FireflyException('Cannot store zip file.');
         }
         // for each file in the collection, add it to the zip file.

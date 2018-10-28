@@ -111,15 +111,49 @@ class ReconcileController extends Controller
         $cleared      = $this->repository->getTransactionsById($clearedIds);
         $countCleared = 0;
 
+        Log::debug('Start transaction loop');
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            $amount = bcadd($amount, $transaction->amount);
-        }
+            // find the account and opposing account for this transaction
+            Log::debug(sprintf('Now at transaction #%d: %s', $transaction->journal_id, $transaction->description));
+            $srcAccount  = $this->accountRepos->findNull((int)$transaction->account_id);
+            $dstAccount  = $this->accountRepos->findNull((int)$transaction->opposing_account_id);
+            $srcCurrency = (int)$this->accountRepos->getMetaValue($srcAccount, 'currency_id');
+            $dstCurrency = (int)$this->accountRepos->getMetaValue($dstAccount, 'currency_id');
 
+            // is $account source or destination?
+            if ($account->id === $srcAccount->id) {
+                // source, and it matches the currency id or is 0
+                if ($srcCurrency === $transaction->transaction_currency_id || 0 === $srcCurrency) {
+                    Log::debug(sprintf('Source matches currency: %s', $transaction->transaction_amount));
+                    $amount = bcadd($amount, $transaction->transaction_amount);
+                }
+                // destination, and it matches the foreign currency ID.
+                if ($srcCurrency === $transaction->foreign_currency_id) {
+                    Log::debug(sprintf('Source matches foreign currency: %s', $transaction->transaction_foreign_amount));
+                    $amount = bcadd($amount, $transaction->transaction_foreign_amount);
+                }
+            }
+
+            if ($account->id === $dstAccount->id) {
+                // destination, and it matches the currency id or is 0
+                if ($dstCurrency === $transaction->transaction_currency_id || 0 === $dstCurrency) {
+                    Log::debug(sprintf('Destination matches currency: %s', app('steam')->negative($transaction->transaction_amount)));
+                    $amount = bcadd($amount, app('steam')->negative($transaction->transaction_amount));
+                }
+                // destination, and it matches the foreign currency ID.
+                if ($dstCurrency === $transaction->foreign_currency_id) {
+                    Log::debug(sprintf('Destination matches foreign currency: %s', $transaction->transaction_foreign_amount));
+                    $amount = bcadd($amount, $transaction->transaction_foreign_amount);
+                }
+            }
+            Log::debug(sprintf('Amount is now %s', $amount));
+        }
+        Log::debug('End transaction loop');
         /** @var Transaction $transaction */
         foreach ($cleared as $transaction) {
-            if ($transaction->transactionJournal->date <= $end) {
-                $clearedAmount = bcadd($clearedAmount, $transaction->amount); // @codeCoverageIgnore
+            if ($transaction->date <= $end) {
+                $clearedAmount = bcadd($clearedAmount, $transaction->transaction_amount); // @codeCoverageIgnore
                 ++$countCleared;
             }
         }
@@ -201,6 +235,7 @@ class ReconcileController extends Controller
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
             $html = 'Could not render accounts.reconcile.transactions';
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 return [
     'iban'                           => 'Dit is niet een geldige IBAN.',
+    'zero_or_more'                   => 'De waarde mag niet negatief zijn.',
     'source_equals_destination'      => 'De bronrekening is gelijk aan de doelrekening.',
     'unique_account_number_for_user' => 'Het lijkt erop dat dit rekeningnummer al in gebruik is.',
     'unique_iban_for_user'           => 'Het lijkt erop dat deze IBAN al in gebruik is.',

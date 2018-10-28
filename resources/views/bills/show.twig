@@ -109,31 +109,29 @@
                     </div>
                     <div class="box-body table-responsive no-padding">
                         <table class="table table-hover">
-                            {% for att in bill.data.attachments.data %}
+                            {% for att in object.data.attachments.data %}
                                 <tr>
                                     <td>
                                         <div class="btn-group btn-group-xs">
-                                            <a href="{{ route('attachments.edit', att.data.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
-                                            <a href="{{ route('attachments.delete', att.data.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('attachments.edit', att.id) }}" class="btn btn-default"><i class="fa fa-pencil"></i></a>
+                                            <a href="{{ route('attachments.delete', att.id) }}" class="btn btn-danger"><i class="fa fa-trash"></i></a>
+                                            <a href="{{ route('attachments.download', att.id) }}" class="btn btn-default"><i class="fa fa-download"></i></a>
                                         </div>
                                     </td>
                                     <td>
-                                        <i class="fa {{ att.data.mime|mimeIcon }}"></i>
-                                        <a href="{{ route('attachments.download', att.data.id) }}" title="{{ att.data.filename }}">
-                                            {% if att.data.title %}
-                                                {{ att.data.title }}
+                                        <i class="fa {{ att.mime|mimeIcon }}"></i>
+                                        <a href="{{ route('attachments.view', att.id) }}" title="{{ att.filename }}">
+                                            {% if att.title %}
+                                                {{ att.title }}
                                             {% else %}
-                                                {{ att.data.filename }}
+                                                {{ att.filename }}
                                             {% endif %}
                                         </a>
-                                        ({{ att.data.size|filesize }})
-                                        {% if att.data.description %}
+                                        ({{ att.size|filesize }})
+                                        {% if att.description %}
                                             <br/>
-                                            <em>{{ att.data.description }}</em>
+                                            <em>{{ att.description }}</em>
                                         {% endif %}
-                                    </td>
-                                    <td style="width:100px;">
-                                        <img src="{{ route('attachments.preview', att.data.id) }}"/>
                                     </td>
                                 </tr>
                             {% endfor %}

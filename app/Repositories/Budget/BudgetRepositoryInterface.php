@@ -156,7 +156,6 @@ interface BudgetRepositoryInterface
      */
     public function getBudgetLimits(Budget $budget, Carbon $start = null, Carbon $end = null): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -166,6 +165,8 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @return Collection
@@ -195,7 +196,6 @@ interface BudgetRepositoryInterface
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
@@ -205,6 +205,14 @@ interface BudgetRepositoryInterface
      * @return AvailableBudget
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * @param Budget $budget
+     * @param int    $order
+     */
+    public function setBudgetOrder(Budget $budget, int $order): void;
 
     /**
      * @param User $user

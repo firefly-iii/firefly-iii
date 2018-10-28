@@ -95,8 +95,12 @@ There are many ways to run Firefly III
 1. There is a [demo site](https://demo.firefly-iii.org) with an example financial administration already present.
 2. You can [install it on your server](https://firefly-iii.readthedocs.io/en/latest/installation/server.html).
 3. You can [run it using Docker](https://firefly-iii.readthedocs.io/en/latest/installation/docker.html).
-4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master)
-5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70)
+4. You can [deploy to Heroku](https://heroku.com/deploy?template=https://github.com/firefly-iii/firefly-iii/tree/master).
+   
+   Please read the [considerations when using Heroku](https://firefly-iii.readthedocs.io/en/latest/installation/hosted.html#considerations-when-using-heroku) first though.
+5. You can [deploy to Sandstorm.io](https://apps.sandstorm.io/app/uws252ya9mep4t77tevn85333xzsgrpgth8q4y1rhknn1hammw70).
+
+   Note that you must have a paid Sandstorm account for this to work, or you must self-host your Sandstorm server.
 6. You can [install it using Softaculous](https://softaculous.com/). These guys even have made [another demo site](https://www.softaculous.com/softaculous/apps/others/Firefly_III)!
 7. You can [install it using AMPPS](https://www.ampps.com/)
 8. You can [install it with YunoHost](https://install-app.yunohost.org/?app=firefly-iii).
@@ -151,4 +155,4 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.1](https://img.shields.io/badge/php-7.1-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Patreon page](https://img.shields.io/badge/patreon-JC5-brightgreen.svg?longCache=true&style=flat-square)](https://patreon.com/JC5)
+[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.2](https://img.shields.io/badge/php-7.2-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Patreon page](https://img.shields.io/badge/patreon-JC5-brightgreen.svg?longCache=true&style=flat-square)](https://patreon.com/JC5)

@@ -50,9 +50,9 @@ return [
     'source_account'              => 'Konto źródłowe',
     'destination_account'         => 'Konto docelowe',
     'journal_destination_id'      => 'Konto aktywów (przeznaczenie)',
-    'asset_destination_account'   => 'Destination account',
+    'asset_destination_account'   => 'Konto docelowe',
     'include_net_worth'           => 'Include in net worth',
-    'asset_source_account'        => 'Source account',
+    'asset_source_account'        => 'Konto źródłowe',
     'journal_description'         => 'Opis',
     'note'                        => 'Notatki',
     'split_journal'               => 'Podziel tę transakcję',
@@ -191,6 +191,7 @@ return [
     'password_confirmation' => 'Hasło (ponownie)',
     'blocked'               => 'Jest zablokowany?',
     'blocked_code'          => 'Powód blokady',
+    'login_name'            => 'Login',
 
     // import
     'apply_rules'           => 'Zastosuj reguły',
@@ -222,6 +223,16 @@ return [
     'public_key'            => 'Klucz publiczny',
     'country_code'          => 'Kod kraju',
     'provider_code'         => 'Dostawca banku lub danych',
+    'fints_url'             => 'FinTS API URL',
+    'fints_port'            => 'Port',
+    'fints_bank_code'       => 'Bank code',
+    'fints_username'        => 'Nazwa użytkownika',
+    'fints_password'        => 'Kodu PIN / hasło',
+    'fints_account'         => 'FinTS account',
+    'local_account'         => 'Konto Firefly III',
+    'from_date'             => 'Data od',
+    'to_date'               => 'Data do',
+
 
     'due_date'                => 'Termin realizacji',
     'payment_date'            => 'Data płatności',

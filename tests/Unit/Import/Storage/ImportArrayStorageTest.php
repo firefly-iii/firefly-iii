@@ -86,6 +86,7 @@ class ImportArrayStorageTest extends TestCase
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('getTransactions')->once()->andReturn([]);
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
@@ -120,7 +121,8 @@ class ImportArrayStorageTest extends TestCase
         $job->provider      = 'fake';
         $job->file_type     = '';
         $job->configuration = ['apply-rules' => true];
-        $job->transactions  = [$this->singleTransfer(), $this->singleWithdrawal(), $this->basedOnTransfer($transfer)];
+        $job->transactions  = ['count' => 3];
+        $transactions       = [$this->singleTransfer(), $this->singleWithdrawal(), $this->basedOnTransfer($transfer)];
         $job->save();
 
 
@@ -138,7 +140,7 @@ class ImportArrayStorageTest extends TestCase
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
         // mock calls:
         $collector->shouldReceive('setUser')->times(2);
 
@@ -155,7 +157,6 @@ class ImportArrayStorageTest extends TestCase
         $repository->shouldReceive('addErrorMessage')->withArgs(
             [Mockery::any(), 'Row #2 ("' . $transfer->description . '") could not be imported. Such a transfer already exists.']
         )->once();
-
 
         // mock collector so it will return some transfers:
         $collector->shouldReceive('setAllAssetAccounts')->times(1)->andReturnSelf();
@@ -201,7 +202,7 @@ class ImportArrayStorageTest extends TestCase
         $job->provider      = 'fake';
         $job->file_type     = '';
         $job->configuration = ['apply-rules' => true];
-        $job->transactions  = $transactions;
+        $job->transactions  = ['count' => 2];
         $job->save();
 
         // get some stuff:
@@ -222,6 +223,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -276,6 +278,7 @@ class ImportArrayStorageTest extends TestCase
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $journalRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn([]);
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
@@ -318,6 +321,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         // mock calls:
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn([]);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -344,7 +348,8 @@ class ImportArrayStorageTest extends TestCase
         $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
 
         // make fake job
-        $job = new ImportJob;
+        $transactions = [$this->singleWithdrawal()];
+        $job          = new ImportJob;
         $job->user()->associate($this->user());
         $job->key           = 'e_storage' . random_int(1, 10000);
         $job->status        = 'new';
@@ -352,7 +357,7 @@ class ImportArrayStorageTest extends TestCase
         $job->provider      = 'fake';
         $job->file_type     = '';
         $job->configuration = ['apply-rules' => true];
-        $job->transactions  = [$this->singleWithdrawal()];
+        $job->transactions  = ['count' => 1];
         $job->save();
 
         // get some stuff:
@@ -377,6 +382,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('store')->once()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(2);
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
 
         $storage = new ImportArrayStorage;
         $storage->setImportJob($job);
@@ -398,7 +404,8 @@ class ImportArrayStorageTest extends TestCase
         $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
 
         // make fake job
-        $job = new ImportJob;
+        $job          = new ImportJob;
+        $transactions = [$this->singleWithdrawal()];
         $job->user()->associate($this->user());
         $job->key           = 'f_storage' . random_int(1, 10000);
         $job->status        = 'new';
@@ -406,7 +413,7 @@ class ImportArrayStorageTest extends TestCase
         $job->provider      = 'fake';
         $job->file_type     = '';
         $job->configuration = ['apply-rules' => true];
-        $job->transactions  = [$this->singleWithdrawal()];
+        $job->transactions  = ['count' => 1];
         $job->save();
 
         // get some stuff:
@@ -435,6 +442,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('store')->once()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(2);
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
 
 
         $storage = new ImportArrayStorage;
@@ -458,6 +466,7 @@ class ImportArrayStorageTest extends TestCase
 
         // make fake job
         $job = new ImportJob;
+        $transactions = [$this->singleTransfer(), $this->singleWithdrawal()];
         $job->user()->associate($this->user());
         $job->key           = 'g_storage' . random_int(1, 10000);
         $job->status        = 'new';
@@ -465,7 +474,7 @@ class ImportArrayStorageTest extends TestCase
         $job->provider      = 'fake';
         $job->file_type     = '';
         $job->configuration = ['apply-rules' => true];
-        $job->transactions  = [$this->singleTransfer(), $this->singleWithdrawal()];
+        $job->transactions  = ['count' => 2];
         $job->save();
 
         // get a transfer:
@@ -506,6 +515,7 @@ class ImportArrayStorageTest extends TestCase
         $journalRepos->shouldReceive('setUser')->once();
         $journalRepos->shouldReceive('store')->twice()->andReturn($journal);
         $journalRepos->shouldReceive('findByHash')->andReturn(null)->times(4);
+        $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
 
         // mock collector so it will return some transfers:
         $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
@@ -587,6 +597,7 @@ class ImportArrayStorageTest extends TestCase
 
     /**
      * @return array
+     * @throws \Exception
      */
     private function singleTransfer(): array
     {
@@ -635,6 +646,7 @@ class ImportArrayStorageTest extends TestCase
 
     /**
      * @return array
+     * @throws \Exception
      */
     private function singleWithdrawal(): array
     {

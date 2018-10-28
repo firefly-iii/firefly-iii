@@ -29,7 +29,7 @@ $(document).ready(function () {
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,
                                            prefetch: {
-                                               url: 'json/expense-accounts',
+                                               url: 'json/expense-accounts?uid=' + uid,
                                                filter: function (list) {
                                                    return $.map(list, function (name) {
                                                        return {name: name};
@@ -37,7 +37,7 @@ $(document).ready(function () {
                                                }
                                            },
                                            remote: {
-                                               url: 'json/expense-accounts?search=%QUERY',
+                                               url: 'json/expense-accounts?search=%QUERY&uid=' + uid,
                                                wildcard: '%QUERY',
                                                filter: function (list) {
                                                    return $.map(list, function (name) {
@@ -57,7 +57,7 @@ $(document).ready(function () {
                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
                                              prefetch: {
-                                                 url: 'json/revenue-accounts',
+                                                 url: 'json/revenue-accounts?uid=' + uid,
                                                  filter: function (list) {
                                                      return $.map(list, function (name) {
                                                          return {name: name};
@@ -65,7 +65,7 @@ $(document).ready(function () {
                                                  }
                                              },
                                              remote: {
-                                                 url: 'json/revenue-accounts?search=%QUERY',
+                                                 url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
                                                  wildcard: '%QUERY',
                                                  filter: function (list) {
                                                      return $.map(list, function (name) {
@@ -83,7 +83,7 @@ $(document).ready(function () {
                                         datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                         queryTokenizer: Bloodhound.tokenizers.whitespace,
                                         prefetch: {
-                                            url: 'json/categories',
+                                            url: 'json/categories?uid=' + uid,
                                             filter: function (list) {
                                                 return $.map(list, function (name) {
                                                     return {name: name};
@@ -91,7 +91,7 @@ $(document).ready(function () {
                                             }
                                         },
                                         remote: {
-                                            url: 'json/categories?search=%QUERY',
+                                            url: 'json/categories?search=%QUERY&uid=' + uid,
                                             wildcard: '%QUERY',
                                             filter: function (list) {
                                                 return $.map(list, function (name) {
