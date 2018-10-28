@@ -138,7 +138,7 @@ class ReconcileController extends Controller
             if ($account->id === $dstAccount->id) {
                 // destination, and it matches the currency id or is 0
                 if ($dstCurrency === $transaction->transaction_currency_id || 0 === $dstCurrency) {
-                    Log::debug(sprintf('Destination matches currency: %s', $transaction->transaction_amount));
+                    Log::debug(sprintf('Destination matches currency: %s', app('steam')->negative($transaction->transaction_amount)));
                     $amount = bcadd($amount, app('steam')->negative($transaction->transaction_amount));
                 }
                 // destination, and it matches the foreign currency ID.
@@ -147,10 +147,9 @@ class ReconcileController extends Controller
                     $amount = bcadd($amount, $transaction->transaction_foreign_amount);
                 }
             }
+            Log::debug(sprintf('Amount is now %s', $amount));
         }
         Log::debug('End transaction loop');
-        // make sure amount is positive.
-        $amount = app('steam')->positive($amount);
         /** @var Transaction $transaction */
         foreach ($cleared as $transaction) {
             if ($transaction->date <= $end) {
