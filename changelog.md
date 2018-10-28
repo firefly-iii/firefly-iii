@@ -40,6 +40,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 1807](https://github.com/firefly-iii/firefly-iii/issues/1807) Also decrypt deleted records.
 - [Issue 1812](https://github.com/firefly-iii/firefly-iii/issues/1812) Fix in transactions API
 - [Issue 1815](https://github.com/firefly-iii/firefly-iii/issues/1815) Opening balance account name can now be translated.
+- [Issue 1830](https://github.com/firefly-iii/firefly-iii/issues/1830) Multi-user in a single browser could leak autocomplete data.
 
 ## [4.7.7] - 2018-10-01
 

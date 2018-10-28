@@ -91,9 +91,9 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'               => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                  => '4.7.7',
-    'api_version'              => '0.8',
-    'db_version'               => 5,
+    'version'                  => '4.7.8',
+    'api_version'              => '0.81',
+    'db_version'               => 6,
     'maxUploadSize'            => 15242880,
     'login_provider'           => env('LOGIN_PROVIDER', 'eloquent'),
     'allowedMimes'             => [
@@ -239,16 +239,25 @@ return [
     'languages'                => [
         // completed languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
-        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'],
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'],
-        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'],
-        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'],
-        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'],
-        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '],
-        //'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'],
-        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'],
-        //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'],
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'], // 2018-10-26: 96%
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],  // 2018-10-26: 100%
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'], // 2018-10-26: 100%
+        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'], // 2018-10-26: 61% :(
+        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'], // 2018-10-26: 100%
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 2018-10-26: 100%
+        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '], // 2018-10-26: 76%
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 2018-10-26: 77%
+        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 2018-10-26: 80%
+        //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 2018-10-26: 71%
+
+        // very far away:
+        //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 2018-10-26: 0%
+        //'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 2018-10-26: 8%
+        //'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'], // 2018-10-26: 3%
+        //'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 2018-10-26: 40%
+        //'nb_NO' => ['name_locale' => 'Norwegian', 'name_english' => 'Norwegian'], // 2018-10-26: 54%
+        //'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'], // 2018-10-26: 10%
+        //'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'], // 2018-10-26: 3%
     ],
     'transactionTypesByWhat'   => [
         'expenses'   => ['Withdrawal'],

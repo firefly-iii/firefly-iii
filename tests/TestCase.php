@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests;
 
 use Carbon\Carbon;
+use Closure;
 use DB;
 use Exception;
 use FireflyIII\Models\Account;
@@ -188,11 +189,13 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string $class
+     * @param string       $class
+     *
+     * @param Closure|null $closure
      *
      * @return \Mockery\MockInterface
      */
-    protected function mock($class): \Mockery\MockInterface
+    protected function mock($class, Closure $closure = null): \Mockery\MockInterface
     {
         Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);

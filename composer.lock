@@ -1299,16 +1299,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.7.10",
+            "version": "v5.7.11",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "7d748c33b8c409b9b0c96704d6493853de41754d"
+                "reference": "52ee19c53c4fcd7fea8a83aacae5b8bc212ae19b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/7d748c33b8c409b9b0c96704d6493853de41754d",
-                "reference": "7d748c33b8c409b9b0c96704d6493853de41754d",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/52ee19c53c4fcd7fea8a83aacae5b8bc212ae19b",
+                "reference": "52ee19c53c4fcd7fea8a83aacae5b8bc212ae19b",
                 "shasum": ""
             },
             "require": {
@@ -1438,20 +1438,20 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2018-10-23T14:05:19+00:00"
+            "time": "2018-10-24T12:50:20+00:00"
         },
         {
             "name": "laravel/passport",
-            "version": "v7.0.2",
+            "version": "v7.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "7bb53d1ae4f8f375cc9461d232053958740002da"
+                "reference": "404b345775c91cd04443e77e8d6164b9727a3448"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/7bb53d1ae4f8f375cc9461d232053958740002da",
-                "reference": "7bb53d1ae4f8f375cc9461d232053958740002da",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/404b345775c91cd04443e77e8d6164b9727a3448",
+                "reference": "404b345775c91cd04443e77e8d6164b9727a3448",
                 "shasum": ""
             },
             "require": {
@@ -1507,7 +1507,7 @@
                 "oauth",
                 "passport"
             ],
-            "time": "2018-09-25T14:23:48+00:00"
+            "time": "2018-10-22T14:47:22+00:00"
         },
         {
             "name": "laravelcollective/html",
@@ -3006,16 +3006,16 @@
         },
         {
             "name": "rcrowe/twigbridge",
-            "version": "v0.9.8",
+            "version": "v0.9.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/rcrowe/TwigBridge.git",
-                "reference": "d0c998ae6d39f154c4e2d01ef914e49d0b7d5d68"
+                "reference": "04ee299bf1eecf55d27120c85da71720aabe7f40"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/d0c998ae6d39f154c4e2d01ef914e49d0b7d5d68",
-                "reference": "d0c998ae6d39f154c4e2d01ef914e49d0b7d5d68",
+                "url": "https://api.github.com/repos/rcrowe/TwigBridge/zipball/04ee299bf1eecf55d27120c85da71720aabe7f40",
+                "reference": "04ee299bf1eecf55d27120c85da71720aabe7f40",
                 "shasum": ""
             },
             "require": {
@@ -3074,7 +3074,7 @@
                 "laravel",
                 "twig"
             ],
-            "time": "2018-08-31T13:30:10+00:00"
+            "time": "2018-10-25T19:11:00+00:00"
         },
         {
             "name": "swiftmailer/swiftmailer",
