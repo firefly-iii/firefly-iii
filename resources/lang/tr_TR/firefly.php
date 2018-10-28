@@ -782,6 +782,7 @@ işlemlerin kontrol edildiğini lütfen unutmayın.',
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',
+    'initial_balance_account'                 => 'Başlangıç bakiyesi :name',
 
     // categories:
     'new_category'                            => 'Yeni Kategori',
