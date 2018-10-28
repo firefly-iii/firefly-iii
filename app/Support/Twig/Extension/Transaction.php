@@ -225,6 +225,7 @@ class Transaction extends Twig_Extension
         }
 
         $name          = app('steam')->tryDecrypt($transaction->account_name);
+        $iban          = $transaction->account_iban;
         $transactionId = (int)$transaction->account_id;
         $type          = $transaction->account_type;
 
@@ -233,6 +234,7 @@ class Transaction extends Twig_Extension
             $name          = $transaction->opposing_account_name;
             $transactionId = (int)$transaction->opposing_account_id;
             $type          = $transaction->opposing_account_type;
+            $iban          = $transaction->opposing_account_iban;
         }
 
         // Find the opposing account and use that one:
@@ -264,7 +266,7 @@ class Transaction extends Twig_Extension
             return $txt;
         }
 
-        $txt = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
+        $txt = sprintf('<a title="%3$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]), $iban);
 
         return $txt;
     }
@@ -385,12 +387,14 @@ class Transaction extends Twig_Extension
         $name          = app('steam')->tryDecrypt($transaction->account_name);
         $transactionId = (int)$transaction->account_id;
         $type          = $transaction->account_type;
+        $iban          = $transaction->account_iban;
 
         // name is present in object, use that one:
         if (null !== $transaction->opposing_account_id && 1 === bccomp($transaction->transaction_amount, '0')) {
             $name          = $transaction->opposing_account_name;
             $transactionId = (int)$transaction->opposing_account_id;
             $type          = $transaction->opposing_account_type;
+            $iban          = $transaction->opposing_account_iban;
         }
         // Find the opposing account and use that one:
         if (null === $transaction->opposing_account_id && 1 === bccomp($transaction->transaction_amount, '0')) {
@@ -415,7 +419,7 @@ class Transaction extends Twig_Extension
             return $txt;
         }
 
-        $txt = sprintf('<a title="%1$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]));
+        $txt = sprintf('<a title="%3$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]), $iban);
 
         return $txt;
     }
