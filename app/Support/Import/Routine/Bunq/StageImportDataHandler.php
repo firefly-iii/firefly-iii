@@ -104,8 +104,8 @@ class StageImportDataHandler
         foreach ($accounts as $bunqAccount) {
             $bunqAccountId = $bunqAccount['id'] ?? 0;
             $localId       = $mapping[$bunqAccountId] ?? 0;
-            Log::debug(sprintf('Looping accounts, now at bunq account #%d and local account #%d', $bunqAccountId, $localId));
             if (0 !== $localId && 0 !== $bunqAccountId) {
+                Log::info(sprintf('Now at bunq account #%d and local account #%d', $bunqAccountId, $localId));
                 $localAccount = $this->getLocalAccount((int)$localId);
                 $collection[] = $this->getTransactionsFromBunq($bunqAccountId, $localAccount);
             }
@@ -205,6 +205,7 @@ class StageImportDataHandler
                 ],
             ],
         ];
+        Log::info(sprintf('Parsed %s: "%s" (%s).', $created->format('Y-m-d'), $storeData['description'], $storeData['transactions'][0]['amount']));
 
         return $storeData;
     }
@@ -267,7 +268,7 @@ class StageImportDataHandler
         $account = $this->accountFactory->create($data);
         Log::debug(
             sprintf(
-                'Converted label monetary account %s to %s account %s (#%d)',
+                'Converted label monetary account "%s" to "%s" account "%s" (#%d)',
                 $party->getLabelUser()->getDisplayName(),
                 $expectedType,
                 $account->name, $account->id
@@ -362,6 +363,7 @@ class StageImportDataHandler
         $direction = $this->getDirection($bunqAccountId);
         $return    = [];
         if (self::DOWNLOAD_BACKWARDS === $direction) {
+            Log::info('For this account we go backwards in time.');
             // go back either from NULL or from ID.
             // ID is the very last transaction downloaded from bunq.
             $preference    = \Preferences::getForUser($this->importJob->user, sprintf('bunq-oldest-transaction-%d', $bunqAccountId), 0);
@@ -369,6 +371,7 @@ class StageImportDataHandler
             $return        = $this->goBackInTime($bunqAccountId, $localAccount, $transactionId);
         }
         if (self::DOWNLOAD_FORWARDS === $direction) {
+            Log::info('For this account we go forwards in time.');
             // go forward from ID. There is no NULL, young padawan
             $return = $this->goForwardInTime($bunqAccountId, $localAccount);
         }
@@ -415,7 +418,7 @@ class StageImportDataHandler
              */
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $params         = ['count' => 53, 'older_id' => $olderId];
+            $params         = ['count' => 79, 'older_id' => $olderId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Params for the request to bunq are: ', $params);
@@ -472,13 +475,13 @@ class StageImportDataHandler
                  */
                 $oldestTransaction = 0;
             }
-            sleep(1);
-
-
+            // half a second.
+            usleep(500000);
         }
         // store newest and oldest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-oldest-transaction-%d', $bunqAccountId), $oldestTransaction);
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
+        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', \count($return)));
 
         return $return;
     }
@@ -567,11 +570,12 @@ class StageImportDataHandler
                 $hasMoreTransactions = false;
                 $this->stillRunning  = false;
             }
-            sleep(1);
+            usleep(500000);
         }
 
         // store newest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
+        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', \count($return)));
 
         return $return;
     }

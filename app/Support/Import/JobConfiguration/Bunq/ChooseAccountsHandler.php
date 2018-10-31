@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
+use Log;
 
 /**
  * Class ChooseAccountsHandler
@@ -118,6 +119,9 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $config['bunq-iban']   = $ibanToAsset;
         $config['apply-rules'] = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
+
+        Log::info('Account mapping: ', $final);
+        Log::info('Bunq IBAN array: ', $ibanToAsset);
 
         return new MessageBag;
     }

@@ -135,7 +135,7 @@ class JobStatusController extends Controller
      */
     public function start(ImportJob $importJob): JsonResponse
     {
-        Log::debug('Now in JobStatusController::start');
+        Log::info('Now in JobStatusController::start');
         // catch impossible status:
         $allowed = ['ready_to_run', 'need_job_config'];
 
@@ -152,8 +152,10 @@ class JobStatusController extends Controller
         $className      = config($key);
         if (null === $className || !class_exists($className)) {
             // @codeCoverageIgnoreStart
+            $message = sprintf('Cannot find import routine class for job of type "%s".', $importProvider);
+            Log::error($message);
             return response()->json(
-                ['status' => 'NOK', 'message' => sprintf('Cannot find import routine class for job of type "%s".', $importProvider)]
+                ['status' => 'NOK', 'message' => $message]
             );
             // @codeCoverageIgnoreEnd
         }
@@ -179,6 +181,7 @@ class JobStatusController extends Controller
         }
 
         // expect nothing from routine, just return OK to user.
+        Log::info('Now finished with JobStatusController::start');
         return response()->json(['status' => 'OK', 'message' => 'stage_finished']);
     }
 
@@ -194,6 +197,7 @@ class JobStatusController extends Controller
      */
     public function store(ImportJob $importJob): JsonResponse
     {
+        Log::info('Now in JobStatusController::store');
         // catch impossible status:
         $allowed = ['provider_finished', 'storing_data'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
@@ -222,7 +226,7 @@ class JobStatusController extends Controller
         // set storage to be finished:
         $this->repository->setStatus($importJob, 'storage_finished');
 
-
+        Log::info('Now finished with JobStatusController::start');
         // expect nothing from routine, just return OK to user.
         return response()->json(['status' => 'OK', 'message' => 'storage_finished']);
     }

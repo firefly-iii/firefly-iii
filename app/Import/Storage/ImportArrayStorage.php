@@ -424,7 +424,7 @@ class ImportArrayStorage
         $count   = \count($array);
         $toStore = [];
 
-        Log::debug(sprintf('Now in store(). Count of items is %d.', $count));
+        Log::notice(sprintf('Will now store the transactions. Count of items is %d.', $count));
 
         /*
          * Detect duplicates in initial array:
@@ -432,6 +432,7 @@ class ImportArrayStorage
         foreach ($array as $index => $transaction) {
             Log::debug(sprintf('Now at item %d out of %d', $index + 1, $count));
             if ($this->duplicateDetected($index, $transaction)) {
+                Log::warning(sprintf('Row #%d seems to be a duplicate entry and will be ignored.', $index));
                 continue;
             }
             $transaction['importHashV2'] = $this->getHash($transaction);
@@ -443,13 +444,14 @@ class ImportArrayStorage
 
             return new Collection;
         }
-
-        Log::debug('Going to store...');
+        Log::notice(sprintf('After a first check for duplicates, the count of items is %d.', $count));
+        Log::notice('Going to store...');
         // now actually store them:
         $collection = new Collection;
         foreach ($toStore as $index => $store) {
             // do duplicate detection again!
             if ($this->duplicateDetected($index, $store)) {
+                Log::warning(sprintf('Row #%d seems to be a imported already and will be ignored.', $index), $store);
                 continue;
             }
 
@@ -466,6 +468,8 @@ class ImportArrayStorage
                 $this->repository->addErrorMessage($this->importJob, sprintf('Row #%d could not be imported. %s', $index, $e->getMessage()));
                 continue;
             }
+
+            Log::info(sprintf('Stored #%d: "%s" (ID #%d)', $index, $journal->description, $journal->id));
             Log::debug(sprintf('Stored as journal #%d', $journal->id));
             $collection->push($journal);
 
@@ -477,7 +481,7 @@ class ImportArrayStorage
                 Log::debug(sprintf('List length is now %d', $this->transfers->count()));
             }
         }
-        Log::debug('DONE storing!');
+        Log::notice(sprintf('Done storing. Firefly III has stored %d transactions.', $collection->count()));
 
         return $collection;
     }

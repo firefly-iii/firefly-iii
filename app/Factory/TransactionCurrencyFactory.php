@@ -84,7 +84,7 @@ class TransactionCurrencyFactory
         $currencyId   = (int)$currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {
-            Log::warning('Cannot find anything on empty currency code and empty currency ID!');
+            Log::debug('Cannot find anything on empty currency code and empty currency ID!');
 
             return null;
         }

@@ -53,6 +53,7 @@ class StageNewHandler
      */
     public function run(): void
     {
+        Log::info('Now in StageNewHandler::run()');
         /** @var Preference $preference */
         $preference = app('preferences')->getForUser($this->importJob->user, 'bunq_api_context', null);
         if (null !== $preference && '' !== (string)$preference->data) {
@@ -68,6 +69,7 @@ class StageNewHandler
             $config             = $this->repository->getConfiguration($this->importJob);
             $config['accounts'] = $accounts;
             $this->repository->setConfiguration($this->importJob, $config);
+
             return;
         }
         throw new FireflyException('The bunq API context is unexpectedly empty.'); // @codeCoverageIgnore
@@ -127,9 +129,11 @@ class StageNewHandler
                 }
                 if (null !== $array) {
                     $accounts[] = $array;
+                    $this->reportFinding($array);
                 }
             }
         }
+        Log::info(sprintf('Found %d account(s) at bunq', \count($accounts)));
 
         return $accounts;
     }
@@ -273,5 +277,28 @@ class StageNewHandler
         }
 
         return $return;
+    }
+
+    /**
+     * Basic report method.
+     *
+     * @param array $array
+     */
+    private function reportFinding(array $array): void
+    {
+        $bunqId          = $array['id'] ?? '';
+        $bunqDescription = $array['description'] ?? '';
+        $bunqIBAN        = '';
+
+        // find IBAN:
+        $aliases = $array['aliases'] ?? [];
+        foreach ($aliases as $alias) {
+            $type = $alias['type'] ?? 'none';
+            if ('IBAN' === $type) {
+                $bunqIBAN = $alias['value'] ?? '';
+            }
+        }
+
+        Log::info(sprintf('Found account at bunq. ID #%d, title "%s" and IBAN "%s" ', $bunqId, $bunqDescription, $bunqIBAN));
     }
 }
