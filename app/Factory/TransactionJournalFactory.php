@@ -92,12 +92,13 @@ class TransactionJournalFactory
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user);
-
+        $totalAmount= '0';
         Log::debug(sprintf('Found %d transactions in array.', \count($data['transactions'])));
         /** @var array $trData */
         foreach ($data['transactions'] as $index => $trData) {
             Log::debug(sprintf('Now storing transaction %d of %d', $index + 1, \count($data['transactions'])));
             $factory->createPair($journal, $trData);
+            $totalAmount = bcadd($totalAmount, $trData['amount'] ?? '0');
         }
         $journal->completed = true;
         $journal->save();
@@ -126,6 +127,8 @@ class TransactionJournalFactory
 
         // invalidate cache.
         app('preferences')->mark();
+
+        $journal->temp_amount = $totalAmount;
 
         return $journal;
     }
