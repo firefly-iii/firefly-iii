@@ -33,32 +33,6 @@ use Log;
  */
 trait GetConfigurationData
 {
-
-    /**
-     * All packages that are installed.
-     *
-     * @return array
-     */
-    protected function collectPackages(): array  // get configuration
-    {
-        $packages = [];
-        $file     = \dirname(__DIR__, 4) . '/vendor/composer/installed.json';
-        if (file_exists($file)) {
-            // file exists!
-            $content = file_get_contents($file);
-            $json    = json_decode($content, true);
-            foreach ($json as $package) {
-                $packages[]
-                    = [
-                    'name'    => $package['name'],
-                    'version' => $package['version'],
-                ];
-            }
-        }
-
-        return $packages;
-    }
-
     /**
      * Some common combinations.
      *

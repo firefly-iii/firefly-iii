@@ -133,13 +133,14 @@ class DebugController extends Controller
         $toSandbox      = var_export(env('BUNQ_USE_SANDBOX', 'unknown'), true);
         $trustedProxies = env('TRUSTED_PROXIES', '(none)');
         $displayErrors  = ini_get('display_errors');
+        $storageDisks = implode(', ', config('filesystems.disks.upload.disks'));
         $errorReporting = $this->errorReporting((int)ini_get('error_reporting'));
         $appEnv         = env('APP_ENV', '');
         $appDebug       = var_export(env('APP_DEBUG', false), true);
         $logChannel     = env('LOG_CHANNEL', '');
         $appLogLevel    = env('APP_LOG_LEVEL', 'info');
-        $packages       = $this->collectPackages();
         $cacheDriver    = env('CACHE_DRIVER', 'unknown');
+        $loginProvider  = env('LOGIN_PROVIDER', 'unknown');
 
         // set languages, see what happens:
         $original       = setlocale(LC_ALL, 0);
@@ -170,13 +171,15 @@ class DebugController extends Controller
                 }
             }
         }
-        // last few lines
-        $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
+        if (strlen($logContent) > 0) {
+            // last few lines
+            $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
+        }
 
         return view(
             'debug', compact(
-                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'packages', 'drivers',
-                       'currentDriver',
+                       'phpVersion', 'extensions', 'localeAttempts', 'appEnv', 'appDebug', 'logChannel', 'appLogLevel', 'now', 'drivers',
+                       'currentDriver', 'loginProvider','storageDisks',
                        'userAgent', 'displayErrors', 'errorReporting', 'phpOs', 'interface', 'logContent', 'cacheDriver', 'isDocker', 'isSandstorm',
                        'trustedProxies',
                        'toSandbox'

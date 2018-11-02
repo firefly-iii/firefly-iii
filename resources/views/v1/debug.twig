@@ -34,6 +34,8 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 {% endfor %}
 | DB drivers | {{ drivers }} |
 | Current driver | {{ currentDriver }} |
+| Login provider | {{ loginProvider }}  |
+| Storage disks | {{ storageDisks }}  |
 | Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |
 {% if SANDSTORM == true %}| Sandstorm anon? | {% if SANDSTORM_ANON == true %}yes{% else %}no{% endif %} |{% endif %}
 | Is Sandstorm (.env) | {{ isSandstorm }} |
@@ -42,7 +44,6 @@ Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION
 | Trusted proxies (.env) | {{ trustedProxies }} |
 | User agent | {{ userAgent }} |
 | Loaded extensions | {{ extensions }} |
-| Installed packages | {% for package in packages %}{{ package.name }}@{{ package.version }}, {% endfor %} |
 </textarea>
 
 <p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
