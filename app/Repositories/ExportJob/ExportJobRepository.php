@@ -65,39 +65,6 @@ class ExportJobRepository implements ExportJobRepositoryInterface
     }
 
     /**
-     * @return bool
-     */
-    public function cleanup(): bool
-    {
-        $dayAgo = Carbon::now()->subDay();
-        $set    = ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
-                           ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
-                           ->get();
-
-        $disk = Storage::disk('export');
-        $files = $disk->files();
-
-        // loop set:
-        /** @var ExportJob $entry */
-        foreach ($set as $entry) {
-            $key   = $entry->key;
-            /** @var array $file */
-            foreach ($files as $file) {
-                if (0 === strpos($file['basename'], $key)) {
-                    $disk->delete($file['path']);
-                }
-            }
-            try {
-                $entry->delete();
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete object: %s', $e->getMessage()));
-            }
-        }
-
-        return true;
-    }
-
-    /**
      * @return ExportJob|null
      */
     public function create(): ?ExportJob
