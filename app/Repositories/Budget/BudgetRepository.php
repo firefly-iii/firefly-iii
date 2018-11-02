@@ -41,6 +41,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 use Navigation;
+use Symfony\Component\Debug\Exception\FatalThrowableError;
 
 /**
  * Class BudgetRepository.
@@ -104,7 +105,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         // delete limits with amount 0:
         try {
             BudgetLimit::where('amount', 0)->delete();
-        } catch (Exception $e) {
+        } catch (Exception|FatalThrowableError $e) {
             Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
         Budget::where('order',0)->update(['order' => 100]);
@@ -119,7 +120,7 @@ class BudgetRepository implements BudgetRepositoryInterface
                 // delete it!
                 try {
                     BudgetLimit::find($budgetLimit->id)->delete();
-                } catch (Exception $e) {
+                } catch (Exception|FatalThrowableError $e) {
                     Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
                 }
             }
