@@ -1,0 +1,138 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journals) }}
+{% endblock %}
+
+{% block content %}
+    <form method="POST" action="{{ route('transactions.bulk.update') }}" accept-charset="UTF-8" class="form-horizontal" id="update">
+        <input name="_token" type="hidden" value="{{ csrf_token() }}">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="box box-default">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'mass_bulk_journals'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ 'mass_bulk_journals_explain'|_ }}
+                        </p>
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                <table class="table table-striped table-condensed">
+                                    <thead>
+                                    <tr>
+                                        <th>{{ trans('list.description') }}</th>
+                                        <th>{{ trans('list.amount') }}</th>
+                                        <th>{{ trans('list.date') }}</th>
+                                        <th>{{ trans('list.category') }}</th>
+                                        <th>{{ trans('list.budget') }}</th>
+                                        <th>{{ trans('list.tags') }}</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for journal in journals %}
+                                    {% if journal.transaction_count == 2 %}
+                                        <input type="hidden" name="journals[]" value="{{ journal.id }}"/>
+                                        <tr>
+                                            <td>
+                                                <a href="{{ route('transactions.show', [journal.id]) }}">
+                                                {{ journal.description }}</a></td>
+                                            <td>{{ journal|journalTotalAmount }}</td>
+                                            <td>{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+                                            <td>{{ journalCategories(journal)|raw }}</td>
+                                            <td>{{ journalBudgets(journal)|raw }}</td>
+                                            <td>
+                                                {% for tag in journal.tags %}
+                                                    <a class="label label-success" href="{{ route('tags.show', [tag.id]) }}">
+                                                        <i class="fa fa-fw fa-tag"></i> {{ tag.tag }}</a>
+                                                {% endfor %}
+                                            </td>
+                                        </tr>
+                                    {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <p>
+                            {{ 'bulk_set_new_values'|_ }}
+                        </p>
+                        <div class="row">
+                            <div class="col-lg-8 col-md-12 col-sm-12 col-xs-12">
+                                <table class="table table-striped table-condensed">
+                                    <tr>
+                                        <th style="width:25%;">{{ trans('list.category') }}</th>
+                                        <td>
+                                            <input class="form-control" placeholder="" name="category" autocomplete="off" type="text" value="">
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_category" type="checkbox" value="1" checked>
+                                                    {{ 'no_bulk_category'|_ }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ trans('list.budget') }}</th>
+                                        <td>
+                                            <select class="form-control" name="budget_id">
+                                                {% for id, budget in budgetList %}
+                                                    <option value="{{ id }}" label="{{ budget }}">{{ budget }}</option>
+                                                {% endfor %}
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_budget" type="checkbox" value="1" checked>
+                                                    {{ 'no_bulk_budget'|_ }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>{{ trans('list.tags') }}</th>
+                                        <td>
+                                            <input class="form-control" placeholder="" name="tags" autocomplete="off" type="text" value="">
+                                        </td>
+                                        <td>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input name="ignore_tags" type="checkbox" value="1" checked>
+                                                    {{ 'no_bulk_tags'|_ }}
+                                                </label>
+                                            </div>
+                                        </td>
+                                    </tr>
+
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        {% if journals.count > 0 %}
+                            <input type="submit" name="submit" value="{{ trans('form.update_all_journals') }}" class="btn btn-success pull-right"/>
+                        {% endif %}
+                        <a href="{{ route('index') }}" class="btn-default btn">{{ trans('form.cancel') }}</a>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+        var what = "";
+    </script>
+    <script type="text/javascript" src="v1/js/lib/typeahead/typeahead.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/mass/edit-bulk.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
+{% block styles %}
+    <link href="v1/css/bootstrap-tagsinput.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+{% endblock %}

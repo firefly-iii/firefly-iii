@@ -1,0 +1,199 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render }}
+{% endblock %}
+{% block content %}
+
+    {# Initial display. Will refresh (and disappear almost immediately. #}
+    <div class="row status_initial statusbox">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('import.status_wait_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ trans('import.status_wait_text') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Fatal error display. Will be shown (duh) when something goes horribly wrong. #}
+    <div class="row fatal_error" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('import.status_fatal_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {{ trans('import.status_fatal_text') }}
+                    </p>
+                    <p class="text-danger fatal_error_txt">
+
+                    </p>
+                    <p>
+                        {{ trans('import.status_fatal_more') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# box to show when job is running ... #}
+    <div class="row status_running statusbox" style="display: none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="import-status-title">{{ trans('import.status_running_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="import-status-holder">
+                        <div class="progress">
+                            <div class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 100%">
+                                <span class="sr-only">Running...</span>
+                            </div>
+                        </div>
+                        <p id="import-status-txt"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    {# Box for when the job is ready to start
+    <div class="row status_configured statusbox" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('import.status_ready_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p>
+                        {% if job.configuration['has-config-file'] == false %}
+                            {{ trans('import.status_ready_noconfig_text') }}
+                        {% else %}
+                            {{ trans('import.status_ready_text') }}
+                        {% endif %}
+                    </p>
+                    <p>
+                        <code>php artisan firefly:start-import {{ job.key }}</code>
+                    </p>
+                    <div class="row">
+                        {% if job.configuration['has-config-file'] != false %}
+                            <div class="col-lg-4">
+                                <a href="{{ route('import.download', [job.key]) }}" class="btn btn-default"><i
+                                            class="fa fa-fw fa-download"></i> {{ trans('import.status_ready_config') }}</a>
+                            </div>
+                        {% endif %}
+                        <div class="col-lg-4">
+                            <button class="btn btn-success start-job"><i class="fa fa-fw fa-gears"></i> {{ trans('import.status_ready_start') }}</button>
+                        </div>
+                    </div>
+                    {% if job.configuration['has-config-file'] != false %}
+                        <p>
+                            &nbsp;
+                        </p>
+                        <p class="text-info">
+                            {{ trans('import.status_ready_share')|raw }}
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    #}
+
+    {# Box for when the job is running!
+    <div class="row status_running statusbox" style="display: none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title" id="import-status-title">{{ trans('import.status_running_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <div id="import-status-holder">
+                        <div class="progress" id="import-status-holder">
+                            <div id="import-status-bar" class="progress-bar progress-bar-info active progress-bar-striped" role="progressbar"
+                                 aria-valuenow="100" aria-valuemin="0"
+                                 aria-valuemax="100" style="width: 100%;min-width:40px;">
+                            </div>
+                        </div>
+                        <p id="import-status-txt">{{ trans('import.status_running_placeholder') }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #}
+    {# displays the finished status of the import    #}
+    <div class="row status_finished statusbox" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-default">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('import.status_finished_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p id="import-status-intro">
+                        {{ trans('import.status_finished_text') }}
+                        <span id="import-status-more-info"></span>
+                    </p>
+                    <p id="import-status-download">
+
+                    </p>
+                    <p id="import-status-error-txt" style="display:none;">{{ trans('import.finished_with_errors') }}</p>
+                    <ul id="import-status-errors" class="text-danger">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    {# box to show error information. #}
+    {#
+    <div class="row info_errors" style="display:none;">
+        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+            <div class="box box-danger">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ trans('import.status_errors_title') }}</h3>
+                </div>
+                <div class="box-body">
+                    <p id="import-status-error-intro">
+                    </p>
+                    <div id="import-status-error-list"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    #}
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript">
+
+        var jobStatusUri = '{{ route('import.job.status.json', [importJob.key]) }}';
+        var jobStartUri = '{{ route('import.job.start', [importJob.key]) }}';
+        var jobConfigurationUri = '{{ route('import.job.configuration.index', [importJob.key]) }}';
+        var jobStorageStartUri = '{{ route('import.job.store', [importJob.key]) }}';
+
+        // import is running:
+        var langImportRunning = '{{ trans('import.status_job_running')|escape('js') }}';
+        var langImportStoring = '{{ trans('import.status_job_storing')|escape('js') }}';
+        var langImportRules = '{{ trans('import.status_job_rules')|escape('js') }}';
+
+        // some useful translations.
+        {#var langImportTimeOutError = '(time out thing)';#}
+        {#var langImportSingleError = '{{ trans('import.status_errors_single')|escape('js') }}';#}
+        {#var langImportMultiError = '{{ trans('import.status_errors_multi')|escape('js') }}';#}
+
+
+
+        var token = '{{ csrf_token() }}';
+        var job = {{ job|json_encode|raw }};
+    </script>
+    <script type="text/javascript" src="v1/js/ff/import/status_v2.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
+{% block styles %}
+{% endblock %}

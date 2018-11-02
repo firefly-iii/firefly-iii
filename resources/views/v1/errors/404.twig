@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="robots" content="noindex, nofollow, noarchive, noodp, NoImageIndex, noydir">
+    <title>404</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <base href="{{ route('index') }}/">
+
+    {# libraries #}
+    <link href="v1/lib/bs/css/bootstrap.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/lib/fa/css/font-awesome.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# the theme #}
+    <link href="v1/lib/adminlte/css/AdminLTE.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+    <link href="v1/lib/adminlte/css/skins/skin-blue-light.min.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {# Firefly III customisations #}
+    <link href="v1/css/firefly.css?v={{ FF_VERSION }}" rel="stylesheet" type="text/css"/>
+
+    {% include('partials.favicons') %}
+</head>
+<body class="ff-error-page">
+<div class="ff-error-box">
+    <div class="login-logo">
+        <a href="{{ route('index') }}"><s><b>Firefly</b>III</s> <span class="text-danger">404</span></a>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <h3 class="text-info">404 &mdash; Firefly III cannot find this page.</h3>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <p class="text-danger">
+                The page you have requested does not exist. Please check that you have not entered
+                the wrong URL. Did you make a typo perhaps?
+            </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12">
+            <p>
+                If you are sure this page should exist, please open a ticket on
+                <strong><a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub</a></strong>.
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

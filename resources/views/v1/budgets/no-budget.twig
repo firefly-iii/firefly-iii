@@ -1,0 +1,63 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, start, end) }}
+{% endblock %}
+
+{% block content %}
+
+    {# upper show-all instruction #}
+    {% if periods.count > 0 %}
+        <div class="row">
+            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.no-budget',['all']) }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="{% if periods.count > 0 %}col-lg-9 col-md-9 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ subTitle }}</h3>
+                </div>
+                <div class="box-body ">
+
+                    {% if periods.count > 0 %}
+                        {% include 'list.transactions' %}
+                        <p>
+                            <i class="fa fa-calendar"></i>
+                            <a href="{{ route('budgets.no-budget-all') }}">{{ 'show_all_no_filter'|_ }}</a>
+                        </p>
+                    {% else %}
+                        {% include 'list.transactions' with {showCategories:true, showBill:true} %}
+                        <p>
+                            <i class="fa fa-calendar"></i>
+                            <a href="{{ route('budgets.no-budget') }}">{{ 'show_the_current_period_and_overview'|_ }}</a>
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        {% if periods.count > 0 %}
+            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                {% include 'list.periods' %}
+            </div>
+        {% endif %}
+
+    </div>
+
+    {# lower show-all instruction #}
+    {% if periods.count > 0 %}
+        <div class="row">
+            <div class="col-lg-offset-9 col-lg-3 col-md-offset-9 col-md-3 col-sm-12 col-xs-12">
+                <p class="small text-center"><a href="{{ route('budgets.no-budget-all') }}">{{ 'showEverything'|_ }}</a></p>
+            </div>
+        </div>
+    {% endif %}
+
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
+{% endblock %}

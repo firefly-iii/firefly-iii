@@ -1,0 +1,177 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, account, start, end) }}
+{% endblock %}
+
+{% block content %}
+
+    <div class="row">
+        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">
+                        {{ trans('firefly.chart_account_in_period', {name: account.name, start: start.formatLocalized(monthAndDayFormat), end: end.formatLocalized(monthAndDayFormat) }) }}
+                    </h3>
+                    <div class="box-tools pull-right">
+                        <div class="btn-group">
+                            <button class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i></button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="{{ route('accounts.edit', account.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="{{ route('accounts.delete', account.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div>
+                        <canvas id="overview-chart" style="width:100%;height:400px;" height="400" width="100%"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if not showAll and isLiability %}
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">pay-off by date</h3>
+                    </div>
+                    <div class="box-body">
+                        Content
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if not showAll and not isLiability %}
+        <div class="row">
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expenses_by_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="account-cat-out" style="width:100%;height:250px;" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'expenses_by_budget'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="account-budget-out" style="width:100%;height:250px;" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'income_by_category'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <div style="width:100%;margin:0 auto;">
+                            <canvas id="account-cat-in" style="width:100%;height:250px;" height="250"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if account.notes.count == 1 %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'notes'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ account.notes.first.text|markdown }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="{% if periods.count > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'transactions'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {% if account.accountType.type == 'Asset account' %}
+                        {% set showReconcile = true %}
+                    {% else %}
+                        {% set showReconcile = false %}
+                    {% endif %}
+                    {% if periods.count > 0 %}
+                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile} %}
+                    {% else %}
+                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile, showCategories: true, showBudgets: true, showBill:true} %}
+                    {% endif %}
+                    <p>
+                        <i class="fa fa-calendar"></i>
+                        {% if periods.count > 0 %}
+                            <a href="{{ route('accounts.show.all', [account.id]) }}">
+                                {{ 'show_all_no_filter'|_ }}
+                            </a>
+                        {% else %}
+                            <a href="{{ route('accounts.show', [account.id]) }}">
+                                {{ 'show_the_current_period_and_overview'|_ }}
+                            </a>
+                        {% endif %}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% if periods.count > 0 %}
+            <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+                {% include 'list.periods' %}
+            </div>
+        {% endif %}
+    </div>
+
+
+
+{% endblock %}
+
+{% block scripts %}
+    <script type="text/javascript">
+
+        var showAll = true;
+        currencySymbol = "{{ currency.symbol }}";
+        var accountID = {{ account.id }};
+        var chartUri = '{{ chartUri }}';
+        {% if not showAll %}
+        showAll = false;
+        // uri's for charts:
+
+        var incomeCategoryUri = '{{ route('chart.account.income-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseCategoryUri = '{{ route('chart.account.expense-category', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var expenseBudgetUri = '{{ route('chart.account.expense-budget', [account.id, start.format('Ymd'), end.format('Ymd')]) }}';
+        var drawVerticalLine = '';
+        {# render vertical line with text "today"  #}
+        {% if start.lte(today) and end.gte(today) %}
+        drawVerticalLine = '{{ today.formatLocalized(monthAndDayFormat) }}';
+        {% endif %}
+        {% endif %}
+
+    </script>
+    <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/chartjs-plugin-annotation.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}"></script>
+
+    <script src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+    <script src="v1/js/lib/jquery.color-2.1.2.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+    <script src="v1/js/ff/accounts/show.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+    <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
