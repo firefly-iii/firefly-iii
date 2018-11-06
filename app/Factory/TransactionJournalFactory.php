@@ -98,7 +98,7 @@ class TransactionJournalFactory
         foreach ($data['transactions'] as $index => $trData) {
             Log::debug(sprintf('Now storing transaction %d of %d', $index + 1, \count($data['transactions'])));
             $factory->createPair($journal, $trData);
-            $totalAmount = bcadd($totalAmount, $trData['amount'] ?? '0');
+            $totalAmount = bcadd($totalAmount, (string)($trData['amount'] ?? '0'));
         }
         $journal->completed = true;
         $journal->save();
