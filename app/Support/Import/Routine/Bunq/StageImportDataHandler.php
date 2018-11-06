@@ -418,7 +418,7 @@ class StageImportDataHandler
              */
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $params         = ['count' => 79, 'older_id' => $olderId];
+            $params         = ['count' => 197, 'older_id' => $olderId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Params for the request to bunq are: ', $params);
@@ -475,8 +475,8 @@ class StageImportDataHandler
                  */
                 $oldestTransaction = 0;
             }
-            // half a second.
-            usleep(500000);
+            // sleep 2 seconds to prevent hammering bunq.
+            sleep(2);
         }
         // store newest and oldest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-oldest-transaction-%d', $bunqAccountId), $oldestTransaction);
@@ -523,7 +523,7 @@ class StageImportDataHandler
              */
             /** @var Payment $paymentRequest */
             $paymentRequest = app(Payment::class);
-            $params         = ['count' => 53, 'newer_id' => $newerId];
+            $params         = ['count' => 197, 'newer_id' => $newerId];
             $response       = $paymentRequest->listing($bunqAccountId, $params);
             $pagination     = $response->getPagination();
             Log::debug('Submit payment request with params', $params);
@@ -570,7 +570,8 @@ class StageImportDataHandler
                 $hasMoreTransactions = false;
                 $this->stillRunning  = false;
             }
-            usleep(500000);
+            // sleep 2 seconds to prevent hammering bunq.
+            sleep(2);
         }
 
         // store newest tranasction ID to be used later:
