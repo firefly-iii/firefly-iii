@@ -60,6 +60,9 @@ class JournalUpdateService
      */
     public function update(TransactionJournal $journal, array $data): TransactionJournal
     {
+        // just in case.
+        unset($journal->temp_amount);
+
         // update journal:
         $journal->description = $data['description'];
         $journal->date        = $data['date'];
