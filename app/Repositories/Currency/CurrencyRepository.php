@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Currency;
 use Carbon\Carbon;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
@@ -89,6 +90,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string)$currency->id))->count();
         if ($meta > 0) {
             Log::debug(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
+
+            return true;
+        }
+
+        // is being used in budget limits
+        $budgetLimit = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
+        if ($budgetLimit > 0) {
+            Log::debug(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
 
             return true;
         }

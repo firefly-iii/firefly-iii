@@ -95,4 +95,13 @@ class TransactionCurrency extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
+    }
 }
