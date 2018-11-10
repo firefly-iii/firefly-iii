@@ -33,6 +33,7 @@ use Illuminate\Support\Facades\Facade;
  *
  * @method string formatAnything(TransactionCurrency $format, string $amount, bool $coloured = true)
  * @method Collection getAllCurrencies()
+ * @method Collection getCurrencies()
  * @method string getCurrencyCode()
  * @method string getCurrencySymbol()
  * @method TransactionCurrency getDefaultCurrency()

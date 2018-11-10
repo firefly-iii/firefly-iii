@@ -30,6 +30,7 @@ return [
     'credit_card_limit'           => 'Credit card limit',
     'automatch'                   => 'Match automatically',
     'skip'                        => 'Skip',
+    'enabled'                        => 'Enabled',
     'name'                        => 'Name',
     'active'                      => 'Active',
     'amount_min'                  => 'Minimum amount',

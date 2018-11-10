@@ -90,7 +90,7 @@ class CurrencyController extends Controller
             // access denied:
             throw new FireflyException('No access to method, user is not owner.'); // @codeCoverageIgnore
         }
-        if (!$this->repository->canDeleteCurrency($currency)) {
+        if ($this->repository->currencyInUse($currency)) {
             throw new FireflyException('No access to method, currency is in use.'); // @codeCoverageIgnore
         }
         $this->repository->destroy($currency);
@@ -108,7 +108,7 @@ class CurrencyController extends Controller
     public function index(Request $request): JsonResponse
     {
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection = $this->repository->get();
+        $collection = $this->repository->getAll();
         $count      = $collection->count();
         // slice them:
         $currencies = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);

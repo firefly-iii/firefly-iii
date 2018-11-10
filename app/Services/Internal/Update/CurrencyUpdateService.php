@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\TransactionCurrency;
 use Log;
+
 /**
  * Class CurrencyUpdateService
  */
@@ -51,6 +52,7 @@ class CurrencyUpdateService
         $currency->code           = $data['code'];
         $currency->symbol         = $data['symbol'];
         $currency->name           = $data['name'];
+        $currency->enabled        = $data['enabled'];
         $currency->decimal_places = $data['decimal_places'];
         $currency->save();
 

@@ -35,6 +35,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $decimal_places
  * @property int    $id
  * @property string name
+ * @property bool   $enabled
  *
  */
 class TransactionCurrency extends Model
@@ -52,9 +53,10 @@ class TransactionCurrency extends Model
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
+            'enabled'        => 'bool',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
+    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -83,5 +85,14 @@ class TransactionCurrency extends Model
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

@@ -83,6 +83,7 @@ class CurrencyTransformer extends TransformerAbstract
             'symbol'         => $currency->symbol,
             'decimal_places' => (int)$currency->decimal_places,
             'default'        => $isDefault,
+            'enabled'        => $currency->enabled,
             'links'          => [
                 [
                     'rel' => 'self',

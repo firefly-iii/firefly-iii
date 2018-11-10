@@ -61,6 +61,7 @@ class TransactionCurrencyFactory
                     'code'           => $data['code'],
                     'symbol'         => $data['symbol'],
                     'decimal_places' => $data['decimal_places'],
+                    'enabled'        => $data['enabled'],
                 ]
             );
         } catch (QueryException $e) {

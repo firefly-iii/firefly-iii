@@ -10,10 +10,14 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'currencies'|_ }}</h3>
+                        <a class="btn btn-success pull-right" href="{{ route('currencies.create') }}">{{ 'create_currency'|_ }}</a>
                 </div>
                 <div class="box-body">
                     <p class="text-info">
                         {{ 'currencies_intro'|_ }}
+                    </p>
+                    <p class="text-info">
+                        {{ 'currencies_default_disabled'|_ }}
                     </p>
                     {% if currencies|length > 0 %}
                         <div style="padding-left:8px;">
@@ -41,15 +45,42 @@
                                             </div>
                                         </td>
                                     {% endif %}
-                                    <td>{{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})</td>
-                                    <td>{{ currency.decimal_places }}</td>
-                                    <td class="defaultCurrency">
-                                        {% if currency.id == defaultCurrency.id %}
-                                            <span class="label label-success">{{ 'default_currency'|_ }}</span>
-                                        {% else %}
-                                            <a class="btn btn-info btn-xs"
-                                               href="{{ route('currencies.default',currency.id) }}">{{ 'make_default_currency'|_ }}</a>
+                                    <td>
+                                        {% if currency.enabled == false %}
+                                            <span class="text-muted">
                                         {% endif %}
+                                        {{ currency.name }} ({{ currency.code }}) ({{ currency.symbol|raw }})
+                                        {% if currency.id == defaultCurrency.id %}
+                                        <span class="label label-success" id="default-currency">{{ 'default_currency'|_ }}</span>
+                                        {% endif %}
+                                        {% if currency.enabled == false %}
+                                        </span>
+                                        <br><small class="text-danger">{{ 'currency_is_disabled'|_ }}</small>
+                                        {% endif %}
+                                    </td>
+
+                                    <td>{{ currency.decimal_places }}</td>
+                                    <td class="buttons">
+                                        <div class="btn-group">
+                                        {% if currency.id != defaultCurrency.id %}
+                                            <a class="btn btn-default"
+                                               href="{{ route('currencies.default',currency.id) }}">
+                                                <i class="fa fa-fw fa-star"></i>
+                                                {{ 'make_default_currency'|_ }}</a>
+                                        {% endif %}
+                                        {% if currency.enabled %}
+                                            <a class="btn btn-default"
+                                               href="{{ route('currencies.disable',currency.id) }}">
+                                                <i class="fa fa-fw fa-square-o"></i>
+                                                {{ 'disable_currency'|_ }}</a>
+                                        {% endif %}
+                                        {% if not currency.enabled %}
+                                            <a class="btn btn-default"
+                                               href="{{ route('currencies.enable',currency.id) }}">
+                                                <i class="fa fa-fw fa-check-square-o"></i>
+                                                {{ 'enable_currency'|_ }}</a>
+                                        {% endif %}
+                                        </div>
                                     </td>
                                 </tr>
                             {% endfor %}

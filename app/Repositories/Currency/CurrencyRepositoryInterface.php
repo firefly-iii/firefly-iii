@@ -39,7 +39,7 @@ interface CurrencyRepositoryInterface
      *
      * @return bool
      */
-    public function canDeleteCurrency(TransactionCurrency $currency): bool;
+    public function currencyInUse(TransactionCurrency $currency): bool;
 
     /**
      * @param TransactionCurrency $currency
@@ -54,6 +54,38 @@ interface CurrencyRepositoryInterface
      * @return bool
      */
     public function destroy(TransactionCurrency $currency): bool;
+
+    /**
+     * Disables a currency
+     *
+     * @param TransactionCurrency $currency
+     */
+    public function disable(TransactionCurrency $currency): void;
+
+    /**
+     * Enables a currency
+     *
+     * @param TransactionCurrency $currency
+     */
+    public function enable(TransactionCurrency $currency): void;
+
+    /**
+     * Find by ID, return NULL if not found.
+     *
+     * @param int $currencyId
+     *
+     * @return TransactionCurrency|null
+     */
+    public function find(int $currencyId): ?TransactionCurrency;
+
+    /**
+     * Find by currency code, return NULL if unfound.
+     *
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByCode(string $currencyCode): ?TransactionCurrency;
 
     /**
      * Find by currency code, return NULL if unfound.
@@ -71,7 +103,25 @@ interface CurrencyRepositoryInterface
      *
      * @return TransactionCurrency
      */
+    public function findByName(string $currencyName): ?TransactionCurrency;
+
+    /**
+     * Find by currency name.
+     *
+     * @param string $currencyName
+     *
+     * @return TransactionCurrency
+     */
     public function findByNameNull(string $currencyName): ?TransactionCurrency;
+
+    /**
+     * Find by currency symbol.
+     *
+     * @param string $currencySymbol
+     *
+     * @return TransactionCurrency
+     */
+    public function findBySymbol(string $currencySymbol): ?TransactionCurrency;
 
     /**
      * Find by currency symbol.
@@ -95,6 +145,11 @@ interface CurrencyRepositoryInterface
      * @return Collection
      */
     public function get(): Collection;
+
+    /**
+     * @return Collection
+     */
+    public function getAll(): Collection;
 
     /**
      * @param array $ids
