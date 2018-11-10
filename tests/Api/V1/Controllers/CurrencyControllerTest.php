@@ -65,7 +65,7 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         $userRepos->shouldReceive('hasRole')->once()->withArgs([Mockery::any(), 'owner'])->andReturn(true);
-        $repository->shouldReceive('canDeleteCurrency')->once()->andReturn(true);
+        $repository->shouldReceive('currencyInUse')->once()->andReturn(false);
 
         $repository->shouldReceive('destroy')->once()->andReturn(true);
 
@@ -91,7 +91,7 @@ class CurrencyControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('get')->withNoArgs()->andReturn($collection)->once();
+        $repository->shouldReceive('getAll')->withNoArgs()->andReturn($collection)->once();
 
         // test API
         $response = $this->get('/api/v1/currencies');
@@ -167,6 +167,7 @@ class CurrencyControllerTest extends TestCase
             'symbol'         => 'A',
             'decimal_places' => 2,
             'default'        => '0',
+            'enabled'        => '1',
         ];
 
         // test API
@@ -206,6 +207,7 @@ class CurrencyControllerTest extends TestCase
             'symbol'         => 'A',
             'decimal_places' => 2,
             'default'        => '1',
+            'enabled'        => '1',
         ];
 
         // test API
@@ -239,6 +241,7 @@ class CurrencyControllerTest extends TestCase
             'symbol'         => '$E',
             'decimal_places' => '2',
             'default'        => '0',
+            'enabled'        => '1',
         ];
 
         // test API
@@ -278,6 +281,7 @@ class CurrencyControllerTest extends TestCase
             'symbol'         => '$E',
             'decimal_places' => '2',
             'default'        => '1',
+            'enabled'        => '1',
         ];
 
         // test API
