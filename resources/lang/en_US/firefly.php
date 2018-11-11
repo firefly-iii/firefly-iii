@@ -851,6 +851,7 @@ return [
     'opt_group_l_Credit card'                 => 'Liability: Credit card',
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
+    'attachment_not_found'                    => 'This attachment could not found in the storage.',
 
     // new user:
     'welcome'                                 => 'Welcome to Firefly III!',

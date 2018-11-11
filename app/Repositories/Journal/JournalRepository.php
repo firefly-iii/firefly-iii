@@ -29,7 +29,6 @@ use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBankEvent;
@@ -261,6 +260,18 @@ class JournalRepository implements JournalRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * Return all attachments for journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getAttachments(TransactionJournal $journal): Collection
+    {
+        return $journal->attachments;
     }
 
     /**
@@ -585,10 +596,10 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactionsById(array $transactionIds): Collection
     {
         $journalIds = Transaction::whereIn('id', $transactionIds)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $journals = new Collection;
-        foreach($journalIds as $journalId) {
+        $journals   = new Collection;
+        foreach ($journalIds as $journalId) {
             $result = $this->findNull((int)$journalId);
-            if(null !== $result) {
+            if (null !== $result) {
                 $journals->push($result);
             }
         }
@@ -600,6 +611,7 @@ class JournalRepository implements JournalRepositoryInterface
         //$collector->addFilter(TransferFilter::class);
 
         $collector->setJournals($journals)->withOpposingAccount();
+
         return $collector->getTransactions();
     }
 

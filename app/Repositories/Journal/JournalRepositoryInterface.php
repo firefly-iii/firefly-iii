@@ -38,6 +38,16 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+    /**
+     * Return all attachments for journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getAttachments(TransactionJournal $journal): Collection;
+
+
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionJournal $journal
