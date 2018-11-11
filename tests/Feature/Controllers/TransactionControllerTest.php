@@ -27,6 +27,7 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -70,7 +71,7 @@ class TransactionControllerTest extends TestCase
         $transfer   = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('firstNull')->twice()->andReturn($transfer);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -106,7 +107,7 @@ class TransactionControllerTest extends TestCase
         $transfer   = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('firstNull')->twice()->andReturn($transfer);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -149,9 +150,9 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $transfer   = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
@@ -194,9 +195,9 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $transfer   = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
@@ -239,9 +240,9 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $transfer   = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
@@ -284,9 +285,9 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $transfer   = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
+        $transfer = $this->user()->transactionJournals()->inRandomOrder()->where('transaction_type_id', 3)->first();
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
         $repository->shouldReceive('firstNull')->once()->andReturn($transfer);
 
@@ -317,7 +318,7 @@ class TransactionControllerTest extends TestCase
     {
         $data       = ['transactions' => [1, 2]];
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('firstNull')->times(1)->andReturn(new TransactionJournal);
         $repository->shouldReceive('findTransaction')->andReturn(new Transaction)->twice();
@@ -337,7 +338,7 @@ class TransactionControllerTest extends TestCase
         $journal       = factory(TransactionJournal::class)->make();
         $journal->date = new Carbon('2016-01-01');
         $repository    = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->once()->andReturn($journal);
         $repository->shouldReceive('setOrder')->once()->andReturn(true);
@@ -360,12 +361,14 @@ class TransactionControllerTest extends TestCase
         // mock stuff
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $attRepos  = $this->mock(AttachmentRepositoryInterface::class);
 
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('getAttachments')->andReturn(new Collection)->once();
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');

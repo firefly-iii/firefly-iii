@@ -33,6 +33,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -994,6 +995,7 @@ class SingleControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        $attachmentRepos = $this->mock(AttachmentRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -1008,6 +1010,7 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Withdrawal');
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection);
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
+        $journalRepos->shouldReceive('getAttachments')->andReturn(new Collection);
 
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
