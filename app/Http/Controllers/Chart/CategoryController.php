@@ -35,6 +35,7 @@ use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class CategoryController.
@@ -77,12 +78,15 @@ class CategoryController extends Controller
         if ($cache->has()) {
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
-        $start     = $repository->firstUseDate($category);
-        $start     = $start ?? new Carbon;
-        $range     = app('preferences')->get('viewRange', '1M')->data;
-        $start     = app('navigation')->startOfPeriod($start, $range);
-        $end       = new Carbon;
-        $accounts  = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $start    = $repository->firstUseDate($category);
+        $start    = $start ?? new Carbon;
+        $range    = app('preferences')->get('viewRange', '1M')->data;
+        $start    = app('navigation')->startOfPeriod($start, $range);
+        $end      = new Carbon;
+        $accounts = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+
+        Log::debug(sprintf('Full range is %s to %s', $start->format('Y-m-d'), $end->format('Y-m-d')));
+
         $chartData = [
             [
                 'label'           => (string)trans('firefly.spent'),
@@ -100,10 +104,14 @@ class CategoryController extends Controller
             ],
         ];
         $step      = $this->calculateStep($start, $end);
-        $current = clone $start;
+        $current   = clone $start;
+
+        Log::debug(sprintf('abc Step is %s', $step));
+
         switch ($step) {
             case '1D':
                 while ($current <= $end) {
+                    Log::debug(sprintf('Current day is %s', $current->format('Y-m-d')));
                     $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $current);
                     $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $current);
                     $sum                             = bcadd($spent, $earned);
@@ -118,7 +126,9 @@ class CategoryController extends Controller
             case '1M':
             case '1Y':
                 while ($current <= $end) {
-                    $currentEnd                      = app('navigation')->endOfPeriod($current, $range);
+                    $currentEnd = app('navigation')->endOfPeriod($current, $step);
+                    Log::debug(sprintf('abc Range is %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+
                     $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
                     $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
                     $sum                             = bcadd($spent, $earned);
@@ -126,7 +136,7 @@ class CategoryController extends Controller
                     $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
                     $chartData[1]['entries'][$label] = round($earned, 12);
                     $chartData[2]['entries'][$label] = round($sum, 12);
-                    $current= app('navigation')->addPeriod($current, $step, 0);
+                    $current                         = app('navigation')->addPeriod($current, $step, 0);
                 }
                 break;
         }
@@ -431,17 +441,33 @@ class CategoryController extends Controller
             ],
         ];
 
-        while ($start <= $end) {
-            $spent  = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
-            $earned = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
-            $sum    = bcadd($spent, $earned);
-            $label  = trim(app('navigation')->periodShow($start, '1D'));
+        $step = $this->calculateStep($start, $end);
 
+
+        while ($start <= $end) {
+            $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
+            $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
+            $sum                             = bcadd($spent, $earned);
+            $label                           = trim(app('navigation')->periodShow($start, $step));
             $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
             $chartData[1]['entries'][$label] = round($earned, 12);
             $chartData[2]['entries'][$label] = round($sum, 12);
 
-            $start->addDay();
+            switch ($step) {
+                default:
+                case '1D':
+                    $start->addDay();
+                    break;
+                case '1W':
+                    $start->addDays(7);
+                    break;
+                case '1M':
+                    $start->addMonth();
+                    break;
+                case '1Y':
+                    $start->addYear();
+                    break;
+            }
         }
 
         $data = $this->generator->multiSet($chartData);
