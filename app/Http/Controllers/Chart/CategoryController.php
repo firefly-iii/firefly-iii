@@ -383,8 +383,12 @@ class CategoryController extends Controller
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
         $start = app('navigation')->startOfPeriod($date, $range);
-        $end   = app('navigation')->endOfPeriod($date, $range);
-        $data  = $this->makePeriodChart($category, $start, $end);
+        $end   = session()->get('end');
+        if ($end < $start) {
+            $end = app('navigation')->endOfPeriod($date, $range);
+        }
+
+        $data = $this->makePeriodChart($category, $start, $end);
 
         return response()->json($data);
     }
@@ -411,7 +415,7 @@ class CategoryController extends Controller
 
 
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var AccountRepositoryInterface $accountRepository */
