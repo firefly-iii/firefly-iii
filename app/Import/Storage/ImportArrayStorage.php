@@ -469,7 +469,7 @@ class ImportArrayStorage
                 continue;
             }
 
-            Log::info(sprintf('Stored #%d: "%s" %s (ID #%d)', $index, $journal->description, round($journal->temp_amount, 2), $journal->id));
+            Log::info(sprintf('Stored #%d: "%s" (ID #%d)', $index, $journal->description, $journal->id));
             Log::debug(sprintf('Stored as journal #%d', $journal->id));
             $collection->push($journal);
 

@@ -128,8 +128,6 @@ class TransactionJournalFactory
         // invalidate cache.
         app('preferences')->mark();
 
-        $journal->temp_amount = $totalAmount;
-
         return $journal;
     }
 
