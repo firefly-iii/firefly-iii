@@ -180,14 +180,14 @@ class AccountTransformer extends TransformerAbstract
 
         $openingBalance     = null;
         $openingBalanceDate = null;
-        if ($type === AccountType::ASSET) {
-            /** @var AccountRepositoryInterface $repository */
-            $repository = app(AccountRepositoryInterface::class);
-            $repository->setUser($account->user);
-            $amount             = $repository->getOpeningBalanceAmount($account);
+        if (\in_array($type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
+            $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
-            $openingBalanceDate = $repository->getOpeningBalanceDate($account);
+            $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
+        $interest        = $this->repository->getMetaValue($account, 'interest');
+        $interestPeriod  = $this->repository->getMetaValue($account, 'interest_period');
+        $includeNetworth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
 
         $data = [
             'id'                   => (int)$account->id,
@@ -206,12 +206,18 @@ class AccountTransformer extends TransformerAbstract
             'monthly_payment_date' => $monthlyPaymentDate,
             'credit_card_type'     => $creditCardType,
             'account_number'       => $this->repository->getMetaValue($account, 'accountNumber'),
-            'iban'                 => $account->iban,
+            'iban'                 => '' === $account->iban ? null : $account->iban,
             'bic'                  => $this->repository->getMetaValue($account, 'BIC'),
             'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
             'opening_balance'      => $openingBalance,
             'opening_balance_date' => $openingBalanceDate,
             'role'                 => $role,
+            'liability_type'       => $type,
+            'liability_amount'     => $openingBalance,
+            'liability_start_date' => $openingBalanceDate,
+            'interest'             => $interest,
+            'interest_period'      => $interestPeriod,
+            'include_in_net_worth' => $includeNetworth,
             'links'                => [
                 [
                     'rel' => 'self',
