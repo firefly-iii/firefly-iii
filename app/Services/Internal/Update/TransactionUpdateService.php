@@ -89,11 +89,10 @@ class TransactionUpdateService
     {
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $journal     = $transaction->transactionJournal;
-        $description = $journal->description === $data['description'] ? null : $data['description'];
         $amount      = (string)$data['amount'];
         $account     = null;
         // update description:
-        $transaction->description = $description;
+        $transaction->description = $data['description'];
         $foreignAmount            = null;
         if ((float)$transaction->amount < 0) {
             // this is the source transaction.
@@ -112,7 +111,7 @@ class TransactionUpdateService
         }
 
         // update the actual transaction:
-        $transaction->description             = $description;
+        $transaction->description             = $data['description'];
         $transaction->amount                  = $amount;
         $transaction->foreign_amount          = null;
         $transaction->transaction_currency_id = null === $currency ? $transaction->transaction_currency_id : $currency->id;

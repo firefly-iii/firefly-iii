@@ -110,7 +110,7 @@ class TransactionFactory
         // all this data is the same for both transactions:
         Log::debug('Searching for currency info.');
         $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        $description = $journal->description === $data['description'] ? null : $data['description'];
+        //$description = $data['description'];
 
         // type of source account and destination account depends on journal type:
         $sourceType      = $this->accountType($journal, 'source');
@@ -135,10 +135,9 @@ class TransactionFactory
 
         // based on the source type, destination type and transaction type, the system can start throwing FireflyExceptions.
         $this->validateTransaction($sourceAccount->accountType->type, $destinationAccount->accountType->type, $journal->transactionType->type);
-
         $source = $this->create(
             [
-                'description'         => $description,
+                'description'         => $data['description'],
                 'amount'              => app('steam')->negative((string)$data['amount']),
                 'foreign_amount'      => null,
                 'currency'            => $currency,
@@ -150,7 +149,7 @@ class TransactionFactory
         );
         $dest   = $this->create(
             [
-                'description'         => $description,
+                'description'         => $data['description'],
                 'amount'              => app('steam')->positive((string)$data['amount']),
                 'foreign_amount'      => null,
                 'currency'            => $currency,
