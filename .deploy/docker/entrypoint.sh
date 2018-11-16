@@ -8,6 +8,7 @@ mkdir -p $FIREFLY_PATH/storage/database
 mkdir -p $FIREFLY_PATH/storage/debugbar
 mkdir -p $FIREFLY_PATH/storage/export
 mkdir -p $FIREFLY_PATH/storage/framework/cache
+mkdir -p $FIREFLY_PATH/storage/framework/cache/data
 mkdir -p $FIREFLY_PATH/storage/framework/sessions
 mkdir -p $FIREFLY_PATH/storage/framework/testing
 mkdir -p $FIREFLY_PATH/storage/framework/views
