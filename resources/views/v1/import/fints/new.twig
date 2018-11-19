@@ -18,7 +18,7 @@
                         {{ ExpandedForm.text('fints_url', data.fints_url, {helpText: trans('import.job_config_fints_url_help'), required: true}) }}
                         {{ ExpandedForm.text('fints_port', data.fints_port, {helpText: trans('import.job_config_fints_port_help'), required: true}) }}
                         {{ ExpandedForm.text('fints_bank_code', data.fints_bank_code, {required: true}) }}
-                        {{ ExpandedForm.text('fints_username', data.fints_username, {helpText: trans('import.job_config_fints_username_help'), required: true}) }}
+                        {{ ExpandedForm.text('fints_username', data.fints_username, {helpText: trans('import.job_config_fints_username_help'), required: false}) }}
                         {{ ExpandedForm.password('fints_password', {required: true}) }}
                     </div>
                 </div>
