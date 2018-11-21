@@ -171,11 +171,11 @@ class Modifier
     {
         $journalBudget = '';
         if (null !== $transaction->transaction_journal_budget_name) {
-            $journalBudget = app('steam')->decrypt((int)$transaction->transaction_journal_budget_encrypted, $transaction->transaction_journal_budget_name);
+            $journalBudget = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
         }
         $transactionBudget = '';
         if (null !== $transaction->transaction_budget_name) {
-            $journalBudget = app('steam')->decrypt((int)$transaction->transaction_budget_encrypted, $transaction->transaction_budget_name);
+            $journalBudget = app('steam')->tryDecrypt($transaction->transaction_budget_name);
         }
 
         return self::stringCompare($journalBudget, $search) || self::stringCompare($transactionBudget, $search);
@@ -191,13 +191,11 @@ class Modifier
     {
         $journalCategory = '';
         if (null !== $transaction->transaction_journal_category_name) {
-            $journalCategory = app('steam')->decrypt(
-                (int)$transaction->transaction_journal_category_encrypted, $transaction->transaction_journal_category_name
-            );
+            $journalCategory = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
         }
         $transactionCategory = '';
         if (null !== $transaction->transaction_category_name) {
-            $journalCategory = app('steam')->decrypt((int)$transaction->transaction_category_encrypted, $transaction->transaction_category_name);
+            $journalCategory = app('steam')->tryDecrypt($transaction->transaction_category_name);
         }
 
         return self::stringCompare($journalCategory, $search) || self::stringCompare($transactionCategory, $search);
