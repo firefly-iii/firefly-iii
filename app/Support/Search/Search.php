@@ -237,7 +237,7 @@ class Search implements SearchInterface
                 case 'after':
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
                     $after = new Carbon($modifier['value']);
-                    $collector->setBefore($after);
+                    $collector->setAfter($after);
                     break;
             }
         }
