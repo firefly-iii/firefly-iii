@@ -446,4 +446,14 @@ class SingleController extends Controller
         // redirect to previous URL.
         return redirect($this->getPreviousUri('transactions.edit.uri'));
     }
+
+    /**
+     * Show a special JSONified view of a transaction, for easier debug purposes.
+     *
+     * @param TransactionJournal $journal
+     */
+    public function debugShow(TransactionJournal $journal)
+    {
+
+    }
 }
