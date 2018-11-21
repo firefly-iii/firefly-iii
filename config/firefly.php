@@ -256,6 +256,7 @@ return [
         //'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'], // 2018-10-26: 3%
         //'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 2018-10-26: 40%
         //'nb_NO' => ['name_locale' => 'Norwegian', 'name_english' => 'Norwegian'], // 2018-10-26: 54%
+        //'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'], // 2018-11-21: 1%
         //'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'], // 2018-10-26: 10%
         //'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'], // 2018-10-26: 3%
     ],
