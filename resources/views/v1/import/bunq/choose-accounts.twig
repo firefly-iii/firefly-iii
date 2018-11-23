@@ -56,13 +56,20 @@
                                         <tr>
                                             <td style="background:{{ account.settings.color }};"></td>
                                             <td>
-                                                <strong>{{ account.description }}</strong><br />
+                                                <strong>{{ account.description }}</strong>
+                                                <ul>
                                                 {% for alias in account.aliases %}
                                                     {% if alias.type == 'IBAN' %}
-                                                        {{ alias.name }}: {{ alias.value }}
-                                                        {% set currentIban = alias.value  %}
+                                                        <li>{{ alias.name }}: {{ alias.value }}{% set currentIban = alias.value  %}</li>
                                                     {% endif %}
                                                 {% endfor %}
+                                                {% if account.status != 'ACTIVE' %}
+                                                    <li>{{ trans('import.bunq_account_status_'~account.status) }}</li>
+                                                {% endif %}
+                                                {% if account.type == 'MonetaryAccountSavings' %}
+                                                    <li>{{ trans('import.bunq_savings_goal', {'amount': account.savingsGoal.currency ~' '~account.savingsGoal.value,'percentage' : account.savingsGoal.percentage}) }}</li>
+                                                {% endif %}
+                                                </ul>
                                             </td>
                                             <td>
                                                 <select class="form-control" name="account_mapping[{{ account.id }}]">

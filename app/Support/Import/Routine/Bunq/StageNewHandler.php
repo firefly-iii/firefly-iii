@@ -28,6 +28,7 @@ use bunq\Model\Generated\Endpoint\MonetaryAccount as BunqMonetaryAccount;
 use bunq\Model\Generated\Endpoint\MonetaryAccountBank;
 use bunq\Model\Generated\Endpoint\MonetaryAccountJoint;
 use bunq\Model\Generated\Endpoint\MonetaryAccountLight;
+use bunq\Model\Generated\Endpoint\MonetaryAccountSavings;
 use bunq\Model\Generated\Object\CoOwner;
 use bunq\Model\Generated\Object\Pointer;
 use FireflyIII\Exceptions\FireflyException;
@@ -121,6 +122,11 @@ class StageNewHandler
                     case MonetaryAccountLight::class:
                         /** @var MonetaryAccountLight $object */
                         $array = $this->processMal($object);
+                        break;
+                    case MonetaryAccountSavings::class;
+                        /** @var MonetaryAccountSavings $object */
+                        $array = $this->processMas($object);
+                        break;
                         break;
                     default:
                         // @codeCoverageIgnoreStart
@@ -275,6 +281,52 @@ class StageNewHandler
                 ];
             }
         }
+
+        return $return;
+    }
+
+    /**
+     * @param MonetaryAccountSavings $object
+     *
+     * @return array
+     */
+    private function processMas(MonetaryAccountSavings $object): array
+    {
+        $setting = $object->getSetting();
+        $return  = [
+            'id'            => $object->getId(),
+            'currency_code' => $object->getCurrency(),
+            'description'   => $object->getDescription(),
+            'balance'       => $object->getBalance(),
+            'status'        => $object->getStatus(),
+            'type'          => 'MonetaryAccountSavings',
+            'aliases'       => [],
+            'savingsGoal'   => [],
+        ];
+
+        if (null !== $setting) {
+            $return['settings'] = [
+                'color'                 => $object->getSetting()->getColor(),
+                'default_avatar_status' => $object->getSetting()->getDefaultAvatarStatus(),
+                'restriction_chat'      => $object->getSetting()->getRestrictionChat(),
+            ];
+        }
+        if (null !== $object->getAlias()) {
+            /** @var Pointer $alias */
+            foreach ($object->getAlias() as $alias) {
+                $return['aliases'][] = [
+                    'type'  => $alias->getType(),
+                    'name'  => $alias->getName(),
+                    'value' => $alias->getValue(),
+                ];
+            }
+        }
+        $goal                  = $object->getSavingsGoal();
+        $return['savingsGoal'] = [
+            'currency'   => $goal->getCurrency(),
+            'value'      => $goal->getValue(),
+            'percentage' => $object->getSavingsGoalProgress(),
+        ];
 
         return $return;
     }
