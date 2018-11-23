@@ -66,7 +66,7 @@
     "ext-json": "*",
     "adldap2/adldap2-laravel": "^4.0",
     "bacon/bacon-qr-code": "1.*",
-    "bunq/sdk_php": "dev-master#8c1faefc111d9b970168a1837ca165d854954941",
+    "bunq/sdk_php": "dev-master",
     "danhunsaker/laravel-flysystem-others": "^1.3",
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
