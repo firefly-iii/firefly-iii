@@ -64,6 +64,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                 $id
  * @property TransactionType     $transactionType
  * @property Collection          budgets
+ * @property Bill                $bill
+ * @property Collection          transactionJournalMeta
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)

@@ -90,6 +90,11 @@
                         {% endif %}
                         {{ ExpandedForm.text('category',data['category']) }}
                         {{ ExpandedForm.text('tags') }}
+
+                        {% if data.bill_id != null %}
+                            {{ ExpandedForm.checkbox('keep_bill_id',1,true, {'helpText': trans('firefly.journal_link_bill', {name: data.bill_name,route: route('bills.show', [data.bill_id])})} ) }}
+                        {% endif %}
+
                         {# NO PIGGY BANK #}
                     </div>
                 </div>

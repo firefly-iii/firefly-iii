@@ -879,6 +879,7 @@ Route::group(
     );
 
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+    Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
     Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
 }
