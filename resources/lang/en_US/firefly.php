@@ -852,6 +852,7 @@ return [
     'notes'                                   => 'Notes',
     'unknown_journal_error'                   => 'Could not store the transaction. Please check the log files.',
     'attachment_not_found'                    => 'This attachment could not be found.',
+    'journal_link_bill'                       => 'This transaction is linked to bill <a href=":route">:name</a>. To remove the connection, uncheck the checkbox. Use rules to connect it to another bill.',
 
     // new user:
     'welcome'                                 => 'Welcome to Firefly III!',
