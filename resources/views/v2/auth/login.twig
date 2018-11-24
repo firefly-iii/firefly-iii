@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+    <base href="{{ route('index') }}/">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Content-Language" content="en"/>
+
+    {# favicons #}
+    {% include('partials.favicons') %}
+
+    <title>TODO replace meLogin</title>
+    <link rel="stylesheet" href="v2/lib/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="v2/assets/css/gf-source.css">
+    <script src="v2/assets/js/require.min.js"></script>
+    <script>
+        requirejs.config({
+                             baseUrl: '.'
+                         });
+    </script>
+    <!-- Dashboard Core -->
+    <link href="v2/assets/css/dashboard.css" rel="stylesheet"/>
+    <script src="v2/assets/js/dashboard.js"></script>
+    <!-- Input Mask Plugin -->
+    <script src="v2/assets/plugins/input-mask/plugin.js"></script>
+</head>
+<body class="">
+<div class="page">
+    <div class="page-single">
+        <div class="container">
+            <div class="row">
+                <div class="col col-login mx-auto">
+                    <div class="text-center mb-6">
+                        <img src="v2/assets/images/firefly-iii-48.png" class="h-6" alt="Firefly III">
+                    </div>
+                    <form class="card" action="{{ route('login') }}" method="post">
+                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                        <div class="card-body p-6">
+                            <div class="card-title">
+                                {% if IS_DEMO_SITE %}
+                                    Welcome to the Firefly III demonstration website!
+                                {% else %}
+                                    {{ 'sign_in_to_start'|_ }}
+                                {% endif %}
+                            </div>
+                            {% if IS_DEMO_SITE %}
+                                <p>
+                                    To log in, please use email address <strong>{{ DEMO_USERNAME }}</strong> with password <strong>{{ DEMO_PASSWORD }}</strong>
+                                </p>
+                            {% endif %}
+                            <div class="form-group">
+                                {% if env('LOGIN_PROVIDER', 'eloquent') == 'eloquent' %}
+                                    <label class="form-label">{{ trans('form.email') }}</label>
+                                    <input type="email" class="form-control" id="email" autocomplete="email" aria-describedby="emailHelp" placeholder="{{ trans('form.email') }}">
+                                {% else %}
+                                    <label class="form-label">{{ trans('form.login_name') }}</label>
+                                    <input type="email" class="form-control" id="email" autocomplete="username" aria-describedby="emailHelp" placeholder="{{ trans('form.login_name') }}">
+                                {% endif %}
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    Password
+                                    {% if allowReset %}
+                                    <a href="{{ route('password.reset.request') }}" class="float-right small">{{ 'forgot_my_password'|_ }}</a>
+                                    {% endif %}
+                                </label>
+                                <input type="password" class="form-control" autocomplete="password" id="password" placeholder="Password">
+                            </div>
+                            <div class="form-group">
+                                <label class="custom-control custom-checkbox">
+                                    <input type="checkbox" class="custom-control-input" name="remember" {% if remember %}checked{% endif %} value="1" />
+                                    <span class="custom-control-label">{{ trans('form.remember_me') }}</span>
+                                </label>
+                            </div>
+                            <div class="form-footer">
+                                <button type="submit" class="btn btn-primary btn-block">{{ 'sign_in'|_ }}</button>
+                            </div>
+                        </div>
+                    </form>
+                    {% if allowRegistration %}
+                    <div class="text-center text-muted">
+                        Don't have account yet? <a href="./register.html">Sign up</a>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
