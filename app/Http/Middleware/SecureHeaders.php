@@ -76,7 +76,10 @@ class SecureHeaders
             "payment 'none'",
         ];
 
-        $response->header('X-Frame-Options', 'deny');
+        $disableFrameHeader = env('DISABLE_FRAME_HEADER');
+        if (false === $disableFrameHeader || null === $disableFrameHeader) {
+            $response->header('X-Frame-Options', 'deny');
+        }
         $response->header('Content-Security-Policy', implode('; ', $csp));
         $response->header('X-XSS-Protection', '1; mode=block');
         $response->header('X-Content-Type-Options', 'nosniff');
