@@ -188,7 +188,7 @@ function getAccountId() {
         return $('select[name="destination_id"]').val();
     }
 
-    alert('Cannot handle ' + journal.transaction_type.type);
+    //alert('Cannot handle ' + journal.transaction_type.type);
     return undefined;
 }
 
