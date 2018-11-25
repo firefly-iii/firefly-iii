@@ -94,6 +94,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
         // test API
         $response = $this->get('/api/v1/accounts');
@@ -254,6 +257,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
 
         // test API
@@ -288,6 +294,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
         // data to submit
         $data = [
@@ -377,6 +386,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
         // data to submit
         $data = [
@@ -422,6 +434,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
         // functions to expect:
 
@@ -467,6 +482,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
         $account = $this->user()->accounts()->first();
         // data to submit
@@ -512,6 +530,9 @@ class AccountControllerTest extends TestCase
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
 
         $account = $this->user()->accounts()->first();
         // data to submit

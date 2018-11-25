@@ -154,6 +154,9 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('123');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
