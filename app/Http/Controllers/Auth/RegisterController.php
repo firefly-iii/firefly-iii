@@ -72,7 +72,7 @@ class RegisterController extends Controller
     {
         // is allowed to?
         $allowRegistration = true;
-        $loginProvider     = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        $loginProvider     = envNonEmpty('LOGIN_PROVIDER', 'eloquent');
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         if (true === $singleUserMode && $userCount > 0 && 'eloquent' === $loginProvider) {
@@ -113,10 +113,11 @@ class RegisterController extends Controller
     public function showRegistrationForm(Request $request)
     {
         $allowRegistration = true;
-        $loginProvider     = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        $loginProvider     = envNonEmpty('LOGIN_PROVIDER', 'eloquent');
         $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
+        $pageTitle         = (string)trans('firefly.register_page_title');
 
         if (true === $isDemoSite) {
             $allowRegistration = false;
@@ -138,7 +139,7 @@ class RegisterController extends Controller
 
         $email = $request->old('email');
 
-        return view('auth.register', compact('isDemoSite', 'email'));
+        return view('auth.register', compact('isDemoSite', 'email', 'pageTitle'));
     }
 
 }

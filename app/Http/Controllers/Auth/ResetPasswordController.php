@@ -78,18 +78,18 @@ class ResetPasswordController extends Controller
             return view('error', compact('message'));
         }
 
-
         // is allowed to register?
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
+        $pageTitle         = (string)trans('firefly.reset_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }
 
         /** @noinspection PhpUndefinedFieldInspection */
         return view('auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration]
+            ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration,'pageTitle' => $pageTitle]
         );
     }
 
@@ -129,5 +129,17 @@ class ResetPasswordController extends Controller
             : $this->sendResetFailedResponse($request, $response);
     }
 
-
+    /**
+     * Get the password reset validation rules.
+     *
+     * @return array
+     */
+    protected function rules()
+    {
+        return [
+            'token' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|confirmed|min:6|secure_password',
+        ];
+    }
 }

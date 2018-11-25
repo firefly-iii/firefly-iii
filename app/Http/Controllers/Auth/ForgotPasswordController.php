@@ -109,10 +109,11 @@ class ForgotPasswordController extends Controller
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
+        $pageTitle         = (string)trans('firefly.forgot_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }
 
-        return view('auth.passwords.email')->with(compact('allowRegistration'));
+        return view('auth.passwords.email')->with(compact('allowRegistration', 'pageTitle'));
     }
 }

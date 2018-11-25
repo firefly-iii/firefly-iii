@@ -1,39 +1,28 @@
-<!doctype html>
-<html lang="en" dir="ltr">
-<head>
-    <base href="{{ route('index') }}/">
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta http-equiv="Content-Language" content="en"/>
-
-    {# favicons #}
-    {% include('partials.favicons') %}
-
-    <title>TODO replace meLogin</title>
-    <link rel="stylesheet" href="v2/lib/font-awesome/4.7.0/css/font-awesome.min.css">
-    <link rel="stylesheet" href="v2/assets/css/gf-source.css">
-    <script src="v2/assets/js/require.min.js"></script>
-    <script>
-        requirejs.config({
-                             baseUrl: '.'
-                         });
-    </script>
-    <!-- Dashboard Core -->
-    <link href="v2/assets/css/dashboard.css" rel="stylesheet"/>
-    <script src="v2/assets/js/dashboard.js"></script>
-    <!-- Input Mask Plugin -->
-    <script src="v2/assets/plugins/input-mask/plugin.js"></script>
-</head>
-<body class="">
-<div class="page">
-    <div class="page-single">
+{% extends "./layout/auth" %}
+{% block content %}
+ <div class="page-single">
         <div class="container">
             <div class="row">
                 <div class="col col-login mx-auto">
                     <div class="text-center mb-6">
-                        <img src="v2/assets/images/firefly-iii-48.png" class="h-6" alt="Firefly III">
+                        <img src="v2/assets/images/firefly-iii-48.png" class="h-6" alt="Firefly III v{{ FF_VERSION }}" title="Firefly III v{{ FF_VERSION }}">
                     </div>
+                    {# ERROR LOGIN STUFF #}
+                    {% if errors.all|length > 0 %}
+                        <div class="alert alert-danger" role="alert">
+                            {% if errors.all|length == 1 %}
+                                <strong>{{ 'flash_error'|_ }}</strong> {{ errors.first() }}
+                            {% else %}
+                                <strong>{{ 'flash_error'|_ }}</strong>
+                                <ul>
+                                    {% for message in errors.all %}
+                                        <li>{{ message }}</li>
+                                    {% endfor %}
+                                </ul>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
                     <form class="card" action="{{ route('login') }}" method="post">
                         <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
                         <div class="card-body p-6">
@@ -52,10 +41,15 @@
                             <div class="form-group">
                                 {% if env('LOGIN_PROVIDER', 'eloquent') == 'eloquent' %}
                                     <label class="form-label">{{ trans('form.email') }}</label>
-                                    <input type="email" class="form-control" id="email" autocomplete="email" aria-describedby="emailHelp" placeholder="{{ trans('form.email') }}">
+                                    <input type="email" class="{% if errors.has('email') %}is-invalid{% endif %} form-control" name="email" id="email" value="{{ old('email') }}" autocomplete="email" aria-describedby="emailHelp" placeholder="{{ trans('form.email') }}" required>
+                                    {% if errors.has('email') %}
+                                        <div class="invalid-feedback">
+                                            {{ errors.get('email')[0] }}
+                                        </div>
+                                    {% endif %}
                                 {% else %}
                                     <label class="form-label">{{ trans('form.login_name') }}</label>
-                                    <input type="email" class="form-control" id="email" autocomplete="username" aria-describedby="emailHelp" placeholder="{{ trans('form.login_name') }}">
+                                    <input type="email" class="{% if errors.has('email') %}is-invalid{% endif %} form-control" name="email" id="email" autocomplete="username" aria-describedby="emailHelp" placeholder="{{ trans('form.login_name') }}" required>
                                 {% endif %}
                             </div>
                             <div class="form-group">
@@ -65,7 +59,12 @@
                                     <a href="{{ route('password.reset.request') }}" class="float-right small">{{ 'forgot_my_password'|_ }}</a>
                                     {% endif %}
                                 </label>
-                                <input type="password" class="form-control" autocomplete="password" id="password" placeholder="Password">
+                                <input type="password" name="password" class="{% if errors.has('password') %}is-invalid{% endif %} form-control" autocomplete="password" id="password" placeholder="Password">
+                                {% if errors.has('password') %}
+                                    <div class="invalid-feedback">
+                                        {{ errors.get('password')[0] }}
+                                    </div>
+                                {% endif %}
                             </div>
                             <div class="form-group">
                                 <label class="custom-control custom-checkbox">
@@ -80,13 +79,11 @@
                     </form>
                     {% if allowRegistration %}
                     <div class="text-center text-muted">
-                        Don't have account yet? <a href="./register.html">Sign up</a>
+                        <a href="{{ route('register') }}">{{ 'register_new_account'|_ }}</a>
                     </div>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-</div>
-</body>
-</html>
+{% endblock %}
