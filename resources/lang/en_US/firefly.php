@@ -176,6 +176,7 @@ return [
     'button_reset_password'                      => 'Reset password',
     'reset_button'                               => 'Reset',
     'want_to_login'                              => 'I want to login',
+    'login_page_title'                           => 'Login to Firefly III',
     'button_register'                            => 'Register',
     'authorization'                              => 'Authorization',
     'active_bills_only'                          => 'active bills only',
