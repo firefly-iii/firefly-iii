@@ -453,7 +453,7 @@ return [
     'without_date'                            => 'Without date',
     'result'                                  => 'Result',
     'sums_apply_to_range'                     => 'All sums apply to the selected range',
-    'mapbox_api_key'                          => 'To use map, get an API key from <a href="https://www.mapbox.com/">Mapbox</a>. Open your <code>.env</code> file en enter this code after <code>MAPBOX_API_KEY=</code>.',
+    'mapbox_api_key'                          => 'To use map, get an API key from <a href="https://www.mapbox.com/">Mapbox</a>. Open your <code>.env</code> file and enter this code after <code>MAPBOX_API_KEY=</code>.',
     'press_tag_location'                      => 'Right click or long press to set the tag\'s location.',
     'clear_location'                          => 'Clear location',
 
