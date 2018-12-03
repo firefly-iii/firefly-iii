@@ -628,6 +628,11 @@ class FireflyValidator extends Validator
     {
         /** @var array $search */
         $search = Config::get('firefly.accountTypeByIdentifier.' . $type);
+
+        if (null === $search) {
+            return false;
+        }
+
         /** @var Collection $accountTypes */
         $accountTypes   = AccountType::whereIn('type', $search)->get();
         $ignore         = (int)($parameters[0] ?? 0.0);

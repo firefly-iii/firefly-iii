@@ -314,6 +314,7 @@ return [
     'column_sepa-ci'                  => 'SEPA Creditor Identifier',
     'column_sepa-ep'                  => 'SEPA External Purpose',
     'column_sepa-country'             => 'SEPA Country Code',
+    'column_sepa-batch-id'            => 'SEPA Batch ID',
     'column_tags-comma'               => 'Tags (comma separated)',
     'column_tags-space'               => 'Tags (space separated)',
     'column_account-number'           => 'Asset account (account number)',

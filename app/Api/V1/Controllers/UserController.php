@@ -78,7 +78,7 @@ class UserController extends Controller
     {
         /** @var User $admin */
         $admin = auth()->user();
-        if ($this->repository->hasRole($admin, 'owner')) {
+        if ($admin->id !== $user->id && $this->repository->hasRole($admin, 'owner')) {
             $this->repository->destroy($user);
 
             return response()->json([], 204);

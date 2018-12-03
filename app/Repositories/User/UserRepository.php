@@ -288,7 +288,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function store(array $data): User
     {
-        return User::create(
+        $user = User::create(
             [
                 'blocked'      => $data['blocked'] ?? false,
                 'blocked_code' => $data['blocked_code'] ?? null,
@@ -296,6 +296,12 @@ class UserRepository implements UserRepositoryInterface
                 'password'     => str_random(24),
             ]
         );
+        $role = $data['role'] ?? '';
+        if ('' !== $role) {
+            $this->attachRole($user, $role);
+        }
+
+        return $user;
     }
 
     /**

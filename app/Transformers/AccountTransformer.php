@@ -196,6 +196,7 @@ class AccountTransformer extends TransformerAbstract
             'name'                 => $account->name,
             'active'               => 1 === (int)$account->active,
             'type'                 => $type,
+            'account_role'         => $role,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,
             'currency_symbol'      => $currencySymbol,
@@ -211,13 +212,12 @@ class AccountTransformer extends TransformerAbstract
             'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
             'opening_balance'      => $openingBalance,
             'opening_balance_date' => $openingBalanceDate,
-            'role'                 => $role,
             'liability_type'       => $type,
             'liability_amount'     => $openingBalance,
             'liability_start_date' => $openingBalanceDate,
             'interest'             => $interest,
             'interest_period'      => $interestPeriod,
-            'include_in_net_worth' => $includeNetworth,
+            'include_net_worth'    => $includeNetworth,
             'links'                => [
                 [
                     'rel' => 'self',
