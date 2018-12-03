@@ -253,7 +253,7 @@ class TransactionController extends Controller
         $collector->setJournals(new Collection([$journal]));
         $set          = $collector->getTransactions();
         $transactions = [];
-        $transformer  = new TransactionTransformer(new ParameterBag);
+        $transformer  = new TransactionTransformer(new ParameterBag, $this->repository);
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $transactions[] = $transformer->transform($transaction);

@@ -475,6 +475,24 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return string value of a meta date (or NULL).
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|string
+     */
+    public function getMetaDateString(TransactionJournal $journal, string $field): ?string
+    {
+        $date = $this->getMetaDate($journal, $field);
+        if (null === $date) {
+            return null;
+        }
+
+        return $date->format('Y-m-d');
+    }
+
+    /**
      * Return value of a meta field (or NULL) as a string.
      *
      * @param TransactionJournal $journal

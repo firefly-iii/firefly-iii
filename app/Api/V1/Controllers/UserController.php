@@ -134,10 +134,6 @@ class UserController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // make resource
         $resource = new Item($user, new UserTransformer($this->parameters), 'users');
 
@@ -160,10 +156,6 @@ class UserController extends Controller
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
 
         // make resource
         $resource = new Item($user, new UserTransformer($this->parameters), 'users');
@@ -188,10 +180,6 @@ class UserController extends Controller
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
 
         // make resource
         $resource = new Item($user, new UserTransformer($this->parameters), 'users');

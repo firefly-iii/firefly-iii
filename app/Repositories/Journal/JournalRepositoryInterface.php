@@ -39,17 +39,6 @@ use Illuminate\Support\MessageBag;
 interface JournalRepositoryInterface
 {
     /**
-     * Return all attachments for journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return Collection
-     */
-    public function getAttachments(TransactionJournal $journal): Collection;
-
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-    /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
      * @param Account            $source
@@ -58,6 +47,9 @@ interface JournalRepositoryInterface
      * @return MessageBag
      */
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
+
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param TransactionJournal $journal
@@ -120,6 +112,15 @@ interface JournalRepositoryInterface
      * @return Transaction|null
      */
     public function getAssetTransaction(TransactionJournal $journal): ?Transaction;
+
+    /**
+     * Return all attachments for journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    public function getAttachments(TransactionJournal $journal): Collection;
 
     /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
@@ -195,6 +196,16 @@ interface JournalRepositoryInterface
      * @return null|Carbon
      */
     public function getMetaDate(TransactionJournal $journal, string $field): ?Carbon;
+
+    /**
+     * Return string value of a meta date (or NULL).
+     *
+     * @param TransactionJournal $journal
+     * @param string             $field
+     *
+     * @return null|string
+     */
+    public function getMetaDateString(TransactionJournal $journal, string $field): ?string;
 
     /**
      * Return value of a meta field (or NULL).

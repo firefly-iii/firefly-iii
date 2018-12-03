@@ -33,6 +33,7 @@ use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
@@ -221,6 +222,7 @@ trait RequestInformation
      */
     protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
     {
+        $repository = app(JournalRepositoryInterface::class);
         // use collector to collect transactions.
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
@@ -229,7 +231,7 @@ trait RequestInformation
         $collector->setJournals(new Collection([$journal]));
         $set          = $collector->getTransactions();
         $transactions = [];
-        $transformer  = new TransactionTransformer(new ParameterBag);
+        $transformer  = new TransactionTransformer(new ParameterBag, $repository);
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $res = [];

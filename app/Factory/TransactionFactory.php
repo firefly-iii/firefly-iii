@@ -40,6 +40,11 @@ use Log;
  */
 class TransactionFactory
 {
+    /** @var User */
+    private $user;
+
+    use TransactionServiceTrait;
+
     /**
      * Constructor.
      */
@@ -49,11 +54,6 @@ class TransactionFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    use TransactionServiceTrait;
-
-    /** @var User */
-    private $user;
 
     /**
      * @param array $data
@@ -109,8 +109,9 @@ class TransactionFactory
         Log::debug('Start of TransactionFactory::createPair()', $data);
         // all this data is the same for both transactions:
         Log::debug('Searching for currency info.');
-        $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        //$description = $data['description'];
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency        = $this->findCurrency($data['currency_id'], $data['currency_code']);
+        $currency        = $currency ?? $defaultCurrency;
 
         // type of source account and destination account depends on journal type:
         $sourceType      = $this->accountType($journal, 'source');

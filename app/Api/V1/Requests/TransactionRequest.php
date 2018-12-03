@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\BelongsUser;
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
 
@@ -73,8 +74,21 @@ class TransactionRequest extends Request
             'invoice_date'       => $this->date('invoice_date'),
             'internal_reference' => $this->string('internal_reference'),
             'notes'              => $this->string('notes'),
-            'original-source'    => sprintf('api-v%s', config('firefly.api_version')),
+            'original-source'    => sprintf('ff3-v%s|api-v%s', config('firefly.version'),config('firefly.api_version')),
             'transactions'       => $this->getTransactionData(),
+
+            // SEPA fields:
+            'sepa-cc'            => $this->string('sepa_cc'),
+            'sepa-ct-op'         => $this->string('sepa_ct_op'),
+            'sepa-db'            => $this->string('sepa_db'),
+            'sepa-country'       => $this->string('sepa_country'),
+            'sepa-ep'            => $this->string('sepa_ep'),
+            'sepa-ci'            => $this->string('sepa_ci'),
+            'sepa-batch-id'      => $this->string('sepa_batch_id'),
+
+            // others:
+            'bunq_payment_id'    => $this->string('bunq_payment_id'),
+            'external_id'        => $this->string('external_id'),
         ];
 
         return $data;
@@ -109,11 +123,20 @@ class TransactionRequest extends Request
             'internal_reference'                   => 'min:1,max:255|nullable',
             'notes'                                => 'min:1,max:50000|nullable',
 
+            // SEPA fields:
+            'sepa_cc'                              => 'min:1,max:255|nullable',
+            'sepa_ct_op'                           => 'min:1,max:255|nullable',
+            'sepa_db'                              => 'min:1,max:255|nullable',
+            'sepa_country'                         => 'min:1,max:255|nullable',
+            'sepa_ep'                              => 'min:1,max:255|nullable',
+            'sepa_ci'                              => 'min:1,max:255|nullable',
+            'sepa_batch_id'                        => 'min:1,max:255|nullable',
+
             // transaction rules (in array for splits):
             'transactions.*.description'           => 'nullable|between:1,255',
             'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',
-            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|required_without:transactions.*.currency_id',
+            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
+            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_amount'        => 'numeric|more:0',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
@@ -121,7 +144,7 @@ class TransactionRequest extends Request
             'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
-            'transactions.*.reconciled'            => 'boolean|nullable',
+            'transactions.*.reconciled'            => [new IsBoolean],
             // basic rules will be expanded later.
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.source_name'           => 'between:1,255|nullable',

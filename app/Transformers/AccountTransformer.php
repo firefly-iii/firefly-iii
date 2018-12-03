@@ -30,6 +30,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Support\Collection;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
@@ -118,7 +119,9 @@ class AccountTransformer extends TransformerAbstract
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
         $transactions = $collector->getTransactions();
 
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $journalRepos = app(JournalRepositoryInterface::class);
+
+        return $this->collection($transactions, new TransactionTransformer($this->parameters, $journalRepos), 'transactions');
     }
 
     /**

@@ -129,7 +129,7 @@ class TransactionController extends Controller
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -141,20 +141,14 @@ class TransactionController extends Controller
      *
      * @param Request     $request
      * @param Transaction $transaction
-     * @param string      $include
      *
      * @return JsonResponse
      */
-    public function show(Request $request, Transaction $transaction, string $include = null): JsonResponse
+    public function show(Request $request, Transaction $transaction): JsonResponse
     {
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        // add include parameter:
-        $include = $include ?? '';
-        $include = $request->get('include') ?? $include;
-        $manager->parseIncludes($include);
 
         // collect transactions using the journal collector
         $collector = app(TransactionCollectorInterface::class);
@@ -173,7 +167,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -200,10 +194,6 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // collect transactions using the journal collector
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
@@ -221,7 +211,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -247,10 +237,6 @@ class TransactionController extends Controller
 
         event(new UpdatedTransactionJournal($journal));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // needs a lot of extra data to match the journal collector. Or just expand that one.
         // collect transactions using the journal collector
         $collector = app(TransactionCollectorInterface::class);
@@ -269,7 +255,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

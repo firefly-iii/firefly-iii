@@ -25,11 +25,9 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use League\Fractal\TransformerAbstract;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -39,110 +37,25 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class TransactionTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['attachments', 'user', 'tags', 'journal_meta', 'piggy_bank_events'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
     /** @var ParameterBag */
     protected $parameters;
+
+    /** @var JournalRepositoryInterface */
+    protected $repository;
 
     /**
      * TransactionTransformer constructor.
      *
      * @codeCoverageIgnore
      *
-     * @param ParameterBag $parameters
+     * @param ParameterBag               $parameters
+     * @param JournalRepositoryInterface $repository
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct(ParameterBag $parameters, JournalRepositoryInterface $repository)
     {
         $this->parameters = $parameters;
+        $this->repository = $repository;
     }
-
-    /**
-     * Include attachments.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Transaction $transaction
-     *
-     * @return FractalCollection
-     */
-    public function includeAttachments(Transaction $transaction): FractalCollection
-    {
-        return $this->collection($transaction->transactionJournal->attachments, new AttachmentTransformer($this->parameters), 'attachments');
-    }
-
-    /**
-     * Include meta data
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Transaction $transaction
-     *
-     * @return FractalCollection
-     */
-    public function includeJournalMeta(Transaction $transaction): FractalCollection
-    {
-        $meta = $transaction->transactionJournal->transactionJournalMeta()->get();
-
-        return $this->collection($meta, new JournalMetaTransformer($this->parameters), 'journal_meta');
-    }
-
-    /**
-     * Include piggy bank events
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Transaction $transaction
-     *
-     * @return FractalCollection
-     */
-    public function includePiggyBankEvents(Transaction $transaction): FractalCollection
-    {
-        $events = $transaction->transactionJournal->piggyBankEvents()->get();
-
-        return $this->collection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
-    }
-
-    /**
-     * Include tags
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Transaction $transaction
-     *
-     * @return FractalCollection
-     */
-    public function includeTags(Transaction $transaction): FractalCollection
-    {
-        $set = $transaction->transactionJournal->tags;
-
-        return $this->collection($set, new TagTransformer($this->parameters), 'tags');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Transaction $transaction
-     *
-     * @return \League\Fractal\Resource\Item
-     */
-    public function includeUser(Transaction $transaction): Item
-    {
-        return $this->item($transaction->transactionJournal->user, new UserTransformer($this->parameters), 'users');
-    }
-
 
     /**
      * Transform the journal.
@@ -160,17 +73,15 @@ class TransactionTransformer extends TransformerAbstract
         $budgetName   = null;
         $categoryId   = $transaction->transaction_category_id ?? $transaction->transaction_journal_category_id;
         $categoryName = $transaction->transaction_category_name ?? $transaction->transaction_journal_category_name;
-
+        $journal      = $transaction->transactionJournal;
+        $notes        = $this->repository->getNoteText($journal);
         if ($transaction->transaction_type_type === TransactionType::WITHDRAWAL) {
             $budgetId   = $transaction->transaction_budget_id ?? $transaction->transaction_journal_budget_id;
             $budgetName = $transaction->transaction_budget_name ?? $transaction->transaction_journal_budget_name;
         }
-        /** @var Note $dbNote */
-        $dbNote = $transaction->transactionJournal->notes()->first();
-        $notes  = null;
-        if (null !== $dbNote) {
-            $notes = $dbNote->text;
-        }
+        // get tags:
+        $tags = implode(',', $journal->tags->pluck('tag')->toArray());
+
 
         $data = [
             'id'                      => (int)$transaction->id,
@@ -200,6 +111,27 @@ class TransactionTransformer extends TransformerAbstract
             'budget_id'               => $budgetId,
             'budget_name'             => $budgetName,
             'notes'                   => $notes,
+            'sepa_cc'                 => $this->repository->getMetaField($journal, 'sepa-cc'),
+            'sepa_ct_op'              => $this->repository->getMetaField($journal, 'sepa-ct-op'),
+            'sepa_ct_id'              => $this->repository->getMetaField($journal, 'sepa-ct-ud'),
+            'sepa_db'                 => $this->repository->getMetaField($journal, 'sepa-db'),
+            'sepa_country'            => $this->repository->getMetaField($journal, 'sepa-country'),
+            'sepa_ep'                 => $this->repository->getMetaField($journal, 'sepa-ep'),
+            'sepa_ci'                 => $this->repository->getMetaField($journal, 'sepa-ci'),
+            'sepa_batch_id'           => $this->repository->getMetaField($journal, 'sepa-batch-id'),
+            'interest_date'           => $this->repository->getMetaDateString($journal, 'interest_date'),
+            'book_date'               => $this->repository->getMetaDateString($journal, 'book_date'),
+            'process_date'            => $this->repository->getMetaDateString($journal, 'process_date'),
+            'due_date'                => $this->repository->getMetaDateString($journal, 'due_date'),
+            'payment_date'            => $this->repository->getMetaDateString($journal, 'payment_date'),
+            'invoice_date'            => $this->repository->getMetaDateString($journal, 'invoice_date'),
+            'internal_reference'      => $this->repository->getMetaField($journal, 'internal_reference'),
+            'bunq_payment_id'         => $this->repository->getMetaField($journal, 'bunq_payment_id'),
+            'importHashV2'            => $this->repository->getMetaField($journal, 'importHashV2'),
+            'recurrence_id'           => (int)$this->repository->getMetaField($journal, 'recurrence_id'),
+            'external_id'             => $this->repository->getMetaField($journal, 'external_id'),
+            'original_source'         => $this->repository->getMetaField($journal, 'original-source'),
+            'tags'                    => '' === $tags ? null : $tags,
             'links'                   => [
                 [
                     'rel' => 'self',
