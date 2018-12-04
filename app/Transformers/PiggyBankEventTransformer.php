@@ -24,12 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Illuminate\Support\Collection;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -38,19 +35,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class PiggyBankEventTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['piggy_bank', 'transaction'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -64,50 +48,6 @@ class PiggyBankEventTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Include piggy bank into end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param PiggyBankEvent $event
-     *
-     * @return Item
-     */
-    public function includePiggyBank(PiggyBankEvent $event): Item
-    {
-        return $this->item($event->piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
-    }
-
-    /**
-     * Include transaction into end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param PiggyBankEvent $event
-     *
-     * @return Item
-     */
-    public function includeTransaction(PiggyBankEvent $event): Item
-    {
-        $journal  = $event->transactionJournal;
-        $pageSize = (int)app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($journal->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setJournals(new Collection([$journal]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**
@@ -125,6 +65,8 @@ class PiggyBankEventTransformer extends TransformerAbstract
         $accountRepos->setUser($account->user);
 
         $currencyId    = (int)$accountRepos->getMetaValue($account, 'currency_id');
+        $journal       = $event->transactionJournal;
+        $transactionId = null;
         $decimalPlaces = 2;
         if ($currencyId > 0) {
             /** @var CurrencyRepositoryInterface $repository */
@@ -134,13 +76,24 @@ class PiggyBankEventTransformer extends TransformerAbstract
             /** @noinspection NullPointerExceptionInspection */
             $decimalPlaces = $currency->decimal_places;
         }
+        if (0 === $currencyId) {
+            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+        }
+        if (null !== $journal) {
+            $transactionId = $journal->transactions()->first()->id;
+        }
 
         $data = [
-            'id'         => (int)$event->id,
-            'updated_at' => $event->updated_at->toAtomString(),
-            'created_at' => $event->created_at->toAtomString(),
-            'amount'     => round($event->amount, $decimalPlaces),
-            'links'      => [
+            'id'              => (int)$event->id,
+            'updated_at'      => $event->updated_at->toAtomString(),
+            'created_at'      => $event->created_at->toAtomString(),
+            'amount'          => round($event->amount, $decimalPlaces),
+            'currency_id'     => $currency->id,
+            'currency_code'   => $currency->code,
+            'currency_symbol' => $currency->symbol,
+            'currency_dp'     => $currency->decimal_places,
+            'transaction_id'  => $transactionId,
+            'links'           => [
                 [
                     'rel' => 'self',
                     'uri' => '/piggy_bank_events/' . $event->id,

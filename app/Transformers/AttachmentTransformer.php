@@ -26,8 +26,6 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -36,19 +34,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AttachmentTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -69,20 +54,6 @@ class AttachmentTransformer extends TransformerAbstract
     }
 
     /**
-     * Attach the user.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Attachment $attachment
-     *
-     * @return Item
-     */
-    public function includeUser(Attachment $attachment): Item
-    {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'users');
-    }
-
-    /**
      * Transform attachment.
      *
      * @param Attachment $attachment
@@ -97,7 +68,8 @@ class AttachmentTransformer extends TransformerAbstract
             'id'              => (int)$attachment->id,
             'updated_at'      => $attachment->updated_at->toAtomString(),
             'created_at'      => $attachment->created_at->toAtomString(),
-            'attachable_type' => $attachment->attachable_type,
+            'attachable_id'   => $attachment->attachable_id,
+            'attachable_type' => str_replace('FireflyIII\\Models\\','',$attachment->attachable_type),
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,
             'download_uri'    => route('api.v1.attachments.download', [$attachment->id]),

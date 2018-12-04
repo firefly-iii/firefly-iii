@@ -35,6 +35,8 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
+use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -73,6 +75,44 @@ class TransactionController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param Request     $request
+     * @param Transaction $transaction
+     *
+     * @return JsonResponse
+     */
+    public function attachments(Request $request, Transaction $transaction): JsonResponse
+    {
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $attachments = $transaction->transactionJournal->attachments()->get();
+        $resource    = new FractalCollection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
+
+    /**
+     * @param Request     $request
+     * @param Transaction $transaction
+     *
+     * @return JsonResponse
+     */
+    public function piggyBankEvents(Request $request, Transaction $transaction): JsonResponse
+    {
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $events= $transaction->transactionJournal->piggyBankEvents()->get();
+        $resource    = new FractalCollection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
     }
 
     /**
@@ -134,7 +174,6 @@ class TransactionController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
-
 
     /**
      * Show a single transaction.
