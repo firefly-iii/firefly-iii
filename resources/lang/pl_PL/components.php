@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Osobisty kod dostępowy',
+    'personal_access_tokens' => 'Osobisty token dostępowy',
 
     // bills:
     'not_expected_period'    => 'Nie oczekiwany w tym okresie',

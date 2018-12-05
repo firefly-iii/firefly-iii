@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III suporta múltiplas moedas, que você pode alterar nesta página.',
-    'currencies_index_default'                                => 'Firefly III tem uma moeda padrão. Você pode mudar usando esses botões.',
+    'currencies_index_default'                                => 'Firefly III tem uma moeda padrão.',
+    'currencies_index_buttons'                                => 'Use os botões para mudar a moeda padrão ou habilitar outras moedas.',
 
     // create currency
     'currencies_create_code'                                  => 'Este código deve ser compatível com ISO (Google é para sua nova moeda).',

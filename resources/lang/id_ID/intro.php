@@ -33,13 +33,13 @@ return [
 
     // create account:
     'accounts_create_iban'                  => 'Berikan akun anda IBAN yang benar. Hal ini bisa membuat data impor sangat mudah di masa yang akan datang.',
-    'accounts_create_asset_opening_balance' => 'Assets accounts may have an "opening balance", indicating the start of this account\'s history in Firefly III.',
+    'accounts_create_asset_opening_balance' => 'Rekening aset boleh memiliki "saldo awal", yang menandakan dimulainya riwayat rekening ini di Firefly III.',
     'accounts_create_asset_currency'        => 'Firelfly III mendukung berbagai mata uang. Akun aset memiliki satu mata uang utama, yang yang harus anda tetapkan.',
     'accounts_create_asset_virtual'         => 'Kadang-kadang itu dapat membantu memberi akun anda saldo virtual: jumlah tambahan yang selalu ditambahkan atau dihapus dari saldo sebenarnya.',
 
     // budgets index
     'budgets_index_intro'                   => 'Anggaran yang digunakan untuk mengelola keuangan anda dan membentuk salah satu fungsi inti dari Firefly III.',
-    'budgets_index_set_budget'              => 'Set your total budget for every period so Firefly III can tell you if you have budgeted all available money.',
+    'budgets_index_set_budget'              => 'Tetapkan total anggaran Anda untuk setiap periode sehingga Firefly III dapat menginformasikan apakah semua uang Anda sudah dianggarkan atau belum.',
     'budgets_index_see_expenses_bar'        => 'Menghabiskan uang secara perlahan dengan mengisi di bar ini.',
     'budgets_index_navigate_periods'        => 'Menavigasi melalui periode dengan mudah menetapkan anggaraan sebelumnya.',
     'budgets_index_new_budget'              => 'Buat anggaran baru sesuai keinginan anda.',
@@ -93,7 +93,7 @@ return [
     'piggy-banks_show_piggyEvents'                            => 'Setiap tambahan atau kepindahan juga tercantum di sini.',
 
     // bill index
-    'bills_index_rules'                                       => 'Here you see which rules will check if this bill is hit',
+    'bills_index_rules'                                       => 'Di sini Anda akan melihat aturan mana saja yang akan memeriksa tagihan ini',
     'bills_index_paid_in_period'                              => 'Bagian ini menunjukkan kapan tagihan terakhir dibayarkan.',
     'bills_index_expected_in_period'                          => 'Bagian ini menunjukkan setiap tagihan jika dan kapan tagihan berikutnya diperkirakan akan dibayar.',
 
@@ -103,12 +103,12 @@ return [
     'bills_show_billChart'                                    => 'Bagan ini menunjukkan transaksi yang terkait dengan tagihan ini.',
 
     // create bill
-    'bills_create_intro'                                      => 'Use bills to track the amount of money you\'re due every period. Think about expenses like rent, insurance or mortgage payments.',
+    'bills_create_intro'                                      => 'Gunakan tagihan untuk melacak berapa jumlah uang yang jatuh tempo setiap periode nya. Pikirkan tentang semua biaya seperti sewa, asuransi, gadai, atau cicilan lainnya.',
     'bills_create_name'                                       => 'Gunakan nama yang deskriptif seperti "Rent" atau "Health insurance".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
     'bills_create_amount_min_holder'                          => 'Pilih jumlah minimum dan maksimum untuk tagihan ini.',
     'bills_create_repeat_freq_holder'                         => 'Sebagian besar tagihan diulang setiap bulannya, tapi anda bisa mengatur frekuensi lain di sini.',
-    'bills_create_skip_holder'                                => 'If a bill repeats every 2 weeks, the "skip"-field should be set to "1" to skip every other week.',
+    'bills_create_skip_holder'                                => 'Jika tagihan berulang setiap 2 minggu, bagian "lewati" harus diatur ke "1" untuk melewati setiap minggu lainnya.',
 
     // rules index
     'rules_index_intro'                                       => 'Firefly III memungkinkan anda mengatur peraturan-peraturan, yang otomatis akan diterapkan pada transaksi yang anda buat atau edit.',
@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III mendukung banyak mata uang, yang dapat anda ubah di halaman ini.',
-    'currencies_index_default'                                => 'Firefly III memiliki satu mata uang standar. Anda selalu dapat beralih ke mata uang lainnya dengan menggunakan tombol-tombol ini.',
+    'currencies_index_default'                                => 'Firefly III memiliki satu mata uang default.',
+    'currencies_index_buttons'                                => 'Gunakan tombol ini untuk mengubah mata uang default atau mengaktifkan mata uang lainnya.',
 
     // create currency
     'currencies_create_code'                                  => 'Kode ini harus sesuai dengan ISO (Google untuk mata uang baru anda).',

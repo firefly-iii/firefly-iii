@@ -123,7 +123,7 @@ return [
     'present'                        => ':attribute il campo deve essere presente.',
     'amount_zero'                    => 'L\'importo totale non può essere zero.',
     'unique_piggy_bank_for_user'     => 'Il nome del salvadanaio deve essere unico.',
-    'secure_password'                => 'Questa non è una password sicura. Riprova. Per maggiori informazioni visita http://bit.ly/FF3-password-security.',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Il tipo di ripetizione della transazione ricorrente non è valido.',
     'valid_recurrence_rep_moment'    => 'Il momento di ripetizione per questo tipo di ripetizione non è valido.',
     'invalid_account_info'           => 'Informazione sul conto non valida.',

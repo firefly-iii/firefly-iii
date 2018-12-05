@@ -128,7 +128,7 @@ return [
     'job_config_uc_specifics_txt'         => 'Some banks deliver badly formatted files. Firefly III can fix those automatically. If your bank delivers such files but it\'s not listed here, please open an issue on GitHub.',
     'job_config_uc_submit'                => 'Kontynuuj',
     'invalid_import_account'              => 'You have selected an invalid account to import into.',
-    'import_liability_select'             => 'Liability',
+    'import_liability_select'             => 'Zobowiązanie',
     // job configuration for Spectre:
     'job_config_spectre_login_title'      => 'Wybierz swój login',
     'job_config_spectre_login_text'       => 'Firefly III has found :count existing login(s) in your Spectre account. Which one would you like to use to import from?',
@@ -142,7 +142,7 @@ return [
     'spectre_do_not_import'               => '(nie importuj)',
     'spectre_no_mapping'                  => 'Wygląda na to, że nie wybrałeś żadnych kont z których można zaimportować dane.',
     'imported_from_account'               => 'Zaimportowane z ":account"',
-    'spectre_account_with_number'         => ':number konta',
+    'spectre_account_with_number'         => 'Konto :number',
     'job_config_spectre_apply_rules'      => 'Zastosuj reguły',
     'job_config_spectre_apply_rules_text' => 'By default, your rules will be applied to the transactions created during this import routine. If you do not want this to happen, deselect this checkbox.',
 
@@ -154,6 +154,8 @@ return [
     'share_config_file'                   => 'If you have imported data from a public bank, you should <a href="https://github.com/firefly-iii/import-configurations/wiki">share your configuration file</a> so it will be easy for other users to import their data. Sharing your configuration file will not expose your financial details.',
     'job_config_bunq_apply_rules'         => 'Zastosuj reguły',
     'job_config_bunq_apply_rules_text'    => 'By default, your rules will be applied to the transactions created during this import routine. If you do not want this to happen, deselect this checkbox.',
+    'bunq_savings_goal'                   => 'Savings goal: :amount (:percentage%)',
+    'bunq_account_status_CANCELLED'       => 'Closed bunq account',
 
     'ynab_account_closed'                  => 'Account is closed!',
     'ynab_account_deleted'                 => 'Konto usunięte!',
@@ -163,7 +165,7 @@ return [
     'ynab_account_type_creditCard'         => 'karta kredytowa',
     'ynab_account_type_lineOfCredit'       => 'line of credit',
     'ynab_account_type_otherAsset'         => 'other asset account',
-    'ynab_account_type_otherLiability'     => 'other liabilities',
+    'ynab_account_type_otherLiability'     => 'inne zobowiązania',
     'ynab_account_type_payPal'             => 'PayPal',
     'ynab_account_type_merchantAccount'    => 'merchant account',
     'ynab_account_type_investmentAccount'  => 'investment account',
@@ -312,6 +314,7 @@ return [
     'column_sepa-ci'                  => 'SEPA Creditor Identifier',
     'column_sepa-ep'                  => 'SEPA External Purpose',
     'column_sepa-country'             => 'SEPA Country Code',
+    'column_sepa-batch-id'            => 'SEPA Batch ID',
     'column_tags-comma'               => 'Tagi (oddzielone przecinkami)',
     'column_tags-space'               => 'Tagi (oddzielone spacjami)',
     'column_account-number'           => 'Konto aktywów (numer konta)',

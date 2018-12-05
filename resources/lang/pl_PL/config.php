@@ -24,11 +24,11 @@ declare(strict_types=1);
 
 return [
     'html_language'         => 'pl',
-    'locale'                => 'pl, Polish, polski, pl_PL.utf8, pl_PL.UTF-8',
+    'locale'                => 'pl_PL.utf8, pl_PL.UTF-8',
     'month'                 => '%B %Y',
     'month_and_day'         => '%e %B %Y',
-    'month_and_date_day'    => '%A %B %e, %Y',
-    'month_and_day_no_year' => '%B %e',
+    'month_and_date_day'    => '%A, %e %B %Y',
+    'month_and_day_no_year' => '%e %B',
     'date_time'             => '%e %B %Y o %T',
     'specific_day'          => '%e %B %Y',
     'week_in_year'          => 'Tydzień %W, %Y',

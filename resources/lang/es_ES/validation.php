@@ -123,7 +123,7 @@ return [
     'present'                        => 'El campo :attribute debe estar presente.',
     'amount_zero'                    => 'La cantidad total no puede ser cero.',
     'unique_piggy_bank_for_user'     => 'En nombre de la hucha debe ser único.',
-    'secure_password'                => 'Este contraseña no es segura. Por favor, inténtelo de nuevo. Para obtener más información, visita http://bit.ly/FF3-password-security.',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetición no válido para transacciones recurrentes.',
     'valid_recurrence_rep_moment'    => 'Momento de repetición no válido para este tipo de repetición.',
     'invalid_account_info'           => 'Información de cuenta no válida.',
