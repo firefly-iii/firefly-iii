@@ -246,6 +246,22 @@ Route::group(
 );
 
 Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags', 'as' => 'api.v1.tags.'],
+    function () {
+
+        // Transaction currency API routes:
+        Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'TagController@store', 'as' => 'store']);
+        Route::get('{tagOrId}', ['uses' => 'TagController@show', 'as' => 'show']);
+        Route::put('{tagOrId}', ['uses' => 'TagController@update', 'as' => 'update']);
+        Route::delete('{tagOrId}', ['uses' => 'TagController@delete', 'as' => 'delete']);
+        Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'delete']);
+    }
+);
+
+
+
+Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transactions', 'as' => 'api.v1.transactions.'],
     function () {
 

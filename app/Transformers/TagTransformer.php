@@ -119,7 +119,6 @@ class TagTransformer extends TransformerAbstract
             'updated_at'  => $tag->updated_at->toAtomString(),
             'created_at'  => $tag->created_at->toAtomString(),
             'tag'         => $tag->tag,
-            'tag_mode'    => $tag->tagMode,
             'date'        => $date,
             'description' => '' === $tag->description ? null : $tag->description,
             'latitude'    => (float)$tag->latitude,
