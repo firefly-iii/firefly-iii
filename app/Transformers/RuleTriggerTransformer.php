@@ -33,19 +33,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class RuleTriggerTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = [];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
     /** @var ParameterBag */
     protected $parameters;
 

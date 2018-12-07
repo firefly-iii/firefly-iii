@@ -25,8 +25,8 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Rule;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleTrigger;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -35,19 +35,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class RuleTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['rule_group', 'rule_triggers', 'rule_actions', 'user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['rule_group', 'rule_triggers', 'rule_actions'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -64,52 +51,6 @@ class RuleTransformer extends TransformerAbstract
     }
 
     /**
-     * @param Rule $rule
-     *
-     * @return FractalCollection
-     */
-    public function includeRuleActions(Rule $rule): FractalCollection
-    {
-        return $this->collection($rule->ruleActions, new RuleActionTransformer($this->parameters), 'rule_actions');
-    }
-
-    /**
-     * Include the rule group.
-     *
-     * @param Rule $rule
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeRuleGroup(Rule $rule): Item
-    {
-        return $this->item($rule->ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
-    }
-
-    /**
-     * @param Rule $rule
-     *
-     * @return FractalCollection
-     */
-    public function includeRuleTriggers(Rule $rule): FractalCollection
-    {
-        return $this->collection($rule->ruleTriggers, new RuleTriggerTransformer($this->parameters), 'rule_triggers');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Rule $rule
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Rule $rule): Item
-    {
-        return $this->item($rule->user, new UserTransformer($this->parameters), 'users');
-    }
-
-    /**
      * Transform the rule.
      *
      * @param Rule $rule
@@ -123,11 +64,13 @@ class RuleTransformer extends TransformerAbstract
             'updated_at'      => $rule->updated_at->toAtomString(),
             'created_at'      => $rule->created_at->toAtomString(),
             'title'           => $rule->title,
-            'text'            => $rule->text,
+            'description'     => $rule->text,
             'order'           => (int)$rule->order,
             'active'          => $rule->active,
             'stop_processing' => $rule->stop_processing,
             'strict'          => $rule->strict,
+            'triggers'        => $this->triggers($rule),
+            'actions'         => $this->actions($rule),
             'links'           => [
                 [
                     'rel' => 'self',
@@ -137,5 +80,57 @@ class RuleTransformer extends TransformerAbstract
         ];
 
         return $data;
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return array
+     */
+    private function actions(Rule $rule): array
+    {
+        $result  = [];
+        $actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+        /** @var RuleAction $ruleAction */
+        foreach ($actions as $ruleAction) {
+            $result[] = [
+                'id'              => (int)$ruleAction->id,
+                'updated_at'      => $ruleAction->updated_at->toAtomString(),
+                'created_at'      => $ruleAction->created_at->toAtomString(),
+                'type'            => $ruleAction->action_type,
+                'value'           => $ruleAction->action_value,
+                'order'           => $ruleAction->order,
+                'active'          => $ruleAction->active,
+                'stop_processing' => $ruleAction->stop_processing,
+            ];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return array
+     */
+    private function triggers(Rule $rule): array
+    {
+        $result   = [];
+        $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        /** @var RuleTrigger $ruleTrigger */
+        foreach ($triggers as $ruleTrigger) {
+            $result[] = [
+                'id'              => (int)$ruleTrigger->id,
+                'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
+                'created_at'      => $ruleTrigger->created_at->toAtomString(),
+                'type'            => $ruleTrigger->trigger_type,
+                'value'           => $ruleTrigger->trigger_value,
+                'order'           => $ruleTrigger->order,
+                'active'          => $ruleTrigger->active,
+                'stop_processing' => $ruleTrigger->stop_processing,
+            ];
+        }
+
+        return $result;
     }
 }

@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\TransactionRules;
 
+use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Rule;
@@ -37,28 +39,41 @@ use Log;
  */
 class TransactionMatcher
 {
+    /** @var Collection Asset accounts to search in. */
+    private $accounts;
+    /** @var Carbon Start date of the matched transactions */
+    private $endDate;
     /** @var string */
     private $exactAmount;
-    /** @var int Limit of matcher */
-    private $limit = 10;
     /** @var string */
     private $maxAmount;
     /** @var string */
     private $minAmount;
-    /** @var int Maximum number of transaction to search in (for performance reasons) * */
-    private $range = 200;
     /** @var Rule The rule to apply */
     private $rule;
+    /** @var int Maximum number of transaction to search in (for performance reasons) */
+    private $searchLimit;
+    /** @var Carbon Start date of the matched transactions */
+    private $startDate;
     /** @var bool */
     private $strict;
     /** @var array Types that can be matched using this matcher */
     private $transactionTypes = [TransactionType::DEPOSIT, TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+    /** @var int Max number of results */
+    private $triggeredLimit;
     /** @var array List of triggers to match */
     private $triggers = [];
 
+    /**
+     * TransactionMatcher constructor.
+     */
     public function __construct()
     {
-        $this->strict = false;
+        $this->strict    = false;
+        $this->startDate = null;
+        $this->endDate   = null;
+        $this->accounts  = new Collection;
+        Log::debug('Created new transaction matcher');
     }
 
     /**
@@ -71,11 +86,13 @@ class TransactionMatcher
      */
     public function findTransactionsByRule(): Collection
     {
+        Log::debug('Now in findTransactionsByRule()');
         if (0 === \count($this->rule->ruleTriggers)) {
+            Log::error('Rule has no triggers!');
             return new Collection;
         }
 
-        // Variables used within the loop
+        // Variables used within the loop.
         /** @var Processor $processor */
         $processor = app(Processor::class);
         $processor->make($this->rule, false);
@@ -83,7 +100,7 @@ class TransactionMatcher
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list
-        $result = $result->slice(0, $this->limit);
+        $result = $result->slice(0, $this->searchLimit);
 
         return $result;
     }
@@ -111,57 +128,9 @@ class TransactionMatcher
 
         // If the list of matchingTransactions is larger than the maximum number of results
         // (e.g. if a large percentage of the transactions match), truncate the list
-        $result = $result->slice(0, $this->limit);
+        $result = $result->slice(0, $this->searchLimit);
 
         return $result;
-    }
-
-    /**
-     * Return limit
-     *
-     * @return int
-     */
-    public function getLimit(): int
-    {
-        return $this->limit;
-    }
-
-    /**
-     * Set limit
-     *
-     * @param int $limit
-     *
-     * @return TransactionMatcher
-     */
-    public function setLimit(int $limit): TransactionMatcher
-    {
-        $this->limit = $limit;
-
-        return $this;
-    }
-
-    /**
-     * Get range
-     *
-     * @return int
-     */
-    public function getRange(): int
-    {
-        return $this->range;
-    }
-
-    /**
-     * Set range
-     *
-     * @param int $range
-     *
-     * @return TransactionMatcher
-     */
-    public function setRange(int $range): TransactionMatcher
-    {
-        $this->range = $range;
-
-        return $this;
     }
 
     /**
@@ -205,6 +174,22 @@ class TransactionMatcher
     }
 
     /**
+     * @param Collection $accounts
+     */
+    public function setAccounts(Collection $accounts): void
+    {
+        $this->accounts = $accounts;
+    }
+
+    /**
+     * @param Carbon|null $endDate
+     */
+    public function setEndDate(Carbon $endDate = null): void
+    {
+        $this->endDate = $endDate;
+    }
+
+    /**
      * Set rule
      *
      * @param Rule $rule
@@ -212,6 +197,30 @@ class TransactionMatcher
     public function setRule(Rule $rule): void
     {
         $this->rule = $rule;
+    }
+
+    /**
+     * @param int $searchLimit
+     */
+    public function setSearchLimit(int $searchLimit): void
+    {
+        $this->searchLimit = $searchLimit;
+    }
+
+    /**
+     * @param Carbon|null $startDate
+     */
+    public function setStartDate(Carbon $startDate = null): void
+    {
+        $this->startDate = $startDate;
+    }
+
+    /**
+     * @param int $triggeredLimit
+     */
+    public function setTriggeredLimit(int $triggeredLimit): void
+    {
+        $this->triggeredLimit = $triggeredLimit;
     }
 
     /**
@@ -249,27 +258,43 @@ class TransactionMatcher
      */
     private function runProcessor(Processor $processor): Collection
     {
+        Log::debug('Now in runprocessor()');
         // since we have a rule in $this->rule, we can add some of the triggers
         // to the Journal Collector.
         // Firefly III will then have to search through less transactions.
         $this->readTriggers();
 
-
         // Start a loop to fetch batches of transactions. The loop will finish if:
         //   - all transactions have been fetched from the database
         //   - the maximum number of transactions to return has been found
         //   - the maximum number of transactions to search in have been searched
-        $pageSize  = min($this->range / 2, $this->limit * 2);
+        $pageSize  = min($this->searchLimit, min($this->triggeredLimit, 50));
         $processed = 0;
         $page      = 1;
-        $result    = new Collection();
+        $result    = new Collection;
+
+        Log::debug(sprintf('Search limit is %d, triggered limit is %d, so page size is %d', $this->searchLimit, $this->triggeredLimit, $pageSize));
+
         do {
+            Log::debug('Start of do-loop');
             // Fetch a batch of transactions from the database
             /** @var TransactionCollectorInterface $collector */
             $collector = app(TransactionCollectorInterface::class);
             $collector->setUser(auth()->user());
             $collector->withOpposingAccount();
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
+
+            // limit asset accounts:
+            if (0 === $this->accounts->count()) {
+                $collector->setAllAssetAccounts();
+            }
+            if ($this->accounts->count() > 0) {
+                $collector->setAccounts($this->accounts);
+            }
+            if(null !== $this->startDate && null !== $this->endDate) {
+                $collector->setRange($this->startDate, $this->endDate);
+            }
+
+            $collector->setLimit($pageSize)->setPage($page)->setTypes($this->transactionTypes);
             if (null !== $this->maxAmount) {
                 Log::debug(sprintf('Amount must be less than %s', $this->maxAmount));
                 $collector->amountLess($this->maxAmount);
@@ -290,7 +315,7 @@ class TransactionMatcher
             // Filter transactions that match the given triggers.
             $filtered = $set->filter(
                 function (Transaction $transaction) use ($processor) {
-                    Log::debug(sprintf('Test these triggers on journal #%d (transaction #%d)', $transaction->transaction_journal_id, $transaction->id));
+                    Log::debug(sprintf('Test the triggers on journal #%d (transaction #%d)', $transaction->transaction_journal_id, $transaction->id));
 
                     return $processor->handleTransaction($transaction);
                 }
@@ -311,13 +336,14 @@ class TransactionMatcher
 
             // Check for conditions to finish the loop
             $reachedEndOfList = $set->count() < 1;
-            $foundEnough      = $result->count() >= $this->limit;
-            $searchedEnough   = ($processed >= $this->range);
+            $foundEnough      = $result->count() >= $this->triggeredLimit;
+            $searchedEnough   = ($processed >= $this->searchLimit);
 
             Log::debug(sprintf('reachedEndOfList: %s', var_export($reachedEndOfList, true)));
             Log::debug(sprintf('foundEnough: %s', var_export($foundEnough, true)));
             Log::debug(sprintf('searchedEnough: %s', var_export($searchedEnough, true)));
         } while (!$reachedEndOfList && !$foundEnough && !$searchedEnough);
+        Log::debug('End of do-loop');
 
         return $result;
     }

@@ -40,18 +40,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class PiggyBankTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['account', 'user', 'piggy_bank_events'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
+
 
     /** @var ParameterBag */
     protected $parameters;
@@ -68,46 +57,6 @@ class PiggyBankTransformer extends TransformerAbstract
         $this->parameters = $parameters;
     }
 
-    /**
-     * Include account.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return Item
-     */
-    public function includeAccount(PiggyBank $piggyBank): Item
-    {
-        return $this->item($piggyBank->account, new AccountTransformer($this->parameters), 'accounts');
-    }
-
-    /**
-     * Include events.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @return FractalCollection
-     */
-    public function includePiggyBankEvents(PiggyBank $piggyBank): FractalCollection
-    {
-        return $this->collection($piggyBank->piggyBankEvents, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param PiggyBank $piggyBank
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(PiggyBank $piggyBank): Item
-    {
-        return $this->item($piggyBank->account->user, new UserTransformer($this->parameters), 'users');
-    }
 
     /**
      * Transform the piggy bank.

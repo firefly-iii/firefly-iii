@@ -46,19 +46,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class RecurrenceTransformer extends TransformerAbstract
 {
-    /** @noinspection ClassOverridesFieldOfSuperClassInspection */
-    /**
-     * List of resources possible to include.
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
     /** @var ParameterBag */
     protected $parameters;
 
@@ -74,21 +61,6 @@ class RecurrenceTransformer extends TransformerAbstract
     {
         $this->repository = app(RecurringRepositoryInterface::class);
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Include user data in end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Recurrence $recurrence
-     *
-     *
-     * @return Item
-     */
-    public function includeUser(Recurrence $recurrence): Item
-    {
-        return $this->item($recurrence->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

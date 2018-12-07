@@ -123,6 +123,18 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return Collection
      */
+    public function getActiveRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->where('rules.active', 1)
+                     ->get(['rules.*']);
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
     public function getActiveStoreRules(RuleGroup $group): Collection
     {
         return $group->rules()
@@ -182,6 +194,17 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                             },
                         ]
                     )->get();
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->get(['rules.*']);
     }
 
     /**
