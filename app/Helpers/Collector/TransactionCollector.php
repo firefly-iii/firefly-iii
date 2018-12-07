@@ -528,6 +528,22 @@ class TransactionCollector implements TransactionCollectorInterface
     }
 
     /**
+     * @param array $journalIds
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setJournalIds(array $journalIds): TransactionCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($journalIds) {
+                $q->whereIn('transaction_journals.id', $journalIds);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * @param Collection $journals
      *
      * @return TransactionCollectorInterface

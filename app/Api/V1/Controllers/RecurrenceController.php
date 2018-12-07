@@ -24,9 +24,17 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\RecurrenceRequest;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use FireflyIII\Support\Http\Api\Transactions;
 use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -36,12 +44,14 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use Log;
 
 /**
  * Class RecurrenceController
  */
 class RecurrenceController extends Controller
 {
+    use Transactions;
     /** @var RecurringRepositoryInterface The recurring transaction repository */
     private $repository;
 
@@ -154,6 +164,79 @@ class RecurrenceController extends Controller
         $resource = new Item($recurrence, new RecurrenceTransformer($this->parameters), 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show transactions for this recurrence.
+     *
+     * @param Request    $request
+     * @param Recurrence $recurrence
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, Recurrence $recurrence): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        // whatever is returned by the query, it must be part of these journals:
+        $journalIds = $this->repository->getJournalIds($recurrence);
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setJournalIds($journalIds);
+
+        if (\in_array(TransactionType::TRANSFER, $types, true)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $transactions = $paginator->getCollection();
+        $repository   = app(JournalRepositoryInterface::class);
+
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @return JsonResponse
+     * @throws FireflyException
+     */
+    public function trigger(): JsonResponse
+    {
+        $recurring = new RecurringCronjob;
+        try {
+            $result = $recurring->fire();
+        } catch (FireflyException $e) {
+            Log::error($e->getMessage());
+            throw new FireflyException('Could not fire recurring cron job.');
+        }
+        if (false === $result) {
+            return response()->json([], 204);
+        }
+        if (true === $result) {
+            return response()->json([], 200);
+        }
+        throw new FireflyException('Could not fire recurring cron job.');
     }
 
     /**

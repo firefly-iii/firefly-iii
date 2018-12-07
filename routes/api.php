@@ -200,9 +200,11 @@ Route::group(
         // Recurrence API routes:
         Route::get('', ['uses' => 'RecurrenceController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'RecurrenceController@store', 'as' => 'store']);
+        Route::post('trigger', ['uses' => 'RecurrenceController@trigger', 'as' => 'trigger']);
         Route::get('{recurrence}', ['uses' => 'RecurrenceController@show', 'as' => 'show']);
         Route::put('{recurrence}', ['uses' => 'RecurrenceController@update', 'as' => 'update']);
         Route::delete('{recurrence}', ['uses' => 'RecurrenceController@delete', 'as' => 'delete']);
+        Route::get('{recurrence}/transactions', ['uses' => 'RecurrenceController@transactions', 'as' => 'transactions']);
     }
 );
 

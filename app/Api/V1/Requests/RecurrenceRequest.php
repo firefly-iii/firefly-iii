@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use Carbon\Carbon;
 use FireflyIII\Rules\BelongsUser;
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
@@ -54,6 +55,14 @@ class RecurrenceRequest extends Request
      */
     public function getAll(): array
     {
+        $active     = true;
+        $applyRules = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+        if (null !== $this->get('apply_rules')) {
+            $applyRules = $this->boolean('apply_rules');
+        }
         $return = [
             'recurrence'   => [
                 'type'         => $this->string('type'),
@@ -62,8 +71,8 @@ class RecurrenceRequest extends Request
                 'first_date'   => $this->date('first_date'),
                 'repeat_until' => $this->date('repeat_until'),
                 'repetitions'  => $this->integer('nr_of_repetitions'),
-                'apply_rules'  => $this->boolean('apply_rules'),
-                'active'       => $this->boolean('active'),
+                'apply_rules'  => $applyRules,
+                'active'       => $active,
             ],
             'meta'         => [
                 'piggy_bank_id'   => $this->integer('piggy_bank_id'),
@@ -93,8 +102,8 @@ class RecurrenceRequest extends Request
             'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
             'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
             'nr_of_repetitions'                    => 'numeric|between:1,31',
-            'apply_rules'                          => 'required|boolean',
-            'active'                               => 'required|boolean',
+            'apply_rules'                          => [new IsBoolean],
+            'active'                               => [new IsBoolean],
             'tags'                                 => 'between:1,64000',
             'piggy_bank_id'                        => 'numeric',
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',

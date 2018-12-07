@@ -83,13 +83,6 @@ interface TransactionCollectorInterface
     public function count(): int;
 
     /**
-     * Get all transactions.
-     *
-     * @return Collection
-     */
-    public function getTransactions(): Collection;
-
-    /**
      * Get a paginated result.
      *
      * @return LengthAwarePaginator
@@ -102,6 +95,13 @@ interface TransactionCollectorInterface
      * @return EloquentBuilder
      */
     public function getQuery(): EloquentBuilder;
+
+    /**
+     * Get all transactions.
+     *
+     * @return Collection
+     */
+    public function getTransactions(): Collection;
 
     /**
      * Set to ignore the cache.
@@ -197,6 +197,15 @@ interface TransactionCollectorInterface
      * @return TransactionCollectorInterface
      */
     public function setCategory(Category $category): TransactionCollectorInterface;
+
+    /**
+     * Set the journal IDs to filter on.
+     *
+     * @param array $journalIds
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setJournalIds(array $journalIds): TransactionCollectorInterface;
 
     /**
      * Set the journals to filter on.

@@ -176,6 +176,22 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
+     * Get journal ID's for journals created by this recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     */
+    public function getJournalIds(Recurrence $recurrence): array
+    {
+        return TransactionJournalMeta::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
+                                     ->where('transaction_journals.user_id', $this->user->id)
+                                     ->where('journal_meta.name', '=', 'recurrence_id')
+                                     ->where('journal_meta.data', '=', json_encode((string)$recurrence->id))
+                                     ->get(['journal_meta.transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+    }
+
+    /**
      * Get the notes.
      *
      * @param Recurrence $recurrence
@@ -500,6 +516,8 @@ class RecurringRepository implements RecurringRepositoryInterface
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -528,6 +546,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -575,6 +594,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -607,7 +627,6 @@ class RecurringRepository implements RecurringRepositoryInterface
         return $return;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
@@ -652,6 +671,8 @@ class RecurringRepository implements RecurringRepositoryInterface
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of daily occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -681,6 +702,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of monthly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -720,6 +742,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of NDOM occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -759,6 +782,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of weekly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -802,6 +826,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Calculates the number of yearly occurrences for a recurring transaction, starting at the date, until $count is reached. It will skip
      * over $skipMod -1 recurrences.
@@ -838,7 +863,6 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *
