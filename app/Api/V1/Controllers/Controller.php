@@ -100,7 +100,7 @@ class Controller extends BaseController
         // some date fields:
         $dates = ['start', 'end', 'date'];
         foreach ($dates as $field) {
-            $date = request()->get($field);
+            $date = request()->query->get($field);
             $obj  = null;
             if (null !== $date) {
                 try {

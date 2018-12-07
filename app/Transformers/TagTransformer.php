@@ -36,18 +36,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class TagTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
 
     /** @var ParameterBag */
     protected $parameters;
@@ -65,47 +53,9 @@ class TagTransformer extends TransformerAbstract
     }
 
     /**
-     * Include any transactions.
-     *
-     * @param Tag $tag
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Tag $tag): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($tag->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($tag->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setTag($tag);
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Tag $tag
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Tag $tag): Item
-    {
-        return $this->item($tag->user, new UserTransformer($this->parameters), 'users');
-    }
-
-    /**
      * Transform a tag.
+     *
+     * TODO add spent, earned, tranferred, etc.
      *
      * @param Tag $tag
      *
@@ -121,9 +71,9 @@ class TagTransformer extends TransformerAbstract
             'tag'         => $tag->tag,
             'date'        => $date,
             'description' => '' === $tag->description ? null : $tag->description,
-            'latitude'    => (float)$tag->latitude,
-            'longitude'   => (float)$tag->longitude,
-            'zoom_level'  => (int)$tag->zoomLevel,
+            'latitude'    => null === $tag->latitude ? null : (float)$tag->latitude,
+            'longitude'   => null === $tag->longitude? null : (float)$tag->longitude,
+            'zoom_level'  => null === $tag->zoomLevel ? null : (int)$tag->zoomLevel,
             'links'       => [
                 [
                     'rel' => 'self',

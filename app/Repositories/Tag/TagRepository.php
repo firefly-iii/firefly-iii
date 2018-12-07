@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Tag;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
@@ -251,18 +252,11 @@ class TagRepository implements TagRepositoryInterface
      */
     public function store(array $data): Tag
     {
-        $tag              = new Tag;
-        $tag->tag         = $data['tag'];
-        $tag->date        = $data['date'];
-        $tag->description = $data['description'];
-        $tag->latitude    = $data['latitude'];
-        $tag->longitude   = $data['longitude'];
-        $tag->zoomLevel   = $data['zoomLevel'];
-        $tag->tagMode     = 'nothing';
-        $tag->user()->associate($this->user);
-        $tag->save();
+        /** @var TagFactory $factory */
+        $factory = new TagFactory;
+        $factory->setUser($this->user);
+        return $factory->create($data);
 
-        return $tag;
     }
 
     /**

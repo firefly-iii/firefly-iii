@@ -30,6 +30,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Support\Http\Api\Transactions;
 use FireflyIII\Transformers\TagTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
@@ -47,6 +48,8 @@ use League\Fractal\Resource\Collection as FractalCollection;
  */
 class TagController extends Controller
 {
+    use Transactions;
+
     /** @var TagRepositoryInterface The tag repository */
     private $repository;
 

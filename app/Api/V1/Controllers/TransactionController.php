@@ -35,6 +35,7 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Api\Transactions;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
@@ -53,6 +54,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class TransactionController extends Controller
 {
+    use Transactions;
 
     /** @var JournalRepositoryInterface The journal repository */
     private $repository;
@@ -297,43 +299,6 @@ class TransactionController extends Controller
         $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
-    }
-
-    /**
-     * All the types you can request.
-     *
-     * @param string $type
-     *
-     * @return array
-     */
-    private function mapTypes(string $type): array
-    {
-        $types  = [
-            'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,
-                                  TransactionType::RECONCILIATION,],
-            'withdrawal'      => [TransactionType::WITHDRAWAL,],
-            'withdrawals'     => [TransactionType::WITHDRAWAL,],
-            'expense'         => [TransactionType::WITHDRAWAL,],
-            'expenses'        => [TransactionType::WITHDRAWAL,],
-            'income'          => [TransactionType::DEPOSIT,],
-            'deposit'         => [TransactionType::DEPOSIT,],
-            'deposits'        => [TransactionType::DEPOSIT,],
-            'transfer'        => [TransactionType::TRANSFER,],
-            'transfers'       => [TransactionType::TRANSFER,],
-            'opening_balance' => [TransactionType::OPENING_BALANCE,],
-            'reconciliation'  => [TransactionType::RECONCILIATION,],
-            'reconciliations' => [TransactionType::RECONCILIATION,],
-            'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
-            'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
-            'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
-        ];
-        $return = $types['default'];
-        if (isset($types[$type])) {
-            $return = $types[$type];
-        }
-
-        return $return;
 
     }
 }

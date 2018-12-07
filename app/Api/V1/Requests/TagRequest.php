@@ -57,7 +57,7 @@ class TagRequest extends Request
             'description' => $this->string('description'),
             'latitude'    => '' === $this->string('latitude') ? null : $this->string('latitude'),
             'longitude'   => '' === $this->string('longitude') ? null : $this->string('longitude'),
-            'zoomLevel'   => $this->integer('zoom_level'),
+            'zoom_level'   => $this->integer('zoom_level'),
         ];
 
         return $data;

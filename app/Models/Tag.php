@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -44,6 +45,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string         description
  * @property string         amount_sum
  * @property string         tagMode
+ * @property Carbon         created_at
+ * @property Carbon         updated_at
  */
 class Tag extends Model
 {
