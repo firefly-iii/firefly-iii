@@ -158,6 +158,7 @@ class RuleGroupController extends Controller
 
     /**
      * Update a rule group.
+     * TODO update order of rule group
      *
      * @param RuleGroupRequest $request
      * @param RuleGroup        $ruleGroup

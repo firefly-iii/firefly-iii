@@ -296,7 +296,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                 'title'       => $data['title'],
                 'description' => $data['description'],
                 'order'       => $order + 1,
-                'active'      => 1,
+                'active'      => $data['active'],
             ]
         );
         $newRuleGroup->save();
