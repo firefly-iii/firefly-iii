@@ -27,6 +27,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 /**
  * Class Request.
+ *
  * @codeCoverageIgnore
  *
  * @SuppressWarnings(PHPMD.NumberOfChildren)
@@ -50,6 +51,29 @@ class Request extends FormRequest
         }
 
         return 1 === (int)$this->input($field);
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return bool
+     */
+    public function convertBoolean(string $value): bool
+    {
+        if ('true' === $value) {
+            return true;
+        }
+        if (1 === $value) {
+            return true;
+        }
+        if ('1' === $value) {
+            return true;
+        }
+        if (true === $value) {
+            return true;
+        }
+
+        return false;
     }
 
     /**

@@ -216,6 +216,8 @@ Route::group(
         Route::get('{rule}', ['uses' => 'RuleController@show', 'as' => 'show']);
         Route::put('{rule}', ['uses' => 'RuleController@update', 'as' => 'update']);
         Route::delete('{rule}', ['uses' => 'RuleController@delete', 'as' => 'delete']);
+        Route::get('{rule}/test', ['uses' => 'RuleController@testRule', 'as' => 'test']);
+        Route::post('{rule}/trigger', ['uses' => 'RuleController@triggerRule', 'as' => 'trigger']);
     }
 );
 
@@ -229,6 +231,9 @@ Route::group(
         Route::get('{ruleGroup}', ['uses' => 'RuleGroupController@show', 'as' => 'show']);
         Route::put('{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'update']);
         Route::delete('{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'delete']);
+        Route::get('{ruleGroup}/test', ['uses' => 'RuleGroupController@testGroup', 'as' => 'test']);
+        Route::get('{ruleGroup}/rules', ['uses' => 'RuleGroupController@rules', 'as' => 'rules']);
+        Route::post('{ruleGroup}/trigger', ['uses' => 'RuleGroupController@triggerGroup', 'as' => 'trigger']);
     }
 );
 

@@ -51,9 +51,7 @@ class RuleGroupRequest extends Request
      */
     public function getAll(): array
     {
-        if (null === $this->get('active')) {
-            $active = true;
-        }
+        $active = true;
 
         if (null !== $this->get('active')) {
             $active = $this->boolean('active');

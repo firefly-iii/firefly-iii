@@ -301,9 +301,9 @@ class RuleRepository implements RuleRepositoryInterface
 
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
-        $rule->active          = true;
-        $rule->strict          = $data['strict'] ?? false;
-        $rule->stop_processing = 1 === (int)$data['stop_processing'];
+        $rule->active          = $data['active'];
+        $rule->strict          = $data['strict'];
+        $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];
         $rule->description     = \strlen($data['description']) > 0 ? $data['description'] : null;
 
@@ -399,7 +399,7 @@ class RuleRepository implements RuleRepositoryInterface
     private function storeActions(Rule $rule, array $data): bool
     {
         $order = 1;
-        foreach ($data['rule_actions'] as $action) {
+        foreach ($data['actions'] as $action) {
             $value          = $action['value'] ?? '';
             $stopProcessing = $action['stop_processing'] ?? false;
 
@@ -435,7 +435,7 @@ class RuleRepository implements RuleRepositoryInterface
         ];
 
         $this->storeTrigger($rule, $triggerValues);
-        foreach ($data['rule_triggers'] as $trigger) {
+        foreach ($data['triggers'] as $trigger) {
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop_processing'] ?? false;
 

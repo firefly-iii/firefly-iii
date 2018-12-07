@@ -257,7 +257,7 @@ class FireflyValidator extends Validator
         $index = (int)($parts[1] ?? '0');
 
         // get the name of the trigger from the data array:
-        $actionType = $this->data['rule_actions'][$index]['name'] ?? 'invalid';
+        $actionType = $this->data['actions'][$index]['name'] ?? 'invalid';
 
         // if it's "invalid" return false.
         if ('invalid' === $actionType) {
@@ -320,7 +320,7 @@ class FireflyValidator extends Validator
         $index = (int)($parts[1] ?? '0');
 
         // get the name of the trigger from the data array:
-        $triggerType = $this->data['rule_triggers'][$index]['name'] ?? 'invalid';
+        $triggerType = $this->data['triggers'][$index]['name'] ?? 'invalid';
 
         // invalid always returns false:
         if ('invalid' === $triggerType) {
