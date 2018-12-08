@@ -47,6 +47,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property array  extended_status
  * @property int    id
  * @property Carbon $created_at
+ * @property Carbon $updated_at
  */
 class ImportJob extends Model
 {

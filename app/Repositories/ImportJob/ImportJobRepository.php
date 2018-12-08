@@ -171,6 +171,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * Return all import jobs.
+     *
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->importJobs()->get();
+    }
+
+    /**
      * Return all attachments for job.
      *
      * @param ImportJob $job

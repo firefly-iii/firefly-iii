@@ -144,13 +144,15 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'journal_links', 'as' => 'api.v1.journal_links.'],
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'import', 'as' => 'api.v1.import.'],
     function () {
 
-
+        // Transaction Links API routes:
+        Route::get('list', ['uses' => 'ImportController@listAll', 'as' => 'list']);
+        Route::get('{importJob}', ['uses' => 'ImportController@show', 'as' => 'show']);
+        Route::get('{importJob}/transactions', ['uses' => 'ImportController@transactions', 'as' => 'transactions']);
     }
 );
-
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'link_types', 'as' => 'api.v1.link_types.'],
     function () {

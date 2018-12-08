@@ -35,7 +35,6 @@ use Symfony\Component\HttpFoundation\File\UploadedFile;
  */
 interface ImportJobRepositoryInterface
 {
-
     /**
      * Add message to job.
      *
@@ -76,6 +75,13 @@ interface ImportJobRepositoryInterface
      * @return ImportJob|null
      */
     public function findByKey(string $key): ?ImportJob;
+
+    /**
+     * Return all import jobs.
+     *
+     * @return Collection
+     */
+    public function get(): Collection;
 
     /**
      * Return all attachments for job.
