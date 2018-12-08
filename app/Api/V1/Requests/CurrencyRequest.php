@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Rules\IsBoolean;
+
 
 /**
  * Class CurrencyRequest
@@ -47,13 +49,22 @@ class CurrencyRequest extends Request
      */
     public function getAll(): array
     {
+        $enabled = true;
+        $default = false;
+        if (null !== $this->get('enabled')) {
+            $enabled = $this->boolean('enabled');
+        }
+        if (null !== $this->get('default')) {
+            $default = $this->boolean('default');
+        }
+
         return [
             'name'           => $this->string('name'),
             'code'           => $this->string('code'),
             'symbol'         => $this->string('symbol'),
             'decimal_places' => $this->integer('decimal_places'),
-            'default'        => $this->boolean('default'),
-            'enabled'        => $this->boolean('enabled'),
+            'default'        => $default,
+            'enabled'        => $enabled,
         ];
     }
 
@@ -69,8 +80,8 @@ class CurrencyRequest extends Request
             'code'           => 'required|between:3,3|unique:transaction_currencies,code',
             'symbol'         => 'required|between:1,5|unique:transaction_currencies,symbol',
             'decimal_places' => 'required|between:0,20|numeric|min:0|max:20',
-            'enabled'        => 'required|boolean',
-            'default'        => 'boolean',
+            'enabled'        => [new IsBoolean()],
+            'default'        => [new IsBoolean()],
 
         ];
 

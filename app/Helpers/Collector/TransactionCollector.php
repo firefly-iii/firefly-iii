@@ -42,6 +42,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
@@ -521,6 +522,25 @@ class TransactionCollector implements TransactionCollectorInterface
             function (EloquentBuilder $q) use ($category) {
                 $q->where('category_transaction.category_id', $category->id);
                 $q->orWhere('category_transaction_journal.category_id', $category->id);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Set the required currency (local or foreign)
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCurrency(TransactionCurrency $currency): TransactionCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $builder) use ($currency) {
+                $builder->where('transactions.transaction_currency_id', $currency->id);
+                $builder->orWhere('transactions.foreign_currency_id', $currency->id);
             }
         );
 

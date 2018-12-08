@@ -1,6 +1,6 @@
 <?php
 /**
- * Transactions.php
+ * TransactionFilter.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -26,9 +26,9 @@ namespace FireflyIII\Support\Http\Api;
 use FireflyIII\Models\TransactionType;
 
 /**
- * Trait Transactions
+ * Trait TransactionFilter
  */
-trait Transactions
+trait TransactionFilter
 {
     /**
      * All the types you can request.
@@ -37,7 +37,7 @@ trait Transactions
      *
      * @return array
      */
-    protected function mapTypes(string $type): array
+    protected function mapTransactionTypes(string $type): array
     {
         $types  = [
             'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,

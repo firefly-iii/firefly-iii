@@ -33,6 +33,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -339,6 +340,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * Return a list of exchange rates with this currency.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getExchangeRates(TransactionCurrency $currency): Collection
+    {
+        /** @var CurrencyExchangeRate $rate */
+        return $this->user->currencyExchangeRates()
+                          ->where(
+                              function (Builder $query) use ($currency) {
+                                  $query->where('from_currency_id', $currency->id);
+                                  $query->orWhere('to_currency_id', $currency->id);
+                              }
+                          )->get();
     }
 
     /**

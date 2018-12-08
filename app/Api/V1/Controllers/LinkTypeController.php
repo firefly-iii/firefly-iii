@@ -32,7 +32,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Http\Api\Transactions;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
@@ -52,7 +52,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class LinkTypeController extends Controller
 {
-    use Transactions;
+    use TransactionFilter;
     /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 
@@ -189,7 +189,7 @@ class LinkTypeController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTypes($this->parameters->get('type'));
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

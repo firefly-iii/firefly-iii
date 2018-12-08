@@ -33,19 +33,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BudgetLimitTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['budget'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['budget'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -59,20 +46,6 @@ class BudgetLimitTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Attach the budget.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param BudgetLimit $budgetLimit
-     *
-     * @return Item
-     */
-    public function includeBudget(BudgetLimit $budgetLimit): Item
-    {
-        return $this->item($budgetLimit->budget, new BudgetTransformer($this->parameters), 'budgets');
     }
 
     /**

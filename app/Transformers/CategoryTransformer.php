@@ -37,19 +37,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class CategoryTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -63,46 +50,6 @@ class CategoryTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Category $category
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Category $category): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($category->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($category->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setCategories(new Collection([$category]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Category $category
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Category $category): Item
-    {
-        return $this->item($category->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

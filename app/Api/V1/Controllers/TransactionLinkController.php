@@ -28,7 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
-use FireflyIII\Support\Http\Api\Transactions;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\JournalLinkTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -45,7 +45,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class TransactionLinkController extends Controller
 {
-    use Transactions;
+    use TransactionFilter;
 
     /** @var JournalRepositoryInterface The journal repository */
     private $journalRepository;

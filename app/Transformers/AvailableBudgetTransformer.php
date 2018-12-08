@@ -34,19 +34,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AvailableBudgetTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['transaction_currency', 'user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['transaction_currency'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -60,34 +47,6 @@ class AvailableBudgetTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Attach the currency.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return Item
-     */
-    public function includeTransactionCurrency(AvailableBudget $availableBudget): Item
-    {
-        return $this->item($availableBudget->transactionCurrency, new CurrencyTransformer($this->parameters), 'transaction_currencies');
-    }
-
-    /**
-     * Attach the user.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param AvailableBudget $availableBudget
-     *
-     * @return Item
-     */
-    public function includeUser(AvailableBudget $availableBudget): Item
-    {
-        return $this->item($availableBudget->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

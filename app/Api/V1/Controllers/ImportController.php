@@ -29,7 +29,7 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Http\Api\Transactions;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\ImportJobTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
@@ -48,7 +48,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class ImportController extends Controller
 {
-    use Transactions;
+    use TransactionFilter;
     /** @var ImportJobRepositoryInterface Import job repository. */
     private $repository;
 
@@ -128,7 +128,7 @@ class ImportController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTypes($this->parameters->get('type'));
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -163,8 +163,8 @@ class ImportController extends Controller
         }
 
 
-        $repository   = app(JournalRepositoryInterface::class);
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
+        $repository = app(JournalRepositoryInterface::class);
+        $resource   = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');

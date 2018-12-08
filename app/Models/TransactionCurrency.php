@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -36,6 +37,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $id
  * @property string name
  * @property bool   $enabled
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  */
 class TransactionCurrency extends Model
@@ -82,6 +85,15 @@ class TransactionCurrency extends Model
      * @codeCoverageIgnore
      * @return HasMany
      */
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
@@ -94,14 +106,5 @@ class TransactionCurrency extends Model
     public function transactions(): HasMany
     {
         return $this->hasMany(Transaction::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return HasMany
-     */
-    public function budgetLimits(): HasMany
-    {
-        return $this->hasMany(BudgetLimit::class);
     }
 }

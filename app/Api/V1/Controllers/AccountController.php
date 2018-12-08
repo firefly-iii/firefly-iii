@@ -28,6 +28,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -46,6 +47,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class AccountController extends Controller
 {
+    use AccountFilter;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepository;
     /** @var AccountRepositoryInterface The account repository */
@@ -105,7 +107,7 @@ class AccountController extends Controller
         $this->parameters->set('type', $type);
 
         // types to get, page size:
-        $types    = $this->mapTypes($this->parameters->get('type'));
+        $types    = $this->mapAccountTypes($this->parameters->get('type'));
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of accounts. Count it and split it.
@@ -194,52 +196,5 @@ class AccountController extends Controller
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * All the available types.
-     *
-     * @param string $type
-     *
-     * @return array
-     */
-    private function mapTypes(string $type): array
-    {
-        $types  = [
-            'all'                        => [AccountType::DEFAULT, AccountType::CASH, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE,
-                                             AccountType::INITIAL_BALANCE, AccountType::BENEFICIARY, AccountType::IMPORT, AccountType::RECONCILIATION,
-                                             AccountType::LOAN,AccountType::DEBT, AccountType::MORTGAGE],
-            'asset'                      => [AccountType::DEFAULT, AccountType::ASSET,],
-            'cash'                       => [AccountType::CASH,],
-            'expense'                    => [AccountType::EXPENSE, AccountType::BENEFICIARY,],
-            'revenue'                    => [AccountType::REVENUE,],
-            'special'                    => [AccountType::CASH, AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION,],
-            'hidden'                     => [AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
-            'liability'                  => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
-            'liabilities'                => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
-            'cc'                         => [AccountType::CREDITCARD],
-            'creditcard'                 => [AccountType::CREDITCARD],
-            'credit_card'                => [AccountType::CREDITCARD],
-            AccountType::DEFAULT         => [AccountType::DEFAULT],
-            AccountType::CASH            => [AccountType::CASH],
-            AccountType::ASSET           => [AccountType::ASSET],
-            AccountType::EXPENSE         => [AccountType::EXPENSE],
-            AccountType::REVENUE         => [AccountType::REVENUE],
-            AccountType::INITIAL_BALANCE => [AccountType::INITIAL_BALANCE],
-            AccountType::BENEFICIARY     => [AccountType::BENEFICIARY],
-            AccountType::IMPORT          => [AccountType::IMPORT],
-            AccountType::RECONCILIATION  => [AccountType::RECONCILIATION],
-            AccountType::LOAN            => [AccountType::LOAN],
-            AccountType::MORTGAGE        => [AccountType::MORTGAGE],
-            AccountType::DEBT            => [AccountType::DEBT],
-            AccountType::CREDITCARD      => [AccountType::CREDITCARD],
-
-        ];
-        $return = $types['all'];
-        if (isset($types[$type])) {
-            $return = $types[$type];
-        }
-
-        return $return; // @codeCoverageIgnore
     }
 }

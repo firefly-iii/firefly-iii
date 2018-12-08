@@ -37,16 +37,16 @@ interface CurrencyRepositoryInterface
     /**
      * @param TransactionCurrency $currency
      *
-     * @return bool
+     * @return int
      */
-    public function currencyInUse(TransactionCurrency $currency): bool;
+    public function countJournals(TransactionCurrency $currency): int;
 
     /**
      * @param TransactionCurrency $currency
      *
-     * @return int
+     * @return bool
      */
-    public function countJournals(TransactionCurrency $currency): int;
+    public function currencyInUse(TransactionCurrency $currency): bool;
 
     /**
      * @param TransactionCurrency $currency
@@ -175,6 +175,15 @@ interface CurrencyRepositoryInterface
      * @return CurrencyExchangeRate|null
      */
     public function getExchangeRate(TransactionCurrency $fromCurrency, TransactionCurrency $toCurrency, Carbon $date): ?CurrencyExchangeRate;
+
+    /**
+     * Return a list of exchange rates with this currency.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getExchangeRates(TransactionCurrency $currency): Collection;
 
     /**
      * @param User $user

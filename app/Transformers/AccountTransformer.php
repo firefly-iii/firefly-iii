@@ -42,19 +42,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class AccountTransformer extends TransformerAbstract
 {
-    /** @noinspection ClassOverridesFieldOfSuperClassInspection */
-    /**
-     * List of resources possible to include.
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['transactions', 'piggy_banks', 'user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
     /** @var ParameterBag */
     protected $parameters;
 
@@ -73,69 +60,6 @@ class AccountTransformer extends TransformerAbstract
     {
         $this->repository = app(AccountRepositoryInterface::class);
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Include piggy banks into end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Account $account
-     *
-     * @return FractalCollection
-     */
-    public function includePiggyBanks(Account $account): FractalCollection
-    {
-        $piggies = $account->piggyBanks()->get();
-
-        return $this->collection($piggies, new PiggyBankTransformer($this->parameters), 'piggy_banks');
-    }
-
-    /**
-     * Include transactions into end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Account $account
-     *
-     * @return FractalCollection
-     */
-    public function includeTransactions(Account $account): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($account->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($account->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        if ($account->accountType->type === AccountType::ASSET) {
-            $collector->setAccounts(new Collection([$account]));
-        } else {
-            $collector->setOpposingAccounts(new Collection([$account]));
-        }
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        $journalRepos = app(JournalRepositoryInterface::class);
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters, $journalRepos), 'transactions');
-    }
-
-    /**
-     * Include user data in end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Account $account
-     *
-     * @return Item
-     */
-    public function includeUser(Account $account): Item
-    {
-        return $this->item($account->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

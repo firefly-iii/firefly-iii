@@ -35,7 +35,7 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\Http\Api\Transactions;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
@@ -54,7 +54,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class TransactionController extends Controller
 {
-    use Transactions;
+    use TransactionFilter;
 
     /** @var JournalRepositoryInterface The journal repository */
     private $repository;
@@ -145,7 +145,7 @@ class TransactionController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTypes($this->parameters->get('type'));
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

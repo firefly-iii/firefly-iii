@@ -304,6 +304,7 @@ return [
 
         // strings
         'import_provider'   => \FireflyIII\Support\Binder\ImportProvider::class,
+        'currency_code'     => \FireflyIII\Support\Binder\CurrencyCode::class,
 
         // dates
         'start_date'        => \FireflyIII\Support\Binder\Date::class,

@@ -39,19 +39,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BillTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['attachments', 'transactions', 'user', 'rules'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['rules'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -69,79 +56,6 @@ class BillTransformer extends TransformerAbstract
     {
         $this->parameters = $parameters;
         $this->repository = app(BillRepositoryInterface::class);
-    }
-
-    /**
-     * Include any attachments.
-     *
-     * @param Bill $bill
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeAttachments(Bill $bill): FractalCollection
-    {
-        $attachments = $bill->attachments()->get();
-
-        return $this->collection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
-    }
-
-    /**
-     * Attach the rules.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Bill $bill
-     *
-     * @return FractalCollection
-     */
-    public function includeRules(Bill $bill): FractalCollection
-    {
-        $this->repository->setUser($bill->user);
-        // add info about rules:
-        $rules = $this->repository->getRulesForBill($bill);
-
-        return $this->collection($rules, new RuleTransformer($this->parameters), 'rules');
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Bill $bill
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Bill $bill): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($bill->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($bill->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setBills(new Collection([$bill]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Bill $bill
-     *
-     * @codeCoverageIgnore
-     * @return \League\Fractal\Resource\Item
-     */
-    public function includeUser(Bill $bill): Item
-    {
-        return $this->item($bill->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

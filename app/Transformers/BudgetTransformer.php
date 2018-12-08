@@ -37,19 +37,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class BudgetTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -63,46 +50,6 @@ class BudgetTransformer extends TransformerAbstract
     public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Budget $budget
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Budget $budget): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($budget->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($budget->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setBudgets(new Collection([$budget]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Budget $budget
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Budget $budget): Item
-    {
-        return $this->item($budget->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**

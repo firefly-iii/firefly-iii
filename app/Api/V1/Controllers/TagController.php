@@ -30,7 +30,7 @@ use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\Http\Api\Transactions;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TagTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
@@ -48,7 +48,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
  */
 class TagController extends Controller
 {
-    use Transactions;
+    use TransactionFilter;
 
     /** @var TagRepositoryInterface The tag repository */
     private $repository;
@@ -155,7 +155,7 @@ class TagController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTypes($this->parameters->get('type'));
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

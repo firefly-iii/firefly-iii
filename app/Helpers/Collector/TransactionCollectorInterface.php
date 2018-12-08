@@ -27,6 +27,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -143,6 +144,15 @@ interface TransactionCollectorInterface
      * @return TransactionCollectorInterface
      */
     public function setAllAssetAccounts(): TransactionCollectorInterface;
+
+    /**
+     * Set the required currency (local or foreign)
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCurrency(TransactionCurrency $currency): TransactionCollectorInterface;
 
     /**
      * Collect transactions before a specific date.

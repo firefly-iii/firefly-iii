@@ -258,9 +258,22 @@ Route::group(
         // Transaction currency API routes:
         Route::get('', ['uses' => 'CurrencyController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'CurrencyController@store', 'as' => 'store']);
-        Route::get('{currency}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
-        Route::put('{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
-        Route::delete('{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
+        Route::get('{currency_code}', ['uses' => 'CurrencyController@show', 'as' => 'show']);
+        Route::put('{currency_code}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
+        Route::delete('{currency_code}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
+
+        Route::post('{currency_code}/enable', ['uses' => 'CurrencyController@enable', 'as' => 'enable']);
+        Route::post('{currency_code}/disable', ['uses' => 'CurrencyController@disable', 'as' => 'disable']);
+        Route::post('{currency_code}/default', ['uses' => 'CurrencyController@makeDefault', 'as' => 'default']);
+
+        Route::get('{currency_code}/accounts', ['uses' => 'CurrencyController@accounts', 'as' => 'accounts']);
+        Route::get('{currency_code}/available_budgets', ['uses' => 'CurrencyController@availableBudgets', 'as' => 'available_budgets']);
+        Route::get('{currency_code}/bills', ['uses' => 'CurrencyController@bills', 'as' => 'bills']);
+        Route::get('{currency_code}/budget_limits', ['uses' => 'CurrencyController@budgetLimits', 'as' => 'budget_limits']);
+        Route::get('{currency_code}/cer', ['uses' => 'CurrencyController@cer', 'as' => 'cer']);
+        Route::get('{currency_code}/recurrences', ['uses' => 'CurrencyController@recurrences', 'as' => 'recurrences']);
+        Route::get('{currency_code}/rules', ['uses' => 'CurrencyController@rules', 'as' => 'rules']);
+        Route::get('{currency_code}/transactions', ['uses' => 'CurrencyController@transactions', 'as' => 'transactions']);
     }
 );
 
