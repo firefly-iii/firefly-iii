@@ -140,10 +140,6 @@ class CurrencyController extends Controller
     public function show(Request $request, TransactionCurrency $currency): JsonResponse
     {
         $manager = new Manager();
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());

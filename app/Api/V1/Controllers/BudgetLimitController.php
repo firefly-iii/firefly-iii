@@ -130,11 +130,6 @@ class BudgetLimitController extends Controller
     public function show(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
         $manager = new Manager;
-
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');

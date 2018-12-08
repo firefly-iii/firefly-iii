@@ -127,13 +127,7 @@ class AvailableBudgetController extends Controller
      */
     public function show(Request $request, AvailableBudget $availableBudget): JsonResponse
     {
-
         $manager = new Manager;
-
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new Item($availableBudget, new AvailableBudgetTransformer($this->parameters), 'available_budgets');
