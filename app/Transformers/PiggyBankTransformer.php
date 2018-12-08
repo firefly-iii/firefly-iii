@@ -40,8 +40,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class PiggyBankTransformer extends TransformerAbstract
 {
-
-
     /** @var ParameterBag */
     protected $parameters;
 

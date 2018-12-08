@@ -24,11 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalLink;
-use Illuminate\Support\Collection;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -38,19 +35,6 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class JournalLinkTransformer extends TransformerAbstract
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['inward', 'outward', 'link_type'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['inward', 'outward', 'link_type'];
-
     /** @var ParameterBag */
     protected $parameters;
 
@@ -69,59 +53,11 @@ class JournalLinkTransformer extends TransformerAbstract
     /**
      * @param TransactionJournalLink $link
      *
-     * @return Item
-     */
-    public function includeInward(TransactionJournalLink $link): Item
-    {
-        // need to use the collector to get the transaction :(
-        // journals always use collector and limited using URL parameters.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($link->source->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setJournals(new Collection([$link->source]));
-        $transactions = $collector->getTransactions();
-
-        return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return Item
-     */
-    public function includeLinkType(TransactionJournalLink $link): Item
-    {
-        return $this->item($link->linkType, new LinkTypeTransformer($this->parameters), 'link_types');
-    }
-
-    /**
-     * @param TransactionJournalLink $link
-     *
-     * @return Item
-     */
-    public function includeOutward(TransactionJournalLink $link): Item
-    {
-        // need to use the collector to get the transaction :(
-        // journals always use collector and limited using URL parameters.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($link->source->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setJournals(new Collection([$link->destination]));
-        $transactions = $collector->getTransactions();
-
-        return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * @param TransactionJournalLink $link
-     *
      * @return array
      */
     public function transform(TransactionJournalLink $link): array
     {
-        $notes = '';
+        $notes = null;
         /** @var Note $note */
         $note = $link->notes()->first();
         if (null !== $note) {
@@ -132,11 +68,13 @@ class JournalLinkTransformer extends TransformerAbstract
             'id'         => (int)$link->id,
             'updated_at' => $link->updated_at->toAtomString(),
             'created_at' => $link->created_at->toAtomString(),
+            'inward_id'  => $link->source_id,
+            'outward_id' => $link->destination_id,
             'notes'      => $notes,
             'links'      => [
                 [
                     'rel' => 'self',
-                    'uri' => '/journal_links/' . $link->id,
+                    'uri' => '/transaction_links/' . $link->id,
                 ],
             ],
         ];

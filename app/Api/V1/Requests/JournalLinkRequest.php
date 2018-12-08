@@ -71,8 +71,8 @@ class JournalLinkRequest extends Request
         return [
             'link_type_id'   => 'exists:link_types,id|required_without:link_type_name',
             'link_type_name' => 'exists:link_types,name|required_without:link_type_id',
-            'inward_id'      => 'required|belongsToUser:transaction_journals,id',
-            'outward_id'     => 'required|belongsToUser:transaction_journals,id',
+            'inward_id'      => 'required|belongsToUser:transaction_journals,id|different:outward_id',
+            'outward_id'     => 'required|belongsToUser:transaction_journals,id|different:inward_id',
             'notes'          => 'between:0,65000',
         ];
     }
@@ -124,8 +124,12 @@ class JournalLinkRequest extends Request
         }
 
         if ($repository->findLink($inward, $outward)) {
-            $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
-            $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
+            // only if not updating:
+            $link = $this->route()->parameter('journalLink');
+            if (null === $link) {
+                $validator->errors()->add('outward_id', 'Already have a link between inward and outward.');
+                $validator->errors()->add('inward_id', 'Already have a link between inward and outward.');
+            }
         }
     }
 }

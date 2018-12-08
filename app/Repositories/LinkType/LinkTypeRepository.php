@@ -157,6 +157,22 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
     }
 
     /**
+     * Return array of all journal ID's for this type of link.
+     *
+     * @param LinkType $linkType
+     *
+     * @return array
+     */
+    public function getJournalIds(LinkType $linkType): array
+    {
+        $links        = $linkType->transactionJournalLinks()->get(['source_id', 'destination_id']);
+        $sources      = $links->pluck('source_id')->toArray();
+        $destinations = $links->pluck('destination_id')->toArray();
+
+        return array_unique(array_merge($sources, $destinations));
+    }
+
+    /**
      * Returns all the journal links (of a specific type).
      *
      * @param $linkType

@@ -1,6 +1,6 @@
 <?php
 /**
- * JournalLinkController.php
+ * TransactionLinkController.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\Support\Http\Api\Transactions;
 use FireflyIII\Transformers\JournalLinkTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -40,12 +41,12 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
- * Class JournalLinkController.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Class TransactionLinkController
  */
-class JournalLinkController extends Controller
+class TransactionLinkController extends Controller
 {
+    use Transactions;
+
     /** @var JournalRepositoryInterface The journal repository */
     private $journalRepository;
     /** @var LinkTypeRepositoryInterface The link type repository */
@@ -105,21 +106,20 @@ class JournalLinkController extends Controller
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-
         $linkType = $this->repository->findByName($name);
 
-        // get list of accounts. Count it and split it.
+        // get list of transaction links. Count it and split it.
         $collection   = $this->repository->getJournalLinks($linkType);
         $count        = $collection->count();
         $journalLinks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
         // make paginator:
         $paginator = new LengthAwarePaginator($journalLinks, $count, $pageSize, $this->parameters->get('page'));
-        $paginator->setPath(route('api.v1.journal_links.index') . $this->buildParams());
+        $paginator->setPath(route('api.v1.transaction_links.index') . $this->buildParams());
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($journalLinks, new JournalLinkTransformer($this->parameters), 'journal_links');
+        $resource = new FractalCollection($journalLinks, new JournalLinkTransformer($this->parameters), 'transaction_links');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -144,7 +144,7 @@ class JournalLinkController extends Controller
 
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'journal_links');
+        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -175,7 +175,7 @@ class JournalLinkController extends Controller
         $data['direction'] = 'inward';
 
         $journalLink = $this->repository->storeLink($data, $inward, $outward);
-        $resource    = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'journal_links');
+        $resource    = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -208,7 +208,7 @@ class JournalLinkController extends Controller
         $data['direction'] = 'inward';
         $journalLink       = $this->repository->updateLink($journalLink, $data);
 
-        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'journal_links');
+        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

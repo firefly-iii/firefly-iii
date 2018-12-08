@@ -147,12 +147,7 @@ Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'journal_links', 'as' => 'api.v1.journal_links.'],
     function () {
 
-        // Journal Link API routes:
-        Route::get('', ['uses' => 'JournalLinkController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'JournalLinkController@store', 'as' => 'store']);
-        Route::get('{journalLink}', ['uses' => 'JournalLinkController@show', 'as' => 'show']);
-        Route::put('{journalLink}', ['uses' => 'JournalLinkController@update', 'as' => 'update']);
-        Route::delete('{journalLink}', ['uses' => 'JournalLinkController@delete', 'as' => 'delete']);
+
     }
 );
 
@@ -166,6 +161,21 @@ Route::group(
         Route::get('{linkType}', ['uses' => 'LinkTypeController@show', 'as' => 'show']);
         Route::put('{linkType}', ['uses' => 'LinkTypeController@update', 'as' => 'update']);
         Route::delete('{linkType}', ['uses' => 'LinkTypeController@delete', 'as' => 'delete']);
+        Route::get('{linkType}/transactions', ['uses' => 'LinkTypeController@transactions', 'as' => 'transactions']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links', 'as' => 'api.v1.transaction_links.'],
+    function () {
+
+        // Transaction Links API routes:
+        Route::get('', ['uses' => 'TransactionLinkController@index', 'as' => 'index']);
+        Route::post('', ['uses' => 'TransactionLinkController@store', 'as' => 'store']);
+        Route::get('{journalLink}', ['uses' => 'TransactionLinkController@show', 'as' => 'show']);
+        Route::put('{journalLink}', ['uses' => 'TransactionLinkController@update', 'as' => 'update']);
+        Route::delete('{journalLink}', ['uses' => 'TransactionLinkController@delete', 'as' => 'delete']);
+
     }
 );
 
@@ -177,6 +187,7 @@ Route::group(
         Route::get('', ['uses' => 'PiggyBankController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'PiggyBankController@store', 'as' => 'store']);
         Route::get('{piggyBank}', ['uses' => 'PiggyBankController@show', 'as' => 'show']);
+        Route::get('{piggyBank}/events', ['uses' => 'PiggyBankController@piggyBankEvents', 'as' => 'events']);
         Route::put('{piggyBank}', ['uses' => 'PiggyBankController@update', 'as' => 'update']);
         Route::delete('{piggyBank}', ['uses' => 'PiggyBankController@delete', 'as' => 'delete']);
     }

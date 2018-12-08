@@ -27,6 +27,7 @@ use FireflyIII\Api\V1\Requests\PiggyBankRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -111,6 +112,38 @@ class PiggyBankController extends Controller
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
         $resource = new FractalCollection($piggyBanks, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
+
+    /**
+     * List single resource.
+     *
+     * @param Request   $request
+     * @param PiggyBank $piggyBank
+     *
+     * @return JsonResponse
+     */
+    public function piggyBankEvents(Request $request, PiggyBank $piggyBank): JsonResponse
+    {
+        // types to get, page size:
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $manager  = new Manager();
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $collection = $piggyBank->piggyBankEvents()->get();
+        $count      = $collection->count();
+        $events     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.piggy_banks.events', [$piggyBank->id]) . $this->buildParams());
+
+
+        $resource = new FractalCollection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
