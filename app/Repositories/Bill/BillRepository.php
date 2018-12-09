@@ -122,6 +122,18 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Get all attachments.
+     *
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getAttachments(Bill $bill): Collection
+    {
+        return $bill->attachments()->get();
+    }
+
+    /**
      * @return Collection
      */
     public function getBills(): Collection
@@ -148,7 +160,8 @@ class BillRepository implements BillRepositoryInterface
     public function getBillsForAccounts(Collection $accounts): Collection
     {
         $fields = ['bills.id', 'bills.created_at', 'bills.updated_at', 'bills.deleted_at', 'bills.user_id', 'bills.name', 'bills.match', 'bills.amount_min',
-                   'bills.amount_max', 'bills.date','bills.transaction_currency_id', 'bills.repeat_freq', 'bills.skip', 'bills.automatch', 'bills.active', 'bills.name_encrypted',
+                   'bills.amount_max', 'bills.date', 'bills.transaction_currency_id', 'bills.repeat_freq', 'bills.skip', 'bills.automatch', 'bills.active',
+                   'bills.name_encrypted',
                    'bills.match_encrypted',];
         $ids    = $accounts->pluck('id')->toArray();
         $set    = $this->user->bills()
@@ -381,9 +394,11 @@ class BillRepository implements BillRepositoryInterface
      */
     public function getPaidDatesInRange(Bill $bill, Carbon $start, Carbon $end): Collection
     {
-        $dates = $bill->transactionJournals()->before($end)->after($start)->get([
-            'transaction_journals.id','transaction_journals.date'
-        ])->pluck('date', 'id');
+        $dates = $bill->transactionJournals()->before($end)->after($start)->get(
+            [
+                'transaction_journals.id', 'transaction_journals.date',
+            ]
+        )->pluck('date', 'id');
 
         return $dates;
     }

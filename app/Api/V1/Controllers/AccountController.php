@@ -24,16 +24,23 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\AccountRequest;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Transformers\PiggyBankTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -47,7 +54,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class AccountController extends Controller
 {
-    use AccountFilter;
+    use AccountFilter, TransactionFilter;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepository;
     /** @var AccountRepositoryInterface The account repository */
@@ -128,6 +135,41 @@ class AccountController extends Controller
     }
 
     /**
+     * List all of them.
+     *
+     * @param Request $request
+     * @param Account $account
+     *
+     * @return JsonResponse]
+     */
+    public function piggyBanks(Request $request, Account $account): JsonResponse
+    {
+        // create some objects:
+        $manager = new Manager;
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+
+        // types to get, page size:
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+
+        // get list of budgets. Count it and split it.
+        $collection = $this->repository->getPiggyBanks($account);
+        $count      = $collection->count();
+        $piggyBanks = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+
+        // make paginator:
+        $paginator = new LengthAwarePaginator($piggyBanks, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.accounts.piggy_banks', [$account->id]) . $this->buildParams());
+
+        // present to user.
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new FractalCollection($piggyBanks, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
+
+    /**
      * Show single instance.
      *
      * @param Request $request
@@ -166,6 +208,58 @@ class AccountController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show all transactions.
+     *
+     * @param Request $request
+     * @param Account $account
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, Account $account): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        if ($this->repository->isAsset($account)) {
+            $collector->setAccounts(new Collection([$account]));
+        }
+        if (!$this->repository->isAsset($account)) {
+            $collector->setOpposingAccounts(new Collection([$account]));
+        }
+
+        if (\in_array(TransactionType::TRANSFER, $types, true)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
+        $transactions = $paginator->getCollection();
+        $repository   = app(JournalRepositoryInterface::class);
+
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

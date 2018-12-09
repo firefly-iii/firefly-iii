@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
-
     /**
      * Moved here from account CRUD.
      *
@@ -168,6 +167,13 @@ interface AccountRepositoryInterface
     public function getOpeningBalanceDate(Account $account): ?string;
 
     /**
+     * @param Account $account
+     *
+     * @return Collection
+     */
+    public function getPiggyBanks(Account $account): Collection;
+
+    /**
      * Find or create the opposing reconciliation account.
      *
      * @param Account $account
@@ -175,6 +181,13 @@ interface AccountRepositoryInterface
      * @return Account|null
      */
     public function getReconciliation(Account $account): ?Account;
+
+    /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    public function isAsset(Account $account): bool;
 
     /**
      * @param Account $account

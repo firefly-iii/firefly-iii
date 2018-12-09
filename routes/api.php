@@ -40,6 +40,10 @@ Route::group(
         Route::get('{account}', ['uses' => 'AccountController@show', 'as' => 'show']);
         Route::put('{account}', ['uses' => 'AccountController@update', 'as' => 'update']);
         Route::delete('{account}', ['uses' => 'AccountController@delete', 'as' => 'delete']);
+
+        Route::get('{account}/piggy_banks', ['uses' => 'AccountController@piggyBanks', 'as' => 'piggy_banks']);
+        Route::get('{account}/transactions', ['uses' => 'AccountController@transactions', 'as' => 'transactions']);
+
     }
 );
 
@@ -72,6 +76,22 @@ Route::group(
     }
 );
 
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
+
+    // Bills API routes:
+    Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
+    Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
+    Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
+    Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
+    Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
+
+    Route::get('{bill}/attachments', ['uses' => 'BillController@attachments', 'as' => 'attachments']);
+    Route::get('{bill}/rules', ['uses' => 'BillController@rules', 'as' => 'rules']);
+    Route::get('{bill}/transactions', ['uses' => 'BillController@transactions', 'as' => 'transactions']);
+}
+);
+
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets/limits', 'as' => 'api.v1.budget_limits.'],
@@ -101,22 +121,6 @@ Route::group(
         Route::get('{budget}/limits', ['uses' => 'BudgetController@budgetLimits', 'as' => 'budget_limits']);
         Route::post('{budget}/limits', ['uses' => 'BudgetController@storeBudgetLimit', 'as' => 'store_budget_limit']);
     }
-);
-
-
-
-
-
-Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
-
-    // Bills API routes:
-    Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
-    Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
-    Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
-    Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
-    Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
-}
 );
 
 Route::group(
@@ -177,7 +181,8 @@ Route::group(
 );
 
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links', 'as' => 'api.v1.transaction_links.'],
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'transaction_links',
+     'as'         => 'api.v1.transaction_links.'],
     function () {
 
         // Transaction Links API routes:
@@ -299,7 +304,6 @@ Route::group(
         Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'delete']);
     }
 );
-
 
 
 Route::group(

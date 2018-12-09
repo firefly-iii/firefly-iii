@@ -389,6 +389,16 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      *
+     * @return Collection
+     */
+    public function getPiggyBanks(Account $account): Collection
+    {
+        return $account->piggyBanks()->get();
+    }
+
+    /**
+     * @param Account $account
+     *
      * @return Account|null
      *
      * @throws FireflyException
@@ -414,6 +424,18 @@ class AccountRepository implements AccountRepositoryInterface
         $account = $factory->findOrCreate($name, $type->type);
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    public function isAsset(Account $account): bool
+    {
+        $type = $account->accountType->type;
+
+        return AccountType::ASSET === $type || AccountType::DEFAULT === $type;
     }
 
     /**
