@@ -130,7 +130,7 @@ Route::group(
 
         // Configuration API routes:
         Route::get('', ['uses' => 'ConfigurationController@index', 'as' => 'index']);
-        Route::post('', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
+        Route::post('{configName}', ['uses' => 'ConfigurationController@update', 'as' => 'update']);
     }
 );
 

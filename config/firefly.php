@@ -326,6 +326,7 @@ return [
         'unfinishedJournal' => \FireflyIII\Support\Binder\UnfinishedJournal::class,
         'cliToken'          => \FireflyIII\Support\Binder\CLIToken::class,
         'tagOrId'           => \FireflyIII\Support\Binder\TagOrId::class,
+        'configName'        => \FireflyIII\Support\Binder\ConfigurationName::class,
 
 
     ],
