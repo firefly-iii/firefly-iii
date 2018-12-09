@@ -25,9 +25,15 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\CategoryRequest;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CategoryTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -45,6 +51,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class CategoryController extends Controller
 {
+    use TransactionFilter;
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
@@ -158,6 +165,54 @@ class CategoryController extends Controller
         throw new FireflyException('Could not store new category.'); // @codeCoverageIgnore
     }
 
+    /**
+     * Show all transactions.
+     *
+     * @param Request  $request
+     *
+     * @param Category $category
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, Category $category): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setCategory($category);
+
+        if (\in_array(TransactionType::TRANSFER, $types, true)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.categories.transactions', [$category->id]) . $this->buildParams());
+        $transactions = $paginator->getCollection();
+        $repository   = app(JournalRepositoryInterface::class);
+
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
 
     /**
      * Update the category.

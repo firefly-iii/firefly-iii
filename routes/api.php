@@ -121,6 +121,7 @@ Route::group(
         Route::get('{category}', ['uses' => 'CategoryController@show', 'as' => 'show']);
         Route::put('{category}', ['uses' => 'CategoryController@update', 'as' => 'update']);
         Route::delete('{category}', ['uses' => 'CategoryController@delete', 'as' => 'delete']);
+        Route::get('{category}/transactions', ['uses' => 'CategoryController@transactions', 'as' => 'transactions']);
     }
 );
 
