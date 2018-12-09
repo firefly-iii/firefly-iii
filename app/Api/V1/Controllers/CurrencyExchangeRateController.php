@@ -92,6 +92,7 @@ class CurrencyExchangeRateController extends Controller
         $this->parameters->set('from', $fromCurrency->code);
         $this->parameters->set('to', $toCurrency->code);
         $this->parameters->set('date', $dateObj->format('Y-m-d'));
+        $this->parameters->set('amount', $request->get('amount'));
 
         $rate = $this->repository->getExchangeRate($fromCurrency, $toCurrency, $dateObj);
         if (null === $rate) {

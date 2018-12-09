@@ -55,13 +55,26 @@ class CurrencyExchangeRateTransformer extends TransformerAbstract
      */
     public function transform(CurrencyExchangeRate $rate): array
     {
-        $data = [
-            'id'         => (int)$rate->id,
-            'updated_at' => $rate->updated_at->toAtomString(),
-            'created_at' => $rate->created_at->toAtomString(),
-            'date'       => $rate->date->format('Y-m-d'),
-            'rate'       => (float)$rate->rate,
-            'links'      => [
+        $result = round((float)$rate->rate * (float)$this->parameters->get('amount'), $rate->toCurrency->decimal_places);
+        $result = 0.0 === $result ? null : $result;
+        $data   = [
+            'id'                   => (int)$rate->id,
+            'updated_at'           => $rate->updated_at->toAtomString(),
+            'created_at'           => $rate->created_at->toAtomString(),
+            'from_currency_id'     => $rate->fromCurrency->id,
+            'from_currency_name'   => $rate->fromCurrency->name,
+            'from_currency_code'   => $rate->fromCurrency->code,
+            'from_currency_symbol' => $rate->fromCurrency->symbol,
+            'from_currency_dp'     => $rate->fromCurrency->decimal_places,
+            'to_currency_id'       => $rate->toCurrency->id,
+            'to_currency_name'     => $rate->toCurrency->name,
+            'to_currency_code'     => $rate->toCurrency->code,
+            'to_currency_symbol'   => $rate->toCurrency->symbol,
+            'to_currency_dp'       => $rate->toCurrency->decimal_places,
+            'date'                 => $rate->date->format('Y-m-d'),
+            'rate'                 => (float)$rate->rate,
+            'amount'               => $result,
+            'links'                => [
                 [
                     'rel' => 'self',
                     'uri' => '/currency_exchange_rates/' . $rate->id,
