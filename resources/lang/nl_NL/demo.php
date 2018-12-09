@@ -34,5 +34,5 @@ return [
     'transactions-index'     => 'Deze uitgaven, inkomsten en overschrijvingen zijn niet heel fantasierijk. Ze zijn automatisch gegenereerd.',
     'piggy-banks-index'      => 'Zoals je kan zien zijn er drie spaarpotjes. Gebruik de plus- en minknoppen om het bedrag in de spaarpotjes te veranderen. Klik op de naam van het spaarpotje om er de geschiedenis van te zien.',
     'import-index'           => 'Je kan elk CSV bestand importeren met Firefly III. Het is ook mogelijk om transacties te importeren van bunq en Spectre. Andere verzamelbedrijven worden ook geïntegreerd. De demo-gebruiker mag alleen de "nep"-importhulp gebruiken. Deze genereert een paar willekeurige transacties om te laten zien hoe het werkt.',
-    'profile-index'          => 'Keep in mind that the demo site resets every four hours. Your access may be revoked at any time. This happens automatically and is not a bug.',
+    'profile-index'          => 'Houd in gedachten dat de demosite elke vier uur reset. Je toegang kan dus te allen tijde worden herroepen. Dit gebeurt automatisch en is niet een bug.',
 ];

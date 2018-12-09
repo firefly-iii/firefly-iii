@@ -45,7 +45,7 @@ return [
     'attachments'                 => 'Documents joints',
     'journal_amount'              => 'Montant',
     'journal_source_name'         => 'Compte de recettes (source)',
-    'keep_bill_id'                => 'Bill',
+    'keep_bill_id'                => 'Facture',
     'journal_source_id'           => 'Compte d’actif (source)',
     'BIC'                         => 'Code BIC',
     'verify_password'             => 'Vérifiez la sécurité du mot de passe',

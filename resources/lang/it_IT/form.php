@@ -45,7 +45,7 @@ return [
     'attachments'                 => 'Allegati',
     'journal_amount'              => 'Importo',
     'journal_source_name'         => 'Conto entrate (origine)',
-    'keep_bill_id'                => 'Bill',
+    'keep_bill_id'                => 'Bolletta',
     'journal_source_id'           => 'Conto attività (origine)',
     'BIC'                         => 'BIC',
     'verify_password'             => 'Verifica password di sicurezza',

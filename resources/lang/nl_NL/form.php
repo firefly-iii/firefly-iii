@@ -45,7 +45,7 @@ return [
     'attachments'                 => 'Bijlagen',
     'journal_amount'              => 'Bedrag',
     'journal_source_name'         => 'Debiteur (bron)',
-    'keep_bill_id'                => 'Bill',
+    'keep_bill_id'                => 'Contract',
     'journal_source_id'           => 'Betaalrekening (bron)',
     'BIC'                         => 'BIC',
     'verify_password'             => 'Bevestig wachtwoordsterkte',

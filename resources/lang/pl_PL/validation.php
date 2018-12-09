@@ -123,7 +123,7 @@ return [
     'present'                        => 'Pole :attribute musi być obecne.',
     'amount_zero'                    => 'Całkowita kwota nie może wynosić zero.',
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'secure_password'                => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
     'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
     'invalid_account_info'           => 'Nieprawidłowe informacje o koncie.',

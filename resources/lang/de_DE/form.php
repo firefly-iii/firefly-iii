@@ -45,7 +45,7 @@ return [
     'attachments'                 => 'Anhänge',
     'journal_amount'              => 'Betrag',
     'journal_source_name'         => 'Erlöskonto (Herkunft)',
-    'keep_bill_id'                => 'Bill',
+    'keep_bill_id'                => 'Rechnung',
     'journal_source_id'           => 'Anlagenkonto (Herkunft)',
     'BIC'                         => 'BIC',
     'verify_password'             => 'Passwortsicherheit überprüfen',
