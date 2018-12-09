@@ -72,8 +72,9 @@ Route::group(
     }
 );
 
+
 Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budget_limits', 'as' => 'api.v1.budget_limits.'],
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'budgets/limits', 'as' => 'api.v1.budget_limits.'],
     function () {
 
         // Budget Limit API routes:
@@ -82,20 +83,8 @@ Route::group(
         Route::get('{budgetLimit}', ['uses' => 'BudgetLimitController@show', 'as' => 'show']);
         Route::put('{budgetLimit}', ['uses' => 'BudgetLimitController@update', 'as' => 'update']);
         Route::delete('{budgetLimit}', ['uses' => 'BudgetLimitController@delete', 'as' => 'delete']);
+        Route::get('{budgetLimit}/transactions', ['uses' => 'BudgetLimitController@transactions', 'as' => 'transactions']);
     }
-);
-
-
-Route::group(
-    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
-
-    // Bills API routes:
-    Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
-    Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
-    Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
-    Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
-    Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
-}
 );
 
 Route::group(
@@ -108,7 +97,26 @@ Route::group(
         Route::get('{budget}', ['uses' => 'BudgetController@show', 'as' => 'show']);
         Route::put('{budget}', ['uses' => 'BudgetController@update', 'as' => 'update']);
         Route::delete('{budget}', ['uses' => 'BudgetController@delete', 'as' => 'delete']);
+        Route::get('{budget}/transactions', ['uses' => 'BudgetController@transactions', 'as' => 'transactions']);
+        Route::get('{budget}/limits', ['uses' => 'BudgetController@budgetLimits', 'as' => 'budget_limits']);
+        Route::post('{budget}/limits', ['uses' => 'BudgetController@storeBudgetLimit', 'as' => 'store_budget_limit']);
     }
+);
+
+
+
+
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'bills', 'as' => 'api.v1.bills.'], function () {
+
+    // Bills API routes:
+    Route::get('', ['uses' => 'BillController@index', 'as' => 'index']);
+    Route::post('', ['uses' => 'BillController@store', 'as' => 'store']);
+    Route::get('{bill}', ['uses' => 'BillController@show', 'as' => 'show']);
+    Route::put('{bill}', ['uses' => 'BillController@update', 'as' => 'update']);
+    Route::delete('{bill}', ['uses' => 'BillController@delete', 'as' => 'delete']);
+}
 );
 
 Route::group(

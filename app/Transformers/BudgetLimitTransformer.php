@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -57,17 +56,35 @@ class BudgetLimitTransformer extends TransformerAbstract
      */
     public function transform(BudgetLimit $budgetLimit): array
     {
+        $currency       = $budgetLimit->transactionCurrency;
+        $amount         = $budgetLimit->amount;
+        $currencyId     = null;
+        $currencyName   = null;
+        $currencyCode   = null;
+        $currencySymbol = null;
+        if (null !== $currency) {
+            $amount         = round($budgetLimit->amount, $budgetLimit->transactionCurrency->decimal_places);
+            $currencyId     = $currency->id;
+            $currencyName   = $currency->name;
+            $currencyCode   = $currency->code;
+            $currencySymbol = $currency->symbol;
+        }
         $data = [
-            'id'         => (int)$budgetLimit->id,
-            'updated_at' => $budgetLimit->updated_at->toAtomString(),
-            'created_at' => $budgetLimit->created_at->toAtomString(),
-            'start_date' => $budgetLimit->start_date->format('Y-m-d'),
-            'end_date'   => $budgetLimit->end_date->format('Y-m-d'),
-            'amount'     => $budgetLimit->amount,
-            'links'      => [
+            'id'              => (int)$budgetLimit->id,
+            'updated_at'      => $budgetLimit->updated_at->toAtomString(),
+            'created_at'      => $budgetLimit->created_at->toAtomString(),
+            'start_date'      => $budgetLimit->start_date->format('Y-m-d'),
+            'end_date'        => $budgetLimit->end_date->format('Y-m-d'),
+            'budget_id'       => $budgetLimit->budget_id,
+            'currency_id'     => $currencyId,
+            'currency_code'   => $currencyCode,
+            'currency_name'   => $currencyName,
+            'currency_symbol' => $currencySymbol,
+            'amount'          => $amount,
+            'links'           => [
                 [
                     'rel' => 'self',
-                    'uri' => '/budget_limits/' . $budgetLimit->id,
+                    'uri' => '/budgets/limits/' . $budgetLimit->id,
                 ],
             ],
         ];

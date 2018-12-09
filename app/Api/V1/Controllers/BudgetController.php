@@ -23,11 +23,19 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Api\V1\Requests\BudgetRequest;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -45,6 +53,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class BudgetController extends Controller
 {
+    use TransactionFilter;
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
@@ -66,6 +75,33 @@ class BudgetController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param Request $request
+     * @param Budget  $budget
+     *
+     * @return JsonResponse
+     */
+    public function budgetLimits(Request $request, Budget $budget): JsonResponse
+    {
+        $manager  = new Manager;
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $this->parameters->set('budget_id', $budget->id);
+        $collection   = $this->repository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
+        $count        = $collection->count();
+        $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
+        $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));
+        $paginator->setPath(route('api.v1.budgets.budget_limits', [$budget->id]) . $this->buildParams());
+
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        $resource = new FractalCollection($budgetLimits, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -115,7 +151,6 @@ class BudgetController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
-
     /**
      * Show a budget.
      *
@@ -158,6 +193,76 @@ class BudgetController extends Controller
         throw new FireflyException('Could not store new budget.'); // @codeCoverageIgnore
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param BudgetLimitRequest $request
+     * @param Budget             $budget
+     *
+     * @return JsonResponse
+     */
+    public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
+    {
+        $data           = $request->getAll();
+        $data['budget'] = $budget;
+        $budgetLimit    = $this->repository->storeBudgetLimit($data);
+        $manager        = new Manager;
+        $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show all transactions.
+     *
+     * @param Request $request
+     *
+     * @param Budget  $budget
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, Budget $budget): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setBudget($budget);
+
+        if (\in_array(TransactionType::TRANSFER, $types, true)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]) . $this->buildParams());
+        $transactions = $paginator->getCollection();
+        $repository   = app(JournalRepositoryInterface::class);
+
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
 
     /**
      * Update a budget.

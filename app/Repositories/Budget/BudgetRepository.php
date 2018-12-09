@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Budget;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
@@ -108,7 +109,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         } catch (Exception|FatalThrowableError $e) {
             Log::debug(sprintf('Could not delete budget limit: %s', $e->getMessage()));
         }
-        Budget::where('order',0)->update(['order' => 100]);
+        Budget::where('order', 0)->update(['order' => 100]);
 
         // do the clean up by hand because Sqlite can be tricky with this.
         $budgetLimits = BudgetLimit::orderBy('created_at', 'DESC')->get(['id', 'budget_id', 'start_date', 'end_date']);
@@ -773,24 +774,33 @@ class BudgetRepository implements BudgetRepositoryInterface
         /** @var Budget $budget */
         $budget = $data['budget'];
 
-        // find limit with same date range.
-        // if it exists, throw error.
-        $limits = $budget->budgetlimits()
-                         ->where('budget_limits.start_date', $data['start_date']->format('Y-m-d 00:00:00'))
-                         ->where('budget_limits.end_date', $data['end_date']->format('Y-m-d 00:00:00'))
-                         ->get(['budget_limits.*'])->count();
-        Log::debug(sprintf('Found %d budget limits.', $limits));
-        if ($limits > 0) {
-            throw new FireflyException('A budget limit for this budget, and this date range already exists. You must update the existing one.');
+        // if no currency has been provided, use the user's default currency:
+        /** @var TransactionCurrencyFactory $factory */
+        $factory  = app(TransactionCurrencyFactory::class);
+        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+        if (null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
 
+        // find limit with same date range.
+        // if it exists, return that one.
+        $limit = $budget->budgetlimits()
+                        ->where('budget_limits.start_date', $data['start']->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.end_date', $data['end']->format('Y-m-d 00:00:00'))
+                        ->where('budget_limits.transaction_currency_id', $currency->id)
+                        ->get(['budget_limits.*'])->first();
+        if (null !== $limit) {
+            return $limit;
+        }
         Log::debug('No existing budget limit, create a new one');
+
         // or create one and return it.
         $limit = new BudgetLimit;
         $limit->budget()->associate($budget);
-        $limit->start_date = $data['start_date']->format('Y-m-d 00:00:00');
-        $limit->end_date   = $data['end_date']->format('Y-m-d 00:00:00');
-        $limit->amount     = $data['amount'];
+        $limit->start_date              = $data['start']->format('Y-m-d 00:00:00');
+        $limit->end_date                = $data['end']->format('Y-m-d 00:00:00');
+        $limit->amount                  = $data['amount'];
+        $limit->transaction_currency_id = $currency->id;
         $limit->save();
         Log::debug(sprintf('Created new budget limit with ID #%d and amount %s', $limit->id, $data['amount']));
 
@@ -861,9 +871,19 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget = $data['budget'];
 
         $budgetLimit->budget()->associate($budget);
-        $budgetLimit->start_date = $data['start_date']->format('Y-m-d 00:00:00');
-        $budgetLimit->end_date   = $data['end_date']->format('Y-m-d 00:00:00');
+        $budgetLimit->start_date = $data['start']->format('Y-m-d 00:00:00');
+        $budgetLimit->end_date   = $data['end']->format('Y-m-d 00:00:00');
         $budgetLimit->amount     = $data['amount'];
+
+        // if no currency has been provided, use the user's default currency:
+        /** @var TransactionCurrencyFactory $factory */
+        $factory  = app(TransactionCurrencyFactory::class);
+        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+        if (null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+        $budgetLimit->transaction_currency_id = $currency->id;
+
         $budgetLimit->save();
         Log::debug(sprintf('Updated budget limit with ID #%d and amount %s', $budgetLimit->id, $data['amount']));
 
