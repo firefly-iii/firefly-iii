@@ -306,7 +306,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * $attribute has the format rule_triggers.%d.value.
+     * $attribute has the format triggers.%d.value.
      *
      * @param string $attribute
      * @param string $value

@@ -73,7 +73,7 @@ class CurrencyControllerTest extends TestCase
         $currency = TransactionCurrency::first();
 
         // call API
-        $response = $this->delete('/api/v1/currencies/' . $currency->id);
+        $response = $this->delete('/api/v1/currencies/' . $currency->code);
         $response->assertStatus(204);
     }
 
@@ -132,7 +132,7 @@ class CurrencyControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // test API
-        $response = $this->get('/api/v1/currencies/' . $currency->id);
+        $response = $this->get('/api/v1/currencies/' . $currency->code);
         $response->assertStatus(200);
         $response->assertJson(
             ['data' => [
@@ -245,7 +245,7 @@ class CurrencyControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/currencies/' . $currency->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put('/api/v1/currencies/' . $currency->code, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -285,7 +285,7 @@ class CurrencyControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/currencies/' . $currency->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put('/api/v1/currencies/' . $currency->code, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

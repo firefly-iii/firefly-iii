@@ -51,10 +51,10 @@ class TransactionTransformer extends TransformerAbstract
      * @param ParameterBag               $parameters
      * @param JournalRepositoryInterface $repository
      */
-    public function __construct(ParameterBag $parameters, JournalRepositoryInterface $repository)
+    public function __construct(ParameterBag $parameters)
     {
         $this->parameters = $parameters;
-        $this->repository = $repository;
+        $this->repository = app(JournalRepositoryInterface::class);
     }
 
     /**

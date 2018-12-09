@@ -90,7 +90,7 @@ class CurrencyRequest extends Request
                 break;
             case 'PUT':
             case 'PATCH':
-                $currency        = $this->route()->parameter('currency');
+                $currency        = $this->route()->parameter('currency_code');
                 $rules['name']   = 'required|between:1,255|unique:transaction_currencies,name,' . $currency->id;
                 $rules['code']   = 'required|between:1,255|unique:transaction_currencies,code,' . $currency->id;
                 $rules['symbol'] = 'required|between:1,255|unique:transaction_currencies,symbol,' . $currency->id;

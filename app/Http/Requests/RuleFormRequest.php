@@ -58,8 +58,8 @@ class RuleFormRequest extends Request
             'description'     => $this->string('description'),
             'stop_processing' => $this->boolean('stop_processing'),
             'strict'          => $this->boolean('strict'),
-            'rule_triggers'   => $this->getRuleTriggerData(),
-            'rule_actions'    => $this->getRuleActionData(),
+            'triggers'        => $this->getRuleTriggerData(),
+            'actions'         => $this->getRuleActionData(),
         ];
 
         return $data;
@@ -83,16 +83,16 @@ class RuleFormRequest extends Request
 
         // initial set of rules:
         $rules = [
-            'title'                 => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'           => 'between:1,5000|nullable',
-            'stop_processing'       => 'boolean',
-            'rule_group_id'         => 'required|belongsToUser:rule_groups',
-            'trigger'               => 'required|in:store-journal,update-journal',
-            'rule_triggers.*.name'  => 'required|in:' . implode(',', $validTriggers),
-            'rule_triggers.*.value' => sprintf('required_if:rule_triggers.*.name,%s|min:1|ruleTriggerValue', $contextTriggers),
-            'rule-actions.*.name'   => 'required|in:' . implode(',', $validActions),
-            'rule_actions.*.value'  => sprintf('required_if:rule_actions.*.name,%s|min:1|ruleActionValue', $contextActions),
-            'strict'                => 'in:0,1',
+            'title'            => 'required|between:1,100|uniqueObjectForUser:rules,title',
+            'description'      => 'between:1,5000|nullable',
+            'stop_processing'  => 'boolean',
+            'rule_group_id'    => 'required|belongsToUser:rule_groups',
+            'trigger'          => 'required|in:store-journal,update-journal',
+            'triggers.*.name'  => 'required|in:' . implode(',', $validTriggers),
+            'triggers.*.value' => sprintf('required_if:triggers.*.name,%s|min:1|ruleTriggerValue', $contextTriggers),
+            'actions.*.name'   => 'required|in:' . implode(',', $validActions),
+            'actions.*.value'  => sprintf('required_if:actions.*.name,%s|min:1|ruleActionValue', $contextActions),
+            'strict'           => 'in:0,1',
         ];
 
         /** @var Rule $rule */
@@ -111,7 +111,7 @@ class RuleFormRequest extends Request
     private function getRuleActionData(): array
     {
         $return     = [];
-        $actionData = $this->get('rule_actions');
+        $actionData = $this->get('actions');
         if (\is_array($actionData)) {
             foreach ($actionData as $action) {
                 $stopProcessing = $action['stop_processing'] ?? '0';
@@ -132,7 +132,7 @@ class RuleFormRequest extends Request
     private function getRuleTriggerData(): array
     {
         $return      = [];
-        $triggerData = $this->get('rule_triggers');
+        $triggerData = $this->get('triggers');
         if (\is_array($triggerData)) {
             foreach ($triggerData as $trigger) {
                 $stopProcessing = $trigger['stop_processing'] ?? '0';

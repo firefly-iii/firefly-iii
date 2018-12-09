@@ -207,7 +207,7 @@ class AccountTransformerTest extends TestCase
         $this->assertEquals($note->text, $result['notes']);
         $this->assertEquals('2018-02-01', $result['monthly_payment_date']);
         $this->assertEquals('monthlyFull', $result['credit_card_type']);
-        $this->assertEquals('ccAsset', $result['role']);
+        $this->assertEquals('ccAsset', $result['account_role']);
     }
 
     /**
@@ -292,7 +292,7 @@ class AccountTransformerTest extends TestCase
         $this->assertEquals($note->text, $result['notes']);
         $this->assertNull($result['monthly_payment_date']);
         $this->assertNull($result['credit_card_type']);
-        $this->assertNull($result['role']);
+        $this->assertNull($result['account_role']);
     }
 
     /**

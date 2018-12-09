@@ -1231,7 +1231,9 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
-
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
@@ -1242,6 +1244,8 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
+
+
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
 
@@ -1284,6 +1288,9 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
@@ -1351,6 +1358,9 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
@@ -1410,6 +1420,9 @@ class TransactionControllerTest extends TestCase
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
@@ -1461,6 +1474,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1508,6 +1524,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1554,6 +1573,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1601,6 +1623,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1646,6 +1671,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1692,6 +1720,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
         $accountRepos->shouldReceive('findByName')->andReturn($account);
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1738,6 +1769,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1783,6 +1817,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1829,6 +1866,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1876,6 +1916,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1922,6 +1965,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1975,6 +2021,10 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2014,6 +2064,10 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
+
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2066,6 +2120,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2113,6 +2170,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2160,6 +2220,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2206,6 +2269,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2252,6 +2318,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2298,6 +2367,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2345,6 +2417,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2391,6 +2466,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2435,6 +2513,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2480,6 +2561,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2539,6 +2623,9 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Note');
+        $journalRepos->shouldReceive('getMetaField')->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2604,6 +2691,9 @@ class TransactionControllerTest extends TestCase
         $transaction = $deposit->transactions()->first();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('update')->andReturn($deposit)->once();
+        $repository->shouldReceive('getNoteText')->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         // call API
         $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);
@@ -2648,6 +2738,9 @@ class TransactionControllerTest extends TestCase
         $transaction = $withdrawal->transactions()->first();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('update')->andReturn($withdrawal)->once();
+        $repository->shouldReceive('getNoteText')->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
 
         // call API
         $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);

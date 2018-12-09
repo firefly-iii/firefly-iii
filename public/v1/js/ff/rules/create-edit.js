@@ -162,7 +162,7 @@ function onAddNewAction() {
     "use strict";
     console.log('Now in onAddNewAction()');
 
-    var selectQuery = 'select[name^="rule_actions["][name$="][name]"]';
+    var selectQuery = 'select[name^="actions["][name$="][name]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -190,7 +190,7 @@ function onAddNewTrigger() {
     "use strict";
     console.log('Now in onAddNewTrigger()');
 
-    var selectQuery = 'select[name^="rule_triggers["][name$="][name]"]';
+    var selectQuery = 'select[name^="triggers["][name$="][name]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -219,7 +219,7 @@ function updateActionInput(selectList) {
     // the actual row this select list is in:
     var parent = selectList.parent().parent();
     // the text input we're looking for:
-    var inputQuery = 'input[name^="rule_actions["][name$="][value]"]';
+    var inputQuery = 'input[name^="actions["][name$="][value]"]';
     var inputResult = parent.find(inputQuery);
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');
@@ -291,7 +291,7 @@ function updateTriggerInput(selectList) {
     // the actual row this select list is in:
     var parent = selectList.parent().parent();
     // the text input we're looking for:
-    var inputQuery = 'input[name^="rule_triggers["][name$="][value]"]';
+    var inputQuery = 'input[name^="triggers["][name$="][value]"]';
     var inputResult = parent.find(inputQuery);
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');

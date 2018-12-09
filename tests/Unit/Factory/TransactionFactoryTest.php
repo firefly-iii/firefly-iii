@@ -878,6 +878,12 @@ class TransactionFactoryTest extends TestCase
         // first search action is for the asset account, second is for expense account.
         $accountRepos->shouldReceive('findNull')->andReturn($asset, $expense)->atLeast()->once();
 
+        // Find budget, but based on null it returns null.
+        $budgetFactory->shouldReceive('find')->withArgs([null, null])->andReturnNull()->atLeast()->once();
+
+        // find category, but none are present so return null.
+        $categoryFactory->shouldReceive('findOrCreate')->withArgs([null, null])->andReturnNull()->atLeast()->once();
+
         // factories return various stuff:
         $currencyFactory->shouldReceive('find')->andReturn(null, null)->atLeast()->once();
 
@@ -896,7 +902,7 @@ class TransactionFactoryTest extends TestCase
 
         $newCount = $withdrawal->transactions()->count();
 
-        $this->assertEquals($count, $newCount);
+        $this->assertEquals($count, $newCount - 2);
     }
 
     /**

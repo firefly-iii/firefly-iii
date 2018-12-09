@@ -374,7 +374,8 @@ class TransactionControllerTest extends TestCase
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
-
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.show', [1]));

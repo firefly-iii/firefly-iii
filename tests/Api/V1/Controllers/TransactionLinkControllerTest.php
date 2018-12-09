@@ -1,6 +1,6 @@
 <?php
 /**
- * JournalLinkControllerTest.php
+ * TransactionLinkControllerTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -37,9 +37,9 @@ use Tests\TestCase;
 
 /**
  *
- * Class JournalLinkControllerTest
+ * Class TransactionLinkControllerTest
  */
-class JournalLinkControllerTest extends TestCase
+class TransactionLinkControllerTest extends TestCase
 {
     /**
      *
@@ -53,7 +53,7 @@ class JournalLinkControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      */
     public function testDelete(): void
     {
@@ -71,12 +71,12 @@ class JournalLinkControllerTest extends TestCase
         $journalLink = TransactionJournalLink::first();
 
         // call API
-        $response = $this->delete('/api/v1/journal_links/' . $journalLink->id);
+        $response = $this->delete('/api/v1/transaction_links/' . $journalLink->id);
         $response->assertStatus(204);
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      */
     public function testIndex(): void
     {
@@ -104,13 +104,13 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         // call API
-        $response = $this->get('/api/v1/journal_links');
+        $response = $this->get('/api/v1/transaction_links');
         $response->assertStatus(200);
         $response->assertSee($journalLinks->first()->id);
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      */
     public function testShow(): void
     {
@@ -135,13 +135,13 @@ class JournalLinkControllerTest extends TestCase
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         // call API
-        $response = $this->get('/api/v1/journal_links/' . $journalLink->id);
+        $response = $this->get('/api/v1/transaction_links/' . $journalLink->id);
         $response->assertStatus(200);
         $response->assertSee($journalLink->id);
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testStore(): void
@@ -183,7 +183,7 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/journal_links', $data);
+        $response = $this->post('/api/v1/transaction_links', $data);
         $response->assertStatus(200);
         $response->assertSee($journalLink->created_at->toAtomString()); // the creation moment.
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -192,7 +192,7 @@ class JournalLinkControllerTest extends TestCase
     /**
      * In this particular test the journal link request will fail.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testStoreExistingLink(): void
@@ -233,7 +233,7 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('Already have a link between inward and outward.');
 
@@ -244,7 +244,7 @@ class JournalLinkControllerTest extends TestCase
     /**
      * In this particular test the JournalLinkRequest will report the failure.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testStoreInvalidInward(): void
@@ -285,7 +285,7 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
         $response->assertSee('Invalid inward ID.'); // the creation moment.
         $response->assertStatus(422);
         $response->assertHeader('Content-Type', 'application/json');
@@ -294,7 +294,7 @@ class JournalLinkControllerTest extends TestCase
     /**
      * In this particular test the JournalLinkRequest will report the failure.
      *
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testStoreInvalidOutward(): void
@@ -335,14 +335,14 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
         $response->assertSee('Invalid outward ID.');
         $response->assertStatus(422);
         $response->assertHeader('Content-Type', 'application/json');
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testStoreNoJournal(): void
@@ -384,14 +384,14 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('Source or destination is NULL.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testStoreWithNull(): void
@@ -431,14 +431,14 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/journal_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('Invalid inward ID.'); // error message
         $response->assertHeader('Content-Type', 'application/json');
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testUpdate(): void
@@ -481,14 +481,14 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/journal_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put('/api/v1/transaction_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertSee($journalLink->created_at->toAtomString()); // the creation moment.
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testUpdateNoJournal(): void
@@ -531,14 +531,14 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/journal_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put('/api/v1/transaction_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('Source or destination is NULL.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\JournalLinkController
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
      * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
      */
     public function testUpdateWithNull(): void
@@ -579,7 +579,7 @@ class JournalLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/journal_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put('/api/v1/transaction_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('Invalid inward ID.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');

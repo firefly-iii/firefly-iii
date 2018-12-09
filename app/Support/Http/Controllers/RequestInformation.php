@@ -222,7 +222,6 @@ trait RequestInformation
      */
     protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
     {
-        $repository = app(JournalRepositoryInterface::class);
         // use collector to collect transactions.
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
@@ -231,7 +230,7 @@ trait RequestInformation
         $collector->setJournals(new Collection([$journal]));
         $set          = $collector->getTransactions();
         $transactions = [];
-        $transformer  = new TransactionTransformer(new ParameterBag, $repository);
+        $transformer  = new TransactionTransformer(new ParameterBag);
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $res = [];
@@ -262,7 +261,7 @@ trait RequestInformation
     protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
     {
         $triggers = [];
-        $data     = $request->get('rule_triggers');
+        $data     = $request->get('triggers');
         if (\is_array($data)) {
             foreach ($data as $index => $triggerInfo) {
                 $triggers[] = [

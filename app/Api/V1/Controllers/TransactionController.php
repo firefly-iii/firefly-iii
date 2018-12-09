@@ -171,7 +171,7 @@ class TransactionController extends Controller
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -208,7 +208,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -252,7 +252,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -296,7 +296,7 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $this->repository), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

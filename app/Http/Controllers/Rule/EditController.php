@@ -158,9 +158,9 @@ class EditController extends Controller
     {
         $index   = 0;
         $actions = [];
-
+        $currentActions = $rule->ruleActions()->orderBy('order','ASC')->get();
         /** @var RuleAction $entry */
-        foreach ($rule->ruleActions as $entry) {
+        foreach ($currentActions as $entry) {
             $count = ($index + 1);
             try {
                 $actions[] = view(
@@ -196,9 +196,9 @@ class EditController extends Controller
     {
         $index    = 0;
         $triggers = [];
-
+        $currentTriggers = $rule->ruleTriggers()->orderBy('order','ASC')->get();
         /** @var RuleTrigger $entry */
-        foreach ($rule->ruleTriggers as $entry) {
+        foreach ($currentTriggers as $entry) {
             if ('user_action' !== $entry->trigger_type) {
                 $count = ($index + 1);
                 try {

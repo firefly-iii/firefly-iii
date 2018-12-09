@@ -260,8 +260,7 @@ class BillController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $repository   = app(JournalRepositoryInterface::class);
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters, $repository), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');

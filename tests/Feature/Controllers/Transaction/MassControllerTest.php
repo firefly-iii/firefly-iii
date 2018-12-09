@@ -122,8 +122,15 @@ class MassControllerTest extends TestCase
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]));
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]));
         $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
+
         $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
         $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn($transfers->first()->transactions()->first());
+
+        // get all kinds of meta fields (the transformer needs this)
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Hello');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturnNull();
+        $journalRepos->shouldReceive('getMetaDateString')->withAnyArgs()->andReturnNull();
+
 
 
         // mock stuff:
@@ -171,6 +178,11 @@ class MassControllerTest extends TestCase
                      ->andReturn('Withdrawal', 'Opening balance', 'Withdrawal', 'Withdrawal', 'Withdrawal');
         $journalRepos->shouldReceive('isJournalReconciled')
                      ->andReturn(true, false, false, false, false);
+
+        // get all kinds of meta fields (the transformer needs this)
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Hello');
+        $journalRepos->shouldReceive('getMetaField')->withAnyArgs()->andReturnNull();
+        $journalRepos->shouldReceive('getMetaDateString')->withAnyArgs()->andReturnNull();
 
 
         // default transactions

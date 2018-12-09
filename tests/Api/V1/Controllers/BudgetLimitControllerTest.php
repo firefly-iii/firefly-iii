@@ -72,7 +72,7 @@ class BudgetLimitControllerTest extends TestCase
         );
 
         // call API
-        $response = $this->delete('/api/v1/budget_limits/' . $budgetLimit->id);
+        $response = $this->delete('/api/v1/budgets/limits/' . $budgetLimit->id);
         $response->assertStatus(204);
     }
 
@@ -97,7 +97,7 @@ class BudgetLimitControllerTest extends TestCase
         $params   = [
             'budget_id' => $budget->id,
         ];
-        $response = $this->get('/api/v1/budget_limits?' . http_build_query($params));
+        $response = $this->get('/api/v1/budgets/limits?' . http_build_query($params));
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -124,7 +124,7 @@ class BudgetLimitControllerTest extends TestCase
             'start' => '2018-01-01',
             'end'   => '2018-01-31',
         ];
-        $uri      = '/api/v1/budget_limits?' . http_build_query($params);
+        $uri      = '/api/v1/budgets/limits?' . http_build_query($params);
         $response = $this->get($uri);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -153,7 +153,7 @@ class BudgetLimitControllerTest extends TestCase
             'start'     => '2018-01-01',
             'end'       => '2018-01-31',
         ];
-        $response = $this->get('/api/v1/budget_limits?' . http_build_query($params));
+        $response = $this->get('/api/v1/budgets/limits?' . http_build_query($params));
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -174,15 +174,15 @@ class BudgetLimitControllerTest extends TestCase
         $budget      = $this->user()->budgets()->first();
         $budgetLimit = BudgetLimit::create(
             [
-                'budget_id'  => $budget->id,
-                'start_date' => '2018-01-01',
-                'end_date'   => '2018-01-31',
-                'amount'     => 1,
+                'budget_id' => $budget->id,
+                'start_date'     => '2018-01-01',
+                'end_date'       => '2018-01-31',
+                'amount'    => 1,
             ]
         );
 
 
-        $response = $this->get('/api/v1/budget_limits/' . $budgetLimit->id);
+        $response = $this->get('/api/v1/budgets/limits/' . $budgetLimit->id);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -198,18 +198,18 @@ class BudgetLimitControllerTest extends TestCase
         $budget      = $this->user()->budgets()->first();
         $budgetLimit = BudgetLimit::create(
             [
-                'budget_id'  => $budget->id,
-                'start_date' => '2018-01-01',
-                'end_date'   => '2018-01-31',
-                'amount'     => 1,
+                'budget_id' => $budget->id,
+                'start_date'     => '2018-01-01',
+                'end_date'       => '2018-01-31',
+                'amount'    => 1,
             ]
         );
         $data
                      = [
-            'budget_id'  => $budget->id,
-            'start_date' => '2018-01-01',
-            'end_date'   => '2018-01-31',
-            'amount'     => 1,
+            'budget_id' => $budget->id,
+            'start'     => '2018-01-01',
+            'end'       => '2018-01-31',
+            'amount'    => 1,
         ];
         // mock stuff:
         $repository = $this->mock(BudgetRepositoryInterface::class);
@@ -221,7 +221,7 @@ class BudgetLimitControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // call API
-        $response = $this->post('/api/v1/budget_limits', $data);
+        $response = $this->post('/api/v1/budgets/limits', $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -236,10 +236,10 @@ class BudgetLimitControllerTest extends TestCase
     {
         $data
             = [
-            'budget_id'  => '1',
-            'start_date' => '2018-01-01',
-            'end_date'   => '2018-01-31',
-            'amount'     => 1,
+            'budget_id' => '1',
+            'start'     => '2018-01-01',
+            'end'       => '2018-01-31',
+            'amount'    => 1,
         ];
         // mock stuff:
         $repository = $this->mock(BudgetRepositoryInterface::class);
@@ -250,7 +250,7 @@ class BudgetLimitControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // call API
-        $response = $this->post('/api/v1/budget_limits', $data);
+        $response = $this->post('/api/v1/budgets/limits', $data);
         $response->assertStatus(500);
         $response->assertSee('Unknown budget.');
     }
@@ -266,18 +266,18 @@ class BudgetLimitControllerTest extends TestCase
         $budget      = $this->user()->budgets()->first();
         $budgetLimit = BudgetLimit::create(
             [
-                'budget_id'  => $budget->id,
-                'start_date' => '2018-01-01',
-                'end_date'   => '2018-01-31',
-                'amount'     => 1,
+                'budget_id' => $budget->id,
+                'start_date'     => '2018-01-01',
+                'end_date'       => '2018-01-31',
+                'amount'    => 1,
             ]
         );
         $data
                      = [
-            'budget_id'  => $budget->id,
-            'start_date' => '2018-01-01',
-            'end_date'   => '2018-01-31',
-            'amount'     => 2,
+            'budget_id' => $budget->id,
+            'start'     => '2018-01-01',
+            'end'       => '2018-01-31',
+            'amount'    => 2,
         ];
         // mock stuff:
         $repository = $this->mock(BudgetRepositoryInterface::class);
@@ -289,7 +289,7 @@ class BudgetLimitControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // call API
-        $response = $this->put('/api/v1/budget_limits/' . $budgetLimit->id, $data);
+        $response = $this->put('/api/v1/budgets/limits/' . $budgetLimit->id, $data);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
 
@@ -314,10 +314,10 @@ class BudgetLimitControllerTest extends TestCase
         );
         $data
                      = [
-            'budget_id'  => $budget->id,
-            'start_date' => '2018-01-01',
-            'end_date'   => '2018-01-31',
-            'amount'     => 2,
+            'budget_id' => $budget->id,
+            'start'     => '2018-01-01',
+            'end'       => '2018-01-31',
+            'amount'    => 2,
         ];
         // mock stuff:
         $repository = $this->mock(BudgetRepositoryInterface::class);
@@ -328,7 +328,7 @@ class BudgetLimitControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // call API
-        $response = $this->put('/api/v1/budget_limits/' . $budgetLimit->id, $data);
+        $response = $this->put('/api/v1/budgets/limits/' . $budgetLimit->id, $data);
         $response->assertStatus(500);
         $response->assertSee('Unknown budget.');
     }

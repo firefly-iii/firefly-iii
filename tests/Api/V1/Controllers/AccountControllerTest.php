@@ -184,8 +184,9 @@ class AccountControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'cc_monthly_payment_date' => ['The cc monthly payment date field is required when account role is ccAsset.'],
-                    'cc_type'                 => ['The cc type field is required when account role is ccAsset.'],
+                    'credit_card_type'                 => ['The credit card type field is required when account role is ccAsset.'],
+                    'monthly_payment_date' => ['The monthly payment date field is required when account role is ccAsset.'],
+
                 ],
             ]
         );

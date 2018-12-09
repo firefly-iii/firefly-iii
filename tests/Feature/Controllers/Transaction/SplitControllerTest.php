@@ -67,7 +67,7 @@ class SplitControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -89,11 +89,12 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
         $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
-        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
         $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
         $journalRepos->shouldReceive('getCategoryName')->andReturn('');
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
         $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
 
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
@@ -116,14 +117,14 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
 
-        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
-        $account            = $destination->account;
-        $transactions       = factory(Transaction::class, 3)->make();
+        $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
+        $destination  = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account      = $destination->account;
+        $transactions = factory(Transaction::class, 3)->make();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
@@ -139,10 +140,11 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
         $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
-        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
         $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
         $journalRepos->shouldReceive('getCategoryName')->andReturn('');
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
 
 
         $old = [
@@ -215,7 +217,7 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
@@ -235,7 +237,7 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -254,10 +256,11 @@ class SplitControllerTest extends TestCase
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
         $journalRepos->shouldReceive('getJournalDate')->once()->andReturn('2018-01-01');
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
-        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
         $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
         $journalRepos->shouldReceive('getCategoryName')->andReturn('');
         $journalRepos->shouldReceive('getJournalTotal')->andReturn('1');
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
 
         $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
         $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
@@ -282,7 +285,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $billRepos->shouldReceive('scan');
@@ -338,7 +341,7 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
@@ -384,7 +387,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
         $ruleRepos->shouldReceive('setUser')->once();
@@ -442,7 +445,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $billRepos->shouldReceive('scan');

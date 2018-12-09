@@ -1012,6 +1012,10 @@ class SingleControllerTest extends TestCase
         $journalRepos->shouldReceive('getMetaField')->andReturn('');
         $journalRepos->shouldReceive('getAttachments')->andReturn(new Collection);
 
+        $journalRepos->shouldReceive('getNoteText')->andReturn('');
+        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01');
+
+
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection);
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection);
 

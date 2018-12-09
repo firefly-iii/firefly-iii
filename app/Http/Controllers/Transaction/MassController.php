@@ -142,7 +142,7 @@ class MassController extends Controller
 
         $this->rememberPreviousUri('transactions.mass-edit.uri');
 
-        $transformer = new TransactionTransformer(new ParameterBag, $this->repository);
+        $transformer = new TransactionTransformer(new ParameterBag);
         /** @var TransactionCollectorInterface $collector */
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser($user);

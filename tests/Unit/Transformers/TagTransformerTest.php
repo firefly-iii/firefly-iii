@@ -55,7 +55,6 @@ class TagTransformerTest extends TestCase
         );
         $transformer = new TagTransformer(new ParameterBag);
         $result      = $transformer->transform($tag);
-        $this->assertEquals('nothing', $result['tag_mode']);
         $this->assertEquals($tag->tag, $result['tag']);
         $this->assertEquals(5.5, $result['latitude']);
         $this->assertEquals(6.6, $result['longitude']);

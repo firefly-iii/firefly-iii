@@ -51,7 +51,8 @@ trait RuleManagement
                 'description'     => (string)trans('firefly.default_rule_description'),
                 'trigger'         => 'store-journal',
                 'strict'          => true,
-                'rule_triggers'   => [
+                'active'          => true,
+                'triggers'        => [
                     [
                         'name'            => 'description_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_description'),
@@ -66,7 +67,7 @@ trait RuleManagement
                     ],
 
                 ],
-                'rule_actions'    => [
+                'actions'         => [
                     [
                         'name'            => 'prepend_description',
                         'value'           => (string)trans('firefly.default_rule_action_prepend'),
@@ -94,7 +95,7 @@ trait RuleManagement
     {
         $index    = 0;
         $triggers = [];
-        $oldInput = $request->old('rule_actions');
+        $oldInput = $request->old('actions');
         if (\is_array($oldInput)) {
             foreach ($oldInput as $oldAction) {
                 try {
@@ -127,7 +128,7 @@ trait RuleManagement
     {
         $index    = 0;
         $triggers = [];
-        $oldInput = $request->old('rule_triggers');
+        $oldInput = $request->old('triggers');
         if (\is_array($oldInput)) {
             foreach ($oldInput as $oldTrigger) {
                 try {
@@ -162,6 +163,7 @@ trait RuleManagement
             $data = [
                 'title'       => (string)trans('firefly.default_rule_group_name'),
                 'description' => (string)trans('firefly.default_rule_group_description'),
+                'active'      => true,
             ];
 
             $repository->store($data);

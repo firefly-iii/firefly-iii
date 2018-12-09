@@ -35,6 +35,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Symfony\Component\HttpFoundation\ParameterBag;
@@ -52,6 +53,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -130,6 +136,7 @@ class TransactionTransformerTest extends TestCase
         $this->assertEquals($expense->iban, $result['destination_iban']);
         $this->assertEquals($expense->id, $result['destination_id']);
         $this->assertEquals('Expense account', $result['destination_type']);
+
     }
 
     /**
@@ -140,6 +147,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testDeposit(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -228,6 +240,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testDepositBudget(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -325,6 +342,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testForeignAmount(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -421,6 +443,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testJournalBudget(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -523,6 +550,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testJournalCategory(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -625,6 +657,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testOpeningBalanceNeg(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -714,6 +751,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testOpeningBalancePos(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -803,6 +845,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testReconciliationNeg(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -892,6 +939,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testReconciliationPos(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -981,6 +1033,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testTransactionBudget(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -1085,6 +1142,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testTransactionCategory(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -1188,6 +1250,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testTransactionDescription(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $asset = Account::create(
             [
@@ -1276,6 +1343,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testTransferOne(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $left = Account::create(
             [
@@ -1364,6 +1436,11 @@ class TransactionTransformerTest extends TestCase
      */
     public function testTransferTwo(): void
     {
+        $journalRepository = $this->mock(JournalRepositoryInterface::class);
+        $journalRepository->shouldReceive('getNoteText')->andReturn('Some notes')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaField')->andReturn('FieldValue')->atLeast()->once();
+        $journalRepository->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+
         // make new asset account:
         $left = Account::create(
             [

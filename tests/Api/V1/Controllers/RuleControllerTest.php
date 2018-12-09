@@ -118,14 +118,14 @@ class RuleControllerTest extends TestCase
             'strict'          => 1,
             'stop_processing' => 1,
             'active'          => 1,
-            'rule_triggers'   => [
+            'triggers'        => [
                 [
                     'name'            => 'description_is',
                     'value'           => 'Hello',
                     'stop_processing' => 1,
                 ],
             ],
-            'rule_actions'    => [
+            'actions'         => [
                 [
                     'name'            => 'add_tag',
                     'value'           => 'A',
@@ -158,14 +158,14 @@ class RuleControllerTest extends TestCase
             'strict'          => 1,
             'stop_processing' => 1,
             'active'          => 1,
-            'rule_triggers'   => [
+            'triggers'        => [
                 [
                     'name'            => 'description_is',
                     'value'           => 'Hello',
                     'stop_processing' => 1,
                 ],
             ],
-            'rule_actions'    => [
+            'actions'         => [
             ],
         ];
 
@@ -190,9 +190,9 @@ class RuleControllerTest extends TestCase
             'strict'          => 1,
             'stop_processing' => 1,
             'active'          => 1,
-            'rule_triggers'   => [
+            'triggers'        => [
             ],
-            'rule_actions'    => [
+            'actions'         => [
                 [
                     'name'            => 'add_tag',
                     'value'           => 'A',
@@ -225,14 +225,14 @@ class RuleControllerTest extends TestCase
             'strict'          => 1,
             'stop_processing' => 1,
             'active'          => 1,
-            'rule_triggers'   => [
+            'triggers'        => [
                 [
                     'name'            => 'description_is',
                     'value'           => 'Hello',
                     'stop_processing' => 1,
                 ],
             ],
-            'rule_actions'    => [
+            'actions'         => [
                 [
                     'name'            => 'add_tag',
                     'value'           => 'A',
