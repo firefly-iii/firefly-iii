@@ -23,10 +23,15 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
 use Mockery;
@@ -184,7 +189,7 @@ class AccountControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'credit_card_type'                 => ['The credit card type field is required when account role is ccAsset.'],
+                    'credit_card_type'     => ['The credit card type field is required when account role is ccAsset.'],
                     'monthly_payment_date' => ['The monthly payment date field is required when account role is ccAsset.'],
 
                 ],
@@ -231,6 +236,47 @@ class AccountControllerTest extends TestCase
             ]
         );
         $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * Test the list of piggy banks.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testPiggyBanks(): void
+    {
+        // mock stuff:
+        $repository    = $this->mock(AccountRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+
+        // get piggies for this user.
+        $piggies = $this->user()->piggyBanks()->get();
+        $asset   = $this->getRandomAsset();
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+        $currencyRepos->shouldReceive('setUser');
+        $piggyRepos->shouldReceive('setUser');
+
+        $repository->shouldReceive('getPiggyBanks')->andReturn($piggies)->once();
+        $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('12.45');
+        $piggyRepos->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.45');
+        $repository->shouldReceive('getMetaValue')->atLeast()->once()->andReturn('');
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.piggy_banks', [$asset->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(
+            ['meta' => ['pagination' => ['total'       => $piggies->count(), 'count' => $piggies->count(), 'per_page' => true, 'current_page' => 1,
+                                         'total_pages' => 1]],]
+        );
+        $response->assertJson(
+            ['links' => ['self' => true, 'first' => true, 'last' => true,],]
+        );
+        $response->assertSee('page=1'); // default returns this.
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -457,6 +503,202 @@ class AccountControllerTest extends TestCase
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
         $response->assertSee($account->name);
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testTransactionsBasic(): void
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
+
+        $asset = $this->getRandomAsset();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.transactions', [$asset->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testTransactionsOpposing(): void
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
+
+        $revenue = $this->getRandomRevenue();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnFalse();
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setOpposingAccounts')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.transactions', [$revenue->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testTransactionsRange(): void
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('getAccountsByType')
+                     ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
+
+        $asset = $this->getRandomAsset();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.transactions', [$asset->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31']));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**

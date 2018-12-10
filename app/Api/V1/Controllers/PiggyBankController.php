@@ -134,7 +134,7 @@ class PiggyBankController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $collection = $piggyBank->piggyBankEvents()->get();
+        $collection = $this->repository->getEvents($piggyBank);
         $count      = $collection->count();
         $events     = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 

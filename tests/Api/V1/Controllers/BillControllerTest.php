@@ -24,8 +24,16 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -46,6 +54,37 @@ class BillControllerTest extends TestCase
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', \get_class($this)));
 
+    }
+
+    /**
+     * List all attachments.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BillController
+     */
+    public function testAttachments(): void
+    {
+        // create stuff
+        $attachments = factory(Attachment::class, 10)->create();
+        $bill        = $this->user()->bills()->first();
+        // mock stuff:
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $billRepos     = $this->mock(BillRepositoryInterface::class);
+
+
+        // mock calls:
+        $repository->shouldReceive('setUser');
+        $billRepos->shouldReceive('setUser');
+        $billRepos->shouldReceive('getAttachments')->once()->andReturn($attachments);
+        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
+
+        // test API
+        $response = $this->get(route('api.v1.bills.attachments', [$bill->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -97,6 +136,24 @@ class BillControllerTest extends TestCase
         $response->assertJson(
             ['links' => ['self' => true, 'first' => true, 'last' => true,],]
         );
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\BillController
+     */
+    public function testRules(): void
+    {
+        $rules     = $this->user()->rules()->get();
+        $bill      = $this->user()->bills()->first();
+        $billRepos = $this->mock(BillRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser')->once();
+        $billRepos->shouldReceive('getRulesForBill')->once()->andReturn($rules);
+
+        // call API
+        $response = $this->get(route('api.v1.bills.rules', [$bill->id]));
+        $response->assertStatus(200);
+        $response->assertSee($rules->first()->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -211,6 +268,131 @@ class BillControllerTest extends TestCase
         $response->assertJson(['data' => ['type' => 'bills', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
         $response->assertSee($bill->name);
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BillController
+     */
+    public function testTransactionsBasic(): void
+    {
+        $bill = $this->user()->bills()->first();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setBills')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.bills.transactions', [$bill->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BillController
+     */
+    public function testTransactionsRange(): void
+    {
+        $bill = $this->user()->bills()->first();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setBills')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.bills.transactions', [$bill->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31']));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**

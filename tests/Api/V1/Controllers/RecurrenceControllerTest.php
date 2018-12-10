@@ -24,13 +24,18 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -89,10 +94,10 @@ class RecurrenceControllerTest extends TestCase
         $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
 
         $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
-            ->andReturn($this->user()->budgets()->first());
+                    ->andReturn($this->user()->budgets()->first());
 
         $piggyRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
-                    ->andReturn($this->user()->piggyBanks()->first());
+                   ->andReturn($this->user()->piggyBanks()->first());
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1670,6 +1675,79 @@ class RecurrenceControllerTest extends TestCase
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTransactions(): void
+    {
+        $recurrence = $this->user()->recurrences()->first();
+        $paginator  = new LengthAwarePaginator(new Collection, 0, 50);
+        // mock repositories:
+        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $collector      = $this->mock(TransactionCollectorInterface::class);
+        $journalIds     = $recurringRepos->shouldReceive('getJournalIds')->once()->andReturn([1, 2, 3]);
+        $collector->shouldReceive('setUser')->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->once()->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->once()->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->once()->andReturn($paginator);
+
+        $collector->shouldReceive('removeFilter')->once()->andReturnSelf();
+        $recurringRepos->shouldReceive('setUser')->once();
+
+        $response = $this->get(
+            route('api.v1.recurrences.transactions', [$recurrence->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31'])
+        );
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTriggerError(): void
+    {
+        $cronjob = $this->mock(RecurringCronjob::class);
+        $cronjob->shouldReceive('fire')->andThrow(FireflyException::class);
+
+
+        $response = $this->post(route('api.v1.recurrences.trigger'));
+        $response->assertStatus(500);
+        $response->assertSee('Could not fire recurring cron job.');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTriggerFalse(): void
+    {
+        $cronjob = $this->mock(RecurringCronjob::class);
+        $cronjob->shouldReceive('fire')->once()->andReturnFalse();
+
+
+        $response = $this->post(route('api.v1.recurrences.trigger'));
+        $response->assertStatus(204);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTriggerTrue(): void
+    {
+        $cronjob = $this->mock(RecurringCronjob::class);
+        $cronjob->shouldReceive('fire')->once()->andReturnTrue();
+
+
+        $response = $this->post(route('api.v1.recurrences.trigger'));
+        $response->assertStatus(200);
     }
 
     /**

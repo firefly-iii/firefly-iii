@@ -28,6 +28,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Mockery;
@@ -100,6 +101,21 @@ class PiggyBankControllerTest extends TestCase
         $response->assertJson(
             ['links' => ['self' => true, 'first' => true, 'last' => true,],]
         );
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\PiggyBankController
+     */
+    public function testPiggyBankEvents(): void
+    {
+        $piggyBank  = $this->user()->piggyBanks()->first();
+        $repository = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('getEvents')->once()->andReturn(new Collection);
+
+        $response = $this->get(route('api.v1.piggy_banks.events', [$piggyBank->id]));
+        $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 

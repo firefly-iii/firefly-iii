@@ -79,28 +79,6 @@ class PreferenceController extends Controller
     }
 
     /**
-     * List single resource.
-     *
-     * @param Request    $request
-     * @param Preference $preference
-     *
-     * @return JsonResponse
-     */
-    public function show(Request $request, Preference $preference): JsonResponse
-    {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($preference, new PreferenceTransformer($this->parameters), 'preferences');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
-    }
-
-    /**
      * Update a preference.
      *
      * @param PreferenceRequest $request

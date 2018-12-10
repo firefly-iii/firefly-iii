@@ -49,14 +49,20 @@ class AboutControllerTest extends TestCase
      */
     public function testAbout(): void
     {
-        // test API
-        $response = $this->get('/api/v1/about');
+
+        $search     = ['~', '#'];
+        $replace    = ['\~', '# '];
+        $phpVersion = str_replace($search, $replace, PHP_VERSION);
+        $phpOs      = str_replace($search, $replace, PHP_OS);
+        $response   = $this->get(route('api.v1.about.index'));
         $response->assertStatus(200);
         $response->assertJson(
             ['data' => [
-                'version'     => true,
-                'api_version' => true,
-                'php_version' => true,
+                'version'     => config('firefly.version'),
+                'api_version' => config('firefly.api_version'),
+                'php_version' => $phpVersion,
+                'os'          => $phpOs,
+                'driver'      => 'sqlite',
             ]]
         );
     }
@@ -68,11 +74,16 @@ class AboutControllerTest extends TestCase
      */
     public function testUser(): void
     {
-        // test API
-        $response = $this->get('/api/v1/about/user');
+        $response = $this->get(route('api.v1.about.user'));
         $response->assertStatus(200);
-        $response->assertJson(['data' => ['attributes' => true, 'links' => true]]);
-        $this->assertEquals($this->user()->id, $response->json()['data']['id']);
+        $response->assertJson(
+            [
+                'data' => [
+                    'attributes' => true,
+                    'links'      => true,
+                ],
+            ]
+        );
     }
 
 

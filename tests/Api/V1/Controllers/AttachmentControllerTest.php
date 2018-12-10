@@ -57,7 +57,7 @@ class AttachmentControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -79,10 +79,10 @@ class AttachmentControllerTest extends TestCase
     public function testDownload(): void
     {
         // mock stuff:
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $content    = 'Attachment content ' . random_int(100, 1000);
+        $content = 'Attachment content ' . random_int(100, 1000);
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('exists')->andReturn(true)->once();
@@ -107,10 +107,10 @@ class AttachmentControllerTest extends TestCase
     public function testDownloadNotExisting(): void
     {
         // mock stuff:
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $content    = 'Attachment content ' . random_int(100, 1000);
+        $content = 'Attachment content ' . random_int(100, 1000);
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('exists')->andReturn(false)->once();
@@ -133,7 +133,7 @@ class AttachmentControllerTest extends TestCase
     public function testDownloadNotUploaded(): void
     {
         // mock stuff:
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls:
@@ -172,7 +172,7 @@ class AttachmentControllerTest extends TestCase
         $attachments = factory(Attachment::class, 10)->create();
 
         // mock stuff:
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
 
@@ -201,7 +201,7 @@ class AttachmentControllerTest extends TestCase
         $attachment = $this->user()->attachments()->first();
 
         // mock stuff:
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
 
@@ -230,8 +230,8 @@ class AttachmentControllerTest extends TestCase
         $attachment = $this->user()->attachments()->first();
 
         // mock stuff:
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
+        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
 
@@ -268,7 +268,7 @@ class AttachmentControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock repositories
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
 
@@ -304,7 +304,7 @@ class AttachmentControllerTest extends TestCase
      */
     public function testUpload(): void
     {
-        $repository = $this->mock(AttachmentRepositoryInterface::class);
+        $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
 

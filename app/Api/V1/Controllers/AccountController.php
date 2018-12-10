@@ -134,6 +134,8 @@ class AccountController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
+
+
     /**
      * List all of them.
      *

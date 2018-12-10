@@ -24,8 +24,16 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -44,6 +52,27 @@ class BudgetControllerTest extends TestCase
         parent::setUp();
         Passport::actingAs($this->user());
         Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
+     * Show all budgets
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BudgetController
+     */
+    public function testBudgetLimits(): void
+    {
+        $budget       = $this->user()->budgets()->first();
+        $budgetLimits = BudgetLimit::get();
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('getBudgetLimits')->once()->andReturn($budgetLimits);
+
+        // call API
+        $response = $this->get(route('api.v1.budgets.budget_limits', [$budget->id]));
+        $response->assertStatus(200);
+        $response->assertSee('budget_limits');
     }
 
     /**
@@ -142,6 +171,173 @@ class BudgetControllerTest extends TestCase
     }
 
     /**
+     * Store new budget limit.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BudgetController
+     * @covers \FireflyIII\Api\V1\Requests\BudgetLimitRequest
+     */
+    public function testStoreBudgetLimit(): void
+    {
+        $budget      = $this->user()->budgets()->first();
+        $budgetLimit = BudgetLimit::create(
+            [
+                'budget_id'  => $budget->id,
+                'start_date' => '2018-01-01',
+                'end_date'   => '2018-01-31',
+                'amount'     => 1,
+            ]
+        );
+        $data
+                     = [
+            'budget_id' => $budget->id,
+            'start'     => '2018-01-01',
+            'end'       => '2018-01-31',
+            'amount'    => 1,
+        ];
+        // mock stuff:
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository->shouldReceive('storeBudgetLimit')->andReturn($budgetLimit)->once();
+
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('storeBudgetLimit')->andReturn($budgetLimit);
+
+        // call API
+        $response = $this->post(route('api.v1.budgets.store_budget_limit', [$budget->id]), $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertSee('budget_limits');
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BudgetController
+     */
+    public function testTransactionsBasic(): void
+    {
+        $budget = $this->user()->budgets()->first();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $budgetRepos        = $this->mock(BudgetRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+        $budgetRepos->shouldReceive('setUser');
+
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.budgets.transactions', [$budget->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\BudgetController
+     */
+    public function testTransactionsRange(): void
+    {
+        $budget = $this->user()->budgets()->first();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $budgetRepos        = $this->mock(BudgetRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+        $budgetRepos->shouldReceive('setUser');
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setBudget')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.budgets.transactions', [$budget->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31']));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * Update a budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\BudgetController
@@ -172,6 +368,5 @@ class BudgetControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
         $response->assertSee($budget->name);
     }
-
 
 }

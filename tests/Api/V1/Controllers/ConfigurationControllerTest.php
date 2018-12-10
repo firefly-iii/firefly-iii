@@ -119,7 +119,7 @@ class ConfigurationControllerTest extends TestCase
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $data      = [
+        $data = [
             'value' => 1,
 
         ];
@@ -221,10 +221,10 @@ class ConfigurationControllerTest extends TestCase
     public function testUpdateInvalid(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $data     = [
+        $data      = [
             'value' => 'true',
         ];
-        $response = $this->post('/api/v1/configuration/last_update_check', $data);
+        $response  = $this->post('/api/v1/configuration/last_update_check', $data);
         $response->assertStatus(404);
     }
 

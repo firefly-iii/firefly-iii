@@ -2669,7 +2669,7 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
-        $data        = [
+        $data = [
             'description'  => 'Some deposit #' . random_int(1, 10000),
             'date'         => '2018-01-01',
             'transactions' => [

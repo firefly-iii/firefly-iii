@@ -249,7 +249,7 @@ class RuleController extends Controller
         foreach ($accountList as $accountId) {
             Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
             $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
+            if (null !== $account && $this->accountRepository->isAsset($account)) {
                 Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
                 $accounts->push($account);
             }

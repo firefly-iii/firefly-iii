@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Support\Http\Api\TransactionFilter;
@@ -205,7 +204,7 @@ class RecurrenceController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -217,7 +216,8 @@ class RecurrenceController extends Controller
      */
     public function trigger(): JsonResponse
     {
-        $recurring = new RecurringCronjob;
+        /** @var RecurringCronjob $recurring */
+        $recurring = app(RecurringCronjob::class);
         try {
             $result = $recurring->fire();
         } catch (FireflyException $e) {
@@ -230,7 +230,7 @@ class RecurrenceController extends Controller
         if (true === $result) {
             return response()->json([], 200);
         }
-        throw new FireflyException('Could not fire recurring cron job.');
+        return response()->json([], 418); // @codeCoverageIgnore
     }
 
     /**

@@ -42,7 +42,6 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -154,54 +153,6 @@ class CurrencyController extends Controller
     }
 
     /**
-     * Show all transactions.
-     *
-     * @param Request             $request
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return JsonResponse
-     */
-    public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
-    {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $type     = $request->get('type') ?? 'default';
-        $this->parameters->set('type', $type);
-
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        /** @var User $admin */
-        $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setCurrency($currency);
-
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
-
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
-        $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
-        $transactions = $paginator->getCollection();
-
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
      * Display a listing of the resource.
      *
      * @param Request             $request
@@ -212,6 +163,9 @@ class CurrencyController extends Controller
      */
     public function availableBudgets(Request $request, TransactionCurrency $currency): JsonResponse
     {
+        /** @var User $admin */
+        $admin = auth()->user();
+
         // create some objects:
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
@@ -222,6 +176,7 @@ class CurrencyController extends Controller
         // get list of available budgets. Count it and split it.
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
+        $repository->setUser($admin);
         $unfiltered = $repository->getAvailableBudgets();
 
         // filter list.
@@ -302,18 +257,8 @@ class CurrencyController extends Controller
         $repository = app(BudgetRepositoryInterface::class);
         $manager    = new Manager;
         $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
-        $budgetId   = (int)($request->get('budget_id') ?? 0);
-        $budget     = $repository->findNull($budgetId);
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $this->parameters->set('budget_id', $budgetId);
-
-        $unfiltered = new Collection;
-        if (null === $budget) {
-            $unfiltered = $repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
-        }
-        if (null !== $budget) {
-            $unfiltered = $repository->getBudgetLimits($budget, $this->parameters->get('start'), $this->parameters->get('end'));
-        }
+        $unfiltered = $repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
 
         // filter budget limits on currency ID
         $collection = $unfiltered->filter(
@@ -404,7 +349,6 @@ class CurrencyController extends Controller
             return response()->json([], 409);
         }
         $this->repository->disable($currency);
-        $currency = $this->repository->find($currency->id);
         $manager  = new Manager();
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -429,7 +373,6 @@ class CurrencyController extends Controller
     public function enable(Request $request, TransactionCurrency $currency): JsonResponse
     {
         $this->repository->enable($currency);
-        $currency = $this->repository->find($currency->id);
         $manager  = new Manager();
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -488,7 +431,6 @@ class CurrencyController extends Controller
         app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
-        $currency = $this->repository->find($currency->id);
         $manager  = new Manager();
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -651,6 +593,54 @@ class CurrencyController extends Controller
         }
         throw new FireflyException('Could not store new currency.'); // @codeCoverageIgnore
 
+    }
+
+    /**
+     * Show all transactions.
+     *
+     * @param Request             $request
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setCurrency($currency);
+
+        if (\in_array(TransactionType::TRANSFER, $types, true)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
+        $transactions = $paginator->getCollection();
+
+        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

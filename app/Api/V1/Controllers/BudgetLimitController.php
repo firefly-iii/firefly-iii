@@ -198,11 +198,6 @@ class BudgetLimitController extends Controller
         $collector->setAllAssetAccounts();
         $collector->setBudget($budgetLimit->budget);
         $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
-
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
-
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
         $collector->setTypes($types);
         $paginator = $collector->getPaginatedTransactions();

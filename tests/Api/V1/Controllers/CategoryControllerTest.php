@@ -24,8 +24,15 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollector;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Category;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -144,6 +151,132 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
+     */
+    public function testTransactionsBasic(): void
+    {
+        $category = $this->user()->categories()->first();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setCategory')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+        $response = $this->get(route('api.v1.categories.transactions', [$category->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
+     */
+    public function testTransactionsRange(): void
+    {
+        $category = $this->user()->categories()->first();
+
+        // get some transactions using the collector:
+        Log::info('This transaction collector is OK, because it is used in a test:');
+        $collector = new TransactionCollector;
+        $collector->setUser($this->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setLimit(5)->setPage(1);
+        try {
+            $paginator = $collector->getPaginatedTransactions();
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // mock stuff:
+        $repository         = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $billRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser');
+        $currencyRepository->shouldReceive('setUser');
+
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
+        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
+        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
+
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setCategory')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+
+
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+
+        // mock some calls:
+
+        // test API
+
+        $response = $this->get(
+            route('api.v1.categories.transactions', [$category->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31'])
+        );
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * Update a category.
      *
      * @covers \FireflyIII\Api\V1\Controllers\CategoryController
@@ -174,6 +307,5 @@ class CategoryControllerTest extends TestCase
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
         $response->assertSee($category->name);
     }
-
 
 }

@@ -244,13 +244,10 @@ class BudgetController extends Controller
         $collector->setAllAssetAccounts();
         $collector->setBudget($budget);
 
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
-
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
+
         $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
         $collector->setTypes($types);
         $paginator = $collector->getPaginatedTransactions();

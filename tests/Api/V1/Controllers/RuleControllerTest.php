@@ -24,10 +24,17 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
+use FireflyIII\Jobs\Job;
 use FireflyIII\Models\Rule;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\TransactionRules\TransactionMatcher;
+use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
+use Queue;
 use Tests\TestCase;
 
 /**
@@ -206,6 +213,67 @@ class RuleControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertSee('');
 
+    }
+
+    /**
+     *
+     */
+    public function testTestRule(): void
+    {
+        $rule         = $this->user()->rules()->first();
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $matcher      = $this->mock(TransactionMatcher::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
+        $repository->shouldReceive('setUser')->once();
+
+        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
+        $repository->shouldReceive('isAsset')->withArgs([1])->andReturn(true);
+        $repository->shouldReceive('isAsset')->withArgs([2])->andReturn(false);
+
+        $matcher->shouldReceive('setRule')->once();
+        $matcher->shouldReceive('setEndDate')->once();
+        $matcher->shouldReceive('setStartDate')->once();
+        $matcher->shouldReceive('setSearchLimit')->once();
+        $matcher->shouldReceive('setTriggeredLimit')->once();
+        $matcher->shouldReceive('setAccounts')->once();
+        $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn(new Collection);
+
+
+        $response = $this->get(route('api.v1.rules.test', [$rule->id]) . '?accounts=1,2,3');
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RuleController
+     */
+    public function testTriggerRule(): void
+    {
+
+        $rule         = $this->user()->rules()->first();
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $matcher      = $this->mock(TransactionMatcher::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
+        $repository->shouldReceive('isAsset')->andReturn(true, false);
+
+        Queue::fake();
+
+
+        $response = $this->post(route('api.v1.rules.trigger', [$rule->id]) . '?accounts=1,2,3');
+        $response->assertStatus(204);
+
+        Queue::assertPushed(
+            ExecuteRuleOnExistingTransactions::class, function (Job $job) use ($rule) {
+            return $job->getRule()->id === $rule->id;
+        }
+        );
     }
 
     /**
