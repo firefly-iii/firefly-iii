@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Category;
@@ -110,7 +111,10 @@ class AccountControllerTest extends TestCase
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $transaction = factory(Transaction::class)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
@@ -135,12 +139,12 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudgetAll(string $range): void
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transaction  = factory(Transaction::class)->make();
+        $transaction   = factory(Transaction::class)->make();
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -172,7 +176,10 @@ class AccountControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -231,7 +238,7 @@ class AccountControllerTest extends TestCase
         $generator     = $this->mock(GeneratorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         // change the preference:
         Preferences::setForUser($this->user(), 'frontPageAccounts', []);
 
@@ -262,7 +269,10 @@ class AccountControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
@@ -317,10 +327,13 @@ class AccountControllerTest extends TestCase
      */
     public function testPeriod(string $range): void
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
         Steam::shouldReceive('balanceInRange')->andReturn(['2012-01-01' => '0']);
         $generator->shouldReceive('singleSet')->andReturn([]);
@@ -339,9 +352,12 @@ class AccountControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $generator = $this->mock(GeneratorInterface::class);
-
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(),'currency_id'])->andReturn('1')->atLeast()->once();
+        $generator     = $this->mock(GeneratorInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
 
         $currencyRepos->shouldReceive('findNull')->andReturn(TransactionCurrency::find(1), null);
 
@@ -364,7 +380,7 @@ class AccountControllerTest extends TestCase
         $generator     = $this->mock(GeneratorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         // grab two expense accounts from the current user.
         $accounts = $this->user()->accounts()->where('account_type_id', 5)->take(2)->get();
 

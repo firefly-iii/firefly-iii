@@ -118,8 +118,8 @@ class AccountTransformer extends TransformerAbstract
 
         $data = [
             'id'                   => (int)$account->id,
-            'updated_at'           => $account->updated_at->toAtomString(),
             'created_at'           => $account->created_at->toAtomString(),
+            'updated_at'           => $account->updated_at->toAtomString(),
             'active'               => 1 === (int)$account->active,
             'name'                 => $account->name,
             'type'                 => $type,

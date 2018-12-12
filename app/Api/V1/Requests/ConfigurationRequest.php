@@ -59,7 +59,7 @@ class ConfigurationRequest extends Request
                 return ['value' => $this->integer('value')];
         }
 
-        return ['value' => $this->string('value')];
+        return ['value' => $this->string('value')]; // @codeCoverageIgnore
     }
 
     /**
@@ -78,6 +78,6 @@ class ConfigurationRequest extends Request
                 return ['value' => 'required|numeric|between:-1,1'];
         }
 
-        return ['value' => 'required'];
+        return ['value' => 'required']; // @codeCoverageIgnore
     }
 }

@@ -40,6 +40,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property float       $spent // used in category reports
  * @property Carbon|null lastActivity
  * @property bool        encrypted
+ * @property User        $user
+ * @property Carbon      $created_at
+ * @property Carbon      $updated_at
  */
 class Category extends Model
 {

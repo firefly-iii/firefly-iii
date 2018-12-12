@@ -57,8 +57,8 @@ class PreferenceTransformer extends TransformerAbstract
     {
         return [
             'id'         => (int)$preference->id,
-            'updated_at' => $preference->updated_at->toAtomString(),
             'created_at' => $preference->created_at->toAtomString(),
+            'updated_at' => $preference->updated_at->toAtomString(),
             'name'       => $preference->name,
             'data'       => $preference->data,
         ];

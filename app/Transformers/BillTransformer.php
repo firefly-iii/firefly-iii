@@ -72,24 +72,24 @@ class BillTransformer extends TransformerAbstract
         $this->repository->setUser($bill->user);
         $data = [
             'id'                  => (int)$bill->id,
-            'updated_at'          => $bill->updated_at->toAtomString(),
             'created_at'          => $bill->created_at->toAtomString(),
-            'name'                => $bill->name,
+            'updated_at'          => $bill->updated_at->toAtomString(),
             'currency_id'         => $bill->transaction_currency_id,
             'currency_code'       => $bill->transactionCurrency->code,
             'currency_symbol'     => $bill->transactionCurrency->symbol,
+            'currency_dp'     => $bill->transactionCurrency->decimal_places,
+            'name'                => $bill->name,
             'amount_min'          => round((float)$bill->amount_min, 2),
             'amount_max'          => round((float)$bill->amount_max, 2),
             'date'                => $bill->date->format('Y-m-d'),
             'repeat_freq'         => $bill->repeat_freq,
             'skip'                => (int)$bill->skip,
-            'automatch'           => $bill->automatch,
             'active'              => $bill->active,
-            'attachments_count'   => $bill->attachments()->count(),
-            'pay_dates'           => $payDates,
             'notes'               => $this->repository->getNoteText($bill),
-            'paid_dates'          => $paidData['paid_dates'],
             'next_expected_match' => $paidData['next_expected_match'],
+            'pay_dates'           => $payDates,
+            'paid_dates'          => $paidData['paid_dates'],
+
             'links'               => [
                 [
                     'rel' => 'self',

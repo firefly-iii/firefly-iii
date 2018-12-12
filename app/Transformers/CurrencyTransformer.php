@@ -63,14 +63,14 @@ class CurrencyTransformer extends TransformerAbstract
         }
         $data = [
             'id'             => (int)$currency->id,
-            'updated_at'     => $currency->updated_at->toAtomString(),
             'created_at'     => $currency->created_at->toAtomString(),
+            'updated_at'     => $currency->updated_at->toAtomString(),
+            'default'        => $isDefault,
+            'enabled'        => $currency->enabled,
             'name'           => $currency->name,
             'code'           => $currency->code,
             'symbol'         => $currency->symbol,
             'decimal_places' => (int)$currency->decimal_places,
-            'default'        => $isDefault,
-            'enabled'        => $currency->enabled,
             'links'          => [
                 [
                     'rel' => 'self',

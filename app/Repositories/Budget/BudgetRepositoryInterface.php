@@ -35,7 +35,6 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
-
     /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
@@ -166,12 +165,12 @@ interface BudgetRepositoryInterface
      */
     public function getBudgetPeriodReport(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @return Collection
      */
     public function getBudgets(): Collection;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Get all budgets with these ID's.
@@ -206,20 +205,19 @@ interface BudgetRepositoryInterface
      */
     public function setAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end, string $amount): AvailableBudget;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Budget $budget
      * @param int    $order
      */
     public function setBudgetOrder(Budget $budget, int $order): void;
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param User $user
      */
     public function setUser(User $user);
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $budgets
      * @param Collection $accounts
@@ -229,6 +227,20 @@ interface BudgetRepositoryInterface
      * @return string
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * Return multi-currency spent information.
+     *
+     * @param Collection $budgets
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $accounts

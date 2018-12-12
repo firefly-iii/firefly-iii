@@ -26,6 +26,7 @@ namespace Tests\Feature\Controllers\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
@@ -56,7 +57,7 @@ class AmountControllerTest extends TestCase
      */
     public function testAmount(): void
     {
-        Log::debug('Now in testAmount()');
+        Log::info('Now in testAmount()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -79,7 +80,7 @@ class AmountControllerTest extends TestCase
      */
     public function testAmountLargeDiff(): void
     {
-        Log::debug('Now in testAmount()');
+        Log::info('Now in testAmountLargeDiff()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -102,7 +103,7 @@ class AmountControllerTest extends TestCase
      */
     public function testAmountOutOfRange(): void
     {
-        Log::debug('Now in testAmountOutOfRange()');
+        Log::info('Now in testAmountOutOfRange()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -126,7 +127,7 @@ class AmountControllerTest extends TestCase
      */
     public function testAmountZero(): void
     {
-        Log::debug('Now in testAmountZero()');
+        Log::info('Now in testAmountZero()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -147,11 +148,15 @@ class AmountControllerTest extends TestCase
      */
     public function testInfoIncome(): void
     {
-        Log::debug('Now in testInfoIncome()');
+        Log::info('Now in testInfoIncome()');
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
         $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
@@ -187,11 +192,16 @@ class AmountControllerTest extends TestCase
      */
     public function testInfoIncomeExpanded(string $range): void
     {
-        Log::debug(sprintf('Now in testInfoIncomeExpanded(%s)', $range));
+        Log::info(sprintf('Now in testInfoIncomeExpanded(%s)', $range));
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
         $repository->shouldReceive('getAvailableBudget')->andReturn('100.123');
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
@@ -223,12 +233,15 @@ class AmountControllerTest extends TestCase
      */
     public function testInfoIncomeInversed(): void
     {
-        Log::debug('Now in testInfoIncome()');
+        Log::info('Now in testInfoIncomeInversed()');
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->times(2);
         $collector->shouldReceive('setRange')->andReturnSelf()->times(2);
         $collector->shouldReceive('setTypes')->andReturnSelf()->times(2);
@@ -260,11 +273,15 @@ class AmountControllerTest extends TestCase
      */
     public function testPostUpdateIncome(): void
     {
-        Log::debug('Now in testPostUpdateIncome()');
+        Log::info('Now in testPostUpdateIncome()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        //$fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        //$fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('setAvailableBudget');
         $repository->shouldReceive('cleanupBudgets');
@@ -281,7 +298,7 @@ class AmountControllerTest extends TestCase
      */
     public function testUpdateIncome(): void
     {
-        Log::debug('Now in testUpdateIncome()');
+        Log::info('Now in testUpdateIncome()');
         // must be in list
         $this->be($this->user());
 
@@ -289,6 +306,10 @@ class AmountControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getAvailableBudget')->andReturn('1');
         $repository->shouldReceive('cleanupBudgets');

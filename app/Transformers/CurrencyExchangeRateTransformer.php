@@ -59,8 +59,8 @@ class CurrencyExchangeRateTransformer extends TransformerAbstract
         $result = 0.0 === $result ? null : $result;
         $data   = [
             'id'                   => (int)$rate->id,
-            'updated_at'           => $rate->updated_at->toAtomString(),
             'created_at'           => $rate->created_at->toAtomString(),
+            'updated_at'           => $rate->updated_at->toAtomString(),
             'from_currency_id'     => $rate->fromCurrency->id,
             'from_currency_name'   => $rate->fromCurrency->name,
             'from_currency_code'   => $rate->fromCurrency->code,

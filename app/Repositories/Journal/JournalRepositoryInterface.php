@@ -123,6 +123,13 @@ interface JournalRepositoryInterface
     public function getAttachments(TransactionJournal $journal): Collection;
 
     /**
+     * @param Transaction $transaction
+     *
+     * @return Collection
+     */
+    public function getAttachmentsByTr(Transaction $transaction): Collection;
+
+    /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
      *
      * @param TransactionJournal $journal
@@ -232,6 +239,13 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEventsbyTr(Transaction $transaction): Collection;
 
     /**
      * Return all tags as strings in an array.

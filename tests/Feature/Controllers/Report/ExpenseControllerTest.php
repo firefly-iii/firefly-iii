@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -57,6 +59,10 @@ class ExpenseControllerTest extends TestCase
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
         // fake collection:
@@ -102,6 +108,10 @@ class ExpenseControllerTest extends TestCase
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
         // fake collection:
@@ -157,6 +167,10 @@ class ExpenseControllerTest extends TestCase
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
         // fake collection:
@@ -200,6 +214,10 @@ class ExpenseControllerTest extends TestCase
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
         // fake collection:
@@ -245,6 +263,10 @@ class ExpenseControllerTest extends TestCase
         $expense    = $this->user()->accounts()->where('account_type_id', 4)->first();
         $revenue    = $this->user()->accounts()->where('account_type_id', 5)->first();
         $repository = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);
 
         // fake collection:

@@ -85,8 +85,8 @@ class PiggyBankEventTransformer extends TransformerAbstract
 
         $data = [
             'id'              => (int)$event->id,
-            'updated_at'      => $event->updated_at->toAtomString(),
             'created_at'      => $event->created_at->toAtomString(),
+            'updated_at'      => $event->updated_at->toAtomString(),
             'amount'          => round($event->amount, $decimalPlaces),
             'currency_id'     => $currency->id,
             'currency_code'   => $currency->code,

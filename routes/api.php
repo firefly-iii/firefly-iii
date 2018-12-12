@@ -301,7 +301,7 @@ Route::group(
         Route::get('{tagOrId}', ['uses' => 'TagController@show', 'as' => 'show']);
         Route::put('{tagOrId}', ['uses' => 'TagController@update', 'as' => 'update']);
         Route::delete('{tagOrId}', ['uses' => 'TagController@delete', 'as' => 'delete']);
-        Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'delete']);
+        Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'transactions']);
     }
 );
 

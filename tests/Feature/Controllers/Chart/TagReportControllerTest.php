@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
+use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
@@ -29,6 +30,7 @@ use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -65,6 +67,11 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -93,6 +100,11 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -120,6 +132,11 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -146,6 +163,11 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -171,6 +193,11 @@ class TagReportControllerTest extends TestCase
         $tag          = $this->user()->tags()->first();
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
+
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $set = new Collection;
         for ($i = 0; $i < 10; ++$i) {
@@ -211,6 +238,11 @@ class TagReportControllerTest extends TestCase
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -236,6 +268,11 @@ class TagReportControllerTest extends TestCase
         $tag          = $this->user()->tags()->first();
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
+
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setTags')->once()->andReturnSelf();

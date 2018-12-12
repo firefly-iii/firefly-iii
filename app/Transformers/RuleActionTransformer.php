@@ -60,10 +60,10 @@ class RuleActionTransformer extends TransformerAbstract
     {
         $data = [
             'id'              => (int)$ruleAction->id,
-            'updated_at'      => $ruleAction->updated_at->toAtomString(),
             'created_at'      => $ruleAction->created_at->toAtomString(),
-            'action_type'     => $ruleAction->action_type,
-            'action_value'    => $ruleAction->action_value,
+            'updated_at'      => $ruleAction->updated_at->toAtomString(),
+            'type'            => $ruleAction->action_type,
+            'value'           => $ruleAction->action_value,
             'order'           => $ruleAction->order,
             'active'          => $ruleAction->active,
             'stop_processing' => $ruleAction->stop_processing,

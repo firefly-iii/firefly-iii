@@ -56,7 +56,8 @@ class AvailableBudgetControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -79,7 +80,8 @@ class AvailableBudgetControllerTest extends TestCase
     {
         $availableBudgets = $this->user()->availableBudgets()->get();
         // mock stuff:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -100,7 +102,8 @@ class AvailableBudgetControllerTest extends TestCase
     {
         $availableBudget = $this->user()->availableBudgets()->first();
         // mock stuff:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository    = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();

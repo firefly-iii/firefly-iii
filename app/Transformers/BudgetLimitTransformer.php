@@ -71,8 +71,8 @@ class BudgetLimitTransformer extends TransformerAbstract
         }
         $data = [
             'id'              => (int)$budgetLimit->id,
-            'updated_at'      => $budgetLimit->updated_at->toAtomString(),
             'created_at'      => $budgetLimit->created_at->toAtomString(),
+            'updated_at'      => $budgetLimit->updated_at->toAtomString(),
             'start_date'      => $budgetLimit->start_date->format('Y-m-d'),
             'end_date'        => $budgetLimit->end_date->format('Y-m-d'),
             'budget_id'       => $budgetLimit->budget_id,

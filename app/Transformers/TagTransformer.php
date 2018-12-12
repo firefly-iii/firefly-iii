@@ -66,8 +66,8 @@ class TagTransformer extends TransformerAbstract
         $date = null === $tag->date ? null : $tag->date->format('Y-m-d');
         $data = [
             'id'          => (int)$tag->id,
-            'updated_at'  => $tag->updated_at->toAtomString(),
             'created_at'  => $tag->created_at->toAtomString(),
+            'updated_at'  => $tag->updated_at->toAtomString(),
             'tag'         => $tag->tag,
             'date'        => $date,
             'description' => '' === $tag->description ? null : $tag->description,

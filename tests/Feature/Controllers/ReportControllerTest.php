@@ -415,6 +415,38 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
+    public function testPostIndexAccountError(): void
+    {
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
+        $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+
+        $accountRepos->shouldReceive('findNull')->andReturn(null)->times(3);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $data = [
+            'accounts'    => ['1'],
+            'exp_rev'     => ['4'],
+            'daterange'   => '2016-01-01 - 2016-01-31',
+            'report_type' => 'account',
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('reports.index.post'), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('reports.index'));
+        $response->assertSessionHas('error');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\ReportController
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
+     */
     public function testPostIndexAuditOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);

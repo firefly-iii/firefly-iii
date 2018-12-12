@@ -24,11 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -61,12 +59,24 @@ class BudgetTransformer extends TransformerAbstract
      */
     public function transform(Budget $budget): array
     {
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
+        $spent = [];
+        if (null !== $start && null !== $end) {
+            /** @var BudgetRepositoryInterface $repository */
+            $repository = app(BudgetRepositoryInterface::class);
+            $repository->setUser($budget->user);
+            $spent = $repository->spentInPeriodMc(new Collection([$budget]), new Collection, $start, $end);
+        }
+
+
         $data = [
             'id'         => (int)$budget->id,
-            'updated_at' => $budget->updated_at->toAtomString(),
             'created_at' => $budget->created_at->toAtomString(),
+            'updated_at' => $budget->updated_at->toAtomString(),
             'active'     => 1 === (int)$budget->active,
             'name'       => $budget->name,
+            'spent'      => $spent,
             'links'      => [
                 [
                     'rel' => 'self',

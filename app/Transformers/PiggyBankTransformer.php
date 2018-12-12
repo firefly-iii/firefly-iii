@@ -102,8 +102,8 @@ class PiggyBankTransformer extends TransformerAbstract
         $percentage   = (int)(0 !== bccomp('0', $currentAmountStr) ? $currentAmount / $targetAmount * 100 : 0);
         $data         = [
             'id'              => (int)$piggyBank->id,
-            'updated_at'      => $piggyBank->updated_at->toAtomString(),
             'created_at'      => $piggyBank->created_at->toAtomString(),
+            'updated_at'      => $piggyBank->updated_at->toAtomString(),
             'name'            => $piggyBank->name,
             'currency_id'     => $currency->id,
             'currency_code'   => $currency->code,

@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -248,6 +249,10 @@ class TagControllerTest extends TestCase
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);

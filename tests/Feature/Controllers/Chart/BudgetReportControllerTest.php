@@ -29,6 +29,7 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -59,7 +60,10 @@ class BudgetReportControllerTest extends TestCase
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $generator   = $this->mock(GeneratorInterface::class);
         $pieChart    = $this->mock(MetaPieChartInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();
@@ -82,6 +86,10 @@ class BudgetReportControllerTest extends TestCase
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $generator   = $this->mock(GeneratorInterface::class);
         $pieChart    = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setBudgets')->once()->andReturnSelf();
@@ -104,6 +112,10 @@ class BudgetReportControllerTest extends TestCase
         $generator   = $this->mock(GeneratorInterface::class);
         $collector   = $this->mock(TransactionCollectorInterface::class);
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $one                              = factory(BudgetLimit::class)->make();
         $one->budget_id                   = 1;

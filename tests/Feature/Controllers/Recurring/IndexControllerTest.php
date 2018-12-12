@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Recurring;
 
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
@@ -53,9 +54,13 @@ class IndexControllerTest extends TestCase
     public function testIndex(): void
     {
 
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+
+        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
+        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -88,9 +93,13 @@ class IndexControllerTest extends TestCase
 
     public function testShow(): void
     {
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+
+        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
+        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $budgetRepos->shouldReceive('findNull')->withAnyArgs()->andReturn($this->user()->budgets()->first())->atLeast()->once();

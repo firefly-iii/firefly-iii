@@ -74,8 +74,8 @@ class NoteTransformer extends TransformerAbstract
         $converter = new CommonMarkConverter;
         $data      = [
             'id'         => (int)$note->id,
-            'updated_at' => $note->updated_at->toAtomString(),
             'created_at' => $note->created_at->toAtomString(),
+            'updated_at' => $note->updated_at->toAtomString(),
             'title'      => $note->title,
             'text'       => $note->text,
             'markdown'   => $converter->convertToHtml($note->text),

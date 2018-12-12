@@ -19,6 +19,7 @@ use Illuminate\Support\Collection;
 /**
  *
  * Class ApplyRules
+ * @codeCoverageIgnore
  */
 class ApplyRules extends Command
 {

@@ -21,7 +21,7 @@
 
 declare(strict_types=1);
 
-namespace tests\Api\V1\Controllers;
+namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\ImportJob;

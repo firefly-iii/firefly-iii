@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Budget;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionJournal;
@@ -61,7 +62,7 @@ class IndexControllerTest extends TestCase
     {
 
 
-        Log::debug(sprintf('Now in testIndex(%s)', $range));
+        Log::info(sprintf('Now in testIndex(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -110,7 +111,7 @@ class IndexControllerTest extends TestCase
      */
     public function testIndexOutOfRange(string $range): void
     {
-        Log::debug(sprintf('Now in testIndexOutOfRange(%s)', $range));
+        Log::info(sprintf('Now in testIndexOutOfRange(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -130,6 +131,10 @@ class IndexControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -161,7 +166,7 @@ class IndexControllerTest extends TestCase
      */
     public function testIndexWithDate(string $range): void
     {
-        Log::debug(sprintf('Now in testIndexWithDate(%s)', $range));
+        Log::info(sprintf('Now in testIndexWithDate(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -181,6 +186,10 @@ class IndexControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -210,7 +219,7 @@ class IndexControllerTest extends TestCase
      */
     public function testIndexWithInvalidDate(string $range): void
     {
-        Log::debug(sprintf('Now in testIndexWithInvalidDate(%s)', $range));
+        Log::info(sprintf('Now in testIndexWithInvalidDate(%s)', $range));
         // mock stuff
         $budget      = factory(Budget::class)->make();
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -230,6 +239,10 @@ class IndexControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);

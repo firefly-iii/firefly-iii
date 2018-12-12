@@ -31,6 +31,8 @@ use Illuminate\Support\Collection;
  *
  * Used when the final collection contains double transactions, which can happen when viewing the tag report.
  * Class DoubleTransactionFilter
+ *
+ * @codeCoverageIgnore
  */
 class DoubleTransactionFilter implements FilterInterface
 {

@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -78,8 +77,8 @@ class RecurrenceTransformer extends TransformerAbstract
         // basic data.
         $return = [
             'id'                     => (int)$recurrence->id,
-            'updated_at'             => $recurrence->updated_at->toAtomString(),
             'created_at'             => $recurrence->created_at->toAtomString(),
+            'updated_at'             => $recurrence->updated_at->toAtomString(),
             'transaction_type_id'    => $recurrence->transaction_type_id,
             'transaction_type'       => $recurrence->transactionType->type,
             'title'                  => $recurrence->title,
@@ -172,15 +171,15 @@ class RecurrenceTransformer extends TransformerAbstract
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
             $repetitionArray = [
-                'id'                => $repetition->id,
-                'updated_at'        => $repetition->updated_at->toAtomString(),
-                'created_at'        => $repetition->created_at->toAtomString(),
-                'repetition_type'   => $repetition->repetition_type,
-                'repetition_moment' => $repetition->repetition_moment,
-                'repetition_skip'   => (int)$repetition->repetition_skip,
-                'weekend'           => (int)$repetition->weekend,
-                'description'       => $this->repository->repetitionDescription($repetition),
-                'occurrences'       => [],
+                'id'          => $repetition->id,
+                'created_at'  => $repetition->created_at->toAtomString(),
+                'updated_at'  => $repetition->updated_at->toAtomString(),
+                'type'        => $repetition->repetition_type,
+                'moment'      => $repetition->repetition_moment,
+                'skip'        => (int)$repetition->repetition_skip,
+                'weekend'     => (int)$repetition->weekend,
+                'description' => $this->repository->repetitionDescription($repetition),
+                'occurrences' => [],
             ];
 
             // get the (future) occurrences for this specific type of repetition:
@@ -255,22 +254,38 @@ class RecurrenceTransformer extends TransformerAbstract
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
 
-            $sourceAccount      = $transaction->sourceAccount;
-            $destinationAccount = $transaction->destinationAccount;
-            $transactionArray   = [
-                'currency_id'         => $transaction->transaction_currency_id,
-                'currency_code'       => $transaction->transactionCurrency->code,
-                'currency_symbol'     => $transaction->transactionCurrency->symbol,
-                'currency_dp'         => $transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id' => $transaction->foreign_currency_id,
-                'source_id'           => $transaction->source_id,
-                'source_name'         => null === $sourceAccount ? '' : $sourceAccount->name,
-                'destination_id'      => $transaction->destination_id,
-                'destination_name'    => null === $destinationAccount ? '' : $destinationAccount->name,
-                'amount'              => $transaction->amount,
-                'foreign_amount'      => $transaction->foreign_amount,
-                'description'         => $transaction->description,
-                'meta'                => $this->getTransactionMeta($transaction),
+            $sourceAccount         = $transaction->sourceAccount;
+            $destinationAccount    = $transaction->destinationAccount;
+            $foreignCurrencyCode   = null;
+            $foreignCurrencySymbol = null;
+            $foreignCurrencyDp     = null;
+            if (null !== $transaction->foreign_currency_id) {
+                $foreignCurrencyCode   = $transaction->foreignCurrency->code;
+                $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
+                $foreignCurrencyDp     = $transaction->foreignCurrency->decimal_places;
+            }
+            $amount        = round($transaction->amount, $transaction->transactionCurrency->decimal_places);
+            $foreignAmount = null;
+            if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
+                $foreignAmount = round($transaction->foreign_amount, $foreignCurrencyDp);
+            }
+            $transactionArray = [
+                'currency_id'             => $transaction->transaction_currency_id,
+                'currency_code'           => $transaction->transactionCurrency->code,
+                'currency_symbol'         => $transaction->transactionCurrency->symbol,
+                'currency_dp'             => $transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id'     => $transaction->foreign_currency_id,
+                'foreign_currency_code'   => $foreignCurrencyCode,
+                'foreign_currency_symbol' => $foreignCurrencySymbol,
+                'foreign_currency_dp'     => $foreignCurrencyDp,
+                'source_id'               => $transaction->source_id,
+                'source_name'             => null === $sourceAccount ? '' : $sourceAccount->name,
+                'destination_id'          => $transaction->destination_id,
+                'destination_name'        => null === $destinationAccount ? '' : $destinationAccount->name,
+                'amount'                  => $amount,
+                'foreign_amount'          => $foreignAmount,
+                'description'             => $transaction->description,
+                'meta'                    => $this->getTransactionMeta($transaction),
             ];
             if (null !== $transaction->foreign_currency_id) {
                 $transactionArray['foreign_currency_code']   = $transaction->foreignCurrency->code;

@@ -48,7 +48,7 @@ class AutomationHandler
         $sendReport = envNonEmpty('SEND_REPORT_JOURNALS', true);
 
         if (false === $sendReport) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
 
         Log::debug('In reportJournals.');

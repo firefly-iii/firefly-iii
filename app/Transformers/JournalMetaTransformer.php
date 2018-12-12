@@ -62,8 +62,8 @@ class JournalMetaTransformer extends TransformerAbstract
     {
         $data = [
             'id'         => (int)$meta->id,
-            'updated_at' => $meta->updated_at->toAtomString(),
             'created_at' => $meta->created_at->toAtomString(),
+            'updated_at' => $meta->updated_at->toAtomString(),
             'name'       => $meta->name,
             'data'       => $meta->data,
             'hash'       => $meta->hash,

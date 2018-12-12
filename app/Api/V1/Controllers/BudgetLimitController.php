@@ -27,11 +27,8 @@ namespace FireflyIII\Api\V1\Controllers;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BudgetLimitTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
@@ -203,7 +200,7 @@ class BudgetLimitController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.budget_limits.transactions', [$budgetLimit->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -219,12 +216,8 @@ class BudgetLimitController extends Controller
      */
     public function update(BudgetLimitRequest $request, BudgetLimit $budgetLimit): JsonResponse
     {
-        $data   = $request->getAll();
-        $budget = $this->repository->findNull($data['budget_id']);
-        if (null === $budget) {
-            $budget = $budgetLimit->budget;
-        }
-        $data['budget'] = $budget;
+        $data           = $request->getAll();
+        $data['budget'] = $budgetLimit->budget;
         $budgetLimit    = $this->repository->updateBudgetLimit($budgetLimit, $data);
         $manager        = new Manager;
         $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';

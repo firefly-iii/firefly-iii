@@ -74,8 +74,8 @@ class LinkTypeTransformer extends TransformerAbstract
     {
         $data = [
             'id'         => (int)$linkType->id,
-            'updated_at' => $linkType->updated_at->toAtomString(),
             'created_at' => $linkType->created_at->toAtomString(),
+            'updated_at' => $linkType->updated_at->toAtomString(),
             'name'       => $linkType->name,
             'inward'     => $linkType->inward,
             'outward'    => $linkType->outward,

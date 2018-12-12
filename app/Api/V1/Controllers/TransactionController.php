@@ -91,27 +91,8 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $attachments = $transaction->transactionJournal->attachments()->get();
+        $attachments = $this->repository->getAttachmentsByTr($transaction);
         $resource    = new FractalCollection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
-    }
-
-    /**
-     * @param Request     $request
-     * @param Transaction $transaction
-     *
-     * @return JsonResponse
-     */
-    public function piggyBankEvents(Request $request, Transaction $transaction): JsonResponse
-    {
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $events= $transaction->transactionJournal->piggyBankEvents()->get();
-        $resource    = new FractalCollection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -175,6 +156,25 @@ class TransactionController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @param Request     $request
+     * @param Transaction $transaction
+     *
+     * @return JsonResponse
+     */
+    public function piggyBankEvents(Request $request, Transaction $transaction): JsonResponse
+    {
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $events = $this->repository->getPiggyBankEventsByTr($transaction);
+        $resource = new FractalCollection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
     }
 
     /**

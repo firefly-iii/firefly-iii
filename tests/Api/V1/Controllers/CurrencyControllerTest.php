@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
@@ -115,10 +113,12 @@ class CurrencyControllerTest extends TestCase
     {
         $availableBudgets = $this->user()->availableBudgets()->get();
         // mock stuff:
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
+        $currencyRepos->shouldReceive('setUser')->once();
         $budgetRepos->shouldReceive('setUser')->once();
         $budgetRepos->shouldReceive('getAvailableBudgets')->once()->andReturn($availableBudgets);
 
@@ -140,10 +140,13 @@ class CurrencyControllerTest extends TestCase
         $bills     = factory(Bill::class, 10)->create();
         $paginator = new LengthAwarePaginator($bills, 10, 50, 1);
         // mock stuff:
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $repository    = $this->mock(BillRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
+        $currencyRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('getPaginator')->withAnyArgs()->andReturn($paginator)->once();
         $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
         $repository->shouldReceive('getNoteText')->andReturn('Hi there');
@@ -164,13 +167,16 @@ class CurrencyControllerTest extends TestCase
     public function testBudgetLimits(): void
     {
         $repository                           = $this->mock(BudgetRepositoryInterface::class);
+        $currencyRepos                        = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos                            = $this->mock(UserRepositoryInterface::class);
         $currency                             = TransactionCurrency::first();
         $budgetLimit                          = BudgetLimit::first();
         $budgetLimit->transaction_currency_id = $currency->id;
         $collection                           = new Collection([$budgetLimit]);
+
         // mock calls:
         $repository->shouldReceive('getAllBudgetLimits')->once()->andReturn($collection);
-
+        $currencyRepos->shouldReceive('setUser')->once();
 
         $response = $this->get(route('api.v1.currencies.budget_limits', [$currency->code]));
         $response->assertStatus(200);
@@ -183,6 +189,7 @@ class CurrencyControllerTest extends TestCase
     public function testCer(): void
     {
         $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('getExchangeRates')->once()->andReturn(new Collection);
 
@@ -367,11 +374,14 @@ class CurrencyControllerTest extends TestCase
         $recurrences = $this->user()->recurrences()->get();
 
         // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository    = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
+        $currencyRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getAll')->once()->andReturn($recurrences);
         $repository->shouldReceive('getNoteText')->andReturn('Notes.');
@@ -393,9 +403,11 @@ class CurrencyControllerTest extends TestCase
     {
         $rules = $this->user()->rules()->get();
 
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos     = $this->mock(RuleRepositoryInterface::class);
+        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
         $ruleRepos->shouldReceive('getAll')->once()->andReturn($rules);
-
+        $currencyRepos->shouldReceive('setUser')->once();
 
         // call API
         $currency = TransactionCurrency::first();
@@ -514,34 +526,16 @@ class CurrencyControllerTest extends TestCase
     {
         $currency     = TransactionCurrency::first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsByType')->atLeast()->once()
-                     ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
-        // get some transactions using the collector:
-        Log::info('This transaction collector is OK, because it is used in a test:');
-        $collector = new TransactionCollector;
-        $collector->setUser($this->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setLimit(5)->setPage(1);
-        try {
-            $paginator = $collector->getPaginatedTransactions();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
 
-        // mock stuff:
+        $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $repository         = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('setUser');
         $currencyRepository->shouldReceive('setUser');
-
-        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
-        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
-        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
-
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
@@ -559,7 +553,7 @@ class CurrencyControllerTest extends TestCase
         $response = $this->get(route('api.v1.currencies.transactions', [$currency->code]));
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -571,34 +565,15 @@ class CurrencyControllerTest extends TestCase
     {
         $currency     = TransactionCurrency::first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsByType')->atLeast()->once()
-                     ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
-        // get some transactions using the collector:
-        Log::info('This transaction collector is OK, because it is used in a test:');
-        $collector = new TransactionCollector;
-        $collector->setUser($this->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setLimit(5)->setPage(1);
-        try {
-            $paginator = $collector->getPaginatedTransactions();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        // mock stuff:
+        $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $repository         = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('setUser');
         $currencyRepository->shouldReceive('setUser');
-
-        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Note');
-        $repository->shouldReceive('getMetaField')->atLeast()->once()->andReturn(null);
-        $repository->shouldReceive('getMetaDateString')->atLeast()->once()->andReturn('2018-01-01');
-
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
@@ -619,7 +594,7 @@ class CurrencyControllerTest extends TestCase
         );
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }

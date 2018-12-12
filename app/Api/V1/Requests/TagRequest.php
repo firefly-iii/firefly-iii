@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Tag;
-use Illuminate\Validation\Validator;
 
 /**
  * Class TagRequest
@@ -57,7 +56,7 @@ class TagRequest extends Request
             'description' => $this->string('description'),
             'latitude'    => '' === $this->string('latitude') ? null : $this->string('latitude'),
             'longitude'   => '' === $this->string('longitude') ? null : $this->string('longitude'),
-            'zoom_level'   => $this->integer('zoom_level'),
+            'zoom_level'  => $this->integer('zoom_level'),
         ];
 
         return $data;
@@ -76,7 +75,7 @@ class TagRequest extends Request
             'date'        => 'date|nullable',
             'latitude'    => 'numeric|min:-90|max:90|nullable|required_with:longitude',
             'longitude'   => 'numeric|min:-90|max:90|nullable|required_with:latitude',
-            'zoomLevel'   => 'numeric|min:0|max:80|nullable',
+            'zoom_level'  => 'numeric|min:0|max:80|nullable',
         ];
         switch ($this->method()) {
             default:
@@ -90,26 +89,5 @@ class TagRequest extends Request
         }
 
         return $rules;
-    }
-
-    /**
-     * Configure the validator instance.
-     *
-     * @param  Validator $validator
-     *
-     * @return void
-     */
-    public function withValidator(Validator $validator): void
-    {
-        $validator->after(
-            function (Validator $validator) {
-                $data = $validator->getData();
-                $min  = (float)($data['amount_min'] ?? 0);
-                $max  = (float)($data['amount_max'] ?? 0);
-                if ($min > $max) {
-                    $validator->errors()->add('amount_min', (string)trans('validation.amount_min_over_max'));
-                }
-            }
-        );
     }
 }

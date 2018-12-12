@@ -114,6 +114,7 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variables.
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdate(): void
     {
@@ -165,6 +166,7 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variables.
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdateBoolean(): void
     {
@@ -217,6 +219,7 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variable that you're not allowed to change
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdateInvalid(): void
     {
@@ -232,6 +235,7 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variables but you're  not the owner.
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdateNotOwner(): void
     {

@@ -61,14 +61,15 @@ class RuleTransformer extends TransformerAbstract
     {
         $data = [
             'id'              => (int)$rule->id,
-            'updated_at'      => $rule->updated_at->toAtomString(),
             'created_at'      => $rule->created_at->toAtomString(),
+            'updated_at'      => $rule->updated_at->toAtomString(),
+            'rule_group_id'   => (int)$rule->rule_group_id,
             'title'           => $rule->title,
-            'description'     => $rule->text,
+            'description'     => $rule->description,
             'order'           => (int)$rule->order,
             'active'          => $rule->active,
-            'stop_processing' => $rule->stop_processing,
             'strict'          => $rule->strict,
+            'stop_processing' => $rule->stop_processing,
             'triggers'        => $this->triggers($rule),
             'actions'         => $this->actions($rule),
             'links'           => [
@@ -95,8 +96,8 @@ class RuleTransformer extends TransformerAbstract
         foreach ($actions as $ruleAction) {
             $result[] = [
                 'id'              => (int)$ruleAction->id,
-                'updated_at'      => $ruleAction->updated_at->toAtomString(),
                 'created_at'      => $ruleAction->created_at->toAtomString(),
+                'updated_at'      => $ruleAction->updated_at->toAtomString(),
                 'type'            => $ruleAction->action_type,
                 'value'           => $ruleAction->action_value,
                 'order'           => $ruleAction->order,
@@ -121,8 +122,8 @@ class RuleTransformer extends TransformerAbstract
         foreach ($triggers as $ruleTrigger) {
             $result[] = [
                 'id'              => (int)$ruleTrigger->id,
-                'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
                 'created_at'      => $ruleTrigger->created_at->toAtomString(),
+                'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
                 'type'            => $ruleTrigger->trigger_type,
                 'value'           => $ruleTrigger->trigger_value,
                 'order'           => $ruleTrigger->order,

@@ -64,9 +64,10 @@ class RecurrenceControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -89,9 +90,10 @@ class RecurrenceControllerTest extends TestCase
         $recurrences = $this->user()->recurrences()->get();
 
         // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
 
         $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
                     ->andReturn($this->user()->budgets()->first());
@@ -100,6 +102,8 @@ class RecurrenceControllerTest extends TestCase
                    ->andReturn($this->user()->piggyBanks()->first());
 
         // mock calls:
+        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
+        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getAll')->once()->andReturn($recurrences);
         $repository->shouldReceive('getNoteText')->andReturn('Notes.');
@@ -123,14 +127,18 @@ class RecurrenceControllerTest extends TestCase
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+
 
         $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
                     ->andReturn($this->user()->budgets()->first());
 
         // mock calls:
+        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
+        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getNoteText')->andReturn('Notes.');
         $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
@@ -1685,10 +1693,11 @@ class RecurrenceControllerTest extends TestCase
         $recurrence = $this->user()->recurrences()->first();
         $paginator  = new LengthAwarePaginator(new Collection, 0, 50);
         // mock repositories:
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
-        $collector      = $this->mock(TransactionCollectorInterface::class);
-        $journalIds     = $recurringRepos->shouldReceive('getJournalIds')->once()->andReturn([1, 2, 3]);
+        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $collector       = $this->mock(TransactionCollectorInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $journalIds      = $recurringRepos->shouldReceive('getJournalIds')->once()->andReturn([1, 2, 3]);
         $collector->shouldReceive('setUser')->once()->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->once()->andReturnSelf();
@@ -1715,8 +1724,11 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testTriggerError(): void
     {
-        $cronjob = $this->mock(RecurringCronjob::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $cronjob         = $this->mock(RecurringCronjob::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
         $cronjob->shouldReceive('fire')->andThrow(FireflyException::class);
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
 
         $response = $this->post(route('api.v1.recurrences.trigger'));
@@ -1729,9 +1741,11 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testTriggerFalse(): void
     {
-        $cronjob = $this->mock(RecurringCronjob::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $cronjob         = $this->mock(RecurringCronjob::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
         $cronjob->shouldReceive('fire')->once()->andReturnFalse();
-
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         $response = $this->post(route('api.v1.recurrences.trigger'));
         $response->assertStatus(204);
@@ -1742,9 +1756,11 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testTriggerTrue(): void
     {
-        $cronjob = $this->mock(RecurringCronjob::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $cronjob         = $this->mock(RecurringCronjob::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
         $cronjob->shouldReceive('fire')->once()->andReturnTrue();
-
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         $response = $this->post(route('api.v1.recurrences.trigger'));
         $response->assertStatus(200);

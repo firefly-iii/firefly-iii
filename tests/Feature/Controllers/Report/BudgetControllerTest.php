@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -54,6 +56,10 @@ class BudgetControllerTest extends TestCase
     {
         $return = [];
         $helper = $this->mock(BudgetReportHelperInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $helper->shouldReceive('getBudgetReport')->andReturn($return);
 
         $this->be($this->user());
@@ -69,6 +75,10 @@ class BudgetControllerTest extends TestCase
         $first      = [1 => ['entries' => ['1', '1']]];
         $second     = ['entries' => ['1', '1']];
         $repository = $this->mock(BudgetRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getBudgets')->andReturn(new Collection);
         $repository->shouldReceive('getBudgetPeriodReport')->andReturn($first);
         $repository->shouldReceive('getNoBudgetPeriodReport')->andReturn($second);

@@ -28,7 +28,6 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\TagTransformer;
@@ -39,10 +38,10 @@ use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
+use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
-use League\Fractal\Resource\Collection as FractalCollection;
 /**
  * Class TagController
  */
@@ -124,11 +123,11 @@ class TagController extends Controller
      * List single resource.
      *
      * @param Request $request
-     * @param Tag    $tag
+     * @param Tag     $tag
      *
      * @return JsonResponse
      */
-    public function show(Request $request, Tag    $tag): JsonResponse
+    public function show(Request $request, Tag $tag): JsonResponse
     {
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
@@ -140,6 +139,24 @@ class TagController extends Controller
 
     }
 
+    /**
+     * Store new object.
+     *
+     * @param TagRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function store(TagRequest $request): JsonResponse
+    {
+        $rule    = $this->repository->store($request->getAll());
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $resource = new Item($rule, new TagTransformer($this->parameters), 'tags');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
 
     /**
      * Show all transactions.
@@ -188,31 +205,11 @@ class TagController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
-
-    /**
-     * Store new object.
-     *
-     * @param TagRequest $request
-     *
-     * @return JsonResponse
-     */
-    public function store(TagRequest $request): JsonResponse
-    {
-        $rule    = $this->repository->store($request->getAll());
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        $resource = new Item($rule, new TagTransformer($this->parameters), 'tags');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
     /**
      * Update a rule.
      *
      * @param TagRequest $request
-     * @param Tag $tag
+     * @param Tag        $tag
      *
      * @return JsonResponse
      */

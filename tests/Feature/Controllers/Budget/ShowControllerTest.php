@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Budget;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -62,7 +63,7 @@ class ShowControllerTest extends TestCase
      */
     public function testNoBudget(string $range): void
     {
-        Log::debug(sprintf('Now in testNoBudget(%s)', $range));
+        Log::info(sprintf('Now in testNoBudget(%s)', $range));
 
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
@@ -101,7 +102,7 @@ class ShowControllerTest extends TestCase
      */
     public function testNoBudgetAll(string $range): void
     {
-        Log::debug(sprintf('Now in testNoBudgetAll(%s)', $range));
+        Log::info(sprintf('Now in testNoBudgetAll(%s)', $range));
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
@@ -140,12 +141,16 @@ class ShowControllerTest extends TestCase
      */
     public function testNoBudgetDate(string $range): void
     {
-        Log::debug(sprintf('Now in testNoBudgetDate(%s)', $range));
+        Log::info(sprintf('Now in testNoBudgetDate(%s)', $range));
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $journalRepos->shouldReceive('firstNull')->andReturn(null);
@@ -180,7 +185,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
-        Log::debug(sprintf('Now in testShow(%s)', $range));
+        Log::info(sprintf('Now in testShow(%s)', $range));
         // mock stuff
 
         $budgetLimit = factory(BudgetLimit::class)->make();
@@ -226,7 +231,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowByBadBudgetLimit(): void
     {
-        Log::debug('Now in testShowByBadBudgetLimit()');
+        Log::info('Now in testShowByBadBudgetLimit()');
         // mock stuff
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -247,7 +252,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowByBudgetLimit(string $range): void
     {
-        Log::debug(sprintf('Now in testShowByBudgetLimit(%s)', $range));
+        Log::info(sprintf('Now in testShowByBudgetLimit(%s)', $range));
         // mock stuff
         $journalRepos      = $this->mock(JournalRepositoryInterface::class);
         $accountRepository = $this->mock(AccountRepositoryInterface::class);

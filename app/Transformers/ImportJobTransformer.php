@@ -67,8 +67,10 @@ class ImportJobTransformer extends TransformerAbstract
         }
         $data = [
             'id'              => (int)$importJob->id,
-            'updated_at'      => $importJob->updated_at->toAtomString(),
             'created_at'      => $importJob->created_at->toAtomString(),
+            'updated_at'      => $importJob->updated_at->toAtomString(),
+            'tag_id'          => $tagId,
+            'tag_tag'         => $tagTag,
             'key'             => $importJob->key,
             'file_type'       => $importJob->file_type,
             'provider'        => $importJob->provider,
@@ -78,8 +80,7 @@ class ImportJobTransformer extends TransformerAbstract
             'extended_status' => $importJob->extended_status,
             'transactions'    => $importJob->transactions,
             'errors'          => $importJob->errors,
-            'tag_id'          => $tagId,
-            'tag_tag'         => $tagTag,
+
             'links'           => [
                 [
                     'rel' => 'self',

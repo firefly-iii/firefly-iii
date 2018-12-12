@@ -62,9 +62,11 @@ class RuleControllerTest extends TestCase
         $rule = $this->user()->rules()->first();
 
         // mock stuff:
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls:
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('destroy')->once()->andReturn(true);
 
@@ -79,7 +81,10 @@ class RuleControllerTest extends TestCase
     {
         $rules = $this->user()->rules()->get();
 
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('getAll')->once()->andReturn($rules);
 
@@ -96,9 +101,11 @@ class RuleControllerTest extends TestCase
      */
     public function testShow(): void
     {
-        $rule = $this->user()->rules()->first();
+        $rule         = $this->user()->rules()->first();
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
 
 
@@ -115,7 +122,9 @@ class RuleControllerTest extends TestCase
      */
     public function testStore(): void
     {
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
         $ruleRepos->shouldReceive('setUser')->once();
         $rule = $this->user()->rules()->first();
         $data = [
@@ -141,6 +150,7 @@ class RuleControllerTest extends TestCase
             ],
         ];
 
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('store')->once()->andReturn($rule);
 
         // test API
@@ -155,7 +165,10 @@ class RuleControllerTest extends TestCase
      */
     public function testStoreNoActions(): void
     {
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         $rule = $this->user()->rules()->first();
         $data = [
@@ -187,7 +200,10 @@ class RuleControllerTest extends TestCase
      */
     public function testStoreNoTriggers(): void
     {
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         $rule = $this->user()->rules()->first();
         $data = [
@@ -224,8 +240,11 @@ class RuleControllerTest extends TestCase
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $asset        = $this->getRandomAsset();
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+
+        $asset = $this->getRandomAsset();
         $repository->shouldReceive('setUser')->once();
+        $ruleRepos->shouldReceive('setUser')->once();
 
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
         $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
@@ -256,8 +275,11 @@ class RuleControllerTest extends TestCase
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+
         $asset        = $this->getRandomAsset();
         $repository->shouldReceive('setUser')->once();
+        $ruleRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
         $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
         $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
@@ -282,7 +304,10 @@ class RuleControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         /** @var Rule $rule */
         $rule = $this->user()->rules()->first();

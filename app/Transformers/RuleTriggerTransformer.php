@@ -59,10 +59,10 @@ class RuleTriggerTransformer extends TransformerAbstract
     {
         $data = [
             'id'              => (int)$ruleTrigger->id,
-            'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
             'created_at'      => $ruleTrigger->created_at->toAtomString(),
-            'trigger_type'    => $ruleTrigger->trigger_type,
-            'trigger_value'   => $ruleTrigger->trigger_value,
+            'updated_at'      => $ruleTrigger->updated_at->toAtomString(),
+            'type'            => $ruleTrigger->trigger_type,
+            'value'           => $ruleTrigger->trigger_value,
             'order'           => $ruleTrigger->order,
             'active'          => $ruleTrigger->active,
             'stop_processing' => $ruleTrigger->stop_processing,

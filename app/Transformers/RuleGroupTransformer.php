@@ -58,8 +58,8 @@ class RuleGroupTransformer extends TransformerAbstract
     {
         $data = [
             'id'          => (int)$ruleGroup->id,
-            'updated_at'  => $ruleGroup->updated_at->toAtomString(),
             'created_at'  => $ruleGroup->created_at->toAtomString(),
+            'updated_at'  => $ruleGroup->updated_at->toAtomString(),
             'title'       => $ruleGroup->title,
             'description' => $ruleGroup->description,
             'order'       => $ruleGroup->order,

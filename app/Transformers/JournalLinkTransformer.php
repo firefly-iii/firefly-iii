@@ -66,8 +66,8 @@ class JournalLinkTransformer extends TransformerAbstract
 
         $data = [
             'id'         => (int)$link->id,
-            'updated_at' => $link->updated_at->toAtomString(),
             'created_at' => $link->created_at->toAtomString(),
+            'updated_at' => $link->updated_at->toAtomString(),
             'inward_id'  => $link->source_id,
             'outward_id' => $link->destination_id,
             'notes'      => $notes,

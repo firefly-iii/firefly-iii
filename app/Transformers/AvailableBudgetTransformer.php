@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\AvailableBudget;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
@@ -58,14 +57,19 @@ class AvailableBudgetTransformer extends TransformerAbstract
      */
     public function transform(AvailableBudget $availableBudget): array
     {
-        $data = [
-            'id'         => (int)$availableBudget->id,
-            'updated_at' => $availableBudget->updated_at->toAtomString(),
-            'created_at' => $availableBudget->created_at->toAtomString(),
-            'start_date' => $availableBudget->start_date->format('Y-m-d'),
-            'end_date'   => $availableBudget->end_date->format('Y-m-d'),
-            'amount'     => round($availableBudget->amount, $availableBudget->transactionCurrency->decimal_places),
-            'links'      => [
+        $currency = $availableBudget->transactionCurrency;
+        $data     = [
+            'id'              => (int)$availableBudget->id,
+            'created_at'      => $availableBudget->created_at->toAtomString(),
+            'updated_at'      => $availableBudget->updated_at->toAtomString(),
+            'currency_id'     => $currency->id,
+            'currency_code'   => $currency->code,
+            'currency_symbol' => $currency->symbol,
+            'currency_dp'     => $currency->decimal_places,
+            'start'           => $availableBudget->start_date->format('Y-m-d'),
+            'end'             => $availableBudget->end_date->format('Y-m-d'),
+            'amount'          => round($availableBudget->amount, $currency->decimal_places),
+            'links'           => [
                 [
                     'rel' => 'self',
                     'uri' => '/available_budgets/' . $availableBudget->id,

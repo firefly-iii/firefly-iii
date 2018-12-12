@@ -275,6 +275,16 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * @param Transaction $transaction
+     *
+     * @return Collection
+     */
+    public function getAttachmentsByTr(Transaction $transaction): Collection
+    {
+        return $transaction->transactionJournal->attachments()->get();
+    }
+
+    /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
      *
      * @param TransactionJournal $journal
@@ -572,6 +582,16 @@ class JournalRepository implements JournalRepositoryInterface
         );
 
         return $events;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return Collection
+     */
+    public function getPiggyBankEventsbyTr(Transaction $transaction): Collection
+    {
+        return $transaction->transactionJournal->piggyBankEvents()->get();
     }
 
     /**

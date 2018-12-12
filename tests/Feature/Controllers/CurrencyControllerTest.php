@@ -196,6 +196,87 @@ class CurrencyControllerTest extends TestCase
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
+    public function testDisable(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('disable')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('get')->atLeast()->once()->andReturn(new Collection([$currency]));
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisableInUse(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(true);
+        $repository->shouldNotReceive('disable');
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisableNothingLeft(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('disable')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(500);
+        $response->assertSee('No currencies found.');
+    }
+
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisableEnableFirst(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('disable')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection([$currency]));
+        $repository->shouldReceive('enable')->atLeast()->once()->andReturn(true);
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
     public function testEdit(): void
     {
         // mock stuff
@@ -211,6 +292,22 @@ class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testEnable(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $repository->shouldReceive('enable')->atLeast()->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.enable', [$currency->id]));
+        $response->assertStatus(302);
     }
 
     /**
