@@ -72,6 +72,7 @@ class AttachmentRequest extends Request
                    Bill::class,
                    ImportJob::class,
                    TransactionJournal::class,
+                   ImportJob::class,
                ]
         );
         $model  = $this->string('model');

@@ -1,6 +1,6 @@
 <?php
 /**
- * JournalLinkRequest.php
+ * TransactionLinkRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -29,9 +29,9 @@ use Illuminate\Validation\Validator;
 
 /**
  *
- * Class JournalLinkRequest
+ * Class TransactionLinkRequest
  */
-class JournalLinkRequest extends Request
+class TransactionLinkRequest extends Request
 {
     /**
      * Authorize logged in users.

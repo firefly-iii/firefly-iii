@@ -142,7 +142,7 @@ class TransactionLinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testStore(): void
     {
@@ -193,7 +193,7 @@ class TransactionLinkControllerTest extends TestCase
      * In this particular test the journal link request will fail.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testStoreExistingLink(): void
     {
@@ -242,10 +242,10 @@ class TransactionLinkControllerTest extends TestCase
     }
 
     /**
-     * In this particular test the JournalLinkRequest will report the failure.
+     * In this particular test the TransactionLinkRequest will report the failure.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testStoreInvalidInward(): void
     {
@@ -292,10 +292,10 @@ class TransactionLinkControllerTest extends TestCase
     }
 
     /**
-     * In this particular test the JournalLinkRequest will report the failure.
+     * In this particular test the TransactionLinkRequest will report the failure.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testStoreInvalidOutward(): void
     {
@@ -343,7 +343,7 @@ class TransactionLinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testStoreNoJournal(): void
     {
@@ -392,7 +392,7 @@ class TransactionLinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testStoreWithNull(): void
     {
@@ -439,7 +439,7 @@ class TransactionLinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testUpdate(): void
     {
@@ -489,7 +489,7 @@ class TransactionLinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testUpdateNoJournal(): void
     {
@@ -539,7 +539,7 @@ class TransactionLinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\TransactionLinkController
-     * @covers \FireflyIII\Api\V1\Requests\JournalLinkRequest
+     * @covers \FireflyIII\Api\V1\Requests\TransactionLinkRequest
      */
     public function testUpdateWithNull(): void
     {

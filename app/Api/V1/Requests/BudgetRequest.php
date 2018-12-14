@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Budget;
+use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class BudgetRequest
@@ -64,7 +65,7 @@ class BudgetRequest extends Request
     {
         $rules = [
             'name'   => 'required|between:1,100|uniqueObjectForUser:budgets,name',
-            'active' => 'required|boolean',
+            'active' => [new IsBoolean],
         ];
         switch ($this->method()) {
             default:

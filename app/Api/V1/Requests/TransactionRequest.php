@@ -74,7 +74,7 @@ class TransactionRequest extends Request
             'invoice_date'       => $this->date('invoice_date'),
             'internal_reference' => $this->string('internal_reference'),
             'notes'              => $this->string('notes'),
-            'original-source'    => sprintf('ff3-v%s|api-v%s', config('firefly.version'),config('firefly.api_version')),
+            'original-source'    => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
             'transactions'       => $this->getTransactionData(),
 
             // SEPA fields:
@@ -105,8 +105,8 @@ class TransactionRequest extends Request
         $rules = [
             // basic fields for journal:
             'type'                                 => 'required|in:withdrawal,deposit,transfer',
-            'date'                                 => 'required|date',
             'description'                          => 'between:1,255',
+            'date'                                 => 'required|date',
             'piggy_bank_id'                        => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
             'piggy_bank_name'                      => ['between:1,255', 'nullable', new BelongsUser],
             'bill_id'                              => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
@@ -121,11 +121,14 @@ class TransactionRequest extends Request
             'payment_date'                         => 'date|nullable',
             'invoice_date'                         => 'date|nullable',
             'internal_reference'                   => 'min:1,max:255|nullable',
+            'bunq_payment_id'                      => 'min:1,max:255|nullable',
+            'external_id'                          => 'min:1,max:255|nullable',
             'notes'                                => 'min:1,max:50000|nullable',
 
             // SEPA fields:
             'sepa_cc'                              => 'min:1,max:255|nullable',
             'sepa_ct_op'                           => 'min:1,max:255|nullable',
+            'sepa_ct_id'                           => 'min:1,max:255|nullable',
             'sepa_db'                              => 'min:1,max:255|nullable',
             'sepa_country'                         => 'min:1,max:255|nullable',
             'sepa_ep'                              => 'min:1,max:255|nullable',
@@ -133,8 +136,8 @@ class TransactionRequest extends Request
             'sepa_batch_id'                        => 'min:1,max:255|nullable',
 
             // transaction rules (in array for splits):
-            'transactions.*.description'           => 'nullable|between:1,255',
             'transactions.*.amount'                => 'required|numeric|more:0',
+            'transactions.*.description'           => 'nullable|between:1,255',
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_amount'        => 'numeric|more:0',
@@ -145,7 +148,6 @@ class TransactionRequest extends Request
             'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
             'transactions.*.reconciled'            => [new IsBoolean],
-            // basic rules will be expanded later.
             'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
@@ -195,8 +197,8 @@ class TransactionRequest extends Request
         $return = [];
         foreach ($this->get('transactions') as $index => $transaction) {
             $return[] = [
-                'description'           => $transaction['description'] ?? null,
                 'amount'                => $transaction['amount'],
+                'description'           => $transaction['description'] ?? null,
                 'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
                 'currency_code'         => $transaction['currency_code'] ?? null,
                 'foreign_amount'        => $transaction['foreign_amount'] ?? null,

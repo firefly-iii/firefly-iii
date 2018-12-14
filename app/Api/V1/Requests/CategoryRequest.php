@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Category;
+use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class CategoryRequest
@@ -49,8 +50,7 @@ class CategoryRequest extends Request
     public function getAll(): array
     {
         return [
-            'name'   => $this->string('name'),
-            'active' => $this->boolean('active'),
+            'name'   => $this->string('name')
         ];
     }
 
@@ -62,8 +62,7 @@ class CategoryRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'name'   => 'required|between:1,100|uniqueObjectForUser:categories,name',
-            'active' => 'required|boolean',
+            'name'   => 'required|between:1,100|uniqueObjectForUser:categories,name'
         ];
         switch ($this->method()) {
             default:

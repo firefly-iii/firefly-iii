@@ -95,20 +95,25 @@ class RuleRequest extends Request
 
 
         $rules = [
-            'title'                      => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'                => 'between:1,5000|nullable',
-            'rule_group_id'              => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
-            'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
-            'trigger'                    => 'required|in:store-journal,update-journal',
-            'triggers.*.name'            => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.stop_processing' => [new IsBoolean],
+            'title'            => 'required|between:1,100|uniqueObjectForUser:rules,title',
+            'description'      => 'between:1,5000|nullable',
+            'rule_group_id'    => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
+            'rule_group_title' => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
+            'trigger'          => 'required|in:store-journal,update-journal',
+
+            'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
             'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
-            'actions.*.name'             => 'required|in:' . implode(',', $validActions),
-            'actions.*.value'            => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
-            'actions.*.stop_processing'  => [new IsBoolean],
-            'strict'                     => [new IsBoolean],
-            'stop_processing'            => [new IsBoolean],
-            'active'                     => [new IsBoolean],
+            'triggers.*.stop_processing' => [new IsBoolean],
+            'triggers.*.active'          => [new IsBoolean],
+
+            'actions.*.type'            => 'required|in:' . implode(',', $validActions),
+            'actions.*.value'           => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
+            'actions.*.stop_processing' => [new IsBoolean],
+            'actions.*.active'          => [new IsBoolean],
+
+            'strict'          => [new IsBoolean],
+            'stop_processing' => [new IsBoolean],
+            'active'          => [new IsBoolean],
         ];
 
         return $rules;
@@ -171,8 +176,9 @@ class RuleRequest extends Request
         if (\is_array($actions)) {
             foreach ($actions as $action) {
                 $return[] = [
-                    'name'            => $action['name'],
+                    'type'            => $action['type'],
                     'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
                     'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
                 ];
             }
@@ -191,8 +197,9 @@ class RuleRequest extends Request
         if (\is_array($triggers)) {
             foreach ($triggers as $trigger) {
                 $return[] = [
-                    'name'            => $trigger['name'],
+                    'type'            => $trigger['type'],
                     'value'           => $trigger['value'],
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
                     'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
                 ];
             }

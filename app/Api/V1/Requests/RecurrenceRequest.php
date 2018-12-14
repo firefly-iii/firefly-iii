@@ -96,23 +96,25 @@ class RecurrenceRequest extends Request
         $today = Carbon::now()->addDay();
 
         return [
-            'type'                                 => 'required|in:withdrawal,transfer,deposit',
+            'type'                                 => 'required|in:Withdrawal,Transfer,Deposit',
             'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'description'                          => 'between:1,65000',
             'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
-            'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
-            'nr_of_repetitions'                    => 'numeric|between:1,31',
             'apply_rules'                          => [new IsBoolean],
             'active'                               => [new IsBoolean],
+            'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
+            'nr_of_repetitions'                    => 'numeric|between:1,31',
             'tags'                                 => 'between:1,64000',
             'piggy_bank_id'                        => 'numeric',
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
             'repetitions.*.skip'                   => 'required|numeric|between:0,31',
             'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
-            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',
-            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|required_without:transactions.*.currency_id',
+            'transactions.*.description'           => 'required|between:1,255',
+            'transactions.*.amount'                => 'required|numeric|more:0',
             'transactions.*.foreign_amount'        => 'numeric|more:0',
+            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
+            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
@@ -121,8 +123,8 @@ class RecurrenceRequest extends Request
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
-            'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.description'           => 'required|between:1,255',
+
+
         ];
     }
 

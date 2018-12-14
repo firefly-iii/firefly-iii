@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\JournalLinkRequest;
+use FireflyIII\Api\V1\Requests\TransactionLinkRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -148,12 +148,12 @@ class TransactionLinkController extends Controller
     /**
      * Store new object.
      *
-     * @param JournalLinkRequest $request
+     * @param TransactionLinkRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function store(JournalLinkRequest $request): JsonResponse
+    public function store(TransactionLinkRequest $request): JsonResponse
     {
         $manager = new Manager;
         $data    = $request->getAll();
@@ -174,13 +174,13 @@ class TransactionLinkController extends Controller
     /**
      * Update object.
      *
-     * @param JournalLinkRequest     $request
+     * @param TransactionLinkRequest     $request
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function update(JournalLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
+    public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
         $manager = new Manager;
         $data            = $request->getAll();
