@@ -116,7 +116,13 @@ class CategoryController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($categories, new CategoryTransformer($this->parameters), 'categories');
+
+        /** @var CategoryTransformer $transformer */
+        $transformer = app(CategoryTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+
+        $resource = new FractalCollection($categories, $transformer, 'categories');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -137,7 +143,11 @@ class CategoryController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($category, new CategoryTransformer($this->parameters), 'categories');
+        /** @var CategoryTransformer $transformer */
+        $transformer = app(CategoryTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -158,7 +168,11 @@ class CategoryController extends Controller
             $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
             $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-            $resource = new Item($category, new CategoryTransformer($this->parameters), 'categories');
+            /** @var CategoryTransformer $transformer */
+            $transformer = app(CategoryTransformer::class);
+            $transformer->setParameters($this->parameters);
+
+            $resource = new Item($category, $transformer, 'categories');
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
@@ -206,7 +220,12 @@ class CategoryController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.categories.transactions', [$category->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -228,7 +247,11 @@ class CategoryController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($category, new CategoryTransformer($this->parameters), 'categories');
+        /** @var CategoryTransformer $transformer */
+        $transformer = app(CategoryTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($category, $transformer, 'categories');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

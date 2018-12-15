@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
@@ -121,7 +120,12 @@ class LinkTypeController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($linkTypes, new LinkTypeTransformer($this->parameters), 'link_types');
+
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($linkTypes, $transformer, 'link_types');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -141,7 +145,11 @@ class LinkTypeController extends Controller
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($linkType, new LinkTypeTransformer($this->parameters), 'link_types');
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -170,7 +178,10 @@ class LinkTypeController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($linkType, new LinkTypeTransformer($this->parameters), 'link_types');
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -218,12 +229,16 @@ class LinkTypeController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
-
 
 
     /**
@@ -254,7 +269,11 @@ class LinkTypeController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($linkType, new LinkTypeTransformer($this->parameters), 'link_types');
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

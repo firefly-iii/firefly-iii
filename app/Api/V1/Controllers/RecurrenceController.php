@@ -115,7 +115,12 @@ class RecurrenceController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($piggyBanks, new RecurrenceTransformer($this->parameters), 'recurrences');
+
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($piggyBanks, $transformer, 'recurrences');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -136,7 +141,11 @@ class RecurrenceController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($recurrence, new RecurrenceTransformer($this->parameters), 'recurrences');
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -156,7 +165,12 @@ class RecurrenceController extends Controller
         $manager    = new Manager();
         $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($recurrence, new RecurrenceTransformer($this->parameters), 'recurrences');
+
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($recurrence, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -204,7 +218,12 @@ class RecurrenceController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -230,6 +249,7 @@ class RecurrenceController extends Controller
         if (true === $result) {
             return response()->json([], 200);
         }
+
         return response()->json([], 418); // @codeCoverageIgnore
     }
 
@@ -248,8 +268,11 @@ class RecurrenceController extends Controller
         $manager  = new Manager();
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-        $resource = new Item($category, new RecurrenceTransformer($this->parameters), 'recurrences');
+        $resource = new Item($category, $transformer, 'recurrences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

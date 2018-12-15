@@ -112,7 +112,12 @@ class TagController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($rules, new TagTransformer($this->parameters), 'tags');
+
+        /** @var TagTransformer $transformer */
+        $transformer = app(TagTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($rules, $transformer, 'tags');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -133,7 +138,11 @@ class TagController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($tag, new TagTransformer($this->parameters), 'tags');
+        /** @var TagTransformer $transformer */
+        $transformer = app(TagTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($tag, $transformer, 'tags');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -153,7 +162,11 @@ class TagController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($rule, new TagTransformer($this->parameters), 'tags');
+        /** @var TagTransformer $transformer */
+        $transformer = app(TagTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'tags');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -199,7 +212,11 @@ class TagController extends Controller
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -219,8 +236,11 @@ class TagController extends Controller
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
+        /** @var TagTransformer $transformer */
+        $transformer = app(TagTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-        $resource = new Item($rule, new TagTransformer($this->parameters), 'tags');
+        $resource = new Item($rule, $transformer, 'tags');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

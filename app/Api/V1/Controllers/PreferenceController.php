@@ -71,7 +71,12 @@ class PreferenceController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($preferences, new PreferenceTransformer($this->parameters), 'preferences');
+
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($preferences, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -115,7 +120,11 @@ class PreferenceController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($result, new PreferenceTransformer($this->parameters), 'preferences');
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($result, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

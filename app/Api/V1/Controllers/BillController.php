@@ -101,7 +101,12 @@ class BillController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
+
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -139,7 +144,11 @@ class BillController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new FractalCollection($bills, new BillTransformer($this->parameters), 'bills');
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($bills, $transformer, 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -173,7 +182,13 @@ class BillController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($rules, new RuleTransformer($this->parameters), 'rules');
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+
+        $resource = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -194,7 +209,11 @@ class BillController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -215,7 +234,11 @@ class BillController extends Controller
             $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
             $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-            $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+            /** @var BillTransformer $transformer */
+            $transformer = app(BillTransformer::class);
+            $transformer->setParameters($this->parameters);
+
+            $resource = new Item($bill, $transformer, 'bills');
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
@@ -260,7 +283,12 @@ class BillController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -282,7 +310,11 @@ class BillController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($bill, new BillTransformer($this->parameters), 'bills');
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($bill, $transformer, 'bills');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

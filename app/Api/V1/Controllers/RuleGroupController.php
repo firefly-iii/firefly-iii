@@ -31,7 +31,6 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
@@ -123,7 +122,12 @@ class RuleGroupController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($ruleGroups, new RuleGroupTransformer($this->parameters), 'rule_groups');
+
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($ruleGroups, $transformer, 'rule_groups');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -155,7 +159,12 @@ class RuleGroupController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($rules, new RuleTransformer($this->parameters), 'rules');
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -176,7 +185,11 @@ class RuleGroupController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -196,7 +209,11 @@ class RuleGroupController extends Controller
         $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -269,7 +286,12 @@ class RuleGroupController extends Controller
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($matchingTransactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -340,7 +362,11 @@ class RuleGroupController extends Controller
         $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($ruleGroup, new RuleGroupTransformer($this->parameters), 'rule_groups');
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

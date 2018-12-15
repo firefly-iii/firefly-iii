@@ -146,7 +146,13 @@ class CurrencyController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($accounts, new AccountTransformer($this->parameters), 'accounts');
+
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+
+        $resource = new FractalCollection($accounts, $transformer, 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -196,7 +202,12 @@ class CurrencyController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($availableBudgets, new AvailableBudgetTransformer($this->parameters), 'available_budgets');
+
+        /** @var AvailableBudgetTransformer $transformer */
+        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -238,7 +249,12 @@ class CurrencyController extends Controller
 
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($bills, new BillTransformer($this->parameters), 'bills');
+
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($bills, $transformer, 'bills');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -273,7 +289,12 @@ class CurrencyController extends Controller
         $paginator->setPath(route('api.v1.currencies.budget_limits', [$currency->code]) . $this->buildParams());
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($budgetLimits, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -303,7 +324,12 @@ class CurrencyController extends Controller
         $paginator->setPath(route('api.v1.currencies.cer', [$currency->code]) . $this->buildParams());
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($exchangeRates, new CurrencyExchangeRateTransformer($this->parameters), 'currency_exchange_rates');
+
+        /** @var CurrencyExchangeRateTransformer $transformer */
+        $transformer = app(CurrencyExchangeRateTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($exchangeRates, $transformer, 'currency_exchange_rates');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -349,14 +375,18 @@ class CurrencyController extends Controller
             return response()->json([], 409);
         }
         $this->repository->disable($currency);
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-        $resource = new Item($currency, new CurrencyTransformer($this->parameters), 'currencies');
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -373,14 +403,18 @@ class CurrencyController extends Controller
     public function enable(Request $request, TransactionCurrency $currency): JsonResponse
     {
         $this->repository->enable($currency);
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-        $resource = new Item($currency, new CurrencyTransformer($this->parameters), 'currencies');
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -410,7 +444,11 @@ class CurrencyController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-        $resource = new FractalCollection($currencies, new CurrencyTransformer($this->parameters), 'currencies');
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($currencies, $transformer, 'currencies');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -431,13 +469,17 @@ class CurrencyController extends Controller
         app('preferences')->set('currencyPreference', $currency->code);
         app('preferences')->mark();
 
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $this->parameters->set('defaultCurrency', $currency);
 
-        $resource = new Item($currency, new CurrencyTransformer($this->parameters), 'currencies');
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -488,7 +530,12 @@ class CurrencyController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($piggyBanks, new RecurrenceTransformer($this->parameters), 'recurrences');
+
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($piggyBanks, $transformer, 'recurrences');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -536,7 +583,12 @@ class CurrencyController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($rules, new RuleTransformer($this->parameters), 'rules');
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -559,7 +611,11 @@ class CurrencyController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-        $resource = new Item($currency, new CurrencyTransformer($this->parameters), 'currencies');
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -587,7 +643,11 @@ class CurrencyController extends Controller
             $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
             $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-            $resource = new Item($currency, new CurrencyTransformer($this->parameters), 'currencies');
+            /** @var CurrencyTransformer $transformer */
+            $transformer = app(CurrencyTransformer::class);
+            $transformer->setParameters($this->parameters);
+
+            $resource = new Item($currency, $transformer, 'currencies');
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
@@ -637,7 +697,11 @@ class CurrencyController extends Controller
         $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -668,7 +732,11 @@ class CurrencyController extends Controller
         $defaultCurrency = app('amount')->getDefaultCurrencyByUser(auth()->user());
         $this->parameters->set('defaultCurrency', $defaultCurrency);
 
-        $resource = new Item($currency, new CurrencyTransformer($this->parameters), 'currencies');
+        /** @var CurrencyTransformer $transformer */
+        $transformer = app(CurrencyTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($currency, $transformer, 'currencies');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

@@ -93,7 +93,12 @@ class ImportController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($importJobs, new ImportJobTransformer($this->parameters), 'import_jobs');
+
+        /** @var ImportJobTransformer $transformer */
+        $transformer = app(ImportJobTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($importJobs, $transformer, 'import_jobs');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -110,7 +115,12 @@ class ImportController extends Controller
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($importJob, new ImportJobTransformer($this->parameters), 'import_jobs');
+
+        /** @var ImportJobTransformer $transformer */
+        $transformer = app(ImportJobTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($importJob, $transformer, 'import_jobs');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -162,8 +172,11 @@ class ImportController extends Controller
             $transactions = $paginator->getCollection();
         }
 
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-        $resource   = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        $resource   = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');

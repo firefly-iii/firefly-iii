@@ -111,7 +111,12 @@ class PiggyBankController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($piggyBanks, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($piggyBanks, $transformer, 'piggy_banks');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -142,8 +147,11 @@ class PiggyBankController extends Controller
         $paginator = new LengthAwarePaginator($events, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.piggy_banks.events', [$piggyBank->id]) . $this->buildParams());
 
+        /** @var PiggyBankEventTransformer $transformer */
+        $transformer = app(PiggyBankEventTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
+        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -164,7 +172,11 @@ class PiggyBankController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -186,7 +198,11 @@ class PiggyBankController extends Controller
             $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
             $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-            $resource = new Item($piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+            /** @var PiggyBankTransformer $transformer */
+            $transformer = app(PiggyBankTransformer::class);
+            $transformer->setParameters($this->parameters);
+
+            $resource = new Item($piggyBank, $transformer, 'piggy_banks');
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
@@ -209,7 +225,11 @@ class PiggyBankController extends Controller
         $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($piggyBank, $transformer, 'piggy_banks');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

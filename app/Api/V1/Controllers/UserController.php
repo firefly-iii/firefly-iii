@@ -113,7 +113,11 @@ class UserController extends Controller
         $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
 
         // make resource
-        $resource = new FractalCollection($users, new UserTransformer($this->parameters), 'users');
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($users, $transformer, 'users');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -135,7 +139,11 @@ class UserController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // make resource
-        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -158,7 +166,12 @@ class UserController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // make resource
-        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -182,7 +195,11 @@ class UserController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         // make resource
-        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

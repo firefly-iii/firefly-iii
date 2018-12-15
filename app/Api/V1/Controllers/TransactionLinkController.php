@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\JournalLinkTransformer;
+use FireflyIII\Transformers\TransactionLinkTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -119,7 +120,12 @@ class TransactionLinkController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($journalLinks, new JournalLinkTransformer($this->parameters), 'transaction_links');
+
+        /** @var TransactionLinkTransformer $transformer */
+        $transformer = app(TransactionLinkTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($journalLinks, $transformer, 'transaction_links');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -139,7 +145,12 @@ class TransactionLinkController extends Controller
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'transaction_links');
+
+        /** @var TransactionLinkTransformer $transformer */
+        $transformer = app(TransactionLinkTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -165,7 +176,12 @@ class TransactionLinkController extends Controller
         $data['direction'] = 'inward';
 
         $journalLink = $this->repository->storeLink($data, $inward, $outward);
-        $resource    = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'transaction_links');
+
+        /** @var TransactionLinkTransformer $transformer */
+        $transformer = app(TransactionLinkTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -174,7 +190,7 @@ class TransactionLinkController extends Controller
     /**
      * Update object.
      *
-     * @param TransactionLinkRequest     $request
+     * @param TransactionLinkRequest $request
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
@@ -182,7 +198,7 @@ class TransactionLinkController extends Controller
      */
     public function update(TransactionLinkRequest $request, TransactionJournalLink $journalLink): JsonResponse
     {
-        $manager = new Manager;
+        $manager         = new Manager;
         $data            = $request->getAll();
         $data['inward']  = $this->journalRepository->findNull($data['inward_id'] ?? 0);
         $data['outward'] = $this->journalRepository->findNull($data['outward_id'] ?? 0);
@@ -192,7 +208,11 @@ class TransactionLinkController extends Controller
         $data['direction'] = 'inward';
         $journalLink       = $this->repository->updateLink($journalLink, $data);
 
-        $resource = new Item($journalLink, new JournalLinkTransformer($this->parameters), 'transaction_links');
+        /** @var TransactionLinkTransformer $transformer */
+        $transformer = app(TransactionLinkTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($journalLink, $transformer, 'transaction_links');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

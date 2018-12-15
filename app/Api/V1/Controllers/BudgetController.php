@@ -98,7 +98,13 @@ class BudgetController extends Controller
         $paginator->setPath(route('api.v1.budgets.budget_limits', [$budget->id]) . $this->buildParams());
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($budgetLimits, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+
+        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -145,7 +151,12 @@ class BudgetController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($budgets, new BudgetTransformer($this->parameters), 'budgets');
+
+        /** @var BudgetTransformer $transformer */
+        $transformer = app(BudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($budgets, $transformer, 'budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -165,7 +176,11 @@ class BudgetController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($budget, new BudgetTransformer($this->parameters), 'budgets');
+        /** @var BudgetTransformer $transformer */
+        $transformer = app(BudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -186,7 +201,11 @@ class BudgetController extends Controller
             $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
             $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-            $resource = new Item($budget, new BudgetTransformer($this->parameters), 'budgets');
+            /** @var BudgetTransformer $transformer */
+            $transformer = app(BudgetTransformer::class);
+            $transformer->setParameters($this->parameters);
+
+            $resource = new Item($budget, $transformer, 'budgets');
 
             return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
         }
@@ -210,7 +229,11 @@ class BudgetController extends Controller
         $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -253,7 +276,13 @@ class BudgetController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.budgets.transactions', [$budget->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -275,7 +304,11 @@ class BudgetController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($budget, new BudgetTransformer($this->parameters), 'budgets');
+        /** @var BudgetTransformer $transformer */
+        $transformer = app(BudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budget, $transformer, 'budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

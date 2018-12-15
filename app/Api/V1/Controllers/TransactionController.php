@@ -92,7 +92,12 @@ class TransactionController extends Controller
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         $attachments = $this->repository->getAttachmentsByTr($transaction);
-        $resource    = new FractalCollection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
+
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -152,7 +157,11 @@ class TransactionController extends Controller
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -170,8 +179,13 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $events = $this->repository->getPiggyBankEventsByTr($transaction);
-        $resource = new FractalCollection($events, new PiggyBankEventTransformer($this->parameters), 'piggy_bank_events');
+        $events   = $this->repository->getPiggyBankEventsByTr($transaction);
+
+        /** @var PiggyBankEventTransformer $transformer */
+        $transformer = app(PiggyBankEventTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -208,7 +222,10 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -252,7 +269,12 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -296,7 +318,12 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

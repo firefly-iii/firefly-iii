@@ -111,7 +111,12 @@ class AvailableBudgetController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($availableBudgets, new AvailableBudgetTransformer($this->parameters), 'available_budgets');
+
+        /** @var AvailableBudgetTransformer $transformer */
+        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($availableBudgets, $transformer, 'available_budgets');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -130,7 +135,12 @@ class AvailableBudgetController extends Controller
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($availableBudget, new AvailableBudgetTransformer($this->parameters), 'available_budgets');
+
+        /** @var AvailableBudgetTransformer $transformer */
+        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($availableBudget, $transformer, 'available_budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -151,14 +161,18 @@ class AvailableBudgetController extends Controller
             $currency = $this->currencyRepository->findByCodeNull($data['currency_code']);
         }
         if (null === $currency) {
-            throw new FireflyException('Could not find the indicated currency.');
+            $currency = app('amount')->getDefaultCurrency();
         }
-        $availableBudget = $this->repository->setAvailableBudget($currency, $data['start_date'], $data['end_date'], $data['amount']);
+        $availableBudget = $this->repository->setAvailableBudget($currency, $data['start'], $data['end'], $data['amount']);
         $manager         = new Manager;
         $baseUrl         = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($availableBudget, new AvailableBudgetTransformer($this->parameters), 'available_budgets');
+        /** @var AvailableBudgetTransformer $transformer */
+        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($availableBudget, $transformer, 'available_budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -181,7 +195,11 @@ class AvailableBudgetController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($availableBudget, new AvailableBudgetTransformer($this->parameters), 'available_budgets');
+        /** @var AvailableBudgetTransformer $transformer */
+        $transformer = app(AvailableBudgetTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($availableBudget, $transformer, 'available_budgets');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

@@ -120,7 +120,12 @@ class RuleController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($rules, new RuleTransformer($this->parameters), 'rules');
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($rules, $transformer, 'rules');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -141,7 +146,11 @@ class RuleController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -161,7 +170,11 @@ class RuleController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -222,7 +235,12 @@ class RuleController extends Controller
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($matchingTransactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -288,7 +306,11 @@ class RuleController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($rule, new RuleTransformer($this->parameters), 'rules');
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
