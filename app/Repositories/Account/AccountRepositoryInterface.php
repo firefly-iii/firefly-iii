@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\Account;
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -43,6 +44,20 @@ interface AccountRepositoryInterface
      * @return int
      */
     public function count(array $types): int;
+
+    /**
+     * @param Account $account
+     *
+     * @return string
+     */
+    public function getAccountType(Account $account): string;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    public function getAccountCurrency(Account $account): ?TransactionCurrency;
 
     /**
      * Moved here from account CRUD.

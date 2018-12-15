@@ -30,7 +30,6 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
@@ -128,12 +127,16 @@ class AccountController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($accounts, new AccountTransformer($this->parameters), 'accounts');
+
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($accounts, $transformer, 'accounts');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
-
 
 
     /**
@@ -164,7 +167,12 @@ class AccountController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($piggyBanks, new PiggyBankTransformer($this->parameters), 'piggy_banks');
+
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($piggyBanks, $transformer, 'piggy_banks');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -184,7 +192,11 @@ class AccountController extends Controller
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
+
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new Item($account, $transformer, 'accounts');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -209,7 +221,11 @@ class AccountController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($account, $transformer, 'accounts');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -228,9 +244,12 @@ class AccountController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager = new Manager();
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $types    = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager  = new Manager();
+        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
+
+
+
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var User $admin */
@@ -258,7 +277,12 @@ class AccountController extends Controller
         $paginator = $collector->getPaginatedTransactions();
         $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -287,7 +311,10 @@ class AccountController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($account, new AccountTransformer($this->parameters), 'accounts');
+        /** @var AccountTransformer $transformer */
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new Item($account, $transformer, 'accounts');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

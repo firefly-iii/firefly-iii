@@ -53,22 +53,14 @@ class AccountTransformerTest extends TestCase
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
         $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
         $accountRepos->shouldReceive('getNoteText')->andReturn('');
-
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-
+        $account = factory(Account::class)->make();
         $transformer = new AccountTransformer(new ParameterBag);
         $result      = $transformer->transform($account);
+
+
+        // verify all fields.
+        $this->assertEquals($account->id, $result['id']);
+
 
         $this->assertEquals($account->name, $result['name']);
         $this->assertEquals('Asset account', $result['type']);

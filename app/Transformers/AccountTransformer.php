@@ -25,26 +25,16 @@ namespace FireflyIII\Transformers;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use Illuminate\Support\Collection;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Log;
 
 /**
  * Class AccountTransformer
  */
-class AccountTransformer extends TransformerAbstract
+class AccountTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
-
     /** @var AccountRepositoryInterface */
     protected $repository;
 
@@ -53,13 +43,14 @@ class AccountTransformer extends TransformerAbstract
      * AccountTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
+
         $this->repository = app(AccountRepositoryInterface::class);
-        $this->parameters = $parameters;
     }
 
     /**
@@ -73,17 +64,23 @@ class AccountTransformer extends TransformerAbstract
     {
         $this->repository->setUser($account->user);
 
-        $type = $account->accountType->type;
-        $role = $this->repository->getMetaValue($account, 'accountRole');
-        if ($type !== AccountType::ASSET || '' === (string)$role) {
-            $role = null;
+        // get account type:
+        $accountType = $this->repository->getAccountType($account);
+
+        // get account role (will only work if the type is asset. TODO test me.
+        $accountRole = $this->repository->getMetaValue($account, 'accountRole');
+        if ($accountType !== AccountType::ASSET || '' === (string)$accountRole) {
+            $accountRole = null;
         }
-        $currencyId     = (int)$this->repository->getMetaValue($account, 'currency_id');
+
+        // get currency. If not 0, get from repository. TODO test me.
+        $currency       = $this->repository->getAccountCurrency($account);
+        $currencyId     = null;
         $currencyCode   = null;
-        $currencySymbol = null;
         $decimalPlaces  = 2;
-        if ($currencyId > 0) {
-            $currency       = TransactionCurrency::find($currencyId);
+        $currencySymbol = null;
+        if (null !== $currency) {
+            $currencyId     = $currency->id;
             $currencyCode   = $currency->code;
             $decimalPlaces  = $currency->decimal_places;
             $currencySymbol = $currency->symbol;
@@ -94,20 +91,16 @@ class AccountTransformer extends TransformerAbstract
             $date = $this->parameters->get('date');
         }
 
-        if (0 === $currencyId) {
-            $currencyId = null;
-        }
-
         $monthlyPaymentDate = null;
         $creditCardType     = null;
-        if ('ccAsset' === $role && $type === AccountType::ASSET) {
+        if ('ccAsset' === $accountRole && $accountType === AccountType::ASSET) {
             $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
             $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
         }
 
         $openingBalance     = null;
         $openingBalanceDate = null;
-        if (\in_array($type, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
+        if (\in_array($accountType, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
@@ -120,10 +113,10 @@ class AccountTransformer extends TransformerAbstract
             'id'                   => (int)$account->id,
             'created_at'           => $account->created_at->toAtomString(),
             'updated_at'           => $account->updated_at->toAtomString(),
-            'active'               => 1 === (int)$account->active,
+            'active'               => $account->active,
             'name'                 => $account->name,
-            'type'                 => $type,
-            'account_role'         => $role,
+            'type'                 => $accountType,
+            'account_role'         => $accountRole,
             'currency_id'          => $currencyId,
             'currency_code'        => $currencyCode,
             'currency_symbol'      => $currencySymbol,
@@ -139,7 +132,7 @@ class AccountTransformer extends TransformerAbstract
             'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
             'opening_balance'      => $openingBalance,
             'opening_balance_date' => $openingBalanceDate,
-            'liability_type'       => $type,
+            'liability_type'       => $accountType,
             'liability_amount'     => $openingBalance,
             'liability_start_date' => $openingBalanceDate,
             'interest'             => $interest,
