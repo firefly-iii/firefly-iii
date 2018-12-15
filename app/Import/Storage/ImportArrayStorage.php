@@ -337,7 +337,7 @@ class ImportArrayStorage
             'description' => null,
             'latitude'    => null,
             'longitude'   => null,
-            'zoomLevel'   => null,
+            'zoom_level'   => null,
             'tagMode'     => 'nothing',
         ];
         $tag  = $repository->store($data);

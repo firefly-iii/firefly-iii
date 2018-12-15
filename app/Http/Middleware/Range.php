@@ -107,7 +107,7 @@ class Range
      */
     private function loseItAll(Request $request): void
     {
-        if ('sqlite' === getenv('DB_CONNECTION') && true === getenv('IS_DOCKER')) {
+        if ('sqlite' === config('database.default') && true === config('firefly.is_docker')) {
             // @codeCoverageIgnoreStart
             $request->session()->flash(
                 'error', 'You seem to be using SQLite in a Docker container. Don\'t do this. If the container restarts all your data will be gone.'

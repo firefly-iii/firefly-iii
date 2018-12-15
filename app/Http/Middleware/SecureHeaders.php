@@ -44,7 +44,7 @@ class SecureHeaders
     {
         $response    = $next($request);
         $google      = '';
-        $analyticsId = env('ANALYTICS_ID', '');
+        $analyticsId = config('firefly.analytics_id');
         if ('' !== $analyticsId) {
             $google = 'www.googletagmanager.com/gtag/js'; // @codeCoverageIgnore
         }
@@ -76,7 +76,7 @@ class SecureHeaders
             "payment 'none'",
         ];
 
-        $disableFrameHeader = env('DISABLE_FRAME_HEADER');
+        $disableFrameHeader = config('firefly.disable_frame_header');
         if (false === $disableFrameHeader || null === $disableFrameHeader) {
             $response->header('X-Frame-Options', 'deny');
         }

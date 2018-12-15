@@ -77,7 +77,7 @@ class CurrencyController extends Controller
         /** @var User $user */
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
 
             return redirect(route('currencies.index'));
         }
@@ -127,7 +127,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
@@ -160,7 +160,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
@@ -192,7 +192,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
@@ -236,7 +236,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd
@@ -308,7 +308,7 @@ class CurrencyController extends Controller
         $defaultCurrency = $this->repository->getCurrencyByPreference(app('preferences')->get('currencyPreference', config('firefly.default_currency', 'EUR')));
         $isOwner         = true;
         if (!$this->userRepository->hasRole($user, 'owner')) {
-            $request->session()->flash('info', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('info', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
             $isOwner = false;
         }
 
@@ -374,7 +374,7 @@ class CurrencyController extends Controller
         $user = auth()->user();
         if (!$this->userRepository->hasRole($user, 'owner')) {
             // @codeCoverageIgnoreStart
-            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => env('SITE_OWNER')]));
+            $request->session()->flash('error', (string)trans('firefly.ask_site_owner', ['owner' => config('firefly.site_owner')]));
 
             return redirect(route('currencies.index'));
             // @codeCoverageIgnoreEnd

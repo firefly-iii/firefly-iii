@@ -58,6 +58,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string      $interest
  * @property string      $interestPeriod
  * @property string      accountTypeString
+ * @property Carbon      created_at
+ * @property Carbon      updated_at
  *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */

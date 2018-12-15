@@ -76,7 +76,7 @@ class CacheProperties
      */
     public function has(): bool
     {
-        if ('testing' === getenv('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             return false;
         }
         $this->hash();

@@ -54,7 +54,7 @@
             <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
 
             <div class="form-group has-feedback">
-                {% if env('LOGIN_PROVIDER', 'eloquent') == 'eloquent' %}
+                {% if config('firefly.login_provider') == 'eloquent' %}
                     <input type="email" autocomplete="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
                 {% else %}
                     <input type="text" autocomplete="username" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>

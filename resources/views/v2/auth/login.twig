@@ -39,7 +39,7 @@
                                 </p>
                             {% endif %}
                             <div class="form-group">
-                                {% if env('LOGIN_PROVIDER', 'eloquent') == 'eloquent' %}
+                                {% if config('firefly.login_provider') == 'eloquent' %}
                                     <label class="form-label">{{ trans('form.email') }}</label>
                                     <input type="email" class="{% if errors.has('email') %}is-invalid{% endif %} form-control" name="email" id="email" value="{{ old('email') }}" autocomplete="email" aria-describedby="emailHelp" placeholder="{{ trans('form.email') }}" required>
                                     {% if errors.has('email') %}

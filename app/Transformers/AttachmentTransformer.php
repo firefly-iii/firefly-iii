@@ -27,6 +27,7 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -51,6 +52,9 @@ class AttachmentTransformer extends TransformerAbstract
     {
         $this->parameters = $parameters;
         $this->repository = app(AttachmentRepositoryInterface::class);
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**

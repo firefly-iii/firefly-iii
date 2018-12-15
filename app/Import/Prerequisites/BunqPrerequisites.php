@@ -156,7 +156,7 @@ class BunqPrerequisites implements PrerequisitesInterface
      */
     private function getBunqEnvironment(): BunqEnumApiEnvironmentType
     {
-        $env = env('BUNQ_USE_SANDBOX');
+        $env = config('firefly.bunq_use_sandbox');
         if (null === $env) {
             return BunqEnumApiEnvironmentType::PRODUCTION();
         }

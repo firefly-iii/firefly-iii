@@ -44,7 +44,7 @@ class FixerIOv2 implements ExchangeRateInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -70,7 +70,7 @@ class FixerIOv2 implements ExchangeRateInterface
         $exchangeRate->created_at = new Carbon;
 
         // get API key
-        $apiKey = env('FIXER_API_KEY', '');
+        $apiKey = config('firefly.fixer_api_key');
 
         // if no API key, return unsaved exchange rate.
         if ('' === $apiKey) {

@@ -35,11 +35,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class TransactionTransformer
  */
-class TransactionTransformer extends TransformerAbstract
+class TransactionTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
-
     /** @var JournalRepositoryInterface */
     protected $repository;
 
@@ -47,14 +44,13 @@ class TransactionTransformer extends TransformerAbstract
      * TransactionTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag               $parameters
-     * @param JournalRepositoryInterface $repository
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         $this->repository = app(JournalRepositoryInterface::class);
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**

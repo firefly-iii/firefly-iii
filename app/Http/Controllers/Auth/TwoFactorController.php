@@ -77,7 +77,7 @@ class TwoFactorController extends Controller
     {
         /** @var User $user */
         $user      = auth()->user();
-        $siteOwner = env('SITE_OWNER', '');
+        $siteOwner = config('firefly.site_owner');
         $title     = (string)trans('firefly.two_factor_forgot_title');
 
         Log::info(

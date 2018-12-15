@@ -130,7 +130,7 @@ class LoginController extends Controller
     public function showLoginForm(Request $request)
     {
         $count         = DB::table('users')->count();
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER', 'eloquent');
+        $loginProvider = config('firefly.login_provider');
         $pageTitle     = (string)trans('firefly.login_page_title');
         if (0 === $count && 'eloquent' === $loginProvider) {
             return redirect(route('register')); // @codeCoverageIgnore

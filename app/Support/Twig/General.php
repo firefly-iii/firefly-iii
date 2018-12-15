@@ -59,7 +59,6 @@ class General extends Twig_Extension
             $this->getCurrencyCode(),
             $this->getCurrencySymbol(),
             $this->phpdate(),
-            $this->env(),
             $this->activeRouteStrict(),
             $this->activeRoutePartial(),
             $this->activeRoutePartialWhat(),
@@ -154,19 +153,6 @@ class General extends Twig_Extension
                 $date = session('end', Carbon::now()->endOfMonth());
 
                 return app('steam')->balance($account, $date);
-            }
-        );
-    }
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function env(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'env',
-            function (string $name, string $default): string {
-                return env($name, $default);
             }
         );
     }

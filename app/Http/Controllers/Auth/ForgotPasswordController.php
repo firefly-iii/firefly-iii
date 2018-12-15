@@ -59,7 +59,8 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        Log::info('Start of sendResetLinkEmail()');
+        $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
             Log::error($message);
@@ -98,7 +99,7 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 

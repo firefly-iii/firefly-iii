@@ -41,15 +41,15 @@
 </div>
 
 <script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
-{% if env('ANALYTICS_ID','') != '' %}
+{% if config('firefly.analytics_id')  != '' %}
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id={{ env('ANALYTICS_ID', 'XXX-XX-X') }}"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ config('firefly.analytics_id')  }}"></script>
     <script>
         window.dataLayer = window.dataLayer || [];
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', '{{ env('ANALYTICS_ID', 'XXX-XX-X') }}');
+        gtag('config', '{{ config('firefly.analytics_id')  }}');
     </script>
 {% endif %}
 </body>

@@ -71,7 +71,7 @@ class ResetPasswordController extends Controller
      */
     public function showResetForm(Request $request, $token = null)
     {
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 
@@ -103,7 +103,7 @@ class ResetPasswordController extends Controller
      */
     public function reset(Request $request)
     {
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 

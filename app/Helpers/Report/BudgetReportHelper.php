@@ -48,7 +48,7 @@ class BudgetReportHelper implements BudgetReportHelperInterface
     {
         $this->repository = $repository;
 
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
 

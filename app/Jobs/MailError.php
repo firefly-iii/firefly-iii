@@ -70,7 +70,7 @@ class MailError extends Job implements ShouldQueue
      */
     public function handle()
     {
-        $email            = env('SITE_OWNER');
+        $email            = config('firefly.site_owner');
         $args             = $this->exception;
         $args['loggedIn'] = $this->userData['id'] > 0;
         $args['user']     = $this->userData;

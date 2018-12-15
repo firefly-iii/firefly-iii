@@ -86,7 +86,7 @@
 
 
         // token for Mapbox:
-        var mapboxToken = "{{ env('MAPBOX_API_KEY','') }}";
+        var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
 
     </script>
     <script src="lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
