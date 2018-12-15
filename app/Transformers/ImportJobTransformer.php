@@ -32,21 +32,15 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class ImportJobTransformer
  */
-class ImportJobTransformer extends TransformerAbstract
+class ImportJobTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
-
     /**
      * PiggyBankTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }

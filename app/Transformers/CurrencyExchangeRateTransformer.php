@@ -32,21 +32,16 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class CurrencyExchangeRateTransformer
  */
-class CurrencyExchangeRateTransformer extends TransformerAbstract
+class CurrencyExchangeRateTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
 
     /**
      * PiggyBankEventTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }

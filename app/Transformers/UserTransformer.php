@@ -26,33 +26,25 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Role;
 use FireflyIII\User;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class UserTransformer
  */
-class UserTransformer extends TransformerAbstract
+class UserTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
-
     /**
      * UserTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
+
     /**
      * Transform user.
      *

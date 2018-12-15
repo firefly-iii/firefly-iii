@@ -33,35 +33,15 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  *
  * Class LinkTypeTransformer
  */
-class LinkTypeTransformer extends TransformerAbstract
+class LinkTypeTransformer extends AbstractTransformer
 {
-
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = [];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
-    /** @var ParameterBag */
-    protected $parameters;
-
     /**
      * CurrencyTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }

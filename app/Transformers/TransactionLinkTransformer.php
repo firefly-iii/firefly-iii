@@ -1,6 +1,6 @@
 <?php
 /**
- * JournalLinkTransformer.php
+ * TransactionLinkTransformer.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -32,23 +32,18 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  *
- * Class JournalLinkTransformer
+ * Class TransactionLinkTransformer
  */
-class JournalLinkTransformer extends TransformerAbstract
+class TransactionLinkTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
 
     /**
-     * CurrencyTransformer constructor.
+     * Constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
