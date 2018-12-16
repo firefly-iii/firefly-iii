@@ -121,7 +121,7 @@ class Handler extends ExceptionHandler
         // if the user wants us to mail:
         if (true === $doMailError
             // and if is one of these error instances
-            && ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException)) {
+            && ($exception instanceof FireflyException || $exception instanceof ErrorException)) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
