@@ -28,6 +28,7 @@ use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Transformers\AvailableBudgetTransformer;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -58,16 +59,17 @@ class AvailableBudgetControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AvailableBudgetTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('destroyAvailableBudget')->once()->andReturn(true);
 
         // get available budget:
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // call API
-        $response = $this->delete('/api/v1/available_budgets/' . $availableBudget->id);
+        $response = $this->delete(route('api.v1.available_budgets.delete', [$availableBudget->id]));
         $response->assertStatus(204);
     }
 
@@ -82,13 +84,21 @@ class AvailableBudgetControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AvailableBudgetTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getAvailableBudgets')->once()->andReturn($availableBudgets);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         // call API
-        $response = $this->get('/api/v1/available_budgets');
+        $response = $this->get(route('api.v1.available_budgets.index'));
         $response->assertStatus(200);
         $response->assertSee($availableBudgets->first()->id);
     }
@@ -104,12 +114,20 @@ class AvailableBudgetControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AvailableBudgetTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // call API
-        $response = $this->get('/api/v1/available_budgets/' . $availableBudget->id);
+        $response = $this->get(route('api.v1.available_budgets.show', [$availableBudget->id]));
         $response->assertStatus(200);
         $response->assertSee($availableBudget->id);
     }
@@ -122,15 +140,20 @@ class AvailableBudgetControllerTest extends TestCase
      */
     public function testStore(): void
     {
-        /** @var AvailableBudget $availableBudget */
-        $availableBudget = $this->user()->availableBudgets()->first();
-
-        // mock stuff:
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $availableBudget    = new AvailableBudget;
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
 
@@ -138,16 +161,15 @@ class AvailableBudgetControllerTest extends TestCase
         $data = [
             'currency_id' => '1',
             'amount'      => '100',
-            'start_date'  => '2018-01-01',
-            'end_date'    => '2018-01-31',
+            'start'       => '2018-01-01',
+            'end'         => '2018-01-31',
         ];
 
 
         // test API
-        $response = $this->post('/api/v1/available_budgets', $data);
+        $response = $this->post(route('api.v1.available_budgets.store'), $data);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'available_budgets', 'links' => true],]);
-        $response->assertSee($availableBudget->amount); // the amount
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -162,27 +184,36 @@ class AvailableBudgetControllerTest extends TestCase
         // mock stuff:
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $availableBudget    = new AvailableBudget;
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(null)->once();
         $currencyRepository->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(null)->once();
+        $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
 
         // data to submit
         $data = [
             'currency_id'   => '1',
             'currency_code' => 'EUR',
             'amount'        => '100',
-            'start_date'    => '2018-01-01',
-            'end_date'      => '2018-01-31',
+            'start'         => '2018-01-01',
+            'end'           => '2018-01-31',
         ];
 
 
         // test API
-        $response = $this->post('/api/v1/available_budgets', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(500);
-        $response->assertSee('Could not find the indicated currency.'); // the amount
-        $response->assertHeader('Content-Type', 'application/json');
+        $response = $this->post(route('api.v1.available_budgets.store'), $data);
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -199,6 +230,14 @@ class AvailableBudgetControllerTest extends TestCase
         // mock stuff:
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer        = $this->mock(AvailableBudgetTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -211,16 +250,15 @@ class AvailableBudgetControllerTest extends TestCase
             'currency_id'   => '1',
             'currency_code' => 'EUR',
             'amount'        => '100',
-            'start_date'    => '2018-01-01',
-            'end_date'      => '2018-01-31',
+            'start'         => '2018-01-01',
+            'end'           => '2018-01-31',
         ];
 
 
         // test API
-        $response = $this->post('/api/v1/available_budgets', $data);
+        $response = $this->post(route('api.v1.available_budgets.store'), $data);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'available_budgets', 'links' => true],]);
-        $response->assertSee($availableBudget->amount); // the amount
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -236,6 +274,14 @@ class AvailableBudgetControllerTest extends TestCase
         // mock repositories
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer        = $this->mock(AvailableBudgetTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         /** @var AvailableBudget $availableBudget */
         $availableBudget = $this->user()->availableBudgets()->first();
@@ -249,16 +295,15 @@ class AvailableBudgetControllerTest extends TestCase
         $data = [
             'currency_id' => '1',
             'amount'      => '100',
-            'start_date'  => '2018-01-01',
-            'end_date'    => '2018-01-31',
+            'start'  => '2018-01-01',
+            'end'    => '2018-01-31',
         ];
 
         // test API
-        $response = $this->put('/api/v1/available_budgets/' . $availableBudget->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.available_budgets.update', $availableBudget->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'available_budgets', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($availableBudget->amount);
     }
 
 

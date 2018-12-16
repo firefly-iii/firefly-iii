@@ -33,11 +33,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class AttachmentTransformer
  */
-class AttachmentTransformer extends TransformerAbstract
+class AttachmentTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
-
     /** @var AttachmentRepositoryInterface */
     private $repository;
 
@@ -45,12 +42,9 @@ class AttachmentTransformer extends TransformerAbstract
      * BillTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         $this->repository = app(AttachmentRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));

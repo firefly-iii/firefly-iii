@@ -31,6 +31,8 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -79,20 +81,21 @@ class RuleControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $rules = $this->user()->rules()->get();
-
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
-        $ruleRepos->shouldReceive('getAll')->once()->andReturn($rules);
+        $ruleRepos->shouldReceive('getAll')->once()->andReturn(new Collection);
 
 
         // call API
         $response = $this->get('/api/v1/rules');
         $response->assertStatus(200);
-        $response->assertSee($rules->first()->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -104,6 +107,14 @@ class RuleControllerTest extends TestCase
         $rule         = $this->user()->rules()->first();
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -112,7 +123,6 @@ class RuleControllerTest extends TestCase
         // call API
         $response = $this->get('/api/v1/rules/' . $rule->id);
         $response->assertStatus(200);
-        $response->assertSee($rule->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -124,6 +134,14 @@ class RuleControllerTest extends TestCase
     {
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $ruleRepos->shouldReceive('setUser')->once();
         $rule = $this->user()->rules()->first();
@@ -136,14 +154,14 @@ class RuleControllerTest extends TestCase
             'active'          => 1,
             'triggers'        => [
                 [
-                    'name'            => 'description_is',
+                    'type'            => 'description_is',
                     'value'           => 'Hello',
                     'stop_processing' => 1,
                 ],
             ],
             'actions'         => [
                 [
-                    'name'            => 'add_tag',
+                    'type'            => 'add_tag',
                     'value'           => 'A',
                     'stop_processing' => 1,
                 ],
@@ -167,6 +185,7 @@ class RuleControllerTest extends TestCase
     {
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -202,6 +221,7 @@ class RuleControllerTest extends TestCase
     {
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -241,6 +261,9 @@ class RuleControllerTest extends TestCase
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $transformer     = $this->mock(TransactionTransformer::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
 
         $asset = $this->getRandomAsset();
         $repository->shouldReceive('setUser')->once();
@@ -276,8 +299,9 @@ class RuleControllerTest extends TestCase
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
 
-        $asset        = $this->getRandomAsset();
+        $asset = $this->getRandomAsset();
         $repository->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
@@ -306,6 +330,14 @@ class RuleControllerTest extends TestCase
     {
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -320,14 +352,14 @@ class RuleControllerTest extends TestCase
             'active'          => 1,
             'triggers'        => [
                 [
-                    'name'            => 'description_is',
+                    'type'            => 'description_is',
                     'value'           => 'Hello',
                     'stop_processing' => 1,
                 ],
             ],
             'actions'         => [
                 [
-                    'name'            => 'add_tag',
+                    'type'            => 'add_tag',
                     'value'           => 'A',
                     'stop_processing' => 1,
                 ],

@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -59,15 +60,16 @@ class AttachmentControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('destroy')->once()->andReturn(true);
 
         // get attachment:
         $attachment = $this->user()->attachments()->first();
 
         // call API
-        $response = $this->delete('/api/v1/attachments/' . $attachment->id);
+        $response = $this->delete(route('api.v1.attachments.delete', [$attachment->id]));
         $response->assertStatus(204);
     }
 
@@ -81,10 +83,11 @@ class AttachmentControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
         $content = 'Attachment content ' . random_int(100, 1000);
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('exists')->andReturn(true)->once();
         $repository->shouldReceive('getContent')->andReturn($content)->once();
 
@@ -92,7 +95,7 @@ class AttachmentControllerTest extends TestCase
         $attachment = $this->user()->attachments()->first();
 
         // call API
-        $response = $this->get('/api/v1/attachments/' . $attachment->id . '/download');
+        $response = $this->get(route('api.v1.attachments.download', [$attachment->id]));
 
         $response->assertStatus(200);
         $response->assertSee($content);
@@ -109,17 +112,18 @@ class AttachmentControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
         $content = 'Attachment content ' . random_int(100, 1000);
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('exists')->andReturn(false)->once();
 
         // get attachment:
         $attachment = $this->user()->attachments()->first();
 
         // call API
-        $response = $this->get('/api/v1/attachments/' . $attachment->id . '/download');
+        $response = $this->get(route('api.v1.attachments.download', [$attachment->id]));
 
         $response->assertStatus(500);
         $response->assertSee('Could not find the indicated attachment. The file is no longer there.');
@@ -135,9 +139,10 @@ class AttachmentControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         // create attachment
         $attachment = Attachment::create(
@@ -155,7 +160,7 @@ class AttachmentControllerTest extends TestCase
         );
 
         // call API
-        $response = $this->get('/api/v1/attachments/' . $attachment->id . '/download');
+        $response = $this->get(route('api.v1.attachments.download', [$attachment->id]));
 
         $response->assertStatus(500);
         $response->assertSee('No file has been uploaded for this attachment (yet).');
@@ -174,15 +179,21 @@ class AttachmentControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('get')->once()->andReturn($attachments);
-        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
 
         // test API
-        $response = $this->get('/api/v1/attachments');
+        $response = $this->get(route('api.v1.attachments.index'));
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
         $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
@@ -203,17 +214,23 @@ class AttachmentControllerTest extends TestCase
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // test API
-        $response = $this->get('/api/v1/attachments/' . $attachment->id);
+        $response = $this->get(route('api.v1.attachments.show', [$attachment->id]));
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'attachments', 'links' => true],]);
-        $response->assertSee($attachment->filename); // attachment file name
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -233,7 +250,14 @@ class AttachmentControllerTest extends TestCase
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -252,10 +276,9 @@ class AttachmentControllerTest extends TestCase
 
 
         // test API
-        $response = $this->post('/api/v1/attachments', $data);
+        $response = $this->post(route('api.v1.attachments.store'), $data);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'attachments', 'links' => true],]);
-        $response->assertSee($attachment->filename); // the file name.
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -270,6 +293,14 @@ class AttachmentControllerTest extends TestCase
         // mock repositories
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
 
         /** @var Attachment $attachment */
@@ -288,11 +319,10 @@ class AttachmentControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/attachments/' . $attachment->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.attachments.update', [$attachment->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'attachments', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($attachment->description);
 
     }
 
@@ -306,6 +336,7 @@ class AttachmentControllerTest extends TestCase
     {
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
         $repository->shouldReceive('setUser')->once();
 
 
@@ -316,7 +347,7 @@ class AttachmentControllerTest extends TestCase
         $helper = $this->mock(AttachmentHelperInterface::class);
         $helper->shouldReceive('saveAttachmentFromApi')->once();
 
-        $response = $this->call('POST', '/api/v1/attachments/' . $attachment->id . '/upload', [], [], [], [], $content);
+        $response = $this->call('POST', route('api.v1.attachments.upload', [$attachment->id]), [], [], [], [], $content);
         //$response = $this->post('/api/v1/attachments/' . $attachment->id . '/upload',$content, ['Accept' => 'application/json']);
         $response->assertStatus(204);
     }

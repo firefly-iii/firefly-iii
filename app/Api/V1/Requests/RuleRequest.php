@@ -92,28 +92,23 @@ class RuleRequest extends Request
         // some triggers and actions require text:
         $contextTriggers = implode(',', config('firefly.context-rule-triggers'));
         $contextActions  = implode(',', config('firefly.context-rule-actions'));
-
-
-        $rules = [
-            'title'            => 'required|between:1,100|uniqueObjectForUser:rules,title',
-            'description'      => 'between:1,5000|nullable',
-            'rule_group_id'    => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
-            'rule_group_title' => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
-            'trigger'          => 'required|in:store-journal,update-journal',
-
+        $rules           = [
+            'title'                      => 'required|between:1,100|uniqueObjectForUser:rules,title',
+            'description'                => 'between:1,5000|nullable',
+            'rule_group_id'              => 'required|belongsToUser:rule_groups|required_without:rule_group_title',
+            'rule_group_title'           => 'nullable|between:1,255|required_without:rule_group_id|belongsToUser:rule_groups,title',
+            'trigger'                    => 'required|in:store-journal,update-journal',
             'triggers.*.type'            => 'required|in:' . implode(',', $validTriggers),
             'triggers.*.value'           => 'required_if:actions.*.type,' . $contextTriggers . '|min:1|ruleTriggerValue',
             'triggers.*.stop_processing' => [new IsBoolean],
             'triggers.*.active'          => [new IsBoolean],
-
-            'actions.*.type'            => 'required|in:' . implode(',', $validActions),
-            'actions.*.value'           => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
-            'actions.*.stop_processing' => [new IsBoolean],
-            'actions.*.active'          => [new IsBoolean],
-
-            'strict'          => [new IsBoolean],
-            'stop_processing' => [new IsBoolean],
-            'active'          => [new IsBoolean],
+            'actions.*.type'             => 'required|in:' . implode(',', $validActions),
+            'actions.*.value'            => 'required_if:actions.*.type,' . $contextActions . '|ruleActionValue',
+            'actions.*.stop_processing'  => [new IsBoolean],
+            'actions.*.active'           => [new IsBoolean],
+            'strict'                     => [new IsBoolean],
+            'stop_processing'            => [new IsBoolean],
+            'active'                     => [new IsBoolean],
         ];
 
         return $rules;

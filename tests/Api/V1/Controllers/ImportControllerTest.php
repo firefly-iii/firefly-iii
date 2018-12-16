@@ -26,6 +26,8 @@ namespace Tests\Api\V1\Controllers;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
+use FireflyIII\Transformers\ImportJobTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -52,12 +54,16 @@ class ImportControllerTest extends TestCase
      */
     public function testListAll(): void
     {
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $repository  = $this->mock(ImportJobRepositoryInterface::class);
+        $transformer = $this->mock(ImportJobTransformer::class);
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('get')->once()->andReturn(new Collection);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
-        $response = $this->get(route('api.v1.import.list'));
+
+        $response = $this->get(route('api.v1.import.list'), ['Accept' => 'application/json']);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -67,9 +73,18 @@ class ImportControllerTest extends TestCase
     public function testShow(): void
     {
         /** @var ImportJob $job */
-        $job        = $this->user()->importJobs()->first();
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $job         = $this->user()->importJobs()->first();
+        $repository  = $this->mock(ImportJobRepositoryInterface::class);
+        $transformer = $this->mock(ImportJobTransformer::class);
         $repository->shouldReceive('setUser')->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
 
         $response = $this->get(route('api.v1.import.show', [$job->key]), ['accept' => 'application/json']);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -85,8 +100,13 @@ class ImportControllerTest extends TestCase
         $tag         = $this->user()->tags()->first();
         $job->tag_id = $tag->id;
         $job->save();
-        $repository = $this->mock(ImportJobRepositoryInterface::class);
+        $repository  = $this->mock(ImportJobRepositoryInterface::class);
+        $transformer = $this->mock(TransactionTransformer::class);
         $repository->shouldReceive('setUser')->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
 
         // paginator:
         $paginator = new LengthAwarePaginator(new Collection, 0, 50);

@@ -32,6 +32,9 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
+use FireflyIII\Transformers\PiggyBankEventTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -62,6 +65,11 @@ class TransactionControllerTest extends TestCase
         $repository      = $this->mock(JournalRepositoryInterface::class);
         $collector       = $this->mock(TransactionCollectorInterface::class);
         $attachmentRepos = $this->mock(AttachmentRepositoryInterface::class);
+        $transformer     = $this->mock(AttachmentTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('getAttachmentsByTr')->once()->andReturn(new Collection);
@@ -1253,6 +1261,7 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $transformer  = $this->mock(TransactionTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
@@ -1271,6 +1280,8 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
@@ -1293,6 +1304,7 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndexWithRange(): void
     {
+        $transformer  = $this->mock(TransactionTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
@@ -1315,6 +1327,8 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock some calls:
 
@@ -1347,12 +1361,17 @@ class TransactionControllerTest extends TestCase
     public function testPiggyBankEvents(): void
     {
         // mock stuff:
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $collector  = $this->mock(TransactionCollectorInterface::class);
+        $repository  = $this->mock(JournalRepositoryInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
+        $transformer = $this->mock(PiggyBankEventTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('getPiggyBankEventsbyTr')->once()->andReturn(new Collection);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
 
         // get account:
         $transaction = $this->user()->transactions()->first();
@@ -1368,9 +1387,10 @@ class TransactionControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
-    public function testShowWithdrawal(): void
+    public function testShowDeposit(): void
     {
-        $withdrawal = $this->getRandomWithdrawal();
+        $transformer  = $this->mock(TransactionTransformer::class);
+        $deposit      = $this->getRandomDeposit();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
@@ -1387,8 +1407,11 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('addFilter')->andReturnSelf()->once();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         // test API
-        $response = $this->get('/api/v1/transactions/' . $withdrawal->id);
+        $response = $this->get('/api/v1/transactions/' . $deposit->id);
         $response->assertStatus(200);
         $response->assertJson(
             [
@@ -1407,9 +1430,10 @@ class TransactionControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
-    public function testShowDeposit(): void
+    public function testShowWithdrawal(): void
     {
-        $deposit =$this->getRandomDeposit();
+        $transformer  = $this->mock(TransactionTransformer::class);
+        $withdrawal   = $this->getRandomWithdrawal();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
@@ -1426,8 +1450,11 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('addFilter')->andReturnSelf()->once();
         $collector->shouldReceive('getTransactions')->andReturn(new Collection);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         // test API
-        $response = $this->get('/api/v1/transactions/' . $deposit->id);
+        $response = $this->get('/api/v1/transactions/' . $withdrawal->id);
         $response->assertStatus(200);
         $response->assertJson(
             [
@@ -1455,6 +1482,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // collector stuff:
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
@@ -1513,6 +1544,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser')->once();
@@ -1569,6 +1604,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1626,6 +1665,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1681,6 +1724,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1736,6 +1783,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1793,6 +1844,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1848,6 +1903,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1904,6 +1963,11 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1961,6 +2025,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2017,6 +2085,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2074,6 +2146,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2130,11 +2206,15 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // collector stuff:
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
@@ -2193,11 +2273,15 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // collector stuff:
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
@@ -2250,6 +2334,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2307,6 +2395,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2363,6 +2455,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2419,6 +2515,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2475,11 +2575,15 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // collector stuff:
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
@@ -2532,6 +2636,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2588,6 +2696,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2642,6 +2754,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2697,6 +2813,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2766,6 +2886,10 @@ class TransactionControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -2821,6 +2945,11 @@ class TransactionControllerTest extends TestCase
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
@@ -2874,6 +3003,10 @@ class TransactionControllerTest extends TestCase
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));

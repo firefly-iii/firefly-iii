@@ -25,13 +25,15 @@ namespace Tests\Api\V1\Controllers;
 
 
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
+use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -62,25 +64,26 @@ class BillControllerTest extends TestCase
     public function testAttachments(): void
     {
         // create stuff
-        $attachments = factory(Attachment::class, 10)->create();
-        $bill        = $this->user()->bills()->first();
+        $bill = $this->user()->bills()->first();
+
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $billRepos     = $this->mock(BillRepositoryInterface::class);
+        $transformer   = $this->mock(AttachmentTransformer::class);
 
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $billRepos->shouldReceive('setUser');
-        $billRepos->shouldReceive('getAttachments')->once()->andReturn($attachments);
-        $repository->shouldReceive('getNoteText')->andReturn('Hi There');
+        $billRepos->shouldReceive('setUser')->atLeast()->once();
+        $billRepos->shouldReceive('getAttachments')->once()->andReturn(new Collection);
 
         // test API
         $response = $this->get(route('api.v1.bills.attachments', [$bill->id]));
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -93,7 +96,8 @@ class BillControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -103,7 +107,7 @@ class BillControllerTest extends TestCase
         $bill = $this->user()->bills()->first();
 
         // call API
-        $response = $this->delete('/api/v1/bills/' . $bill->id);
+        $response = $this->delete(route('api.v1.bills.delete', [$bill->id]));
         $response->assertStatus(204);
     }
 
@@ -115,22 +119,22 @@ class BillControllerTest extends TestCase
     public function testIndex(): void
     {
         // create stuff
-        $bills     = factory(Bill::class, 10)->create();
-        $paginator = new LengthAwarePaginator($bills, 10, 50, 1);
-        // mock stuff:
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $paginator   = new LengthAwarePaginator(new Collection, 0, 50, 1);
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getPaginator')->withAnyArgs()->andReturn($paginator)->once();
-        $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // test API
-        $response = $this->get('/api/v1/bills');
+        $response = $this->get(route('api.v1.bills.index'));
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(
             ['links' => ['self' => true, 'first' => true, 'last' => true,],]
         );
@@ -142,16 +146,18 @@ class BillControllerTest extends TestCase
      */
     public function testRules(): void
     {
-        $rules     = $this->user()->rules()->get();
-        $bill      = $this->user()->bills()->first();
-        $billRepos = $this->mock(BillRepositoryInterface::class);
-        $billRepos->shouldReceive('setUser')->once();
-        $billRepos->shouldReceive('getRulesForBill')->once()->andReturn($rules);
+        $bill        = $this->user()->bills()->first();
+        $billRepos   = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $billRepos->shouldReceive('setUser')->atLeast()->once();
+        $billRepos->shouldReceive('getRulesForBill')->atLeast()->once()->andReturn(new Collection);
 
         // call API
         $response = $this->get(route('api.v1.bills.rules', [$bill->id]));
         $response->assertStatus(200);
-        $response->assertSee($rules->first()->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -163,20 +169,25 @@ class BillControllerTest extends TestCase
     public function testShow(): void
     {
         // create stuff
-        $bill       = $this->user()->bills()->first();
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $bill        = $this->user()->bills()->first();
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         // test API
-        $response = $this->get('/api/v1/bills/' . $bill->id);
+        $response = $this->get(route('api.v1.bills.show', [$bill->id]));
         $response->assertStatus(200);
         $response->assertJson(
             ['data' => [
                 'type' => 'bills',
-                'id'   => $bill->id,
             ],]
         );
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -191,13 +202,13 @@ class BillControllerTest extends TestCase
     public function testStoreMinOverMax(): void
     {
         // create stuff
-        $bill       = $this->user()->bills()->first();
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $bill        = $this->user()->bills()->first();
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('store')->andReturn($bill);
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
 
         // data to submit:
         $data = [
@@ -215,7 +226,7 @@ class BillControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/bills', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.bills.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -237,14 +248,21 @@ class BillControllerTest extends TestCase
     public function testStoreValid(): void
     {
         // create stuff
-        $bill       = $this->user()->bills()->first();
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $bill        = $this->user()->bills()->first();
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->times(2);
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->andReturn($bill);
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
-        $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
+
         // data to submit:
         $data = [
             'name'        => 'New bill #' . random_int(1, 10000),
@@ -261,11 +279,10 @@ class BillControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/bills', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.bills.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'bills', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($bill->name);
     }
 
     /**
@@ -281,6 +298,7 @@ class BillControllerTest extends TestCase
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $transformer        = $this->mock(TransactionTransformer::class);
         $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $billRepos->shouldReceive('setUser');
         $repository->shouldReceive('setUser');
@@ -296,6 +314,9 @@ class BillControllerTest extends TestCase
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
 
         // mock some calls:
@@ -321,6 +342,7 @@ class BillControllerTest extends TestCase
         $collector          = $this->mock(TransactionCollectorInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
+        $transformer        = $this->mock(TransactionTransformer::class);
         $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $billRepos->shouldReceive('setUser');
         $repository->shouldReceive('setUser');
@@ -337,6 +359,9 @@ class BillControllerTest extends TestCase
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
 
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
@@ -362,14 +387,13 @@ class BillControllerTest extends TestCase
     public function testUpdateValid(): void
     {
         // create stuff
-        $bill       = $this->user()->bills()->first();
-        $repository = $this->mock(BillRepositoryInterface::class);
+        $bill        = $this->user()->bills()->first();
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->atleast()->times(2);
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('update')->andReturn($bill);
-        $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
         // data to submit:
         $data = [
             'name'        => 'New bill #' . random_int(1, 10000),
@@ -384,12 +408,18 @@ class BillControllerTest extends TestCase
             'currency_id' => 1,
         ];
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         // test API
-        $response = $this->put('/api/v1/bills/' . $bill->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.bills.update', [$bill->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'bills', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($bill->name);
     }
 
 }

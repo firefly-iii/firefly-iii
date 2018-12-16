@@ -87,7 +87,7 @@ class ConfigurationControllerTest extends TestCase
             ],
         ];
 
-        $response = $this->get('/api/v1/configuration');
+        $response = $this->get(route('api.v1.configuration.index'));
         $response->assertStatus(200);
         $response->assertExactJson($expected);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -105,7 +105,7 @@ class ConfigurationControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
 
         Passport::actingAs($this->emptyUser());
-        $response = $this->get('/api/v1/configuration');
+        $response = $this->get(route('api.v1.configuration.index'));
         $response->assertStatus(500);
         $response->assertSee('No access to method.');
     }
@@ -156,8 +156,7 @@ class ConfigurationControllerTest extends TestCase
                 'single_user_mode'        => true,
             ],
         ];
-
-        $response = $this->post('/api/v1/configuration/permission_update_check', $data);
+        $response = $this->post(route('api.v1.configuration.update', ['permission_update_check']), $data);
         $response->assertStatus(200);
         $response->assertExactJson($expected);
     }
@@ -210,7 +209,7 @@ class ConfigurationControllerTest extends TestCase
             ],
         ];
 
-        $response = $this->post('/api/v1/configuration/single_user_mode', $data);
+        $response = $this->post(route('api.v1.configuration.update', ['single_user_mode']), $data);
         $response->assertStatus(200);
         $response->assertExactJson($expected);
     }
@@ -243,7 +242,7 @@ class ConfigurationControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
 
         Passport::actingAs($this->emptyUser());
-        $response = $this->post('/api/v1/configuration/single_user_mode');
+        $response = $this->post(route('api.v1.configuration.update', ['single_user_mode']));
         $response->assertStatus(500);
         $response->assertSee('No access to method.');
     }

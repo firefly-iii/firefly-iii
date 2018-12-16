@@ -25,10 +25,12 @@ namespace Tests\Api\V1\Controllers;
 
 
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\Account;
+use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -39,6 +41,15 @@ use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Transformers\AvailableBudgetTransformer;
+use FireflyIII\Transformers\BillTransformer;
+use FireflyIII\Transformers\BudgetLimitTransformer;
+use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
+use FireflyIII\Transformers\CurrencyTransformer;
+use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -70,33 +81,33 @@ class CurrencyControllerTest extends TestCase
      */
     public function testAccounts(): void
     {
-        // create stuff
-        $accounts = factory(Account::class, 10)->create();
-
         // mock stuff:
+        $currency      = TransactionCurrency::first();
+        $account       = $this->getRandomAsset();
+        $collection    = new Collection([$account]);
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(AccountTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getAccountsByType')->withAnyArgs()->andReturn($accounts)->once();
-        $currencyRepos->shouldReceive('setUser');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('2')->atLeast()->once();
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('daily')->atLeast()->once();
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn(true)->atLeast()->once();
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getAccountsByType')->withAnyArgs()->andReturn($collection)->atLeast()->once();
+        $repository->shouldReceive('getMetaValue')->atLeast()->once()->andReturn('1');
 
         // test API
-        $currency = TransactionCurrency::first();
+
         $response = $this->get(route('api.v1.currencies.accounts', [$currency->code]));
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 1, 'count' => 1, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(
             ['links' => ['self' => true, 'first' => true, 'last' => true,],]
         );
@@ -111,22 +122,25 @@ class CurrencyControllerTest extends TestCase
      */
     public function testAvailableBudgets(): void
     {
-        $availableBudgets = $this->user()->availableBudgets()->get();
         // mock stuff:
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(AvailableBudgetTransformer::class);
+        $collection    = new Collection([AvailableBudget::first()]);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock calls:
-        $currencyRepos->shouldReceive('setUser')->once();
-        $budgetRepos->shouldReceive('setUser')->once();
-        $budgetRepos->shouldReceive('getAvailableBudgets')->once()->andReturn($availableBudgets);
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('getAvailableBudgets')->once()->andReturn($collection);
 
         // call API
         $currency = TransactionCurrency::first();
         $response = $this->get(route('api.v1.currencies.available_budgets', [$currency->code]));
         $response->assertStatus(200);
-        $response->assertSee($availableBudgets->first()->id);
     }
 
     /**
@@ -137,26 +151,26 @@ class CurrencyControllerTest extends TestCase
     public function testBills(): void
     {
         // create stuff
-        $bills     = factory(Bill::class, 10)->create();
-        $paginator = new LengthAwarePaginator($bills, 10, 50, 1);
+        $paginator = new LengthAwarePaginator(new Collection([Bill::first()]), 0, 50, 1);
         // mock stuff:
         $repository    = $this->mock(BillRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(BillTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $currencyRepos->shouldReceive('setUser')->once();
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getPaginator')->withAnyArgs()->andReturn($paginator)->once();
-        $repository->shouldReceive('getRulesForBill')->withAnyArgs()->andReturn(new Collection());
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
 
         // test API
         $currency = TransactionCurrency::first();
         $response = $this->get(route('api.v1.currencies.bills', [$currency->code]));
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => true, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -169,10 +183,18 @@ class CurrencyControllerTest extends TestCase
         $repository                           = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos                        = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos                            = $this->mock(UserRepositoryInterface::class);
+        $transformer                          = $this->mock(BudgetLimitTransformer::class);
         $currency                             = TransactionCurrency::first();
         $budgetLimit                          = BudgetLimit::first();
         $budgetLimit->transaction_currency_id = $currency->id;
         $collection                           = new Collection([$budgetLimit]);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('getAllBudgetLimits')->once()->andReturn($collection);
@@ -188,9 +210,15 @@ class CurrencyControllerTest extends TestCase
      */
     public function testCer(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyExchangeRateTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // mock calls
+        $repository->shouldReceive('setUser')->once()->atLeast()->once();
         $repository->shouldReceive('getExchangeRates')->once()->andReturn(new Collection);
 
 
@@ -233,9 +261,17 @@ class CurrencyControllerTest extends TestCase
     public function testDisable(): void
     {
         // create stuff
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -248,7 +284,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertJson(
             ['data' => [
                 'type' => 'currencies',
-                'id'   => $currency->id,
             ],]
         );
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -260,9 +295,10 @@ class CurrencyControllerTest extends TestCase
     public function testDisableInUse(): void
     {
         // create stuff
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -281,9 +317,17 @@ class CurrencyControllerTest extends TestCase
     public function testEnable(): void
     {
         // create stuff
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -295,7 +339,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertJson(
             ['data' => [
                 'type' => 'currencies',
-                'id'   => $currency->id,
             ],]
         );
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -308,14 +351,17 @@ class CurrencyControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $collection = TransactionCurrency::get();
         // mock stuff:
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getAll')->withNoArgs()->andReturn($collection)->once();
+        $repository->shouldReceive('getAll')->withNoArgs()->andReturn(new Collection)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // test API
         $response = $this->get('/api/v1/currencies');
@@ -325,8 +371,8 @@ class CurrencyControllerTest extends TestCase
             [
                 'meta' => [
                     'pagination' => [
-                        'total'        => $collection->count(),
-                        'count'        => $collection->count(),
+                        'total'        => 0,
+                        'count'        => 0,
                         'per_page'     => true, // depends on user preference.
                         'current_page' => 1,
                         'total_pages'  => 1,
@@ -346,13 +392,21 @@ class CurrencyControllerTest extends TestCase
     public function testMakeDefault(): void
     {
         // create stuff
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('enable')->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // test API
         $response = $this->post(route('api.v1.currencies.default', [$currency->code]));
@@ -360,7 +414,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertJson(
             ['data' => [
                 'type' => 'currencies',
-                'id'   => $currency->id,
             ],]
         );
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -371,23 +424,22 @@ class CurrencyControllerTest extends TestCase
      */
     public function testRecurrences(): void
     {
-        $recurrences = $this->user()->recurrences()->get();
-
         // mock stuff:
+        $recurrence     = Recurrence::first();
         $repository    = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(RecurrenceTransformer::class);
 
         // mock calls:
         $currencyRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getAll')->once()->andReturn($recurrences);
-        $repository->shouldReceive('getNoteText')->andReturn('Notes.');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+        $repository->shouldReceive('getAll')->once()->andReturn(new Collection([$recurrence]));
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // call API
         $currency = TransactionCurrency::first();
@@ -401,12 +453,15 @@ class CurrencyControllerTest extends TestCase
      */
     public function testRules(): void
     {
-        $rules = $this->user()->rules()->get();
-
         $ruleRepos     = $this->mock(RuleRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $ruleRepos->shouldReceive('getAll')->once()->andReturn($rules);
+        $transformer   = $this->mock(RuleTransformer::class);
+
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $ruleRepos->shouldReceive('getAll')->once()->andReturn(new Collection([Rule::first()]));
         $currencyRepos->shouldReceive('setUser')->once();
 
         // call API
@@ -425,12 +480,20 @@ class CurrencyControllerTest extends TestCase
     public function testShow(): void
     {
         // create stuff
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // test API
         $response = $this->get('/api/v1/currencies/' . $currency->code);
@@ -438,7 +501,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertJson(
             ['data' => [
                 'type' => 'currencies',
-                'id'   => $currency->id,
             ],]
         );
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -453,9 +515,17 @@ class CurrencyControllerTest extends TestCase
     public function testStore(): void
     {
 
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -476,7 +546,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($currency->name);
     }
 
     /**
@@ -487,9 +556,17 @@ class CurrencyControllerTest extends TestCase
      */
     public function testStoreWithDefault(): void
     {
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $preference       = new Preference;
         $preference->data = 'EUR';
@@ -516,7 +593,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($currency->name);
     }
 
     /**
@@ -527,8 +603,11 @@ class CurrencyControllerTest extends TestCase
         $currency     = TransactionCurrency::first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
         $accountRepos->shouldReceive('setUser');
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $repository         = $this->mock(JournalRepositoryInterface::class);
@@ -566,7 +645,11 @@ class CurrencyControllerTest extends TestCase
         $currency     = TransactionCurrency::first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
         $accountRepos->shouldReceive('setUser');
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $repository         = $this->mock(JournalRepositoryInterface::class);
@@ -607,9 +690,17 @@ class CurrencyControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $currency   = TransactionCurrency::first();
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -630,7 +721,6 @@ class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($currency->name);
     }
 
     /**
@@ -644,8 +734,16 @@ class CurrencyControllerTest extends TestCase
         $currency         = TransactionCurrency::first();
         $repository       = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $transformer      = $this->mock(CurrencyTransformer::class);
         $preference       = new Preference;
         $preference->data = 'EUR';
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -670,6 +768,5 @@ class CurrencyControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($currency->name);
     }
 }

@@ -29,6 +29,7 @@ use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
+use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -56,8 +57,9 @@ class CurrencyExchangeRateControllerTest extends TestCase
     public function testIndex(): void
     {
         // mock repository
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $service    = $this->mock(ExchangeRateInterface::class);
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $service     = $this->mock(ExchangeRateInterface::class);
+        $transformer = $this->mock(CurrencyExchangeRateTransformer::class);
 
         $rate                   = new CurrencyExchangeRate();
         $rate->date             = new Carbon();
@@ -66,6 +68,13 @@ class CurrencyExchangeRateControllerTest extends TestCase
         $rate->rate             = '0.5';
         $rate->to_currency_id   = 1;
         $rate->from_currency_id = 2;
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -86,17 +95,6 @@ class CurrencyExchangeRateControllerTest extends TestCase
         $response->assertJson(
             ['data' => [
                 'type'       => 'currency_exchange_rates',
-                'id'         => '0',
-                'attributes' => [
-                    'rate' => 0.5,
-                ],
-                'links'      => [
-
-                    [
-                        'rel' => 'self',
-                        'uri' => '/currency_exchange_rates/',
-                    ],
-                ],
             ],
             ]
         );
@@ -109,8 +107,9 @@ class CurrencyExchangeRateControllerTest extends TestCase
     public function testIndexBadDestination(): void
     {
         // mock repository
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $service    = $this->mock(ExchangeRateInterface::class);
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $service     = $this->mock(ExchangeRateInterface::class);
+        $transformer = $this->mock(CurrencyExchangeRateTransformer::class);
 
         $rate                   = new CurrencyExchangeRate();
         $rate->date             = new Carbon();
@@ -143,8 +142,9 @@ class CurrencyExchangeRateControllerTest extends TestCase
     public function testIndexBadSource(): void
     {
         // mock repository
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $service    = $this->mock(ExchangeRateInterface::class);
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $service     = $this->mock(ExchangeRateInterface::class);
+        $transformer = $this->mock(CurrencyExchangeRateTransformer::class);
 
         $rate                   = new CurrencyExchangeRate();
         $rate->date             = new Carbon();

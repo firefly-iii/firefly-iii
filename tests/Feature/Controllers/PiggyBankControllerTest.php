@@ -79,6 +79,7 @@ class PiggyBankControllerTest extends TestCase
         $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
         $piggyRepos->shouldReceive('leftOnAccount')->andReturn('0');
 
+
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add', [1]));
         $response->assertStatus(200);
@@ -253,7 +254,8 @@ class PiggyBankControllerTest extends TestCase
         $accountRepos->shouldReceive('getNoteText')->withAnyArgs()->andReturn('Hello')->atLeast()->once();
 
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
-
+        $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn(TransactionCurrency::find(1))->atLeast()->once();
 
         $first   = $this->user()->transactionJournals()->inRandomOrder()->first();
         $piggies = $this->user()->piggyBanks()->take(2)->get();

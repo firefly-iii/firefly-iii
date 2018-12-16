@@ -37,11 +37,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 /**
  * Class BillTransformer
  */
-class BillTransformer extends TransformerAbstract
+class BillTransformer extends AbstractTransformer
 {
-    /** @var ParameterBag */
-    protected $parameters;
-
     /** @var BillRepositoryInterface */
     private $repository;
 
@@ -49,12 +46,9 @@ class BillTransformer extends TransformerAbstract
      * BillTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         $this->repository = app(BillRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));

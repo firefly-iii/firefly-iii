@@ -96,7 +96,7 @@ class RecurrenceRequest extends Request
         $today = Carbon::now()->addDay();
 
         return [
-            'type'                                 => 'required|in:Withdrawal,Transfer,Deposit',
+            'type'                                 => 'required|in:withdrawal,transfer,deposit',
             'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'description'                          => 'between:1,65000',
             'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),

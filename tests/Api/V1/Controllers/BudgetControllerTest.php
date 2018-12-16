@@ -32,6 +32,9 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\BudgetLimitTransformer;
+use FireflyIII\Transformers\BudgetTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -61,18 +64,18 @@ class BudgetControllerTest extends TestCase
      */
     public function testBudgetLimits(): void
     {
-        $budget       = $this->user()->budgets()->first();
-        $budgetLimits = BudgetLimit::get();
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $budget      = $this->user()->budgets()->first();
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(BudgetLimitTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getBudgetLimits')->once()->andReturn($budgetLimits);
+        $repository->shouldReceive('setUser')->once()->atLeast()->once();
+        $repository->shouldReceive('getBudgetLimits')->once()->andReturn(new Collection());
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
 
         // call API
         $response = $this->get(route('api.v1.budgets.budget_limits', [$budget->id]));
         $response->assertStatus(200);
-        $response->assertSee('budget_limits');
     }
 
     /**
@@ -86,14 +89,14 @@ class BudgetControllerTest extends TestCase
         $repository = $this->mock(BudgetRepositoryInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('destroy')->once()->andReturn(true);
 
         // get budget:
         $budget = $this->user()->budgets()->first();
 
         // call API
-        $response = $this->delete('/api/v1/budgets/' . $budget->id);
+        $response = $this->delete(route('api.v1.budgets.delete', [$budget->id]));
         $response->assertStatus(204);
     }
 
@@ -104,18 +107,17 @@ class BudgetControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $budgets = $this->user()->budgets()->get();
-        // mock stuff:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(BudgetTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getBudgets')->once()->andReturn($budgets);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getBudgets')->once()->andReturn(new Collection);
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
 
         // call API
-        $response = $this->get('/api/v1/budgets');
+        $response = $this->get(route('api.v1.budgets.index'));
         $response->assertStatus(200);
-        $response->assertSee($budgets->first()->name);
     }
 
     /**
@@ -125,17 +127,23 @@ class BudgetControllerTest extends TestCase
      */
     public function testShow(): void
     {
-        $budget = $this->user()->budgets()->first();
-        // mock stuff:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $budget      = $this->user()->budgets()->first();
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(BudgetTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // call API
-        $response = $this->get('/api/v1/budgets/' . $budget->id);
+        $response = $this->get(route('api.v1.budgets.show', [$budget->id]));
         $response->assertStatus(200);
-        $response->assertSee($budget->name);
     }
 
     /**
@@ -147,26 +155,32 @@ class BudgetControllerTest extends TestCase
     public function testStore(): void
     {
         /** @var Budget $budget */
-        $budget = $this->user()->budgets()->first();
+        $budget = new Budget;
 
         // mock stuff:
-        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(BudgetTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($budget);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // data to submit
         $data = [
-            'name'   => 'Some budget',
-            'active' => '1',
+            'name' => 'Some budget',
         ];
 
         // test API
-        $response = $this->post('/api/v1/budgets', $data);
+        $response = $this->post(route('api.v1.budgets.store'), $data);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'budgets', 'links' => true],]);
-        $response->assertSee($budget->name); // the amount
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -179,14 +193,7 @@ class BudgetControllerTest extends TestCase
     public function testStoreBudgetLimit(): void
     {
         $budget      = $this->user()->budgets()->first();
-        $budgetLimit = BudgetLimit::create(
-            [
-                'budget_id'  => $budget->id,
-                'start_date' => '2018-01-01',
-                'end_date'   => '2018-01-31',
-                'amount'     => 1,
-            ]
-        );
+        $budgetLimit = new BudgetLimit;
         $data
                      = [
             'budget_id' => $budget->id,
@@ -196,8 +203,16 @@ class BudgetControllerTest extends TestCase
         ];
         // mock stuff:
         $repository = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(BudgetLimitTransformer::class);
+
         $repository->shouldReceive('storeBudgetLimit')->andReturn($budgetLimit)->once();
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -224,6 +239,11 @@ class BudgetControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
         $budgetRepos        = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
         $billRepos->shouldReceive('setUser');
         $repository->shouldReceive('setUser');
@@ -265,6 +285,11 @@ class BudgetControllerTest extends TestCase
         $billRepos          = $this->mock(BillRepositoryInterface::class);
         $budgetRepos        = $this->mock(BudgetRepositoryInterface::class);
         $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
+        $transformer = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $billRepos->shouldReceive('setUser');
         $repository->shouldReceive('setUser');
         $currencyRepository->shouldReceive('setUser');
@@ -302,13 +327,20 @@ class BudgetControllerTest extends TestCase
     {
         // mock repositories
         $repository = $this->mock(BudgetRepositoryInterface::class);
-
+        $transformer = $this->mock(BudgetTransformer::class);
         /** @var Budget $budget */
         $budget = $this->user()->budgets()->first();
 
         // mock calls:
         $repository->shouldReceive('setUser');
-        $repository->shouldReceive('update')->once()->andReturn($budget);
+        $repository->shouldReceive('update')->once()->andReturn(new Budget);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // data to submit
         $data = [
@@ -317,11 +349,10 @@ class BudgetControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/budgets/' . $budget->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.budgets.update', $budget->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'budgets', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($budget->name);
     }
 
 }

@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
+use FireflyIII\Transformers\UserTransformer;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class AboutControllerTest
+ * Class AboutControllerTest.
  */
 class AboutControllerTest extends TestCase
 {
@@ -74,16 +75,17 @@ class AboutControllerTest extends TestCase
      */
     public function testUser(): void
     {
+        $transformer = $this->mock(UserTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         $response = $this->get(route('api.v1.about.user'));
         $response->assertStatus(200);
-        $response->assertJson(
-            [
-                'data' => [
-                    'attributes' => true,
-                    'links'      => true,
-                ],
-            ]
-        );
     }
 
 

@@ -31,6 +31,9 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\Transformers\RuleGroupTransformer;
+use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -64,6 +67,7 @@ class RuleGroupControllerTest extends TestCase
         // mock stuff:
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         // mock calls:
         $accountRepos->shouldReceive('setUser')->once();
@@ -79,19 +83,20 @@ class RuleGroupControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $ruleGroups     = $this->user()->ruleGroups()->get();
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('get')->once()->andReturn($ruleGroups);
+        $ruleGroupRepos->shouldReceive('get')->once()->andReturn(new Collection);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
 
 
         // call API
         $response = $this->get('/api/v1/rule_groups');
         $response->assertStatus(200);
-        $response->assertSee($ruleGroups->first()->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -102,6 +107,11 @@ class RuleGroupControllerTest extends TestCase
     {
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleTransformer::class);
+
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
@@ -122,15 +132,22 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroup      = $this->user()->ruleGroups()->first();
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
 
         // call API
         $response = $this->get('/api/v1/rule_groups/' . $ruleGroup->id);
         $response->assertStatus(200);
-        $response->assertSee($ruleGroup->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -142,6 +159,14 @@ class RuleGroupControllerTest extends TestCase
     {
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
@@ -172,6 +197,11 @@ class RuleGroupControllerTest extends TestCase
         $repository     = $this->mock(AccountRepositoryInterface::class);
         $matcher        = $this->mock(TransactionMatcher::class);
         $journalRepos   = $this->mock(JournalRepositoryInterface::class);
+        $transformer    = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection([$rule]));
 
@@ -205,6 +235,7 @@ class RuleGroupControllerTest extends TestCase
 
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
@@ -260,6 +291,14 @@ class RuleGroupControllerTest extends TestCase
     {
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();

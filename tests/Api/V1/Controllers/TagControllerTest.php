@@ -26,6 +26,8 @@ namespace Tests\Api\V1\Controllers;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Transformers\TagTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -98,7 +100,11 @@ class TagControllerTest extends TestCase
     public function testIndex(): void
     {
         // mock stuff:
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tagRepos    = $this->mock(TagRepositoryInterface::class);
+        $transformer = $this->mock(TagTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock calls:
         $tagRepos->shouldReceive('setUser')->times(1);
@@ -117,8 +123,16 @@ class TagControllerTest extends TestCase
     public function testShow(): void
     {
         // mock stuff:
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->user()->tags()->inRandomOrder()->first();
+        $tagRepos    = $this->mock(TagRepositoryInterface::class);
+        $tag         = $this->user()->tags()->inRandomOrder()->first();
+        $transformer = $this->mock(TagTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $tagRepos->shouldReceive('setUser')->times(2);
@@ -139,8 +153,17 @@ class TagControllerTest extends TestCase
     public function testShowByTag(): void
     {
         // mock stuff:
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->user()->tags()->inRandomOrder()->first();
+        $tagRepos    = $this->mock(TagRepositoryInterface::class);
+        $tag         = $this->user()->tags()->inRandomOrder()->first();
+        $transformer = $this->mock(TagTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         // mock calls:
         $tagRepos->shouldReceive('setUser')->times(2);
         $tagRepos->shouldReceive('findByTag')->once()->withArgs([(string)$tag->tag])->andReturn($tag);
@@ -158,9 +181,18 @@ class TagControllerTest extends TestCase
      */
     public function testStore(): void
     {
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->user()->tags()->inRandomOrder()->first();
-        $data     = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $tagRepos    = $this->mock(TagRepositoryInterface::class);
+        $tag         = $this->user()->tags()->inRandomOrder()->first();
+        $data        = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $transformer = $this->mock(TagTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
 
         $tagRepos->shouldReceive('setUser')->times(1);
         $tagRepos->shouldReceive('store')->times(1)->andReturn($tag);
@@ -182,6 +214,10 @@ class TagControllerTest extends TestCase
         $tag          = $this->user()->tags()->inRandomOrder()->first();
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $paginator = new LengthAwarePaginator([], 0, 50);
 
@@ -217,9 +253,18 @@ class TagControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
-        $tag      = $this->user()->tags()->inRandomOrder()->first();
-        $data     = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $tagRepos    = $this->mock(TagRepositoryInterface::class);
+        $tag         = $this->user()->tags()->inRandomOrder()->first();
+        $data        = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $transformer = $this->mock(TagTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
 
         $tagRepos->shouldReceive('setUser')->times(2);
         $tagRepos->shouldReceive('update')->times(1)->andReturn($tag);
