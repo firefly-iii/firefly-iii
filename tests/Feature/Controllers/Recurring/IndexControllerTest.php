@@ -28,6 +28,7 @@ use FireflyIII\Models\Configuration;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -58,13 +59,19 @@ class IndexControllerTest extends TestCase
         $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
         $userRepos       = $this->mock(UserRepositoryInterface::class);
         $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
 
-        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
-        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'id' => 5,
+                'first_date' => '2018-01-01',
+                'repeat_until' =>null,
+                'latest_date' => null,
+            ]
+        );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $budgetRepos->shouldReceive('findNull')->withAnyArgs()->andReturn($this->user()->budgets()->first())->atLeast()->once();
 
         $config       = new Configuration;
         $config->data = 0;
@@ -79,10 +86,6 @@ class IndexControllerTest extends TestCase
         \FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
 
         $repository->shouldReceive('get')->andReturn($collection)->once();
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getNoteText')->andReturn('Notes');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Bla');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
 
 
         $this->be($this->user());
@@ -97,20 +100,24 @@ class IndexControllerTest extends TestCase
         $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
         $userRepos       = $this->mock(UserRepositoryInterface::class);
         $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
 
-        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
-        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'id' => 5,
+                'first_date' => '2018-01-01',
+                'repeat_until' =>null,
+                'latest_date' => null,
+                'recurrence_repetitions' => [],
+            ]
+        );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $budgetRepos->shouldReceive('findNull')->withAnyArgs()->andReturn($this->user()->budgets()->first())->atLeast()->once();
-
 
         $recurrence = $this->user()->recurrences()->first();
         $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getNoteText')->andReturn('Notes');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Bla');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-        $repository->shouldReceive('getTransactions')->andReturn(new Collection);
+        $repository->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('recurring.show', [$recurrence->id]));

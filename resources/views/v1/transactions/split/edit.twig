@@ -56,7 +56,7 @@
                                 <label for="ffInput_journal_amount" class="col-sm-4 control-label">{{ trans('form.amount') }}</label>
                                 <div class="col-sm-8">
                                     <p id="ffInput_journal_amount" class="form-control-static">
-                                        {{ formatAmountBySymbol(preFilled.journal_amount, preFilled.transactions[0].currency_symbol, preFilled.transactions[0].currency_dp) }}
+                                        {{ formatAmountBySymbol(preFilled.journal_amount|default("0"), preFilled.transactions[0].currency_symbol|default("x"), preFilled.transactions[0].currency_dp) }}
                                     </p>
                                 </div>
                             </div>

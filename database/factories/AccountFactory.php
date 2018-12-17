@@ -28,7 +28,7 @@ $factory->define(
     FireflyIII\Models\Account::class,
     function (Faker\Generator $faker) {
         return [
-            //'id'              => $faker->unique()->numberBetween(1000, 10000),
+            'id'              => $faker->unique()->numberBetween(1000, 10000),
             'user_id'         => 1,
             'created_at'      => new Carbon,
             'updated_at'      => new Carbon,

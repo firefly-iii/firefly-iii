@@ -34,6 +34,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
+use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -168,6 +169,12 @@ class BillControllerTest extends TestCase
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer    = $this->mock(BillTransformer::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            ['id' => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01']
+        );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -175,7 +182,6 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('getNoteText')->andReturn('Hi there');
-        $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
         $repository->shouldReceive('getRulesForBills')->andReturn([]);
 
 
@@ -254,33 +260,42 @@ class BillControllerTest extends TestCase
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer    = $this->mock(BillTransformer::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
+        $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once();
+        $transformer->shouldReceive('getAvailableIncludes')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            ['id' => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
+                'currency_symbol' => 'x','amount_min' => '10','amount_max' => '15'
+                ]
+        );
+
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $repository->shouldReceive('getYearAverage')->andReturn('0');
         $repository->shouldReceive('getOverallAverage')->andReturn('0');
-        $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
+//        $repository->shouldReceive('nextExpectedMatch')->andReturn(new Carbon);
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection);
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
+//        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+//
         $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
         $collector->shouldReceive('setBills')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
-
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
         $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
-        $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
-        $repository->shouldReceive('setUser');
+//        $repository->shouldReceive('getPaidDatesInRange')->twice()->andReturn(new Collection([new Carbon, new Carbon, new Carbon]));
+//        $repository->shouldReceive('setUser');
 
         $this->be($this->user());
         $response = $this->get(route('bills.show', [1]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-        $response->assertSee('Hi there');
-
     }
 
     /**

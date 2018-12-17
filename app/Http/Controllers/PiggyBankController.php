@@ -244,9 +244,15 @@ class PiggyBankController extends Controller
         // transform piggies using the transformer:
         $parameters = new ParameterBag;
         $parameters->set('end', $end);
-        $transformed        = new Collection;
-        $transformer        = new PiggyBankTransformer(new ParameterBag);
-        $accountTransformer = new AccountTransformer($parameters);
+        $transformed = new Collection;
+
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
+        /** @var AccountTransformer $accountTransformer */
+        $accountTransformer = app(AccountTransformer::class);
+        $accountTransformer->setParameters($parameters);
         /** @var PiggyBank $piggy */
         foreach ($collection as $piggy) {
             $array     = $transformer->transform($piggy);
@@ -435,7 +441,10 @@ class PiggyBankController extends Controller
         // transform piggies using the transformer:
         $parameters = new ParameterBag;
         $parameters->set('end', $end);
-        $transformer = new PiggyBankTransformer(new ParameterBag);
+
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters($parameters);
         $piggy       = $transformer->transform($piggyBank);
         $events      = $this->piggyRepos->getEvents($piggyBank);
         $subTitle    = $piggyBank->name;

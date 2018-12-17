@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -64,12 +65,14 @@ class EditControllerTest extends TestCase
         $accountRepos    = $this->mock(AccountRepositoryInterface::class);
         $categoryFactory = $this->mock(CategoryFactory::class);
         $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $recurringRepos->shouldReceive('setUser');
-        $categoryFactory->shouldReceive('setUser')->atLeast()->once();
-        $categoryFactory->shouldReceive('findOrCreate')->atLeast()->once()->andReturn(null);
         $recurringRepos->shouldReceive('getNoteText')->andReturn('Note!');
         $recurringRepos->shouldReceive('repetitionDescription')->andReturn('dunno');
         $recurringRepos->shouldReceive('getXOccurrences')->andReturn([]);
@@ -92,14 +95,15 @@ class EditControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
-        $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $categoryRepos   = $this->mock(CategoryRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
         $categoryFactory = $this->mock(CategoryFactory::class);
         $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
 
         $recurringRepos->shouldReceive('update')->once();
 

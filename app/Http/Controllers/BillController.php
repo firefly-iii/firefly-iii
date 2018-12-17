@@ -196,7 +196,11 @@ class BillController extends Controller
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
-        $transformer = new BillTransformer($parameters);
+
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($parameters);
+
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
             function (Bill $bill) use ($transformer) {
@@ -294,7 +298,12 @@ class BillController extends Controller
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
-        $resource                   = new Item($bill, new BillTransformer($parameters), 'bill');
+
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($parameters);
+
+        $resource                   = new Item($bill, $transformer, 'bill');
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 

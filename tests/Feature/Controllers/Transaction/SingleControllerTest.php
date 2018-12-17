@@ -28,6 +28,7 @@ use Exception;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -40,6 +41,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -79,6 +81,8 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(TransactionTransformer::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -113,6 +117,9 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(TransactionTransformer::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -142,6 +149,9 @@ class SingleControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(TransactionTransformer::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -996,14 +1006,28 @@ class SingleControllerTest extends TestCase
     public function testUpdate(): void
     {
         $attachmentRepos = $this->mock(AttachmentRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
-        $attRepos      = $this->mock(AttachmentHelperInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $linkRepos     = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $attRepos        = $this->mock(AttachmentHelperInterface::class);
+        $currencyRepos   = $this->mock(CurrencyRepositoryInterface::class);
+        $journalRepos    = $this->mock(JournalRepositoryInterface::class);
+        $linkRepos       = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(TransactionTransformer::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+
+
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
