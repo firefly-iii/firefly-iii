@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
@@ -392,15 +393,22 @@ class TransactionControllerTest extends TestCase
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $transformer  = $this->mock(TransactionTransformer::class);
+        $attachment   = new Attachment;
+        $transaction = new Transaction;
 
         $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'id' => 5,
+            ]
+        );
 
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection([$transaction, $transaction]));
 
         $linkRepos->shouldReceive('get')->andReturn(new Collection);
         $linkRepos->shouldReceive('getLinks')->andReturn(new Collection);
@@ -408,14 +416,13 @@ class TransactionControllerTest extends TestCase
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal)->atLeast()->once();
-        $journalRepos->shouldReceive('getAttachments')->andReturn(new Collection)->atLeast()->once();
+        $journalRepos->shouldReceive('getAttachments')->andReturn(new Collection([$attachment]))->atLeast()->once();
         $journalRepos->shouldReceive('getPiggyBankEvents')->andReturn(new Collection)->atLeast()->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection)->atLeast()->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection)->atLeast()->once();
         $journalRepos->shouldReceive('getMetaField')->andReturn('')->atLeast()->once();
 
-//        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
-//        $journalRepos->shouldReceive('getMetaDateString')->andReturn('2018-01-01')->atLeast()->once();
+        $attRepos->shouldReceive('exists')->atLeast()->once()->andReturn(false);
 
         $this->be($this->user());
         $response = $this->get(route('transactions.show', [1]));

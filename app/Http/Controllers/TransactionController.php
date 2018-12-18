@@ -265,7 +265,7 @@ class TransactionController extends Controller
 
         $events   = $this->repository->getPiggyBankEvents($journal);
         $what     = strtolower($transactionType);
-        $subTitle = (string)trans('firefly.' . $what) . ' "' . $journal->description . '"';
+        $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
         return view('transactions.show', compact('journal','attachments', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }
