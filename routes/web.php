@@ -215,7 +215,7 @@ Route::group(
     Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
 
     // reorder budgets
-    Route::get('reorder', ['uses' => 'Budget\IndexController@reorder', 'as' => 'reorder']);
+    Route::post('reorder', ['uses' => 'Budget\IndexController@reorder', 'as' => 'reorder']);
 
     // index
     Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);

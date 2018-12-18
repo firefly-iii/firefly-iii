@@ -108,38 +108,7 @@ function sortStop(event, ui) {
         page: page,
         _token: token
     };
-    // var thisDate = current.data('date');
-    // var originalBG = current.css('backgroundColor');
-    //
-    //
-    // if (current.prev().data('date') !== thisDate && current.next().data('date') !== thisDate) {
-    //     // animate something with color:
-    //     current.animate({backgroundColor: "#d9534f"}, 200, function () {
-    //         $(this).animate({backgroundColor: originalBG}, 200);
-    //         return undefined;
-    //     });
-    //
-    //     return false;
-    // }
-    //
-    // // do update
-    // var list = $('tr[data-date="' + thisDate + '"]');
-    // var submit = [];
-    // $.each(list, function (i, v) {
-    //     var row = $(v);
-    //     var id = row.data('id');
-    //     submit.push(id);
-    // });
-    //
-    // // do extra animation when done?
-    $.get('budgets/reorder', arr);
-    //
-    // current.animate({backgroundColor: "#5cb85c"}, 200, function () {
-    //     $(this).animate({backgroundColor: originalBG}, 200);
-    //     return undefined;
-    // });
-    // return undefined;
-    //alert('drop!');
+    $.post('budgets/reorder', arr);
 }
 
 

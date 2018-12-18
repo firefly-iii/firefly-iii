@@ -131,8 +131,8 @@ class IndexControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -186,8 +186,8 @@ class IndexControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -239,8 +239,8 @@ class IndexControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
@@ -253,5 +253,26 @@ class IndexControllerTest extends TestCase
         $this->changeDateRange($this->user(), $range);
         $response = $this->get(route('budgets.index', ['Hello-there']));
         $response->assertStatus(404);
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\Budget\IndexController
+     */
+    public function testReorder(): void
+    {
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $data = [
+            'budgetIds' => [1,2],
+            'page' => 1,
+        ];
+
+        $repository->shouldReceive('cleanupBudgets')->atLeast()->once();
+        $repository->shouldReceive('findNull')->atLeast()->once()->andReturn(new Budget);
+        $repository->shouldReceive('setBudgetOrder')->atLeast()->once();
+
+        $this->be($this->user());
+        $response = $this->post(route('budgets.reorder', $data));
+        $response->assertStatus(200);
+
     }
 }
