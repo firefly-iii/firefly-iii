@@ -26,7 +26,6 @@ namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Log;
 
@@ -65,11 +64,14 @@ class AccountTransformer extends AbstractTransformer
         $this->repository->setUser($account->user);
 
         // get account type:
-        $accountType = $this->repository->getAccountType($account);
+        $fullType      = $this->repository->getAccountType($account);
+        $accountType   = (string)config(sprintf('firefly.shortNamesByFullName.%s', $fullType));
+        $liabilityType = (string)config(sprintf('firefly.shortLiabilityNameByFullName.%s', $fullType));
+        $liabilityType = '' === $liabilityType ? null : $liabilityType;
 
-        // get account role (will only work if the type is asset. TODO test me.
+        // get account role (will only work if the type is asset.
         $accountRole = $this->repository->getMetaValue($account, 'accountRole');
-        if ($accountType !== AccountType::ASSET || '' === (string)$accountRole) {
+        if ('asset' !== $accountType || '' === (string)$accountRole) {
             $accountRole = null;
         }
 
@@ -93,52 +95,63 @@ class AccountTransformer extends AbstractTransformer
 
         $monthlyPaymentDate = null;
         $creditCardType     = null;
-        if ('ccAsset' === $accountRole && $accountType === AccountType::ASSET) {
+        if ('ccAsset' === $accountRole && 'asset' === $accountType) {
             $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
             $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
         }
 
         $openingBalance     = null;
         $openingBalanceDate = null;
-        if (\in_array($accountType, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true)) {
+        if (\in_array($accountType, ['asset', 'liabilities'], true)) {
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
         }
-        $interest        = $this->repository->getMetaValue($account, 'interest');
-        $interestPeriod  = $this->repository->getMetaValue($account, 'interest_period');
+        $liabilityAmount = null;
+        $liabilityStart  = null;
+        if (null !== $liabilityType) {
+            $liabilityAmount = $openingBalance;
+            $liabilityStart  = $openingBalanceDate;
+        }
+
+        $interest       = null;
+        $interestPeriod = null;
+        if ('liabilities' === $accountType) {
+            $interest       = $this->repository->getMetaValue($account, 'interest');
+            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
+        }
         $includeNetworth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
 
         $data = [
-            'id'                   => (int)$account->id,
-            'created_at'           => $account->created_at->toAtomString(),
-            'updated_at'           => $account->updated_at->toAtomString(),
-            'active'               => $account->active,
-            'name'                 => $account->name,
-            'type'                 => $accountType,
-            'account_role'         => $accountRole,
-            'currency_id'          => $currencyId,
-            'currency_code'        => $currencyCode,
-            'currency_symbol'      => $currencySymbol,
-            'currency_dp'          => $decimalPlaces,
-            'current_balance'      => round(app('steam')->balance($account, $date), $decimalPlaces),
-            'current_balance_date' => $date->format('Y-m-d'),
-            'notes'                => $this->repository->getNoteText($account),
-            'monthly_payment_date' => $monthlyPaymentDate,
-            'credit_card_type'     => $creditCardType,
-            'account_number'       => $this->repository->getMetaValue($account, 'accountNumber'),
-            'iban'                 => '' === $account->iban ? null : $account->iban,
-            'bic'                  => $this->repository->getMetaValue($account, 'BIC'),
-            'virtual_balance'      => round($account->virtual_balance, $decimalPlaces),
-            'opening_balance'      => $openingBalance,
-            'opening_balance_date' => $openingBalanceDate,
-            'liability_type'       => $accountType,
-            'liability_amount'     => $openingBalance,
-            'liability_start_date' => $openingBalanceDate,
-            'interest'             => $interest,
-            'interest_period'      => $interestPeriod,
-            'include_net_worth'    => $includeNetworth,
-            'links'                => [
+            'id'                      => (int)$account->id,
+            'created_at'              => $account->created_at->toAtomString(),
+            'updated_at'              => $account->updated_at->toAtomString(),
+            'active'                  => $account->active,
+            'name'                    => $account->name,
+            'type'                    => $accountType,
+            'account_role'            => $accountRole,
+            'currency_id'             => $currencyId,
+            'currency_code'           => $currencyCode,
+            'currency_symbol'         => $currencySymbol,
+            'currency_decimal_places' => $decimalPlaces,
+            'current_balance'         => round(app('steam')->balance($account, $date), $decimalPlaces),
+            'current_balance_date'    => $date->format('Y-m-d'),
+            'notes'                   => $this->repository->getNoteText($account),
+            'monthly_payment_date'    => $monthlyPaymentDate,
+            'credit_card_type'        => $creditCardType,
+            'account_number'          => $this->repository->getMetaValue($account, 'accountNumber'),
+            'iban'                    => '' === $account->iban ? null : $account->iban,
+            'bic'                     => $this->repository->getMetaValue($account, 'BIC'),
+            'virtual_balance'         => round($account->virtual_balance, $decimalPlaces),
+            'opening_balance'         => $openingBalance,
+            'opening_balance_date'    => $openingBalanceDate,
+            'liability_type'          => $liabilityType,
+            'liability_amount'        => $liabilityAmount,
+            'liability_start_date'    => $liabilityStart,
+            'interest'                => $interest,
+            'interest_period'         => $interestPeriod,
+            'include_net_worth'       => $includeNetworth,
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/accounts/' . $account->id,

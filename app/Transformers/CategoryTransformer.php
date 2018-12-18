@@ -116,7 +116,7 @@ class CategoryTransformer extends AbstractTransformer
             $return[] = [
                 'currency_code'   => $code,
                 'currency_symbol' => $currency->symbol,
-                'currency_dp'     => $currency->decimal_places,
+                'currency_decimal_places'     => $currency->decimal_places,
                 'amount'          => round($earned, $currency->decimal_places),
             ];
         }
@@ -154,7 +154,7 @@ class CategoryTransformer extends AbstractTransformer
             $return[] = [
                 'currency_code'   => $code,
                 'currency_symbol' => $currency->symbol,
-                'currency_dp'     => $currency->decimal_places,
+                'currency_decimal_places'     => $currency->decimal_places,
                 'amount'          => round($spent, $currency->decimal_places),
             ];
         }

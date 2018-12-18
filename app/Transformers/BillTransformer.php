@@ -74,7 +74,7 @@ class BillTransformer extends AbstractTransformer
             'currency_id'         => $bill->transaction_currency_id,
             'currency_code'       => $bill->transactionCurrency->code,
             'currency_symbol'     => $bill->transactionCurrency->symbol,
-            'currency_dp'     => $bill->transactionCurrency->decimal_places,
+            'currency_decimal_places'     => $bill->transactionCurrency->decimal_places,
             'name'                => $bill->name,
             'amount_min'          => round((float)$bill->amount_min, 2),
             'amount_max'          => round((float)$bill->amount_max, 2),

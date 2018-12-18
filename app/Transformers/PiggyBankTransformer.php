@@ -102,7 +102,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'currency_id'     => $currency->id,
             'currency_code'   => $currency->code,
             'currency_symbol' => $currency->symbol,
-            'currency_dp'     => $currency->decimal_places,
+            'currency_decimal_places'     => $currency->decimal_places,
             'target_amount'   => $targetAmount,
             'percentage'      => $percentage,
             'current_amount'  => $currentAmount,

@@ -63,7 +63,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'currency_id'     => $currency->id,
             'currency_code'   => $currency->code,
             'currency_symbol' => $currency->symbol,
-            'currency_dp'     => $currency->decimal_places,
+            'currency_decimal_places'     => $currency->decimal_places,
             'start'           => $availableBudget->start_date->format('Y-m-d'),
             'end'             => $availableBudget->end_date->format('Y-m-d'),
             'amount'          => round($availableBudget->amount, $currency->decimal_places),

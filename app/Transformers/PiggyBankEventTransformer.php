@@ -89,7 +89,7 @@ class PiggyBankEventTransformer extends AbstractTransformer
             'currency_id'     => $currency->id,
             'currency_code'   => $currency->code,
             'currency_symbol' => $currency->symbol,
-            'currency_dp'     => $currency->decimal_places,
+            'currency_decimal_places'     => $currency->decimal_places,
             'transaction_id'  => $transactionId,
             'links'           => [
                 [

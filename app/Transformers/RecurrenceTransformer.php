@@ -36,9 +36,7 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  *
@@ -268,27 +266,27 @@ class RecurrenceTransformer extends AbstractTransformer
                 $foreignAmount = round($transaction->foreign_amount, $foreignCurrencyDp);
             }
             $transactionArray = [
-                'currency_id'             => $transaction->transaction_currency_id,
-                'currency_code'           => $transaction->transactionCurrency->code,
-                'currency_symbol'         => $transaction->transactionCurrency->symbol,
-                'currency_dp'             => $transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id'     => $transaction->foreign_currency_id,
-                'foreign_currency_code'   => $foreignCurrencyCode,
-                'foreign_currency_symbol' => $foreignCurrencySymbol,
-                'foreign_currency_dp'     => $foreignCurrencyDp,
-                'source_id'               => $transaction->source_id,
-                'source_name'             => null === $sourceAccount ? '' : $sourceAccount->name,
-                'destination_id'          => $transaction->destination_id,
-                'destination_name'        => null === $destinationAccount ? '' : $destinationAccount->name,
-                'amount'                  => $amount,
-                'foreign_amount'          => $foreignAmount,
-                'description'             => $transaction->description,
-                'meta'                    => $this->getTransactionMeta($transaction),
+                'currency_id'                     => $transaction->transaction_currency_id,
+                'currency_code'                   => $transaction->transactionCurrency->code,
+                'currency_symbol'                 => $transaction->transactionCurrency->symbol,
+                'currency_decimal_places'         => $transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id'             => $transaction->foreign_currency_id,
+                'foreign_currency_code'           => $foreignCurrencyCode,
+                'foreign_currency_symbol'         => $foreignCurrencySymbol,
+                'foreign_currency_decimal_places' => $foreignCurrencyDp,
+                'source_id'                       => $transaction->source_id,
+                'source_name'                     => null === $sourceAccount ? '' : $sourceAccount->name,
+                'destination_id'                  => $transaction->destination_id,
+                'destination_name'                => null === $destinationAccount ? '' : $destinationAccount->name,
+                'amount'                          => $amount,
+                'foreign_amount'                  => $foreignAmount,
+                'description'                     => $transaction->description,
+                'meta'                            => $this->getTransactionMeta($transaction),
             ];
             if (null !== $transaction->foreign_currency_id) {
-                $transactionArray['foreign_currency_code']   = $transaction->foreignCurrency->code;
-                $transactionArray['foreign_currency_symbol'] = $transaction->foreignCurrency->symbol;
-                $transactionArray['foreign_currency_dp']     = $transaction->foreignCurrency->decimal_places;
+                $transactionArray['foreign_currency_code']           = $transaction->foreignCurrency->code;
+                $transactionArray['foreign_currency_symbol']         = $transaction->foreignCurrency->symbol;
+                $transactionArray['foreign_currency_decimal_places'] = $transaction->foreignCurrency->decimal_places;
             }
 
             // store transaction in recurrence array.
