@@ -88,10 +88,10 @@ class RuleFormRequest extends Request
             'stop_processing'  => 'boolean',
             'rule_group_id'    => 'required|belongsToUser:rule_groups',
             'trigger'          => 'required|in:store-journal,update-journal',
-            'triggers.*.name'  => 'required|in:' . implode(',', $validTriggers),
-            'triggers.*.value' => sprintf('required_if:triggers.*.name,%s|min:1|ruleTriggerValue', $contextTriggers),
-            'actions.*.name'   => 'required|in:' . implode(',', $validActions),
-            'actions.*.value'  => sprintf('required_if:actions.*.name,%s|min:1|ruleActionValue', $contextActions),
+            'triggers.*.type'  => 'required|in:' . implode(',', $validTriggers),
+            'triggers.*.value' => sprintf('required_if:triggers.*.type,%s|min:1|ruleTriggerValue', $contextTriggers),
+            'actions.*.type'   => 'required|in:' . implode(',', $validActions),
+            'actions.*.value'  => sprintf('required_if:actions.*.type,%s|min:1|ruleActionValue', $contextActions),
             'strict'           => 'in:0,1',
         ];
 
@@ -116,7 +116,7 @@ class RuleFormRequest extends Request
             foreach ($actionData as $action) {
                 $stopProcessing = $action['stop_processing'] ?? '0';
                 $return[]       = [
-                    'name'            => $action['name'] ?? 'invalid',
+                    'type'            => $action['type'] ?? 'invalid',
                     'value'           => $action['value'] ?? '',
                     'stop_processing' => 1 === (int)$stopProcessing,
                 ];
@@ -137,7 +137,7 @@ class RuleFormRequest extends Request
             foreach ($triggerData as $trigger) {
                 $stopProcessing = $trigger['stop_processing'] ?? '0';
                 $return[]       = [
-                    'name'            => $trigger['name'] ?? 'invalid',
+                    'type'            => $trigger['type'] ?? 'invalid',
                     'value'           => $trigger['value'] ?? '',
                     'stop_processing' => 1 === (int)$stopProcessing,
                 ];

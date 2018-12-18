@@ -156,7 +156,7 @@ class CreateControllerTest extends TestCase
             'description'   => 'D',
             'rule_triggers' => [
                 [
-                    'name'            => 'description_is',
+                    'type'            => 'description_is',
                     'value'           => 'A',
                     'stop_processing' => '0',
 
@@ -164,7 +164,7 @@ class CreateControllerTest extends TestCase
             ],
             'rule_actions'  => [
                 [
-                    'name'            => 'set_category',
+                    'type'            => 'set_category',
                     'value'           => 'C',
                     'stop_processing' => '0',
 
