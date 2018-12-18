@@ -196,8 +196,8 @@ return [
     'login_name'            => 'Login',
 
     // import
-    'apply_rules'           => 'Apply rules',
-    'artist'                => 'Artist',
+    'apply_rules'           => 'Aplicar Regras',
+    'artist'                => 'Artista',
     'album'                 => 'Album',
     'song'                  => 'Song',
 
