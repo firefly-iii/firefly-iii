@@ -385,7 +385,7 @@ class CategoryController extends Controller
         $start = app('navigation')->startOfPeriod($date, $range);
         $end   = session()->get('end');
         if ($end < $start) {
-            $end = app('navigation')->endOfPeriod($date, $range);
+            [$end, $start] = [$start, $end];
         }
 
         $data = $this->makePeriodChart($category, $start, $end);
