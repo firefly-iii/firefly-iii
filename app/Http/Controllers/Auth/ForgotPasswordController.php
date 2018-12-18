@@ -61,11 +61,13 @@ class ForgotPasswordController extends Controller
     {
         Log::info('Start of sendResetLinkEmail()');
         $loginProvider = config('firefly.login_provider');
+        // @codeCoverageIgnoreStart
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
             Log::error($message);
             return view('error', compact('message'));
         }
+        // @codeCoverageIgnoreEnd
 
         $this->validateEmail($request);
 
