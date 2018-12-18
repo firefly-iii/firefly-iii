@@ -425,8 +425,14 @@ class ReportControllerTest extends TestCase
         $userRepos        = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
         $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $asset = $this->getRandomAsset();
+        // find the user's asset account
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($asset)->atLeast()->once();
 
-        $accountRepos->shouldReceive('findNull')->andReturn(null)->times(3);
+        // do not find the exp_rev things.
+        $accountRepos->shouldReceive('findNull')->withArgs([4])->andReturnNull()->atLeast()->once();
+
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $data = [
