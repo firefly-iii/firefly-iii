@@ -63,7 +63,7 @@ class LinkTypeTransformer extends AbstractTransformer
             'name'       => $linkType->name,
             'inward'     => $linkType->inward,
             'outward'    => $linkType->outward,
-            'editable'   => 1 === (int)$linkType->editable,
+            'editable'   => $linkType->editable,
             'links'      => [
                 [
                     'rel' => 'self',

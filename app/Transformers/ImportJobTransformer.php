@@ -74,10 +74,10 @@ class ImportJobTransformer extends AbstractTransformer
             'provider'        => $importJob->provider,
             'status'          => $importJob->status,
             'stage'           => $importJob->stage,
-            'configuration'   => $importJob->configuration,
-            'extended_status' => $importJob->extended_status,
-            'transactions'    => $importJob->transactions,
-            'errors'          => $importJob->errors,
+            'configuration'   => json_encode($importJob->configuration),
+            'extended_status' => json_encode($importJob->extended_status),
+            'transactions'    => json_encode($importJob->transactions),
+            'errors'          => json_encode($importJob->errors),
 
             'links'           => [
                 [
