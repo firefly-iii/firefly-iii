@@ -25,9 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\AvailableBudget;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AvailableBudgetTransformer
@@ -57,17 +55,18 @@ class AvailableBudgetTransformer extends AbstractTransformer
     {
         $currency = $availableBudget->transactionCurrency;
         $data     = [
-            'id'              => (int)$availableBudget->id,
-            'created_at'      => $availableBudget->created_at->toAtomString(),
-            'updated_at'      => $availableBudget->updated_at->toAtomString(),
-            'currency_id'     => $currency->id,
-            'currency_code'   => $currency->code,
-            'currency_symbol' => $currency->symbol,
-            'currency_decimal_places'     => $currency->decimal_places,
-            'start'           => $availableBudget->start_date->format('Y-m-d'),
-            'end'             => $availableBudget->end_date->format('Y-m-d'),
-            'amount'          => round($availableBudget->amount, $currency->decimal_places),
-            'links'           => [
+            'id'                      => (int)$availableBudget->id,
+            'created_at'              => $availableBudget->created_at->toAtomString(),
+            'updated_at'              => $availableBudget->updated_at->toAtomString(),
+            'currency_id'             => $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'amount'                  => round($availableBudget->amount, $currency->decimal_places),
+            'start'                   => $availableBudget->start_date->format('Y-m-d'),
+            'end'                     => $availableBudget->end_date->format('Y-m-d'),
+
+            'links' => [
                 [
                     'rel' => 'self',
                     'uri' => '/available_budgets/' . $availableBudget->id,

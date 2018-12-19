@@ -73,8 +73,8 @@ class AttachmentTransformer extends AbstractTransformer
             'download_uri'    => route('api.v1.attachments.download', [$attachment->id]),
             'upload_uri'      => route('api.v1.attachments.upload', [$attachment->id]),
             'title'           => $attachment->title,
-            'mime'            => $attachment->mime,
             'notes'           => $this->repository->getNoteText($attachment),
+            'mime'            => $attachment->mime,
             'size'            => (int)$attachment->size,
             'links'           => [
                 [
