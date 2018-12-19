@@ -42,7 +42,7 @@ trait AccountFilter
         $types  = [
             'all'                        => [AccountType::DEFAULT, AccountType::CASH, AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE,
                                              AccountType::INITIAL_BALANCE, AccountType::BENEFICIARY, AccountType::IMPORT, AccountType::RECONCILIATION,
-                                             AccountType::LOAN,AccountType::DEBT, AccountType::MORTGAGE],
+                                             AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
             'asset'                      => [AccountType::DEFAULT, AccountType::ASSET,],
             'cash'                       => [AccountType::CASH,],
             'expense'                    => [AccountType::EXPENSE, AccountType::BENEFICIARY,],
@@ -51,9 +51,6 @@ trait AccountFilter
             'hidden'                     => [AccountType::INITIAL_BALANCE, AccountType::IMPORT, AccountType::RECONCILIATION],
             'liability'                  => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
             'liabilities'                => [AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD],
-//            'cc'                         => [AccountType::CREDITCARD],
-//            'creditcard'                 => [AccountType::CREDITCARD],
-//            'credit_card'                => [AccountType::CREDITCARD],
             AccountType::DEFAULT         => [AccountType::DEFAULT],
             AccountType::CASH            => [AccountType::CASH],
             AccountType::ASSET           => [AccountType::ASSET],

@@ -747,10 +747,11 @@ class BudgetRepository implements BudgetRepositoryInterface
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_code'   => $code,
-                'currency_symbol' => $currency->symbol,
-                'currency_dp'     => $currency->decimal_places,
-                'amount'          => round($spent, $currency->decimal_places),
+                'currency_id'             => $currency->id,
+                'currency_code'           => $code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'amount'                  => round($spent, $currency->decimal_places),
             ];
         }
 

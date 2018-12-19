@@ -25,6 +25,7 @@ namespace Tests\Unit\Transformers;
 
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -33,6 +34,15 @@ use Tests\TestCase;
  */
 class AvailableBudgetTransformerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Test basic transformer
      *

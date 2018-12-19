@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\BudgetLimit;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BudgetLimitTransformer
@@ -71,8 +69,8 @@ class BudgetLimitTransformer extends AbstractTransformer
             'id'              => (int)$budgetLimit->id,
             'created_at'      => $budgetLimit->created_at->toAtomString(),
             'updated_at'      => $budgetLimit->updated_at->toAtomString(),
-            'start_date'      => $budgetLimit->start_date->format('Y-m-d'),
-            'end_date'        => $budgetLimit->end_date->format('Y-m-d'),
+            'start'           => $budgetLimit->start_date->format('Y-m-d'),
+            'end'             => $budgetLimit->end_date->format('Y-m-d'),
             'budget_id'       => $budgetLimit->budget_id,
             'currency_id'     => $currencyId,
             'currency_code'   => $currencyCode,

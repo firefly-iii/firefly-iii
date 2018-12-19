@@ -34,6 +34,8 @@ use Log;
  */
 class BudgetTransformer extends AbstractTransformer
 {
+    private $repository;
+
     /**
      * BudgetTransformer constructor.
      *
@@ -41,6 +43,7 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->repository = app(BudgetRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -55,22 +58,19 @@ class BudgetTransformer extends AbstractTransformer
      */
     public function transform(Budget $budget): array
     {
+        $this->repository->setUser($budget->user);
         $start = $this->parameters->get('start');
         $end   = $this->parameters->get('end');
         $spent = [];
         if (null !== $start && null !== $end) {
-            /** @var BudgetRepositoryInterface $repository */
-            $repository = app(BudgetRepositoryInterface::class);
-            $repository->setUser($budget->user);
-            $spent = $repository->spentInPeriodMc(new Collection([$budget]), new Collection, $start, $end);
+            $spent = $this->repository->spentInPeriodMc(new Collection([$budget]), new Collection, $start, $end);
         }
-
 
         $data = [
             'id'         => (int)$budget->id,
             'created_at' => $budget->created_at->toAtomString(),
             'updated_at' => $budget->updated_at->toAtomString(),
-            'active'     => 1 === (int)$budget->active,
+            'active'     => $budget->active,
             'name'       => $budget->name,
             'spent'      => $spent,
             'links'      => [

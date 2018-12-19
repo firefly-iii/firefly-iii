@@ -30,15 +30,16 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class CategoryTransformer
  */
 class CategoryTransformer extends AbstractTransformer
 {
+    /** @var CategoryRepositoryInterface */
+    private $repository;
+
     /**
      * CategoryTransformer constructor.
      *
@@ -46,6 +47,7 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->repository = app(CategoryRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -60,6 +62,7 @@ class CategoryTransformer extends AbstractTransformer
      */
     public function transform(Category $category): array
     {
+        $this->repository->setUser($category->user);
         $spent  = [];
         $earned = [];
         $start  = $this->parameters->get('start');
@@ -95,10 +98,7 @@ class CategoryTransformer extends AbstractTransformer
      */
     private function getEarnedInformation(Category $category, Carbon $start, Carbon $end): array
     {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $repository->setUser($category->user);
-        $collection = $repository->earnedInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
+        $collection = $this->repository->earnedInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
         $return     = [];
         $total      = [];
         $currencies = [];
@@ -114,10 +114,11 @@ class CategoryTransformer extends AbstractTransformer
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_code'   => $code,
-                'currency_symbol' => $currency->symbol,
-                'currency_decimal_places'     => $currency->decimal_places,
-                'amount'          => round($earned, $currency->decimal_places),
+                'currency_id'             => $currency->id,
+                'currency_code'           => $code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'amount'                  => round($earned, $currency->decimal_places),
             ];
         }
 
@@ -133,10 +134,7 @@ class CategoryTransformer extends AbstractTransformer
      */
     private function getSpentInformation(Category $category, Carbon $start, Carbon $end): array
     {
-        /** @var CategoryRepositoryInterface $repository */
-        $repository = app(CategoryRepositoryInterface::class);
-        $repository->setUser($category->user);
-        $collection = $repository->spentInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
+        $collection = $this->repository->spentInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
         $return     = [];
         $total      = [];
         $currencies = [];
@@ -152,10 +150,11 @@ class CategoryTransformer extends AbstractTransformer
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_code'   => $code,
-                'currency_symbol' => $currency->symbol,
-                'currency_decimal_places'     => $currency->decimal_places,
-                'amount'          => round($spent, $currency->decimal_places),
+                'currency_id'             => $currency->id,
+                'currency_code'           => $code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'amount'                  => round($spent, $currency->decimal_places),
             ];
         }
 

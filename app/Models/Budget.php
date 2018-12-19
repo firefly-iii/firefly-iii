@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
@@ -43,6 +44,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool        encrypted
  * @property Collection  budgetlimits
  * @property int         $order
+ * @property Carbon      created_at
+ * @property Carbon      updated_at
  */
 class Budget extends Model
 {
@@ -62,7 +65,7 @@ class Budget extends Model
             'encrypted'  => 'boolean',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'name', 'active','order'];
+    protected $fillable = ['user_id', 'name', 'active', 'order'];
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 
