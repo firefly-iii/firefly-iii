@@ -26,7 +26,9 @@ namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
+use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Models\Recurrence;
+use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Rule;
@@ -189,6 +191,24 @@ class CreateRecurringTransactions implements ShouldQueue
     }
 
     /**
+     * @param Recurrence $recurrence
+     *
+     * @return int
+     */
+    private function getPiggyId(Recurrence $recurrence): int
+    {
+        $meta = $recurrence->recurrenceMeta;
+        /** @var RecurrenceMeta $metaEntry */
+        foreach ($meta as $metaEntry) {
+            if ('piggy_bank_id' === $metaEntry->name) {
+                return (int)$metaEntry->value;
+            }
+        }
+
+        return 0;
+    }
+
+    /**
      * Get the users rules.
      *
      * @param User $user
@@ -312,6 +332,12 @@ class CreateRecurringTransactions implements ShouldQueue
             ];
             $journal = $this->journalRepository->store($array);
             Log::info(sprintf('Created new journal #%d', $journal->id));
+
+            // get piggy bank ID from meta data:
+            $piggyBankId = $this->getPiggyId($recurrence);
+
+            // trigger event:
+            event(new StoredTransactionJournal($journal, $piggyBankId));
 
             $collection->push($journal);
             // update recurring thing:
