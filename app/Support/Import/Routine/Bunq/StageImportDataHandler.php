@@ -141,10 +141,18 @@ class StageImportDataHandler
     private function convertPayment(BunqPayment $payment, int $bunqAccountId, LocalAccount $source): array
     {
         Log::debug(sprintf('Now at payment with ID #%d', $payment->getId()));
+        Log::debug(sprintf('Object dump: %s', print_r($payment, true)));
+
         $type         = TransactionType::WITHDRAWAL;
         $counterParty = $payment->getCounterpartyAlias();
         $amount       = $payment->getAmount();
         $paymentId    = $payment->getId();
+
+        // is there meta data to indicate this is a saving or something?
+        Log::debug(sprintf('Subtype is %s', $payment->getSubType()));
+
+
+
 
         Log::debug(sprintf('Amount is %s %s', $amount->getCurrency(), $amount->getValue()));
         $expected = AccountType::EXPENSE;
@@ -171,6 +179,7 @@ class StageImportDataHandler
             'user'               => $this->importJob->user_id,
             'type'               => $type,
             'date'               => $created->format('Y-m-d'),
+            'timestamp'          => $created->toAtomString(),
             'description'        => $payment->getDescription(),
             'piggy_bank_id'      => null,
             'piggy_bank_name'    => null,
