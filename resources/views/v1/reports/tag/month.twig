@@ -463,15 +463,15 @@
         var tagTags = '{{ tagTags }}';
 
         // chart uri's
-        var tagIncomeUri = '{{ route('chart.tag.tag-income', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
-        var tagExpenseUri = '{{ route('chart.tag.tag-expense', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
-        var accountIncomeUri = '{{ route('chart.tag.account-income', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
-        var accountExpenseUri = '{{ route('chart.tag.account-expense', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var tagIncomeUri = '{{ route('chart.tag.tag-income', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var tagExpenseUri = '{{ route('chart.tag.tag-expense', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var accountIncomeUri = '{{ route('chart.tag.account-income', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
+        var accountExpenseUri = '{{ route('chart.tag.account-expense', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd'),'OTHERS']) }}';
 
         // two new charts
-        var tagBudgetUri = '{{ route('chart.tag.budget-expense', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd')]) }}';
-        var tagCategoryUri = '{{ route('chart.tag.category-expense', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd')]) }}';
-        var mainUri = '{{ route('chart.tag.main', [accountIds, tagTags, start.format('Ymd'), end.format('Ymd')]) }}';
+        var tagBudgetUri = '{{ route('chart.tag.budget-expense', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var tagCategoryUri = '{{ route('chart.tag.category-expense', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd')]) }}';
+        var mainUri = '{{ route('chart.tag.main', [accountIds, tagIds, start.format('Ymd'), end.format('Ymd')]) }}';
     </script>
 
     <script type="text/javascript" src="v1/js/ff/reports/all.js?v={{ FF_VERSION }}"></script>
