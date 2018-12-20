@@ -24,11 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournalLink;
-use League\Fractal\TransformerAbstract;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  *
@@ -36,6 +34,8 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 class TransactionLinkTransformer extends AbstractTransformer
 {
+    /** @var JournalRepositoryInterface */
+    private $repository;
 
     /**
      * Constructor.
@@ -44,6 +44,8 @@ class TransactionLinkTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->repository = app(JournalRepositoryInterface::class);
+
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -56,14 +58,8 @@ class TransactionLinkTransformer extends AbstractTransformer
      */
     public function transform(TransactionJournalLink $link): array
     {
-        $notes = null;
-        /** @var Note $note */
-        $note = $link->notes()->first();
-        if (null !== $note) {
-            $notes = $note->text;
-        }
-
-        $data = [
+        $notes = $this->repository->getLinkNoteText($link);
+        $data  = [
             'id'         => (int)$link->id,
             'created_at' => $link->created_at->toAtomString(),
             'updated_at' => $link->updated_at->toAtomString(),

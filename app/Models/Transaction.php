@@ -98,6 +98,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              transaction_journal_budget_encrypted
  * @property string              type
  * @property string              name
+ * @property Carbon              created_at
+ * @property Carbon              updated_at
+ * @property string              foreign_currency_code
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class Transaction extends Model

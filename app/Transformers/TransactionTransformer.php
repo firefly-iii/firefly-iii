@@ -61,27 +61,21 @@ class TransactionTransformer extends AbstractTransformer
      */
     public function transform(Transaction $transaction): array
     {
-        $categoryId   = null;
-        $categoryName = null;
-        $budgetId     = null;
-        $budgetName   = null;
-        $categoryId   = $transaction->transaction_category_id ?? $transaction->transaction_journal_category_id;
-        $categoryName = $transaction->transaction_category_name ?? $transaction->transaction_journal_category_name;
-        $journal      = $transaction->transactionJournal;
-        $notes        = $this->repository->getNoteText($journal);
-        if ($transaction->transaction_type_type === TransactionType::WITHDRAWAL) {
-            $budgetId   = $transaction->transaction_budget_id ?? $transaction->transaction_journal_budget_id;
-            $budgetName = $transaction->transaction_budget_name ?? $transaction->transaction_journal_budget_name;
-        }
-        // get tags:
-        $tags = implode(',', $journal->tags->pluck('tag')->toArray());
+        $journal  = $transaction->transactionJournal;
+        $category = $this->getCategory($transaction);
+        $budget   = $this->getBudget($transaction);
 
+        $this->repository->setUser($journal->user);
+
+        $notes = $this->repository->getNoteText($journal);
+        $tags  = implode(',', $this->repository->getTags($journal));
 
         $data = [
             'id'                              => (int)$transaction->id,
             'created_at'                      => $transaction->created_at->toAtomString(),
             'updated_at'                      => $transaction->updated_at->toAtomString(),
             'description'                     => $transaction->description,
+            'journal_description'             => $transaction->description,
             'transaction_description'         => $transaction->transaction_description,
             'date'                            => $transaction->date->format('Y-m-d'),
             'type'                            => $transaction->transaction_type_type,
@@ -100,10 +94,10 @@ class TransactionTransformer extends AbstractTransformer
             'foreign_currency_decimal_places' => $transaction->foreign_currency_dp,
             'bill_id'                         => $transaction->bill_id,
             'bill_name'                       => $transaction->bill_name,
-            'category_id'                     => $categoryId,
-            'category_name'                   => $categoryName,
-            'budget_id'                       => $budgetId,
-            'budget_name'                     => $budgetName,
+            'category_id'                     => $category['category_id'],
+            'category_name'                   => $category['category_name'],
+            'budget_id'                       => $budget['budget_id'],
+            'budget_name'                     => $budget['budget_name'],
             'notes'                           => $notes,
             'sepa_cc'                         => $this->repository->getMetaField($journal, 'sepa-cc'),
             'sepa_ct_op'                      => $this->repository->getMetaField($journal, 'sepa-ct-op'),
@@ -138,6 +132,7 @@ class TransactionTransformer extends AbstractTransformer
         if (null !== $transaction->transaction_foreign_amount) {
             $data['foreign_amount'] = round($transaction->transaction_foreign_amount, (int)$transaction->foreign_currency_dp);
         }
+
         // switch on type for consistency
         switch ($transaction->transaction_type_type) {
             case TransactionType::WITHDRAWAL:
@@ -176,11 +171,43 @@ class TransactionTransformer extends AbstractTransformer
         }
 
         // expand description.
-        if (\strlen((string)$transaction->transaction_description) > 0) {
+        if ('' !== (string)$transaction->transaction_description) {
             $data['description'] = $transaction->transaction_description . ' (' . $transaction->description . ')';
         }
 
-
         return $data;
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private function getBudget(Transaction $transaction): array
+    {
+        if ($transaction->transaction_type_type !== TransactionType::WITHDRAWAL) {
+            return [
+                'budget_id'   => null,
+                'budget_name' => null,
+            ];
+        }
+
+        return [
+            'budget_id'   => $transaction->transaction_budget_id ?? $transaction->transaction_journal_budget_id,
+            'budget_name' => $transaction->transaction_budget_name ?? $transaction->transaction_journal_budget_name,
+        ];
+    }
+
+    /**
+     * @param Transaction $transaction
+     *
+     * @return array
+     */
+    private function getCategory(Transaction $transaction): array
+    {
+        return [
+            'category_id'   => $transaction->transaction_category_id ?? $transaction->transaction_journal_category_id,
+            'category_name' => $transaction->transaction_category_name ?? $transaction->transaction_journal_category_name,
+        ];
     }
 }

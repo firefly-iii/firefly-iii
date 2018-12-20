@@ -25,6 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Role;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
 
@@ -33,6 +34,8 @@ use Log;
  */
 class UserTransformer extends AbstractTransformer
 {
+    /** @var UserRepositoryInterface */
+    private $repository;
     /**
      * UserTransformer constructor.
      *
@@ -40,6 +43,7 @@ class UserTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->repository = app(UserRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -54,12 +58,6 @@ class UserTransformer extends AbstractTransformer
      */
     public function transform(User $user): array
     {
-        /** @var Role $role */
-        $role = $user->roles()->first();
-        if (null !== $role) {
-            $role = $role->name;
-        }
-
         return [
             'id'           => (int)$user->id,
             'created_at'   => $user->created_at->toAtomString(),
@@ -67,7 +65,7 @@ class UserTransformer extends AbstractTransformer
             'email'        => $user->email,
             'blocked'      => 1 === (int)$user->blocked,
             'blocked_code' => '' === $user->blocked_code ? null : $user->blocked_code,
-            'role'         => $role,
+            'role'         => $this->repository->getRoleByUser($user),
             'links'        => [
                 [
                     'rel' => 'self',

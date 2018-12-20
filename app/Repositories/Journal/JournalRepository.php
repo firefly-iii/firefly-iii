@@ -31,9 +31,11 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
@@ -453,6 +455,23 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->store($amount);
 
         return $amount;
+    }
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return string
+     */
+    public function getLinkNoteText(TransactionJournalLink $link): string
+    {
+        $notes = null;
+        /** @var Note $note */
+        $note = $link->notes()->first();
+        if (null !== $note) {
+            return $note->text ?? '';
+        }
+
+        return '';
     }
 
     /**

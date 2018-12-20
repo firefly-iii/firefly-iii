@@ -218,6 +218,22 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param User $user
+     *
+     * @return string|null
+     */
+    public function getRoleByUser(User $user): ?string
+    {
+        /** @var Role $role */
+        $role = $user->roles()->first();
+        if (null !== $role) {
+            return $role->name;
+        }
+
+        return null;
+    }
+
+    /**
      * Return basic user information.
      *
      * @param User $user

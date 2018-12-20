@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -38,6 +39,14 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return string
+     */
+    public function getLinkNoteText(TransactionJournalLink $link): string;
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type

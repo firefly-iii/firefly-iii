@@ -1,6 +1,6 @@
 <?php
 /**
- * TagTransformerTest.php
+ * TransactionLinkTransformerTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,42 +24,43 @@ declare(strict_types=1);
 namespace Tests\Unit\Transformers;
 
 
-use FireflyIII\Models\Tag;
-use FireflyIII\Transformers\TagTransformer;
+use Carbon\Carbon;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\TransactionLinkTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
 /**
- * Class TagTransformerTest
+ * Class TransactionLinkTransformerTest
  */
-class TagTransformerTest extends TestCase
+class TransactionLinkTransformerTest extends TestCase
 {
     /**
      * Test basic tag transformer
      *
-     * @covers \FireflyIII\Transformers\TagTransformer
+     * @covers \FireflyIII\Transformers\TransactionLinkTransformer
      */
     public function testBasic(): void
     {
-        $tag         = Tag::create(
-            [
-                'user_id'     => $this->user()->id,
-                'tag'         => 'Some tag ' . random_int(1, 10000),
-                'tagMode'     => 'nothing',
-                'date'        => '2018-01-01',
-                'description' => 'Some tag',
-                'latitude'    => 5.5,
-                'longitude'   => '6.6',
-                'zoomLevel'   => 3,
-            ]
-        );
-        $transformer = app(TagTransformer::class);
-        $transformer->setParameters(new ParameterBag);
-        $result = $transformer->transform($tag);
+        $repository = $this->mock(JournalRepositoryInterface::class);
 
-        $this->assertEquals($tag->tag, $result['tag']);
-        $this->assertEquals(5.5, $result['latitude']);
-        $this->assertEquals(6.6, $result['longitude']);
+        $repository->shouldReceive('getLinkNoteText')->atLeast()->once()->andReturn('abc');
+
+        /** @var TransactionJournalLink $link */
+        $link = TransactionJournalLink::first();
+
+        $transformer = app(TransactionLinkTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
+        $result = $transformer->transform($link);
+
+        $this->assertEquals($link->source_id, $result['inward_id']);
+        $this->assertEquals('abc', $result['notes']);
+
     }
 
 }
