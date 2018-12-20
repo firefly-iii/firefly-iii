@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\PiggyBankTransformer;
+use Log;
 use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
@@ -39,6 +40,15 @@ use Amount;
  */
 class PiggyBankTransformerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Test basic transformer.
      *

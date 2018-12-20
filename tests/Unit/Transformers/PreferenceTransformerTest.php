@@ -1,6 +1,6 @@
 <?php
 /**
- * PreferenceTransformer.php
+ * PreferenceTransformerTest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,49 +21,44 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Transformers;
+namespace Tests\Unit\Transformers;
 
 
 use FireflyIII\Models\Preference;
-use League\Fractal\TransformerAbstract;
+use FireflyIII\Transformers\PreferenceTransformer;
 use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
+use Tests\TestCase;
 
 /**
- * Class PreferenceTransformer
+ * Class PreferenceTransformerTest
  */
-class PreferenceTransformer extends AbstractTransformer
+class PreferenceTransformerTest extends TestCase
 {
-
     /**
-     * PreferenceTransformer constructor.
      *
-     * @codeCoverageIgnore
      */
-    public function __construct()
+    public function setUp(): void
     {
-        if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
-        }
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
-     * Transform the preference
+     * Test basic tag transformer
      *
-     * @param Preference $preference
-     *
-     * @return array
+     * @covers \FireflyIII\Transformers\PreferenceTransformer
      */
-    public function transform(Preference $preference): array
+    public function testBasic(): void
     {
-        return [
-            'id'         => (int)$preference->id,
-            'created_at' => $preference->created_at->toAtomString(),
-            'updated_at' => $preference->updated_at->toAtomString(),
-            'name'       => $preference->name,
-            'data'       => $preference->data,
-        ];
+        /** @var Preference $preference */
+        $preference  = Preference::first();
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters(new ParameterBag);
 
+        $result = $transformer->transform($preference);
+
+        $this->assertEquals($preference->name, $result['name']);
     }
 
 }

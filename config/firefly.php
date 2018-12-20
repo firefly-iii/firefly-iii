@@ -289,6 +289,13 @@ return [
         'transfer'   => ['Transfer'],
         'transfers'  => ['Transfer'],
     ],
+    'transactionTypesToShort'                 => [
+        'Withdrawal'      => 'withdrawal',
+        'Deposit'         => 'deposit',
+        'Transfer'        => 'transfer',
+        'Opening balance' => 'opening-balance',
+        'Reconciliation'  => 'reconciliation',
+    ],
     'transactionIconsByWhat'       => [
         'expenses'   => 'fa-long-arrow-left',
         'withdrawal' => 'fa-long-arrow-left',

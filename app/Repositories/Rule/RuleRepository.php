@@ -163,6 +163,26 @@ class RuleRepository implements RuleRepositoryInterface
     /**
      * @param Rule $rule
      *
+     * @return Collection
+     */
+    public function getRuleActions(Rule $rule): Collection
+    {
+        return $rule->ruleActions()->orderBy('order', 'ASC')->get();
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return Collection
+     */
+    public function getRuleTriggers(Rule $rule): Collection
+    {
+        return $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+    }
+
+    /**
+     * @param Rule $rule
+     *
      * @return bool
      */
     public function moveDown(Rule $rule): bool

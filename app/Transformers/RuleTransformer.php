@@ -27,15 +27,17 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
-use League\Fractal\TransformerAbstract;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class RuleTransformer
  */
 class RuleTransformer extends AbstractTransformer
 {
+    /** @var RuleRepositoryInterface */
+    private $ruleRepository;
+
     /**
      * CurrencyTransformer constructor.
      *
@@ -43,6 +45,7 @@ class RuleTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->ruleRepository = app(RuleRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -57,6 +60,8 @@ class RuleTransformer extends AbstractTransformer
      */
     public function transform(Rule $rule): array
     {
+        $this->ruleRepository->setUser($rule->user);
+
         $data = [
             'id'              => (int)$rule->id,
             'created_at'      => $rule->created_at->toAtomString(),
@@ -89,7 +94,7 @@ class RuleTransformer extends AbstractTransformer
     private function actions(Rule $rule): array
     {
         $result  = [];
-        $actions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+        $actions = $this->ruleRepository->getRuleActions($rule);
         /** @var RuleAction $ruleAction */
         foreach ($actions as $ruleAction) {
             $result[] = [
@@ -115,7 +120,7 @@ class RuleTransformer extends AbstractTransformer
     private function triggers(Rule $rule): array
     {
         $result   = [];
-        $triggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        $triggers = $this->ruleRepository->getRuleTriggers($rule);
         /** @var RuleTrigger $ruleTrigger */
         foreach ($triggers as $ruleTrigger) {
             $result[] = [

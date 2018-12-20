@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
+use Log;
 use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
@@ -39,6 +40,14 @@ use Tests\TestCase;
  */
 class PiggyBankEventTransformerTest extends TestCase
 {
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
     /**
      * Basic test with no meta data.
      *

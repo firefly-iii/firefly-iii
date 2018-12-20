@@ -44,15 +44,30 @@ use Log;
  */
 class RecurrenceTransformer extends AbstractTransformer
 {
+    /** @var BillRepositoryInterface */
+    private $billRepos;
+    /** @var BudgetRepositoryInterface */
+    private $budgetRepos;
+    /** @var CategoryFactory */
+    private $factory;
+    /** @var PiggyBankRepositoryInterface */
+    private $piggyRepos;
     /** @var RecurringRepositoryInterface */
-    protected $repository;
+    private $repository;
 
     /**
      * RecurrenceTransformer constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
-        $this->repository = app(RecurringRepositoryInterface::class);
+        $this->repository  = app(RecurringRepositoryInterface::class);
+        $this->billRepos   = app(BillRepositoryInterface::class);
+        $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
+        $this->factory     = app(CategoryFactory::class);
+        $this->budgetRepos = app(BudgetRepositoryInterface::class);
+
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -68,7 +83,14 @@ class RecurrenceTransformer extends AbstractTransformer
      */
     public function transform(Recurrence $recurrence): array
     {
+        Log::debug('Now in Recurrence::transform()');
         $this->repository->setUser($recurrence->user);
+        $this->billRepos->setUser($recurrence->user);
+        $this->piggyRepos->setUser($recurrence->user);
+        $this->factory->setUser($recurrence->user);
+        $this->budgetRepos->setUser($recurrence->user);
+
+        $shortType = (string)config(sprintf('firefly.transactionTypesToShort.%s', $recurrence->transactionType->type));
 
         // basic data.
         $return = [
@@ -76,7 +98,7 @@ class RecurrenceTransformer extends AbstractTransformer
             'created_at'             => $recurrence->created_at->toAtomString(),
             'updated_at'             => $recurrence->updated_at->toAtomString(),
             'transaction_type_id'    => $recurrence->transaction_type_id,
-            'transaction_type'       => $recurrence->transactionType->type,
+            'transaction_type'       => $shortType,
             'title'                  => $recurrence->title,
             'description'            => $recurrence->description,
             'first_date'             => $recurrence->first_date->format('Y-m-d'),
@@ -109,34 +131,28 @@ class RecurrenceTransformer extends AbstractTransformer
      */
     private function getMeta(Recurrence $recurrence): array
     {
-        $return = [];
+        $return     = [];
+        $collection = $recurrence->recurrenceMeta;
+        Log::debug(sprintf('Meta collection length = %d', $collection->count()));
         /** @var RecurrenceMeta $recurrenceMeta */
-        foreach ($recurrence->recurrenceMeta as $recurrenceMeta) {
+        foreach ($collection as $recurrenceMeta) {
             $recurrenceMetaArray = [
                 'name'  => $recurrenceMeta->name,
                 'value' => $recurrenceMeta->value,
             ];
             switch ($recurrenceMeta->name) {
-                default:
-                    throw new FireflyException(sprintf('Recurrence transformer cannot handle meta-field "%s"', $recurrenceMeta->name));
                 case 'tags':
                     $recurrenceMetaArray['tags'] = explode(',', $recurrenceMeta->value);
                     break;
-                case 'notes':
-                    break;
                 case 'bill_id':
-                    /** @var BillRepositoryInterface $repository */
-                    $repository = app(BillRepositoryInterface::class);
-                    $bill       = $repository->find((int)$recurrenceMeta->value);
+                    $bill = $this->billRepos->find((int)$recurrenceMeta->value);
                     if (null !== $bill) {
                         $recurrenceMetaArray['bill_id']   = $bill->id;
                         $recurrenceMetaArray['bill_name'] = $bill->name;
                     }
                     break;
                 case 'piggy_bank_id':
-                    /** @var PiggyBankRepositoryInterface $repository */
-                    $repository = app(PiggyBankRepositoryInterface::class);
-                    $piggy      = $repository->findNull((int)$recurrenceMeta->value);
+                    $piggy = $this->piggyRepos->findNull((int)$recurrenceMeta->value);
                     if (null !== $piggy) {
                         $recurrenceMetaArray['piggy_bank_id']   = $piggy->id;
                         $recurrenceMetaArray['piggy_bank_name'] = $piggy->name;
@@ -208,22 +224,15 @@ class RecurrenceTransformer extends AbstractTransformer
                 'value' => $transactionMeta->value,
             ];
             switch ($transactionMeta->name) {
-                default:
-                    throw new FireflyException(sprintf('Recurrence transformer cannot handle transaction meta-field "%s"', $transactionMeta->name));
                 case 'category_name':
-                    /** @var CategoryFactory $factory */
-                    $factory = app(CategoryFactory::class);
-                    $factory->setUser($transaction->recurrence->user);
-                    $category = $factory->findOrCreate(null, $transactionMeta->value);
+                    $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
                         $transactionMetaArray['category_id']   = $category->id;
                         $transactionMetaArray['category_name'] = $category->name;
                     }
                     break;
                 case 'budget_id':
-                    /** @var BudgetRepositoryInterface $repository */
-                    $repository = app(BudgetRepositoryInterface::class);
-                    $budget     = $repository->findNull((int)$transactionMeta->value);
+                    $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
                     if (null !== $budget) {
                         $transactionMetaArray['budget_id']   = $budget->id;
                         $transactionMetaArray['budget_name'] = $budget->name;

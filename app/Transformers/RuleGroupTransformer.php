@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
 class RuleGroupTransformer extends AbstractTransformer
 {
     /**
-     * CurrencyTransformer constructor.
+     * RuleGroupTransformer constructor.
      *
      * @codeCoverageIgnore
      */
