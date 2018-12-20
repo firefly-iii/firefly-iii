@@ -27,15 +27,21 @@ namespace FireflyIII\Transformers;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use League\Fractal\TransformerAbstract;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class PiggyBankEventTransformer
  */
 class PiggyBankEventTransformer extends AbstractTransformer
 {
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepos;
+    /** @var PiggyBankRepositoryInterface */
+    private $piggyRepos;
+    /** @var AccountRepositoryInterface */
+    private $repository;
+
     /**
      * PiggyBankEventTransformer constructor.
      *
@@ -43,6 +49,9 @@ class PiggyBankEventTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->repository    = app(AccountRepositoryInterface::class);
+        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -57,41 +66,37 @@ class PiggyBankEventTransformer extends AbstractTransformer
      */
     public function transform(PiggyBankEvent $event): array
     {
+        // get account linked to piggy bank
         $account = $event->piggyBank->account;
-        /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
-        $accountRepos->setUser($account->user);
 
-        $currencyId    = (int)$accountRepos->getMetaValue($account, 'currency_id');
-        $journal       = $event->transactionJournal;
-        $transactionId = null;
-        $decimalPlaces = 2;
-        if ($currencyId > 0) {
-            /** @var CurrencyRepositoryInterface $repository */
-            $repository = app(CurrencyRepositoryInterface::class);
-            $repository->setUser($account->user);
-            $currency = $repository->findNull($currencyId);
-            /** @noinspection NullPointerExceptionInspection */
-            $decimalPlaces = $currency->decimal_places;
-        }
-        if (0 === $currencyId) {
+        // set up repositories.
+        $this->repository->setUser($account->user);
+        $this->currencyRepos->setUser($account->user);
+        $this->piggyRepos->setUser($account->user);
+
+        // get associated currency or fall back to the default:
+        $currencyId = (int)$this->repository->getMetaValue($account, 'currency_id');
+        $currency   = $this->currencyRepos->findNull($currencyId);
+        if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($account->user);
         }
-        if (null !== $journal) {
-            $transactionId = $journal->transactions()->first()->id;
-        }
+
+        // get associated journal and transaction, if any:
+        $journalId     = $event->transaction_journal_id;
+        $transactionId = $this->piggyRepos->getTransactionWithEvent($event);
 
         $data = [
-            'id'              => (int)$event->id,
-            'created_at'      => $event->created_at->toAtomString(),
-            'updated_at'      => $event->updated_at->toAtomString(),
-            'amount'          => round($event->amount, $decimalPlaces),
-            'currency_id'     => $currency->id,
-            'currency_code'   => $currency->code,
-            'currency_symbol' => $currency->symbol,
-            'currency_decimal_places'     => $currency->decimal_places,
-            'transaction_id'  => $transactionId,
-            'links'           => [
+            'id'                      => (int)$event->id,
+            'created_at'              => $event->created_at->toAtomString(),
+            'updated_at'              => $event->updated_at->toAtomString(),
+            'amount'                  => round($event->amount, $currency->decimal_places),
+            'currency_id'             => $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'journal_id'              => $journalId,
+            'transaction_id'          => $transactionId,
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/piggy_bank_events/' . $event->id,

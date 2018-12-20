@@ -35,6 +35,7 @@ use Illuminate\Support\Collection;
  */
 interface PiggyBankRepositoryInterface
 {
+
     /**
      * @param PiggyBank $piggyBank
      * @param string    $amount
@@ -153,6 +154,15 @@ interface PiggyBankRepositoryInterface
     public function getMaxOrder(): int;
 
     /**
+     * Return note for piggy bank.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getNoteText(PiggyBank $piggyBank): string;
+
+    /**
      * Return all piggy banks.
      *
      * @return Collection
@@ -181,6 +191,13 @@ interface PiggyBankRepositoryInterface
      * @return string
      */
     public function getSuggestedMonthlyAmount(PiggyBank $piggyBank): string;
+
+    /**
+     * @param PiggyBankEvent $event
+     *
+     * @return int|null
+     */
+    public function getTransactionWithEvent(PiggyBankEvent $event): ?int;
 
     /**
      * Get for piggy account what is left to put in piggies.

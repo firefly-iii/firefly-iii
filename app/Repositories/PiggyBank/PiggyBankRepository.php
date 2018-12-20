@@ -309,6 +309,24 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * Return note for piggy bank.
+     *
+     * @param PiggyBank $piggyBank
+     *
+     * @return string
+     */
+    public function getNoteText(PiggyBank $piggyBank): string
+    {
+        /** @var Note $note */
+        $note = $piggyBank->notes()->first();
+        if (null === $note) {
+            return '';
+        }
+
+        return $note->text;
+    }
+
+    /**
      * @return Collection
      */
     public function getPiggyBanks(): Collection
@@ -379,6 +397,31 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         }
 
         return $savePerMonth;
+    }
+
+    /**
+     * @param PiggyBankEvent $event
+     *
+     * @return int|null
+     */
+    public function getTransactionWithEvent(PiggyBankEvent $event): ?int
+    {
+        $journal = $event->transactionJournal;
+        if (null === $journal) {
+            return null;
+        }
+        if ((float)$event->amount < 0) {
+            $transaction = $journal->transactions()->where('amount', '<', 0)->first();
+
+            return $transaction->id ?? null;
+        }
+        if ((float)$event->amount > 0) {
+            $transaction = $journal->transactions()->where('amount', '>', 0)->first();
+
+            return $transaction->id ?? null;
+        }
+
+        return null;
     }
 
     /**

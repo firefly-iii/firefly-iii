@@ -25,7 +25,6 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -37,6 +36,13 @@ use Log;
  */
 class PiggyBankTransformer extends AbstractTransformer
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepos;
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepos;
+    /** @var PiggyBankRepositoryInterface */
+    private $piggyRepos;
+
     /**
      * PiggyBankTransformer constructor.
      *
@@ -44,6 +50,9 @@ class PiggyBankTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->accountRepos  = app(AccountRepositoryInterface::class);
+        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -61,70 +70,62 @@ class PiggyBankTransformer extends AbstractTransformer
     {
         /** @var Account $account */
         $account = $piggyBank->account;
-        /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
-        $accountRepos->setUser($account->user);
-        $currencyId = (int)$accountRepos->getMetaValue($account, 'currency_id');
-        $currency   = null;
-        if (0 === $currencyId) {
+
+        // set up repositories
+        $this->accountRepos->setUser($account->user);
+        $this->currencyRepos->setUser($account->user);
+        $this->piggyRepos->setUser($account->user);
+
+        // get currency from account, or use default.
+        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        $currency   = $this->currencyRepos->findNull($currencyId);
+        if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($account->user);
         }
 
-        if ($currencyId > 0) {
-            /** @var CurrencyRepositoryInterface $repository */
-            $repository = app(CurrencyRepositoryInterface::class);
-            $repository->setUser($account->user);
-            $currency = $repository->findNull($currencyId);
-        }
-
-        $decimalPlaces = $currency->decimal_places;
+        // note
+        $notes = $this->piggyRepos->getNoteText($piggyBank);
+        $notes = '' === $notes ? null : $notes;
 
         // get currently saved amount:
-        /** @var PiggyBankRepositoryInterface $piggyRepos */
-        $piggyRepos = app(PiggyBankRepositoryInterface::class);
-        $piggyRepos->setUser($account->user);
+        $currentAmountStr = $this->piggyRepos->getCurrentAmount($piggyBank);
+        $currentAmount    = round($currentAmountStr, $currency->decimal_places);
 
-        // current amount in piggy bank:
-        $currentAmountStr = $piggyRepos->getCurrentAmount($piggyBank);
-        $currentAmount    = round($currentAmountStr, $decimalPlaces);
+        // left to save:
+        $leftToSave = bcsub($piggyBank->targetamount, $currentAmountStr);
+        $startDate  = null === $piggyBank->startdate ? null : $piggyBank->startdate->format('Y-m-d');
+        $targetDate = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->format('Y-m-d');
 
-        // left to save to target:
-        $leftToSave   = bcsub($piggyBank->targetamount, $currentAmountStr);
-        $startDate    = null === $piggyBank->startdate ? null : $piggyBank->startdate->format('Y-m-d');
-        $targetDate   = null === $piggyBank->targetdate ? null : $piggyBank->targetdate->format('Y-m-d');
-        $targetAmount = round($piggyBank->targetamount, $decimalPlaces);
+        // target and percentage:
+        $targetAmount = round($piggyBank->targetamount, $currency->decimal_places);
         $percentage   = (int)(0 !== bccomp('0', $currentAmountStr) ? $currentAmount / $targetAmount * 100 : 0);
         $data         = [
-            'id'              => (int)$piggyBank->id,
-            'created_at'      => $piggyBank->created_at->toAtomString(),
-            'updated_at'      => $piggyBank->updated_at->toAtomString(),
-            'name'            => $piggyBank->name,
-            'currency_id'     => $currency->id,
-            'currency_code'   => $currency->code,
-            'currency_symbol' => $currency->symbol,
-            'currency_decimal_places'     => $currency->decimal_places,
-            'target_amount'   => $targetAmount,
-            'percentage'      => $percentage,
-            'current_amount'  => $currentAmount,
-            'left_to_save'    => round($leftToSave, $decimalPlaces),
-            'save_per_month'  => round($piggyRepos->getSuggestedMonthlyAmount($piggyBank), $decimalPlaces),
-            'start_date'      => $startDate,
-            'target_date'     => $targetDate,
-            'order'           => (int)$piggyBank->order,
-            'active'          => true,
-            'notes'           => null,
-            'links'           => [
+            'id'                      => (int)$piggyBank->id,
+            'created_at'              => $piggyBank->created_at->toAtomString(),
+            'updated_at'              => $piggyBank->updated_at->toAtomString(),
+            'account_id'              => $piggyBank->account_id,
+            'name'                    => $piggyBank->name,
+            'currency_id'             => $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'target_amount'           => $targetAmount,
+            'percentage'              => $percentage,
+            'current_amount'          => $currentAmount,
+            'left_to_save'            => round($leftToSave, $currency->decimal_places),
+            'save_per_month'          => round($this->piggyRepos->getSuggestedMonthlyAmount($piggyBank), $currency->decimal_places),
+            'start_date'              => $startDate,
+            'target_date'             => $targetDate,
+            'order'                   => (int)$piggyBank->order,
+            'active'                  => true,
+            'notes'                   => $notes,
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/piggy_banks/' . $piggyBank->id,
                 ],
             ],
         ];
-        /** @var Note $note */
-        $note = $piggyBank->notes()->first();
-        if (null !== $note) {
-            $data['notes'] = $note->text;
-        }
 
         return $data;
     }
