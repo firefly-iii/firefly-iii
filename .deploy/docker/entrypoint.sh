@@ -20,11 +20,22 @@ mkdir -p $FIREFLY_PATH/storage/upload
 chown -R www-data:www-data -R $FIREFLY_PATH/storage
 chmod -R 775 $FIREFLY_PATH/storage
 
+chown -R www-data:www-data -R $FIREFLY_PATH/app
+chmod -R 775 $FIREFLY_PATH/app
+
 # remove any lingering files that may break upgrades:
 rm -f $FIREFLY_PATH/storage/logs/laravel.log
 
 cat .env.docker | envsubst > .env
 composer dump-autoload
 php artisan package:discover
+
+php artisan migrate --seed
+php artisan firefly:upgrade-database
+php artisan firefly:verify
+php artisan passport:install
+php artisan cache:clear
+
+
 php artisan firefly:instructions install
 exec /usr/bin/supervisord -c /etc/supervisor/supervisord.conf --nodaemon
