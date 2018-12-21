@@ -247,6 +247,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
 
         $collector->addFilter(OpposingAccountFilter::class);
         $collector->addFilter(NegativeAmountFilter::class);
+        $collector->addFilter(DoubleTransactionFilter::class);
 
         $transactions = $collector->getTransactions();
         $this->income = $transactions;
