@@ -50,19 +50,19 @@
                         <tr>
                             <td><a href="{{ route('accounts.show',id) }}" title="{{ info.name }}">{{ info.name }}</a></td>
                             <td style="text-align:right;" class="hidden-sm hidden-xs">
-                                {{ formatAmountBySymbol(info.current_balance,info.currency_symbol,info.currency_dp) }}
+                                {{ formatAmountBySymbol(info.current_balance,info.currency_symbol,info.currency_decimal_places) }}
                                 </td>
                             <td style="text-align:right;">
-                                {{ formatAmountBySymbol(info.left,info.currency_symbol,info.currency_dp) }}
+                                {{ formatAmountBySymbol(info.left,info.currency_symbol,info.currency_decimal_places) }}
                             </td>
                             <td style="text-align:right;" class="hidden-sm hidden-xs">
-                                {{ formatAmountBySymbol(info.target,info.currency_symbol,info.currency_dp) }}
+                                {{ formatAmountBySymbol(info.target,info.currency_symbol,info.currency_decimal_places) }}
                             </td>
                             <td style="text-align:right;" class="hidden-sm hidden-xs">
-                                {{ formatAmountBySymbol(info.saved,info.currency_symbol,info.currency_dp) }}
+                                {{ formatAmountBySymbol(info.saved,info.currency_symbol,info.currency_decimal_places) }}
                                 </td>
                             <td style="text-align:right;" class="hidden-sm hidden-xs">
-                                {{ formatAmountBySymbol(info.to_save,info.currency_symbol,info.currency_dp) }}
+                                {{ formatAmountBySymbol(info.to_save,info.currency_symbol,info.currency_decimal_places) }}
                             </td>
                         </tr>
                     {% endfor %}

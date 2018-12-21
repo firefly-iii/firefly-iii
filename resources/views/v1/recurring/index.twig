@@ -69,11 +69,11 @@
                                             {% for rtt in rt.transactions %}
                                                 <li>
                                                     {# normal amount + comma#}
-                                                    {{ formatAmountBySymbol(rtt['amount'],rtt['currency_symbol'],rtt['currency_dp']) }}{% if rtt['foreign_amount'] == null %},{% endif %}
+                                                    {{ formatAmountBySymbol(rtt['amount'],rtt['currency_symbol'],rtt['currency_decimal_places']) }}{% if rtt['foreign_amount'] == null %},{% endif %}
 
                                                     {# foreign amount + comma #}
                                                     {% if null != rtt['foreign_amount'] %}
-                                                        ({{ formatAmountBySymbol(rtt['foreign_amount'],rtt['foreign_currency_symbol'],rtt['foreign_currency_dp']) }}),
+                                                        ({{ formatAmountBySymbol(rtt['foreign_amount'],rtt['foreign_currency_symbol'],rtt['foreign_currency_decimal_places']) }}),
                                                     {% endif %}
                                                     <a href="{{ route('accounts.show', rtt['source_id']) }}">{{ rtt['source_name'] }}</a>
                                                     &rarr;

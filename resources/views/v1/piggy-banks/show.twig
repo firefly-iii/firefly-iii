@@ -41,19 +41,19 @@
                         <tr>
                             <td>{{ 'target_amount'|_ }}</td>
                             <td>
-                                {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_dp) }}
+                                {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
                         <tr>
                             <td>{{ 'saved_so_far'|_ }}</td>
                             <td>
-                                {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_dp) }}
+                                {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
                         <tr>
                             <td>{{ 'left_to_save'|_ }}</td>
                             <td>
-                                {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_dp) }}
+                                {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
                         <tr>
@@ -80,7 +80,7 @@
                             <tr>
                                 <td>{{ 'suggested_amount'|_ }}</td>
                                 <td>
-                                    {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_dp) }}
+                                    {{ formatAmountBySymbol(piggy.save_per_month, piggy.currency_symbol, piggy.currency_decimal_places) }}
 
                                 </td>
                             </tr>

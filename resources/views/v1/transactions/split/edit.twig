@@ -56,7 +56,7 @@
                                 <label for="ffInput_journal_amount" class="col-sm-4 control-label">{{ trans('form.amount') }}</label>
                                 <div class="col-sm-8">
                                     <p id="ffInput_journal_amount" class="form-control-static">
-                                        {{ formatAmountBySymbol(preFilled.journal_amount|default("0"), preFilled.transactions[0].currency_symbol|default("x"), preFilled.transactions[0].currency_dp) }}
+                                        {{ formatAmountBySymbol(preFilled.journal_amount|default("0"), preFilled.transactions[0].currency_symbol|default("x"), preFilled.transactions[0].currency_decimal_places) }}
                                     </p>
                                 </div>
                             </div>
@@ -67,7 +67,7 @@
                                     <label for="ffInput_foreign_journal_amount" class="col-sm-4 control-label">{{ trans('form.foreign_amount') }}</label>
                                     <div class="col-sm-8">
                                         <p id="ffInput_foreign_journal_amount" class="form-control-static">
-                                            {{ formatAmountBySymbol(preFilled.journal_foreign_amount, preFilled.transactions[0].foreign_currency_symbol, preFilled.transactions[0].foreign_currency_dp) }}
+                                            {{ formatAmountBySymbol(preFilled.journal_foreign_amount, preFilled.transactions[0].foreign_currency_symbol, preFilled.transactions[0].foreign_currency_decimal_places) }}
                                         </p>
                                     </div>
                                 </div>
