@@ -87,11 +87,8 @@ RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 U
 # copy Apache config to correct spot.
 COPY ./.deploy/docker/apache2.conf /etc/apache2/apache2.conf
 
-# Enable apache mod rewrite..
-RUN a2enmod rewrite
-
-# Enable apache mod ssl..
-RUN a2enmod ssl
+# Enable apache mod rewrite and mod ssl..
+RUN a2enmod rewrite && a2enmod ssl
 
 # Create volumes
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
