@@ -64,6 +64,20 @@ trait AccountFilter
             AccountType::MORTGAGE        => [AccountType::MORTGAGE],
             AccountType::DEBT            => [AccountType::DEBT],
             AccountType::CREDITCARD      => [AccountType::CREDITCARD],
+            'default account'            => [AccountType::DEFAULT],
+            'cash account'               => [AccountType::CASH],
+            'asset account'              => [AccountType::ASSET],
+            'expense account'            => [AccountType::EXPENSE],
+            'revenue account'            => [AccountType::REVENUE],
+            'initial balance account'    => [AccountType::INITIAL_BALANCE],
+            'reconciliation'             => [AccountType::RECONCILIATION],
+            'loan'                       => [AccountType::LOAN],
+            'mortgage'                   => [AccountType::MORTGAGE],
+            'debt'                       => [AccountType::DEBT],
+            'credit card'                => [AccountType::CREDITCARD],
+            'credit-card'                => [AccountType::CREDITCARD],
+            'creditcard'                 => [AccountType::CREDITCARD],
+            'cc'                         => [AccountType::CREDITCARD],
 
         ];
         $return = $types['all'];
