@@ -93,6 +93,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
          * This is used to properly map transfers.
          */
         $ibanToAsset = [];
+        Log::debug('Going to map IBANs for easy mapping later on.');
         if (0 === \count($accounts)) {
             throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
@@ -106,10 +107,17 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
             $bunqId  = (int)$bunqId;
             $localId = (int)$localId;
 
+            Log::debug(sprintf('Now trying to link bunq acount #%d with Firefly III account %d', $bunqId, $localId));
+
             // validate each
             $bunqId    = $this->validBunqAccount($bunqId);
             $accountId = $this->validLocalAccount($localId);
-            $bunqIban  = $this->getBunqIban($bunqId);
+
+            Log::debug(sprintf('After validation: bunq account #%d with Firefly III account %d', $bunqId, $localId));
+
+            $bunqIban = $this->getBunqIban($bunqId);
+
+            Log::debug(sprintf('IBAN for bunq account #%d is "%s"', $bunqId, $bunqIban));
             if (null !== $bunqIban) {
                 $ibanToAsset[$bunqIban] = $accountId;
             }

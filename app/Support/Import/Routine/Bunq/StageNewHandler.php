@@ -94,6 +94,7 @@ class StageNewHandler
      */
     private function listAccounts(): array
     {
+        Log::debug('Now in StageNewHandler::listAccounts()');
         $accounts = [];
         /** @var MonetaryAccount $lister */
         $lister = app(MonetaryAccount::class);
@@ -112,18 +113,22 @@ class StageNewHandler
                 $array = null;
                 switch (\get_class($object)) {
                     case MonetaryAccountBank::class:
+                        Log::debug('Going to convert a MonetaryAccountBank');
                         /** @var MonetaryAccountBank $object */
                         $array = $this->processMab($object);
                         break;
                     case MonetaryAccountJoint::class:
+                        Log::debug('Going to convert a MonetaryAccountJoint');
                         /** @var MonetaryAccountJoint $object */
                         $array = $this->processMaj($object);
                         break;
                     case MonetaryAccountLight::class:
+                        Log::debug('Going to convert a MonetaryAccountLight');
                         /** @var MonetaryAccountLight $object */
                         $array = $this->processMal($object);
                         break;
                     case MonetaryAccountSavings::class;
+                        Log::debug('Going to convert a MonetaryAccountSavings');
                         /** @var MonetaryAccountSavings $object */
                         $array = $this->processMas($object);
                         break;
@@ -134,12 +139,13 @@ class StageNewHandler
                     // @codeCoverageIgnoreEnd
                 }
                 if (null !== $array) {
+                    Log::debug('Array is not null');
                     $accounts[] = $array;
                     $this->reportFinding($array);
                 }
             }
         }
-        Log::info(sprintf('Found %d account(s) at bunq', \count($accounts)));
+        Log::info(sprintf('Found %d account(s) at bunq', \count($accounts)), $accounts);
 
         return $accounts;
     }
@@ -226,6 +232,10 @@ class StageNewHandler
                     'name'  => $alias->getName(),
                     'value' => $alias->getValue(),
                 ];
+                // store IBAN alias separately:
+                if ('IBAN' === $alias->getType()) {
+                    $return['iban'] = $alias->getValue();
+                }
             }
         }
         $coOwners = $maj->getAllCoOwner() ?? [];
@@ -279,6 +289,10 @@ class StageNewHandler
                     'name'  => $alias->getName(),
                     'value' => $alias->getValue(),
                 ];
+                // store IBAN alias separately:
+                if ('IBAN' === $alias->getType()) {
+                    $return['iban'] = $alias->getValue();
+                }
             }
         }
 
@@ -292,6 +306,7 @@ class StageNewHandler
      */
     private function processMas(MonetaryAccountSavings $object): array
     {
+        Log::debug('Now in processMas()');
         $setting = $object->getSetting();
         $return  = [
             'id'            => $object->getId(),
@@ -312,13 +327,19 @@ class StageNewHandler
             ];
         }
         if (null !== $object->getAlias()) {
+            Log::debug('MAS has aliases');
             /** @var Pointer $alias */
             foreach ($object->getAlias() as $alias) {
+                Log::debug(sprintf('Alias type is "%s", with name "%s" and value "%s"', $alias->getType(), $alias->getName(), $alias->getValue()));
                 $return['aliases'][] = [
                     'type'  => $alias->getType(),
                     'name'  => $alias->getName(),
                     'value' => $alias->getValue(),
                 ];
+                // store IBAN alias separately:
+                if ('IBAN' === $alias->getType()) {
+                    $return['iban'] = $alias->getValue();
+                }
             }
         }
         $goal                  = $object->getSavingsGoal();
@@ -327,6 +348,7 @@ class StageNewHandler
             'value'      => $goal->getValue(),
             'percentage' => $object->getSavingsGoalProgress(),
         ];
+        Log::debug('End of processMas()', $return);
 
         return $return;
     }
