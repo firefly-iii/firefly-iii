@@ -268,7 +268,7 @@ trait RequestInformation
         if (\is_array($data)) {
             foreach ($data as $index => $triggerInfo) {
                 $triggers[] = [
-                    'type'            => $triggerInfo['name'] ?? '',
+                    'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
                     'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
                 ];

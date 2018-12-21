@@ -162,7 +162,7 @@ function onAddNewAction() {
     "use strict";
     console.log('Now in onAddNewAction()');
 
-    var selectQuery = 'select[name^="actions["][name$="][name]"]';
+    var selectQuery = 'select[name^="actions["][name$="][type]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);
@@ -190,7 +190,7 @@ function onAddNewTrigger() {
     "use strict";
     console.log('Now in onAddNewTrigger()');
 
-    var selectQuery = 'select[name^="triggers["][name$="][name]"]';
+    var selectQuery = 'select[name^="triggers["][name$="][type]"]';
     var selectResult = $(selectQuery);
 
     console.log('Select query is "' + selectQuery + '" and the result length is ' + selectResult.length);

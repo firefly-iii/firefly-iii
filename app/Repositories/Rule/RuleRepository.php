@@ -424,7 +424,7 @@ class RuleRepository implements RuleRepositoryInterface
             $stopProcessing = $action['stop_processing'] ?? false;
 
             $actionValues = [
-                'action'          => $action['name'],
+                'action'          => $action['type'],
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
@@ -460,7 +460,7 @@ class RuleRepository implements RuleRepositoryInterface
             $stopProcessing = $trigger['stop_processing'] ?? false;
 
             $triggerValues = [
-                'action'          => $trigger['name'],
+                'action'          => $trigger['type'],
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,

@@ -66,6 +66,15 @@ class TransactionRequest extends Request
             'bill_id'            => $this->integer('bill_id'),
             'bill_name'          => $this->string('bill_name'),
             'tags'               => explode(',', $this->string('tags')),
+            'notes'              => $this->string('notes'),
+            'sepa-cc'            => $this->string('sepa_cc'),
+            'sepa-ct-op'         => $this->string('sepa_ct_op'),
+            'sepa-ct-id'         => $this->string('sepa_ct_id'),
+            'sepa-db'            => $this->string('sepa_db'),
+            'sepa-country'       => $this->string('sepa_country'),
+            'sepa-ep'            => $this->string('sepa_ep'),
+            'sepa-ci'            => $this->string('sepa_ci'),
+            'sepa-batch-id'      => $this->string('sepa_batch_id'),
             'interest_date'      => $this->date('interest_date'),
             'book_date'          => $this->date('book_date'),
             'process_date'       => $this->date('process_date'),
@@ -73,22 +82,10 @@ class TransactionRequest extends Request
             'payment_date'       => $this->date('payment_date'),
             'invoice_date'       => $this->date('invoice_date'),
             'internal_reference' => $this->string('internal_reference'),
-            'notes'              => $this->string('notes'),
-            'original-source'    => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
-            'transactions'       => $this->getTransactionData(),
-
-            // SEPA fields:
-            'sepa-cc'            => $this->string('sepa_cc'),
-            'sepa-ct-op'         => $this->string('sepa_ct_op'),
-            'sepa-db'            => $this->string('sepa_db'),
-            'sepa-country'       => $this->string('sepa_country'),
-            'sepa-ep'            => $this->string('sepa_ep'),
-            'sepa-ci'            => $this->string('sepa_ci'),
-            'sepa-batch-id'      => $this->string('sepa_batch_id'),
-
-            // others:
             'bunq_payment_id'    => $this->string('bunq_payment_id'),
             'external_id'        => $this->string('external_id'),
+            'original-source'    => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
+            'transactions'       => $this->getTransactionData(),
         ];
 
         return $data;
@@ -104,7 +101,7 @@ class TransactionRequest extends Request
     {
         $rules = [
             // basic fields for journal:
-            'type'                                 => 'required|in:withdrawal,deposit,transfer',
+            'type'                                 => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
             'description'                          => 'between:1,255',
             'date'                                 => 'required|date',
             'piggy_bank_id'                        => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
@@ -114,15 +111,6 @@ class TransactionRequest extends Request
             'tags'                                 => 'between:1,255',
 
             // then, custom fields for journal
-            'interest_date'                        => 'date|nullable',
-            'book_date'                            => 'date|nullable',
-            'process_date'                         => 'date|nullable',
-            'due_date'                             => 'date|nullable',
-            'payment_date'                         => 'date|nullable',
-            'invoice_date'                         => 'date|nullable',
-            'internal_reference'                   => 'min:1,max:255|nullable',
-            'bunq_payment_id'                      => 'min:1,max:255|nullable',
-            'external_id'                          => 'min:1,max:255|nullable',
             'notes'                                => 'min:1,max:50000|nullable',
 
             // SEPA fields:
@@ -134,6 +122,17 @@ class TransactionRequest extends Request
             'sepa_ep'                              => 'min:1,max:255|nullable',
             'sepa_ci'                              => 'min:1,max:255|nullable',
             'sepa_batch_id'                        => 'min:1,max:255|nullable',
+
+            // dates
+            'interest_date'                        => 'date|nullable',
+            'book_date'                            => 'date|nullable',
+            'process_date'                         => 'date|nullable',
+            'due_date'                             => 'date|nullable',
+            'payment_date'                         => 'date|nullable',
+            'invoice_date'                         => 'date|nullable',
+            'internal_reference'                   => 'min:1,max:255|nullable',
+            'bunq_payment_id'                      => 'min:1,max:255|nullable',
+            'external_id'                          => 'min:1,max:255|nullable',
 
             // transaction rules (in array for splits):
             'transactions.*.amount'                => 'required|numeric|more:0',

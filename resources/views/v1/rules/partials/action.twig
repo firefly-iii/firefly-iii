@@ -4,9 +4,9 @@
     </td>
     <td style="width:30%;">
         {# todo error when invalid name. #}
-        <select name="actions[{{ count }}][name]" class="form-control">
-            {% for key,name in allRuleActions() %}
-                <option value="{{ key }}" label="{{ name }}" {% if key == oldAction %} selected{% endif %}>{{ name }}</option>
+        <select name="actions[{{ count }}][type]" class="form-control">
+            {% for key,type in allRuleActions() %}
+                <option value="{{ key }}" label="{{ type }}" {% if key == oldAction %} selected{% endif %}>{{ type }}</option>
             {% endfor %}
         </select>
     </td>

@@ -54,13 +54,13 @@ trait RuleManagement
                 'active'          => true,
                 'triggers'        => [
                     [
-                        'name'            => 'description_is',
+                        'type'            => 'description_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_description'),
                         'stop_processing' => false,
 
                     ],
                     [
-                        'name'            => 'from_account_is',
+                        'type'            => 'from_account_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_from_account'),
                         'stop_processing' => false,
 
@@ -69,12 +69,12 @@ trait RuleManagement
                 ],
                 'actions'         => [
                     [
-                        'name'            => 'prepend_description',
+                        'type'            => 'prepend_description',
                         'value'           => (string)trans('firefly.default_rule_action_prepend'),
                         'stop_processing' => false,
                     ],
                     [
-                        'name'            => 'set_category',
+                        'type'            => 'set_category',
                         'value'           => (string)trans('firefly.default_rule_action_set_category'),
                         'stop_processing' => false,
                     ],
@@ -102,7 +102,7 @@ trait RuleManagement
                     $triggers[] = view(
                         'rules.partials.action',
                         [
-                            'oldAction'  => $oldAction['name'],
+                            'oldAction'  => $oldAction['type'],
                             'oldValue'   => $oldAction['value'],
                             'oldChecked' => 1 === (int)($oldAction['stop_processing'] ?? '0'),
                             'count'      => $index + 1,
@@ -135,7 +135,7 @@ trait RuleManagement
                     $triggers[] = view(
                         'rules.partials.trigger',
                         [
-                            'oldTrigger' => $oldTrigger['name'],
+                            'oldTrigger' => $oldTrigger['type'],
                             'oldValue'   => $oldTrigger['value'],
                             'oldChecked' => 1 === (int)($oldTrigger['stop_processing'] ?? '0'),
                             'count'      => $index + 1,

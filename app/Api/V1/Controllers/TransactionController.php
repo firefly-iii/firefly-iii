@@ -218,7 +218,7 @@ class TransactionController extends Controller
             $collector->addFilter(PositiveAmountFilter::class);
         }
         if (!($transactionType === TransactionType::WITHDRAWAL)) {
-            $collector->addFilter(NegativeAmountFilter::class);
+            $collector->addFilter(NegativeAmountFilter::class); // @codeCoverageIgnore
         }
 
         $transactions = $collector->getTransactions();

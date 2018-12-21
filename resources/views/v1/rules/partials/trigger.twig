@@ -3,13 +3,13 @@
         <a href="#" class="btn btn-danger btn-sm remove-trigger"><i class="fa fa-trash"></i></a>
     </td>
     <td style="width:30%;">
-        <select name="triggers[{{ count }}][name]" class="form-control">
-            {% for key,name in allRuleTriggers() %}
-                <option value="{{ key }}" label="{{ name }}"
+        <select name="triggers[{{ count }}][type]" class="form-control">
+            {% for key,type in allRuleTriggers() %}
+                <option value="{{ key }}" label="{{ type }}"
                         {% if key == oldTrigger %}
                             selected
                         {% endif %}
-                >{{ name }}</option>
+                >{{ type }}</option>
             {% endfor %}
         </select>
     </td>
