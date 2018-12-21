@@ -70,6 +70,13 @@ interface ImportJobRepositoryInterface
     public function create(string $importProvider): ImportJob;
 
     /**
+     * @param int $jobId
+     *
+     * @return ImportJob|null
+     */
+    public function find(int $jobId): ?ImportJob;
+
+    /**
      * @param string $key
      *
      * @return ImportJob|null

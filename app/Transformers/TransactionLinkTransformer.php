@@ -65,7 +65,7 @@ class TransactionLinkTransformer extends AbstractTransformer
             'updated_at' => $link->updated_at->toAtomString(),
             'inward_id'  => $link->source_id,
             'outward_id' => $link->destination_id,
-            'notes'      => $notes,
+            'notes'      => '' === $notes ? null : $notes,
             'links'      => [
                 [
                     'rel' => 'self',

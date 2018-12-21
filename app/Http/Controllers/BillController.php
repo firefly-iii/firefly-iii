@@ -252,8 +252,8 @@ class BillController extends Controller
                 // simply fire off all rules?
                 /** @var TransactionMatcher $matcher */
                 $matcher = app(TransactionMatcher::class);
-                $matcher->setLimit(100000); // large upper limit
-                $matcher->setRange(100000); // large upper limit
+                $matcher->setSearchLimit(100000); // large upper limit
+                $matcher->setTriggeredLimit(100000); // large upper limit
                 $matcher->setRule($rule);
                 $matchingTransactions = $matcher->findTransactionsByRule();
                 $total                += $matchingTransactions->count();

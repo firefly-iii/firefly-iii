@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Rules\IsValidAttachmentModel;
 
@@ -72,7 +73,7 @@ class AttachmentRequest extends Request
                    str_replace('FireflyIII\\Models\\', '', Bill::class),
                    str_replace('FireflyIII\\Models\\', '', ImportJob::class),
                    str_replace('FireflyIII\\Models\\', '', TransactionJournal::class),
-                   str_replace('FireflyIII\\Models\\', '', ImportJob::class),
+                   str_replace('FireflyIII\\Models\\', '', Transaction::class),
                ]
         );
         $model  = $this->string('model');

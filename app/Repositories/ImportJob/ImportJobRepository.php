@@ -155,6 +155,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param int $jobId
+     *
+     * @return ImportJob|null
+     */
+    public function find(int $jobId): ?ImportJob
+    {
+        return $this->user->importJobs()->find($jobId);
+    }
+
+    /**
      * @param string $key
      *
      * @return ImportJob|null
