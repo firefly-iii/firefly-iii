@@ -36,6 +36,8 @@ use Log;
  */
 class BillFactory
 {
+    use BillServiceTrait;
+
     /**
      * Constructor.
      */
@@ -46,7 +48,6 @@ class BillFactory
         }
     }
 
-    use BillServiceTrait;
     /** @var User */
     private $user;
 
@@ -61,6 +62,12 @@ class BillFactory
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
         $currency = $factory->find((int)$data['currency_id'], (string)$data['currency_code']);
+
+        if(null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
         /** @var Bill $bill */
         $bill = Bill::create(
             [

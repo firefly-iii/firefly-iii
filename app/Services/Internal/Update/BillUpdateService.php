@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use Log;
 /**
@@ -52,12 +54,27 @@ class BillUpdateService
      */
     public function update(Bill $bill, array $data): Bill
     {
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find((int)$data['currency_id'], (string)$data['currency_code']);
+
+        if(null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($bill->user);
+        }
+
+        // enable the currency if it isn't.
+        $currency->enabled = true;
+        $currency->save();
+
+
         $oldName                       = $bill->name;
         $bill->name                    = $data['name'];
         $bill->amount_min              = $data['amount_min'];
         $bill->amount_max              = $data['amount_max'];
         $bill->date                    = $data['date'];
-        $bill->transaction_currency_id = $data['currency_id'];
+        $bill->transaction_currency_id = $currency->id;
         $bill->repeat_freq             = $data['repeat_freq'];
         $bill->skip                    = $data['skip'];
         $bill->automatch               = true;

@@ -213,8 +213,8 @@ class BillControllerTest extends TestCase
         //calls for transaction matcher:
         // todo bad to do this:
         $matcher = $this->mock(TransactionMatcher::class);
-        $matcher->shouldReceive('setLimit')->once()->withArgs([100000]);
-        $matcher->shouldReceive('setRange')->once()->withArgs([100000]);
+        $matcher->shouldReceive('setSearchLimit')->once()->withArgs([100000]);
+        $matcher->shouldReceive('setTriggeredLimit')->once()->withArgs([100000]);
         $matcher->shouldReceive('setRule')->once()->withArgs([Mockery::any()]);
         $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn(new Collection);
 
