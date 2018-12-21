@@ -141,12 +141,11 @@ class StageImportDataHandler
      * @return array
      * @throws FireflyException
      */
-    private function convertPayment(BunqPayment $payment, int $bunqAccountId, LocalAccount $source): array
+    private function convertPayment(BunqPayment $payment, LocalAccount $source): array
     {
         Log::debug(sprintf('Now at payment with ID #%d', $payment->getId()));
 
         return $this->converter->convert($payment, $source);
-        exit;
     }
 
     /**
@@ -308,7 +307,7 @@ class StageImportDataHandler
             Log::debug('Now looping results from bunq...');
             /** @var BunqPayment $payment */
             foreach ($response->getValue() as $index => $payment) {
-                $return[]  = $this->convertPayment($payment, $bunqAccountId, $localAccount);
+                $return[]  = $this->convertPayment($payment, $localAccount);
                 $paymentId = $payment->getId();
                 /*
                  * If oldest and newest transaction are null, they have to be set:
@@ -412,7 +411,7 @@ class StageImportDataHandler
              */
             /** @var BunqPayment $payment */
             foreach ($response->getValue() as $payment) {
-                $return[]  = $this->convertPayment($payment, $bunqAccountId, $localAccount);
+                $return[]  = $this->convertPayment($payment, $localAccount);
                 $paymentId = $payment->getId();
 
                 /*
