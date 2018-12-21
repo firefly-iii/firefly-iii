@@ -172,7 +172,7 @@
 
 {% block scripts %}
     <script type="text/javascript">
-        var minDate = "{{ start.format('m/d/Y') }}";
+        var minDate = "{{ start.format('Y-m-d') }}";
         var picker;
         var selectAllText = "{{ trans('firefly.multi_select_select_all')|escape('js') }}";
         var nonSelectedText = "{{ trans('firefly.multi_select_no_selection')|escape('js') }}";

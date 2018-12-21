@@ -43,11 +43,11 @@ $(function () {
                     format: 'YYYY-MM-DD',
                     firstDay: 1
                 },
+                format: 'YYYY-MM-DD',
                 minDate: minDate,
                 drops: 'up'
             }
         );
-
 
         // set report type from cookie, if any:
         if (!(readCookie('report-type') === null)) {
@@ -173,8 +173,11 @@ function preSelectDate(e) {
     "use strict";
     var link = $(e.target);
     var picker = $('#inputDateRange').data('daterangepicker');
-    picker.setStartDate(moment(link.data('start'), "YYYY-MM-DD"));
-    picker.setEndDate(moment(link.data('end'), "YYYY-MM-DD"));
+    var startMoment= moment(link.data('start'), "Y-MM-DD");
+    var endMoment= moment(link.data('end'), "Y-MM-DD");
+
+    picker.setStartDate(startMoment);
+    picker.setEndDate(endMoment);
     return false;
 
 }
