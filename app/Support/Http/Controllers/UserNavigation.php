@@ -30,7 +30,6 @@ use FireflyIII\Models\TransactionJournal;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\ViewErrorBag;
 use Log;
-use URL;
 
 /**
  * Trait UserNavigation
@@ -144,8 +143,10 @@ trait UserNavigation
     {
         /** @var ViewErrorBag $errors */
         $errors = session()->get('errors');
-        if(null === $errors || (null !== $errors && 0=== $errors->count())) {
-            session()->put($identifier, URL::previous());
+        if (null === $errors || (null !== $errors && 0 === $errors->count())) {
+            $url = app('url')->previous();
+            session()->put($identifier, $url);
+            Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
         }
     }
 }

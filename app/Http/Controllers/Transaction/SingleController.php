@@ -105,6 +105,10 @@ class SingleController extends Controller
         $amount        = app('steam')->positive($transaction->amount);
         $foreignAmount = null === $transaction->foreign_amount ? null : app('steam')->positive($transaction->foreign_amount);
 
+        // make sure previous URI is correct:
+        session()->put('transactions.create.fromStore', true);
+        session()->put('transactions.create.uri', app('url')->previous());
+
         $preFilled = [
             'description'               => $journal->description,
             'source_id'                 => $source->id,
