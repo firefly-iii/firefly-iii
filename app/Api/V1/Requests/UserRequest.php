@@ -65,9 +65,13 @@ class UserRequest extends Request
      */
     public function getAll(): array
     {
+        $blocked = false;
+        if (null === $this->get('blocked')) {
+            $blocked = $this->boolean('blocked');
+        }
         $data = [
             'email'        => $this->string('email'),
-            'blocked'      => $this->boolean('blocked'),
+            'blocked'      => $blocked,
             'blocked_code' => $this->string('blocked_code'),
             'role'         => $this->string('role'),
         ];

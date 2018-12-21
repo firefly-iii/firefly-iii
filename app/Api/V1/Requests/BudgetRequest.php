@@ -49,9 +49,14 @@ class BudgetRequest extends Request
      */
     public function getAll(): array
     {
+        $active = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         return [
             'name'   => $this->string('name'),
-            'active' => $this->boolean('active'),
+            'active' => $active,
             'order'  => 0,
         ];
     }

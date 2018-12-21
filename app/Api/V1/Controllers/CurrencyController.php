@@ -276,6 +276,7 @@ class CurrencyController extends Controller
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $unfiltered = $repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
 
+        // TODO replace this
         // filter budget limits on currency ID
         $collection = $unfiltered->filter(
             function (BudgetLimit $budgetLimit) use ($currency) {

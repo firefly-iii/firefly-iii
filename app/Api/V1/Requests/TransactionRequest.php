@@ -211,7 +211,7 @@ class TransactionRequest extends Request
                 'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
                 'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
                 'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
-                'reconciled'            => $transaction['reconciled'] ?? false,
+                'reconciled'            => $this->convertBoolean((string)($transaction['reconciled'] ?? 'false')),
                 'identifier'            => $index,
             ];
         }

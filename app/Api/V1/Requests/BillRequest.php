@@ -51,6 +51,11 @@ class BillRequest extends Request
      */
     public function getAll(): array
     {
+        $active = true;
+        if(null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         $data = [
             'name'          => $this->string('name'),
             'amount_min'    => $this->string('amount_min'),
@@ -60,8 +65,7 @@ class BillRequest extends Request
             'date'          => $this->date('date'),
             'repeat_freq'   => $this->string('repeat_freq'),
             'skip'          => $this->integer('skip'),
-            'automatch'     => $this->boolean('automatch'),
-            'active'        => $this->boolean('active'),
+            'active'        => $active,
             'notes'         => $this->string('notes'),
         ];
 
