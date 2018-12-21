@@ -29,7 +29,6 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
@@ -54,8 +53,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
 class AccountController extends Controller
 {
     use AccountFilter, TransactionFilter;
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepository;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
@@ -72,9 +69,6 @@ class AccountController extends Controller
                 // @var AccountRepositoryInterface repository
                 $this->repository = app(AccountRepositoryInterface::class);
                 $this->repository->setUser($user);
-
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
-                $this->currencyRepository->setUser($user);
 
                 return $next($request);
             }
@@ -210,12 +204,7 @@ class AccountController extends Controller
      */
     public function store(AccountRequest $request): JsonResponse
     {
-        $data = $request->getAll();
-        // if currency ID is 0, find the currency by the code:
-        if (0 === $data['currency_id']) {
-            $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
-            $data['currency_id'] = null === $currency ? 0 : $currency->id;
-        }
+        $data    = $request->getAll();
         $account = $this->repository->store($data);
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
@@ -244,10 +233,9 @@ class AccountController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types    = $this->mapTransactionTypes($this->parameters->get('type'));
-        $manager  = new Manager();
-        $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
-
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -282,7 +270,7 @@ class AccountController extends Controller
         $transformer = app(TransactionTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -298,13 +286,7 @@ class AccountController extends Controller
      */
     public function update(AccountRequest $request, Account $account): JsonResponse
     {
-        $data = $request->getAll();
-        // if currency ID is 0, find the currency by the code:
-        if (0 === $data['currency_id']) {
-            $currency            = $this->currencyRepository->findByCodeNull($data['currency_code']);
-            $data['currency_id'] = null === $currency ? 0 : $currency->id;
-        }
-        // set correct type:
+        $data         = $request->getAll();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $this->repository->update($account, $data);
         $manager = new Manager;

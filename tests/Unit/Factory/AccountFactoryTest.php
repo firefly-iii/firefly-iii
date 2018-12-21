@@ -30,6 +30,7 @@ use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use Log;
 use Tests\TestCase;
 
@@ -67,6 +68,7 @@ class AccountFactoryTest extends TestCase
             'accountRole'     => 'defaultAsset',
         ];
 
+
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($this->user());
@@ -84,6 +86,12 @@ class AccountFactoryTest extends TestCase
         $meta = $account->accountMeta()->where('name', 'accountRole')->first();
         $this->assertNotNull($meta);
         $this->assertEquals('defaultAsset', $meta->data);
+
+        // get the currency ID:
+        /** @var AccountMeta $meta */
+        $currencyId = $account->accountMeta()->where('name', 'currency_id')->first();
+        $this->assertNotNull($currencyId);
+        $this->assertEquals('1', $currencyId->data);
     }
 
     /**
@@ -505,6 +513,100 @@ class AccountFactoryTest extends TestCase
 
         $note = $account->notes()->first();
         $this->assertEquals('Hello!', $note->text);
+    }
+
+    /**
+     * Test minimal set of data to make factory work (asset account).
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateCurrencyCode(): void
+    {
+        $currency = TransactionCurrency::where('code', 'CAD')->first();
+        $data     = [
+            'account_type_id' => null,
+            'accountType'     => 'asset',
+            'iban'            => null,
+            'currency_code'   => $currency->code,
+            'name'            => 'Basic asset account #' . random_int(1, 10000),
+            'virtualBalance'  => null,
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        $account = $factory->create($data);
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals('0', $account->virtual_balance);
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
+
+        // get the currency ID:
+        /** @var AccountMeta $meta */
+        $currencyId = $account->accountMeta()->where('name', 'currency_id')->first();
+        $this->assertNotNull($currencyId);
+        $this->assertEquals($currency->id, $currencyId->data);
+    }
+
+    /**
+     * Test minimal set of data to make factory work (asset account).
+     *
+     * @covers \FireflyIII\Factory\AccountFactory
+     * @covers \FireflyIII\Factory\AccountMetaFactory
+     * @covers \FireflyIII\Services\Internal\Support\AccountServiceTrait
+     */
+    public function testCreateCurrencyId(): void
+    {
+        $currency = TransactionCurrency::where('code', 'USD')->first();
+        $data     = [
+            'account_type_id' => null,
+            'accountType'     => 'asset',
+            'iban'            => null,
+            'currency_id'     => $currency->id,
+            'name'            => 'Basic asset account #' . random_int(1, 10000),
+            'virtualBalance'  => null,
+            'active'          => true,
+            'accountRole'     => 'defaultAsset',
+        ];
+
+
+        /** @var AccountFactory $factory */
+        $factory = app(AccountFactory::class);
+        $factory->setUser($this->user());
+        $account = $factory->create($data);
+
+        // assert stuff about account:
+        $this->assertEquals($account->name, $data['name']);
+        $this->assertEquals(AccountType::ASSET, $account->accountType->type);
+        $this->assertEquals('', $account->iban);
+        $this->assertTrue($account->active);
+        $this->assertEquals('0', $account->virtual_balance);
+
+        // get the role:
+        /** @var AccountMeta $meta */
+        $meta = $account->accountMeta()->where('name', 'accountRole')->first();
+        $this->assertNotNull($meta);
+        $this->assertEquals('defaultAsset', $meta->data);
+
+        // get the currency ID:
+        /** @var AccountMeta $meta */
+        $currencyId = $account->accountMeta()->where('name', 'currency_id')->first();
+        $this->assertNotNull($currencyId);
+        $this->assertEquals($currency->id, $currencyId->data);
     }
 
     /**

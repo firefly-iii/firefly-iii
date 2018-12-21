@@ -219,7 +219,7 @@ class BudgetLimitController extends Controller
         $transformer = app(TransactionTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource     = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');

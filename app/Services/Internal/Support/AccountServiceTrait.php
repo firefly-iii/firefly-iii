@@ -332,14 +332,17 @@ trait AccountServiceTrait
      * @param string  $note
      *
      * @return bool
-     * @throws \Exception
      */
     public function updateNote(Account $account, string $note): bool
     {
         if ('' === $note) {
             $dbNote = $account->notes()->first();
             if (null !== $dbNote) {
-                $dbNote->delete();
+                try {
+                    $dbNote->delete();
+                } catch (\Exception $e) {
+                    Log::debug($e->getMessage());
+                }
             }
 
             return true;
@@ -365,7 +368,7 @@ trait AccountServiceTrait
     public function validIBData(array $data): bool
     {
         $data['openingBalance'] = (string)($data['openingBalance'] ?? '');
-        if (isset($data['openingBalance'], $data['openingBalanceDate']) && \strlen($data['openingBalance']) > 0) {
+        if ('' !== $data['openingBalance'] && isset($data['openingBalance'], $data['openingBalanceDate'])) {
             Log::debug('Array has valid opening balance data.');
 
             return true;

@@ -894,7 +894,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null !== $existing) {
             throw new FireflyException(sprintf('An entry already exists for these parameters: available budget object with ID #%d', $existing->id));
         }
-        $availableBudget->transaction_currency_id = $data['transaction_currency_id'];
+        $availableBudget->transaction_currency_id = $data['currency_id'];
         $availableBudget->start_date              = $data['start_date'];
         $availableBudget->end_date                = $data['end_date'];
         $availableBudget->amount                  = $data['amount'];
@@ -931,6 +931,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
+        $currency->enabled = true;
+        $currency->save();
         $budgetLimit->transaction_currency_id = $currency->id;
 
         $budgetLimit->save();

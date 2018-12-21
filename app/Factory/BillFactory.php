@@ -61,7 +61,7 @@ class BillFactory
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
-        $currency = $factory->find((int)$data['currency_id'], (string)$data['currency_code']);
+        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
 
         if(null === $currency) {
             // use default currency:

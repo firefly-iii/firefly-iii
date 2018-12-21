@@ -24,6 +24,8 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
+use Amount;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -60,6 +62,7 @@ class AvailableBudgetControllerTest extends TestCase
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $transformer   = $this->mock(AvailableBudgetTransformer::class);
+        $factory       = $this->mock(TransactionCurrencyFactory::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -85,6 +88,7 @@ class AvailableBudgetControllerTest extends TestCase
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $transformer   = $this->mock(AvailableBudgetTransformer::class);
+        $factory       = $this->mock(TransactionCurrencyFactory::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -115,6 +119,7 @@ class AvailableBudgetControllerTest extends TestCase
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $transformer   = $this->mock(AvailableBudgetTransformer::class);
+        $factory       = $this->mock(TransactionCurrencyFactory::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -143,6 +148,7 @@ class AvailableBudgetControllerTest extends TestCase
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $factory            = $this->mock(TransactionCurrencyFactory::class);
         $availableBudget    = new AvailableBudget;
 
         // mock transformer
@@ -151,15 +157,15 @@ class AvailableBudgetControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        $factory->shouldReceive('find')->withArgs([2, ''])->once()->andReturn(TransactionCurrency::find(2));
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
-        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
 
         // data to submit
         $data = [
-            'currency_id' => '1',
+            'currency_id' => '2',
             'amount'      => '100',
             'start'       => '2018-01-01',
             'end'         => '2018-01-31',
@@ -183,8 +189,9 @@ class AvailableBudgetControllerTest extends TestCase
     {
         // mock stuff:
         $repository         = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $factory            = $this->mock(TransactionCurrencyFactory::class);
         $availableBudget    = new AvailableBudget;
 
         // mock transformer
@@ -193,20 +200,19 @@ class AvailableBudgetControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        $factory->shouldReceive('find')->withArgs([0, ''])->once()->andReturnNull();
+
+        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn(TransactionCurrency::find(5));
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(null)->once();
-        $currencyRepository->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(null)->once();
         $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
 
         // data to submit
         $data = [
-            'currency_id'   => '1',
-            'currency_code' => 'EUR',
-            'amount'        => '100',
-            'start'         => '2018-01-01',
-            'end'           => '2018-01-31',
+            'amount' => '100',
+            'start'  => '2018-01-01',
+            'end'    => '2018-01-31',
         ];
 
 
@@ -228,9 +234,10 @@ class AvailableBudgetControllerTest extends TestCase
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // mock stuff:
-        $repository         = $this->mock(BudgetRepositoryInterface::class);
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(AvailableBudgetTransformer::class);
+        $factory     = $this->mock(TransactionCurrencyFactory::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer        = $this->mock(AvailableBudgetTransformer::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -239,15 +246,15 @@ class AvailableBudgetControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
+        $factory->shouldReceive('find')->withArgs([0, 'EUR'])->once()->andReturnNull();
+        Amount::shouldReceive('getDefaultCurrency')->once()->andReturn(TransactionCurrency::find(5));
+
         // mock calls:
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setAvailableBudget')->once()->andReturn($availableBudget);
-        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(null)->once();
-        $currencyRepository->shouldReceive('findByCodeNull')->withArgs(['EUR'])->andReturn(TransactionCurrency::find(1))->once();
 
         // data to submit
         $data = [
-            'currency_id'   => '1',
             'currency_code' => 'EUR',
             'amount'        => '100',
             'start'         => '2018-01-01',
@@ -275,6 +282,7 @@ class AvailableBudgetControllerTest extends TestCase
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $factory            = $this->mock(TransactionCurrencyFactory::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -282,6 +290,8 @@ class AvailableBudgetControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        $factory->shouldReceive('find')->withArgs([1, ''])->once()->andReturnNull();
 
         /** @var AvailableBudget $availableBudget */
         $availableBudget = $this->user()->availableBudgets()->first();
@@ -295,8 +305,8 @@ class AvailableBudgetControllerTest extends TestCase
         $data = [
             'currency_id' => '1',
             'amount'      => '100',
-            'start'  => '2018-01-01',
-            'end'    => '2018-01-31',
+            'start'       => '2018-01-01',
+            'end'         => '2018-01-31',
         ];
 
         // test API

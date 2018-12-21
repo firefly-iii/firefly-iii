@@ -96,8 +96,8 @@ trait RecurringTransactionTrait
 
             /** @var TransactionCurrencyFactory $factory */
             $factory         = app(TransactionCurrencyFactory::class);
-            $currency        = $factory->find($array['currency_id'], $array['currency_code']);
-            $foreignCurrency = $factory->find($array['foreign_currency_id'], $array['foreign_currency_code']);
+            $currency        = $factory->find($array['currency_id'] ?? null, $array['currency_code'] ?? null);
+            $foreignCurrency = $factory->find($array['foreign_currency_id'] ?? null, $array['foreign_currency_code'] ?? null);
             if (null === $currency) {
                 $currency = app('amount')->getDefaultCurrencyByUser($recurrence->user);
             }

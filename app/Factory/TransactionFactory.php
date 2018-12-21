@@ -72,7 +72,8 @@ class TransactionFactory
             throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
         }
         if (null === $currencyId) {
-            throw new FireflyException('Cannot store transaction without currency information.'); // @codeCoverageIgnore
+            $currency   = app('amount')->getDefaultCurrencyByUser($data['account']->user);
+            $currencyId = $currency->id;
         }
         $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
         Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));

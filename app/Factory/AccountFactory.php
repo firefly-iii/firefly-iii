@@ -30,6 +30,7 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
 use Log;
@@ -47,7 +48,8 @@ class AccountFactory
     use AccountServiceTrait;
 
     /**
-     * Constructor.
+     * AccountFactory constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -79,7 +81,6 @@ class AccountFactory
         // account may exist already:
         $return = $this->find($data['name'], $type->type);
 
-
         if (null === $return) {
             // create it:
             $databaseData
@@ -92,6 +93,21 @@ class AccountFactory
                 'iban'            => $data['iban'],
             ];
 
+            // find currency, or use default currency instead.
+            /** @var TransactionCurrencyFactory $factory */
+            $factory = app(TransactionCurrencyFactory::class);
+            /** @var TransactionCurrency $currency */
+            $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+
+            if (null === $currency) {
+                // use default currency:
+                $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+            }
+            $currency->enabled =true;
+            $currency->save();
+
+            unset($data['currency_code']);
+            $data['currency_id'] = $currency->id;
             // remove virtual balance when not an asset account or a liability
             $canHaveVirtual = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
             if (!\in_array($type->type, $canHaveVirtual, true)) {

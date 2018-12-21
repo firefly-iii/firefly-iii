@@ -33,6 +33,7 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Contracts\Validation\Rule;
+use Log;
 
 /**
  * Class IsValidAttachmentModel
@@ -112,7 +113,7 @@ class IsValidAttachmentModel implements Rule
             return null !== $transaction;
         }
 
-        if (TransactionJournal::class === $this->model) {
+        if (TransactionJournal::class === $model) {
             $repository = app(JournalRepositoryInterface::class);
             $user       = auth()->user();
             $repository->setUser($user);
@@ -120,6 +121,7 @@ class IsValidAttachmentModel implements Rule
 
             return null !== $result;
         }
+        Log::error(sprintf('No model was recognized from string "%s"', $model));
 
         return false;
     }

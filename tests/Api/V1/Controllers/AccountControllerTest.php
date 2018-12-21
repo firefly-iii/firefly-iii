@@ -63,12 +63,10 @@ class AccountControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('destroy')->atLeast()->once()->andReturn(true);
-        $currencyRepos->shouldReceive('setUser')->once();
 
         // get account:
         $account = $this->getRandomAsset();
@@ -90,9 +88,8 @@ class AccountControllerTest extends TestCase
         $accounts = factory(Account::class, 10)->create();
 
         // mock stuff:
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -103,7 +100,6 @@ class AccountControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getAccountsByType')->withAnyArgs()->andReturn($accounts)->once();
 
         // test API
@@ -126,10 +122,9 @@ class AccountControllerTest extends TestCase
     public function testPiggyBanks(): void
     {
         // mock stuff:
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer   = $this->mock(PiggyBankTransformer::class);
+        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer = $this->mock(PiggyBankTransformer::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -144,7 +139,7 @@ class AccountControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
         $repository->shouldReceive('getPiggyBanks')->andReturn($piggies)->atLeast()->once();
 
         // test API
@@ -169,10 +164,10 @@ class AccountControllerTest extends TestCase
     public function testShow(): void
     {
         // mock stuff:
-        $account       = $this->getRandomAsset();
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $account    = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -183,7 +178,7 @@ class AccountControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
 
         // test API
         $response = $this->get(route('api.v1.accounts.show', [$account->id]));
@@ -201,12 +196,12 @@ class AccountControllerTest extends TestCase
     public function testStoreInvalidBalance(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
 
         // data to submit
         $data = [
@@ -239,16 +234,14 @@ class AccountControllerTest extends TestCase
     public function testStoreLiability(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
-        $account       = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+        $account     = $this->getRandomAsset();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->atLeast()->once()->andReturn($account);
-        $currencyRepos->shouldReceive('findByCodeNull')->andReturn(null);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -287,13 +280,13 @@ class AccountControllerTest extends TestCase
     public function testStoreNoCreditCardData(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
 
         // data to submit
         $data = [
@@ -327,9 +320,9 @@ class AccountControllerTest extends TestCase
     public function testStoreNoCurrencyInfo(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -340,8 +333,6 @@ class AccountControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('findByCodeNull')->atLeast()->once()->andReturnNull();
         $repository->shouldReceive('store')->once()->andReturn(new Account);
 
         // data to submit
@@ -367,13 +358,13 @@ class AccountControllerTest extends TestCase
     public function testStoreNotUnique(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
 
         $account = $this->getRandomAsset();
         // data to submit
@@ -409,15 +400,13 @@ class AccountControllerTest extends TestCase
     public function testStoreValid(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
-        $account       = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+        $account     = $this->getRandomAsset();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('findByCodeNull')->atLeast()->once()->andReturnNull();
         $repository->shouldReceive('store')->atLeast()->once()->andReturn($account);
 
         // mock calls to transformer:
@@ -450,16 +439,15 @@ class AccountControllerTest extends TestCase
     public function testStoreWithCurrencyCode(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
-        $account       = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+        $account     = $this->getRandomAsset();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
         $repository->shouldReceive('store')->atLeast()->once()->andReturn($account);
-        $currencyRepos->shouldReceive('findByCodeNull')->atLeast()->once()->andReturn(new TransactionCurrency());
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -493,12 +481,10 @@ class AccountControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(TransactionTransformer::class);
 
         // default mocks
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepository->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
 
         // mock collector:
@@ -537,12 +523,10 @@ class AccountControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(TransactionTransformer::class);
 
         // default mocks
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepository->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnFalse();
 
         // mock collector:
@@ -583,12 +567,10 @@ class AccountControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(TransactionTransformer::class);
 
         // default mocks
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepository->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
 
         // mock collector:
@@ -627,15 +609,14 @@ class AccountControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
         $repository->shouldReceive('update')->atLeast()->once();
-        $currencyRepos->shouldReceive('findByCodeNull')->andReturn(null);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -669,15 +650,14 @@ class AccountControllerTest extends TestCase
     public function testUpdateCurrencyCode(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AccountTransformer::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
+
         $repository->shouldReceive('update')->atLeast()->once();
-        $currencyRepos->shouldReceive('findByCodeNull')->andReturn(TransactionCurrency::find(1));
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();

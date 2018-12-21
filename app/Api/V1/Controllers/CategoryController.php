@@ -30,7 +30,6 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\CategoryTransformer;
 use FireflyIII\Transformers\TransactionTransformer;

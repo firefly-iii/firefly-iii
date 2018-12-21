@@ -37,7 +37,8 @@ use Log;
 class TransactionCurrencyFactory
 {
     /**
-     * Constructor.
+     * TransactionCurrencyFactory constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

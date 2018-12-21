@@ -260,26 +260,29 @@ class AttachmentControllerTest extends TestCase
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
+        $journal  = $this->getRandomWithdrawal();
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($attachment);
         $repository->shouldReceive('getNoteText')->andReturn('Hi There');
         $journalRepos->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('findNull')->once()->andReturn($this->user()->transactionJournals()->find(1));
+
+        $journalRepos->shouldReceive('findNull')->once()->andReturn($journal  );
 
         // data to submit
         $data = [
             'filename'    => 'Some new att',
             'description' => sprintf('Attempt #%d', random_int(1, 10000)),
-            'model'       => TransactionJournal::class,
-            'model_id'    => 1,
+            'model'       => 'TransactionJournal',
+            'model_id'    => $journal->id,
         ];
 
 
         // test API
-        $response = $this->post(route('api.v1.attachments.store'), $data);
+        $response = $this->post(route('api.v1.attachments.store'), $data, ['accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'attachments', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+
     }
 
     /**
@@ -314,7 +317,7 @@ class AttachmentControllerTest extends TestCase
         $data = [
             'filename'    => $attachment->filename,
             'description' => sprintf('Attempt #%d', random_int(1, 10000)),
-            'model'       => TransactionJournal::class,
+            'model'       => 'TransactionJournal',
             'model_id'    => 1,
         ];
 

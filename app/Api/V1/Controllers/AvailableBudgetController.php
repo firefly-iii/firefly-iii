@@ -25,7 +25,9 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\AvailableBudgetRequest;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
@@ -155,11 +157,11 @@ class AvailableBudgetController extends Controller
      */
     public function store(AvailableBudgetRequest $request): JsonResponse
     {
-        $data     = $request->getAll();
-        $currency = $this->currencyRepository->findNull($data['currency_id']);
-        if (null === $currency) {
-            $currency = $this->currencyRepository->findByCodeNull($data['currency_code']);
-        }
+        $data = $request->getAll();
+        /** @var TransactionCurrencyFactory $factory */
+        $factory  = app(TransactionCurrencyFactory::class);
+        $currency = $factory->find($data['currency_id'], $data['currency_code']);
+
         if (null === $currency) {
             $currency = app('amount')->getDefaultCurrency();
         }
@@ -178,7 +180,6 @@ class AvailableBudgetController extends Controller
     }
 
 
-
     /**
      * Update the specified resource in storage.
      *
@@ -190,6 +191,22 @@ class AvailableBudgetController extends Controller
     public function update(AvailableBudgetRequest $request, AvailableBudget $availableBudget): JsonResponse
     {
         $data = $request->getAll();
+
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+
+        if (null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrency();
+        }
+        $currency->enabled = true;
+        $currency->save();
+        unset($data['currency_code']);
+        $data['currency_id'] = $currency->id;
+
+
         $this->repository->updateAvailableBudget($availableBudget, $data);
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
