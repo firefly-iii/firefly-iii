@@ -22,7 +22,7 @@
 
 $(function () {
     "use strict";
-
+    $(".content-wrapper form input:enabled:visible:first").first().focus().select();
     if (triggerCount > 0) {
         console.log('trigger count is larger than zero, call onAddNewTrigger.');
         onAddNewTrigger();

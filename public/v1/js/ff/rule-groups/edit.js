@@ -1,6 +1,6 @@
 /*
- * create.js
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * edit.js
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,16 +18,8 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** global: Modernizr, currencies */
 
 $(document).ready(function () {
     "use strict";
-    $(".content-wrapper form input:enabled:visible:first").first().focus().select();
-    if (!Modernizr.inputtypes.date) {
-        $('input[type="date"]').datepicker(
-            {
-                dateFormat: 'yy-mm-dd'
-            }
-        );
-    }
+    $(".content-wrapper form input[type='text']:enabled:visible:first").first().focus();
 });

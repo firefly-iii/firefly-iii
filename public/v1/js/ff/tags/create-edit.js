@@ -21,6 +21,7 @@
 
 $(function () {
     "use strict";
+    $(".content-wrapper form input:enabled:visible:first").first().focus().select();
     if (!Modernizr.inputtypes.date) {
         $('input[type="date"]').datepicker(
             {
