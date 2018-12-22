@@ -794,6 +794,54 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (0 === $accounts->count()) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set = $collector->getTransactions();
+        $return     = [];
+        $total      = [];
+        $currencies = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $code = $transaction->transaction_currency_code;
+            if (!isset($currencies[$code])) {
+                $currencies[$code] = $transaction->transactionCurrency;
+            }
+            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
+        }
+        foreach ($total as $code => $spent) {
+            /** @var TransactionCurrency $currency */
+            $currency = $currencies[$code];
+            $return[] = [
+                'currency_id'             => $currency->id,
+                'currency_code'           => $code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'amount'                  => round($spent, $currency->decimal_places),
+            ];
+        }
+
+        return $return;
+    }
+
+    /**
      * @param array $data
      *
      * @return Budget

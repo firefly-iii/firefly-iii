@@ -252,6 +252,16 @@ interface BudgetRepositoryInterface
     public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string;
 
     /**
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array;
+
+
+    /**
      * @param array $data
      *
      * @return Budget

@@ -25,6 +25,8 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\AvailableBudget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -32,6 +34,9 @@ use Log;
  */
 class AvailableBudgetTransformer extends AbstractTransformer
 {
+    /** @var BudgetRepositoryInterface */
+    private $repository;
+
     /**
      * CurrencyTransformer constructor.
      *
@@ -39,6 +44,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     public function __construct()
     {
+        $this->repository = app(BudgetRepositoryInterface::class);
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
@@ -53,6 +59,8 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     public function transform(AvailableBudget $availableBudget): array
     {
+        $this->repository->setUser($availableBudget->user);
+
         $currency = $availableBudget->transactionCurrency;
         $data     = [
             'id'                      => (int)$availableBudget->id,
@@ -65,16 +73,43 @@ class AvailableBudgetTransformer extends AbstractTransformer
             'amount'                  => round($availableBudget->amount, $currency->decimal_places),
             'start'                   => $availableBudget->start_date->format('Y-m-d'),
             'end'                     => $availableBudget->end_date->format('Y-m-d'),
-
-            'links' => [
+            'spent_in_budgets'        => [],
+            'spent_no_budget'         => [],
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/available_budgets/' . $availableBudget->id,
                 ],
             ],
         ];
+        $start    = $this->parameters->get('start');
+        $end      = $this->parameters->get('end');
+        if (null !== $start && null !== $end) {
+            $data['spent_in_budgets'] = $this->getSpentInBudgets();
+            $data['spent_no_budget'] = $this->spentOutsideBudgets();
+        }
 
         return $data;
+    }
+
+    /**
+     * @return array
+     */
+    private function getSpentInBudgets(): array
+    {
+        $allActive = $this->repository->getActiveBudgets();
+        return $this->repository->spentInPeriodMc(
+            $allActive, new Collection, $this->parameters->get('start'), $this->parameters->get('end')
+        );
+
+    }
+
+    /**
+     * @return array
+     */
+    private function spentOutsideBudgets(): array
+    {
+        return $this->repository->spentInPeriodWoBudgetMc(new Collection,$this->parameters->get('start'), $this->parameters->get('end'));
     }
 
 }
