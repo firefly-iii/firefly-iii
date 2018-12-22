@@ -20,18 +20,6 @@ mkdir -p $FIREFLY_PATH/storage/upload
 chown -R www-data:www-data -R $FIREFLY_PATH/storage
 chmod -R 775 $FIREFLY_PATH/storage
 
-chown -R www-data:www-data -R $FIREFLY_PATH/app
-chmod -R 775 $FIREFLY_PATH/app
-
-chown -R www-data:www-data -R $FIREFLY_PATH/framework
-chmod -R 775 $FIREFLY_PATH/framework
-
-chown -R www-data:www-data -R $FIREFLY_PATH/logs
-chmod -R 775 $FIREFLY_PATH/logs
-
-chown -R www-data:www-data -R $FIREFLY_PATH/upload
-chmod -R 775 $FIREFLY_PATH/upload
-
 # remove any lingering files that may break upgrades:
 rm -f $FIREFLY_PATH/storage/logs/laravel.log
 

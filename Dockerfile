@@ -5,12 +5,8 @@ FROM php:7.2-apache
 ARG CORES
 ENV CORES ${CORES:-1}
 
-ENV FIREFLY_PATH /var/www/firefly-iii/
-ENV CURL_VERSION 7.60.0
-ENV OPENSSL_VERSION 1.1.1-pre6
-ENV COMPOSER_ALLOW_SUPERUSER 1
-
-LABEL version="1.1" maintainer="thegrumpydictator@gmail.com"
+ENV FIREFLY_PATH=/var/www/firefly-iii/ CURL_VERSION=7.60.0 OPENSSL_VERSION=1.1.1-pre6 COMPOSER_ALLOW_SUPERUSER=1
+LABEL version="1.2" maintainer="thegrumpydictator@gmail.com"
 
 # install packages
 RUN apt-get update -y && \
@@ -35,10 +31,9 @@ RUN apt-get update -y && \
                                                supervisor \
                                                locales && \
                                                apt-get clean && \
-                                               rm -rf /var/lib/apt/lists/*
-# LDAP install
-RUN docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && docker-php-ext-install ldap
-
+                                               rm -rf /var/lib/apt/lists/* && \
+                                               docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+                                               docker-php-ext-install ldap
 # Install latest curl
 RUN cd /tmp && \
     wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && \
@@ -75,14 +70,11 @@ COPY ./.deploy/docker/cacert.pem /usr/local/ssl/cert.pem
 # test crons added via crontab
 RUN echo "0 3 * * * /usr/local/bin/php /var/www/firefly-iii/artisan firefly:cron" | crontab -
 #RUN (crontab -l ; echo "*/1 * * * * free >> /var/www/firefly-iii/public/cron.html") 2>&1 | crontab -
-# Install PHP exentions.
-RUN docker-php-ext-install -j$(nproc) gd intl tidy zip bcmath pdo_mysql bz2 pdo_pgsql
 
-# Install composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
-
-# Generate locales supported by Firefly III
-RUN echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\n\n" > /etc/locale.gen && locale-gen
+# Install PHP exentions, install composer, update languages.
+RUN docker-php-ext-install -j$(nproc) gd intl tidy zip bcmath pdo_mysql bz2 pdo_pgsql && \
+    curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
+    echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\n\n" > /etc/locale.gen && locale-gen
 
 # copy Apache config to correct spot.
 COPY ./.deploy/docker/apache2.conf /etc/apache2/apache2.conf
