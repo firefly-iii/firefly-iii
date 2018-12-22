@@ -73,7 +73,7 @@ class TransactionCurrencySeeder extends Seeder
             try {
                 TransactionCurrency::create($currency);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create transaction currency "%s". It might exist already.', $currency['code']));
+                Log::info(sprintf('Could not create transaction currency "%s". It might exist already.', $currency['code']));
             }
         }
     }

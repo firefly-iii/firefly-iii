@@ -48,7 +48,7 @@ class AccountTypeSeeder extends Seeder
             try {
                 AccountType::create(['type' => $type]);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create account type "%s". It might exist already: %s', $type , $e->getMessage()));
+                Log::info(sprintf('Could not create account type "%s". It might exist already.', $type));
             }
         }
     }

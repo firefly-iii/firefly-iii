@@ -42,7 +42,7 @@ class TransactionTypeSeeder extends Seeder
             try {
                 TransactionType::create(['type' => $type]);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create transaction type "%s". It might exist already.', $type));
+                Log::info(sprintf('Could not create transaction type "%s". It might exist already.', $type));
             }
         }
     }

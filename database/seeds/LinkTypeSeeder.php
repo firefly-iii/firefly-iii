@@ -62,7 +62,7 @@ class LinkTypeSeeder extends Seeder
             try {
                 LinkType::create($type);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create link type "%s". It might exist already.', $type['name']));
+                Log::info(sprintf('Could not create link type "%s". It might exist already.', $type['name']));
             }
         }
     }
