@@ -25,9 +25,9 @@ mkdir -p /var/storage/build
 mkdir -p /var/storage/database
 mkdir -p /var/storage/debugbar
 mkdir -p /var/storage/export
-mkdir -p /var/storage/framework/cache
+mkdir -p /var/storage/framework/cache/v1
 mkdir -p /var/storage/framework/sessions
-mkdir -p /var/storage/framework/views
+mkdir -p /var/storage/framework/views/v1
 mkdir -p /var/storage/logs
 mkdir -p /var/storage/upload
 
