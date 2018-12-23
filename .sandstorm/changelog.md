@@ -1,4 +1,39 @@
-$ 4.7.8
+# 4.7.9
+- [Issue 1622](https://github.com/firefly-iii/firefly-iii/issues/1622) Can now unlink a transaction from a bill.
+- [Issue 1848](https://github.com/firefly-iii/firefly-iii/issues/1848) Added support for the Swiss Franc.
+- [Issue 1828](https://github.com/firefly-iii/firefly-iii/issues/1828) Focus on fields for easy access.
+- [Issue 1859](https://github.com/firefly-iii/firefly-iii/issues/1859) Warning when seeding database.
+- Completely rewritten API. Check out the documentation [here](https://api-docs.firefly-iii.org/).
+- Currencies can now be enabled and disabled, making for cleaner views.
+- You can disable the `X-Frame-Options` header if this is necessary.
+- New fancy favicons.
+- Updated and improved docker build.
+- Docker build no longer builds its own cURL.
+- [Issue 1607](https://github.com/firefly-iii/firefly-iii/issues/1607) [issue 1857](https://github.com/firefly-iii/firefly-iii/issues/1857) [issue 1895](https://github.com/firefly-iii/firefly-iii/issues/1895) Improved bunq import and added support for auto-savings.
+- [Issue 1766](https://github.com/firefly-iii/firefly-iii/issues/1766) Extra commands so cache dir is owned by www user.
+- [Issue 1811](https://github.com/firefly-iii/firefly-iii/issues/1811) 404 when generating report without options.
+- [Issue 1835](https://github.com/firefly-iii/firefly-iii/issues/1835) Strange debug popup removed.
+- [Issue 1840](https://github.com/firefly-iii/firefly-iii/issues/1840) Error when exporting data.
+- [Issue 1857](https://github.com/firefly-iii/firefly-iii/issues/1857) Bunq import words again (see above).
+- [Issue 1858](https://github.com/firefly-iii/firefly-iii/issues/1858) SQL errors when importing CSV.
+- [Issue 1861](https://github.com/firefly-iii/firefly-iii/issues/1861) Period navigator was broken.
+- [Issue 1864](https://github.com/firefly-iii/firefly-iii/issues/1864) First description was empty on split transactions.
+- [Issue 1865](https://github.com/firefly-iii/firefly-iii/issues/1865) Bad math when showing categories.
+- [Issue 1868](https://github.com/firefly-iii/firefly-iii/issues/1868) Fixes to FinTS import.
+- [Issue 1872](https://github.com/firefly-iii/firefly-iii/issues/1872) Some images had 404's.
+- [Issue 1877](https://github.com/firefly-iii/firefly-iii/issues/1877) Several encryption / decryption issues.
+- [Issue 1878](https://github.com/firefly-iii/firefly-iii/issues/1878) Wrong nav links
+- [Issue 1884](https://github.com/firefly-iii/firefly-iii/issues/1884) Budget API improvements (see above)
+- [Issue 1888](https://github.com/firefly-iii/firefly-iii/issues/1888) Transaction API improvements (see above)
+- [Issue 1890](https://github.com/firefly-iii/firefly-iii/issues/1890) Fixes in Bills API
+- [Issue 1891](https://github.com/firefly-iii/firefly-iii/issues/1891) Typo fixed.
+- [Issue 1893](https://github.com/firefly-iii/firefly-iii/issues/1893) Update piggies from recurring transactions.
+- [Issue 1898](https://github.com/firefly-iii/firefly-iii/issues/1898) Bug in tag report.
+- [Issue 1901](https://github.com/firefly-iii/firefly-iii/issues/1901) Redirect when cloning transactions.
+- [Issue 1909](https://github.com/firefly-iii/firefly-iii/issues/1909) Date range fixes.
+- [Issue 1916](https://github.com/firefly-iii/firefly-iii/issues/1916) Date range fixes.
+
+# 4.7.8
 
 - [Issue 1005](https://github.com/firefly-iii/firefly-iii/issues/1005) You can now configure Firefly III to use LDAP. 
 - [Issue 1071](https://github.com/firefly-iii/firefly-iii/issues/1071) You can execute transaction rules using the command line (so you can cronjob it)
