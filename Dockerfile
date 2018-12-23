@@ -23,6 +23,8 @@ RUN apt-get update -y && \
                                                unzip \
                                                libsqlite3-dev \
                                                nano \
+                                               curl \
+                                               openssl \
                                                libpq-dev \
                                                libbz2-dev \
                                                gettext-base \
@@ -34,25 +36,10 @@ RUN apt-get update -y && \
                                                rm -rf /var/lib/apt/lists/* && \
                                                docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
                                                docker-php-ext-install ldap
-# Install latest curl
-RUN cd /tmp && \
-    wget https://www.openssl.org/source/openssl-${OPENSSL_VERSION}.tar.gz && \
-    tar -xvf openssl-${OPENSSL_VERSION}.tar.gz && \
-    cd openssl-${OPENSSL_VERSION} && \
-    ./config && \
-    make -j${CORES} && \
-    make install
 
-RUN cd /tmp && \
-    wget https://curl.haxx.se/download/curl-${CURL_VERSION}.tar.gz && \
-    tar -xvf curl-${CURL_VERSION}.tar.gz && \
-    cd curl-${CURL_VERSION} && \
-    ./configure --with-ssl --host=$(gcc -dumpmachine) && \
-    make -j${CORES} && \
-    make install
 
 # Make sure that libcurl is using the newer curl libaries
-RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/00-curl.conf && ldconfig
+#RUN echo "/usr/local/lib" >> /etc/ld.so.conf.d/00-curl.conf && ldconfig
 
 # Mimic the Debian/Ubuntu config file structure for supervisor
 COPY .deploy/docker/supervisord.conf /etc/supervisor/supervisord.conf
@@ -72,7 +59,7 @@ RUN echo "0 3 * * * /usr/local/bin/php /var/www/firefly-iii/artisan firefly:cron
 #RUN (crontab -l ; echo "*/1 * * * * free >> /var/www/firefly-iii/public/cron.html") 2>&1 | crontab -
 
 # Install PHP exentions, install composer, update languages.
-RUN docker-php-ext-install -j$(nproc) gd intl tidy zip bcmath pdo_mysql bz2 pdo_pgsql && \
+RUN docker-php-ext-install -j$(nproc) gd intl tidy zip curl bcmath pdo_mysql bz2 pdo_pgsql && \
     curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
     echo "en_US.UTF-8 UTF-8\nde_DE.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\n\n" > /etc/locale.gen && locale-gen
 
@@ -96,7 +83,7 @@ WORKDIR $FIREFLY_PATH
 ADD . $FIREFLY_PATH
 
 # Fix the link to curl:
-RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/x86_64-linux-gnu/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
+#RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/x86_64-linux-gnu/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
 
 # Run composer
 RUN composer install --prefer-dist --no-dev --no-scripts --no-suggest

@@ -16,6 +16,11 @@ mkdir -p $FIREFLY_PATH/storage/logs
 mkdir -p $FIREFLY_PATH/storage/upload
 
 
+if [[ $DB_CONNECTION == "sqlite" ]]
+then
+    touch $FIREFLY_PATH/storage/database/database.sqlite
+fi
+
 # make sure we own the volumes:
 chown -R www-data:www-data -R $FIREFLY_PATH/storage
 chmod -R 775 $FIREFLY_PATH/storage
