@@ -312,10 +312,10 @@ function resetDivSplits() {
         input.attr('name', 'transactions[' + i + '][foreign_amount]');
     });
 
-    // ends with ][transaction_currency_id]
-    $.each($('input[name$="][transaction_currency_id]"]'), function (i, v) {
+    // ends with ][currency_id]
+    $.each($('input[name$="][currency_id]"]'), function (i, v) {
         var input = $(v);
-        input.attr('name', 'transactions[' + i + '][transaction_currency_id]');
+        input.attr('name', 'transactions[' + i + '][currency_id]');
     });
 
     // ends with ][foreign_currency_id]
