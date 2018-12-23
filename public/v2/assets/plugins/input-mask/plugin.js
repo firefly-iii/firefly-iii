@@ -3,6 +3,6 @@ require.config({
         'input-mask': ['jquery', 'core']
     },
     paths: {
-        'input-mask': 'assets/plugins/input-mask/js/jquery.mask.min'
+        'input-mask': 'v2/assets/plugins/input-mask/js/jquery.mask.min'
     }
 });
