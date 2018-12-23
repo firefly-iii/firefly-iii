@@ -13,6 +13,7 @@ apt-get update
 apt-get install -y python-software-properties software-properties-common
 
 # install all languages
+sed -i 's/# es_ES.UTF-8 UTF-8/es_ES.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# de_DE.UTF-8 UTF-8/de_DE.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# fr_FR.UTF-8 UTF-8/fr_FR.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# it_IT.UTF-8 UTF-8/it_IT.UTF-8 UTF-8/g' /etc/locale.gen
@@ -20,7 +21,7 @@ sed -i 's/# nl_NL.UTF-8 UTF-8/nl_NL.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# pl_PL.UTF-8 UTF-8/pl_PL.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# pt_BR.UTF-8 UTF-8/pt_BR.UTF-8 UTF-8/g' /etc/locale.gen
 sed -i 's/# ru_RU.UTF-8 UTF-8/ru_RU.UTF-8 UTF-8/g' /etc/locale.gen
-sed -i 's/# tr_TR.UTF-8 UTF-8/tr_TR.UTF-8 UTF-8/g' /etc/locale.gen
+sed -i 's/# zh_TW.UTF-8 UTF-8/zh_TW.UTF-8 UTF-8/g' /etc/locale.gen
 
 dpkg-reconfigure --frontend=noninteractive locales
 
@@ -38,7 +39,7 @@ echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sou
 
 # install packages.
 apt-get update
-apt-get install -y nginx php7.2-fpm php7.2-mysql php7.2-gd php7.2-cli php7.2-curl git php7.2-dev php7.2-zip php7.2-intl php7.2-dom php7.2-mbstring php7.2-bcmath mysql-server
+apt-get install -y nginx php7.2-fpm php7.2-mysql php7.2-gd php7.2-cli php7.2-curl php7.2-ldap git php7.2-dev php7.2-zip php7.2-intl php7.2-dom php7.2-mbstring php7.2-bcmath mysql-server
 service nginx stop
 service php7.2-fpm stop
 service mysql stop
