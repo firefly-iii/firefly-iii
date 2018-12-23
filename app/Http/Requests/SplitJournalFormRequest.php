@@ -67,8 +67,6 @@ class SplitJournalFormRequest extends Request
         $sourceName      = null;
         $destinationId   = null;
         $destinationName = null;
-        var_dump($this->all());exit;
-
 
         foreach ($this->get('transactions') as $index => $transaction) {
             switch ($data['type']) {
