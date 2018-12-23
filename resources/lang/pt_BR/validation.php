@@ -123,7 +123,7 @@ return [
     'present'                        => 'O campo :attribute deve estar presente.',
     'amount_zero'                    => 'O montante total não pode ser zero.',
     'unique_piggy_bank_for_user'     => 'O nome do cofrinho deve ser único.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
+    'secure_password'                => 'Esta nao e uma password segura. Tenta de novo por favor. Para mais informacoes visita https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetição inválido para transações recorrentes.',
     'valid_recurrence_rep_moment'    => 'Momento de repetição inválido para esse tipo de repetição.',
     'invalid_account_info'           => 'Informação de conta inválida.',
