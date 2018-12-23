@@ -196,7 +196,11 @@ class BillController extends Controller
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
-        $transformer = new BillTransformer($parameters);
+
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($parameters);
+
         /** @var Collection $bills */
         $bills = $paginator->getCollection()->map(
             function (Bill $bill) use ($transformer) {
@@ -248,8 +252,8 @@ class BillController extends Controller
                 // simply fire off all rules?
                 /** @var TransactionMatcher $matcher */
                 $matcher = app(TransactionMatcher::class);
-                $matcher->setLimit(100000); // large upper limit
-                $matcher->setRange(100000); // large upper limit
+                $matcher->setSearchLimit(100000); // large upper limit
+                $matcher->setTriggeredLimit(100000); // large upper limit
                 $matcher->setRule($rule);
                 $matchingTransactions = $matcher->findTransactionsByRule();
                 $total                += $matchingTransactions->count();
@@ -294,7 +298,12 @@ class BillController extends Controller
         $parameters = new ParameterBag();
         $parameters->set('start', $start);
         $parameters->set('end', $end);
-        $resource                   = new Item($bill, new BillTransformer($parameters), 'bill');
+
+        /** @var BillTransformer $transformer */
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($parameters);
+
+        $resource                   = new Item($bill, $transformer, 'bill');
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 

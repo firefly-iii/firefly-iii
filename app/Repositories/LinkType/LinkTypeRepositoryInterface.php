@@ -98,6 +98,15 @@ interface LinkTypeRepositoryInterface
     public function get(): Collection;
 
     /**
+     * Return array of all journal ID's for this type of link.
+     *
+     * @param LinkType $linkType
+     *
+     * @return array
+     */
+    public function getJournalIds(LinkType $linkType): array;
+
+    /**
      * @param LinkType|null $linkType
      *
      * @return Collection

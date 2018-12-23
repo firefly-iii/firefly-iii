@@ -26,32 +26,15 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AttachmentTransformer
  */
-class AttachmentTransformer extends TransformerAbstract
+class AttachmentTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
-    /** @var ParameterBag */
-    protected $parameters;
-
     /** @var AttachmentRepositoryInterface */
     private $repository;
 
@@ -59,27 +42,13 @@ class AttachmentTransformer extends TransformerAbstract
      * BillTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         $this->repository = app(AttachmentRepositoryInterface::class);
-    }
-
-    /**
-     * Attach the user.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Attachment $attachment
-     *
-     * @return Item
-     */
-    public function includeUser(Attachment $attachment): Item
-    {
-        return $this->item($attachment->user, new UserTransformer($this->parameters), 'users');
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -95,16 +64,17 @@ class AttachmentTransformer extends TransformerAbstract
 
         return [
             'id'              => (int)$attachment->id,
-            'updated_at'      => $attachment->updated_at->toAtomString(),
             'created_at'      => $attachment->created_at->toAtomString(),
-            'attachable_type' => $attachment->attachable_type,
+            'updated_at'      => $attachment->updated_at->toAtomString(),
+            'attachable_id'   => $attachment->attachable_id,
+            'attachable_type' => str_replace('FireflyIII\\Models\\','',$attachment->attachable_type),
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,
             'download_uri'    => route('api.v1.attachments.download', [$attachment->id]),
             'upload_uri'      => route('api.v1.attachments.upload', [$attachment->id]),
             'title'           => $attachment->title,
-            'mime'            => $attachment->mime,
             'notes'           => $this->repository->getNoteText($attachment),
+            'mime'            => $attachment->mime,
             'size'            => (int)$attachment->size,
             'links'           => [
                 [

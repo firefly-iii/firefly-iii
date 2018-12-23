@@ -40,20 +40,20 @@ use Log;
  */
 class TransactionFactory
 {
+    /** @var User */
+    private $user;
+
+    use TransactionServiceTrait;
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    use TransactionServiceTrait;
-
-    /** @var User */
-    private $user;
 
     /**
      * @param array $data
@@ -72,7 +72,8 @@ class TransactionFactory
             throw new FireflyException('Amount is an empty string, which Firefly III cannot handle. Apologies.');
         }
         if (null === $currencyId) {
-            throw new FireflyException('Cannot store transaction without currency information.');
+            $currency   = app('amount')->getDefaultCurrencyByUser($data['account']->user);
+            $currencyId = $currency->id;
         }
         $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
         Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));
@@ -109,8 +110,9 @@ class TransactionFactory
         Log::debug('Start of TransactionFactory::createPair()', $data);
         // all this data is the same for both transactions:
         Log::debug('Searching for currency info.');
-        $currency    = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        $description = $journal->description === $data['description'] ? null : $data['description'];
+        $defaultCurrency = app('amount')->getDefaultCurrencyByUser($this->user);
+        $currency        = $this->findCurrency($data['currency_id'], $data['currency_code']);
+        $currency        = $currency ?? $defaultCurrency;
 
         // type of source account and destination account depends on journal type:
         $sourceType      = $this->accountType($journal, 'source');
@@ -135,10 +137,9 @@ class TransactionFactory
 
         // based on the source type, destination type and transaction type, the system can start throwing FireflyExceptions.
         $this->validateTransaction($sourceAccount->accountType->type, $destinationAccount->accountType->type, $journal->transactionType->type);
-
         $source = $this->create(
             [
-                'description'         => $description,
+                'description'         => $data['description'],
                 'amount'              => app('steam')->negative((string)$data['amount']),
                 'foreign_amount'      => null,
                 'currency'            => $currency,
@@ -150,7 +151,7 @@ class TransactionFactory
         );
         $dest   = $this->create(
             [
-                'description'         => $description,
+                'description'         => $data['description'],
                 'amount'              => app('steam')->positive((string)$data['amount']),
                 'foreign_amount'      => null,
                 'currency'            => $currency,

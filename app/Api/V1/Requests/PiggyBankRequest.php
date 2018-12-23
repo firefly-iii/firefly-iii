@@ -58,8 +58,8 @@ class PiggyBankRequest extends Request
             'account_id'     => $this->integer('account_id'),
             'targetamount'   => $this->string('target_amount'),
             'current_amount' => $current,
-            'startdate'     => $this->date('start_date'),
-            'targetdate'    => $this->date('target_date'),
+            'startdate'      => $this->date('start_date'),
+            'targetdate'     => $this->date('target_date'),
             'notes'          => $this->string('notes'),
         ];
     }

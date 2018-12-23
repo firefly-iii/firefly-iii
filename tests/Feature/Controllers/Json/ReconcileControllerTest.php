@@ -24,6 +24,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Json;
 
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -31,6 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Tests\TestCase;
@@ -60,15 +64,21 @@ class ReconcileControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
+        $collector      = $this->mock(TransactionCollectorInterface::class);
         $transactions   = $this->user()->transactions()->inRandomOrder()->take(3)->get();
-        $transactions  =$transactions->each(
+        $transactions   = $transactions->each(
             function (Transaction $transaction) {
                 $transaction->transaction_amount = '5';
             }
         );
-        $repository = $this->mock(JournalRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $repository->shouldReceive('getTransactionsById')->andReturn($transactions)->twice();
+
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $accountRepos->shouldReceive('findNull')->andReturn($this->getRandomAsset())->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->atLeast()->once()->andReturn(1);
@@ -94,7 +104,11 @@ class ReconcileControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-
+        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
+        $collector      = $this->mock(TransactionCollectorInterface::class);
+        $date           = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $account    = $this->user()->accounts()->where('account_type_id', '!=', 3)->first();
         $parameters = [
             'startBalance' => '0',
@@ -118,10 +132,21 @@ class ReconcileControllerTest extends TestCase
         $repository     = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-
+        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
+        $collector      = $this->mock(TransactionCollectorInterface::class);
+        $date           = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-
         $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
+
+        $collector->shouldReceive('setAccounts')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+
 
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile.transactions', [1, '20170101', '20170131']));
@@ -136,7 +161,11 @@ class ReconcileControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos  = $this->mock(CurrencyRepositoryInterface::class);
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-
+        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
+        $collector      = $this->mock(TransactionCollectorInterface::class);
+        $date           = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                   ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);

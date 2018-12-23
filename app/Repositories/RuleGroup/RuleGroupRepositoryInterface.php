@@ -70,6 +70,20 @@ interface RuleGroupRepositoryInterface
      *
      * @return Collection
      */
+    public function getActiveRules(RuleGroup $group): Collection;
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getRules(RuleGroup $group): Collection;
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
     public function getActiveStoreRules(RuleGroup $group): Collection;
 
     /**

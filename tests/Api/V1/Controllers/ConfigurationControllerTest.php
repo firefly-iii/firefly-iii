@@ -87,7 +87,7 @@ class ConfigurationControllerTest extends TestCase
             ],
         ];
 
-        $response = $this->get('/api/v1/configuration');
+        $response = $this->get(route('api.v1.configuration.index'));
         $response->assertStatus(200);
         $response->assertExactJson($expected);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -105,7 +105,7 @@ class ConfigurationControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
 
         Passport::actingAs($this->emptyUser());
-        $response = $this->get('/api/v1/configuration');
+        $response = $this->get(route('api.v1.configuration.index'));
         $response->assertStatus(500);
         $response->assertSee('No access to method.');
     }
@@ -114,13 +114,13 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variables.
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdate(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $data      = [
-            'name'  => 'permission_update_check',
+        $data = [
             'value' => 1,
 
         ];
@@ -156,8 +156,7 @@ class ConfigurationControllerTest extends TestCase
                 'single_user_mode'        => true,
             ],
         ];
-
-        $response = $this->post('/api/v1/configuration', $data);
+        $response = $this->post(route('api.v1.configuration.update', ['permission_update_check']), $data);
         $response->assertStatus(200);
         $response->assertExactJson($expected);
     }
@@ -166,6 +165,7 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variables.
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdateBoolean(): void
     {
@@ -173,7 +173,6 @@ class ConfigurationControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $data = [
-            'name'  => 'single_user_mode',
             'value' => 'true',
 
         ];
@@ -210,7 +209,7 @@ class ConfigurationControllerTest extends TestCase
             ],
         ];
 
-        $response = $this->post('/api/v1/configuration', $data);
+        $response = $this->post(route('api.v1.configuration.update', ['single_user_mode']), $data);
         $response->assertStatus(200);
         $response->assertExactJson($expected);
     }
@@ -219,24 +218,23 @@ class ConfigurationControllerTest extends TestCase
      * Set configuration variable that you're not allowed to change
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdateInvalid(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $data     = [
-            'name'  => 'last_update_check',
+        $data      = [
             'value' => 'true',
         ];
-        $response = $this->post('/api/v1/configuration', $data);
-        $response->assertStatus(500);
-        $response->assertSee('You cannot edit this configuration value.');
+        $response  = $this->post('/api/v1/configuration/last_update_check', $data);
+        $response->assertStatus(404);
     }
 
     /**
      * Set configuration variables but you're  not the owner.
      *
      * @covers \FireflyIII\Api\V1\Controllers\ConfigurationController
+     * @covers \FireflyIII\Api\V1\Requests\ConfigurationRequest
      */
     public function testUpdateNotOwner(): void
     {
@@ -244,7 +242,7 @@ class ConfigurationControllerTest extends TestCase
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(false);
 
         Passport::actingAs($this->emptyUser());
-        $response = $this->post('/api/v1/configuration');
+        $response = $this->post(route('api.v1.configuration.update', ['single_user_mode']));
         $response->assertStatus(500);
         $response->assertSee('No access to method.');
     }

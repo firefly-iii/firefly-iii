@@ -46,7 +46,7 @@ class TransactionJournalFactory
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -92,12 +92,13 @@ class TransactionJournalFactory
         /** @var TransactionFactory $factory */
         $factory = app(TransactionFactory::class);
         $factory->setUser($this->user);
-
+        $totalAmount= '0';
         Log::debug(sprintf('Found %d transactions in array.', \count($data['transactions'])));
         /** @var array $trData */
         foreach ($data['transactions'] as $index => $trData) {
             Log::debug(sprintf('Now storing transaction %d of %d', $index + 1, \count($data['transactions'])));
             $factory->createPair($journal, $trData);
+            $totalAmount = bcadd($totalAmount, (string)($trData['amount'] ?? '0'));
         }
         $journal->completed = true;
         $journal->save();

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Rules\IsBoolean;
 
 
 /**
@@ -50,10 +51,16 @@ class RuleGroupRequest extends Request
      */
     public function getAll(): array
     {
+        $active = true;
+
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         return [
             'title'       => $this->string('title'),
             'description' => $this->string('description'),
-            'active'      => $this->boolean('active'),
+            'active'      => $active,
         ];
     }
 
@@ -67,7 +74,7 @@ class RuleGroupRequest extends Request
         $rules = [
             'title'       => 'required|between:1,100|uniqueObjectForUser:rule_groups,title',
             'description' => 'between:1,5000|nullable',
-            'active'      => 'required|boolean',
+            'active'      => [new IsBoolean],
         ];
         switch ($this->method()) {
             default:

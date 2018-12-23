@@ -90,6 +90,15 @@ interface RecurringRepositoryInterface
     public function getJournalCount(Recurrence $recurrence, Carbon $start = null, Carbon $end = null): int;
 
     /**
+     * Get journal ID's for journals created by this recurring transaction.
+     *
+     * @param Recurrence $recurrence
+     *
+     * @return array
+     */
+    public function getJournalIds(Recurrence $recurrence): array;
+
+    /**
      * Get the notes.
      *
      * @param Recurrence $recurrence

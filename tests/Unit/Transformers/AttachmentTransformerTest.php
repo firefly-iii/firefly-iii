@@ -23,9 +23,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Transformers;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Attachment;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Transformers\AttachmentTransformer;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -35,18 +37,28 @@ use Tests\TestCase;
 class AttachmentTransformerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * Test basic transformer
      *
      * @covers \FireflyIII\Transformers\AttachmentTransformer
      */
     public function testBasic(): void
     {
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
         $md5        = md5('hello' . random_int(1, 10000));
         $attachment = Attachment::create(
             [
                 'user_id'         => $this->user()->id,
                 'attachable_id'   => 1,
-                'attachable_type' => Account::class,
+                'attachable_type' => TransactionJournal::class,
                 'md5'             => $md5,
                 'filename'        => 'hello.txt',
                 'mime'            => 'text/plain',
@@ -55,10 +67,20 @@ class AttachmentTransformerTest extends TestCase
             ]
         );
 
-        $transformer = new AttachmentTransformer(new ParameterBag);
-        $result      = $transformer->transform($attachment);
-        $this->assertEquals($md5, $result['md5']);
-        $this->assertEquals('hello.txt', $result['filename']);
+        // expected calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getNoteText')->once()->andReturn('I am a note');
+
+        // make transformer
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+        $result = $transformer->transform($attachment);
+
+        // test results
+        $this->assertEquals($attachment->id, $result['id']);
+        $this->assertEquals('TransactionJournal', $result['attachable_type']);
+        $this->assertEquals('I am a note', $result['notes']);
+
     }
 
 }

@@ -280,6 +280,19 @@ class ExpandedForm
 
     /**
      * @param string $name
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws FireflyException
+     */
+    public function balanceAll(string $name, $value = null, array $options = null): string
+    {
+        return $this->allCurrencyField($name, 'balance', $value, $options);
+    }
+
+    /**
+     * @param string $name
      * @param int    $value
      * @param mixed  $checked
      * @param array  $options
@@ -913,6 +926,60 @@ class ExpandedForm
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     protected function currencyField(string $name, string $view, $value = null, array $options = null): string
+    {
+        $label           = $this->label($name, $options);
+        $options         = $this->expandOptionArray($name, $label, $options);
+        $classes         = $this->getHolderClasses($name);
+        $value           = $this->fillFieldValue($name, $value);
+        $options['step'] = 'any';
+        $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
+        /** @var Collection $currencies */
+        $currencies = app('amount')->getCurrencies();
+        unset($options['currency'], $options['placeholder']);
+
+        // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
+        $preFilled      = session('preFilled');
+        $key            = 'amount_currency_id_' . $name;
+        $sentCurrencyId = isset($preFilled[$key]) ? (int)$preFilled[$key] : $defaultCurrency->id;
+
+        Log::debug(sprintf('Sent currency ID is %d', $sentCurrencyId));
+
+        // find this currency in set of currencies:
+        foreach ($currencies as $currency) {
+            if ($currency->id === $sentCurrencyId) {
+                $defaultCurrency = $currency;
+                Log::debug(sprintf('default currency is now %s', $defaultCurrency->code));
+                break;
+            }
+        }
+
+        // make sure value is formatted nicely:
+        if (null !== $value && '' !== $value) {
+            $value = round($value, $defaultCurrency->decimal_places);
+        }
+        try {
+            $html = view('form.' . $view, compact('defaultCurrency', 'currencies', 'classes', 'name', 'label', 'value', 'options'))->render();
+        } catch (Throwable $e) {
+            Log::debug(sprintf('Could not render currencyField(): %s', $e->getMessage()));
+            $html = 'Could not render currencyField.';
+        }
+
+        return $html;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+    /**
+     * @param string $name
+     * @param string $view
+     * @param mixed  $value
+     * @param array  $options
+     *
+     * @return string
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);

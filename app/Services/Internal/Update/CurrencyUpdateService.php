@@ -25,6 +25,7 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Models\TransactionCurrency;
 use Log;
+
 /**
  * Class CurrencyUpdateService
  */
@@ -35,7 +36,7 @@ class CurrencyUpdateService
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -51,6 +52,7 @@ class CurrencyUpdateService
         $currency->code           = $data['code'];
         $currency->symbol         = $data['symbol'];
         $currency->name           = $data['name'];
+        $currency->enabled        = $data['enabled'];
         $currency->decimal_places = $data['decimal_places'];
         $currency->save();
 

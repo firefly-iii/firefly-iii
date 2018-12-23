@@ -35,6 +35,9 @@ use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Support\Http\Api\TransactionFilter;
+use FireflyIII\Transformers\AttachmentTransformer;
+use FireflyIII\Transformers\PiggyBankEventTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -51,6 +54,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class TransactionController extends Controller
 {
+    use TransactionFilter;
 
     /** @var JournalRepositoryInterface The journal repository */
     private $repository;
@@ -73,6 +77,30 @@ class TransactionController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param Request     $request
+     * @param Transaction $transaction
+     *
+     * @return JsonResponse
+     */
+    public function attachments(Request $request, Transaction $transaction): JsonResponse
+    {
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $attachments = $this->repository->getAttachmentsByTr($transaction);
+
+        /** @var AttachmentTransformer $transformer */
+        $transformer = app(AttachmentTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($attachments, $transformer, 'attachments');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
     }
 
     /**
@@ -103,7 +131,7 @@ class TransactionController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
-        $types   = $this->mapTypes($this->parameters->get('type'));
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -129,32 +157,53 @@ class TransactionController extends Controller
         $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        $resource = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
+    /**
+     * @param Request     $request
+     * @param Transaction $transaction
+     *
+     * @return JsonResponse
+     */
+    public function piggyBankEvents(Request $request, Transaction $transaction): JsonResponse
+    {
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        $events = $this->repository->getPiggyBankEventsByTr($transaction);
+
+        /** @var PiggyBankEventTransformer $transformer */
+        $transformer = app(PiggyBankEventTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($events, $transformer, 'piggy_bank_events');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
 
     /**
      * Show a single transaction.
      *
      * @param Request     $request
      * @param Transaction $transaction
-     * @param string      $include
      *
      * @return JsonResponse
      */
-    public function show(Request $request, Transaction $transaction, string $include = null): JsonResponse
+    public function show(Request $request, Transaction $transaction): JsonResponse
     {
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-
-        // add include parameter:
-        $include = $include ?? '';
-        $include = $request->get('include') ?? $include;
-        $manager->parseIncludes($include);
 
         // collect transactions using the journal collector
         $collector = app(TransactionCollectorInterface::class);
@@ -169,11 +218,14 @@ class TransactionController extends Controller
             $collector->addFilter(PositiveAmountFilter::class);
         }
         if (!($transactionType === TransactionType::WITHDRAWAL)) {
-            $collector->addFilter(NegativeAmountFilter::class);
+            $collector->addFilter(NegativeAmountFilter::class); // @codeCoverageIgnore
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -200,10 +252,6 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // collect transactions using the journal collector
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
@@ -221,7 +269,12 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -247,10 +300,6 @@ class TransactionController extends Controller
 
         event(new UpdatedTransactionJournal($journal));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // needs a lot of extra data to match the journal collector. Or just expand that one.
         // collect transactions using the journal collector
         $collector = app(TransactionCollectorInterface::class);
@@ -269,46 +318,14 @@ class TransactionController extends Controller
         }
 
         $transactions = $collector->getTransactions();
-        $resource     = new FractalCollection($transactions, new TransactionTransformer($this->parameters), 'transactions');
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
-    }
-
-    /**
-     * All the types you can request.
-     *
-     * @param string $type
-     *
-     * @return array
-     */
-    private function mapTypes(string $type): array
-    {
-        $types  = [
-            'all'             => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER, TransactionType::OPENING_BALANCE,
-                                  TransactionType::RECONCILIATION,],
-            'withdrawal'      => [TransactionType::WITHDRAWAL,],
-            'withdrawals'     => [TransactionType::WITHDRAWAL,],
-            'expense'         => [TransactionType::WITHDRAWAL,],
-            'expenses'        => [TransactionType::WITHDRAWAL,],
-            'income'          => [TransactionType::DEPOSIT,],
-            'deposit'         => [TransactionType::DEPOSIT,],
-            'deposits'        => [TransactionType::DEPOSIT,],
-            'transfer'        => [TransactionType::TRANSFER,],
-            'transfers'       => [TransactionType::TRANSFER,],
-            'opening_balance' => [TransactionType::OPENING_BALANCE,],
-            'reconciliation'  => [TransactionType::RECONCILIATION,],
-            'reconciliations' => [TransactionType::RECONCILIATION,],
-            'special'         => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
-            'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
-            'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
-        ];
-        $return = $types['default'];
-        if (isset($types[$type])) {
-            $return = $types[$type];
-        }
-
-        return $return;
 
     }
 }

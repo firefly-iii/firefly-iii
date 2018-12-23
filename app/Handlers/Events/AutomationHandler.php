@@ -45,10 +45,10 @@ class AutomationHandler
      */
     public function reportJournals(RequestedReportOnJournals $event): bool
     {
-        $sendReport = envNonEmpty('SEND_REPORT_JOURNALS', true);
+        $sendReport = config('firefly.send_report_journals');
 
         if (false === $sendReport) {
-            return true;
+            return true; // @codeCoverageIgnore
         }
 
         Log::debug('In reportJournals.');

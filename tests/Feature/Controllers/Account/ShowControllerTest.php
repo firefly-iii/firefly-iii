@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -63,6 +64,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
+        Log::info(sprintf('testShow(%s)', $range));
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 
@@ -116,6 +118,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowAll(string $range): void
     {
+        Log::info(sprintf('testShowAll(%s)', $range));
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 
@@ -165,10 +168,15 @@ class ShowControllerTest extends TestCase
      */
     public function testShowBrokenBadDates(): void
     {
+        Log::info(sprintf('testShowBrokenBadDates(%s)', ''));
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $accountRepos->shouldReceive('isLiability')->atLeast()->once()->andReturn(false);
 
@@ -187,6 +195,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowBrokenInitial(): void
     {
+        Log::info(sprintf('testShowBrokenInitial(%s)', ''));
         // mock
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -212,12 +221,17 @@ class ShowControllerTest extends TestCase
      */
     public function testShowByDateEmpty(string $range): void
     {
+        Log::info(sprintf('testShowByDateEmpty(%s)', $range));
         // mock stuff
         $collector     = $this->mock(TransactionCollectorInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $repository    = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
@@ -253,6 +267,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowInitial(): void
     {
+        Log::info(sprintf('testShowInitial(%s)', ''));
         // mock stuff
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -276,6 +291,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowLiability(string $range): void
     {
+        Log::info(sprintf('testShowLiability(%s)', $range));
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
         $account = $this->user()->accounts()->where('account_type_id', 12)->whereNull('deleted_at')->first();

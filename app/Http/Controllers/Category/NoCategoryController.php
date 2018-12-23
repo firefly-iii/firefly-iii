@@ -131,7 +131,7 @@ class NoCategoryController extends Controller
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->removeFilter(InternalTransferFilter::class);
         $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('categories.no-category'));
+        $transactions->setPath(route('categories.no-category.all'));
 
         return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
     }

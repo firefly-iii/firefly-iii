@@ -57,6 +57,7 @@ class ReportControllerTest extends TestCase
      */
     public function testBadEndDate(): void
     {
+        $popupReport = $this->mock(PopupReportInterface::class);
         $this->be($this->user());
         $arguments = [
             'attributes' => [
@@ -80,6 +81,8 @@ class ReportControllerTest extends TestCase
      */
     public function testBadStartDate(): void
     {
+        $popupReport = $this->mock(PopupReportInterface::class);
+
         $this->be($this->user());
         $arguments = [
             'attributes' => [
@@ -107,7 +110,6 @@ class ReportControllerTest extends TestCase
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $account       = factory(Account::class)->make();
-
         $popupHelper->shouldReceive('balanceForNoBudget')->andReturn(new Collection);
         $budgetRepos->shouldReceive('findNull')->andReturn(new Budget)->once()->withArgs([0]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
@@ -173,6 +175,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $popupReport   = $this->mock(PopupReportInterface::class);
         $budget        = factory(Budget::class)->make();
         $account       = factory(Account::class)->make();
 
@@ -330,6 +333,8 @@ class ReportControllerTest extends TestCase
      */
     public function testWrongLocation(): void
     {
+        $popupReport = $this->mock(PopupReportInterface::class);
+
         $this->be($this->user());
         $arguments = [
             'attributes' => [

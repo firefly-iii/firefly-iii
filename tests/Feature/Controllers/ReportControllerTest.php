@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Generator\Report\Account\YearReportGenerator as AcYRG;
 use FireflyIII\Generator\Report\Audit\YearReportGenerator as AYRG;
 use FireflyIII\Generator\Report\Budget\YearReportGenerator as BYRG;
 use FireflyIII\Generator\Report\Category\YearReportGenerator as CYRG;
 use FireflyIII\Generator\Report\Standard\YearReportGenerator as SYRG;
 use FireflyIII\Generator\Report\Tag\YearReportGenerator as TYRG;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -72,12 +74,18 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
-        $budgetRepository->shouldReceive('cleanupBudgets');
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $generator        = $this->mock(AcYRG::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
-        $generator    = $this->mock(AcYRG::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $budgetRepository->shouldReceive('cleanupBudgets');
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
+        $start = Carbon::create()->startOfYear();
+        $end   = Carbon::create()->endOfYear();
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
 
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
@@ -97,11 +105,20 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $generator        = $this->mock(AYRG::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+
         $budgetRepository->shouldReceive('cleanupBudgets');
 
-        $generator    = $this->mock(AYRG::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $start = Carbon::create()->startOfYear();
+        $end   = Carbon::create()->endOfYear();
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
 
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
@@ -120,10 +137,17 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
-        $budgetRepository->shouldReceive('cleanupBudgets');
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $generator        = $this->mock(BYRG::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $start            = Carbon::create()->startOfYear();
+        $end              = Carbon::create()->endOfYear();
 
-        $generator    = $this->mock(BYRG::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
+
+        $budgetRepository->shouldReceive('cleanupBudgets');
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
@@ -143,11 +167,19 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $generator        = $this->mock(CYRG::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $start            = Carbon::create()->startOfYear();
+        $end              = Carbon::create()->endOfYear();
 
         $budgetRepository->shouldReceive('cleanupBudgets');
 
-        $generator    = $this->mock(CYRG::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
+
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
@@ -167,11 +199,17 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $generator        = $this->mock(SYRG::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $start = Carbon::create()->startOfYear();
+        $end   = Carbon::create()->endOfYear();
+
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
 
         $budgetRepository->shouldReceive('cleanupBudgets');
-
-        $generator    = $this->mock(SYRG::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $generator->shouldReceive('setStartDate')->once();
         $generator->shouldReceive('setEndDate')->once();
@@ -190,10 +228,15 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $start = Carbon::create()->startOfYear();
+        $end   = Carbon::create()->endOfYear();
 
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
         $budgetRepository->shouldReceive('cleanupBudgets');
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -209,13 +252,13 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $helper           = $this->mock(ReportHelperInterface::class);
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
 
         $budgetRepository->shouldReceive('cleanupBudgets');
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $helper       = $this->mock(ReportHelperInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $helper->shouldReceive('listOfMonths')->andReturn([]);
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
@@ -233,9 +276,10 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -250,16 +294,17 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
-
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $repository       = $this->mock(AccountRepositoryInterface::class);
 
         $account       = new Account();
         $account->name = 'Something';
         $account->id   = 3;
         $collection    = new Collection([$account]);
 
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::EXPENSE]])->once()->andReturn($collection);
         $repository->shouldReceive('getActiveAccountsByType')->withArgs([[AccountType::REVENUE]])->once()->andReturn($collection);
 
@@ -275,12 +320,14 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $budgetRepos      = $this->mock(BudgetRepositoryInterface::class);
+        $budget           = factory(Budget::class)->make();
 
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budget      = factory(Budget::class)->make();
+
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]));
 
         $this->be($this->user());
@@ -296,12 +343,13 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $category         = factory(Category::class)->make();
 
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $category      = factory(Category::class)->make();
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
 
         $this->be($this->user());
@@ -316,12 +364,15 @@ class ReportControllerTest extends TestCase
     {
         $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $tag              = factory(Tag::class)->make();
 
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $tag      = factory(Tag::class)->make();
-        $tagRepos = $this->mock(TagRepositoryInterface::class);
+
+
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 
         $this->be($this->user());
@@ -341,8 +392,10 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
-        $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->times(3);
+        $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->times(4);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $data = [
@@ -362,6 +415,44 @@ class ReportControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Controllers\ReportController
      * @covers       \FireflyIII\Http\Requests\ReportFormRequest
      */
+    public function testPostIndexAccountError(): void
+    {
+        $budgetRepository = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos     = $this->mock(JournalRepositoryInterface::class);
+        $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
+        $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $asset = $this->getRandomAsset();
+        // find the user's asset account
+        $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($asset)->atLeast()->once();
+
+        // do not find the exp_rev things.
+        $accountRepos->shouldReceive('findNull')->withArgs([4])->andReturnNull()->atLeast()->once();
+
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $data = [
+            'accounts'    => ['1'],
+            'exp_rev'     => ['4'],
+            'daterange'   => '2016-01-01 - 2016-01-31',
+            'report_type' => 'account',
+        ];
+
+        $this->be($this->user());
+        $response = $this->post(route('reports.index.post'), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('reports.index'));
+        $response->assertSessionHas('error');
+    }
+
+    /**
+     * @covers       \FireflyIII\Http\Controllers\ReportController
+     * @covers       \FireflyIII\Http\Requests\ReportFormRequest
+     */
     public function testPostIndexAuditOK(): void
     {
         $accountRepos     = $this->mock(AccountRepositoryInterface::class);
@@ -370,6 +461,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -398,6 +491,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -429,6 +524,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -459,7 +556,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
-
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -490,6 +588,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $categoryRepos->shouldReceive('findNull')->andReturn($this->user()->categories()->find(1))->twice();
@@ -520,6 +620,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -548,6 +650,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -576,6 +680,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -607,6 +713,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         /** @var Tag $tag */
         $tag  = $this->user()->tags()->find(1);
@@ -644,6 +752,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         /** @var Tag $tag */
         $tag  = $this->user()->tags()->find(1);
@@ -680,6 +790,8 @@ class ReportControllerTest extends TestCase
         $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
@@ -708,9 +820,14 @@ class ReportControllerTest extends TestCase
         $tagRepos         = $this->mock(TagRepositoryInterface::class);
         $generator        = $this->mock(TYRG::class);
         $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
+        $reportHelper     = $this->mock(ReportHelperInterface::class);
+        $tag              = $this->user()->tags()->find(1);
+        $start = Carbon::create()->startOfYear();
+        $end   = Carbon::create()->endOfYear();
 
-        $tag = $this->user()->tags()->find(1);
-
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 

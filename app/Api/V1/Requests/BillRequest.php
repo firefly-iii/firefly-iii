@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use FireflyIII\Rules\IsBoolean;
 use Illuminate\Validation\Validator;
 
 /**
@@ -50,6 +51,11 @@ class BillRequest extends Request
      */
     public function getAll(): array
     {
+        $active = true;
+        if(null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         $data = [
             'name'          => $this->string('name'),
             'amount_min'    => $this->string('amount_min'),
@@ -59,8 +65,7 @@ class BillRequest extends Request
             'date'          => $this->date('date'),
             'repeat_freq'   => $this->string('repeat_freq'),
             'skip'          => $this->integer('skip'),
-            'automatch'     => $this->boolean('automatch'),
-            'active'        => $this->boolean('active'),
+            'active'        => $active,
             'notes'         => $this->string('notes'),
         ];
 
@@ -78,13 +83,13 @@ class BillRequest extends Request
             'name'          => 'required|between:1,255|uniqueObjectForUser:bills,name',
             'amount_min'    => 'required|numeric|more:0',
             'amount_max'    => 'required|numeric|more:0',
-            'currency_id'   => 'numeric|exists:transaction_currencies,id|required_without:currency_code',
-            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code|required_without:currency_id',
+            'currency_id'   => 'numeric|exists:transaction_currencies,id',
+            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
             'date'          => 'required|date',
             'repeat_freq'   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
-            'skip'          => 'required|between:0,31',
-            'automatch'     => 'required|boolean',
-            'active'        => 'required|boolean',
+            'skip'          => 'between:0,31',
+            'automatch'     => [new IsBoolean],
+            'active'        => [new IsBoolean],
             'notes'         => 'between:1,65536',
         ];
         switch ($this->method()) {

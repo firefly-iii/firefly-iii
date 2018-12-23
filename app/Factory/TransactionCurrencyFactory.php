@@ -37,11 +37,12 @@ use Log;
 class TransactionCurrencyFactory
 {
     /**
-     * Constructor.
+     * TransactionCurrencyFactory constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -61,6 +62,7 @@ class TransactionCurrencyFactory
                     'code'           => $data['code'],
                     'symbol'         => $data['symbol'],
                     'decimal_places' => $data['decimal_places'],
+                    'enabled'        => $data['enabled'],
                 ]
             );
         } catch (QueryException $e) {
@@ -84,7 +86,7 @@ class TransactionCurrencyFactory
         $currencyId   = (int)$currencyId;
 
         if ('' === $currencyCode && 0 === $currencyId) {
-            Log::warning('Cannot find anything on empty currency code and empty currency ID!');
+            Log::debug('Cannot find anything on empty currency code and empty currency ID!');
 
             return null;
         }

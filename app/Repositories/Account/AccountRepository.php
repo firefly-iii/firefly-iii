@@ -27,6 +27,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
@@ -51,7 +52,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -176,6 +177,31 @@ class AccountRepository implements AccountRepositoryInterface
     public function findNull(int $accountId): ?Account
     {
         return $this->user->accounts()->find($accountId);
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    public function getAccountCurrency(Account $account): ?TransactionCurrency
+    {
+        $currencyId = (int)$this->getMetaValue($account, 'currency_id');
+        if ($currencyId > 0) {
+            return TransactionCurrency::find($currencyId);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return string
+     */
+    public function getAccountType(Account $account): string
+    {
+        return $account->accountType->type;
     }
 
     /**
@@ -389,6 +415,16 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * @param Account $account
      *
+     * @return Collection
+     */
+    public function getPiggyBanks(Account $account): Collection
+    {
+        return $account->piggyBanks()->get();
+    }
+
+    /**
+     * @param Account $account
+     *
      * @return Account|null
      *
      * @throws FireflyException
@@ -414,6 +450,18 @@ class AccountRepository implements AccountRepositoryInterface
         $account = $factory->findOrCreate($name, $type->type);
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return bool
+     */
+    public function isAsset(Account $account): bool
+    {
+        $type = $account->accountType->type;
+
+        return AccountType::ASSET === $type || AccountType::DEFAULT === $type;
     }
 
     /**

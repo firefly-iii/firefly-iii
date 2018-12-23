@@ -38,7 +38,7 @@ class PwndVerifierV2 implements Verifier
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -58,7 +58,7 @@ class PwndVerifierV2 implements Verifier
         $uri    = sprintf('https://api.pwnedpasswords.com/range/%s', $prefix);
         $opt    = [
             'headers' => ['User-Agent' => 'Firefly III v' . config('firefly.version')],
-            'timeout' => 2];
+            'timeout' => 5];
 
         Log::debug(sprintf('hash prefix is %s', $prefix));
         Log::debug(sprintf('rest is %s', $rest));

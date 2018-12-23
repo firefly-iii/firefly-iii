@@ -29,83 +29,30 @@ use FireflyIII\Models\Tag;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class TagTransformer
  */
-class TagTransformer extends TransformerAbstract
+class TagTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
-    /** @var ParameterBag */
-    protected $parameters;
-
     /**
      * TagTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Tag $tag
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Tag $tag): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($tag->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($tag->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setTag($tag);
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Tag $tag
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Tag $tag): Item
-    {
-        return $this->item($tag->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**
      * Transform a tag.
+     *
+     * TODO add spent, earned, tranferred, etc.
      *
      * @param Tag $tag
      *
@@ -116,15 +63,14 @@ class TagTransformer extends TransformerAbstract
         $date = null === $tag->date ? null : $tag->date->format('Y-m-d');
         $data = [
             'id'          => (int)$tag->id,
-            'updated_at'  => $tag->updated_at->toAtomString(),
             'created_at'  => $tag->created_at->toAtomString(),
+            'updated_at'  => $tag->updated_at->toAtomString(),
             'tag'         => $tag->tag,
-            'tag_mode'    => $tag->tagMode,
             'date'        => $date,
             'description' => '' === $tag->description ? null : $tag->description,
-            'latitude'    => (float)$tag->latitude,
-            'longitude'   => (float)$tag->longitude,
-            'zoom_level'  => (int)$tag->zoomLevel,
+            'latitude'    => null === $tag->latitude ? null : (float)$tag->latitude,
+            'longitude'   => null === $tag->longitude? null : (float)$tag->longitude,
+            'zoom_level'  => null === $tag->zoomLevel ? null : (int)$tag->zoomLevel,
             'links'       => [
                 [
                     'rel' => 'self',

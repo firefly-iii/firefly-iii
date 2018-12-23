@@ -25,6 +25,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\User;
 
 
@@ -64,10 +65,15 @@ class UserRequest extends Request
      */
     public function getAll(): array
     {
+        $blocked = false;
+        if (null === $this->get('blocked')) {
+            $blocked = $this->boolean('blocked');
+        }
         $data = [
             'email'        => $this->string('email'),
-            'blocked'      => $this->boolean('blocked'),
+            'blocked'      => $blocked,
             'blocked_code' => $this->string('blocked_code'),
+            'role'         => $this->string('role'),
         ];
 
         return $data;
@@ -82,8 +88,9 @@ class UserRequest extends Request
     {
         $rules = [
             'email'        => 'required|email|unique:users,email,',
-            'blocked'      => 'required|boolean',
+            'blocked'      => [new IsBoolean],
             'blocked_code' => 'in:email_changed',
+            'role'         => 'in:owner,demo',
         ];
         switch ($this->method()) {
             default:

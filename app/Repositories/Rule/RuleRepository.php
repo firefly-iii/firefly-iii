@@ -46,7 +46,7 @@ class RuleRepository implements RuleRepositoryInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -158,6 +158,26 @@ class RuleRepository implements RuleRepositoryInterface
         }
 
         return $rule->ruleTriggers()->where('trigger_type', 'user_action')->first()->trigger_value;
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return Collection
+     */
+    public function getRuleActions(Rule $rule): Collection
+    {
+        return $rule->ruleActions()->orderBy('order', 'ASC')->get();
+    }
+
+    /**
+     * @param Rule $rule
+     *
+     * @return Collection
+     */
+    public function getRuleTriggers(Rule $rule): Collection
+    {
+        return $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
     }
 
     /**
@@ -301,9 +321,9 @@ class RuleRepository implements RuleRepositoryInterface
 
         $rule->rule_group_id   = $data['rule_group_id'];
         $rule->order           = ($order + 1);
-        $rule->active          = true;
-        $rule->strict          = $data['strict'] ?? false;
-        $rule->stop_processing = 1 === (int)$data['stop_processing'];
+        $rule->active          = $data['active'];
+        $rule->strict          = $data['strict'];
+        $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];
         $rule->description     = \strlen($data['description']) > 0 ? $data['description'] : null;
 
@@ -399,12 +419,12 @@ class RuleRepository implements RuleRepositoryInterface
     private function storeActions(Rule $rule, array $data): bool
     {
         $order = 1;
-        foreach ($data['rule_actions'] as $action) {
+        foreach ($data['actions'] as $action) {
             $value          = $action['value'] ?? '';
             $stopProcessing = $action['stop_processing'] ?? false;
 
             $actionValues = [
-                'action'          => $action['name'],
+                'action'          => $action['type'],
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,
@@ -435,12 +455,12 @@ class RuleRepository implements RuleRepositoryInterface
         ];
 
         $this->storeTrigger($rule, $triggerValues);
-        foreach ($data['rule_triggers'] as $trigger) {
+        foreach ($data['triggers'] as $trigger) {
             $value          = $trigger['value'] ?? '';
             $stopProcessing = $trigger['stop_processing'] ?? false;
 
             $triggerValues = [
-                'action'          => $trigger['name'],
+                'action'          => $trigger['type'],
                 'value'           => $value,
                 'stop_processing' => $stopProcessing,
                 'order'           => $order,

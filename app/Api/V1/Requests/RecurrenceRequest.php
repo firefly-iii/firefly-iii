@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use Carbon\Carbon;
 use FireflyIII\Rules\BelongsUser;
+use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Validation\RecurrenceValidation;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
@@ -54,6 +55,14 @@ class RecurrenceRequest extends Request
      */
     public function getAll(): array
     {
+        $active     = true;
+        $applyRules = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+        if (null !== $this->get('apply_rules')) {
+            $applyRules = $this->boolean('apply_rules');
+        }
         $return = [
             'recurrence'   => [
                 'type'         => $this->string('type'),
@@ -62,8 +71,8 @@ class RecurrenceRequest extends Request
                 'first_date'   => $this->date('first_date'),
                 'repeat_until' => $this->date('repeat_until'),
                 'repetitions'  => $this->integer('nr_of_repetitions'),
-                'apply_rules'  => $this->boolean('apply_rules'),
-                'active'       => $this->boolean('active'),
+                'apply_rules'  => $applyRules,
+                'active'       => $active,
             ],
             'meta'         => [
                 'piggy_bank_id'   => $this->integer('piggy_bank_id'),
@@ -91,19 +100,21 @@ class RecurrenceRequest extends Request
             'title'                                => 'required|between:1,255|uniqueObjectForUser:recurrences,title',
             'description'                          => 'between:1,65000',
             'first_date'                           => sprintf('required|date|after:%s', $today->format('Y-m-d')),
+            'apply_rules'                          => [new IsBoolean],
+            'active'                               => [new IsBoolean],
             'repeat_until'                         => sprintf('date|after:%s', $today->format('Y-m-d')),
             'nr_of_repetitions'                    => 'numeric|between:1,31',
-            'apply_rules'                          => 'required|boolean',
-            'active'                               => 'required|boolean',
             'tags'                                 => 'between:1,64000',
             'piggy_bank_id'                        => 'numeric',
             'repetitions.*.type'                   => 'required|in:daily,weekly,ndom,monthly,yearly',
             'repetitions.*.moment'                 => 'between:0,10',
             'repetitions.*.skip'                   => 'required|numeric|between:0,31',
             'repetitions.*.weekend'                => 'required|numeric|min:1|max:4',
-            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id|required_without:transactions.*.currency_code',
-            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code|required_without:transactions.*.currency_id',
+            'transactions.*.description'           => 'required|between:1,255',
+            'transactions.*.amount'                => 'required|numeric|more:0',
             'transactions.*.foreign_amount'        => 'numeric|more:0',
+            'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
+            'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
             'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
@@ -112,8 +123,8 @@ class RecurrenceRequest extends Request
             'transactions.*.source_name'           => 'between:1,255|nullable',
             'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
             'transactions.*.destination_name'      => 'between:1,255|nullable',
-            'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.description'           => 'required|between:1,255',
+
+
         ];
     }
 

@@ -154,6 +154,8 @@ return [
     'share_config_file'                   => 'Si ha importado los datos de un banco público, debe <a href="https://github.com/firefly-iii/import-configurations/wiki">compartir su archivo de configuración</a> para que sea fácil para otros usuarios importar sus propios datos. Compartiendo su archivo de configuración no expondrá sus datos financieros.',
     'job_config_bunq_apply_rules'         => 'Aplicar reglas',
     'job_config_bunq_apply_rules_text'    => 'De forma predeterminada, sus reglas se aplicarán a las transacciones creadas durante esta rutina de importación. Si no desea que esto suceda, desactive esta casilla de verificación.',
+    'bunq_savings_goal'                   => 'Savings goal: :amount (:percentage%)',
+    'bunq_account_status_CANCELLED'       => 'Closed bunq account',
 
     'ynab_account_closed'                  => '¡La cuenta ha sido cerrada!',
     'ynab_account_deleted'                 => '¡La cuenta ha sido borrada!',
@@ -312,6 +314,7 @@ return [
     'column_sepa-ci'                  => 'Identificador de acreedor SEPA',
     'column_sepa-ep'                  => 'Propósito externo SEPA',
     'column_sepa-country'             => 'Código del país SEPA',
+    'column_sepa-batch-id'            => 'SEPA Batch ID',
     'column_tags-comma'               => 'Etiquetas ( separadas por comas)',
     'column_tags-space'               => 'Etiquetas ( separadas por espacio)',
     'column_account-number'           => 'Cuenta de archivos ( numero de cuenta)',

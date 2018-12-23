@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Factory;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Log;
 
@@ -33,31 +36,46 @@ use Log;
  */
 class AttachmentFactory
 {
+    /** @var User */
+    private $user;
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-    /** @var User */
-    private $user;
 
     /**
      * @param array $data
      *
      * @return Attachment|null
+     * @throws FireflyException
      */
     public function create(array $data): ?Attachment
     {
+        // append if necessary.
+        $model = false === strpos('FireflyIII', $data['model']) ? 'FireflyIII\\Models\\' . $data['model'] : $data['model'];
+
+        if (Transaction::class === $model) {
+            /** @var Transaction $transaction */
+            $transaction = $this->user->transactions()->find((int)$data['model_id']);
+            if (null === $transaction) {
+                throw new FireflyException('Unexpectedly could not find transaction');
+            }
+            $data['model_id'] = $transaction->transaction_journal_id;
+            $model            = TransactionJournal::class;
+        }
+
         // create attachment:
         $attachment = Attachment::create(
             [
                 'user_id'         => $this->user->id,
                 'attachable_id'   => $data['model_id'],
-                'attachable_type' => $data['model'],
+                'attachable_type' => $model,
                 'md5'             => '',
                 'filename'        => $data['filename'],
                 'title'           => '' === $data['title'] ? null : $data['title'],

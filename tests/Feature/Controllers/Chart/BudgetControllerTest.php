@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
@@ -312,6 +313,10 @@ class BudgetControllerTest extends TestCase
         $budget                 = factory(Budget::class)->make();
         $budgetLimit            = factory(BudgetLimit::class)->make();
         $budgetLimit->budget_id = $budget->id;
+        $fiscalHelper           = $this->mock(FiscalHelperInterface::class);
+        $date                   = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $repository->shouldReceive('getBudgetPeriodReport')->andReturn([])->once();
         $repository->shouldReceive('getBudgetLimits')->andReturn(new Collection([$budgetLimit]));
@@ -327,8 +332,12 @@ class BudgetControllerTest extends TestCase
      */
     public function testPeriodNoBudget(): void
     {
-        $repository = $this->mock(BudgetRepositoryInterface::class);
-        $generator  = $this->mock(GeneratorInterface::class);
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $repository->shouldReceive('getNoBudgetPeriodReport')->andReturn([])->once();
         $generator->shouldReceive('singleSet')->once()->andReturn([]);

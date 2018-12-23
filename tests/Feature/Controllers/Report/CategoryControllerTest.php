@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -55,6 +57,10 @@ class CategoryControllerTest extends TestCase
         $first      = [1 => ['entries' => ['1', '1']]];
         $second     = ['entries' => ['1', '1']];
         $repository = $this->mock(CategoryRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
         $repository->shouldReceive('periodExpenses')->andReturn($first);
         $repository->shouldReceive('periodExpensesNoCategory')->andReturn($second);
@@ -72,6 +78,10 @@ class CategoryControllerTest extends TestCase
         $first      = [1 => ['entries' => ['1', '1']]];
         $second     = ['entries' => ['1', '1']];
         $repository = $this->mock(CategoryRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
         $repository->shouldReceive('periodIncome')->andReturn($first);
         $repository->shouldReceive('periodIncomeNoCategory')->andReturn($second);
@@ -88,6 +98,10 @@ class CategoryControllerTest extends TestCase
     {
         $repository = $this->mock(CategoryRepositoryInterface::class);
         $category   = factory(Category::class)->make();
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $repository->shouldReceive('spentInPeriod')->andReturn('-1');
         $repository->shouldReceive('earnedInPeriod')->andReturn('1');

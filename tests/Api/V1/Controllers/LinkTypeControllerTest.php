@@ -23,9 +23,14 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\LinkTypeTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -77,7 +82,6 @@ class LinkTypeControllerTest extends TestCase
         $response->assertStatus(204);
     }
 
-
     /**
      * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
      */
@@ -112,20 +116,19 @@ class LinkTypeControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $linkTypes = LinkType::get();
-
-        // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
 
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
         // mock calls:
         $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('get')->once()->andReturn($linkTypes);
+        $repository->shouldReceive('get')->once()->andReturn(new Collection);
 
         // call API
         $response = $this->get('/api/v1/link_types');
         $response->assertStatus(200);
-        $response->assertSee($linkTypes->first()->created_at->toAtomString());
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -139,6 +142,14 @@ class LinkTypeControllerTest extends TestCase
         // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -146,7 +157,6 @@ class LinkTypeControllerTest extends TestCase
         // call API
         $response = $this->get('/api/v1/link_types/' . $linkType->id);
         $response->assertStatus(200);
-        $response->assertSee($linkType->first()->created_at->toAtomString());
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -161,6 +171,14 @@ class LinkTypeControllerTest extends TestCase
         // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -180,7 +198,6 @@ class LinkTypeControllerTest extends TestCase
         // test API
         $response = $this->post('/api/v1/link_types', $data);
         $response->assertStatus(200);
-        $response->assertSee($linkType->created_at->toAtomString());
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -195,6 +212,7 @@ class LinkTypeControllerTest extends TestCase
         // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -218,6 +236,44 @@ class LinkTypeControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
+     */
+    public function testTransactions(): void
+    {
+        $linkType  = LinkType::first();
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+        // mock repositories:
+        $linkTypeRepos = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $transformer   = $this->mock(TransactionTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        $journalIds = $linkTypeRepos->shouldReceive('getJournalIds')->once()->andReturn([1, 2, 3]);
+        $collector->shouldReceive('setUser')->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->once()->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->once()->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->once()->andReturn($paginator);
+
+        $collector->shouldReceive('removeFilter')->once()->andReturnSelf();
+        $linkTypeRepos->shouldReceive('setUser')->once();
+
+        $response = $this->get(
+            route('api.v1.link_types.transactions', [$linkType->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31'])
+        );
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\LinkTypeController
      * @covers \FireflyIII\Api\V1\Requests\LinkTypeRequest
      */
     public function testUpdate(): void
@@ -225,6 +281,15 @@ class LinkTypeControllerTest extends TestCase
         // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         $userRepository->shouldReceive('hasRole')->once()->andReturn(true);
 
         // create editable link type:
@@ -255,7 +320,6 @@ class LinkTypeControllerTest extends TestCase
         $response = $this->put('/api/v1/link_types/' . $linkType->id, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($linkType->created_at->toAtomString());
     }
 
     /**
@@ -267,6 +331,7 @@ class LinkTypeControllerTest extends TestCase
         // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
 
         // create editable link type:
         $linkType = LinkType::create(
@@ -306,6 +371,8 @@ class LinkTypeControllerTest extends TestCase
         // mock stuff:
         $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
+        $transformer    = $this->mock(LinkTypeTransformer::class);
+
         $userRepository->shouldReceive('hasRole')->once()->andReturn(false);
 
         // create editable link type:

@@ -1,0 +1,70 @@
+<html>
+<head>
+    <title>Debug page</title>
+</head>
+<body>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;">
+    If you are running into problems, you can use the information in this box as debug information. Please copy-and-paste into a new
+    or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. It will generate a beautiful table that can
+    be used to quickly diagnose your problem.
+</p>
+<textarea rows="30" cols="100" name="debug_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:8pt;">
+Debug information generated at {{ now }} for Firefly III version **{{ FF_VERSION }}**.
+
+| Variable | Content |
+| --- | --- |
+| FF version | {{ FF_VERSION }} |
+| FF API version | {{ config('firefly.api_version') }} |
+| App environment | {{ appEnv }} |
+| App debug mode | {{ appDebug }} |
+| App cache driver | {{ cacheDriver }} |
+| App logging | {{ appLogLevel }}, {{ logChannel }} |
+| PHP version | {{ phpVersion }} |
+| Display errors | {{ displayErrors }} |
+| Session start | {{ session('start') }} |
+| Session end | {{ session('end') }} |
+| Session first | {{ session('first') }} |
+| Error reporting | {{ errorReporting }} |
+| Host | {{ phpOs }} |
+| Interface | {{ interface }} |
+| UserID | {{ Auth.user.id }} |
+{% for code,result in localeAttempts %}
+| Attempt at "{{ code }}" | {{ result }} |
+{% endfor %}
+| DB drivers | {{ drivers }} |
+| Current driver | {{ currentDriver }} |
+| Login provider | {{ loginProvider }}  |
+| Storage disks | {{ storageDisks }}  |
+| Using Sandstorm? | {% if SANDSTORM == true %}yes{% else %}no{% endif %} |
+{% if SANDSTORM == true %}| Sandstorm anon? | {% if SANDSTORM_ANON == true %}yes{% else %}no{% endif %} |{% endif %}
+| Is Sandstorm (.env) | {{ isSandstorm }} |
+| Is Docker (.env) | {{ isDocker }} |
+| bunq uses sandbox | {{ toSandbox }} |
+| Trusted proxies (.env) | {{ trustedProxies }} |
+| User agent | {{ userAgent }} |
+| Loaded extensions | {{ extensions }} |
+</textarea>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    <a href="{{ route('index') }}">Back to the index</a>
+</p>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    You may also share the content of the box below. You can also copy-and-paste this into a new
+    or existing <a href="https://github.com/firefly-iii/firefly-iii/issues">GitHub issue</a>. However, the content of this
+    box may contain private information such as account names, transaction details or email addresses.
+</p>
+
+<textarea rows="30" cols="100" name="log_info" style="font-family:Menlo, Monaco, Consolas, monospace;font-size:7pt;">
+```
+{{ logContent }}
+```
+</textarea>
+
+<p style="font-family:Arial, Arial, Helvetica, sans-serif;font-size:12pt;width:600px;color:#a00;">
+    <a href="{{ route('index') }}">Back to the index</a>
+</p>
+
+</body>
+</html>

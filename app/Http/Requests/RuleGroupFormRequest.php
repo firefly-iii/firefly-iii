@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class RuleGroupFormRequest.
@@ -47,9 +48,15 @@ class RuleGroupFormRequest extends Request
      */
     public function getRuleGroupData(): array
     {
+        $active = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+
         return [
             'title'       => $this->string('title'),
             'description' => $this->string('description'),
+            'active'      => $active,
         ];
     }
 
@@ -72,6 +79,7 @@ class RuleGroupFormRequest extends Request
         return [
             'title'       => $titleRule,
             'description' => 'between:1,5000|nullable',
+            'active'      => [new IsBoolean],
         ];
     }
 }

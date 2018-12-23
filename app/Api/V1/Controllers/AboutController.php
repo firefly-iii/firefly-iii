@@ -75,7 +75,12 @@ class AboutController extends Controller
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item(auth()->user(), new UserTransformer($this->parameters), 'users');
+
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item(auth()->user(), $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

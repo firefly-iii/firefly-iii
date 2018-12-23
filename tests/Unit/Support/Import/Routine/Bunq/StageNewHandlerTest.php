@@ -211,6 +211,7 @@ class StageNewHandlerTest extends TestCase
                         'default_avatar_status' => null,
                         'restriction_chat'      => null,
                     ],
+                    'iban' => 'SM72C9584723533916792029340'
                 ],
             ],
         ];
@@ -297,7 +298,9 @@ class StageNewHandlerTest extends TestCase
                         'default_avatar_status' => null,
                         'restriction_chat'      => null,
                     ],
+                    'iban' => 'SM72C9584723533916792029340'
                 ],
+
             ],
         ];
 

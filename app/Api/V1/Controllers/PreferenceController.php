@@ -71,32 +71,15 @@ class PreferenceController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($preferences, new PreferenceTransformer($this->parameters), 'preferences');
+
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($preferences, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
-
-    }
-
-    /**
-     * List single resource.
-     *
-     * @param Request    $request
-     * @param Preference $preference
-     *
-     * @return JsonResponse
-     */
-    public function show(Request $request, Preference $preference): JsonResponse
-    {
-        // create some objects:
-        $manager = new Manager;
-        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-        // present to user.
-        $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($preference, new PreferenceTransformer($this->parameters), 'preferences');
-
-        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
 
@@ -137,7 +120,11 @@ class PreferenceController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($result, new PreferenceTransformer($this->parameters), 'preferences');
+        /** @var PreferenceTransformer $transformer */
+        $transformer = app(PreferenceTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($result, $transformer, 'preferences');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

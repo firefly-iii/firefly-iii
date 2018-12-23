@@ -34,6 +34,5 @@ return [
     'transactions-index'     => 'Ces dépenses, dépôts et transferts ne sont pas particulièrement imaginatifs. Ils ont été générés automatiquement.',
     'piggy-banks-index'      => 'Comme vous pouvez le voir, il y a trois tirelires. Utilisez les boutons plus et moins pour influer sur le montant d’argent dans chaque tirelire. Cliquez sur le nom de la tirelire pour voir l’administration pour chaque tirelire.',
     'import-index'           => 'Tout fichier CSV peut être importé dans Firefly III. L\'importation de données depuis bunq et Spectre est également supportée. D\'autres banques et agrégateurs financiers seront mis en place dans le futur. En tant qu\'utilisateur du site de démonstration, vous ne pouvez voir que le «faux» service en action. Il va générer des transactions aléatoires pour vous montrer comment se déroule le processus.',
-    'recurring-index'        => 'Veuillez noter que cette fonctionnalité est en cours de développement et peut ne pas fonctionner comme prévu.',
-    'recurring-create'       => 'Veuillez noter que cette fonctionnalité est en cours de développement et peut ne pas fonctionner comme prévu.',
+    'profile-index'          => 'Garder à l’esprit que le site de démo se réinitialise toutes les quatre heures. Votre accès peut être révoqué à n\'importe quel moment. Ceci intervient automatiquement, ce n\'est pas un bug.',
 ];

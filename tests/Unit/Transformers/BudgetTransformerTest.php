@@ -23,8 +23,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Transformers;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Transformers\BudgetTransformer;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -35,24 +38,80 @@ use Tests\TestCase;
 class BudgetTransformerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+    /**
      * Basic coverage
      *
      * @covers \FireflyIII\Transformers\BudgetTransformer
      */
     public function testBasic(): void
     {
+        // mocks and prep:
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $parameters  = new ParameterBag;
+        $budget      = Budget::first();
+        $transformer = app(BudgetTransformer::class);
+        $transformer->setParameters($parameters);
 
-        $budget      = Budget::create(
+        // mocks
+        $repository->shouldReceive('setUser')->once();
+
+        // action
+        $result = $transformer->transform($budget);
+
+
+        $this->assertEquals($budget->id, $result['id']);
+        $this->assertEquals((bool)$budget->active, $result['active']);
+        $this->assertEquals([], $result['spent']);
+
+    }
+
+    /**
+     * Basic coverage
+     *
+     * @covers \FireflyIII\Transformers\BudgetTransformer
+     */
+    public function testSpentArray(): void
+    {
+        // mocks and prep:
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $parameters = new ParameterBag;
+
+        // set parameters
+        $parameters->set('start', new Carbon('2018-01-01'));
+        $parameters->set('end', new Carbon('2018-01-31'));
+
+        $budget      = Budget::first();
+        $transformer = app(BudgetTransformer::class);
+        $transformer->setParameters($parameters);
+
+        // spent data
+        $spent = [
             [
-                'user_id' => $this->user()->id,
-                'name'    => 'Some budget ' . random_int(1, 10000),
-                'active'  => 1,
-            ]
-        );
-        $transformer = new BudgetTransformer(new ParameterBag);
-        $result      = $transformer->transform($budget);
+                'currency_id'             => 1,
+                'currency_code'           => 'AKC',
+                'currency_symbol'         => 'x',
+                'currency_decimal_places' => 2,
+                'amount'                  => 1000,
+            ],
+        ];
 
-        $this->assertEquals($budget->name, $result['name']);
-        $this->assertTrue($result['active']);
+        // mocks
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('spentInPeriodMc')->atLeast()->once()->andReturn($spent);
+
+        // action
+        $result = $transformer->transform($budget);
+
+        $this->assertEquals($budget->id, $result['id']);
+        $this->assertEquals((bool)$budget->active, $result['active']);
+        $this->assertEquals($spent, $result['spent']);
+
     }
 }

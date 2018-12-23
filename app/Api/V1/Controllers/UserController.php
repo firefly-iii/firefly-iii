@@ -78,7 +78,7 @@ class UserController extends Controller
     {
         /** @var User $admin */
         $admin = auth()->user();
-        if ($this->repository->hasRole($admin, 'owner')) {
+        if ($admin->id !== $user->id && $this->repository->hasRole($admin, 'owner')) {
             $this->repository->destroy($user);
 
             return response()->json([], 204);
@@ -113,7 +113,11 @@ class UserController extends Controller
         $paginator->setPath(route('api.v1.users.index') . $this->buildParams());
 
         // make resource
-        $resource = new FractalCollection($users, new UserTransformer($this->parameters), 'users');
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($users, $transformer, 'users');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -134,12 +138,12 @@ class UserController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // make resource
-        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -161,12 +165,13 @@ class UserController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // make resource
-        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -189,12 +194,12 @@ class UserController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         // make resource
-        $resource = new Item($user, new UserTransformer($this->parameters), 'users');
+        /** @var UserTransformer $transformer */
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($user, $transformer, 'users');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

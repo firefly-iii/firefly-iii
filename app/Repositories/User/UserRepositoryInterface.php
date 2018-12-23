@@ -31,6 +31,13 @@ use Illuminate\Support\Collection;
  */
 interface UserRepositoryInterface
 {
+
+    /**
+     * @param User $user
+     *
+     * @return string|null
+     */
+    public function getRoleByUser(User $user): ?string;
     /**
      * Returns a collection of all users.
      *

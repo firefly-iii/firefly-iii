@@ -110,7 +110,7 @@ class SelectControllerTest extends TestCase
     public function testTestTriggers(): void
     {
         $data = [
-            'rule_triggers' => [
+            'triggers' => [
                 'name'            => 'description',
                 'value'           => 'Bla bla',
                 'stop_processing' => 1,
@@ -125,9 +125,9 @@ class SelectControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
-        $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
-        $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
+        $matcher->shouldReceive('setStrict')->once()->withArgs([false])->andReturnSelf();
+        $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
+        $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
         $matcher->shouldReceive('findTransactionsByTriggers')->andReturn(new Collection);
 
@@ -145,8 +145,8 @@ class SelectControllerTest extends TestCase
         $matcher = $this->mock(TransactionMatcher::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
-        $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
+        $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
+        $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setRule')->andReturnSelf()->once();
         $matcher->shouldReceive('findTransactionsByRule')->andReturn(new Collection);
 
@@ -181,7 +181,7 @@ class SelectControllerTest extends TestCase
     public function testTestTriggersMax(): void
     {
         $data = [
-            'rule_triggers' => [
+            'triggers' => [
                 'name'            => 'description',
                 'value'           => 'Bla bla',
                 'stop_processing' => 1,
@@ -199,8 +199,8 @@ class SelectControllerTest extends TestCase
 
         $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
 
-        $matcher->shouldReceive('setLimit')->withArgs([10])->andReturnSelf()->once();
-        $matcher->shouldReceive('setRange')->withArgs([200])->andReturnSelf()->once();
+        $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
+        $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
         $matcher->shouldReceive('findTransactionsByTriggers')->andReturn($set);
 

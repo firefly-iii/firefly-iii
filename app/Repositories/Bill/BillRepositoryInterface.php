@@ -65,6 +65,15 @@ interface BillRepositoryInterface
     public function getActiveBills(): Collection;
 
     /**
+     * Get all attachments.
+     *
+     * @param Bill $bill
+     *
+     * @return Collection
+     */
+    public function getAttachments(Bill $bill): Collection;
+
+    /**
      * @return Collection
      */
     public function getBills(): Collection;

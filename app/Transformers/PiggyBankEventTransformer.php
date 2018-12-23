@@ -24,90 +24,37 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Illuminate\Support\Collection;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use Log;
 
 /**
  * Class PiggyBankEventTransformer
  */
-class PiggyBankEventTransformer extends TransformerAbstract
+class PiggyBankEventTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['piggy_bank', 'transaction'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
-    /** @var ParameterBag */
-    protected $parameters;
+    /** @var CurrencyRepositoryInterface */
+    private $currencyRepos;
+    /** @var PiggyBankRepositoryInterface */
+    private $piggyRepos;
+    /** @var AccountRepositoryInterface */
+    private $repository;
 
     /**
      * PiggyBankEventTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * Include piggy bank into end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param PiggyBankEvent $event
-     *
-     * @return Item
-     */
-    public function includePiggyBank(PiggyBankEvent $event): Item
-    {
-        return $this->item($event->piggyBank, new PiggyBankTransformer($this->parameters), 'piggy_banks');
-    }
-
-    /**
-     * Include transaction into end result.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param PiggyBankEvent $event
-     *
-     * @return Item
-     */
-    public function includeTransaction(PiggyBankEvent $event): Item
-    {
-        $journal  = $event->transactionJournal;
-        $pageSize = (int)app('preferences')->getForUser($journal->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($journal->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setJournals(new Collection([$journal]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        $this->repository    = app(AccountRepositoryInterface::class);
+        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        $this->piggyRepos    = app(PiggyBankRepositoryInterface::class);
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->item($transactions->first(), new TransactionTransformer($this->parameters), 'transactions');
     }
 
     /**
@@ -119,28 +66,37 @@ class PiggyBankEventTransformer extends TransformerAbstract
      */
     public function transform(PiggyBankEvent $event): array
     {
+        // get account linked to piggy bank
         $account = $event->piggyBank->account;
-        /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
-        $accountRepos->setUser($account->user);
 
-        $currencyId    = (int)$accountRepos->getMetaValue($account, 'currency_id');
-        $decimalPlaces = 2;
-        if ($currencyId > 0) {
-            /** @var CurrencyRepositoryInterface $repository */
-            $repository = app(CurrencyRepositoryInterface::class);
-            $repository->setUser($account->user);
-            $currency = $repository->findNull($currencyId);
-            /** @noinspection NullPointerExceptionInspection */
-            $decimalPlaces = $currency->decimal_places;
+        // set up repositories.
+        $this->repository->setUser($account->user);
+        $this->currencyRepos->setUser($account->user);
+        $this->piggyRepos->setUser($account->user);
+
+        // get associated currency or fall back to the default:
+        $currencyId = (int)$this->repository->getMetaValue($account, 'currency_id');
+        $currency   = $this->currencyRepos->findNull($currencyId);
+        if (null === $currency) {
+            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
         }
 
+        // get associated journal and transaction, if any:
+        $journalId     = $event->transaction_journal_id;
+        $transactionId = $this->piggyRepos->getTransactionWithEvent($event);
+
         $data = [
-            'id'         => (int)$event->id,
-            'updated_at' => $event->updated_at->toAtomString(),
-            'created_at' => $event->created_at->toAtomString(),
-            'amount'     => round($event->amount, $decimalPlaces),
-            'links'      => [
+            'id'                      => (int)$event->id,
+            'created_at'              => $event->created_at->toAtomString(),
+            'updated_at'              => $event->updated_at->toAtomString(),
+            'amount'                  => round($event->amount, $currency->decimal_places),
+            'currency_id'             => $currency->id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'journal_id'              => $journalId,
+            'transaction_id'          => $transactionId,
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/piggy_bank_events/' . $event->id,

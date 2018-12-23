@@ -22,30 +22,6 @@ declare(strict_types=1);
 
 use Carbon\Carbon;
 
-/*
-|--------------------------------------------------------------------------
-| Model Factories
-|--------------------------------------------------------------------------
-|
-| Here you may define all of your model factories. Model factories give
-| you a convenient way to create models for testing and seeding your
-| database. Just tell the factory how a default model should look.
-|
-*/
-
-$factory->define(
-    FireflyIII\User::class,
-    function (Faker\Generator $faker) {
-        static $password;
-
-        return [
-            'email'          => $faker->safeEmail,
-            'password'       => $password ?: $password = bcrypt('secret'),
-            'remember_token' => str_random(10),
-        ];
-    }
-);
-
 
 $factory->define(
     FireflyIII\Models\Attachment::class,
@@ -237,21 +213,6 @@ $factory->define(
             'end_date'   => '2017-01-31',
             'amount'     => '300',
             'budget_id'  => $faker->numberBetween(1, 6),
-        ];
-    }
-);
-
-$factory->define(
-    FireflyIII\Models\Account::class,
-    function (Faker\Generator $faker) {
-        return [
-            'id'              => $faker->unique()->numberBetween(1000, 10000),
-            'user_id'         => 1,
-            'created_at'      => new Carbon,
-            'updated_at'      => new Carbon,
-            'name'            => $faker->words(3, true),
-            'account_type_id' => 1,
-            'active'          => true,
         ];
     }
 );

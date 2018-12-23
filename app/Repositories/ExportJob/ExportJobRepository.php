@@ -44,7 +44,7 @@ class ExportJobRepository implements ExportJobRepositoryInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -60,39 +60,6 @@ class ExportJobRepository implements ExportJobRepositoryInterface
         Log::debug(sprintf('Change status of job #%d to "%s"', $job->id, $status));
         $job->status = $status;
         $job->save();
-
-        return true;
-    }
-
-    /**
-     * @return bool
-     */
-    public function cleanup(): bool
-    {
-        $dayAgo = Carbon::now()->subDay();
-        $set    = ExportJob::where('created_at', '<', $dayAgo->format('Y-m-d H:i:s'))
-                           ->whereIn('status', ['never_started', 'export_status_finished', 'export_downloaded'])
-                           ->get();
-
-        $disk = Storage::disk('export');
-        $files = $disk->files();
-
-        // loop set:
-        /** @var ExportJob $entry */
-        foreach ($set as $entry) {
-            $key   = $entry->key;
-            /** @var array $file */
-            foreach ($files as $file) {
-                if (0 === strpos($file['basename'], $key)) {
-                    $disk->delete($file['path']);
-                }
-            }
-            try {
-                $entry->delete();
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete object: %s', $e->getMessage()));
-            }
-        }
 
         return true;
     }

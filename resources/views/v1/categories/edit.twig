@@ -1,0 +1,45 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, category) }}
+{% endblock %}
+
+{% block content %}
+    {{ Form.model(category, {'class' : 'form-horizontal','id' : 'update','url' : route('categories.update',category.id)}) }}
+    <input type="hidden" name="id" value="{{ category.id }}"/>
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name') }}
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12">
+
+
+            {# panel for options #}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','category') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn pull-right btn-success">
+                        {{ 'update_category'|_ }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ Form.close|raw }}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="v1/js/ff/categories/edit.js?v={{ FF_VERSION }}"></script>
+{% endblock %}

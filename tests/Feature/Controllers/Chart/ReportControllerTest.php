@@ -22,7 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
+use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
@@ -51,12 +54,26 @@ class ReportControllerTest extends TestCase
      */
     public function testNetWorth(): void
     {
-        $generator    = $this->mock(GeneratorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $netWorth      = $this->mock(NetWorthInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+        //$currencyRepos->shouldReceive('setUser');
+        //$currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
 
-        $currencyRepos->shouldReceive('setUser');
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        $netWorth->shouldReceive('getNetWorthByCurrency')->andReturn(
+            [
+                [
+                    'currency' => TransactionCurrency::first(),
+                    'balance'  => '123',
+                ],
+            ]
+        );
+        $netWorth->shouldReceive('setUser')->atLeast()->once();
 
         // mock calls:
         $accountRepos->shouldReceive('setUser');
@@ -82,12 +99,15 @@ class ReportControllerTest extends TestCase
      */
     public function testOperations(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $tasker    = $this->mock(AccountTaskerInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $tasker        = $this->mock(AccountTaskerInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
-        $income    = [1 => ['sum' => '100']];
-        $expense   = [2 => ['sum' => '-100']];
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $income  = [1 => ['sum' => '100']];
+        $expense = [2 => ['sum' => '-100']];
         $tasker->shouldReceive('getIncomeReport')->once()->andReturn($income);
         $tasker->shouldReceive('getExpenseReport')->once()->andReturn($expense);
         $generator->shouldReceive('multiSet')->andReturn([]);
@@ -102,10 +122,13 @@ class ReportControllerTest extends TestCase
      */
     public function testSum(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $tasker    = $this->mock(AccountTaskerInterface::class);
+        $generator     = $this->mock(GeneratorInterface::class);
+        $tasker        = $this->mock(AccountTaskerInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $income  = [];
         $expense = [];

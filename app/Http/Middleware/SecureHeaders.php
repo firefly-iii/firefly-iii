@@ -44,7 +44,7 @@ class SecureHeaders
     {
         $response    = $next($request);
         $google      = '';
-        $analyticsId = env('ANALYTICS_ID', '');
+        $analyticsId = config('firefly.analytics_id');
         if ('' !== $analyticsId) {
             $google = 'www.googletagmanager.com/gtag/js'; // @codeCoverageIgnore
         }
@@ -76,7 +76,10 @@ class SecureHeaders
             "payment 'none'",
         ];
 
-        $response->header('X-Frame-Options', 'deny');
+        $disableFrameHeader = config('firefly.disable_frame_header');
+        if (false === $disableFrameHeader || null === $disableFrameHeader) {
+            $response->header('X-Frame-Options', 'deny');
+        }
         $response->header('Content-Security-Policy', implode('; ', $csp));
         $response->header('X-XSS-Protection', '1; mode=block');
         $response->header('X-Content-Type-Options', 'nosniff');

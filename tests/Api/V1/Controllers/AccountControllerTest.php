@@ -23,13 +23,21 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Transformers\PiggyBankTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
-use Mockery;
 use Tests\TestCase;
 
 /**
@@ -55,18 +63,16 @@ class AccountControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('destroy')->once()->andReturn(true);
-        $currencyRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('destroy')->atLeast()->once()->andReturn(true);
 
         // get account:
-        $account = $this->user()->accounts()->first();
+        $account = $this->getRandomAsset();
 
         // call API
-        $response = $this->delete('/api/v1/accounts/' . $account->id);
+        $response = $this->delete(route('api.v1.accounts.delete', [$account->id]));
         $response->assertStatus(204);
 
     }
@@ -82,18 +88,19 @@ class AccountControllerTest extends TestCase
         $accounts = factory(Account::class, 10)->create();
 
         // mock stuff:
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $transformer = $this->mock(AccountTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getAccountsByType')->withAnyArgs()->andReturn($accounts)->once();
-        $currencyRepos->shouldReceive('setUser');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
 
         // test API
         $response = $this->get('/api/v1/accounts');
@@ -108,34 +115,104 @@ class AccountControllerTest extends TestCase
     }
 
     /**
+     * Test the list of piggy banks.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testPiggyBanks(): void
+    {
+        // mock stuff:
+        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer = $this->mock(PiggyBankTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // get piggies for this user.
+        $piggies = factory(PiggyBank::class, 10)->create();
+        $asset   = $this->getRandomAsset();
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $repository->shouldReceive('getPiggyBanks')->andReturn($piggies)->atLeast()->once();
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.piggy_banks', [$asset->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(
+            ['meta' => ['pagination' => ['total'       => $piggies->count(), 'count' => $piggies->count(), 'per_page' => true, 'current_page' => 1,
+                                         'total_pages' => 1]],]
+        );
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertSee('page=1'); // default returns this.
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show an account.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+
+    public function testShow(): void
+    {
+        // mock stuff:
+        $account    = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.show', [$account->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * Opening balance without date.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
      * @covers \FireflyIII\Api\V1\Requests\AccountRequest
      */
-    public function testInvalidBalance(): void
+    public function testStoreInvalidBalance(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
 
         // data to submit
         $data = [
-            'name'              => 'Some new asset account #' . random_int(1, 10000),
-            'currency_id'       => 1,
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'defaultAsset',
-            'opening_balance'   => '123.45',
+            'name'            => 'Some new asset account #' . random_int(1, 10000),
+            'type'            => 'asset',
+            'account_role'    => 'defaultAsset',
+            'opening_balance' => '123.45',
         ];
 
         // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -149,122 +226,6 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * CC type present when account is a credit card.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
-     */
-    public function testNoCreditCardData(): void
-    {
-        // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
-
-        // data to submit
-        $data = [
-            'name'              => 'Some new asset account #' . random_int(1, 10000),
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'ccAsset',
-            'currency_id'       => 1,
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'cc_monthly_payment_date' => ['The cc monthly payment date field is required when account role is ccAsset.'],
-                    'cc_type'                 => ['The cc type field is required when account role is ccAsset.'],
-                ],
-            ]
-        );
-        $response->assertHeader('Content-Type', 'application/json');
-    }
-
-    /**
-     * No currency information
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
-     */
-    public function testNoCurrencyInfo(): void
-    {
-        // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
-
-        // data to submit
-        $data = [
-            'name'              => 'Some new asset account #' . random_int(1, 10000),
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'defaultAsset',
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'currency_code' => ['The currency code field is required when currency id is not present.'],
-                    'currency_id'   => ['The currency id field is required when currency code is not present.'],
-                ],
-            ]
-        );
-        $response->assertHeader('Content-Type', 'application/json');
-    }
-
-    /**
-     * Show an account.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     */
-
-    public function testShow(): void
-    {
-        // create stuff
-        $account = $this->user()->accounts()->first();
-
-        // mock stuff:
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser');
-        $currencyRepos->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10')->once();
-        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01')->once();
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
-
-
-        // test API
-        $response = $this->get('/api/v1/accounts/' . $account->id);
-        $response->assertStatus(200);
-        $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
-        $response->assertSee('2018-01-01'); // opening balance date
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
@@ -273,43 +234,119 @@ class AccountControllerTest extends TestCase
     public function testStoreLiability(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $account       = $this->user()->accounts()->first();
-        // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('store')->once()->andReturn($account);
-        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
-        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
-        $currencyRepos->shouldReceive('setUser')->once();
+        $repository = $this->mock(AccountRepositoryInterface::class);
 
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $transformer = $this->mock(AccountTransformer::class);
+        $account     = $this->getRandomAsset();
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('store')->atLeast()->once()->andReturn($account);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // data to submit
         $data = [
             'name'                 => 'Some new liability account #' . random_int(1, 10000),
-            'currency_id'          => 1,
             'type'                 => 'liability',
-            'active'               => 1,
-            'include_net_worth'    => 1,
             'liability_amount'     => '10000',
             'liability_start_date' => '2016-01-01',
             'liability_type'       => 'mortgage',
+            'active'               => true,
             'interest'             => '1',
             'interest_period'      => 'daily',
         ];
 
         // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
-        $response->assertSee($account->name);
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
+
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
 
+    }
+
+    /**
+     * CC type present when account is a credit card.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     */
+    public function testStoreNoCreditCardData(): void
+    {
+        // mock repositories
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+
+        // data to submit
+        $data = [
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
+            'type'         => 'asset',
+            'account_role' => 'ccAsset',
+        ];
+
+        // test API
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'credit_card_type'     => ['The credit card type field is required when account role is ccAsset.'],
+                    'monthly_payment_date' => ['The monthly payment date field is required when account role is ccAsset.'],
+
+                ],
+            ]
+        );
+        $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * No currency information (is allowed).
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     */
+    public function testStoreNoCurrencyInfo(): void
+    {
+        // mock repositories
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('store')->once()->andReturn(new Account);
+
+        // data to submit
+        $data = [
+            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'type'              => 'asset',
+            'account_role'      => 'defaultAsset',
+            'include_net_worth' => false,
+        ];
+
+        // test API
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -321,14 +358,15 @@ class AccountControllerTest extends TestCase
     public function testStoreNotUnique(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
-        $account = $this->user()->accounts()->where('account_type_id', 3)->first();
+
+        $account = $this->getRandomAsset();
         // data to submit
         $data = [
             'name'              => $account->name,
@@ -340,7 +378,7 @@ class AccountControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -362,38 +400,34 @@ class AccountControllerTest extends TestCase
     public function testStoreValid(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $account       = $this->user()->accounts()->first();
-        // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('store')->once()->andReturn($account);
-        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
-        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
-        $currencyRepos->shouldReceive('setUser')->once();
+        $repository = $this->mock(AccountRepositoryInterface::class);
 
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $transformer = $this->mock(AccountTransformer::class);
+        $account     = $this->getRandomAsset();
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('store')->atLeast()->once()->andReturn($account);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // data to submit
         $data = [
-            'name'              => 'Some new asset account #' . random_int(1, 10000),
-            'currency_id'       => 1,
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'defaultAsset',
+            'name'         => 'Some new asset account #' . random_int(1, 10000),
+            'type'         => 'asset',
+            'account_role' => 'defaultAsset',
         ];
 
         // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($account->name);
     }
 
     /**
@@ -405,42 +439,165 @@ class AccountControllerTest extends TestCase
     public function testStoreWithCurrencyCode(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $account       = $this->user()->accounts()->first();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+        $account     = $this->getRandomAsset();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $currencyRepos->shouldReceive('setUser')->once();
-        $repository->shouldReceive('store')->once()->andReturn($account);
-        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
-        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
-        $currencyRepos->shouldReceive('findByCodeNull')->andReturn(TransactionCurrency::find(1));
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('store')->atLeast()->once()->andReturn($account);
 
-        // functions to expect:
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // data to submit
         $data = [
-            'name'              => 'Some new asset account #' . random_int(1, 10000),
-            'currency_code'     => 'EUR',
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'defaultAsset',
+            'name'          => 'Some new asset account #' . random_int(1, 10000),
+            'currency_code' => 'EUR',
+            'type'          => 'asset',
+            'account_role'  => 'defaultAsset',
         ];
 
         // test API
-        $response = $this->post('/api/v1/accounts', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.accounts.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($account->name);
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testTransactionsBasic(): void
+    {
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $transformer        = $this->mock(TransactionTransformer::class);
+
+        // default mocks
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
+
+        // mock collector:
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $asset = $this->getRandomAsset();
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.transactions', [$asset->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testTransactionsOpposing(): void
+    {
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $transformer        = $this->mock(TransactionTransformer::class);
+
+        // default mocks
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnFalse();
+
+        // mock collector:
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setOpposingAccounts')->atLeast()->once()->andReturnSelf();
+
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $revenue = $this->getRandomAsset();
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.transactions', [$revenue->id]));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show index.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testTransactionsRange(): void
+    {
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+        $transformer        = $this->mock(TransactionTransformer::class);
+
+        // default mocks
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
+
+        // mock collector:
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+        $collector->shouldReceive('setUser')->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
+        $collector->shouldReceive('setAccounts')->andReturnSelf();
+        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf();
+        $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('setRange')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $asset = $this->getRandomAsset();
+
+        // test API
+        $response = $this->get(route('api.v1.accounts.transactions', [$asset->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31']));
+        $response->assertStatus(200);
+        $response->assertJson(['data' => [],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -452,39 +609,36 @@ class AccountControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('update')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
-        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('update')->atLeast()->once();
 
-        $account = $this->user()->accounts()->first();
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+
+        $account = $this->getRandomAsset();
         // data to submit
         $data = [
-            'name'              => $account->name,
-            'currency_id'       => 1,
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'defaultAsset',
+            'name'         => $account->name,
+            'type'         => 'asset',
+            'account_role' => 'defaultAsset',
         ];
 
         // test API
-        $response = $this->put('/api/v1/accounts/' . $account->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.accounts.update', [$account->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($account->name);
     }
 
     /**
@@ -496,40 +650,37 @@ class AccountControllerTest extends TestCase
     public function testUpdateCurrencyCode(): void
     {
         // mock repositories
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('update')->once();
-        $currencyRepos->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getOpeningBalanceAmount')->andReturn('10');
-        $repository->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
-        $currencyRepos->shouldReceive('findByCodeNull')->andReturn(TransactionCurrency::find(1));
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1');
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
-        $repository->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('Hello');
+        $repository->shouldReceive('update')->atLeast()->once();
 
-        $account = $this->user()->accounts()->first();
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+
+        $account = $this->getRandomAsset();
         // data to submit
         $data = [
-            'name'              => $account->name,
-            'currency_code'     => 'EUR',
-            'type'              => 'asset',
-            'active'            => 1,
-            'include_net_worth' => 1,
-            'account_role'      => 'defaultAsset',
+            'name'          => $account->name,
+            'type'          => 'asset',
+            'currency_code' => 'EUR',
+            'account_role'  => 'defaultAsset',
         ];
 
         // test API
-        $response = $this->put('/api/v1/accounts/' . $account->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.accounts.update', [$account->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
-        $response->assertSee($account->name);
     }
 
 

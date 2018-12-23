@@ -257,7 +257,7 @@ class FireflyValidator extends Validator
         $index = (int)($parts[1] ?? '0');
 
         // get the name of the trigger from the data array:
-        $actionType = $this->data['rule_actions'][$index]['name'] ?? 'invalid';
+        $actionType = $this->data['actions'][$index]['type'] ?? 'invalid';
 
         // if it's "invalid" return false.
         if ('invalid' === $actionType) {
@@ -306,7 +306,7 @@ class FireflyValidator extends Validator
     }
 
     /**
-     * $attribute has the format rule_triggers.%d.value.
+     * $attribute has the format triggers.%d.value.
      *
      * @param string $attribute
      * @param string $value
@@ -320,7 +320,7 @@ class FireflyValidator extends Validator
         $index = (int)($parts[1] ?? '0');
 
         // get the name of the trigger from the data array:
-        $triggerType = $this->data['rule_triggers'][$index]['name'] ?? 'invalid';
+        $triggerType = $this->data['triggers'][$index]['type'] ?? 'invalid';
 
         // invalid always returns false:
         if ('invalid' === $triggerType) {
@@ -628,6 +628,11 @@ class FireflyValidator extends Validator
     {
         /** @var array $search */
         $search = Config::get('firefly.accountTypeByIdentifier.' . $type);
+
+        if (null === $search) {
+            return false;
+        }
+
         /** @var Collection $accountTypes */
         $accountTypes   = AccountType::whereIn('type', $search)->get();
         $ignore         = (int)($parameters[0] ?? 0.0);

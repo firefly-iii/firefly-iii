@@ -28,6 +28,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Transformers\BillTransformer;
 use Illuminate\Support\Collection;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -36,6 +37,16 @@ use Tests\TestCase;
  */
 class BillTransformerTest extends TestCase
 {
+
+    /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
     /**
      * Basic coverage
      *
@@ -43,66 +54,65 @@ class BillTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
+        $repository = $this->mock(BillRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('');
 
-        $bill        = Bill::create(
-            [
-                'user_id'                 => $this->user()->id,
-                'name'                    => 'Some bill ' . random_int(1, 10000),
-                'match'                   => 'word,' . random_int(1, 10000),
-                'amount_min'              => 12.34,
-                'amount_max'              => 45.67,
-                'transaction_currency_id' => 1,
-                'date'                    => '2018-01-02',
-                'repeat_freq'             => 'weekly',
-                'skip'                    => 0,
-                'active'                  => 1,
-            ]
-        );
-        $transformer = new BillTransformer(new ParameterBag);
-        $result      = $transformer->transform($bill);
 
+        /** @var Bill $bill */
+        $bill        = Bill::first();
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+        $result = $transformer->transform($bill);
+
+        // assert fields.
         $this->assertEquals($bill->name, $result['name']);
-        $this->assertTrue($result['active']);
+        $this->assertEquals($bill->transactionCurrency->decimal_places, $result['currency_decimal_places']);
+        $this->assertEquals($bill->active, $result['active']);
+        $this->assertNull($result['notes']);
     }
 
     /**
-     * Coverage for dates.
+     * Basic coverage
      *
      * @covers \FireflyIII\Transformers\BillTransformer
      */
     public function testWithDates(): void
     {
-        // mock stuff
         $repository = $this->mock(BillRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->andReturnSelf();
-        $repository->shouldReceive('getNoteText')->andReturn('Hi there');
-        $repository->shouldReceive('getPaidDatesInRange')->andReturn(new Collection([new Carbon('2018-01-02')]));
-        $bill       = Bill::create(
-            [
-                'user_id'                 => $this->user()->id,
-                'name'                    => 'Some bill ' . random_int(1, 10000),
-                'match'                   => 'word,' . random_int(1, 10000),
-                'amount_min'              => 12.34,
-                'amount_max'              => 45.67,
-                'date'                    => '2018-01-02',
-                'transaction_currency_id' => 1,
-                'repeat_freq'             => 'monthly',
-                'skip'                    => 0,
-                'active'                  => 1,
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getNoteText')->atLeast()->once()->andReturn('');
+
+        // repos should also receive call for dates:
+        $list = new Collection(
+            [new Carbon('2018-01-02'), new Carbon('2018-01-09'), new Carbon('2018-01-16'),
+             new Carbon('2018-01-21'), new Carbon('2018-01-30'),
             ]
         );
-        $parameters = new ParameterBag();
+        $repository->shouldReceive('getPaidDatesInRange')->atLeast()->once()->andReturn($list);
+
+        $parameters = new ParameterBag;
         $parameters->set('start', new Carbon('2018-01-01'));
         $parameters->set('end', new Carbon('2018-01-31'));
-        $transformer = new BillTransformer($parameters);
-        $result      = $transformer->transform($bill);
 
+        /** @var Bill $bill */
+        $bill        = Bill::first();
+        $transformer = app(BillTransformer::class);
+        $transformer->setParameters($parameters);
+        $result = $transformer->transform($bill);
+
+        // assert fields.
         $this->assertEquals($bill->name, $result['name']);
-        $this->assertTrue($result['active']);
-        $this->assertCount(1, $result['pay_dates']);
-        $this->assertEquals('2018-01-02', $result['pay_dates'][0]);
-        $this->assertCount(1, $result['paid_dates']);
-        $this->assertEquals('2018-01-02', $result['paid_dates'][0]);
+        $this->assertEquals($bill->transactionCurrency->decimal_places, $result['currency_decimal_places']);
+        $this->assertEquals($bill->active, $result['active']);
+        $this->assertNull($result['notes']);
+
+        $this->assertEquals('2018-03-01', $result['next_expected_match']);
+        $this->assertEquals(['2018-01-01'], $result['pay_dates']);
+        $this->assertEquals(
+            ['2018-01-02', '2018-01-09', '2018-01-16', '2018-01-21', '2018-01-30',]
+            , $result['paid_dates']
+        );
     }
 
 }

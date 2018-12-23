@@ -30,6 +30,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
@@ -293,9 +294,14 @@ class ConvertControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
+
 
         // get journal:
         $deposit     = $this->getRandomDeposit();
@@ -326,6 +332,10 @@ class ConvertControllerTest extends TestCase
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
 
         // get journal:
         $deposit     = $this->getRandomDeposit();
@@ -356,6 +366,10 @@ class ConvertControllerTest extends TestCase
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
 
         // get journal:
         $deposit     = $this->getRandomDeposit();
@@ -387,6 +401,7 @@ class ConvertControllerTest extends TestCase
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
         // mock stuff
         $messageBag = new MessageBag;
@@ -422,6 +437,8 @@ class ConvertControllerTest extends TestCase
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
 
         // get journal:
         $withdrawal = $this->getRandomWithdrawal();
@@ -467,9 +484,13 @@ class ConvertControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
 
         // mock stuff
 
@@ -497,10 +518,15 @@ class ConvertControllerTest extends TestCase
      */
     public function testPostIndexWithdrawalDeposit(): void
     {
+        Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
 
         $withdrawal  = $this->getRandomWithdrawal();
         $source      = $this->getRandomExpense();
@@ -521,59 +547,69 @@ class ConvertControllerTest extends TestCase
         $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
     }
 
-        /**
-         * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
-         */
-        public function testPostIndexWithdrawalDepositEmptyName(): void
-        {
-            // mock stuff
-            $repository = $this->mock(JournalRepositoryInterface::class);
-            $userRepos  = $this->mock(UserRepositoryInterface::class);
-            $accountRepos = $this->mock(AccountRepositoryInterface::class);
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
+     */
+    public function testPostIndexWithdrawalDepositEmptyName(): void
+    {
+        Log::info(sprintf('Now in test %s', __METHOD__));
+        // mock stuff
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
-            $withdrawal  = $this->getRandomWithdrawal();
-            $source      = $this->getRandomExpense();
-            $destination = $this->getRandomAsset();
-            $revenue     = $this->getRandomRevenue();
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
 
-            $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
-            $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
-            $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
-            $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
-            $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($revenue);
+        $withdrawal  = $this->getRandomWithdrawal();
+        $source      = $this->getRandomExpense();
+        $destination = $this->getRandomAsset();
+        $revenue     = $this->getRandomRevenue();
 
-            $data       = ['source_account_revenue' => ''];
-            $this->be($this->user());
-            $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
-            $response->assertStatus(302);
-            $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
-        }
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($revenue);
 
-        /**
-         * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
-         */
-        public function testPostIndexWithdrawalTransfer(): void
-        {
-            // mock stuff
-            $repository = $this->mock(JournalRepositoryInterface::class);
-            $userRepos  = $this->mock(UserRepositoryInterface::class);
-            $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $data = ['source_account_revenue' => ''];
+        $this->be($this->user());
+        $response = $this->post(route('transactions.convert.index', ['deposit', $withdrawal->id]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
+    }
 
-            $withdrawal  = $this->getRandomWithdrawal();
-            $source      = $this->getRandomExpense();
-            $destination = $this->getRandomAsset();
-            $newDest = $this->getRandomAsset();
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\ConvertController
+     */
+    public function testPostIndexWithdrawalTransfer(): void
+    {
+        Log::info(sprintf('Now in test %s', __METHOD__));
+        // mock stuff
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
-            $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
-            $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
-            $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
-            $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
-            $accountRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($newDest);
+        $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+        $ruleGroupRepos->shouldReceive('getActiveGroups')->atLeast()->once()->andReturn(new Collection);
 
-            $data       = ['destination_account_asset' => 2,];
-            $this->be($this->user());
-            $response = $this->post(route('transactions.convert.index', ['transfer', $withdrawal->id]), $data);
-            $response->assertStatus(302);
-            $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
-        }
+        $withdrawal  = $this->getRandomWithdrawal();
+        $source      = $this->getRandomExpense();
+        $destination = $this->getRandomAsset();
+        $newDest     = $this->getRandomAsset();
+
+        $repository->shouldReceive('convert')->andReturn(new MessageBag)->atLeast()->once();
+        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $repository->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$destination]))->atLeast()->once();
+        $accountRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($newDest);
+
+        $data = ['destination_account_asset' => 2,];
+        $this->be($this->user());
+        $response = $this->post(route('transactions.convert.index', ['transfer', $withdrawal->id]), $data);
+        $response->assertStatus(302);
+        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
+    }
 }

@@ -1,0 +1,87 @@
+{% extends "./layout/guest" %}
+
+{% block content %}
+    {% if IS_DEMO_SITE %}
+        <div class="row">
+            <div class="col-lg-12">
+                <p class="well">
+                    Welcome to the Firefly III demonstration website!<br/>
+                    <br/>
+                    To log in, please use email address <strong>{{ DEMO_USERNAME }}</strong> with password <strong>{{ DEMO_PASSWORD }}</strong>
+                </p>
+            </div>
+        </div>
+    {% endif %}
+
+    {# SUCCESS MESSAGE (ALWAYS SINGULAR) #}
+    {% if Session.has('success') %}
+        <div class="alert alert-success alert-dismissible" role="alert">
+            <button type="button" class="close" data-dismiss="alert">
+                <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+            </button>
+            <strong>{{ 'flash_success'|_ }}</strong> {{ session('success') }}
+        </div>
+    {% endif %}
+
+    {% if errors.has('email') %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+                    </button>
+                    <strong>{{ 'flash_error'|_ }}</strong> {{ errors.get('email')[0] }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    {% if session('logoutMessage') %}
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="alert alert-info alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert"><span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+                    </button>
+                    {{ session('logoutMessage') }}
+                </div>
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="login-box-body">
+        <p class="login-box-msg">{{ 'sign_in_to_start'|_ }}</p>
+
+        <form action="{{ URL.to('/login') }}" method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+
+            <div class="form-group has-feedback">
+                {% if config('firefly.login_provider') == 'eloquent' %}
+                    <input type="email" autocomplete="email" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.email') }}"/>
+                {% else %}
+                    <input type="text" autocomplete="username" name="email" value="{{ email }}" class="form-control" placeholder="{{ trans('form.login_name') }}"/>
+                {% endif %}
+            </div>
+            <div class="form-group has-feedback">
+                <input type="password" name="password" autocomplete="current-password" class="form-control" placeholder="{{ trans('form.password') }}"/>
+            </div>
+            <div class="row">
+                <div class="col-xs-8">
+                    <div class="checkbox">
+                        <label>
+                            <input type="checkbox" name="remember" {% if remember %}checked="checked"{% endif %} value="1"> {{ trans('form.remember_me') }}
+                        </label>
+                    </div>
+                </div>
+                <div class="col-xs-4">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">{{ 'sign_in'|_ }}</button>
+                </div>
+            </div>
+        </form>
+        {% if allowRegistration %}
+            <a href="{{ URL.to('/register') }}" class="text-center">{{ 'register_new_account'|_ }}</a><br>
+        {% endif %}
+        {% if allowReset %}
+            <a href="{{ URL.to('/password/reset') }}">{{ 'forgot_my_password'|_ }}</a>
+        {% endif %}
+    </div>
+{% endblock %}
+

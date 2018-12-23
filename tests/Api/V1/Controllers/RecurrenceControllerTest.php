@@ -24,13 +24,20 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use FireflyIII\Transformers\RecurrenceTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -59,9 +66,10 @@ class RecurrenceControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -80,32 +88,24 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        /** @var Recurrence $recurrences */
-        $recurrences = $this->user()->recurrences()->get();
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
 
-        // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
 
-        $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
-            ->andReturn($this->user()->budgets()->first());
-
-        $piggyRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
-                    ->andReturn($this->user()->piggyBanks()->first());
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getAll')->once()->andReturn($recurrences);
-        $repository->shouldReceive('getNoteText')->andReturn('Notes.');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('getAll')->once()->andReturn(new Collection);
 
 
         // call API
         $response = $this->get('/api/v1/recurrences');
         $response->assertStatus(200);
-        $response->assertSee($recurrences->first()->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -118,23 +118,26 @@ class RecurrenceControllerTest extends TestCase
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository  = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos  = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
 
-        $budgetRepos->shouldReceive('findNull')->atLeast()->once()->withAnyArgs()
-                    ->andReturn($this->user()->budgets()->first());
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('getNoteText')->andReturn('Notes.');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         // call API
         $response = $this->get('/api/v1/recurrences/' . $recurrence->id);
         $response->assertStatus(200);
-        $response->assertSee($recurrence->title);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -155,8 +158,15 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-
+        $transformer  = $this->mock(RecurrenceTransformer::class);
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -210,10 +220,8 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
-        $response->assertStatus(200);
-
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+        $response->assertStatus(200);
     }
 
     /**
@@ -233,6 +241,14 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -288,7 +304,6 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -312,6 +327,14 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $transformer  = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -367,7 +390,6 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -390,6 +412,14 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
 
         $assetAccount   = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -450,7 +480,6 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -473,6 +502,14 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $assetAccount   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
@@ -530,7 +567,7 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
+
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -553,6 +590,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -645,6 +683,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -721,6 +760,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -796,6 +836,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -884,6 +925,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -958,6 +1000,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1032,6 +1075,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
@@ -1107,6 +1151,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1181,6 +1226,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1255,6 +1301,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1326,6 +1373,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1400,6 +1448,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser');
@@ -1478,6 +1527,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1544,6 +1594,7 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1608,6 +1659,14 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $assetAccount      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $otherAssetAccount = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $assetAccount->id)->first();
@@ -1666,10 +1725,97 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTransactions(): void
+    {
+        $recurrence = $this->user()->recurrences()->first();
+        $paginator  = new LengthAwarePaginator(new Collection, 0, 50);
+        // mock repositories:
+        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $collector       = $this->mock(TransactionCollectorInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(TransactionTransformer::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+
+        $journalIds = $recurringRepos->shouldReceive('getJournalIds')->once()->andReturn([1, 2, 3]);
+        $collector->shouldReceive('setUser')->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->once()->andReturnSelf();
+        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
+        $collector->shouldReceive('setJournalIds')->once()->andReturnSelf();
+        $collector->shouldReceive('setRange')->once()->andReturnSelf();
+        $collector->shouldReceive('setLimit')->once()->andReturnSelf();
+        $collector->shouldReceive('setPage')->once()->andReturnSelf();
+        $collector->shouldReceive('setTypes')->once()->andReturnSelf();
+        $collector->shouldReceive('getPaginatedTransactions')->once()->andReturn($paginator);
+
+        $collector->shouldReceive('removeFilter')->once()->andReturnSelf();
+        $recurringRepos->shouldReceive('setUser')->once();
+
+        $response = $this->get(
+            route('api.v1.recurrences.transactions', [$recurrence->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31'])
+        );
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTriggerError(): void
+    {
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $cronjob         = $this->mock(RecurringCronjob::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
+        $cronjob->shouldReceive('fire')->andThrow(FireflyException::class);
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+
+        $response = $this->post(route('api.v1.recurrences.trigger'));
+        $response->assertStatus(500);
+        $response->assertSee('Could not fire recurring cron job.');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTriggerFalse(): void
+    {
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $cronjob         = $this->mock(RecurringCronjob::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
+        $cronjob->shouldReceive('fire')->once()->andReturnFalse();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $response = $this->post(route('api.v1.recurrences.trigger'));
+        $response->assertStatus(204);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
+     */
+    public function testTriggerTrue(): void
+    {
+        $repository      = $this->mock(RecurringRepositoryInterface::class);
+        $cronjob         = $this->mock(RecurringCronjob::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
+        $cronjob->shouldReceive('fire')->once()->andReturnTrue();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $response = $this->post(route('api.v1.recurrences.trigger'));
+        $response->assertStatus(200);
     }
 
     /**
@@ -1689,6 +1835,14 @@ class RecurrenceControllerTest extends TestCase
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer  = $this->mock(RecurrenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
@@ -1745,9 +1899,7 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->put('/api/v1/recurrences/' . $recurrence->id, $data, ['Accept' => 'application/json']);
-        $response->assertSee($recurrence->title);
         $response->assertStatus(200);
-
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 

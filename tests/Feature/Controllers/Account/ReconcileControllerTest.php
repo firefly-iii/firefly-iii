@@ -23,6 +23,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Account;
 
+use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
@@ -61,6 +64,8 @@ class ReconcileControllerTest extends TestCase
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
@@ -90,6 +95,8 @@ class ReconcileControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
         $this->be($this->user());
@@ -109,6 +116,11 @@ class ReconcileControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $accountRepos->shouldReceive('getMetaValue')
                      ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
@@ -135,6 +147,11 @@ class ReconcileControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                   ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);
@@ -153,6 +170,9 @@ class ReconcileControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+
 
         $accountRepos->shouldReceive('getMetaValue')
                      ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
@@ -180,6 +200,11 @@ class ReconcileControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $accountRepos->shouldReceive('getMetaValue')
                      ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
@@ -206,6 +231,11 @@ class ReconcileControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $account = $this->user()->accounts()->where('account_type_id', '!=', 6)->where('account_type_id', '!=', 3)->first();
         $this->be($this->user());
@@ -224,6 +254,8 @@ class ReconcileControllerTest extends TestCase
         $repository    = $this->mock(JournalRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $accountRepos->shouldReceive('getMetaValue')
                      ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
@@ -256,6 +288,8 @@ class ReconcileControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository    = $this->mock(JournalRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
 
@@ -280,6 +314,8 @@ class ReconcileControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
         $this->be($this->user());
@@ -299,6 +335,11 @@ class ReconcileControllerTest extends TestCase
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('reconcileById')->andReturn(true);
@@ -330,6 +371,8 @@ class ReconcileControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
         $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([new Account]));
@@ -355,6 +398,8 @@ class ReconcileControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
         $data    = ['amount' => '5',];
@@ -373,6 +418,8 @@ class ReconcileControllerTest extends TestCase
     {
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $collector     = $this->mock(TransactionCollectorInterface::class);
 
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
         $data    = ['amount' => '0',];

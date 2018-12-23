@@ -24,14 +24,12 @@ declare(strict_types=1);
 namespace Tests\Unit\Transformers;
 
 use Carbon\Carbon;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\Note;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
+use Log;
 use Mockery;
+use Steam;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -41,418 +39,361 @@ use Tests\TestCase;
 class AccountTransformerTest extends TestCase
 {
     /**
-     * Basic account display.
      *
-     * @covers \FireflyIII\Transformers\AccountTransformer
      */
-    public function testBasic(): void
+    public function setUp(): void
     {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
-        $accountRepos->shouldReceive('getNoteText')->andReturn('');
-
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-
-        $transformer = new AccountTransformer(new ParameterBag);
-        $result      = $transformer->transform($account);
-
-        $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Asset account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(12.34, $result['current_balance']);
-        $this->assertNull($result['opening_balance']);
-        $this->assertNull($result['opening_balance_date']);
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
     /**
-     * Basic account display with custom date parameter.
+     * Check balance on a different date.
      *
      * @covers \FireflyIII\Transformers\AccountTransformer
      */
-    public function testBasicDate(): void
+    public function testBalanceDate(): void
     {
+        // mock stuff and get object:
+        $account      = $this->getRandomAsset();
+        $euro         = TransactionCurrency::find(1);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
-        $accountRepos->shouldReceive('getNoteText')->andReturn('');
-        // make new account:
-        $account      = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        $parameterBag = new ParameterBag;
-        $parameterBag->set('date', new Carbon('2018-01-01'));
 
-        $transformer = new AccountTransformer($parameterBag);
-        $result      = $transformer->transform($account);
+        $parameters = new ParameterBag;
+        $parameters->set('date', new Carbon('2018-01-01'));
 
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters($parameters);
+
+        // following calls are expected:
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+
+        // get all kinds of meta values:
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
+
+        // opening balance:
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->withArgs([Mockery::any()])->andReturnNull()->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->withArgs([Mockery::any()])->andReturnNull()->atLeast()->once();
+
+
+        // steam is also called for the account balance:
+        Steam::shouldReceive('balance')->andReturn('123.45')->atLeast()->once();
+
+
+        $result = $transformer->transform($account);
+
+        // verify all fields.
+        $this->assertEquals($account->id, $result['id']);
+        $this->assertEquals($account->active, $result['active']);
         $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Asset account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(12.34, $result['current_balance']);
+        $this->assertEquals('asset', $result['type']);
+        $this->assertEquals('defaultAsset', $result['account_role']);
+        $this->assertEquals(1, $result['currency_id']);
+        $this->assertEquals('EUR', $result['currency_code']);
+        $this->assertEquals('€', $result['currency_symbol']);
+        $this->assertEquals(2, $result['currency_decimal_places']);
+
+        // date given, so it must match.
         $this->assertEquals('2018-01-01', $result['current_balance_date']);
-    }
+        $this->assertEquals(123.45, $result['current_balance']);
 
-    /**
-     * Assert account has credit card meta data, should NOT be ignored in output.
-     *
-     * @covers \FireflyIII\Transformers\AccountTransformer
-     */
-    public function testCCDataAsset(): void
-    {
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-
-        // add a note:
-        $note = Note::create(
-            [
-                'noteable_id'   => $account->id,
-                'noteable_type' => Account::class,
-                'title'         => null,
-                'text'          => 'I am a note #' . random_int(1, 10000),
-            ]
-        );
-
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('2018-02-01');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('123');
-        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
-
-
-        // add credit card meta data (will be ignored)
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'accountRole',
-                'data'       => 'ccAsset',
-            ]
-        );
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'ccMonthlyPaymentDate',
-                'data'       => '2018-02-01',
-            ]
-        );
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'ccType',
-                'data'       => 'monthlyFull',
-            ]
-        );
-
-
-        $transformer = new AccountTransformer(new ParameterBag);
-        $result      = $transformer->transform($account);
-
-        $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Asset account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(12.34, $result['current_balance']);
-        $this->assertEquals(1, $result['currency_id']);
-        $this->assertEquals('EUR', $result['currency_code']);
-        $this->assertEquals($note->text, $result['notes']);
-        $this->assertEquals('2018-02-01', $result['monthly_payment_date']);
-        $this->assertEquals('monthlyFull', $result['credit_card_type']);
-        $this->assertEquals('ccAsset', $result['role']);
-    }
-
-    /**
-     * Expense account has credit card meta data, should be ignored in output.
-     *
-     * @covers \FireflyIII\Transformers\AccountTransformer
-     */
-    public function testIgnoreCCExpense(): void
-    {
-
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 4, // expense account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        // add a note:
-        $note = Note::create(
-            [
-                'noteable_id'   => $account->id,
-                'noteable_type' => Account::class,
-                'title'         => null,
-                'text'          => 'I am a note #' . random_int(1, 10000),
-            ]
-        );
-
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
-        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
-
-
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
-
-
-        // add credit card meta data (will be ignored)
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'accountRole',
-                'data'       => 'ccAsset',
-            ]
-        );
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'ccMonthlyPaymentDate',
-                'data'       => '2018-02-01',
-            ]
-        );
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'ccType',
-                'data'       => 'monthlyFull',
-            ]
-        );
-
-
-        $transformer = new AccountTransformer(new ParameterBag);
-        $result      = $transformer->transform($account);
-
-        $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Expense account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(12.34, $result['current_balance']);
-        $this->assertEquals(1, $result['currency_id']);
-        $this->assertEquals('EUR', $result['currency_code']);
-        $this->assertEquals($note->text, $result['notes']);
+        $this->assertEquals('I am a note', $result['notes']);
         $this->assertNull($result['monthly_payment_date']);
         $this->assertNull($result['credit_card_type']);
-        $this->assertNull($result['role']);
+        $this->assertEquals('12345', $result['account_number']);
+        $this->assertEquals($account->iban, $result['iban']);
+        $this->assertEquals('NL5X', $result['bic']);
+        $this->assertNull($result['liability_type']);
+        $this->assertNull($result['liability_amount']);
+        $this->assertNull($result['liability_start_date']);
+        $this->assertNull($result['interest']);
+        $this->assertNull($result['interest_period']);
+        $this->assertTrue($result['include_net_worth']);
+
     }
 
     /**
-     * Basic account display.
+     * Load a basic asset account, and verify the result in the transformer.
      *
      * @covers \FireflyIII\Transformers\AccountTransformer
      */
-    public function testOpeningBalance(): void
+    public function testBasicAsset(): void
     {
+        // mock stuff and get object:
+        $account      = $this->getRandomAsset();
+        $euro         = TransactionCurrency::find(1);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn('45.67');
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn('2018-01-01');
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
-        $accountRepos->shouldReceive('getNoteText')->andReturn('');
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
 
-        // create opening balance:
-        $journal     = TransactionJournal::create(
-            [
-                'user_id'                 => $this->user()->id,
-                'transaction_type_id'     => 4, // opening balance
-                'transaction_currency_id' => 1, // EUR
-                'description'             => 'Opening',
-                'date'                    => '2018-01-01',
-                'completed'               => 1,
-                'tag_count'               => 0,
-            ]
-        );
-        $transaction = Transaction::create(
-            [
-                'account_id'              => $account->id,
-                'transaction_journal_id'  => $journal->id,
-                'transaction_currency_id' => 1,
-                'amount'                  => '45.67',
-            ]
-        );
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters(new ParameterBag);
 
-        $transformer = new AccountTransformer(new ParameterBag);
-        $result      = $transformer->transform($account);
+        // following calls are expected:
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
 
+        // get all kinds of meta values:
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
+
+        // opening balance:
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->withArgs([Mockery::any()])->andReturnNull()->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->withArgs([Mockery::any()])->andReturnNull()->atLeast()->once();
+
+
+        // steam is also called for the account balance:
+        Steam::shouldReceive('balance')->andReturn('123.45')->atLeast()->once();
+
+
+        $result = $transformer->transform($account);
+
+        // verify all fields.
+        $this->assertEquals($account->id, $result['id']);
+        $this->assertEquals($account->active, $result['active']);
         $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Asset account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(58.01, $result['current_balance']); // add opening balance.
-        $this->assertEquals(45.67, $result['opening_balance']);
-        $this->assertEquals('2018-01-01', $result['opening_balance_date']);
-    }
-
-    /**
-     * Account has currency preference, should be reflected in output.
-     *
-     * @covers \FireflyIII\Transformers\AccountTransformer
-     */
-    public function testWithCurrency(): void
-    {
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
-        $accountRepos->shouldReceive('getNote')->andReturn('');
-        $accountRepos->shouldReceive('getNoteText')->withArgs([Mockery::any()])->andReturn('');
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
-
-        $transformer = new AccountTransformer(new ParameterBag);
-        $result      = $transformer->transform($account);
-
-        $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Asset account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(12.34, $result['current_balance']);
+        $this->assertEquals('asset', $result['type']);
+        $this->assertEquals('defaultAsset', $result['account_role']);
         $this->assertEquals(1, $result['currency_id']);
         $this->assertEquals('EUR', $result['currency_code']);
+        $this->assertEquals('€', $result['currency_symbol']);
+        $this->assertEquals(2, $result['currency_decimal_places']);
+
+        // no date given, so must be today:
+        $this->assertEquals(date('Y-m-d'), $result['current_balance_date']);
+        $this->assertEquals(123.45, $result['current_balance']);
+
+        $this->assertEquals('I am a note', $result['notes']);
+        $this->assertNull($result['monthly_payment_date']);
+        $this->assertNull($result['credit_card_type']);
+        $this->assertEquals('12345', $result['account_number']);
+        $this->assertEquals($account->iban, $result['iban']);
+        $this->assertEquals('NL5X', $result['bic']);
+        $this->assertNull($result['liability_type']);
+        $this->assertNull($result['liability_amount']);
+        $this->assertNull($result['liability_start_date']);
+        $this->assertNull($result['interest']);
+        $this->assertNull($result['interest_period']);
+        $this->assertTrue($result['include_net_worth']);
+
     }
 
     /**
-     * Account has notes, should be reflected in output.
+     * Credit card asset has some extra fields
      *
      * @covers \FireflyIII\Transformers\AccountTransformer
      */
-    public function testWithNotes(): void
+    public function testCreditCardAsset(): void
     {
-        // make new account:
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        // add a note:
-        $note = Note::create(
-            [
-                'noteable_id'   => $account->id,
-                'noteable_type' => Account::class,
-                'title'         => null,
-                'text'          => 'I am a note #' . random_int(1, 10000),
-            ]
-        );
-
+        // mock stuff and get object:
+        $account      = $this->getRandomAsset();
+        $euro         = TransactionCurrency::find(1);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturn(null);
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturn(null);
-        $accountRepos->shouldReceive('getMetaValue')->andReturn('1');
-        $accountRepos->shouldReceive('getNoteText')->andReturn($note->text);
 
-        // add currency preference:
-        AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1, // euro
-            ]
-        );
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
+        // following calls are expected:
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountType')->andReturn('Asset account')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+
+        // get all kinds of meta values:
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('ccAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
+
+        // credit card fields:
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccType'])->andReturn('monthlyFull')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'ccMonthlyPaymentDate'])->andReturn('2018-01-01')->atLeast()->once();
 
 
-        $transformer = new AccountTransformer(new ParameterBag);
-        $result      = $transformer->transform($account);
+        // opening balance:
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->withArgs([Mockery::any()])->andReturnNull()->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->withArgs([Mockery::any()])->andReturnNull()->atLeast()->once();
 
+
+        // steam is also called for the account balance:
+        Steam::shouldReceive('balance')->andReturn('123.45')->atLeast()->once();
+
+
+        $result = $transformer->transform($account);
+
+        // verify all fields.
+        $this->assertEquals($account->id, $result['id']);
+        $this->assertEquals($account->active, $result['active']);
         $this->assertEquals($account->name, $result['name']);
-        $this->assertEquals('Asset account', $result['type']);
-        $this->assertEquals(12.34, $result['virtual_balance']);
-        $this->assertEquals(12.34, $result['current_balance']);
+        $this->assertEquals('asset', $result['type']);
+        $this->assertEquals('ccAsset', $result['account_role']);
         $this->assertEquals(1, $result['currency_id']);
         $this->assertEquals('EUR', $result['currency_code']);
-        $this->assertEquals($note->text, $result['notes']);
+        $this->assertEquals('€', $result['currency_symbol']);
+        $this->assertEquals(2, $result['currency_decimal_places']);
+
+        // no date given, so must be today:
+        $this->assertEquals(date('Y-m-d'), $result['current_balance_date']);
+        $this->assertEquals(123.45, $result['current_balance']);
+
+        $this->assertEquals('I am a note', $result['notes']);
+
+        // cc fields must be filled in:
+        $this->assertEquals('2018-01-01', $result['monthly_payment_date']);
+        $this->assertEquals('monthlyFull', $result['credit_card_type']);
+        $this->assertEquals('12345', $result['account_number']);
+        $this->assertEquals($account->iban, $result['iban']);
+        $this->assertEquals('NL5X', $result['bic']);
+        $this->assertNull($result['liability_type']);
+        $this->assertNull($result['liability_amount']);
+        $this->assertNull($result['liability_start_date']);
+        $this->assertNull($result['interest']);
+        $this->assertNull($result['interest_period']);
+        $this->assertTrue($result['include_net_worth']);
+
     }
 
+    /**
+     * Liability also has some extra fields.
+     *
+     * @covers \FireflyIII\Transformers\AccountTransformer
+     */
+    public function testLiability(): void
+    {
+        // mock stuff and get object:
+        $account      = $this->getRandomAsset();
+        $euro         = TransactionCurrency::find(1);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
+        // following calls are expected:
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountType')->andReturn('Mortgage')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+
+        // get all kinds of meta values:
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
+
+        // data for liability
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('3')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly')->atLeast()->once();
+
+        // opening balance:
+        $accountRepos->shouldReceive('getOpeningBalanceAmount')->withArgs([Mockery::any()])->andReturn('-1000')->atLeast()->once();
+        $accountRepos->shouldReceive('getOpeningBalanceDate')->withArgs([Mockery::any()])->andReturn('2018-01-01')->atLeast()->once();
+
+
+        // steam is also called for the account balance:
+        Steam::shouldReceive('balance')->andReturn('123.45')->atLeast()->once();
+
+
+        $result = $transformer->transform($account);
+
+        // verify all fields.
+        $this->assertEquals($account->id, $result['id']);
+        $this->assertEquals($account->active, $result['active']);
+        $this->assertEquals($account->name, $result['name']);
+        $this->assertEquals('liabilities', $result['type']);
+        $this->assertNull($result['account_role']);
+        $this->assertEquals(1, $result['currency_id']);
+        $this->assertEquals('EUR', $result['currency_code']);
+        $this->assertEquals('€', $result['currency_symbol']);
+        $this->assertEquals(2, $result['currency_decimal_places']);
+
+        // no date given, so must be today:
+        $this->assertEquals(date('Y-m-d'), $result['current_balance_date']);
+        $this->assertEquals(123.45, $result['current_balance']);
+        $this->assertEquals('I am a note', $result['notes']);
+        $this->assertNull($result['monthly_payment_date']);
+        $this->assertNull($result['credit_card_type']);
+        $this->assertEquals('12345', $result['account_number']);
+        $this->assertEquals($account->iban, $result['iban']);
+        $this->assertEquals('NL5X', $result['bic']);
+
+        // liability fields
+        $this->assertEquals('mortgage', $result['liability_type']);
+        $this->assertEquals('-1000', $result['liability_amount']);
+        $this->assertEquals('2018-01-01', $result['liability_start_date']);
+        $this->assertEquals('3', $result['interest']);
+        $this->assertEquals('monthly', $result['interest_period']);
+
+        $this->assertTrue($result['include_net_worth']);
+
+    }
+
+    /**
+     * If the account is not an asset account, the role must always be NULL.
+     *
+     * @covers \FireflyIII\Transformers\AccountTransformer
+     */
+    public function testRoleEmpty(): void
+    {
+        // mock stuff and get object:
+        $account      = $this->getRandomExpense();
+        $euro         = TransactionCurrency::find(1);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = app(AccountTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
+        // following calls are expected:
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountType')->andReturn('Expense account')->atLeast()->once();
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
+        $accountRepos->shouldReceive('getNoteText')->andReturn('I am a note')->atLeast()->once();
+
+        // get all kinds of meta values:
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'include_net_worth'])->andReturn('1')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('12345')->atLeast()->once();
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('NL5X')->atLeast()->once();
+
+        // steam is also called for the account balance:
+        Steam::shouldReceive('balance')->andReturn('123.45')->atLeast()->once();
+
+
+        $result = $transformer->transform($account);
+
+        // verify all fields.
+        $this->assertEquals($account->id, $result['id']);
+        $this->assertEquals($account->active, $result['active']);
+        $this->assertEquals($account->name, $result['name']);
+        $this->assertEquals('expense', $result['type']);
+        $this->assertNull($result['account_role']);
+        $this->assertEquals(1, $result['currency_id']);
+        $this->assertEquals('EUR', $result['currency_code']);
+        $this->assertEquals('€', $result['currency_symbol']);
+        $this->assertEquals(2, $result['currency_decimal_places']);
+
+        // no date given, so must be today:
+        $this->assertEquals(date('Y-m-d'), $result['current_balance_date']);
+        $this->assertEquals(123.45, $result['current_balance']);
+
+        $this->assertEquals('I am a note', $result['notes']);
+        $this->assertNull($result['monthly_payment_date']);
+        $this->assertNull($result['credit_card_type']);
+        $this->assertEquals('12345', $result['account_number']);
+        $this->assertEquals($account->iban, $result['iban']);
+        $this->assertEquals('NL5X', $result['bic']);
+        $this->assertNull($result['liability_type']);
+        $this->assertNull($result['liability_amount']);
+        $this->assertNull($result['liability_start_date']);
+        $this->assertNull($result['interest']);
+        $this->assertNull($result['interest_period']);
+        $this->assertTrue($result['include_net_worth']);
+    }
 }

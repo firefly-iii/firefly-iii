@@ -123,7 +123,7 @@ return [
     'present'                        => 'Le champs :attribute doit être rempli.',
     'amount_zero'                    => 'Le montant total ne peut pas être zéro.',
     'unique_piggy_bank_for_user'     => 'Le nom de la tirelire doit être unique.',
-    'secure_password'                => 'Ce n’est pas un mot de passe sécurisé. Veuillez essayer à nouveau. Pour plus d’informations, visitez http://bit.ly/FF3-password-security.',
+    'secure_password'                => 'Ce n\'est pas un mot de passe sécurisé. Veuillez essayez à nouveau. Pour plus d\'informations, visitez https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Type de répétition non valide pour des opérations périodiques.',
     'valid_recurrence_rep_moment'    => 'Période de répétition non valide pour ce type de répétition.',
     'invalid_account_info'           => 'Informations de compte non valides.',

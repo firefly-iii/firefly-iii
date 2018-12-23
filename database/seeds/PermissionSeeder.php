@@ -46,7 +46,7 @@ class PermissionSeeder extends Seeder
             try {
                 Role::create($role);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create role "%s". It might exist already.', $role['display_name']));
+                Log::info(sprintf('Could not create role "%s". It might exist already.', $role['display_name']));
             }
         }
     }

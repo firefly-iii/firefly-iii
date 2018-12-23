@@ -24,9 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Rules;
 
 
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Contracts\Validation\Rule;
+use Log;
 
 /**
  * Class IsValidAttachmentModel
@@ -71,9 +78,42 @@ class IsValidAttachmentModel implements Rule
         if (!auth()->check()) {
             return false;
         }
+        $model = false === strpos('FireflyIII', $this->model) ? 'FireflyIII\\Models\\' . $this->model : $this->model;
 
+        if (Bill::class === $model) {
+            /** @var BillRepositoryInterface $repository */
+            $repository = app(BillRepositoryInterface::class);
+            /** @var User $user */
+            $user = auth()->user();
+            $repository->setUser($user);
+            $bill = $repository->find((int)$value);
 
-        if (TransactionJournal::class === $this->model) {
+            return null !== $bill;
+        }
+
+        if (ImportJob::class === $model) {
+            /** @var ImportJobRepositoryInterface $repository */
+            $repository = app(ImportJobRepositoryInterface::class);
+            /** @var User $user */
+            $user = auth()->user();
+            $repository->setUser($user);
+            $importJob = $repository->find((int)$value);
+
+            return null !== $importJob;
+        }
+
+        if (Transaction::class === $model) {
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            /** @var User $user */
+            $user = auth()->user();
+            $repository->setUser($user);
+            $transaction = $repository->findTransaction((int)$value);
+
+            return null !== $transaction;
+        }
+
+        if (TransactionJournal::class === $model) {
             $repository = app(JournalRepositoryInterface::class);
             $user       = auth()->user();
             $repository->setUser($user);
@@ -81,6 +121,7 @@ class IsValidAttachmentModel implements Rule
 
             return null !== $result;
         }
+        Log::error(sprintf('No model was recognized from string "%s"', $model));
 
         return false;
     }

@@ -25,7 +25,9 @@ namespace Tests\Api\V1\Controllers;
 
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\UserTransformer;
 use FireflyIII\User;
+use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Mockery;
@@ -59,9 +61,8 @@ class UserControllerTest extends TestCase
         $userRepository = $this->mock(UserRepositoryInterface::class);
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepository->shouldReceive('destroy')->once();
-        // create a user first:
         // call API
-        $response = $this->delete('/api/v1/users/' . $this->user()->id);
+        $response = $this->delete('/api/v1/users/2');
         $response->assertStatus(204);
     }
 
@@ -81,9 +82,27 @@ class UserControllerTest extends TestCase
         $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
 
         // call API
-        $response = $this->delete('/api/v1/users/' . $user->id);
+        $response = $this->delete('/api/v1/users/' . $user->id, [], ['Accept' => 'application/json']);
         $response->assertStatus(302);
         $this->assertDatabaseHas('users', ['id' => $user->id]);
+    }
+
+    /**
+     * Cannot delete yourself.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
+     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     */
+    public function testDeleteYourself(): void
+    {
+        $userRepository = $this->mock(UserRepositoryInterface::class);
+        $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        // create a user first:
+        // call API
+        $response = $this->delete('/api/v1/users/' . $this->user()->id, [], ['Accept' => 'application/json']);
+        $response->assertStatus(500);
+        $response->assertSee('No access to method.');
     }
 
     /**
@@ -93,23 +112,21 @@ class UserControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        // create stuff
-        $users = factory(User::class, 10)->create();
         // mock stuff:
-        $repository = $this->mock(UserRepositoryInterface::class);
-        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+        $repository  = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(UserTransformer::class);
 
-        // mock calls:
-        $repository->shouldReceive('all')->withAnyArgs()->andReturn($users)->once();
+
+        $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+        $repository->shouldReceive('all')->withAnyArgs()->andReturn(new Collection)->once();
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
 
         // test API
-        $response = $this->get('/api/v1/users');
+        $response = $this->get('/api/v1/users', ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 10, 'count' => 10, 'current_page' => 1, 'total_pages' => 1]],]);
-        $response->assertJson(
-            ['links' => ['self' => true, 'first' => true, 'last' => true,],]
-        );
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'current_page' => 1, 'total_pages' => 1]],]);
+        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -122,12 +139,19 @@ class UserControllerTest extends TestCase
     {
         $user       = User::first();
         $repository = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(UserTransformer::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         // test API
-        $response = $this->get('/api/v1/users/' . $user->id);
+        $response = $this->get('/api/v1/users/' . $user->id, ['Accept' => 'application/json']);
         $response->assertStatus(200);
-        $response->assertSee($user->email);
     }
 
     /**
@@ -139,19 +163,57 @@ class UserControllerTest extends TestCase
     public function testStoreBasic(): void
     {
         $data = [
-            'email'   => 'some_new@user' . random_int(1, 10000) . '.com',
-            'blocked' => 0,
+            'email' => 'some_new@user' . random_int(1, 10000) . '.com',
         ];
 
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(UserTransformer::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
         $userRepos->shouldReceive('store')->once()->andReturn($this->user());
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         // test API
-        $response = $this->post('/api/v1/users', $data);
+        $response = $this->post('/api/v1/users', $data, ['Content-Type' => 'application/x-www-form-urlencoded']);
         $response->assertStatus(200);
-        $response->assertSee($this->user()->email);
+    }
+
+    /**
+     * Store new user using JSON.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
+     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     */
+    public function testStoreBasicJson(): void
+    {
+        $data = [
+            'email'        => 'some_new@user' . random_int(1, 10000) . '.com',
+            'blocked'      => true,
+            'blocked_code' => 'email_changed',
+        ];
+
+        // mock
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $transformer= $this->mock(UserTransformer::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
+        $userRepos->shouldReceive('store')->once()->andReturn($this->user());
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // test API
+        $response = $this->postJson('/api/v1/users', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
     }
 
     /**
@@ -186,6 +248,37 @@ class UserControllerTest extends TestCase
     }
 
     /**
+     * Store user with info already used.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
+     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     */
+    public function testStoreNotUniqueJson(): void
+    {
+        $data = [
+            'email'   => $this->user()->email,
+            'blocked' => 0,
+        ];
+
+        // mock
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
+        // test API
+        $response = $this->postJson('/api/v1/users', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'message' => 'The given data was invalid.',
+                'errors'  => [
+                    'email' => [
+                        'The email address has already been taken.',
+                    ],
+                ],
+            ]
+        );
+    }
+
+    /**
      * Update user.
      *
      * @covers \FireflyIII\Api\V1\Controllers\UserController
@@ -204,13 +297,55 @@ class UserControllerTest extends TestCase
 
         // mock
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(UserTransformer::class);
         $userRepos->shouldReceive('update')->once()->andReturn($user);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
 
-        // call API
-        $response = $this->put('/api/v1/users/' . $user->id, $data);
-        $response->assertStatus(200);
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
+        // call API
+        $response = $this->put('/api/v1/users/' . $user->id, $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * Update user.
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\UserController
+     * @covers \FireflyIII\Api\V1\Requests\UserRequest
+     */
+    public function testUpdateJson(): void
+    {
+        // create a user first:
+        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
+
+        // data:
+        $data = [
+            'email'   => 'some-new@email' . random_int(1, 10000) . '.com',
+            'blocked' => 0,
+        ];
+
+        // mock
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(UserTransformer::class);
+        $userRepos->shouldReceive('update')->once()->andReturn($user);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // call API
+        $response = $this->putJson('/api/v1/users/' . $user->id, $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
     }
 
 }

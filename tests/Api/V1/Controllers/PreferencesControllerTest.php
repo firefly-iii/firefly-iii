@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Models\Preference;
+use FireflyIII\Transformers\PreferenceTransformer;
 use Laravel\Passport\Passport;
 use Log;
 use Mockery;
@@ -52,28 +53,22 @@ class PreferencesControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-
-        $available = ['language', 'customFiscalYear', 'fiscalYearStart', 'currencyPreference', 'transaction_journal_optional_fields', 'frontPageAccounts',
-                      'viewRange', 'listPageSize, twoFactorAuthEnabled',];
+        $transformer = $this->mock(PreferenceTransformer::class);
+        $available   = ['language', 'customFiscalYear', 'fiscalYearStart', 'currencyPreference', 'transaction_journal_optional_fields', 'frontPageAccounts',
+                        'viewRange', 'listPageSize, twoFactorAuthEnabled',];
 
         foreach ($available as $pref) {
             Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), $pref])->once();
         }
 
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+
 
         // call API
         $response = $this->get('/api/v1/preferences');
         $response->assertStatus(200);
-    }
-
-    public function testShow(): void
-    {
-        /** @var Preference $preference */
-        $preference = $this->user()->preferences()->first();
-
-        $response = $this->get('/api/v1/preferences/' . $preference->id);
-        $response->assertStatus(200);
-        $response->assertSee($preference->name);
     }
 
     /**
@@ -82,11 +77,19 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateArray(): void
     {
+        $transformer = $this->mock(PreferenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'frontPageAccounts', [1, 2, 3]);
         $data       = ['data' => '4,5,6'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->id, $data, ['Accept' => 'application/json']);
-        $response->assertSee($preference->name);
+        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -97,11 +100,19 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateBoolean(): void
     {
+        $transformer = $this->mock(PreferenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'twoFactorAuthEnabled', false);
         $data       = ['data' => '1'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->id, $data, ['Accept' => 'application/json']);
-        $response->assertSee($preference->name);
+        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -112,11 +123,19 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateDefault(): void
     {
+        $transformer = $this->mock(PreferenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'currencyPreference', false);
         $data       = ['data' => 'EUR'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->id, $data, ['Accept' => 'application/json']);
-        $response->assertSee($preference->name);
+        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -127,11 +146,19 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateInteger(): void
     {
+        $transformer = $this->mock(PreferenceTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'listPageSize', 13);
         $data       = ['data' => '434'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->id, $data, ['Accept' => 'application/json']);
-        $response->assertSee($preference->name);
+        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }

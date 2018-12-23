@@ -59,12 +59,15 @@ class ForgotPasswordController extends Controller
      */
     public function sendResetLinkEmail(Request $request, UserRepositoryInterface $repository)
     {
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        Log::info('Start of sendResetLinkEmail()');
+        $loginProvider = config('firefly.login_provider');
+        // @codeCoverageIgnoreStart
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
             Log::error($message);
             return view('error', compact('message'));
         }
+        // @codeCoverageIgnoreEnd
 
         $this->validateEmail($request);
 
@@ -98,7 +101,7 @@ class ForgotPasswordController extends Controller
      */
     public function showLinkRequestForm()
     {
-        $loginProvider = envNonEmpty('LOGIN_PROVIDER','eloquent');
+        $loginProvider = config('firefly.login_provider');
         if ('eloquent' !== $loginProvider) {
             $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
 
@@ -109,10 +112,11 @@ class ForgotPasswordController extends Controller
         $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
+        $pageTitle         = (string)trans('firefly.forgot_pw_page_title');
         if (true === $singleUserMode && $userCount > 0) {
             $allowRegistration = false;
         }
 
-        return view('auth.passwords.email')->with(compact('allowRegistration'));
+        return view('auth.passwords.email')->with(compact('allowRegistration', 'pageTitle'));
     }
 }

@@ -24,12 +24,15 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Recurring;
 
 use Carbon\Carbon;
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -55,11 +58,17 @@ class EditControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  =$this->mock(AccountRepositoryInterface::class);
+        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
+
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -86,12 +95,15 @@ class EditControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos    = $this->mock(BudgetRepositoryInterface::class);
-        $categoryRepos  = $this->mock(CategoryRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  =$this->mock(AccountRepositoryInterface::class);
+        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
+        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
+        $categoryRepos   = $this->mock(CategoryRepositoryInterface::class);
+        $userRepos       = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos    = $this->mock(AccountRepositoryInterface::class);
+        $categoryFactory = $this->mock(CategoryFactory::class);
+        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
+        $transformer     = $this->mock(RecurrenceTransformer::class);
 
         $recurringRepos->shouldReceive('update')->once();
 

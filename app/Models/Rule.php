@@ -44,7 +44,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon     $created_at
  * @property Carbon     $updated_at
  * @property string     $title
- * @property string     $text
  * @property int        $order
  * @property RuleGroup  $ruleGroup
  * @property int        $rule_group_id

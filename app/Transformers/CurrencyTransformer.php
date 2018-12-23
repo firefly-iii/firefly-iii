@@ -25,39 +25,24 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\TransactionCurrency;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class CurrencyTransformer
  */
-class CurrencyTransformer extends TransformerAbstract
+class CurrencyTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = [];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-
-    /** @var ParameterBag */
-    protected $parameters;
-
     /**
      * CurrencyTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -76,13 +61,14 @@ class CurrencyTransformer extends TransformerAbstract
         }
         $data = [
             'id'             => (int)$currency->id,
-            'updated_at'     => $currency->updated_at->toAtomString(),
             'created_at'     => $currency->created_at->toAtomString(),
+            'updated_at'     => $currency->updated_at->toAtomString(),
+            'default'        => $isDefault,
+            'enabled'        => $currency->enabled,
             'name'           => $currency->name,
             'code'           => $currency->code,
             'symbol'         => $currency->symbol,
             'decimal_places' => (int)$currency->decimal_places,
-            'default'        => $isDefault,
             'links'          => [
                 [
                     'rel' => 'self',

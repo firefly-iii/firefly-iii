@@ -29,11 +29,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 /**
  * Class PiggyBankEvent.
  *
- * @property PiggyBank $piggyBank
- * @property int       $transaction_journal_id
- * @property int       $piggy_bank_id
- * @property int       $id
- * @property Carbon    date
+ * @property PiggyBank          $piggyBank
+ * @property int                $transaction_journal_id
+ * @property int                $piggy_bank_id
+ * @property int                $id
+ * @property Carbon             date
+ * @property TransactionJournal transactionJournal
+ * @property string             $amount
+ * @property Carbon             created_at
+ * @property Carbon             updated_at
+ *
  */
 class PiggyBankEvent extends Model
 {

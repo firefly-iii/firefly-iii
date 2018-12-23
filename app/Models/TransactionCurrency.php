@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -35,6 +36,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $decimal_places
  * @property int    $id
  * @property string name
+ * @property bool   $enabled
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
  *
  */
 class TransactionCurrency extends Model
@@ -52,9 +56,10 @@ class TransactionCurrency extends Model
             'updated_at'     => 'datetime',
             'deleted_at'     => 'datetime',
             'decimal_places' => 'int',
+            'enabled'        => 'bool',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['name', 'code', 'symbol', 'decimal_places'];
+    protected $fillable = ['name', 'code', 'symbol', 'decimal_places', 'enabled'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -80,8 +85,26 @@ class TransactionCurrency extends Model
      * @codeCoverageIgnore
      * @return HasMany
      */
+    public function budgetLimits(): HasMany
+    {
+        return $this->hasMany(BudgetLimit::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
     public function transactionJournals(): HasMany
     {
         return $this->hasMany(TransactionJournal::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function transactions(): HasMany
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

@@ -38,6 +38,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class Handler
+ *
  * @codeCoverageIgnore
  */
 class Handler extends ExceptionHandler
@@ -92,7 +93,7 @@ class Handler extends ExceptionHandler
         }
 
         if ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException) {
-            $isDebug = env('APP_DEBUG', false);
+            $isDebug = config('app.debug');
 
             return response()->view('errors.FireflyException', ['exception' => $exception, 'debug' => $isDebug], 500);
         }
@@ -116,11 +117,11 @@ class Handler extends ExceptionHandler
     public function report(Exception $exception)
     {
 
-        $doMailError = env('SEND_ERROR_MESSAGE', true);
+        $doMailError = config('firefly.send_error_message');
         // if the user wants us to mail:
         if (true === $doMailError
             // and if is one of these error instances
-            && ($exception instanceof FireflyException || $exception instanceof ErrorException || $exception instanceof OAuthServerException)) {
+            && ($exception instanceof FireflyException || $exception instanceof ErrorException)) {
             $userData = [
                 'id'    => 0,
                 'email' => 'unknown@example.com',
@@ -145,7 +146,7 @@ class Handler extends ExceptionHandler
 
             // create job that will mail.
             $ipAddress = Request::ip() ?? '0.0.0.0';
-            $job       = new MailError($userData, env('SITE_OWNER', ''), $ipAddress, $data);
+            $job       = new MailError($userData, (string)config('firefly.site_owner'), $ipAddress, $data);
             dispatch($job);
         }
 

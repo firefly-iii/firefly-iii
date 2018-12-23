@@ -27,6 +27,7 @@ namespace Tests\Feature\Controllers\Category;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -64,7 +65,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
-        Log::debug(sprintf('Test show(%s)', $range));
+        Log::info(sprintf('Test show(%s)', $range));
         $transaction   = factory(Transaction::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -119,7 +120,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowAll(string $range): void
     {
-        Log::debug(sprintf('Test showAll(%s)', $range));
+        Log::info(sprintf('Test showAll(%s)', $range));
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -127,6 +128,7 @@ class ShowControllerTest extends TestCase
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -160,7 +162,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShowByDate(string $range): void
     {
-        Log::debug(sprintf('Test testShowByDate(%s)', $range));
+        Log::info(sprintf('Test testShowByDate(%s)', $range));
         // mock stuff
         $transaction  = factory(Transaction::class)->make();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -168,6 +170,10 @@ class ShowControllerTest extends TestCase
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -219,6 +225,7 @@ class ShowControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 

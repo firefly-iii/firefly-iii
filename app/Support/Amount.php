@@ -160,6 +160,14 @@ class Amount
     }
 
     /**
+     * @return Collection
+     */
+    public function getCurrencies(): Collection
+    {
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+    }
+
+    /**
      * @return string
      */
     public function getCurrencyCode(): string

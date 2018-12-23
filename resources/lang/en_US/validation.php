@@ -123,7 +123,7 @@ return [
     'present'                        => 'The :attribute field must be present.',
     'amount_zero'                    => 'The total amount cannot be zero.',
     'unique_piggy_bank_for_user'     => 'The name of the piggy bank must be unique.',
-    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit http://bit.ly/FF3-password-security.',
+    'secure_password'                => 'This is not a secure password. Please try again. For more information, visit https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Invalid repetition type for recurring transactions.',
     'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
     'invalid_account_info'           => 'Invalid account information.',

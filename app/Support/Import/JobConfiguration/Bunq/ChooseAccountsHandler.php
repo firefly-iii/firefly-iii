@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use Illuminate\Support\MessageBag;
+use Log;
 
 /**
  * Class ChooseAccountsHandler
@@ -92,6 +93,7 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
          * This is used to properly map transfers.
          */
         $ibanToAsset = [];
+        Log::debug('Going to map IBANs for easy mapping later on.');
         if (0 === \count($accounts)) {
             throw new FireflyException('No bunq accounts found. Import cannot continue.'); // @codeCoverageIgnore
         }
@@ -105,10 +107,17 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
             $bunqId  = (int)$bunqId;
             $localId = (int)$localId;
 
+            Log::debug(sprintf('Now trying to link bunq acount #%d with Firefly III account %d', $bunqId, $localId));
+
             // validate each
             $bunqId    = $this->validBunqAccount($bunqId);
             $accountId = $this->validLocalAccount($localId);
-            $bunqIban  = $this->getBunqIban($bunqId);
+
+            Log::debug(sprintf('After validation: bunq account #%d with Firefly III account %d', $bunqId, $localId));
+
+            $bunqIban = $this->getBunqIban($bunqId);
+
+            Log::debug(sprintf('IBAN for bunq account #%d is "%s"', $bunqId, $bunqIban));
             if (null !== $bunqIban) {
                 $ibanToAsset[$bunqIban] = $accountId;
             }
@@ -118,6 +127,9 @@ class ChooseAccountsHandler implements BunqJobConfigurationInterface
         $config['bunq-iban']   = $ibanToAsset;
         $config['apply-rules'] = $applyRules;
         $this->repository->setConfiguration($this->importJob, $config);
+
+        Log::info('Account mapping: ', $final);
+        Log::info('Bunq IBAN array: ', $ibanToAsset);
 
         return new MessageBag;
     }

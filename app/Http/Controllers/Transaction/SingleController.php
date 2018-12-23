@@ -30,10 +30,12 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -102,6 +104,10 @@ class SingleController extends Controller
         $transaction   = $journal->transactions()->first();
         $amount        = app('steam')->positive($transaction->amount);
         $foreignAmount = null === $transaction->foreign_amount ? null : app('steam')->positive($transaction->foreign_amount);
+
+        // make sure previous URI is correct:
+        session()->put('transactions.create.fromStore', true);
+        session()->put('transactions.create.uri', app('url')->previous());
 
         $preFilled = [
             'description'               => $journal->description,
@@ -178,6 +184,31 @@ class SingleController extends Controller
             'transactions.single.create',
             compact('subTitleIcon', 'budgets', 'what', 'subTitle', 'optionalFields', 'preFilled')
         );
+    }
+
+    /**
+     * Show a special JSONified view of a transaction, for easier debug purposes.
+     *
+     * @param TransactionJournal $journal
+     * @codeCoverageIgnore
+     * @return JsonResponse
+     */
+    public function debugShow(TransactionJournal $journal): JsonResponse
+    {
+        $array                 = $journal->toArray();
+        $array['transactions'] = [];
+        $array['meta']         = [];
+
+        /** @var Transaction $transaction */
+        foreach ($journal->transactions as $transaction) {
+            $array['transactions'][] = $transaction->toArray();
+        }
+        /** @var TransactionJournalMeta $meta */
+        foreach ($journal->transactionJournalMeta as $meta) {
+            $array['meta'][] = $meta->toArray();
+        }
+
+        return response()->json($array);
     }
 
     /**
@@ -283,6 +314,8 @@ class SingleController extends Controller
             'source_name'          => $sourceAccounts->first()->edit_name,
             'destination_id'       => $destinationAccounts->first()->id,
             'destination_name'     => $destinationAccounts->first()->edit_name,
+            'bill_id'              => $journal->bill_id,
+            'bill_name'            => null === $journal->bill_id ? null : $journal->bill->name,
 
             // new custom fields:
             'due_date'             => $repository->getJournalDate($journal, 'due_date'),
@@ -413,6 +446,12 @@ class SingleController extends Controller
 
         // keep current bill:
         $data['bill_id'] = $journal->bill_id;
+
+        // remove it if no checkbox:
+        if (!$request->boolean('keep_bill_id')) {
+            $data['bill_id'] = null;
+        }
+
 
         $journal = $repository->update($journal, $data);
         /** @var array $files */

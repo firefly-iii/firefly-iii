@@ -23,16 +23,17 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Transformers;
 
-use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\PiggyBankTransformer;
+use Log;
+use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
+use Amount;
 
 /**
  * Class PiggyBankTransformerTest
@@ -40,174 +41,93 @@ use Tests\TestCase;
 class PiggyBankTransformerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * Test basic transformer.
      *
      * @covers \FireflyIII\Transformers\PiggyBankTransformer
      */
     public function testBasic(): void
     {
-        // mock repository:
-        $repository = $this->mock(PiggyBankRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getCurrentAmount')->andReturn('12.34')->once();
-        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.34')->once();
-
-
-        // make new account and piggy
-        $account     = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        $piggy       = PiggyBank::create(
-            [
-                'account_id'   => $account->id,
-                'name'         => 'Some random piggy #' . random_int(1, 10000),
-                'targetamount' => '1000',
-                'startdate'    => '2018-01-01',
-                'targetdate'   => '2018-01-31',
-                'order'        => 1,
-                'active'       => 1,
-            ]
-        );
-        $transformer = new PiggyBankTransformer(new ParameterBag);
-        $result      = $transformer->transform($piggy);
-        $this->assertTrue($result['active']);
-        $this->assertEquals(12.34, $result['current_amount']);
-        $this->assertEquals($piggy->name, $result['name']);
-        $this->assertEquals('', $result['notes']);
-    }
-
-    /**
-     * Test basic transformer with currency preference
-     *
-     * @covers \FireflyIII\Transformers\PiggyBankTransformer()
-     */
-    public function testBasicWithCurrency(): void
-    {
-        // mock repository.
+        // mock repositories
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $currencyRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->once();
 
+        // mock calls:
+        $piggyRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // mock repository:
-        $repository = $this->mock(PiggyBankRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getCurrentAmount')->andReturn('12.34')->once();
-        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.34')->once();
+        // return a currency
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(TransactionCurrency::find(1));
 
-        // make new account and piggy
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        // meta
-        $accountMeta = AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1,
-            ]
-        );
+        // get a note
+        $piggyRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('I am a note.');
 
-        $piggy       = PiggyBank::create(
-            [
-                'account_id'   => $account->id,
-                'name'         => 'Some random piggy #' . random_int(1, 10000),
-                'targetamount' => '1000',
-                'startdate'    => '2018-01-01',
-                'targetdate'   => '2018-01-31',
-                'order'        => 1,
-                'active'       => 1,
-            ]
-        );
-        $transformer = new PiggyBankTransformer(new ParameterBag);
-        $result      = $transformer->transform($piggy);
-        $this->assertTrue($result['active']);
-        $this->assertEquals(12.34, $result['current_amount']);
+        // get some amounts
+        $piggyRepos->shouldReceive('getCurrentAmount')->atLeast()->once()->andReturn('123.45');
+        $piggyRepos->shouldReceive('getSuggestedMonthlyAmount')->atLeast()->once()->andReturn('12.45');
+
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters(new ParameterBag());
+
+        $piggy  = PiggyBank::first();
+        $result = $transformer->transform($piggy);
+
+        $this->assertEquals(12.45, $result['save_per_month']);
         $this->assertEquals($piggy->name, $result['name']);
-        $this->assertEquals('', $result['notes']);
+        $this->assertEquals(1, $result['currency_id']);
     }
 
     /**
-     * Test basic transformer with currency preference and a note
+     * Test basic transformer.
      *
      * @covers \FireflyIII\Transformers\PiggyBankTransformer
      */
-    public function testBasicWithCurrencyAndNote(): void
+    public function testNoCurrency(): void
     {
-        // mock repository.
+        // mock repositories
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $currencyRepos->shouldReceive('setUser')->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->once();
 
-        // mock repository:
-        $repository = $this->mock(PiggyBankRepositoryInterface::class);
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('getCurrentAmount')->andReturn('12.34')->once();
-        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('12.34')->once();
+        // mock calls:
+        $piggyRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
+        $currencyRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // make new account and piggy
-        $account = Account::create(
-            [
-                'user_id'         => $this->user()->id,
-                'account_type_id' => 3, // asset account
-                'name'            => 'Random name #' . random_int(1, 10000),
-                'virtual_balance' => 12.34,
-                'iban'            => 'NL85ABNA0466812694',
-                'active'          => 1,
-                'encrypted'       => 0,
-            ]
-        );
-        // meta
-        $accountMeta = AccountMeta::create(
-            [
-                'account_id' => $account->id,
-                'name'       => 'currency_id',
-                'data'       => 1,
-            ]
-        );
+        // return a currency
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->atLeast()->once()->andReturn(null);
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn(TransactionCurrency::find(1));
 
-        $piggy = PiggyBank::create(
-            [
-                'account_id'   => $account->id,
-                'name'         => 'Some random piggy #' . random_int(1, 10000),
-                'targetamount' => '1000',
-                'startdate'    => '2018-01-01',
-                'targetdate'   => '2018-01-31',
-                'order'        => 1,
-                'active'       => 1,
-            ]
-        );
+        // get a note
+        $piggyRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('I am a note.');
 
-        // note:
-        Note::create(
-            [
-                'noteable_id'   => $piggy->id,
-                'noteable_type' => PiggyBank::class,
-                'title'         => null,
-                'text'          => 'I am a note.',
-            ]
-        );
-        $transformer = new PiggyBankTransformer(new ParameterBag);
-        $result      = $transformer->transform($piggy);
-        $this->assertTrue($result['active']);
-        $this->assertEquals(12.34, $result['current_amount']);
+        // get some amounts
+        $piggyRepos->shouldReceive('getCurrentAmount')->atLeast()->once()->andReturn('123.45');
+        $piggyRepos->shouldReceive('getSuggestedMonthlyAmount')->atLeast()->once()->andReturn('12.45');
+
+        /** @var PiggyBankTransformer $transformer */
+        $transformer = app(PiggyBankTransformer::class);
+        $transformer->setParameters(new ParameterBag());
+
+        $piggy  = PiggyBank::first();
+        $result = $transformer->transform($piggy);
+
+        $this->assertEquals(12.45, $result['save_per_month']);
         $this->assertEquals($piggy->name, $result['name']);
-        $this->assertEquals('I am a note.', $result['notes']);
+        $this->assertEquals(1, $result['currency_id']);
     }
+
 }

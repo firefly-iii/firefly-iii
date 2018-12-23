@@ -24,37 +24,16 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use Illuminate\Support\Collection;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class BillTransformer
  */
-class BillTransformer extends TransformerAbstract
+class BillTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['attachments', 'transactions', 'user', 'rules'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['rules'];
-
-    /** @var ParameterBag */
-    protected $parameters;
-
     /** @var BillRepositoryInterface */
     private $repository;
 
@@ -62,86 +41,13 @@ class BillTransformer extends TransformerAbstract
      * BillTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
         $this->repository = app(BillRepositoryInterface::class);
-    }
-
-    /**
-     * Include any attachments.
-     *
-     * @param Bill $bill
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeAttachments(Bill $bill): FractalCollection
-    {
-        $attachments = $bill->attachments()->get();
-
-        return $this->collection($attachments, new AttachmentTransformer($this->parameters), 'attachments');
-    }
-
-    /**
-     * Attach the rules.
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Bill $bill
-     *
-     * @return FractalCollection
-     */
-    public function includeRules(Bill $bill): FractalCollection
-    {
-        $this->repository->setUser($bill->user);
-        // add info about rules:
-        $rules = $this->repository->getRulesForBill($bill);
-
-        return $this->collection($rules, new RuleTransformer($this->parameters), 'rules');
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Bill $bill
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Bill $bill): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($bill->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($bill->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setBills(new Collection([$bill]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Bill $bill
-     *
-     * @codeCoverageIgnore
-     * @return \League\Fractal\Resource\Item
-     */
-    public function includeUser(Bill $bill): Item
-    {
-        return $this->item($bill->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**
@@ -155,28 +61,30 @@ class BillTransformer extends TransformerAbstract
     {
         $paidData = $this->paidData($bill);
         $payDates = $this->payDates($bill);
+        $currency = $bill->transactionCurrency;
+        $notes    = $this->repository->getNoteText($bill);
+        $notes    = '' === $notes ? null : $notes;
         $this->repository->setUser($bill->user);
         $data = [
-            'id'                  => (int)$bill->id,
-            'updated_at'          => $bill->updated_at->toAtomString(),
-            'created_at'          => $bill->created_at->toAtomString(),
-            'name'                => $bill->name,
-            'currency_id'         => $bill->transaction_currency_id,
-            'currency_code'       => $bill->transactionCurrency->code,
-            'currency_symbol'     => $bill->transactionCurrency->symbol,
-            'amount_min'          => round((float)$bill->amount_min, 2),
-            'amount_max'          => round((float)$bill->amount_max, 2),
-            'date'                => $bill->date->format('Y-m-d'),
-            'repeat_freq'         => $bill->repeat_freq,
-            'skip'                => (int)$bill->skip,
-            'automatch'           => $bill->automatch,
-            'active'              => $bill->active,
-            'attachments_count'   => $bill->attachments()->count(),
-            'pay_dates'           => $payDates,
-            'notes'               => $this->repository->getNoteText($bill),
-            'paid_dates'          => $paidData['paid_dates'],
-            'next_expected_match' => $paidData['next_expected_match'],
-            'links'               => [
+            'id'                      => (int)$bill->id,
+            'created_at'              => $bill->created_at->toAtomString(),
+            'updated_at'              => $bill->updated_at->toAtomString(),
+            'currency_id'             => $bill->transaction_currency_id,
+            'currency_code'           => $currency->code,
+            'currency_symbol'         => $currency->symbol,
+            'currency_decimal_places' => $currency->decimal_places,
+            'name'                    => $bill->name,
+            'amount_min'              => round((float)$bill->amount_min, $currency->decimal_places),
+            'amount_max'              => round((float)$bill->amount_max, $currency->decimal_places),
+            'date'                    => $bill->date->format('Y-m-d'),
+            'repeat_freq'             => $bill->repeat_freq,
+            'skip'                    => (int)$bill->skip,
+            'active'                  => $bill->active,
+            'notes'                   => $notes,
+            'next_expected_match'     => $paidData['next_expected_match'],
+            'pay_dates'               => $payDates,
+            'paid_dates'              => $paidData['paid_dates'],
+            'links'                   => [
                 [
                     'rel' => 'self',
                     'uri' => '/bills/' . $bill->id,
@@ -250,10 +158,7 @@ class BillTransformer extends TransformerAbstract
             ];
         }
 
-        /** @var BillRepositoryInterface $repository */
-        $repository = app(BillRepositoryInterface::class);
-        $repository->setUser($bill->user);
-        $set = $repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
+        $set = $this->repository->getPaidDatesInRange($bill, $this->parameters->get('start'), $this->parameters->get('end'));
         Log::debug(sprintf('Count %d entries in getPaidDatesInRange()', $set->count()));
         $simple = $set->map(
             function (Carbon $date) {
@@ -268,7 +173,7 @@ class BillTransformer extends TransformerAbstract
             $nextMatch = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
         }
         $end          = app('navigation')->addPeriod($nextMatch, $bill->repeat_freq, $bill->skip);
-        $journalCount = $repository->getPaidDatesInRange($bill, $nextMatch, $end)->count();
+        $journalCount = $this->repository->getPaidDatesInRange($bill, $nextMatch, $end)->count();
         if ($journalCount > 0) {
             $nextMatch = clone $end;
         }

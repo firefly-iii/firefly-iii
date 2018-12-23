@@ -70,11 +70,10 @@ class Preference extends Model
     public static function routeBinder(string $value): Preference
     {
         if (auth()->check()) {
-            $preferenceId = (int)$value;
             /** @var User $user */
             $user = auth()->user();
             /** @var Preference $preference */
-            $preference = $user->preferences()->find($preferenceId);
+            $preference = $user->preferences()->where('name', $value)->first();
             if (null !== $preference) {
                 return $preference;
             }

@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III prend en charge plusieurs devises, que vous pouvez modifier sur cette page.',
-    'currencies_index_default'                                => 'Firefly III a une devise par défaut. Vous pouvez toujours en changer à l\'aide de ces boutons, bien entendu.',
+    'currencies_index_default'                                => 'Firefly III a une devise par défaut.',
+    'currencies_index_buttons'                                => 'Utilisez ces boutons pour changer la devise par défaut ou activer d’autres devises.',
 
     // create currency
     'currencies_create_code'                                  => 'Ce code devrait être conforme à l\'ISO (recherchez-le sur google votre nouvelle devise).',

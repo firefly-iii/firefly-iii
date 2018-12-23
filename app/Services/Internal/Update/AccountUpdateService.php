@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Update;
 
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use Log;
 
@@ -33,12 +35,13 @@ use Log;
 class AccountUpdateService
 {
     use AccountServiceTrait;
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -66,6 +69,19 @@ class AccountUpdateService
         if (isset($data['currency_id']) && 0 === $data['currency_id']) {
             unset($data['currency_id']);
         }
+        // find currency, or use default currency instead.
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
+
+        if (null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
+        }
+        $currency->enabled = true;
+        $currency->save();
+        $data['currency_id'] = $currency->id;
 
         // update all meta data:
         $this->updateMetaData($account, $data);

@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Transaction;
 
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -33,6 +34,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
@@ -67,37 +69,33 @@ class SplitControllerTest extends TestCase
         $accountRepos       = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $transformer        = $this->mock(TransactionTransformer::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
 
+        $deposit     = $this->getRandomDeposit();
+        $destination = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account     = $destination->account;
 
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
-
-
-        $deposit              = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $destination          = $deposit->transactions()->where('amount', '>', 0)->first();
-        $account              = $destination->account;
-        $transactions         = factory(Transaction::class, 3)->make();
-        $array                = $transactions->toArray();
-        $array[0]['category'] = '';
-
+        // mock calls
         $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
+        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
+        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection)->atLeast()->once();
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->atLeast()->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->atLeast()->once();
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
         $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
-        $journalRepos->shouldReceive('getMetaField')->andReturn('');
-        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
-        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
-        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
-        $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
-        $journalRepos->shouldReceive('getJournalCategoryName')->andReturn('Some');
-
-
-        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
+        $journalRepos->shouldReceive('getMetaField')->andReturn('')->atLeast()->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('transactions.split.edit', [$deposit->id]));
@@ -116,81 +114,80 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
+        $transformer        = $this->mock(TransactionTransformer::class);
+        $collector          = $this->mock(TransactionCollectorInterface::class);
+
+        $deposit     = $this->getRandomDeposit();
+        $destination = $deposit->transactions()->where('amount', '>', 0)->first();
+        $account     = $destination->account;
 
 
-        $deposit            = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $destination        = $deposit->transactions()->where('amount', '>', 0)->first();
-        $account            = $destination->account;
-        $transactions       = factory(Transaction::class, 3)->make();
-
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
-
-
-        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-
-
+        // mock calls
         $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
+        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
+        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection)->atLeast()->once();
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]))->atLeast()->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]))->atLeast()->once();
         $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
         $journalRepos->shouldReceive('getJournalDate')->andReturn('2018-01-01')->once();
-        $journalRepos->shouldReceive('getMetaField')->andReturn('');
-        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
-        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
-        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
-        $journalRepos->shouldReceive('getJournalTotal')->andReturn('0');
-
+        $journalRepos->shouldReceive('getMetaField')->andReturn('')->atLeast()->once();
+        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->atLeast()->once();
 
         $old = [
             'transactions' => [
                 [
-                    'transaction_currency_id'     => 1,
-                    'transaction_currency_code'   => 'AB',
-                    'transaction_currency_symbol' => 'X',
-                    'foreign_amount'              => '0',
-                    'foreign_currency_id'         => 2,
-                    'foreign_currency_code'       => 'CD',
-                    'foreign_currency_symbol'     => 'Y',
+                    'currency_id'             => 1,
+                    'currency_code'           => 'AB',
+                    'currency_symbol'         => 'X',
+                    'foreign_amount'          => '0',
+                    'foreign_currency_id'     => 2,
+                    'foreign_currency_code'   => 'CD',
+                    'foreign_currency_symbol' => 'Y',
                 ],
                 [
-                    'transaction_currency_id'     => 1,
-                    'transaction_currency_code'   => 'AB',
-                    'transaction_currency_symbol' => 'X',
-                    'foreign_amount'              => '0',
-                    'foreign_currency_id'         => 2,
-                    'foreign_currency_code'       => 'CD',
-                    'foreign_currency_symbol'     => 'Y',
+                    'currency_id'             => 1,
+                    'currency_code'           => 'AB',
+                    'currency_symbol'         => 'X',
+                    'foreign_amount'          => '0',
+                    'foreign_currency_id'     => 2,
+                    'foreign_currency_code'   => 'CD',
+                    'foreign_currency_symbol' => 'Y',
                 ],
                 [
-                    'transaction_currency_id'     => 1,
-                    'transaction_currency_code'   => 'AB',
-                    'transaction_currency_symbol' => 'X',
-                    'foreign_amount'              => '0',
-                    'foreign_currency_id'         => 2,
-                    'foreign_currency_code'       => 'CD',
-                    'foreign_currency_symbol'     => 'Y',
+                    'currency_id'             => 1,
+                    'currency_code'           => 'AB',
+                    'currency_symbol'         => 'X',
+                    'foreign_amount'          => '0',
+                    'foreign_currency_id'     => 2,
+                    'foreign_currency_code'   => 'CD',
+                    'foreign_currency_symbol' => 'Y',
                 ],
                 [
-                    'transaction_currency_id'     => 1,
-                    'transaction_currency_code'   => 'AB',
-                    'transaction_currency_symbol' => 'X',
-                    'foreign_amount'              => '0',
-                    'foreign_currency_id'         => 2,
-                    'foreign_currency_code'       => 'CD',
-                    'foreign_currency_symbol'     => 'Y',
+                    'currency_id'             => 1,
+                    'currency_code'           => 'AB',
+                    'currency_symbol'         => 'X',
+                    'foreign_amount'          => '0',
+                    'foreign_currency_id'     => 2,
+                    'foreign_currency_code'   => 'CD',
+                    'foreign_currency_symbol' => 'Y',
                 ],
                 [
-                    'transaction_currency_id'     => 1,
-                    'transaction_currency_code'   => 'AB',
-                    'transaction_currency_symbol' => 'X',
-                    'foreign_amount'              => '0',
-                    'foreign_currency_id'         => 2,
-                    'foreign_currency_code'       => 'CD',
-                    'foreign_currency_symbol'     => 'Y',
+                    'currency_id'             => 1,
+                    'currency_code'           => 'AB',
+                    'currency_symbol'         => 'X',
+                    'foreign_amount'          => '0',
+                    'foreign_currency_id'     => 2,
+                    'foreign_currency_code'   => 'CD',
+                    'foreign_currency_symbol' => 'Y',
                 ],
 
             ],
@@ -215,7 +212,7 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $opening = TransactionJournal::where('transaction_type_id', 4)->where('user_id', $this->user()->id)->first();
@@ -225,49 +222,6 @@ class SplitControllerTest extends TestCase
         $response->assertStatus(302);
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\SplitController
-     */
-    public function testEditSingle(): void
-    {
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepository  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
-        $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $transactions = factory(Transaction::class, 1)->make();
-        $deposit      = TransactionJournal::where('transaction_type_id', 2)->where('user_id', $this->user()->id)->first();
-        $destination  = $deposit->transactions()->where('amount', '>', 0)->first();
-        $account      = $destination->account;
-
-        $accountRepository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $currencyRepository->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
-
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn($deposit);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('getTransactionType')->once()->andReturn('Deposit');
-        $journalRepos->shouldReceive('getJournalDate')->once()->andReturn('2018-01-01');
-        $journalRepos->shouldReceive('getMetaField')->andReturn('');
-        $journalRepos->shouldReceive('getNoteText')->andReturn('Some note')->once();
-        $journalRepos->shouldReceive('getJournalBudgetId')->andReturn(0);
-        $journalRepos->shouldReceive('getCategoryName')->andReturn('');
-        $journalRepos->shouldReceive('getJournalTotal')->andReturn('1');
-
-        $currencyRepository->shouldReceive('get')->once()->andReturn(new Collection);
-        $budgetRepository->shouldReceive('getActiveBudgets')->andReturn(new Collection);
-
-        $this->be($this->user());
-        $response = $this->get(route('transactions.split.edit', [$deposit->id]));
-        $response->assertStatus(200);
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
 
     /**
      * @covers       \FireflyIII\Http\Controllers\Transaction\SplitController
@@ -282,7 +236,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $billRepos->shouldReceive('scan');
@@ -305,7 +259,7 @@ class SplitControllerTest extends TestCase
                 [
                     'transaction_description' => 'Split #1',
                     'source_name'             => 'Job',
-                    'transaction_currency_id' => 1,
+                    'currency_id'             => 1,
                     'amount'                  => 1591,
                     'category_name'           => '',
                 ],
@@ -338,7 +292,7 @@ class SplitControllerTest extends TestCase
         $budgetRepository   = $this->mock(BudgetRepositoryInterface::class);
         $journalRepos       = $this->mock(JournalRepositoryInterface::class);
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $this->session(['transactions.edit-split.uri' => 'http://localhost']);
@@ -356,7 +310,7 @@ class SplitControllerTest extends TestCase
                 [
                     'transaction_description' => 'Split #1',
                     'source_name'             => 'Job',
-                    'transaction_currency_id' => 1,
+                    'currency_id'             => 1,
                     'amount'                  => 1591,
                     'category_name'           => '',
                 ],
@@ -384,7 +338,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
         $billRepos->shouldReceive('scan');
         $ruleRepos->shouldReceive('setUser')->once();
@@ -407,7 +361,7 @@ class SplitControllerTest extends TestCase
                     'transaction_description' => 'Split #1',
                     'source_id'               => '1',
                     'destination_id'          => '2',
-                    'transaction_currency_id' => 1,
+                    'currency_id'             => 1,
                     'amount'                  => 1591,
                     'category_name'           => '',
                 ],
@@ -442,7 +396,7 @@ class SplitControllerTest extends TestCase
         $attHelper          = $this->mock(AttachmentHelperInterface::class);
         $ruleRepos          = $this->mock(RuleGroupRepositoryInterface::class);
         $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
 
 
         $billRepos->shouldReceive('scan');
@@ -466,7 +420,7 @@ class SplitControllerTest extends TestCase
                     'transaction_description' => 'Split #1',
                     'source_id'               => '1',
                     'destination_name'        => 'some expense',
-                    'transaction_currency_id' => 1,
+                    'currency_id'             => 1,
                     'amount'                  => 1591,
                     'category_name'           => '',
                 ],

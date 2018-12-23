@@ -23,6 +23,9 @@
 declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
+
+use FireflyIII\Rules\IsBoolean;
+
 /**
  * Class AccountRequest
  */
@@ -47,10 +50,19 @@ class AccountRequest extends Request
      */
     public function getAll(): array
     {
+        $active          = true;
+        $includeNetWorth = true;
+        if (null !== $this->get('active')) {
+            $active = $this->boolean('active');
+        }
+        if (null !== $this->get('include_net_worth')) {
+            $includeNetWorth = $this->boolean('include_net_worth');
+        }
+
         $data = [
             'name'                 => $this->string('name'),
-            'active'               => $this->boolean('active'),
-            'include_net_worth'    => $this->boolean('include_net_worth'),
+            'active'               => $active,
+            'include_net_worth'    => $includeNetWorth,
             'accountType'          => $this->string('type'),
             'account_type_id'      => null,
             'currency_id'          => $this->integer('currency_id'),
@@ -62,18 +74,13 @@ class AccountRequest extends Request
             'accountRole'          => $this->string('account_role'),
             'openingBalance'       => $this->string('opening_balance'),
             'openingBalanceDate'   => $this->date('opening_balance_date'),
-            'ccType'               => $this->string('cc_type'),
-            'ccMonthlyPaymentDate' => $this->string('cc_monthly_payment_date'),
+            'ccType'               => $this->string('credit_card_type'),
+            'ccMonthlyPaymentDate' => $this->string('monthly_payment_date'),
             'notes'                => $this->string('notes'),
             'interest'             => $this->string('interest'),
             'interest_period'      => $this->string('interest_period'),
         ];
-        // new fields for liabilities
-        //            'liability_type'       => $this->string('liability_type'),
-        //            'liability_start_date' => $this->date('liability_start_date'),
 
-
-        //];
         if ('liability' === $data['accountType']) {
             $data['openingBalance']     = bcmul($this->string('liability_amount'), '-1');
             $data['openingBalanceDate'] = $this->date('liability_start_date');
@@ -95,29 +102,27 @@ class AccountRequest extends Request
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
-            'name'                    => 'required|min:1|uniqueAccountForUser',
-            'opening_balance'         => 'numeric|required_with:opening_balance_date|nullable',
-            'opening_balance_date'    => 'date|required_with:opening_balance|nullable',
-            'iban'                    => 'iban|nullable',
-            'bic'                     => 'bic|nullable',
-            'virtual_balance'         => 'numeric|nullable',
-            'currency_id'             => 'numeric|exists:transaction_currencies,id|required_without:currency_code',
-            'currency_code'           => 'min:3|max:3|exists:transaction_currencies,code|required_without:currency_id',
-            'account_number'          => 'between:1,255|nullable|uniqueAccountNumberForUser',
-            'account_role'            => 'in:' . $accountRoles . '|required_if:type,asset',
-            'active'                  => 'required|boolean',
-            'include_net_worth'       => 'required|boolean',
-            'cc_type'                 => 'in:' . $ccPaymentTypes . '|required_if:account_role,ccAsset',
-            'cc_monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:cc_type,monthlyFull',
-            'type'                    => 'required|in:' . $types,
-            'notes'                   => 'min:0|max:65536',
-            // required fields for liabilities:
-            'liability_type'          => 'required_if:type,liability|in:loan,debt,mortgage,credit card',
-            'liability_amount'        => 'required_if:type,liability|min:0|numeric',
-            'liability_start_date'    => 'required_if:type,liability|date',
-            'interest'                => 'required_if:type,liability|between:0,100|numeric',
-            'interest_period'         => 'required_if:type,liability|in:daily,monthly,yearly',
-
+            'name'                 => 'required|min:1|uniqueAccountForUser',
+            'type'                 => 'required|in:' . $types,
+            'iban'                 => 'iban|nullable',
+            'bic'                  => 'bic|nullable',
+            'account_number'       => 'between:1,255|nullable|uniqueAccountNumberForUser',
+            'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
+            'opening_balance_date' => 'date|required_with:opening_balance|nullable',
+            'virtual_balance'      => 'numeric|nullable',
+            'currency_id'          => 'numeric|exists:transaction_currencies,id',
+            'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
+            'active'               => [new IsBoolean],
+            'include_net_worth'    => [new IsBoolean],
+            'account_role'         => 'in:' . $accountRoles . '|required_if:type,asset',
+            'credit_card_type'     => 'in:' . $ccPaymentTypes . '|required_if:account_role,ccAsset',
+            'monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
+            'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
+            'liability_amount'     => 'required_if:type,liability|min:0|numeric',
+            'liability_start_date' => 'required_if:type,liability|date',
+            'interest'             => 'required_if:type,liability|between:0,100|numeric',
+            'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
+            'notes'                => 'min:0|max:65536',
         ];
         switch ($this->method()) {
             default:

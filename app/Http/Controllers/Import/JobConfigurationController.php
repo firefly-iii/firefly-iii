@@ -76,7 +76,7 @@ class JobConfigurationController extends Controller
         Log::debug('Now in JobConfigurationController::index()');
         $allowed = ['has_prereq', 'need_job_config'];
         if (null !== $importJob && !\in_array($importJob->status, $allowed, true)) {
-            Log::debug(sprintf('Job has state "%s", but we only accept %s', $importJob->status, json_encode($allowed)));
+            Log::error(sprintf('Job has state "%s", but we only accept %s', $importJob->status, json_encode($allowed)));
             session()->flash('error', (string)trans('import.bad_job_status', ['status' => $importJob->status]));
 
             return redirect(route('import.index'));

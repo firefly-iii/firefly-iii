@@ -123,7 +123,7 @@ return [
     'present'                        => 'Het :attribute veld moet aanwezig zijn.',
     'amount_zero'                    => 'Het totaalbedrag kan niet nul zijn.',
     'unique_piggy_bank_for_user'     => 'De naam van de spaarpot moet uniek zijn.',
-    'secure_password'                => 'Dit is geen sterk wachtwoord. Probeer het nog een keer. Zie ook: http://bit.ly/FF3-password-security.',
+    'secure_password'                => 'Dit is geen veilig wachtwoord. Probeer het nog een keer. Zie ook: https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Dit is geen geldige herhaling voor periodieke transacties.',
     'valid_recurrence_rep_moment'    => 'Ongeldig herhaalmoment voor dit type herhaling.',
     'invalid_account_info'           => 'Ongeldige rekeninginformatie.',

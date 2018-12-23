@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III ondersteunt meerdere valuta, die je op deze pagina kunt wijzigen.',
-    'currencies_index_default'                                => 'Firefly III heeft één standaardvaluta. Je kan natuurlijk altijd wisselen met deze knoppen.',
+    'currencies_index_default'                                => 'Firefly III heeft één standaardvaluta.',
+    'currencies_index_buttons'                                => 'Gebruik deze knoppen om de standaardvaluta te wijzigen of om andere valuta in te schakelen.',
 
     // create currency
     'currencies_create_code'                                  => 'Deze code moet ISO-compatibel zijn (Google die code voor je nieuwe valuta).',

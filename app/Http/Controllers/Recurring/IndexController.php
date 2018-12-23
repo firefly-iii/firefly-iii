@@ -86,7 +86,10 @@ class IndexController extends Controller
         /** @var Collection $recurrences */
         $recurrences = $collection->slice(($page - 1) * $pageSize, $pageSize);
 
-        $transformer = new RecurrenceTransformer(new ParameterBag);
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
         $recurring   = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
@@ -114,7 +117,10 @@ class IndexController extends Controller
      */
     public function show(Recurrence $recurrence)
     {
-        $transformer  = new RecurrenceTransformer(new ParameterBag);
+        /** @var RecurrenceTransformer $transformer */
+        $transformer = app(RecurrenceTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
         $array        = $transformer->transform($recurrence);
         $transactions = $this->recurring->getTransactions($recurrence);
 

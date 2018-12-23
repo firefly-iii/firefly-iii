@@ -80,7 +80,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('canDeleteCurrency')->andReturn(false);
+        $repository->shouldReceive('currencyInUse')->andReturn(true);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
         $this->be($this->user());
@@ -100,7 +100,7 @@ class CurrencyControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
-        $repository->shouldReceive('canDeleteCurrency')->andReturn(false);
+        $repository->shouldReceive('currencyInUse')->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->once()->andReturn(true);
 
@@ -142,6 +142,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $currencyRepos->shouldReceive('enable')->once();
 
         $this->be($this->user());
         $response = $this->get(route('currencies.default', [1]));
@@ -160,7 +161,7 @@ class CurrencyControllerTest extends TestCase
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
+        $repository->shouldReceive('currencyInUse')->andReturn(false);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
@@ -180,7 +181,7 @@ class CurrencyControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
-        $repository->shouldReceive('canDeleteCurrency')->andReturn(true);
+        $repository->shouldReceive('currencyInUse')->andReturn(false);
         $repository->shouldReceive('destroy')->andReturn(true)->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(1)->andReturn(true);
@@ -190,6 +191,87 @@ class CurrencyControllerTest extends TestCase
         $response = $this->post(route('currencies.destroy', [1]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisable(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('disable')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('get')->atLeast()->once()->andReturn(new Collection([$currency]));
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisableInUse(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(true);
+        $repository->shouldNotReceive('disable');
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisableNothingLeft(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('disable')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection);
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(500);
+        $response->assertSee('No currencies found.');
+    }
+
+
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testDisableEnableFirst(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->andReturn(true);
+        $repository->shouldReceive('currencyInuse')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('disable')->atLeast()->once()->andReturn(false);
+        $repository->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('getAll')->atLeast()->once()->andReturn(new Collection([$currency]));
+        $repository->shouldReceive('enable')->atLeast()->once()->andReturn(true);
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.disable', [$currency->id]));
+        $response->assertStatus(302);
     }
 
     /**
@@ -214,6 +296,22 @@ class CurrencyControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\CurrencyController
+     */
+    public function testEnable(): void
+    {
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $currency   = TransactionCurrency::first();
+
+        $repository->shouldReceive('enable')->atLeast()->once();
+
+        $this->be($this->user());
+        $response = $this->get(route('currencies.enable', [$currency->id]));
+        $response->assertStatus(302);
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\CurrencyController
      * @covers \FireflyIII\Http\Controllers\CurrencyController
      */
     public function testIndex(): void
@@ -227,7 +325,7 @@ class CurrencyControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn($currencies->first());
-        $repository->shouldReceive('get')->andReturn($currencies);
+        $repository->shouldReceive('getAll')->andReturn($currencies);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
 
         $this->be($this->user());
@@ -250,7 +348,7 @@ class CurrencyControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getCurrencyByPreference')->andReturn(new TransactionCurrency);
-        $repository->shouldReceive('get')->andReturn(new Collection);
+        $repository->shouldReceive('getAll')->andReturn(new Collection);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(false);
 
         $this->be($this->user());

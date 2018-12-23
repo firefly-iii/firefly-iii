@@ -40,6 +40,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $budget_id
  * @property string spent
  * @property int $transaction_currency_id
+ * @property TransactionCurrency $transactionCurrency
  */
 class BudgetLimit extends Model
 {

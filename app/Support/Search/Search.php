@@ -56,7 +56,7 @@ class Search implements SearchInterface
         $this->modifiers      = new Collection;
         $this->validModifiers = (array)config('firefly.search_modifiers');
 
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
 
@@ -237,7 +237,7 @@ class Search implements SearchInterface
                 case 'after':
                     Log::debug(sprintf('Set "%s" using collector with value "%s"', $modifier['type'], $modifier['value']));
                     $after = new Carbon($modifier['value']);
-                    $collector->setBefore($after);
+                    $collector->setAfter($after);
                     break;
             }
         }

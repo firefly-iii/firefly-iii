@@ -51,29 +51,30 @@ trait RuleManagement
                 'description'     => (string)trans('firefly.default_rule_description'),
                 'trigger'         => 'store-journal',
                 'strict'          => true,
-                'rule_triggers'   => [
+                'active'          => true,
+                'triggers'        => [
                     [
-                        'name'            => 'description_is',
+                        'type'            => 'description_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_description'),
                         'stop_processing' => false,
 
                     ],
                     [
-                        'name'            => 'from_account_is',
+                        'type'            => 'from_account_is',
                         'value'           => (string)trans('firefly.default_rule_trigger_from_account'),
                         'stop_processing' => false,
 
                     ],
 
                 ],
-                'rule_actions'    => [
+                'actions'         => [
                     [
-                        'name'            => 'prepend_description',
+                        'type'            => 'prepend_description',
                         'value'           => (string)trans('firefly.default_rule_action_prepend'),
                         'stop_processing' => false,
                     ],
                     [
-                        'name'            => 'set_category',
+                        'type'            => 'set_category',
                         'value'           => (string)trans('firefly.default_rule_action_set_category'),
                         'stop_processing' => false,
                     ],
@@ -94,14 +95,14 @@ trait RuleManagement
     {
         $index    = 0;
         $triggers = [];
-        $oldInput = $request->old('rule_actions');
+        $oldInput = $request->old('actions');
         if (\is_array($oldInput)) {
             foreach ($oldInput as $oldAction) {
                 try {
                     $triggers[] = view(
                         'rules.partials.action',
                         [
-                            'oldAction'  => $oldAction['name'],
+                            'oldAction'  => $oldAction['type'],
                             'oldValue'   => $oldAction['value'],
                             'oldChecked' => 1 === (int)($oldAction['stop_processing'] ?? '0'),
                             'count'      => $index + 1,
@@ -127,14 +128,14 @@ trait RuleManagement
     {
         $index    = 0;
         $triggers = [];
-        $oldInput = $request->old('rule_triggers');
+        $oldInput = $request->old('triggers');
         if (\is_array($oldInput)) {
             foreach ($oldInput as $oldTrigger) {
                 try {
                     $triggers[] = view(
                         'rules.partials.trigger',
                         [
-                            'oldTrigger' => $oldTrigger['name'],
+                            'oldTrigger' => $oldTrigger['type'],
                             'oldValue'   => $oldTrigger['value'],
                             'oldChecked' => 1 === (int)($oldTrigger['stop_processing'] ?? '0'),
                             'count'      => $index + 1,
@@ -162,6 +163,7 @@ trait RuleManagement
             $data = [
                 'title'       => (string)trans('firefly.default_rule_group_name'),
                 'description' => (string)trans('firefly.default_rule_group_description'),
+                'active'      => true,
             ];
 
             $repository->store($data);

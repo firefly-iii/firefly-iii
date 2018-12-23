@@ -41,7 +41,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -218,6 +218,22 @@ class UserRepository implements UserRepositoryInterface
     }
 
     /**
+     * @param User $user
+     *
+     * @return string|null
+     */
+    public function getRoleByUser(User $user): ?string
+    {
+        /** @var Role $role */
+        $role = $user->roles()->first();
+        if (null !== $role) {
+            return $role->name;
+        }
+
+        return null;
+    }
+
+    /**
      * Return basic user information.
      *
      * @param User $user
@@ -288,7 +304,7 @@ class UserRepository implements UserRepositoryInterface
      */
     public function store(array $data): User
     {
-        return User::create(
+        $user = User::create(
             [
                 'blocked'      => $data['blocked'] ?? false,
                 'blocked_code' => $data['blocked_code'] ?? null,
@@ -296,6 +312,12 @@ class UserRepository implements UserRepositoryInterface
                 'password'     => str_random(24),
             ]
         );
+        $role = $data['role'] ?? '';
+        if ('' !== $role) {
+            $this->attachRole($user, $role);
+        }
+
+        return $user;
     }
 
     /**

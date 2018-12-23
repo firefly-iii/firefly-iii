@@ -22,7 +22,9 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Balance;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use Log;
 use Tests\TestCase;
@@ -52,6 +54,10 @@ class BalanceControllerTest extends TestCase
     public function testGeneral(): void
     {
         $balance = $this->mock(BalanceReportHelperInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $balance->shouldReceive('getBalanceReport')->andReturn(new Balance);
 
         $this->be($this->user());

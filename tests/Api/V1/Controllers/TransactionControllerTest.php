@@ -27,13 +27,15 @@ namespace Tests\Api\V1\Controllers;
 use Exception;
 use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionJournal;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\AttachmentTransformer;
+use FireflyIII\Transformers\PiggyBankEventTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -55,6 +57,33 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testAttachments(): void
+    {
+        // mock stuff:
+        $repository      = $this->mock(JournalRepositoryInterface::class);
+        $collector       = $this->mock(TransactionCollectorInterface::class);
+        $attachmentRepos = $this->mock(AttachmentRepositoryInterface::class);
+        $transformer     = $this->mock(AttachmentTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('getAttachmentsByTr')->once()->andReturn(new Collection);
+
+        // get account:
+        $transaction = $this->user()->transactions()->first();
+
+        // call API
+        $response = $this->get(route('api.v1.transactions.attachments', [$transaction->id]));
+        $response->assertStatus(200);
+
+    }
+
+    /**
      * Destroy journal over API.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
@@ -63,6 +92,7 @@ class TransactionControllerTest extends TestCase
     {
         // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
+        $collector  = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();
@@ -88,6 +118,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -135,6 +166,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -181,6 +213,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -233,6 +266,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
@@ -291,6 +325,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $account      = $this->user()->accounts()->where('account_type_id', 4)->first();
 
         // mock calls:
@@ -339,6 +374,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -386,6 +422,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -430,6 +467,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -468,6 +506,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -518,6 +557,7 @@ class TransactionControllerTest extends TestCase
         // mock stuff:
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -568,6 +608,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -627,6 +668,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -685,6 +727,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -743,6 +786,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -801,6 +845,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -869,6 +914,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -935,6 +981,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -991,6 +1038,7 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 4)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1039,6 +1087,7 @@ class TransactionControllerTest extends TestCase
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1096,6 +1145,7 @@ class TransactionControllerTest extends TestCase
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1160,6 +1210,7 @@ class TransactionControllerTest extends TestCase
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
@@ -1210,29 +1261,15 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $transformer  = $this->mock(TransactionTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
                      ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
-
-        // get some transactions using the collector:
-        $collector = new TransactionCollector;
-        $collector->setUser($this->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setLimit(5)->setPage(1);
-        try {
-            $paginator = $collector->getPaginatedTransactions();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
+        $paginator  = new LengthAwarePaginator(new Collection, 0, 50);
         $repository->shouldReceive('setUser');
-
-
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
@@ -1242,6 +1279,10 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
 
@@ -1251,7 +1292,7 @@ class TransactionControllerTest extends TestCase
         $response = $this->get('/api/v1/transactions');
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => true, 'count' => true, 'per_page' => 5, 'current_page' => 1, 'total_pages' => true]],]);
+        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
         $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -1263,24 +1304,13 @@ class TransactionControllerTest extends TestCase
      */
     public function testIndexWithRange(): void
     {
+        $transformer  = $this->mock(TransactionTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
                      ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
-        // get some transactions using the collector:
-        $collector = new TransactionCollector;
-        $collector->setUser($this->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setLimit(5)->setPage(1);
-        try {
-            $paginator = $collector->getPaginatedTransactions();
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        // mock stuff:
+        $paginator  = new LengthAwarePaginator(new Collection, 0, 50);
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
@@ -1297,6 +1327,8 @@ class TransactionControllerTest extends TestCase
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // mock some calls:
 
@@ -1308,11 +1340,11 @@ class TransactionControllerTest extends TestCase
             ['meta' =>
                  ['pagination' =>
                       [
-                          'total'        => true,
-                          'count'        => true,
-                          'per_page'     => 5,
+                          'total'        => 0,
+                          'count'        => 0,
+                          'per_page'     => 50,
                           'current_page' => 1,
-                          'total_pages'  => true,
+                          'total_pages'  => 1,
                       ],
                  ],
             ]
@@ -1324,53 +1356,67 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * Show a deposit.
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testPiggyBankEvents(): void
+    {
+        // mock stuff:
+        $repository  = $this->mock(JournalRepositoryInterface::class);
+        $collector   = $this->mock(TransactionCollectorInterface::class);
+        $transformer = $this->mock(PiggyBankEventTransformer::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->once();
+        $repository->shouldReceive('getPiggyBankEventsbyTr')->once()->andReturn(new Collection);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+
+        // get account:
+        $transaction = $this->user()->transactions()->first();
+
+        // call API
+        $response = $this->get(route('api.v1.transactions.piggy_bank_events', [$transaction->id]));
+        $response->assertStatus(200);
+
+    }
+
+    /**
+     * Show a withdrawal.
      *
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
      */
     public function testShowDeposit(): void
     {
+        $transformer  = $this->mock(TransactionTransformer::class);
         $deposit      = $this->getRandomDeposit();
-        $transaction  = $deposit->transactions()->first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
                      ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
-
-        // get some transactions using the collector:
-        $collector = new TransactionCollector;
-        $collector->setUser($this->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setJournals(new Collection([$deposit]));
-        $collector->setLimit(5)->setPage(1);
-        $transactions = $collector->getTransactions();
-
-        // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
-
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setJournals')->andReturnSelf()->once();
-        $collector->shouldReceive('addFilter')->withArgs([NegativeAmountFilter::class])->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn($transactions);
+        $collector->shouldReceive('addFilter')->andReturnSelf()->once();
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // test API
-        $response = $this->get('/api/v1/transactions/' . $transaction->id);
+        $response = $this->get('/api/v1/transactions/' . $deposit->id);
         $response->assertStatus(200);
         $response->assertJson(
             [
-                'data' => [[
-                               'attributes' => [
-                                   'description' => $deposit->description,
-                                   'type'        => 'Deposit',
-                               ],
-                           ]],
+                'data' => [
+                ],
 
             ]
         );
@@ -1386,54 +1432,33 @@ class TransactionControllerTest extends TestCase
      */
     public function testShowWithdrawal(): void
     {
-        $journal                  = $this->getRandomWithdrawal();
-        $transaction              = $journal->transactions()->first();
-        $transaction->description = null;
-        $transaction->save();
-
+        $transformer  = $this->mock(TransactionTransformer::class);
+        $withdrawal   = $this->getRandomWithdrawal();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsByType')
                      ->andReturn($this->user()->accounts()->where('account_type_id', 3)->get());
 
-
-        // get some transactions using the collector:
-        $collector = new TransactionCollector;
-        $collector->setUser($this->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setJournals(new Collection([$journal]));
-        $collector->setLimit(5)->setPage(1);
-        $transactions = $collector->getTransactions();
-
-        // mock stuff:
         $repository = $this->mock(JournalRepositoryInterface::class);
         $collector  = $this->mock(TransactionCollectorInterface::class);
         $repository->shouldReceive('setUser');
-
         $collector->shouldReceive('setUser')->andReturnSelf();
         $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setJournals')->andReturnSelf()->once();
         $collector->shouldReceive('addFilter')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn($transactions);
+        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         // test API
-        $response = $this->get('/api/v1/transactions/' . $transaction->id);
+        $response = $this->get('/api/v1/transactions/' . $withdrawal->id);
         $response->assertStatus(200);
         $response->assertJson(
             [
                 'data' => [
-                    [
-                        'attributes' => [
-                            'description' => $journal->description,
-                        ],
-                        'links'      => [
-                            0      => [],
-                            'self' => true,
-                        ],
-                    ],
                 ],
 
             ]
@@ -1456,10 +1481,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+
 
         $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
+        $accountRepos->shouldReceive('setUser')->once();
+        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]))->once();
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
 
         try {
@@ -1503,11 +1543,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
+        $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1549,11 +1603,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1596,11 +1664,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1641,11 +1723,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1686,12 +1782,26 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
         $accountRepos->shouldReceive('findByName')->andReturn($account);
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1733,11 +1843,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1778,11 +1902,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1824,11 +1962,26 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1871,11 +2024,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1917,11 +2084,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1964,6 +2145,11 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -1975,6 +2161,16 @@ class TransactionControllerTest extends TestCase
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+
         $data = [
             'description'  => 'Some transaction #' . random_int(1, 10000),
             'date'         => '2018-01-01',
@@ -2009,11 +2205,26 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2061,11 +2272,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2108,11 +2333,25 @@ class TransactionControllerTest extends TestCase
         $opposing     = $this->user()->accounts()->where('account_type_id', 4)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2155,11 +2394,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2201,11 +2454,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2247,11 +2514,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2293,11 +2574,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2340,11 +2635,25 @@ class TransactionControllerTest extends TestCase
         $journal      = $this->user()->transactionJournals()->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2386,11 +2695,25 @@ class TransactionControllerTest extends TestCase
         $journal      = $this->user()->transactionJournals()->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2430,11 +2753,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2475,11 +2812,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2534,11 +2885,25 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
 
         $journalRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
         $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         try {
             $this->expectsEvents(StoredTransactionJournal::class);
@@ -2579,10 +2944,16 @@ class TransactionControllerTest extends TestCase
         $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
         $repository   = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
-        $data        = [
+        $data = [
             'description'  => 'Some deposit #' . random_int(1, 10000),
             'date'         => '2018-01-01',
             'transactions' => [
@@ -2605,6 +2976,15 @@ class TransactionControllerTest extends TestCase
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('update')->andReturn($deposit)->once();
 
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+
         // call API
         $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);
         $response->assertStatus(200);
@@ -2619,10 +2999,15 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateBasicWithdrawal(): void
     {
-        $account    = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $repository = $this->mock(JournalRepositoryInterface::class);
-
+        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $repository   = $this->mock(JournalRepositoryInterface::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
         $accountRepos->shouldReceive('setUser');
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
 
@@ -2648,6 +3033,15 @@ class TransactionControllerTest extends TestCase
         $transaction = $withdrawal->transactions()->first();
         $repository->shouldReceive('setUser');
         $repository->shouldReceive('update')->andReturn($withdrawal)->once();
+
+        // collector stuff:
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
 
         // call API
         $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);

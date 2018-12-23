@@ -54,7 +54,7 @@ class Installer
      */
     public function handle($request, Closure $next)
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             return $next($request);
         }
         $url    = $request->url();

@@ -33,6 +33,7 @@ use FireflyIII\Http\Requests\TestRuleFormRequest;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
@@ -229,7 +230,10 @@ trait RequestInformation
         $collector->setJournals(new Collection([$journal]));
         $set          = $collector->getTransactions();
         $transactions = [];
-        $transformer  = new TransactionTransformer(new ParameterBag);
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters(new ParameterBag());
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $res = [];
@@ -260,11 +264,11 @@ trait RequestInformation
     protected function getValidTriggerList(TestRuleFormRequest $request): array // process input
     {
         $triggers = [];
-        $data     = $request->get('rule_triggers');
+        $data     = $request->get('triggers');
         if (\is_array($data)) {
             foreach ($data as $index => $triggerInfo) {
                 $triggers[] = [
-                    'type'            => $triggerInfo['name'] ?? '',
+                    'type'            => $triggerInfo['type'] ?? '',
                     'value'           => $triggerInfo['value'] ?? '',
                     'stop_processing' => 1 === (int)($triggerInfo['stop_processing'] ?? '0'),
                 ];
@@ -394,7 +398,7 @@ trait RequestInformation
             $data,
             [
                 'email'    => 'required|string|email|max:255|unique:users',
-                'password' => 'required|string|secure_password|confirmed',
+                'password' => 'required|string|min:6|secure_password|confirmed',
             ]
         );
     }

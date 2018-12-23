@@ -153,7 +153,6 @@ class ReportFormRequest extends Request
      */
     public function getExpenseList(): Collection
     {
-        // fixed
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $set        = $this->get('exp_rev');

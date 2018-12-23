@@ -25,61 +25,24 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\CurrencyExchangeRate;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Log;
 
 /**
  * Class CurrencyExchangeRateTransformer
  */
-class CurrencyExchangeRateTransformer extends TransformerAbstract
+class CurrencyExchangeRateTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['from_currency', 'to_currency'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['from_currency', 'to_currency'];
-
-    /** @var ParameterBag */
-    protected $parameters;
 
     /**
      * PiggyBankEventTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * @param CurrencyExchangeRate $rate
-     *
-     * @return Item
-     */
-    public function includeFromCurrency(CurrencyExchangeRate $rate): Item
-    {
-        return $this->item($rate->fromCurrency, new CurrencyTransformer($this->parameters), 'transaction_currencies');
-    }
-
-    /**
-     * @param CurrencyExchangeRate $rate
-     *
-     * @return \League\Fractal\Resource\Item
-     */
-    public function includeToCurrency(CurrencyExchangeRate $rate): Item
-    {
-        return $this->item($rate->toCurrency, new CurrencyTransformer($this->parameters), 'transaction_currencies');
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -89,12 +52,26 @@ class CurrencyExchangeRateTransformer extends TransformerAbstract
      */
     public function transform(CurrencyExchangeRate $rate): array
     {
-        $data = [
-            'id'         => (int)$rate->id,
-            'updated_at' => $rate->updated_at->toAtomString(),
-            'created_at' => $rate->created_at->toAtomString(),
-            'rate'       => (float)$rate->rate,
-            'links'      => [
+        $result = round((float)$rate->rate * (float)$this->parameters->get('amount'), $rate->toCurrency->decimal_places);
+        $result = 0.0 === $result ? null : $result;
+        $data   = [
+            'id'                           => (int)$rate->id,
+            'created_at'                   => $rate->created_at->toAtomString(),
+            'updated_at'                   => $rate->updated_at->toAtomString(),
+            'from_currency_id'             => $rate->fromCurrency->id,
+            'from_currency_name'           => $rate->fromCurrency->name,
+            'from_currency_code'           => $rate->fromCurrency->code,
+            'from_currency_symbol'         => $rate->fromCurrency->symbol,
+            'from_currency_decimal_places' => $rate->fromCurrency->decimal_places,
+            'to_currency_id'               => $rate->toCurrency->id,
+            'to_currency_name'             => $rate->toCurrency->name,
+            'to_currency_code'             => $rate->toCurrency->code,
+            'to_currency_symbol'           => $rate->toCurrency->symbol,
+            'to_currency_decimal_places'   => $rate->toCurrency->decimal_places,
+            'date'                         => $rate->date->format('Y-m-d'),
+            'rate'                         => (float)$rate->rate,
+            'amount'                       => $result,
+            'links'                        => [
                 [
                     'rel' => 'self',
                     'uri' => '/currency_exchange_rates/' . $rate->id,

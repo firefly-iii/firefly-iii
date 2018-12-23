@@ -155,8 +155,8 @@ class SelectController extends Controller
         $strict               = '1' === $request->get('strict');
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
-        $matcher->setLimit($limit);
-        $matcher->setRange($range);
+        $matcher->setSearchLimit($range);
+        $matcher->setTriggeredLimit($limit);
         $matcher->setTriggers($triggers);
         $matcher->setStrict($strict);
         try {
@@ -222,8 +222,8 @@ class SelectController extends Controller
 
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
-        $matcher->setLimit($limit);
-        $matcher->setRange($range);
+        $matcher->setTriggeredLimit($limit);
+        $matcher->setSearchLimit($range);
         $matcher->setRule($rule);
         try {
             $matchingTransactions = $matcher->findTransactionsByRule();

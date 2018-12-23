@@ -39,11 +39,6 @@ interface ExportJobRepositoryInterface
     public function changeStatus(ExportJob $job, string $status): bool;
 
     /**
-     * @return bool
-     */
-    public function cleanup(): bool;
-
-    /**
      * @return ExportJob|null
      */
     public function create(): ?ExportJob;

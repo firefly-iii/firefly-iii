@@ -26,9 +26,12 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\BudgetLimitTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -48,6 +51,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class BudgetLimitController extends Controller
 {
+    use TransactionFilter;
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
@@ -113,7 +117,12 @@ class BudgetLimitController extends Controller
         $paginator->setPath(route('api.v1.budget_limits.index') . $this->buildParams());
 
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($budgetLimits, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($budgetLimits, $transformer, 'budget_limits');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -130,14 +139,14 @@ class BudgetLimitController extends Controller
     public function show(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
         $manager = new Manager;
-
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -163,7 +172,55 @@ class BudgetLimitController extends Controller
         $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Show all transactions.
+     *
+     * @param Request     $request
+     * @param BudgetLimit $budgetLimit
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, BudgetLimit $budgetLimit): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setBudget($budgetLimit->budget);
+        $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.budget_limits.transactions', [$budgetLimit->id]) . $this->buildParams());
+        $transactions = $paginator->getCollection();
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
@@ -178,18 +235,18 @@ class BudgetLimitController extends Controller
      */
     public function update(BudgetLimitRequest $request, BudgetLimit $budgetLimit): JsonResponse
     {
-        $data   = $request->getAll();
-        $budget = $this->repository->findNull($data['budget_id']);
-        if (null === $budget) {
-            $budget = $budgetLimit->budget;
-        }
-        $data['budget'] = $budget;
+        $data           = $request->getAll();
+        $data['budget'] = $budgetLimit->budget;
         $budgetLimit    = $this->repository->updateBudgetLimit($budgetLimit, $data);
         $manager        = new Manager;
         $baseUrl        = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($budgetLimit, new BudgetLimitTransformer($this->parameters), 'budget_limits');
+        /** @var BudgetLimitTransformer $transformer */
+        $transformer = app(BudgetLimitTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($budgetLimit, $transformer, 'budget_limits');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Transformers;
 
 
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
@@ -41,27 +42,15 @@ class UserTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
-        $user        = $this->user();
-        $transformer = new UserTransformer(new ParameterBag());
-        $result      = $transformer->transform($user);
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('getRoleByUser')->atLeast()->once()->andReturn('owner');
+        $user = $this->user();
+
+        $transformer = app(UserTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+        $result = $transformer->transform($user);
 
         $this->assertEquals($user->email, $result['email']);
         $this->assertEquals('owner', $result['role']);
     }
-
-    /**
-     * Test basic transformer.
-     *
-     * @covers \FireflyIII\Transformers\UserTransformer
-     */
-    public function testEmptyUser(): void
-    {
-        $user        = $this->emptyUser();
-        $transformer = new UserTransformer(new ParameterBag());
-        $result      = $transformer->transform($user);
-
-        $this->assertEquals($user->email, $result['email']);
-        $this->assertNull($result['role']);
-    }
-
 }

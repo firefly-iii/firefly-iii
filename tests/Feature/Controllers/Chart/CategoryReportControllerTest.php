@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
+use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
@@ -29,6 +30,7 @@ use FireflyIII\Helpers\Filter\NegativeAmountFilter;
 use FireflyIII\Helpers\Filter\OpposingAccountFilter;
 use FireflyIII\Helpers\Filter\PositiveAmountFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Log;
@@ -53,9 +55,12 @@ class CategoryReportControllerTest extends TestCase
      */
     public function testAccountExpense(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
-
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setCategories')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -74,9 +79,12 @@ class CategoryReportControllerTest extends TestCase
      */
     public function testAccountIncome(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
-
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setCategories')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -95,9 +103,12 @@ class CategoryReportControllerTest extends TestCase
      */
     public function testCategoryExpense(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
-
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setCategories')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -116,9 +127,12 @@ class CategoryReportControllerTest extends TestCase
      */
     public function testCategoryIncome(): void
     {
-        $generator = $this->mock(GeneratorInterface::class);
-        $pieChart  = $this->mock(MetaPieChartInterface::class);
-
+        $generator    = $this->mock(GeneratorInterface::class);
+        $pieChart     = $this->mock(MetaPieChartInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $pieChart->shouldReceive('setAccounts')->once()->andReturnSelf();
         $pieChart->shouldReceive('setCategories')->once()->andReturnSelf();
         $pieChart->shouldReceive('setStart')->once()->andReturnSelf();
@@ -140,7 +154,10 @@ class CategoryReportControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $transactions = factory(Transaction::class, 10)->make();
-
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $collector->shouldReceive('setAccounts')->andReturnSelf();
         $collector->shouldReceive('setRange')->andReturnSelf();
         $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL, TransactionType::TRANSFER]])->andReturnSelf();

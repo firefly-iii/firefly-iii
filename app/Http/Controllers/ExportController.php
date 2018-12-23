@@ -118,8 +118,6 @@ class ExportController extends Controller
     {
         // create new export job.
         $job = $jobs->create();
-        // delete old ones.
-        $jobs->cleanup();
 
         // does the user have shared accounts?
         $formats       = array_keys(config('firefly.export_formats'));

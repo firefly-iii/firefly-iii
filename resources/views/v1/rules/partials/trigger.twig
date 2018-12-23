@@ -1,0 +1,34 @@
+<tr data-count="{{ count }}" class="rule-trigger-holder">
+    <td style="width:40px;">
+        <a href="#" class="btn btn-danger btn-sm remove-trigger"><i class="fa fa-trash"></i></a>
+    </td>
+    <td style="width:30%;">
+        <select name="triggers[{{ count }}][type]" class="form-control">
+            {% for key,type in allRuleTriggers() %}
+                <option value="{{ key }}" label="{{ type }}"
+                        {% if key == oldTrigger %}
+                            selected
+                        {% endif %}
+                >{{ type }}</option>
+            {% endfor %}
+        </select>
+    </td>
+    <td style="position: relative;">
+
+        <input autocomplete="off" type="text" value="{{ oldValue }}" name="triggers[{{ count }}][value]" class="form-control">
+        {% if errors.has('triggers.'~count~'.value') %}
+            <p class="text-danger">
+                {{ errors.first('triggers.'~count~'.value') }}
+            </p>
+        {% endif %}
+    </td>
+    <td style="width:20%;">
+        <div class="checkbox">
+            <label>
+                <input type="checkbox" name="triggers[{{ count }}][stop_processing]" value="1"
+                       {% if oldChecked %}checked{% endif %}
+                />
+            </label>
+        </div>
+    </td>
+</tr>

@@ -37,6 +37,7 @@
   "license": "GPL-3.0-or-later",
   "homepage": "https://github.com/firefly-iii/firefly-iii",
   "type": "project",
+  "readme": "readme.md",
   "authors": [
     {
       "name": "James Cole",
@@ -45,6 +46,14 @@
       "role": "Developer"
     }
   ],
+  "support": {
+    "email": "thegrumpydictator@gmail.com",
+    "issues": "https://github.com/firefly-iii/firefly-iii/issues",
+    "forum": "https://reddit.com/r/FireflyIII",
+    "wiki": "https://github.com/firefly-iii/help/wiki",
+    "source": "https://github.com/firefly-iii/firefly-iii",
+    "docs": "https://firefly-iii.readthedocs.io/en/latest/"
+  },
   "require": {
     "php": ">=7.2.0",
     "ext-bcmath": "*",
@@ -52,12 +61,12 @@
     "ext-gd": "*",
     "ext-intl": "*",
     "ext-xml": "*",
+    "ext-ldap": "*",
     "ext-zip": "*",
     "ext-json": "*",
-    "ext-ldap": "*",
     "adldap2/adldap2-laravel": "^4.0",
     "bacon/bacon-qr-code": "1.*",
-    "bunq/sdk_php": "dev-master#8c1faefc111d9b970168a1837ca165d854954941",
+    "bunq/sdk_php": "dev-master",
     "danhunsaker/laravel-flysystem-others": "^1.3",
     "davejamesmiller/laravel-breadcrumbs": "5.*",
     "doctrine/dbal": "2.*",
@@ -86,6 +95,8 @@
     "php-coveralls/php-coveralls": "^2.0",
     "phpunit/phpunit": "7.*",
     "roave/security-advisories": "dev-master"
+  },
+  "suggest": {
   },
   "autoload": {
     "classmap": [

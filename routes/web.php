@@ -35,7 +35,7 @@ Route::group(
 
 Route::group(
     ['middleware' => 'binders-only','namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], function () {
-    Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
+        Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
 }
 );
 
@@ -56,8 +56,8 @@ Route::group(
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
     Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
-    Route::post('password/reset', 'Auth\ResetPasswordController@reset');
-    Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm');
+    Route::post('password/reset',['uses' => 'Auth\ResetPasswordController@reset']);
+    Route::get('password/reset', ['uses' => 'Auth\ForgotPasswordController@showLinkRequestForm', 'as' => 'password.reset.request']);
 
     // Change email routes:
     Route::get('profile/confirm-email-change/{token}', ['uses' => 'ProfileController@confirmEmailChange', 'as' => 'profile.confirm-email-change']);
@@ -215,7 +215,7 @@ Route::group(
     Route::get('list/no-budget/{start_date?}/{end_date?}', ['uses' => 'Budget\ShowController@noBudget', 'as' => 'no-budget']);
 
     // reorder budgets
-    Route::get('reorder', ['uses' => 'Budget\IndexController@reorder', 'as' => 'reorder']);
+    Route::post('reorder', ['uses' => 'Budget\IndexController@reorder', 'as' => 'reorder']);
 
     // index
     Route::get('{start_date?}/{end_date?}', ['uses' => 'Budget\IndexController@index', 'as' => 'index']);
@@ -273,6 +273,8 @@ Route::group(
     Route::get('edit/{currency}', ['uses' => 'CurrencyController@edit', 'as' => 'edit']);
     Route::get('delete/{currency}', ['uses' => 'CurrencyController@delete', 'as' => 'delete']);
     Route::get('default/{currency}', ['uses' => 'CurrencyController@defaultCurrency', 'as' => 'default']);
+    Route::get('enable/{currency}', ['uses' => 'CurrencyController@enableCurrency', 'as' => 'enable']);
+    Route::get('disable/{currency}', ['uses' => 'CurrencyController@disableCurrency', 'as' => 'disable']);
 
     Route::post('store', ['uses' => 'CurrencyController@store', 'as' => 'store']);
     Route::post('update/{currency}', ['uses' => 'CurrencyController@update', 'as' => 'update']);
@@ -533,7 +535,7 @@ Route::group(
  * Budget Controller
  */
 Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'jscript', 'as' => 'javascript.'], function () {
+    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'v1/jscript', 'as' => 'javascript.'], function () {
     Route::get('variables', ['uses' => 'JavascriptController@variables', 'as' => 'variables']);
     Route::get('accounts', ['uses' => 'JavascriptController@accounts', 'as' => 'accounts']);
     Route::get('currencies', ['uses' => 'JavascriptController@currencies', 'as' => 'currencies']);
@@ -877,6 +879,7 @@ Route::group(
     );
 
     Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+    Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
     Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
 }

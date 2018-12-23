@@ -52,6 +52,7 @@ class CurrencyFormRequest extends Request
             'code'           => $this->string('code'),
             'symbol'         => $this->string('symbol'),
             'decimal_places' => $this->integer('decimal_places'),
+            'enabled'        => $this->boolean('enabled'),
         ];
     }
 
@@ -68,6 +69,7 @@ class CurrencyFormRequest extends Request
             'code'           => 'required|min:3|max:3|unique:transaction_currencies,code',
             'symbol'         => 'required|min:1|max:8|unique:transaction_currencies,symbol',
             'decimal_places' => 'required|min:0|max:12|numeric',
+            'enabled'        => 'in:0,1',
         ];
 
         /** @var TransactionCurrency $currency */
@@ -79,6 +81,7 @@ class CurrencyFormRequest extends Request
                 'code'           => 'required|min:3|max:3',
                 'symbol'         => 'required|min:1|max:8',
                 'decimal_places' => 'required|min:0|max:12|numeric',
+                'enabled'        => 'in:0,1',
             ];
         }
 

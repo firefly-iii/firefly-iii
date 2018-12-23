@@ -22,8 +22,10 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Chart;
 
+use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -56,6 +58,11 @@ class ExpenseReportControllerTest extends TestCase
         $collector         = $this->mock(TransactionCollectorInterface::class);
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
         $accountRepository->shouldReceive('findByName')->once()->andReturn($expense);
+
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $date          = new Carbon;
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
         $set                                = new Collection;
         $transaction                        = new Transaction();

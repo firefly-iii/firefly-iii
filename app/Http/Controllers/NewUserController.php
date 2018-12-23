@@ -100,6 +100,7 @@ class NewUserController extends Controller
         if (null === $currency) {
             $currency = $currencyRepository->findByCodeNull('EUR');
         }
+        $currencyRepository->enable($currency);
 
         $this->createAssetAccount($request, $currency); // create normal asset account
         $this->createSavingsAccount($request, $currency, $language); // create savings account

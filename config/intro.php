@@ -165,7 +165,8 @@ return [
     // currencies: index, create
     'currencies_index'               => [
         'intro'   => [],
-        'default' => ['element' => '.defaultCurrency'],
+        'default' => ['element' => '#default-currency'],
+        'buttons' => ['element' => '.buttons',]
     ],
     'currencies_create'              => [
         'code' => ['element' => '#ffInput_code',],

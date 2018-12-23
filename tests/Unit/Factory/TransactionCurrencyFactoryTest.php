@@ -51,7 +51,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
-        $result  = $factory->create(['name' => 'OK', 'code' => 'XXA', 'symbol' => 'Z', 'decimal_places' => 2]);
+        $result  = $factory->create(['name' => 'OK', 'code' => 'XXA', 'symbol' => 'Z', 'decimal_places' => 2, 'enabled' => true]);
         $this->assertNotNull($result);
         $this->assertEquals('XXA', $result->code);
     }
@@ -63,7 +63,7 @@ class TransactionCurrencyFactoryTest extends TestCase
     {
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
-        $result  = $factory->create(['name' => null, 'code' => null, 'symbol' => null, 'decimal_places' => null]);
+        $result  = $factory->create(['name' => null, 'code' => null, 'symbol' => null, 'decimal_places' => null, 'enabled' => true]);
         $this->assertNull($result);
     }
 

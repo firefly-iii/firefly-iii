@@ -48,10 +48,12 @@ class BudgetLimitRequest extends Request
     public function getAll(): array
     {
         return [
-            'budget_id'  => $this->integer('budget_id'),
-            'start_date' => $this->date('start_date'),
-            'end_date'   => $this->date('end_date'),
-            'amount'     => $this->string('amount'),
+            'budget_id'     => $this->integer('budget_id'),
+            'start'         => $this->date('start'),
+            'end'           => $this->date('end'),
+            'amount'        => $this->string('amount'),
+            'currency_id'   => $this->integer('currency_id'),
+            'currency_code' => $this->string('currency_code'),
         ];
     }
 
@@ -63,10 +65,12 @@ class BudgetLimitRequest extends Request
     public function rules(): array
     {
         $rules = [
-            'budget_id'  => 'required|exists:budgets,id|belongsToUser:budgets,id',
-            'start_date' => 'required|before:end_date|date',
-            'end_date'   => 'required|after:start_date|date',
-            'amount'     => 'required|more:0',
+            'budget_id'     => 'required|exists:budgets,id|belongsToUser:budgets,id',
+            'start'         => 'required|before:end|date',
+            'end'           => 'required|after:start|date',
+            'amount'        => 'required|more:0',
+            'currency_id'   => 'numeric|exists:transaction_currencies,id',
+            'currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
         ];
         switch ($this->method()) {
             default:
@@ -76,6 +80,12 @@ class BudgetLimitRequest extends Request
                 $rules['budget_id'] = 'required|exists:budgets,id|belongsToUser:budgets,id';
                 break;
         }
+        // if request has a budget already, drop the rule.
+        $budget = $this->route()->parameter('budget');
+        if (null !== $budget) {
+            unset($rules['budget_id']);
+        }
+
 
         return $rules;
     }

@@ -68,7 +68,7 @@ class ConfigurationController extends Controller
         // they don't exist yet.
         $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $isDemoSite     = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $siteOwner      = env('SITE_OWNER');
+        $siteOwner      = config('firefly.site_owner');
 
         return view(
             'admin.configuration.index',

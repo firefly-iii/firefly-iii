@@ -32,7 +32,7 @@ class TransactionCurrencySeeder extends Seeder
     {
         $currencies = [];
         // european currencies
-        $currencies[] = ['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'EUR', 'name' => 'Euro', 'symbol' => '€', 'decimal_places' => 2,'enabled' => 1];
         $currencies[] = ['code' => 'HUF', 'name' => 'Hungarian forint', 'symbol' => 'Ft', 'decimal_places' => 2];
         $currencies[] = ['code' => 'GBP', 'name' => 'British Pound', 'symbol' => '£', 'decimal_places' => 2];
         $currencies[] = ['code' => 'UAH', 'name' => 'Ukrainian hryvnia', 'symbol' => '₴', 'decimal_places' => 2];
@@ -67,12 +67,13 @@ class TransactionCurrencySeeder extends Seeder
 
         // PLEASE ADD NEW CURRENCIES BELOW THIS LINE
         $currencies[] = ['code' => 'ILS', 'name' => 'Israeli new shekel', 'symbol' => '₪', 'decimal_places' => 2];
+        $currencies[] = ['code' => 'CHF', 'name' => 'Swiss franc', 'symbol' => 'CHF', 'decimal_places' => 2];
 
         foreach ($currencies as $currency) {
             try {
                 TransactionCurrency::create($currency);
             } catch (PDOException $e) {
-                Log::warning(sprintf('Could not create transaction currency "%s". It might exist already.', $currency['code']));
+                Log::info(sprintf('Could not create transaction currency "%s". It might exist already.', $currency['code']));
             }
         }
     }

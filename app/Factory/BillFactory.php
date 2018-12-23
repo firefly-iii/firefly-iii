@@ -36,17 +36,18 @@ use Log;
  */
 class BillFactory
 {
+    use BillServiceTrait;
+
     /**
      * Constructor.
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
 
-    use BillServiceTrait;
     /** @var User */
     private $user;
 
@@ -60,7 +61,13 @@ class BillFactory
         /** @var TransactionCurrencyFactory $factory */
         $factory = app(TransactionCurrencyFactory::class);
         /** @var TransactionCurrency $currency */
-        $currency = $factory->find((int)$data['currency_id'], (string)$data['currency_code']);
+        $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+
+        if(null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
         /** @var Bill $bill */
         $bill = Bill::create(
             [
@@ -73,7 +80,7 @@ class BillFactory
                 'date'                    => $data['date'],
                 'repeat_freq'             => $data['repeat_freq'],
                 'skip'                    => $data['skip'],
-                'automatch'               => $data['automatch'] ?? true,
+                'automatch'               => true,
                 'active'                  => $data['active'] ?? true,
             ]
         );

@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III supporta più valute, che è possibile modificare su questa pagina.',
-    'currencies_index_default'                                => 'Firefly III ha una valuta predefinita. Puoi sempre cambiare valuta usando questi pulsanti.',
+    'currencies_index_default'                                => 'Firefly III ha una valuta predefinita.',
+    'currencies_index_buttons'                                => 'Utilizza questi pulsanti per cambiare la valuta predefinita o per abilitare altre valute.',
 
     // create currency
     'currencies_create_code'                                  => 'Questo codice dovrebbe essere conforme ISO (cercalo con Google per la tua nuova valuta).',

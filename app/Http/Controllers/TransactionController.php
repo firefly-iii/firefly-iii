@@ -26,13 +26,16 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
@@ -53,6 +56,8 @@ use View;
 class TransactionController extends Controller
 {
     use ModelInformation, PeriodOverview;
+    /** @var AttachmentRepositoryInterface */
+    private $attachmentRepository;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $repository;
 
@@ -67,7 +72,8 @@ class TransactionController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');
-                $this->repository = app(JournalRepositoryInterface::class);
+                $this->repository           = app(JournalRepositoryInterface::class);
+                $this->attachmentRepository = app(AttachmentRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -212,6 +218,7 @@ class TransactionController extends Controller
      *
      * @param TransactionJournal          $journal
      * @param LinkTypeRepositoryInterface $linkTypeRepository
+     * @param AttachmentHelper            $attHelper
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      * @throws FireflyException
@@ -228,6 +235,16 @@ class TransactionController extends Controller
         $linkTypes = $linkTypeRepository->get();
         $links     = $linkTypeRepository->getLinks($journal);
 
+        // get attachments:
+        $attachments = $this->repository->getAttachments($journal);
+        $attachments = $attachments->each(
+            function (Attachment $attachment) {
+                $attachment->file_exists = $this->attachmentRepository->exists($attachment);
+
+                return $attachment;
+            }
+        );
+
         // get transactions using the collector:
         $collector = app(TransactionCollectorInterface::class);
         $collector->setUser(auth()->user());
@@ -236,7 +253,11 @@ class TransactionController extends Controller
         $collector->setJournals(new Collection([$journal]));
         $set          = $collector->getTransactions();
         $transactions = [];
-        $transformer  = new TransactionTransformer(new ParameterBag);
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+
         /** @var Transaction $transaction */
         foreach ($set as $transaction) {
             $transactions[] = $transformer->transform($transaction);
@@ -244,9 +265,9 @@ class TransactionController extends Controller
 
         $events   = $this->repository->getPiggyBankEvents($journal);
         $what     = strtolower($transactionType);
-        $subTitle = (string)trans('firefly.' . $what) . ' "' . $journal->description . '"';
+        $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
-        return view('transactions.show', compact('journal', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
+        return view('transactions.show', compact('journal','attachments', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }
 
 

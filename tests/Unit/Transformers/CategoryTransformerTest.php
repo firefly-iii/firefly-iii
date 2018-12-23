@@ -23,8 +23,14 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Transformers;
 
+use Carbon\Carbon;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Transformers\CategoryTransformer;
+use Illuminate\Support\Collection;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
 
@@ -35,23 +41,94 @@ use Tests\TestCase;
 class CategoryTransformerTest extends TestCase
 {
     /**
+     *
+     */
+    public function setUp(): void
+    {
+        parent::setUp();
+        Log::info(sprintf('Now in %s.', \get_class($this)));
+    }
+
+    /**
      * Basic coverage
      *
      * @covers \FireflyIII\Transformers\CategoryTransformer
      */
     public function testBasic(): void
     {
+        $repository = $this->mock(CategoryRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
 
-        $category    = Category::create(
-            [
-                'user_id' => $this->user()->id,
-                'name'    => 'Some budget ' . random_int(1, 10000),
-                'active'  => 1,
-            ]
-        );
-        $transformer = new CategoryTransformer(new ParameterBag);
-        $result      = $transformer->transform($category);
+        /** @var Category $category */
+        $category    = Category::first();
+        $transformer = app(CategoryTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+        $result = $transformer->transform($category);
 
         $this->assertEquals($category->name, $result['name']);
+        $this->assertEquals([], $result['spent']);
+        $this->assertEquals([], $result['earned']);
+    }
+
+    /**
+     * Basic coverage
+     *
+     * @covers \FireflyIII\Transformers\CategoryTransformer
+     */
+    public function testWithDates(): void
+    {
+        $repository = $this->mock(CategoryRepositoryInterface::class);
+        $repository->shouldReceive('setUser')->once();
+
+        $parameters = new ParameterBag;
+        $parameters->set('start', new Carbon('2018-01-01'));
+        $parameters->set('end', new Carbon('2018-01-31'));
+
+        // mock some objects for the spent/earned lists.
+        $expense                            = new Transaction;
+        $expense->transaction_currency_code = 'EUR';
+        $expense->transactionCurrency       = TransactionCurrency::find(1);
+        $expense->transaction_amount        = '-100';
+        $income                             = new Transaction;
+        $income->transaction_currency_code  = 'EUR';
+        $income->transactionCurrency        = TransactionCurrency::find(1);
+        $income->transaction_amount         = '100';
+
+
+        $incomeCollection  = new Collection([$income]);
+        $expenseCollection = new Collection([$expense]);
+
+        $repository->shouldReceive('spentInPeriodCollection')->atLeast()->once()->andReturn($expenseCollection);
+        $repository->shouldReceive('earnedInPeriodCollection')->atLeast()->once()->andReturn($incomeCollection);
+
+        /** @var Category $category */
+        $category    = Category::first();
+        $transformer = app(CategoryTransformer::class);
+        $transformer->setParameters($parameters);
+        $result = $transformer->transform($category);
+
+        $this->assertEquals($category->name, $result['name']);
+        $this->assertEquals(
+            [
+                [
+                    'currency_id'             => 1,
+                    'currency_code'           => 'EUR',
+                    'currency_symbol'         => '€',
+                    'currency_decimal_places' => 2,
+                    'amount'                  => -100,
+                ],
+            ], $result['spent']
+        );
+        $this->assertEquals(
+            [
+                [
+                    'currency_id'             => 1,
+                    'currency_code'           => 'EUR',
+                    'currency_symbol'         => '€',
+                    'currency_decimal_places' => 2,
+                    'amount'                  => 100,
+                ],
+            ], $result['earned']
+        );
     }
 }

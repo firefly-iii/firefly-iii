@@ -24,6 +24,8 @@ namespace FireflyIII\Repositories\Currency;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Models\AccountMeta;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
@@ -31,6 +33,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\CurrencyDestroyService;
 use FireflyIII\Services\Internal\Update\CurrencyUpdateService;
 use FireflyIII\User;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -47,37 +50,9 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
-    }
-
-    /**
-     * @param TransactionCurrency $currency
-     *
-     * @return bool
-     */
-    public function canDeleteCurrency(TransactionCurrency $currency): bool
-    {
-        if ($this->countJournals($currency) > 0) {
-            return false;
-        }
-
-        // is the only currency left
-        if (1 === $this->get()->count()) {
-            return false;
-        }
-
-        // is the default currency for the user or the system
-        $defaultCode = app('preferences')->getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
-        if ($currency->code === $defaultCode) {
-            return false;
-        }
-
-        // is the default currency for the system
-        $defaultSystemCode = config('firefly.default_currency', 'EUR');
-
-        return !($currency->code === $defaultSystemCode);
     }
 
     /**
@@ -87,7 +62,66 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      */
     public function countJournals(TransactionCurrency $currency): int
     {
-        return $currency->transactionJournals()->count();
+        return $currency->transactions()->count();
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     *
+     * @return bool
+     */
+    public function currencyInUse(TransactionCurrency $currency): bool
+    {
+        Log::debug(sprintf('Now in currencyInUse() for #%d ("%s")', $currency->id, $currency->code));
+        $countJournals = $this->countJournals($currency);
+        if ($countJournals > 0) {
+            Log::debug(sprintf('Count journals is %d, return true.', $countJournals));
+
+            return true;
+        }
+
+        // is the only currency left
+        if (1 === $this->getAll()->count()) {
+            Log::debug('Is the last currency in the system, return true. ', $countJournals);
+
+            return true;
+        }
+
+        // is being used in accounts:
+        $meta = AccountMeta::where('name', 'currency_id')->where('data', json_encode((string)$currency->id))->count();
+        if ($meta > 0) {
+            Log::debug(sprintf('Used in %d accounts as currency_id, return true. ', $meta));
+
+            return true;
+        }
+
+        // is being used in budget limits
+        $budgetLimit = BudgetLimit::where('transaction_currency_id', $currency->id)->count();
+        if ($budgetLimit > 0) {
+            Log::debug(sprintf('Used in %d budget limits as currency, return true. ', $budgetLimit));
+
+            return true;
+        }
+
+        // is the default currency for the user or the system
+        $defaultCode = app('preferences')->getForUser($this->user, 'currencyPreference', config('firefly.default_currency', 'EUR'))->data;
+        if ($currency->code === $defaultCode) {
+            Log::debug('Is the default currency of the user, return true.');
+
+            return true;
+        }
+
+        // is the default currency for the system
+        $defaultSystemCode = config('firefly.default_currency', 'EUR');
+        $result            = $currency->code === $defaultSystemCode;
+        if (true === $result) {
+            Log::debug('Is the default currency of the SYSTEM, return true.');
+
+            return true;
+        }
+        Log::debug('Currency is not used, return false.');
+
+        return false;
     }
 
     /**
@@ -111,11 +145,57 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Disables a currency
+     *
+     * @param TransactionCurrency $currency
+     */
+    public function disable(TransactionCurrency $currency): void
+    {
+        $currency->enabled = false;
+        $currency->save();
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * Enables a currency
+     */
+    public function enable(TransactionCurrency $currency): void
+    {
+        $currency->enabled = true;
+        $currency->save();
+    }
+
+    /**
+     * Find by ID, return NULL if not found.
+     *
+     * @param int $currencyId
+     *
+     * @return TransactionCurrency|null
+     */
+    public function find(int $currencyId): ?TransactionCurrency
+    {
+        return TransactionCurrency::find($currencyId);
+    }
+
+    /**
+     * Find by currency code, return NULL if unfound.
+     *
+     * @param string $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findByCode(string $currencyCode): ?TransactionCurrency
+    {
+        return TransactionCurrency::where('code', $currencyCode)->first();
+    }
+
+    /**
      * Find by currency code, return NULL if unfound.
      * Used in Import Currency!
      *
      * @param string $currencyCode
      *
+     * @deprecated
      * @return TransactionCurrency|null
      */
     public function findByCodeNull(string $currencyCode): ?TransactionCurrency
@@ -124,11 +204,24 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by currency name.
+     *
+     * @param string $currencyName
+     *
+     * @return TransactionCurrency
+     */
+    public function findByName(string $currencyName): ?TransactionCurrency
+    {
+        return TransactionCurrency::whereName($currencyName)->first();
+    }
+
+    /**
      * Find by currency name or return null.
      * Used in Import Currency!
      *
      * @param string $currencyName
      *
+     * @deprecated
      * @return TransactionCurrency
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency
@@ -137,11 +230,24 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by currency symbol.
+     *
+     * @param string $currencySymbol
+     *
+     * @return TransactionCurrency
+     */
+    public function findBySymbol(string $currencySymbol): ?TransactionCurrency
+    {
+        return TransactionCurrency::whereSymbol($currencySymbol)->first();
+    }
+
+    /**
      * Find by currency symbol or return NULL
      * Used in Import Currency!
      *
      * @param string $currencySymbol
      *
+     * @deprecated
      * @return TransactionCurrency
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency
@@ -155,6 +261,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param int $currencyId
      *
+     * @deprecated
      * @return TransactionCurrency|null
      */
     public function findNull(int $currencyId): ?TransactionCurrency
@@ -166,6 +273,14 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      * @return Collection
      */
     public function get(): Collection
+    {
+        return TransactionCurrency::where('enabled', true)->orderBy('code', 'ASC')->get();
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getAll(): Collection
     {
         return TransactionCurrency::orderBy('code', 'ASC')->get();
     }
@@ -225,6 +340,25 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         }
 
         return null;
+    }
+
+    /**
+     * Return a list of exchange rates with this currency.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return Collection
+     */
+    public function getExchangeRates(TransactionCurrency $currency): Collection
+    {
+        /** @var CurrencyExchangeRate $rate */
+        return $this->user->currencyExchangeRates()
+                          ->where(
+                              function (Builder $query) use ($currency) {
+                                  $query->where('from_currency_id', $currency->id);
+                                  $query->orWhere('to_currency_id', $currency->id);
+                              }
+                          )->get();
     }
 
     /**

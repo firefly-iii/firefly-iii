@@ -24,85 +24,33 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use Carbon\Carbon;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Support\Collection;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Log;
 
 /**
  * Class CategoryTransformer
  */
-class CategoryTransformer extends TransformerAbstract
+class CategoryTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
-    /** @var ParameterBag */
-    protected $parameters;
+    /** @var CategoryRepositoryInterface */
+    private $repository;
 
     /**
      * CategoryTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Category $category
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Category $category): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($category->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($category->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withCategoryInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setCategories(new Collection([$category]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        $this->repository = app(CategoryRepositoryInterface::class);
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Category $category
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Category $category): Item
-    {
-        return $this->item($category->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**
@@ -114,11 +62,22 @@ class CategoryTransformer extends TransformerAbstract
      */
     public function transform(Category $category): array
     {
+        $this->repository->setUser($category->user);
+        $spent  = [];
+        $earned = [];
+        $start  = $this->parameters->get('start');
+        $end    = $this->parameters->get('end');
+        if (null !== $start && null !== $end) {
+            $spent  = $this->getSpentInformation($category, $start, $end);
+            $earned = $this->getEarnedInformation($category, $start, $end);
+        }
         $data = [
             'id'         => (int)$category->id,
-            'updated_at' => $category->updated_at->toAtomString(),
             'created_at' => $category->created_at->toAtomString(),
+            'updated_at' => $category->updated_at->toAtomString(),
             'name'       => $category->name,
+            'spent'      => $spent,
+            'earned'     => $earned,
             'links'      => [
                 [
                     'rel' => 'self',
@@ -128,6 +87,78 @@ class CategoryTransformer extends TransformerAbstract
         ];
 
         return $data;
+    }
+
+    /**
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return array
+     */
+    private function getEarnedInformation(Category $category, Carbon $start, Carbon $end): array
+    {
+        $collection = $this->repository->earnedInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
+        $return     = [];
+        $total      = [];
+        $currencies = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            $code = $transaction->transaction_currency_code;
+            if (!isset($currencies[$code])) {
+                $currencies[$code] = $transaction->transactionCurrency;
+            }
+            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
+        }
+        foreach ($total as $code => $earned) {
+            /** @var TransactionCurrency $currency */
+            $currency = $currencies[$code];
+            $return[] = [
+                'currency_id'             => $currency->id,
+                'currency_code'           => $code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'amount'                  => round($earned, $currency->decimal_places),
+            ];
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Category $category
+     * @param Carbon   $start
+     * @param Carbon   $end
+     *
+     * @return array
+     */
+    private function getSpentInformation(Category $category, Carbon $start, Carbon $end): array
+    {
+        $collection = $this->repository->spentInPeriodCollection(new Collection([$category]), new Collection, $start, $end);
+        $return     = [];
+        $total      = [];
+        $currencies = [];
+        /** @var Transaction $transaction */
+        foreach ($collection as $transaction) {
+            $code = $transaction->transaction_currency_code;
+            if (!isset($currencies[$code])) {
+                $currencies[$code] = $transaction->transactionCurrency;
+            }
+            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
+        }
+        foreach ($total as $code => $spent) {
+            /** @var TransactionCurrency $currency */
+            $currency = $currencies[$code];
+            $return[] = [
+                'currency_id'             => $currency->id,
+                'currency_code'           => $code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+                'amount'                  => round($spent, $currency->decimal_places),
+            ];
+        }
+
+        return $return;
     }
 
 }

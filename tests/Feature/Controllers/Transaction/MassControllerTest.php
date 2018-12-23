@@ -22,12 +22,15 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -59,7 +62,7 @@ class MassControllerTest extends TestCase
     public function testDelete(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -87,7 +90,7 @@ class MassControllerTest extends TestCase
 
         // mock deletion:
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('findNull')->andReturnValues([$deposits[0], $deposits[1]])->times(2);
@@ -109,22 +112,50 @@ class MassControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        // mock things
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
 
+        // data:
         $transfers      = TransactionJournal::where('transaction_type_id', 3)->where('user_id', $this->user()->id)->take(2)->get();
         $transfersArray = $transfers->pluck('id')->toArray();
         $source         = $this->user()->accounts()->first();
 
+        $transaction = new Transaction;
+
+        // mock calls:
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'amount'         => '10',
+                'foreign_amount' => '',
+                'type'           => 'transfer',
+                'id'             => 3,
+                'journal_id'     => 1,
+            ]
+        );
+
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection([new Transaction]));
+
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         // mock data for edit page:
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]));
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]));
-        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer');
-        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false);
-        $journalRepos->shouldReceive('getFirstPosTransaction')->andReturn($transfers->first()->transactions()->first());
+        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([$source]))->atLeast()->once();
+        $journalRepos->shouldReceive('getTransactionType')->andReturn('Transfer')->atLeast()->once();
 
+        $journalRepos->shouldReceive('isJournalReconciled')->andReturn(false)->atLeast()->once();
 
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
@@ -132,7 +163,7 @@ class MassControllerTest extends TestCase
 
         // mock more stuff:
         $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->atLeast()->once();
 
 
         $this->be($this->user());
@@ -148,30 +179,51 @@ class MassControllerTest extends TestCase
      */
     public function testEditMultiple(): void
     {
-        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
-
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $transformer  = $this->mock(TransactionTransformer::class);
+        $collector    = $this->mock(TransactionCollectorInterface::class);
+
+        // mock calls:
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'amount'         => '10',
+                'foreign_amount' => '',
+                'type'           => 'transfer',
+                'id'             => 3,
+                'journal_id'     => 1,
+            ]
+        );
+
+        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection([new Transaction]));
+
+
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection)->atLeast()->once();
 
 
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
         $repository->shouldReceive('getAccountsByType')->once()->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
 
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal)->atLeast()->once();
         $journalRepos->shouldReceive('getJournalSourceAccounts')
-                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection, new Collection([1]));
+                     ->andReturn(new Collection([1, 2, 3]), new Collection, new Collection, new Collection, new Collection([1]))->atLeast()->once();
         $journalRepos->shouldReceive('getJournalDestinationAccounts')
-                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection, new Collection([1]));
+                     ->andReturn(new Collection, new Collection([1, 2, 3]), new Collection, new Collection, new Collection([1]))->atLeast()->once();
         $journalRepos->shouldReceive('getTransactionType')
-                     ->andReturn('Withdrawal', 'Opening balance', 'Withdrawal', 'Withdrawal', 'Withdrawal');
+                     ->andReturn('Withdrawal', 'Opening balance', 'Withdrawal', 'Withdrawal', 'Withdrawal')->atLeast()->once();
         $journalRepos->shouldReceive('isJournalReconciled')
-                     ->andReturn(true, false, false, false, false);
-
+                     ->andReturn(true, false, false, false, false)->atLeast()->once();
 
         // default transactions
         $collection = $this->user()->transactionJournals()->take(5)->get();
@@ -200,7 +252,7 @@ class MassControllerTest extends TestCase
 
         // mock stuff
         $repository = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update')->once();

@@ -23,10 +23,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use Amount;
-use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\PiggyBank;
+use FireflyIII\Models\PiggyBankRepetition;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -34,10 +34,11 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Transformers\AccountTransformer;
+use FireflyIII\Transformers\PiggyBankTransformer;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
-use Steam;
 use Tests\TestCase;
 
 /**
@@ -77,6 +78,7 @@ class PiggyBankControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $piggyRepos->shouldReceive('getCurrentAmount')->andReturn('0');
         $piggyRepos->shouldReceive('leftOnAccount')->andReturn('0');
+
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.add', [1]));
@@ -120,12 +122,13 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         // new account list thing.
-        $currency      = TransactionCurrency::first();
-        $account       = factory(Account::class)->make();
+        $currency = TransactionCurrency::first();
+        $account  = factory(Account::class)->make();
         $currencyRepos->shouldReceive('findNull')->andReturn($currency);
 
         Amount::shouldReceive('getDefaultCurrency')->andReturn($currency);
@@ -149,9 +152,11 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.delete', [1]));
@@ -192,6 +197,7 @@ class PiggyBankControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
 
         // mock stuff
         $account = factory(Account::class)->make();
@@ -220,29 +226,31 @@ class PiggyBankControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\PiggyBankController
-     * @covers \FireflyIII\Http\Controllers\PiggyBankController
      */
     public function testIndex(): void
     {
         // mock stuff
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $repository    = $this->mock(PiggyBankRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $currencyRepos      = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
+        $repository         = $this->mock(PiggyBankRepositoryInterface::class);
+        $journalRepos       = $this->mock(JournalRepositoryInterface::class);
+        $userRepos          = $this->mock(UserRepositoryInterface::class);
+        $transformer        = $this->mock(PiggyBankTransformer::class);
+        $accountTransformer = $this->mock(AccountTransformer::class);
+
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            ['id' => 5, 'current_amount' => '10', 'target_amount' => '10', 'currency_symbol' => 'x']
+        );
+
+        // mock transformer again
+        $accountTransformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $accountTransformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            ['id' => 5, 'current_balance' => '10', 'name' => 'Account', 'current_amount' => '5', 'currency_symbol' => 'x']
+        );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $accountRepos->shouldReceive('setUser');
-        $currencyRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->andReturn('defaultAsset')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('1234')->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('1234')->atLeast()->once();
-
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
-        $accountRepos->shouldReceive('getOpeningBalanceAmount')->withAnyArgs()->andReturn('10')->atLeast()->once();
-        $accountRepos->shouldReceive('getOpeningBalanceDate')->withAnyArgs()->andReturn(new Carbon())->atLeast()->once();
-        $accountRepos->shouldReceive('getNoteText')->withAnyArgs()->andReturn('Hello')->atLeast()->once();
 
 
         $first   = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -254,8 +262,6 @@ class PiggyBankControllerTest extends TestCase
         $repository->shouldReceive('correctOrder');
         $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('1');
 
-
-        Steam::shouldReceive('balance')->twice()->andReturn('1');
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.index'));
@@ -381,10 +387,12 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $repetition    = PiggyBankRepetition::first();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
-
+        $piggyRepos->shouldReceive('getRepetition')->once()->andReturn($repetition);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
@@ -402,11 +410,14 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
+        $repetition    = PiggyBankRepetition::first();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $piggyRepos->shouldReceive('getRepetition')->once()->andReturn($repetition);
 
         $this->be($this->user());
         $response = $this->get(route('piggy-banks.remove-money-mobile', [1]));
@@ -448,17 +459,16 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $transformer   = $this->mock(PiggyBankTransformer::class);
 
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+        // mock transformer
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            ['id' => 5,'current_amount' => '5','currency_symbol' => 'x','target_amount' => '5','left_to_save' => '5','save_per_month' => '5']);
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $currencyRepos->shouldReceive('setUser');
-        $repository->shouldReceive('setUser')->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn($first);
-        $repository->shouldReceive('getEvents')->andReturn(new Collection);
-        $repository->shouldReceive('getSuggestedMonthlyAmount')->andReturn('1');
-        $repository->shouldReceive('getCurrentAmount')->andReturn('1');
+        $journalRepos->shouldReceive('firstNull')->andReturn($first)->atLeast()->once();
+        $repository->shouldReceive('getEvents')->andReturn(new Collection)->atLeast()->once();
 
 
         $this->be($this->user());

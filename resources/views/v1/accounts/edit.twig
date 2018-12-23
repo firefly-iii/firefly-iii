@@ -1,0 +1,110 @@
+{% extends "./layout/default" %}
+
+{% block breadcrumbs %}
+    {{ Breadcrumbs.render(Route.getCurrentRoute().getName(), account) }}
+{% endblock %}
+
+{% block content %}
+    {{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
+
+    <input type="hidden" name="id" value="{{ account.id }}"/>
+    <input type="hidden" name="what" value="{{ what }}"/>
+
+    <div class="row">
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('name') }}
+                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or what == 'liabilities' %}
+                        {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
+                    {% endif %}
+
+                    {% if what == 'liabilities' %}
+                        {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
+                        {{ ExpandedForm.amountNoCurrency('openingBalance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                        {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
+                        {{ ExpandedForm.percentage('interest') }}
+                        {{ ExpandedForm.select('interest_period', interestPeriods) }}
+                    {% endif %}
+                </div>
+            </div>
+
+        </div>
+        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'optionalFields'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.text('iban') }}
+                    {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
+                    {% if preFilled.accountRole == 'ccAsset' %}
+                        {{ ExpandedForm.text('accountNumber', null , {label:trans('form.creditCardNumber')}) }}
+                    {% else %}
+                        {{ ExpandedForm.text('accountNumber') }}
+                    {% endif %}
+
+                    {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
+
+                        {# get opening balance entry for this thing! #}
+                        {{ ExpandedForm.amountNoCurrency('openingBalance',null) }}
+                        {{ ExpandedForm.date('openingBalanceDate') }}
+                        {{ ExpandedForm.select('accountRole', roles) }}
+                        {{ ExpandedForm.amountNoCurrency('virtualBalance',null) }}
+
+                    {% endif %}
+
+
+                    {{ ExpandedForm.textarea('notes',preFilled.notes,{helpText: trans('firefly.field_supports_markdown')}) }}
+
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('active', 1) }}
+                    {# only correct way to do active checkbox #}
+                    {{ ExpandedForm.checkbox('include_net_worth', 1) }}
+                </div>
+            </div>
+
+            {# panel for credit card options #}
+            {% if preFilled.accountRole == 'ccAsset' %}
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'credit_card_options'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        {{ ExpandedForm.select('ccType',Config.get('firefly.ccTypes')) }}
+                        {{ ExpandedForm.date('ccMonthlyPaymentDate',null,{'helpText' : 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.'}) }}
+                    </div>
+                </div>
+            {% endif %}
+
+            {# panel for options  #}
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'options'|_ }}</h3>
+                </div>
+                <div class="box-body">
+                    {{ ExpandedForm.optionsList('update','account') }}
+                </div>
+                <div class="box-footer">
+                    <button type="submit" class="btn pull-right btn-success">
+                        {{ ('update_' ~ what ~ '_account')|_ }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    {{ Form.close|raw }}
+{% endblock %}
+{% block scripts %}
+    <script type="text/javascript" src="v1/js/lib/modernizr-custom.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/js/ff/accounts/edit.js?v={{ FF_VERSION }}"></script>
+{% endblock %}
+
+{% block styles %}
+    <link href="v1/css/jquery-ui/jquery-ui.structure.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+    <link href="v1/css/jquery-ui/jquery-ui.theme.min.css?v={{ FF_VERSION }}" type="text/css" rel="stylesheet" media="all">
+{% endblock %}

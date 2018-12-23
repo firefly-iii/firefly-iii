@@ -92,6 +92,7 @@ class CurrencyExchangeRateController extends Controller
         $this->parameters->set('from', $fromCurrency->code);
         $this->parameters->set('to', $toCurrency->code);
         $this->parameters->set('date', $dateObj->format('Y-m-d'));
+        $this->parameters->set('amount', $request->get('amount'));
 
         $rate = $this->repository->getExchangeRate($fromCurrency, $toCurrency, $dateObj);
         if (null === $rate) {
@@ -103,8 +104,10 @@ class CurrencyExchangeRateController extends Controller
             $service->setUser($admin);
             $rate = $service->getRate($fromCurrency, $toCurrency, $dateObj);
         }
-
-        $resource = new Item($rate, new CurrencyExchangeRateTransformer($this->parameters), 'currency_exchange_rates');
+        /** @var CurrencyExchangeRateTransformer $transformer */
+        $transformer = app(CurrencyExchangeRateTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new Item($rate, $transformer, 'currency_exchange_rates');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }

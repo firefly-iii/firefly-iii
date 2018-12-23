@@ -104,7 +104,7 @@ class Transaction extends Twig_Extension
         // first display amount:
         $amount                       = (string)$transaction['amount'];
         $fakeCurrency                 = new TransactionCurrency;
-        $fakeCurrency->decimal_places = $transaction['currency_dp'];
+        $fakeCurrency->decimal_places = $transaction['currency_decimal_places'];
         $fakeCurrency->symbol         = $transaction['currency_symbol'];
         $string                       = app('amount')->formatAnything($fakeCurrency, $amount, true);
 
@@ -112,7 +112,7 @@ class Transaction extends Twig_Extension
         if (null !== $transaction['foreign_amount']) {
             $amount                       = (string)$transaction['foreign_amount'];
             $fakeCurrency                 = new TransactionCurrency;
-            $fakeCurrency->decimal_places = $transaction['foreign_currency_dp'];
+            $fakeCurrency->decimal_places = $transaction['foreign_currency_decimal_places'];
             $fakeCurrency->symbol         = $transaction['foreign_currency_symbol'];
             $string                       .= ' (' . app('amount')->formatAnything($fakeCurrency, $amount, true) . ')';
         }

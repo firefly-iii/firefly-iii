@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III supports multiple currencies, which you can change on this page.',
-    'currencies_index_default'                                => 'Firefly III has one default currency. You can always switch of course using these buttons.',
+    'currencies_index_default'                                => 'Firefly III has one default currency.',
+    'currencies_index_buttons'                                => 'Use these buttons to change the default currency or enable other currencies.',
 
     // create currency
     'currencies_create_code'                                  => 'This code should be ISO compliant (Google it for your new currency).',

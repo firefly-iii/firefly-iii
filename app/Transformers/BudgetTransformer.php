@@ -24,85 +24,29 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Budget;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Log;
 
 /**
  * Class BudgetTransformer
  */
-class BudgetTransformer extends TransformerAbstract
+class BudgetTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
-    /** @var ParameterBag */
-    protected $parameters;
+    private $repository;
 
     /**
      * BudgetTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * Include any transactions.
-     *
-     * @param Budget $budget
-     *
-     * @codeCoverageIgnore
-     * @return FractalCollection
-     */
-    public function includeTransactions(Budget $budget): FractalCollection
-    {
-        $pageSize = (int)app('preferences')->getForUser($budget->user, 'listPageSize', 50)->data;
-
-        // journals always use collector and limited using URL parameters.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($budget->user);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setBudgets(new Collection([$budget]));
-        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
-            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        $this->repository = app(BudgetRepositoryInterface::class);
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $transactions = $collector->getTransactions();
-
-        return $this->collection($transactions, new TransactionTransformer($this->parameters), 'transactions');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param Budget $budget
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(Budget $budget): Item
-    {
-        return $this->item($budget->user, new UserTransformer($this->parameters), 'users');
     }
 
     /**
@@ -114,12 +58,21 @@ class BudgetTransformer extends TransformerAbstract
      */
     public function transform(Budget $budget): array
     {
+        $this->repository->setUser($budget->user);
+        $start = $this->parameters->get('start');
+        $end   = $this->parameters->get('end');
+        $spent = [];
+        if (null !== $start && null !== $end) {
+            $spent = $this->repository->spentInPeriodMc(new Collection([$budget]), new Collection, $start, $end);
+        }
+
         $data = [
             'id'         => (int)$budget->id,
-            'updated_at' => $budget->updated_at->toAtomString(),
             'created_at' => $budget->created_at->toAtomString(),
-            'active'     => 1 === (int)$budget->active,
+            'updated_at' => $budget->updated_at->toAtomString(),
+            'active'     => $budget->active,
             'name'       => $budget->name,
+            'spent'      => $spent,
             'links'      => [
                 [
                     'rel' => 'self',

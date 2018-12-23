@@ -26,36 +26,25 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Preference;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class PreferenceTransformer
  */
-class PreferenceTransformer extends TransformerAbstract
+class PreferenceTransformer extends AbstractTransformer
 {
-    /**
-     * List of resources possible to include.
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-    /** @var ParameterBag */
-    protected $parameters;
 
     /**
      * PreferenceTransformer constructor.
      *
-     * @param ParameterBag $parameters
+     * @codeCoverageIgnore
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -69,8 +58,8 @@ class PreferenceTransformer extends TransformerAbstract
     {
         return [
             'id'         => (int)$preference->id,
-            'updated_at' => $preference->updated_at->toAtomString(),
             'created_at' => $preference->created_at->toAtomString(),
+            'updated_at' => $preference->updated_at->toAtomString(),
             'name'       => $preference->name,
             'data'       => $preference->data,
         ];

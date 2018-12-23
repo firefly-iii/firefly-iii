@@ -43,7 +43,7 @@ class TrustProxies extends Middleware
      */
     public function __construct(Repository $config)
     {
-        $trustedProxies = (string)env('TRUSTED_PROXIES', null);
+        $trustedProxies = (string)config('firefly.trusted_proxies');
         $this->proxies  = explode(',', $trustedProxies);
         if ('**' === $trustedProxies) {
             $this->proxies = '**';

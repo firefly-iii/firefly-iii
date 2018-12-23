@@ -54,7 +54,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $this->maxUploadSize = (int)config('firefly.maxUploadSize');
         $this->uploadDisk    = Storage::disk('upload');
 
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -155,6 +155,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     }
 
     /**
+     * @param int $jobId
+     *
+     * @return ImportJob|null
+     */
+    public function find(int $jobId): ?ImportJob
+    {
+        return $this->user->importJobs()->find($jobId);
+    }
+
+    /**
      * @param string $key
      *
      * @return ImportJob|null
@@ -168,6 +178,16 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         }
 
         return $result;
+    }
+
+    /**
+     * Return all import jobs.
+     *
+     * @return Collection
+     */
+    public function get(): Collection
+    {
+        return $this->user->importJobs()->get();
     }
 
     /**

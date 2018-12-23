@@ -36,59 +36,41 @@ use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
-use Symfony\Component\HttpFoundation\ParameterBag;
+use Log;
 
 /**
  *
  * Class RecurringTransactionTransformer
  */
-class RecurrenceTransformer extends TransformerAbstract
+class RecurrenceTransformer extends AbstractTransformer
 {
-    /** @noinspection ClassOverridesFieldOfSuperClassInspection */
-    /**
-     * List of resources possible to include.
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user', 'transactions'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = [];
-    /** @var ParameterBag */
-    protected $parameters;
-
+    /** @var BillRepositoryInterface */
+    private $billRepos;
+    /** @var BudgetRepositoryInterface */
+    private $budgetRepos;
+    /** @var CategoryFactory */
+    private $factory;
+    /** @var PiggyBankRepositoryInterface */
+    private $piggyRepos;
     /** @var RecurringRepositoryInterface */
-    protected $repository;
+    private $repository;
 
     /**
      * RecurrenceTransformer constructor.
      *
-     * @param ParameterBag $parameters
-     */
-    public function __construct(ParameterBag $parameters)
-    {
-        $this->repository = app(RecurringRepositoryInterface::class);
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * Include user data in end result.
-     *
      * @codeCoverageIgnore
-     *
-     * @param Recurrence $recurrence
-     *
-     *
-     * @return Item
      */
-    public function includeUser(Recurrence $recurrence): Item
+    public function __construct()
     {
-        return $this->item($recurrence->user, new UserTransformer($this->parameters), 'users');
+        $this->repository  = app(RecurringRepositoryInterface::class);
+        $this->billRepos   = app(BillRepositoryInterface::class);
+        $this->piggyRepos  = app(PiggyBankRepositoryInterface::class);
+        $this->factory     = app(CategoryFactory::class);
+        $this->budgetRepos = app(BudgetRepositoryInterface::class);
+
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -101,15 +83,22 @@ class RecurrenceTransformer extends TransformerAbstract
      */
     public function transform(Recurrence $recurrence): array
     {
+        Log::debug('Now in Recurrence::transform()');
         $this->repository->setUser($recurrence->user);
+        $this->billRepos->setUser($recurrence->user);
+        $this->piggyRepos->setUser($recurrence->user);
+        $this->factory->setUser($recurrence->user);
+        $this->budgetRepos->setUser($recurrence->user);
+
+        $shortType = (string)config(sprintf('firefly.transactionTypesToShort.%s', $recurrence->transactionType->type));
 
         // basic data.
         $return = [
             'id'                     => (int)$recurrence->id,
-            'updated_at'             => $recurrence->updated_at->toAtomString(),
             'created_at'             => $recurrence->created_at->toAtomString(),
+            'updated_at'             => $recurrence->updated_at->toAtomString(),
             'transaction_type_id'    => $recurrence->transaction_type_id,
-            'transaction_type'       => $recurrence->transactionType->type,
+            'transaction_type'       => $shortType,
             'title'                  => $recurrence->title,
             'description'            => $recurrence->description,
             'first_date'             => $recurrence->first_date->format('Y-m-d'),
@@ -142,34 +131,28 @@ class RecurrenceTransformer extends TransformerAbstract
      */
     private function getMeta(Recurrence $recurrence): array
     {
-        $return = [];
+        $return     = [];
+        $collection = $recurrence->recurrenceMeta;
+        Log::debug(sprintf('Meta collection length = %d', $collection->count()));
         /** @var RecurrenceMeta $recurrenceMeta */
-        foreach ($recurrence->recurrenceMeta as $recurrenceMeta) {
+        foreach ($collection as $recurrenceMeta) {
             $recurrenceMetaArray = [
                 'name'  => $recurrenceMeta->name,
                 'value' => $recurrenceMeta->value,
             ];
             switch ($recurrenceMeta->name) {
-                default:
-                    throw new FireflyException(sprintf('Recurrence transformer cannot handle meta-field "%s"', $recurrenceMeta->name));
                 case 'tags':
                     $recurrenceMetaArray['tags'] = explode(',', $recurrenceMeta->value);
                     break;
-                case 'notes':
-                    break;
                 case 'bill_id':
-                    /** @var BillRepositoryInterface $repository */
-                    $repository = app(BillRepositoryInterface::class);
-                    $bill       = $repository->find((int)$recurrenceMeta->value);
+                    $bill = $this->billRepos->find((int)$recurrenceMeta->value);
                     if (null !== $bill) {
                         $recurrenceMetaArray['bill_id']   = $bill->id;
                         $recurrenceMetaArray['bill_name'] = $bill->name;
                     }
                     break;
                 case 'piggy_bank_id':
-                    /** @var PiggyBankRepositoryInterface $repository */
-                    $repository = app(PiggyBankRepositoryInterface::class);
-                    $piggy      = $repository->findNull((int)$recurrenceMeta->value);
+                    $piggy = $this->piggyRepos->findNull((int)$recurrenceMeta->value);
                     if (null !== $piggy) {
                         $recurrenceMetaArray['piggy_bank_id']   = $piggy->id;
                         $recurrenceMetaArray['piggy_bank_name'] = $piggy->name;
@@ -200,15 +183,15 @@ class RecurrenceTransformer extends TransformerAbstract
         /** @var RecurrenceRepetition $repetition */
         foreach ($recurrence->recurrenceRepetitions as $repetition) {
             $repetitionArray = [
-                'id'                => $repetition->id,
-                'updated_at'        => $repetition->updated_at->toAtomString(),
-                'created_at'        => $repetition->created_at->toAtomString(),
-                'repetition_type'   => $repetition->repetition_type,
-                'repetition_moment' => $repetition->repetition_moment,
-                'repetition_skip'   => (int)$repetition->repetition_skip,
-                'weekend'           => (int)$repetition->weekend,
-                'description'       => $this->repository->repetitionDescription($repetition),
-                'occurrences'       => [],
+                'id'          => $repetition->id,
+                'created_at'  => $repetition->created_at->toAtomString(),
+                'updated_at'  => $repetition->updated_at->toAtomString(),
+                'type'        => $repetition->repetition_type,
+                'moment'      => $repetition->repetition_moment,
+                'skip'        => (int)$repetition->repetition_skip,
+                'weekend'     => (int)$repetition->weekend,
+                'description' => $this->repository->repetitionDescription($repetition),
+                'occurrences' => [],
             ];
 
             // get the (future) occurrences for this specific type of repetition:
@@ -241,22 +224,15 @@ class RecurrenceTransformer extends TransformerAbstract
                 'value' => $transactionMeta->value,
             ];
             switch ($transactionMeta->name) {
-                default:
-                    throw new FireflyException(sprintf('Recurrence transformer cannot handle transaction meta-field "%s"', $transactionMeta->name));
                 case 'category_name':
-                    /** @var CategoryFactory $factory */
-                    $factory = app(CategoryFactory::class);
-                    $factory->setUser($transaction->recurrence->user);
-                    $category = $factory->findOrCreate(null, $transactionMeta->value);
+                    $category = $this->factory->findOrCreate(null, $transactionMeta->value);
                     if (null !== $category) {
                         $transactionMetaArray['category_id']   = $category->id;
                         $transactionMetaArray['category_name'] = $category->name;
                     }
                     break;
                 case 'budget_id':
-                    /** @var BudgetRepositoryInterface $repository */
-                    $repository = app(BudgetRepositoryInterface::class);
-                    $budget     = $repository->findNull((int)$transactionMeta->value);
+                    $budget = $this->budgetRepos->findNull((int)$transactionMeta->value);
                     if (null !== $budget) {
                         $transactionMetaArray['budget_id']   = $budget->id;
                         $transactionMetaArray['budget_name'] = $budget->name;
@@ -283,27 +259,43 @@ class RecurrenceTransformer extends TransformerAbstract
         /** @var RecurrenceTransaction $transaction */
         foreach ($recurrence->recurrenceTransactions as $transaction) {
 
-            $sourceAccount      = $transaction->sourceAccount;
-            $destinationAccount = $transaction->destinationAccount;
-            $transactionArray   = [
-                'currency_id'         => $transaction->transaction_currency_id,
-                'currency_code'       => $transaction->transactionCurrency->code,
-                'currency_symbol'     => $transaction->transactionCurrency->symbol,
-                'currency_dp'         => $transaction->transactionCurrency->decimal_places,
-                'foreign_currency_id' => $transaction->foreign_currency_id,
-                'source_id'           => $transaction->source_id,
-                'source_name'         => null === $sourceAccount ? '' : $sourceAccount->name,
-                'destination_id'      => $transaction->destination_id,
-                'destination_name'    => null === $destinationAccount ? '' : $destinationAccount->name,
-                'amount'              => $transaction->amount,
-                'foreign_amount'      => $transaction->foreign_amount,
-                'description'         => $transaction->description,
-                'meta'                => $this->getTransactionMeta($transaction),
+            $sourceAccount         = $transaction->sourceAccount;
+            $destinationAccount    = $transaction->destinationAccount;
+            $foreignCurrencyCode   = null;
+            $foreignCurrencySymbol = null;
+            $foreignCurrencyDp     = null;
+            if (null !== $transaction->foreign_currency_id) {
+                $foreignCurrencyCode   = $transaction->foreignCurrency->code;
+                $foreignCurrencySymbol = $transaction->foreignCurrency->symbol;
+                $foreignCurrencyDp     = $transaction->foreignCurrency->decimal_places;
+            }
+            $amount        = round($transaction->amount, $transaction->transactionCurrency->decimal_places);
+            $foreignAmount = null;
+            if (null !== $transaction->foreign_currency_id && null !== $transaction->foreign_amount) {
+                $foreignAmount = round($transaction->foreign_amount, $foreignCurrencyDp);
+            }
+            $transactionArray = [
+                'currency_id'                     => $transaction->transaction_currency_id,
+                'currency_code'                   => $transaction->transactionCurrency->code,
+                'currency_symbol'                 => $transaction->transactionCurrency->symbol,
+                'currency_decimal_places'         => $transaction->transactionCurrency->decimal_places,
+                'foreign_currency_id'             => $transaction->foreign_currency_id,
+                'foreign_currency_code'           => $foreignCurrencyCode,
+                'foreign_currency_symbol'         => $foreignCurrencySymbol,
+                'foreign_currency_decimal_places' => $foreignCurrencyDp,
+                'source_id'                       => $transaction->source_id,
+                'source_name'                     => null === $sourceAccount ? '' : $sourceAccount->name,
+                'destination_id'                  => $transaction->destination_id,
+                'destination_name'                => null === $destinationAccount ? '' : $destinationAccount->name,
+                'amount'                          => $amount,
+                'foreign_amount'                  => $foreignAmount,
+                'description'                     => $transaction->description,
+                'meta'                            => $this->getTransactionMeta($transaction),
             ];
             if (null !== $transaction->foreign_currency_id) {
-                $transactionArray['foreign_currency_code']   = $transaction->foreignCurrency->code;
-                $transactionArray['foreign_currency_symbol'] = $transaction->foreignCurrency->symbol;
-                $transactionArray['foreign_currency_dp']     = $transaction->foreignCurrency->decimal_places;
+                $transactionArray['foreign_currency_code']           = $transaction->foreignCurrency->code;
+                $transactionArray['foreign_currency_symbol']         = $transaction->foreignCurrency->symbol;
+                $transactionArray['foreign_currency_decimal_places'] = $transaction->foreignCurrency->decimal_places;
             }
 
             // store transaction in recurrence array.

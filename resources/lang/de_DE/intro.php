@@ -130,7 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III unterstützt mehrere Währungen, die Sie auf dieser Seite ändern können.',
-    'currencies_index_default'                                => 'Firefly III besitzt eine Standardwährung, die mit diesen Buttons gewechselt werden können.',
+    'currencies_index_default'                                => 'Firefly III verfügt über eine Standardwährung.',
+    'currencies_index_buttons'                                => 'Verwenden Sie diese Schaltflächen, um die Standardwährung zu ändern oder andere Währungen zu aktivieren.',
 
     // create currency
     'currencies_create_code'                                  => 'Dieser Code sollte ISO-konform sein (Für eine neue Währung googlen).',

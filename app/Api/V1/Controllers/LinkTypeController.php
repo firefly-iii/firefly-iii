@@ -25,10 +25,15 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\LinkTypeRequest;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\LinkType;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\LinkTypeTransformer;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -46,6 +51,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class LinkTypeController extends Controller
 {
+    use TransactionFilter;
     /** @var LinkTypeRepositoryInterface The link type repository */
     private $repository;
 
@@ -114,7 +120,12 @@ class LinkTypeController extends Controller
 
         // present to user.
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new FractalCollection($linkTypes, new LinkTypeTransformer($this->parameters), 'link_types');
+
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($linkTypes, $transformer, 'link_types');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -132,14 +143,13 @@ class LinkTypeController extends Controller
     public function show(Request $request, LinkType $linkType): JsonResponse
     {
         $manager = new Manager;
-
-        // add include parameter:
-        $include = $request->get('include') ?? '';
-        $manager->parseIncludes($include);
-
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
-        $resource = new Item($linkType, new LinkTypeTransformer($this->parameters), 'link_types');
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
@@ -168,11 +178,68 @@ class LinkTypeController extends Controller
         $baseUrl  = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($linkType, new LinkTypeTransformer($this->parameters), 'link_types');
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
     }
+
+    /**
+     * Delete the resource.
+     *
+     * @param LinkType $linkType
+     *
+     * @return JsonResponse
+     */
+    public function transactions(Request $request, LinkType $linkType): JsonResponse
+    {
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $type     = $request->get('type') ?? 'default';
+        $this->parameters->set('type', $type);
+
+        $types   = $this->mapTransactionTypes($this->parameters->get('type'));
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        // whatever is returned by the query, it must be part of these journals:
+        $journalIds = $this->repository->getJournalIds($linkType);
+
+        /** @var User $admin */
+        $admin = auth()->user();
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($admin);
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        $collector->setAllAssetAccounts();
+        $collector->setJournalIds($journalIds);
+
+        if (\in_array(TransactionType::TRANSFER, $types, true)) {
+            $collector->removeFilter(InternalTransferFilter::class);
+        }
+
+        if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
+            $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
+        }
+        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
+        $collector->setTypes($types);
+        $paginator = $collector->getPaginatedTransactions();
+        $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
+        $transactions = $paginator->getCollection();
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
 
     /**
      * Update object.
@@ -202,7 +269,11 @@ class LinkTypeController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $resource = new Item($linkType, new LinkTypeTransformer($this->parameters), 'link_types');
+        /** @var LinkTypeTransformer $transformer */
+        $transformer = app(LinkTypeTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($linkType, $transformer, 'link_types');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 

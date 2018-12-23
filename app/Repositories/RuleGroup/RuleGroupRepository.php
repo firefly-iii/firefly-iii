@@ -42,7 +42,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function __construct()
     {
-        if ('testing' === env('APP_ENV')) {
+        if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
@@ -123,6 +123,18 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      *
      * @return Collection
      */
+    public function getActiveRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->where('rules.active', 1)
+                     ->get(['rules.*']);
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
     public function getActiveStoreRules(RuleGroup $group): Collection
     {
         return $group->rules()
@@ -182,6 +194,17 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                             },
                         ]
                     )->get();
+    }
+
+    /**
+     * @param RuleGroup $group
+     *
+     * @return Collection
+     */
+    public function getRules(RuleGroup $group): Collection
+    {
+        return $group->rules()
+                     ->get(['rules.*']);
     }
 
     /**
@@ -296,7 +319,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
                 'title'       => $data['title'],
                 'description' => $data['description'],
                 'order'       => $order + 1,
-                'active'      => 1,
+                'active'      => $data['active'],
             ]
         );
         $newRuleGroup->save();

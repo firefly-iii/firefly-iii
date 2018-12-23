@@ -24,65 +24,25 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\RuleGroup;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
 use League\Fractal\TransformerAbstract;
+use Log;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class RuleGroupTransformer
  */
-class RuleGroupTransformer extends TransformerAbstract
+class RuleGroupTransformer extends AbstractTransformer
 {
     /**
-     * List of resources possible to include
-     *
-     * @var array
-     */
-    protected $availableIncludes = ['user'];
-    /**
-     * List of resources to automatically include
-     *
-     * @var array
-     */
-    protected $defaultIncludes = ['user'];
-
-    /** @var ParameterBag */
-    protected $parameters;
-
-    /**
-     * CurrencyTransformer constructor.
+     * RuleGroupTransformer constructor.
      *
      * @codeCoverageIgnore
-     *
-     * @param ParameterBag $parameters
      */
-    public function __construct(ParameterBag $parameters)
+    public function __construct()
     {
-        $this->parameters = $parameters;
-    }
-
-    /**
-     * @param RuleGroup $ruleGroup
-     *
-     * @return FractalCollection
-     */
-    public function includeRules(RuleGroup $ruleGroup): FractalCollection
-    {
-        return $this->collection($ruleGroup->rules, new RuleTransformer($this->parameters), 'rules');
-    }
-
-    /**
-     * Include the user.
-     *
-     * @param RuleGroup $ruleGroup
-     *
-     * @codeCoverageIgnore
-     * @return Item
-     */
-    public function includeUser(RuleGroup $ruleGroup): Item
-    {
-        return $this->item($ruleGroup->user, new UserTransformer($this->parameters), 'users');
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+        }
     }
 
     /**
@@ -95,14 +55,14 @@ class RuleGroupTransformer extends TransformerAbstract
     public function transform(RuleGroup $ruleGroup): array
     {
         $data = [
-            'id'         => (int)$ruleGroup->id,
-            'updated_at' => $ruleGroup->updated_at->toAtomString(),
-            'created_at' => $ruleGroup->created_at->toAtomString(),
-            'title'      => $ruleGroup->title,
-            'text'       => $ruleGroup->text,
-            'order'      => $ruleGroup->order,
-            'active'     => $ruleGroup->active,
-            'links'      => [
+            'id'          => (int)$ruleGroup->id,
+            'created_at'  => $ruleGroup->created_at->toAtomString(),
+            'updated_at'  => $ruleGroup->updated_at->toAtomString(),
+            'title'       => $ruleGroup->title,
+            'description' => $ruleGroup->description,
+            'order'       => $ruleGroup->order,
+            'active'      => $ruleGroup->active,
+            'links'       => [
                 [
                     'rel' => 'self',
                     'uri' => '/rule_groups/' . $ruleGroup->id,
