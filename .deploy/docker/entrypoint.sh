@@ -38,4 +38,4 @@ php artisan cache:clear
 
 php artisan firefly:instructions install
 
-exec /bin/bash -c "source /etc/apache2/envvars && exec /usr/sbin/apache2 -DFOREGROUND"
+exec apache2-foreground
