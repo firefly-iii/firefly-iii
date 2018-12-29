@@ -1288,6 +1288,7 @@ return [
 
     // recurring transactions
     'recurrences'                           => 'Recurring transactions',
+    'recurring_calendar_view'               => 'Calendar',
     'no_recurring_title_default'            => 'Let\'s create a recurring transaction!',
     'no_recurring_intro_default'            => 'You have no recurring transactions yet. You can use these to make Firefly III automatically create transactions for you.',
     'no_recurring_imperative_default'       => 'This is a pretty advanced feature but it can be extremely useful. Make sure you read the documentation (?)-icon in the top right corner) before you continue.',
