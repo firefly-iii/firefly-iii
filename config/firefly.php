@@ -239,17 +239,18 @@ return [
         ],
     'shortNamesByFullName'         =>
         [
-            'Default account'     => 'asset',
-            'Asset account'       => 'asset',
-            'Import account'      => 'import',
-            'Expense account'     => 'expense',
-            'Beneficiary account' => 'expense',
-            'Revenue account'     => 'revenue',
-            'Cash account'        => 'cash',
-            'Credit card'         => 'liabilities',
-            'Loan'                => 'liabilities',
-            'Debt'                => 'liabilities',
-            'Mortgage'            => 'liabilities',
+            'Default account'         => 'asset',
+            'Asset account'           => 'asset',
+            'Import account'          => 'import',
+            'Expense account'         => 'expense',
+            'Beneficiary account'     => 'expense',
+            'Revenue account'         => 'revenue',
+            'Cash account'            => 'cash',
+            'Initial balance account' => 'initial-balance',
+            'Credit card'             => 'liabilities',
+            'Loan'                    => 'liabilities',
+            'Debt'                    => 'liabilities',
+            'Mortgage'                => 'liabilities',
         ],
     'shortLiabilityNameByFullName' => [
         'Credit card' => 'creditcard',
@@ -295,7 +296,7 @@ return [
         'transfer'   => ['Transfer'],
         'transfers'  => ['Transfer'],
     ],
-    'transactionTypesToShort'                 => [
+    'transactionTypesToShort'      => [
         'Withdrawal'      => 'withdrawal',
         'Deposit'         => 'deposit',
         'Transfer'        => 'transfer',
