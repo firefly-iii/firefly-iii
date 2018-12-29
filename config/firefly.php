@@ -247,6 +247,7 @@ return [
             'Revenue account'         => 'revenue',
             'Cash account'            => 'cash',
             'Initial balance account' => 'initial-balance',
+            'Reconciliation account'  => 'reconciliation',
             'Credit card'             => 'liabilities',
             'Loan'                    => 'liabilities',
             'Debt'                    => 'liabilities',
