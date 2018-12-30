@@ -9,9 +9,7 @@ $scopes = [
     UidScope::class,
 ];
 if ('FreeIPA' === env('ADLDAP_CONNECTION_SCHEME')) {
-    $scopes = [
-        UpnScope::class,
-    ];
+    $scopes = [];
 }
 if ('ActiveDirectory' === env('ADLDAP_CONNECTION_SCHEME')) {
     $scopes = [
