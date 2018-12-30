@@ -76,9 +76,9 @@
             {% if sorting %}<a href="#" class="handle btn btn-default"><i class="fa fa-fw fa-arrows-v"></i></a>{% endif %}
 
             <div class="btn-group btn-group-xs">
-                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     {{ 'actions'|_ }} <span class="caret"></span></button>
-                <ul class="dropdown-menu" role="menu">
+                <ul class="dropdown-menu dropdown-menu-right" role="menu">
                     <li><a href="{{ route('transactions.edit',transaction.journal_id) }}"><i class="fa fa-fw fa-pencil"></i> {{ 'edit'|_ }}</a></li>
                     <li><a href="{{ route('transactions.delete',transaction.journal_id) }}"><i class="fa fa-fw fa-trash"></i> {{ 'delete'|_ }}</a></li>
                     <li role="separator" class="divider"></li>
