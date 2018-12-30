@@ -153,6 +153,7 @@ function countChecked() {
  */
 function checkAll() {
     "use strict";
+    console.log('Now in CheckAll((');
     $('.select_all_single').prop('checked', true);
 }
 
@@ -207,6 +208,7 @@ function stopMassSelect() {
  */
 function startMassSelect() {
     "use strict";
+    console.log('Now in startMassSelect()');
     // show "select all" box in table header.
     $('.select_boxes').show();
 
