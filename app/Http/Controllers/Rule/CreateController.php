@@ -29,6 +29,8 @@ use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -40,7 +42,7 @@ use Throwable;
  */
 class CreateController extends Controller
 {
-    use RuleManagement;
+    use RuleManagement, ModelInformation;
     /** @var RuleRepositoryInterface Rule repository */
     private $ruleRepos;
 
@@ -199,78 +201,4 @@ class CreateController extends Controller
         return $redirect;
     }
 
-    /**
-     * Get actions based on a bill.
-     *
-     * @param Bill $bill
-     *
-     * @return array
-     */
-    protected function getActionsForBill(Bill $bill): array // get info and augument
-    {
-        try {
-            $result = view(
-                'rules.partials.action',
-                [
-                    'oldAction'  => 'link_to_bill',
-                    'oldValue'   => $bill->name,
-                    'oldChecked' => false,
-                    'count'      => 1,
-                ]
-            )->render();
-            // @codeCoverageIgnoreStart
-        } catch (Throwable $e) {
-            Log::error(sprintf('Throwable was thrown in getActionsForBill(): %s', $e->getMessage()));
-            Log::error($e->getTraceAsString());
-            $result = 'Could not render view. See log files.';
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        return [$result];
-    }
-
-    /**
-     * Create fake triggers to match the bill's properties
-     *
-     * @param Bill $bill
-     *
-     * @return array
-     */
-    protected function getTriggersForBill(Bill $bill): array // get info and augument
-    {
-        $result   = [];
-        $triggers = ['currency_is', 'amount_more', 'amount_less', 'description_contains'];
-        $values   = [
-            $bill->transactionCurrency()->first()->name,
-            round((float)$bill->amount_min, 12),
-            round((float)$bill->amount_max, 12),
-            $bill->name,
-        ];
-        foreach ($triggers as $index => $trigger) {
-            try {
-                $string = view(
-                    'rules.partials.trigger',
-                    [
-                        'oldTrigger' => $trigger,
-                        'oldValue'   => $values[$index],
-                        'oldChecked' => false,
-                        'count'      => $index + 1,
-                    ]
-                )->render();
-                // @codeCoverageIgnoreStart
-            } catch (Throwable $e) {
-
-                Log::debug(sprintf('Throwable was thrown in getTriggersForBill(): %s', $e->getMessage()));
-                Log::debug($e->getTraceAsString());
-                $string = '';
-                // @codeCoverageIgnoreEnd
-            }
-            if ('' !== $string) {
-                $result[] = $string;
-            }
-        }
-
-        return $result;
-    }
 }

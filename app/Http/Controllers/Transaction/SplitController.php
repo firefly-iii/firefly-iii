@@ -171,42 +171,4 @@ class SplitController extends Controller
         return redirect($this->getPreviousUri('transactions.edit-split.uri'));
     }
 
-
-    /**
-     * Get info from old input.
-     *
-     * @param $array
-     * @param $old
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function updateWithPrevious($array, $old): array // update object with new info
-    {
-        if (0 === \count($old) || !isset($old['transactions'])) {
-            return $array;
-        }
-        $old = $old['transactions'];
-
-        foreach ($old as $index => $row) {
-            if (isset($array[$index])) {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $array[$index] = array_merge($array[$index], $row);
-                continue;
-            }
-            // take some info from first transaction, that should at least exist.
-            $array[$index]                            = $row;
-            $array[$index]['currency_id']             = $array[0]['currency_id'];
-            $array[$index]['currency_code']           = $array[0]['currency_code'] ?? '';
-            $array[$index]['currency_symbol']         = $array[0]['currency_symbol'] ?? '';
-            $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
-            $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
-            $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];
-            $array[$index]['foreign_currency_symbol'] = $array[0]['foreign_currency_symbol'];
-        }
-
-        return $array;
-    }
 }

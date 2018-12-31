@@ -33,6 +33,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -43,7 +44,7 @@ use Log;
  */
 class CategoryController extends Controller
 {
-    use DateCalculation, AugumentData;
+    use DateCalculation, AugumentData, ChartGeneration;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -392,92 +393,5 @@ class CategoryController extends Controller
         $data = $this->makePeriodChart($category, $start, $end);
 
         return response()->json($data);
-    }
-
-    /**
-     * Chart for a specific period (start and end).
-     *
-     *
-     * @param Category $category
-     * @param Carbon   $start
-     * @param Carbon   $end
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function makePeriodChart(Category $category, Carbon $start, Carbon $end): array // chart helper method.
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($category->id);
-        $cache->addProperty('chart.category.period-chart');
-
-
-        if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
-        }
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accounts          = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
-        $repository        = app(CategoryRepositoryInterface::class);
-
-        // chart data
-        $chartData = [
-            [
-                'label'           => (string)trans('firefly.spent'),
-                'entries'         => [],
-                'type'            => 'bar',
-                'backgroundColor' => 'rgba(219, 68, 55, 0.5)', // red
-            ],
-            [
-                'label'           => (string)trans('firefly.earned'),
-                'entries'         => [],
-                'type'            => 'bar',
-                'backgroundColor' => 'rgba(0, 141, 76, 0.5)', // green
-            ],
-            [
-                'label'   => (string)trans('firefly.sum'),
-                'entries' => [],
-                'type'    => 'line',
-                'fill'    => false,
-            ],
-        ];
-
-        $step = $this->calculateStep($start, $end);
-
-
-        while ($start <= $end) {
-            $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $start, $start);
-            $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $start, $start);
-            $sum                             = bcadd($spent, $earned);
-            $label                           = trim(app('navigation')->periodShow($start, $step));
-            $chartData[0]['entries'][$label] = round(bcmul($spent, '-1'), 12);
-            $chartData[1]['entries'][$label] = round($earned, 12);
-            $chartData[2]['entries'][$label] = round($sum, 12);
-
-            switch ($step) {
-                default:
-                case '1D':
-                    $start->addDay();
-                    break;
-                case '1W':
-                    $start->addDays(7);
-                    break;
-                case '1M':
-                    $start->addMonth();
-                    break;
-                case '1Y':
-                    $start->addYear();
-                    break;
-            }
-        }
-
-        $data = $this->generator->multiSet($chartData);
-        $cache->store($data);
-
-        return $data;
     }
 }

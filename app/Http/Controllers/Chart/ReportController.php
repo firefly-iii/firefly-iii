@@ -28,9 +28,9 @@ use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\BasicDataSupport;
+use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
 use Log;
@@ -40,7 +40,7 @@ use Log;
  */
 class ReportController extends Controller
 {
-    use BasicDataSupport;
+    use BasicDataSupport, ChartGeneration;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -84,7 +84,7 @@ class ReportController extends Controller
         // filter accounts on having the preference for being included.
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $filtered = $accounts->filter(
+        $filtered          = $accounts->filter(
             function (Account $account) use ($accountRepository) {
                 $includeNetWorth = $accountRepository->getMetaValue($account, 'include_net_worth');
                 $result          = null === $includeNetWorth ? true : '1' === $includeNetWorth;
@@ -95,7 +95,6 @@ class ReportController extends Controller
                 return $result;
             }
         );
-
 
 
         while ($current < $end) {
@@ -262,68 +261,5 @@ class ReportController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-    /**
-     * Collects the incomes and expenses for the given periods, grouped per month. Will cache its results.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function getChartData(Collection $accounts, Carbon $start, Carbon $end): array // chart helper function
-    {
-        $cache = new CacheProperties;
-        $cache->addProperty('chart.report.get-chart-data');
-        $cache->addProperty($start);
-        $cache->addProperty($accounts);
-        $cache->addProperty($end);
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $currentStart = clone $start;
-        $spentArray   = [];
-        $earnedArray  = [];
-
-        /** @var AccountTaskerInterface $tasker */
-        $tasker = app(AccountTaskerInterface::class);
-
-        while ($currentStart <= $end) {
-            $currentEnd = app('navigation')->endOfPeriod($currentStart, '1M');
-            $earned     = (string)array_sum(
-                array_map(
-                    function ($item) {
-                        return $item['sum'];
-                    },
-                    $tasker->getIncomeReport($currentStart, $currentEnd, $accounts)
-                )
-            );
-
-            $spent = (string)array_sum(
-                array_map(
-                    function ($item) {
-                        return $item['sum'];
-                    },
-                    $tasker->getExpenseReport($currentStart, $currentEnd, $accounts)
-                )
-            );
-
-            $label               = $currentStart->format('Y-m') . '-01';
-            $spentArray[$label]  = bcmul($spent, '-1');
-            $earnedArray[$label] = $earned;
-            $currentStart        = app('navigation')->addPeriod($currentStart, '1M', 0);
-        }
-        $result = [
-            'spent'  => $spentArray,
-            'earned' => $earnedArray,
-        ];
-        $cache->store($result);
-
-        return $result;
     }
 }
