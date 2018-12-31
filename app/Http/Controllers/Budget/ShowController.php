@@ -31,12 +31,10 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 /**
  *
@@ -44,10 +42,7 @@ use Illuminate\Support\Collection;
  */
 class ShowController extends Controller
 {
-    use PeriodOverview;
-
-    /** @var BudgetRepositoryInterface The budget repository */
-    private $repository;
+    use PeriodOverview, AugumentData;
 
     /**
      * ShowController constructor.
@@ -62,7 +57,6 @@ class ShowController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
-                $this->repository = app(BudgetRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -202,40 +196,5 @@ class ShowController extends Controller
         $limits = $this->getLimits($budget, $start, $end);
 
         return view('budgets.show', compact('limits', 'budget', 'budgetLimit', 'transactions', 'subTitle'));
-    }
-
-    /**
-     * Gets all budget limits for a budget.
-     *
-     * @param Budget $budget
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return Collection
-     */
-    protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
-    {
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty($budget->id);
-        $cache->addProperty('get-limits');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $set    = $this->repository->getBudgetLimits($budget, $start, $end);
-        $limits = new Collection();
-
-        /** @var BudgetLimit $entry */
-        foreach ($set as $entry) {
-            $entry->spent = $this->repository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
-            $limits->push($entry);
-        }
-        $cache->store($limits);
-
-        return $set;
     }
 }

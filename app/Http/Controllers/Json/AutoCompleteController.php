@@ -25,20 +25,12 @@ namespace FireflyIII\Http\Controllers\Json;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AutoCompleteCollector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 /**
  * Class AutoCompleteController.
@@ -47,6 +39,7 @@ use Illuminate\Support\Collection;
  */
 class AutoCompleteController extends Controller
 {
+    use AutoCompleteCollector;
 
     /**
      * List of all journals.
@@ -203,7 +196,8 @@ class AutoCompleteController extends Controller
             $return = array_filter(
                 $return, function (array $array) use ($search) {
                 $haystack = $array['name'];
-                $result = stripos($haystack, $search);
+                $result   = stripos($haystack, $search);
+
                 return !(false === $result);
             }
             );
@@ -256,122 +250,5 @@ class AutoCompleteController extends Controller
         $cache->store($return);
 
         return response()->json($return);
-    }
-
-    /**
-     * @param array  $unfiltered
-     * @param string $query
-     *
-     * @return array|null
-     */
-    private function filterResult(?array $unfiltered, string $query): ?array
-    {
-        if (null === $unfiltered) {
-            return null; // @codeCoverageIgnore
-        }
-        if ('' === $query) {
-            sort($unfiltered);
-
-            return $unfiltered;
-        }
-        $return = [];
-        if ('' !== $query) {
-            $return = array_values(
-                array_filter(
-                    $unfiltered, function (string $value) use ($query) {
-                    return !(false === stripos($value, $query));
-                }, ARRAY_FILTER_USE_BOTH
-                )
-            );
-        }
-        sort($return);
-
-
-        return $return;
-    }
-
-    /**
-     * @param string $query
-     * @param array  $types
-     *
-     * @return array
-     */
-    private function getAccounts(array $types): array
-    {
-        $repository = app(AccountRepositoryInterface::class);
-        // find everything:
-        /** @var Collection $collection */
-        $collection = $repository->getAccountsByType($types);
-        $filtered   = $collection->filter(
-            function (Account $account) {
-                return $account->active === true;
-            }
-        );
-        $return     = array_values(array_unique($filtered->pluck('name')->toArray()));
-
-        return $return;
-
-    }
-
-    /**
-     * @return array
-     */
-    private function getBills(): array
-    {
-        $repository = app(BillRepositoryInterface::class);
-
-        return array_unique($repository->getActiveBills()->pluck('name')->toArray());
-    }
-
-    /**
-     * @return array
-     */
-    private function getBudgets(): array
-    {
-        $repository = app(BudgetRepositoryInterface::class);
-
-        return array_unique($repository->getBudgets()->pluck('name')->toArray());
-    }
-
-    /**
-     * @return array
-     */
-    private function getCategories(): array
-    {
-        $repository = app(CategoryRepositoryInterface::class);
-
-        return array_unique($repository->getCategories()->pluck('name')->toArray());
-    }
-
-    /**
-     * @return array
-     */
-    private function getCurrencyNames(): array
-    {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-
-        return $repository->get()->pluck('name')->toArray();
-    }
-
-    /**
-     * @return array
-     */
-    private function getTags(): array
-    {
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-
-        return array_unique($repository->get()->pluck('tag')->toArray());
-    }
-
-    /**
-     * @return array
-     */
-    private function getTransactionTypes(): array
-    {
-        $repository = app(JournalRepositoryInterface::class);
-
-        return array_unique($repository->getTransactionTypes()->pluck('type')->toArray());
     }
 }

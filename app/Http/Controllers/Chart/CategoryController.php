@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -42,7 +43,7 @@ use Log;
  */
 class CategoryController extends Controller
 {
-    use DateCalculation;
+    use DateCalculation, AugumentData;
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
 
@@ -478,22 +479,5 @@ class CategoryController extends Controller
         $cache->store($data);
 
         return $data;
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     *
-     * @param array $names
-     *
-     * @return array
-     */
-    private function expandNames(array $names): array
-    {
-        $result = [];
-        foreach ($names as $entry) {
-            $result[$entry['name']] = 0;
-        }
-
-        return $result;
     }
 }

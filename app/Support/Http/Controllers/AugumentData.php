@@ -33,6 +33,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 
 /**
@@ -66,6 +67,41 @@ trait AugumentData
         }
 
         return $combined;
+    }
+
+    /**
+     * Small helper function for the revenue and expense account charts.
+     *
+     * @param array $names
+     *
+     * @return array
+     */
+    protected function expandNames(array $names): array
+    {
+        $result = [];
+        foreach ($names as $entry) {
+            $result[$entry['name']] = 0;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Small helper function for the revenue and expense account charts.
+     *
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    protected function extractNames(Collection $accounts): array
+    {
+        $return = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $return[$account->id] = $account->name;
+        }
+
+        return $return;
     }
 
     /**
@@ -166,6 +202,43 @@ trait AugumentData
         $return[0] = (string)trans('firefly.no_category');
 
         return $return;
+    }
+
+    /**
+     * Gets all budget limits for a budget.
+     *
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return Collection
+     */
+    protected function getLimits(Budget $budget, Carbon $start, Carbon $end): Collection // get data + augment with info
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty($budget->id);
+        $cache->addProperty('get-limits');
+
+        if ($cache->has()) {
+            return $cache->get(); // @codeCoverageIgnore
+        }
+
+        $set    = $repository->getBudgetLimits($budget, $start, $end);
+        $limits = new Collection();
+
+        /** @var BudgetLimit $entry */
+        foreach ($set as $entry) {
+            $entry->spent = $repository->spentInPeriod(new Collection([$budget]), new Collection(), $entry->start_date, $entry->end_date);
+            $limits->push($entry);
+        }
+        $cache->store($limits);
+
+        return $set;
     }
 
     /**

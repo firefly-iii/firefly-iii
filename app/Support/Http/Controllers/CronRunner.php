@@ -1,6 +1,6 @@
 <?php
 /**
- * CronController.php
+ * CronRunner.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,27 +21,33 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Http\Controllers\System;
+namespace FireflyIII\Support\Http\Controllers;
 
-use FireflyIII\Support\Http\Controllers\CronRunner;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
 
 /**
- * Class CronController
+ * Trait CronRunner
  */
-class CronController
+trait CronRunner
 {
-    use CronRunner;
-
     /**
-     * @param string $token
-     *
      * @return string
      */
-    public function cron(string $token): string
+    protected function runRecurring(): string
     {
-        $results   = [];
-        $results[] = $this->runRecurring();
+        /** @var RecurringCronjob $recurring */
+        $recurring = app(RecurringCronjob::class);
+        try {
+            $result = $recurring->fire();
+        } catch (FireflyException $e) {
+            return $e->getMessage();
+        }
+        if (false === $result) {
+            return 'The recurring transaction cron job did not fire.';
+        }
 
-        return implode("<br>\n", $results);
+        return 'The recurring transaction cron job fired successfully.';
     }
+
 }
