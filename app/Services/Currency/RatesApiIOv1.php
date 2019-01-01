@@ -1,7 +1,7 @@
 <?php
 /**
  * RatesApiIOv1.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 https://github.com/BoGnY
  *
  * This file is part of Firefly III.
  *
