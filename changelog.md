@@ -22,6 +22,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #1942 Favicons are relative so Scriptaculous installations work better.
 - #1944 Make sure that the search allows you to mass-select transactions.
 - #1945 Slight UI change so the drop-down menu renders better.
+- #1955 Fixed a bug in the category report.
 - Fixed broken translations in the recurring transactions overview.
 
 ### Security

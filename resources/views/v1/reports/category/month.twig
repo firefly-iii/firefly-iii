@@ -191,8 +191,6 @@
                             {% set totalCount = 0 %}
                             {% set totalSum = 0 %}
                             {% for row in averageExpenses %}
-                                {% set totalCount = totalCount+ row.count %}
-                                {% set totalSum = totalSum + row.sum %}
                                 {% if loop.index > listLength %}
                                     <tr class="overListLength">
                                 {% else %}
