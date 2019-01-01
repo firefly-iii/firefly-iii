@@ -52,7 +52,7 @@ Most importantly...
 * You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](https://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
 * You can import from [bunq](https://www.bunq.com/).
 * You can import CSV files from practically any bank.
-* Firefly III features an [JSON REST API](https://firefly-iii.readthedocs.io/en/latest/api/start.html).
+* Firefly III features an [JSON REST API](https://api-docs.firefly-iii.org/) with a [Python API client](https://pypi.org/project/Firefly-III-API-Client/) built by [ms32035](https://github.com/ms32035).
 * If you feel you’re missing something you can just ask me and I’ll add it!
 
 But actually, it features:
