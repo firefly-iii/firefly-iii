@@ -185,7 +185,11 @@ class FireflyServiceProvider extends ServiceProvider
         $this->app->bind(FiscalHelperInterface::class, FiscalHelper::class);
         $this->app->bind(BalanceReportHelperInterface::class, BalanceReportHelper::class);
         $this->app->bind(BudgetReportHelperInterface::class, BudgetReportHelper::class);
-        $this->app->bind(ExchangeRateInterface::class, FixerIOv2::class);
+        $class = (string)config(sprintf('firefly.cer_providers.%s', (string)config('firefly.cer_provider')));
+        if('' === $class) {
+            throw new FireflyException('Invalid currency exchange rate provider. Cannot continue.');
+        }
+        $this->app->bind(ExchangeRateInterface::class, $class);
 
         // password verifier thing
         $this->app->bind(Verifier::class, PwndVerifierV2::class);

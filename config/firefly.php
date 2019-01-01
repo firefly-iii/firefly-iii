@@ -24,6 +24,8 @@
 declare(strict_types=1);
 
 use FireflyIII\Export\Exporter\CsvExporter;
+use FireflyIII\Services\Currency\FixerIOv2;
+use FireflyIII\Services\Currency\RatesApiIOv1;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
@@ -111,6 +113,7 @@ return [
     'analytics_id'                 => env('ANALYTICS_ID', ''),
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+    'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',
@@ -479,4 +482,8 @@ return [
     'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
                            'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after'],
     // tag notes has_attachments
+    'cer_providers'    => [
+        'fixer'    => FixerIOv2::class,
+        'ratesapi' => RatesApiIOv1::class,
+    ],
 ];
