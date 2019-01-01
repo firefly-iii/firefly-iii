@@ -2,10 +2,35 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.7.10] - 2019-xx-xx
+## [4.x.x] - 2019-xx-xx
+### Added
+- Added a new currency exchange rate service, [ratesapi.io](https://ratesapi.io/), that does not require expensive API keys. Built by [@BoGnY](https://github.com/BoGnY).
 
 ### Changed
 - The new Docker image no longer has the capability to run cron jobs, and will no longer generate your recurring transactions for you. This has been done to simplify the build and make sure your Docker container runs one service, as it should. To set up a cron job for your new Docker container, [check out the documentation](https://docs.firefly-iii.org/en/latest/installation/cronjob.html).
+
+### Deprecated
+- I will no longer accept PR's that introduce new currencies.
+
+### Removed
+
+### Fixed
+- #1927 It was impossible to make recurring transactions skip.
+- #1929 Fix the recurring transactions calendar overview.
+- #1933 Fixed a bug that made it impossible to authenticate to FreeIPA servers.
+- #1938 The importer can now handle the insane way Postbank (DE) formats its numbers.
+- #1942 Favicons are relative so Scriptaculous installations work better.
+- #1944 Make sure that the search allows you to mass-select transactions.
+- #1945 Slight UI change so the drop-down menu renders better.
+- Fixed broken translations in the recurring transactions overview.
+
+### Security
+
+### API
+- Submitting transactions with a disabled currency will auto-enable the currency.
+- The documentation now states that "Deposit" is a possible return when you get a transaction.
+- "savingAsset" was incorrectly documented as "savingsAsset".
+- Account endpoint can now return type "reconciliation" and "initial-balance" correctly.
 
 ## [4.7.9] - 2018-12-25
 ### Added
@@ -1403,3 +1428,6 @@ An intermediate release because something in the Twig and Twigbridge libraries i
 
 ### Security
 - Initial release.
+
+### API
+- Initial release
