@@ -1,5 +1,5 @@
 /*
- * Example.js
+ * TopMenu.js
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -19,28 +19,31 @@
  */
 
 import React, { Component } from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from "react-dom";
+import {Nav} from "tabler-react";
 
-export default class Example extends Component {
+
+
+
+class TopMenu extends Component {
     render() {
         return (
-            <div className="container">
-                <div className="row justify-content-center">
-                    <div className="col-md-8">
-                        <div className="card">
-                            <div className="card-header">Example Component</div>
-
-                            <div className="card-body">
-                                I'm an example component!
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Nav className="nav nav-tabs border-0 flex-column flex-lg-row">
+                <Nav.Item active hasSubNav value="Dashboard" icon="zap">
+                    <Nav.SubItem value="Sub Item 1" />
+                    <Nav.SubItem>Sub Item 2</Nav.SubItem>
+                    <Nav.SubItem icon="globe">Sub Item 3</Nav.SubItem>
+                </Nav.Item>
+                <Nav.Item to="http://www.example.com">Page Two</Nav.Item>
+                <Nav.Item value="Page Three" />
+                <Nav.Item active icon="user">
+                    Page Four
+                </Nav.Item>
+            </Nav>
         );
     }
 }
 
-if (document.getElementById('example')) {
-    ReactDOM.render(<Example />, document.getElementById('example'));
+if (document.getElementById('TopMenu')) {
+    ReactDOM.render(<TopMenu />, document.getElementById('TopMenu'));
 }
