@@ -74,18 +74,12 @@ class FiscalHelper implements FiscalHelperInterface
      */
     public function startOfFiscalYear(Carbon $date): Carbon
     {
-        // because PHP is stupid:
-        if ($date->day >= 28) {
-            $date->day = 28;
-            Log::info(sprintf('Corrected date to %s', $date->format('Y-m-d')));
-        }
-
         // get start mm-dd. Then create a start date in the year passed.
         $startDate = clone $date;
         if (true === $this->useCustomFiscalYear) {
             $prefStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
             [$mth, $day] = explode('-', $prefStartStr);
-            $startDate->month((int)$mth)->day((int)$day);
+            $startDate->day((int)$day)->month((int)$mth);
 
             // if start date is after passed date, sub 1 year.
             if ($startDate > $date) {
