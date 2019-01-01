@@ -1,4 +1,4 @@
-
+/* TODO REMOVE ME */
 window._ = require('lodash');
 
 /**
