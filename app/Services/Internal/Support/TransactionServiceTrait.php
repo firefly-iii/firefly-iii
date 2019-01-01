@@ -217,6 +217,11 @@ trait TransactionServiceTrait
 
             return;
         }
+        // enable currency if not enabled:
+        if(false === $currency->enabled) {
+            $currency->enabled = true;
+            $currency->save();
+        }
 
         $transaction->foreign_currency_id = $currency->id;
         $transaction->save();
