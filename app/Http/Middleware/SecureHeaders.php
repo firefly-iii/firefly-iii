@@ -55,9 +55,10 @@ class SecureHeaders
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
             "form-action 'self'",
-            "font-src 'self'",
+            "font-src 'self' data: https://fonts.gstatic.com",
             "connect-src 'self'",
             "img-src 'self' data: https://api.tiles.mapbox.com",
+            "manifest-src 'self'",
         ];
 
         $featurePolicies = [
