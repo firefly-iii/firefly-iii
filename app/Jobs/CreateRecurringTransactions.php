@@ -48,6 +48,8 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Factory\PiggyBankEventFactory;
+use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
@@ -356,9 +358,23 @@ class CreateRecurringTransactions implements ShouldQueue
 
             // get piggy bank ID from meta data:
             $piggyBankId = $this->getPiggyId($recurrence);
+            Log::debug(sprintf('Piggy bank ID for recurrence #%d is #%d', $recurrence->id, $piggyBankId));
 
             // trigger event:
-            event(new StoredTransactionJournal($journal, $piggyBankId));
+            event(new StoredTransactionJournal($journal));
+
+            // link to piggy bank:
+            /** @var PiggyBankFactory $factory */
+            $factory = app(PiggyBankFactory::class);
+            $factory->setUser($recurrence->user);
+
+            $piggyBank = $factory->find($piggyBankId, null);
+            if (null !== $piggyBank) {
+                /** @var PiggyBankEventFactory $factory */
+                $factory = app(PiggyBankEventFactory::class);
+                $factory->create($journal, $piggyBank);
+            }
+
 
             $collection->push($journal);
             // update recurring thing:
