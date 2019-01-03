@@ -33,7 +33,4 @@ require('./bootstrap');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-require('./components/Main');
-require('./components/TopMenu');
-
-
+//require('./app');
