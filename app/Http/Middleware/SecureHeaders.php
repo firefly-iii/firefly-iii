@@ -58,6 +58,7 @@ class SecureHeaders
             "font-src 'self'",
             "connect-src 'self'",
             "img-src 'self' data: https://api.tiles.mapbox.com",
+            "manifest-src 'self'",
         ];
 
         $featurePolicies = [
