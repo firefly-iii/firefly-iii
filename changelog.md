@@ -24,6 +24,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #1945 Slight UI change so the drop-down menu renders better.
 - #1955 Fixed a bug in the category report.
 - Fixed broken translations in the recurring transactions overview.
+- When you create a recurring transfer you make make it fill (or empty) a piggy bank. This was not working, despite a fix in 4.7.8.
 
 ### Security
 
