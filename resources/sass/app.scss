@@ -18,16 +18,11 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-
-// Fonts
-@import url('https://fonts.googleapis.com/css?family=Nunito');
-
 // Variables
 @import 'variables';
 
-// Bootstrap
-@import '~bootstrap/scss/bootstrap';
-
 // Font awesome.
-// @import "node_modules/font-awesome/scss/font-awesome";
-@import "~font-awesome/scss/font-awesome";
+// @import "~font-awesome/scss/font-awesome";
+
+// import tabler
+// @import "~tabler-react/dist/Tabler.css";
