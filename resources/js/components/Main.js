@@ -28,10 +28,10 @@ class MyCard extends Component {
         return (
             <Card>
                 <Card.Header>
-                    <Card.Title>Card Title</Card.Title>
+                    <Card.Title>Your accounts</Card.Title>
                 </Card.Header>
                 <Card.Body>
-                    <Button color="primary">A Button</Button>
+
                 </Card.Body>
             </Card>
         );
@@ -56,8 +56,4 @@ export default Main;
 
 if (document.getElementById('root')) {
     ReactDOM.render(<Main />, document.getElementById('root'));
-}
-
-if (document.getElementById('root')) {
-    ReactDOM.render(<MyCard />, document.getElementById('myCard'));
 }
