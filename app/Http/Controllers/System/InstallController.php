@@ -138,7 +138,7 @@ class InstallController extends Controller
         }
         try {
             Log::debug('Am now calling upgrade database routine...');
-            Artisan::call('firefly:upgrade-database');
+            Artisan::call('firefly:upgrade-database', ['--force' => true]);
             Log::debug(Artisan::output());
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -165,7 +165,7 @@ class InstallController extends Controller
         }
         try {
             Log::debug('Am now calling verify database routine...');
-            Artisan::call('firefly:verify');
+            Artisan::call('firefly:verify', ['--force' => true]);
             Log::debug(Artisan::output());
         } catch (Exception $e) {
             Log::error($e->getMessage());

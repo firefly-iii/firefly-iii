@@ -187,7 +187,7 @@ class CategoryController extends Controller
             $spentArray = $repository->spentInPeriodPerCurrency(new Collection([$category]), $accounts, $start, $end);
             foreach ($spentArray as $currencyId => $spent) {
                 if (bccomp($spent, '0') === -1) {
-                    $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
+                    $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull((int)$currencyId);
                     $tempData[]              = [
                         'name'        => $category->name,
                         'spent'       => bcmul($spent, '-1'),
