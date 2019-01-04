@@ -1,0 +1,8 @@
+.GoogleMapContainer {
+  height: 100%;
+}
+
+.GoogleMapContainer.blackAndWhite {
+  -webkit-filter: grayscale(100%);
+  filter: grayscale(100%);
+}

@@ -1,0 +1,10 @@
+.ComponentDemo {
+  position: relative;
+  margin-bottom: 20px;
+}
+
+.ComponentDemo .viewSourceBtn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+}
