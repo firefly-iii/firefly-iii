@@ -23,6 +23,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #1944 Make sure that the search allows you to mass-select transactions.
 - #1945 Slight UI change so the drop-down menu renders better.
 - #1955 Fixed a bug in the category report.
+- #1968 The yearly range would jump to 1-Jan / 1-Jan instead of 1-Jan / 31-Dec
 - Fixed broken translations in the recurring transactions overview.
 - When you create a recurring transfer you make make it fill (or empty) a piggy bank. This was not working, despite a fix in 4.7.8.
 

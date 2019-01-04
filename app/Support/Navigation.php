@@ -176,7 +176,7 @@ class Navigation
             '6M'        => 6,
         ];
 
-        $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'year', 'yearly'];
+        $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', '1Y', 'year', 'yearly'];
 
         // if the range is custom, the end of the period
         // is another X days (x is the difference between start)
@@ -609,6 +609,7 @@ class Navigation
         if ('1Y' === $range) {
             /** @var FiscalHelperInterface $fiscalHelper */
             $fiscalHelper = app(FiscalHelperInterface::class);
+
             return $fiscalHelper->endOfFiscalYear($end);
         }
 
@@ -654,6 +655,7 @@ class Navigation
         if ('1Y' === $range) {
             /** @var FiscalHelperInterface $fiscalHelper */
             $fiscalHelper = app(FiscalHelperInterface::class);
+
             return $fiscalHelper->startOfFiscalYear($start);
         }
 
