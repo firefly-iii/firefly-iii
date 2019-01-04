@@ -1506,16 +1506,16 @@
         },
         {
             "name": "laravel/passport",
-            "version": "v7.0.3",
+            "version": "v7.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "404b345775c91cd04443e77e8d6164b9727a3448"
+                "reference": "d7f24f6d4e95049b04369d60596d7a5b619a1dc9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/404b345775c91cd04443e77e8d6164b9727a3448",
-                "reference": "404b345775c91cd04443e77e8d6164b9727a3448",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/d7f24f6d4e95049b04369d60596d7a5b619a1dc9",
+                "reference": "d7f24f6d4e95049b04369d60596d7a5b619a1dc9",
                 "shasum": ""
             },
             "require": {
@@ -1537,12 +1537,12 @@
             },
             "require-dev": {
                 "mockery/mockery": "~1.0",
-                "phpunit/phpunit": "~6.0"
+                "phpunit/phpunit": "~7.4"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "6.0-dev"
+                    "dev-master": "7.0-dev"
                 },
                 "laravel": {
                     "providers": [
@@ -1571,7 +1571,7 @@
                 "oauth",
                 "passport"
             ],
-            "time": "2018-10-22T14:47:22+00:00"
+            "time": "2019-01-02T10:25:07+00:00"
         },
         {
             "name": "laravel/slack-notification-channel",
@@ -1746,7 +1746,7 @@
                 {
                     "name": "Luís Otávio Cobucci Oblonczyk",
                     "email": "lcobucci@gmail.com",
-                    "role": "Developer"
+                    "role": "developer"
                 }
             ],
             "description": "A simple library to work with JSON Web Token and JSON Web Signature",
@@ -2578,16 +2578,16 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.2.2",
+            "version": "v2.2.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "eccf915f45f911bfb189d1d1638d940ec6ee6e33"
+                "reference": "55af0dc01992b4d0da7f6372e2eac097bbbaffdb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/eccf915f45f911bfb189d1d1638d940ec6ee6e33",
-                "reference": "eccf915f45f911bfb189d1d1638d940ec6ee6e33",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/55af0dc01992b4d0da7f6372e2eac097bbbaffdb",
+                "reference": "55af0dc01992b4d0da7f6372e2eac097bbbaffdb",
                 "shasum": ""
             },
             "require": {
@@ -2595,7 +2595,7 @@
             },
             "require-dev": {
                 "phpunit/phpunit": "^6|^7",
-                "vimeo/psalm": "^1"
+                "vimeo/psalm": "^1|^2"
             },
             "type": "library",
             "autoload": {
@@ -2636,7 +2636,7 @@
                 "hex2bin",
                 "rfc4648"
             ],
-            "time": "2018-03-10T19:47:49+00:00"
+            "time": "2019-01-03T20:26:31+00:00"
         },
         {
             "name": "paragonie/random_compat",
@@ -4752,16 +4752,16 @@
         },
         {
             "name": "vlucas/phpdotenv",
-            "version": "v2.5.1",
+            "version": "v2.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/vlucas/phpdotenv.git",
-                "reference": "8abb4f9aa89ddea9d52112c65bbe8d0125e2fa8e"
+                "reference": "cfd5dc225767ca154853752abc93aeec040fcf36"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/8abb4f9aa89ddea9d52112c65bbe8d0125e2fa8e",
-                "reference": "8abb4f9aa89ddea9d52112c65bbe8d0125e2fa8e",
+                "url": "https://api.github.com/repos/vlucas/phpdotenv/zipball/cfd5dc225767ca154853752abc93aeec040fcf36",
+                "reference": "cfd5dc225767ca154853752abc93aeec040fcf36",
                 "shasum": ""
             },
             "require": {
@@ -4798,7 +4798,7 @@
                 "env",
                 "environment"
             ],
-            "time": "2018-07-29T20:33:41+00:00"
+            "time": "2018-10-30T17:29:25+00:00"
         },
         {
             "name": "zendframework/zend-diactoros",
