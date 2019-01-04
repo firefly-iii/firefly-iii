@@ -138,7 +138,7 @@ class InstallController extends Controller
         }
         try {
             Log::debug('Am now calling upgrade database routine...');
-            Artisan::call('firefly:upgrade-database', ['--force' => true]);
+            Artisan::call('firefly:upgrade-database');
             Log::debug(Artisan::output());
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -147,7 +147,7 @@ class InstallController extends Controller
                 return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
             }
 
-            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
 
         return response()->json(['error' => false, 'message' => 'OK']);
@@ -165,7 +165,7 @@ class InstallController extends Controller
         }
         try {
             Log::debug('Am now calling verify database routine...');
-            Artisan::call('firefly:verify', ['--force' => true]);
+            Artisan::call('firefly:verify');
             Log::debug(Artisan::output());
         } catch (Exception $e) {
             Log::error($e->getMessage());
@@ -174,7 +174,7 @@ class InstallController extends Controller
                 return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
             }
 
-            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
 
         return response()->json(['error' => false, 'message' => 'OK']);
