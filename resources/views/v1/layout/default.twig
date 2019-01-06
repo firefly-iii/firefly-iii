@@ -169,14 +169,26 @@
 </div>
 
 {# Java libraries and stuff: #}
+
+{# Moment JS #}
+<script src="v1/js/lib/moment.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="v1/js/ff/moment/{{ language }}.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+
 {# All kinds of variables. #}
 <script src="{{ route('javascript.variables') }}?ext=.js&amp;v={{ FF_VERSION }}{% if account %}&amp;account={{ account.id }}{% endif %}" type="text/javascript"></script>
-<script type="text/javascript" src="v1/js/ff/manifest.js?v={{ FF_VERSION }}"></script>
-<script type="text/javascript" src="v1/js/ff/vendor.js?v={{ FF_VERSION }}"></script>
+
+{# big fat JS thing courtesy of Vue#}
+<script src="v1/js/app.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+
+{# date range picker, current template, etc.#}
+<script src="v1/js/lib/daterangepicker.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script src="v1/lib/adminlte/js/adminlte.min.js?v={{ FF_VERSION }}" type="text/javascript"></script>
+<script type="text/javascript" src="v1/js/lib/accounting.min.js?v={{ FF_VERSION }}"></script>
 
 {# Firefly III code#}
+<script type="text/javascript" src="v1/js/ff/firefly.js?v={{ FF_VERSION }}"></script>
+<script type="text/javascript" src="v1/js/ff/help.js?v={{ FF_VERSION }}"></script>
 {% if not shownDemo %}
-    <!--
     <script type="text/javascript">
         var routeForTour = "{{ current_route_name }}";
         var routeStepsUri = "{{ route('json.intro', [current_route_name, what|default("")]) }}";
@@ -184,7 +196,6 @@
     </script>
     <script type="text/javascript" src="v1/lib/intro/intro.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/intro/intro.js?v={{ FF_VERSION }}"></script>
-    -->
 {% endif %}
 {% block scripts %}{% endblock %}
 

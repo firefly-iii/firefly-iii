@@ -3,46 +3,22 @@
     "scripts": {
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
-        "watch": "npm run development -- --watch",
+        "watch": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --watch --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
         "watch-poll": "npm run watch -- --watch-poll",
         "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
         "prod": "npm run production",
         "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
     },
     "devDependencies": {
-        "@babel/core": "^7.2.2",
-        "@babel/plugin-proposal-class-properties": "^7.2.3",
-        "@babel/preset-flow": "^7.0.0",
-        "@babel/preset-react": "^7.0.0",
-        "axios": "^0.18",
-        "babel-preset-react": "^6.23.0",
-        "bootstrap": "^4.0.0",
+        "axios": "^0.17",
+        "bootstrap-sass": "^3.3.7",
         "cross-env": "^5.1",
-        "flow-bin": "^0.89.0",
-        "jquery": "^3.2",
-        "laravel-mix": "^4.0.7",
-        "lodash": "^4.17.5",
-        "popper.js": "^1.12",
-        "react": "^16.2.0",
-        "react-dom": "^16.2.0",
-        "resolve-url-loader": "^2.3.1",
-        "sass": "^1.15.2",
-        "sass-loader": "^7.1.0",
-        "webpack": "^4.28.3"
+        "jquery": "^3.1.1",
+        "laravel-mix": "^1.0",
+        "lodash": "^4.17.4",
+        "vue": "^2.5.7"
     },
     "dependencies": {
-        "accounting": "^0.4.1",
-        "admin-lte": "^2.4.8",
-        "bootstrap-daterangepicker": "^3.0.3",
-        "chart.js": "^2.7.3",
-        "d3-scale": "^2.1.2",
-        "formik": "^1.4.1",
-        "moment": "^2.23.0",
-        "react-c3js": "^0.1.20",
-        "react-google-maps": "^9.4.5",
-        "react-router-dom": "^4.3.1",
-        "react-simple-maps": "^0.12.1",
-        "react-syntax-highlighter": "^10.1.2",
-        "tabler-react": "^1.27.0"
+        "font-awesome": "^4.7.0"
     }
 }
