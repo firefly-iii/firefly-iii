@@ -59,6 +59,7 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-gd": "*",
+    "ext-tokenizer": "*",
     "ext-intl": "*",
     "ext-xml": "*",
     "ext-ldap": "*",
