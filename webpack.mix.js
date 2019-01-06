@@ -1,26 +1,32 @@
 let mix = require('laravel-mix');
-let Assert = require('laravel-mix/src/Assert');
-let glob = require('glob');
+// mix.autoload({
+//                  jquery: ['$', 'window.jQuery']
+//              });
+
+//mix.extract(['jquery','chart.js','accounting','chartjs-color-string','chartjs-color','moment','color-name'],'public/v1/js/ff/vendor.js');
+mix.extract([],'public/v1/js/ff/vendor.js');
 
 mix.extend(
-    'foo',
+    'firefly_iii',
     new class {
-
         constructor() {
             this.toCompile = [];
         }
+
         /**
          * The API name for the component.
          */
         name() {
-            return 'foo';
+            return 'firefly_iii';
         }
-        register(entry, output) {
-            if (typeof entry === 'string' && entry.includes('*')) {
-                entry = glob.sync(entry);
-            }
 
-            Assert.js(entry, output);
+        /**
+         * Register the component.
+         *
+         * @param {*} entry
+         * @param {string} output
+         */
+        register(entry, output) {
 
             entry = [].concat(entry).map(file => new File(file));
             output = new File(output);
@@ -44,6 +50,8 @@ mix.extend(
                 );
             });
         }
+
+
         dependencies() {
             return ["@babel/preset-flow",'@babel/preset-react'];
         }
@@ -75,10 +83,6 @@ mix.extend(
                 plugins: [["@babel/plugin-proposal-class-properties"]]
             };
         }
-
-
     }()
 );
-
-
-mix.foo('resources/js/app.js', 'public/v2/assets/js').sass('resources/sass/app.scss', 'public/v2/assets/css');
+mix.firefly_iii('resources/js/v1/index.js', 'public/v1/js/ff/index.js');

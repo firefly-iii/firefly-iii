@@ -1,7 +1,7 @@
 // date ranges
-var ranges = {}
+var ranges = {};
 {% for title, range in dateRangeConfig.ranges %}
-    ranges["{{ title }}"] = [moment("{{ range[0].format('Y-m-d') }}"), moment("{{ range[1].format('Y-m-d') }}")];
+    ranges["{{ title }}"] = ["{{ range[0].format('Y-m-d') }}", "{{ range[1].format('Y-m-d') }}"];
 {% endfor %}
 
 // date range meta configuration
@@ -19,8 +19,8 @@ customRange: "{{ 'customRange'|_ }}"
 
 // date range actual configuration:
 var dateRangeConfig = {
-startDate: moment("{{ dateRangeConfig.start }}"),
-endDate: moment("{{ dateRangeConfig.end }}"),
+startDate: "{{ dateRangeConfig.start }}",
+endDate: "{{ dateRangeConfig.end }}",
 ranges: ranges
 
 };

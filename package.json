@@ -31,8 +31,13 @@
         "webpack": "^4.28.3"
     },
     "dependencies": {
+        "accounting": "^0.4.1",
+        "admin-lte": "^2.4.8",
+        "bootstrap-daterangepicker": "^3.0.3",
+        "chart.js": "^2.7.3",
         "d3-scale": "^2.1.2",
         "formik": "^1.4.1",
+        "moment": "^2.23.0",
         "react-c3js": "^0.1.20",
         "react-google-maps": "^9.4.5",
         "react-router-dom": "^4.3.1",
