@@ -1250,7 +1250,7 @@ return [
     'no_accounts_imperative_revenue'        => 'Revenue accounts are created automatically when you create transactions, but you can create one manually too, if you want. Let\'s create one now:',
     'no_accounts_create_revenue'            => 'Create a revenue account',
     'no_accounts_title_liabilities'         => 'Let\'s create a liability!',
-    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your credit card(s), (student) loans and other debts.',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your (student) loans and other debts.',
     'no_accounts_imperative_liabilities'    => 'You don\'t have to use this feature, but it can be useful if you want to keep track of these things.',
     'no_accounts_create_liabilities'        => 'Create a liability',
     'no_budgets_title_default'              => 'Let\'s create a budget',
