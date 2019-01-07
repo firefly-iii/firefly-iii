@@ -8,6 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 - The new Docker image no longer has the capability to run cron jobs, and will no longer generate your recurring transactions for you. This has been done to simplify the build and make sure your Docker container runs one service, as it should. To set up a cron job for your new Docker container, [check out the documentation](https://docs.firefly-iii.org/en/latest/installation/cronjob.html).
+- #1977 Docker image now includes memcached support
 
 ### Deprecated
 - I will no longer accept PR's that introduce new currencies.
@@ -24,6 +25,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - #1945 Slight UI change so the drop-down menu renders better.
 - #1955 Fixed a bug in the category report.
 - #1968 The yearly range would jump to 1-Jan / 1-Jan instead of 1-Jan / 31-Dec
+- #1975 Fixed explanation for missing credit card liabilities.
+- #1979 Make sure tags are trimmed.
 - Fixed broken translations in the recurring transactions overview.
 - When you create a recurring transfer you make make it fill (or empty) a piggy bank. This was not working, despite a fix in 4.7.8.
 
