@@ -63,7 +63,7 @@ class TagFactory
         return Tag::create(
             [
                 'user_id'     => $this->user->id,
-                'tag'         => $data['tag'],
+                'tag'         => trim($data['tag']),
                 'tagMode'     => 'nothing',
                 'date'        => $data['date'],
                 'description' => $data['description'],
@@ -81,6 +81,7 @@ class TagFactory
      */
     public function findOrCreate(string $tag): ?Tag
     {
+        $tag = trim($tag);
         if (null === $this->tags) {
             $this->tags = $this->user->tags()->get();
         }
