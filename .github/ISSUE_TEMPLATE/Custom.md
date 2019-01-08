@@ -21,4 +21,5 @@ I am running Firefly III version x.x.x
 - Make a drawing
 - Donate money (just kidding ;)
 - Replicate the problem on the demo site https://demo.firefly-iii.org/
+- Remember the human
 -->

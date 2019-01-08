@@ -22,3 +22,11 @@ Please describe your feature request:
 
 **Additional context**
 <!-- Add any other context or screenshots about the feature request here. -->
+
+**Bonus points**
+<!-- Earn bonus points by:
+
+- Make a drawing
+- Donate money (just kidding ;)
+- Remember the human
+-->
