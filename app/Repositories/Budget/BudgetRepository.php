@@ -37,6 +37,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\BudgetDestroyService;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
@@ -185,11 +186,9 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function destroy(Budget $budget): bool
     {
-        try {
-            $budget->delete();
-        } catch (Exception $e) {
-            Log::error(sprintf('Could not delete budget: %s', $e->getMessage()));
-        }
+        /** @var BudgetDestroyService $service */
+        $service = app(BudgetDestroyService::class);
+        $service->destroy($budget);
 
         return true;
     }

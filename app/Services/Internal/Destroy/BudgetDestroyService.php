@@ -1,7 +1,7 @@
 <?php
 /**
- * CategoryDestroyService.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * BudgetDestroyService.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -25,13 +25,13 @@ namespace FireflyIII\Services\Internal\Destroy;
 
 use DB;
 use Exception;
-use FireflyIII\Models\Category;
+use FireflyIII\Models\Budget;
 use Log;
 
 /**
- * Class CategoryDestroyService
+ * Class BudgetDestroyService
  */
-class CategoryDestroyService
+class BudgetDestroyService
 {
     /**
      * Constructor.
@@ -44,20 +44,20 @@ class CategoryDestroyService
     }
 
     /**
-     * @param Category $category
+     * @param Budget $budget
      */
-    public function destroy(Category $category): void
+    public function destroy(Budget $budget): void
     {
         try {
-            $category->delete();
+            $budget->delete();
         } catch (Exception $e) { // @codeCoverageIgnore
-            Log::error(sprintf('Could not delete category: %s', $e->getMessage())); // @codeCoverageIgnore
+            Log::error(sprintf('Could not delete budget: %s', $e->getMessage())); // @codeCoverageIgnore
         }
 
         // also delete all relations between categories and transaction journals:
-        DB::table('category_transaction_journal')->where('category_id', (int)$category->id)->delete();
+        DB::table('budget_transaction_journal')->where('budget_id', (int)$budget->id)->delete();
 
         // also delete all relations between categories and transactions:
-        DB::table('category_transaction')->where('category_id', (int)$category->id)->delete();
+        DB::table('budget_transaction')->where('budget_id', (int)$budget->id)->delete();
     }
 }
