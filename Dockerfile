@@ -34,7 +34,7 @@ RUN apt-get update -y && \
                                                locales && \
                                                apt-get clean && \
                                                rm -rf /var/lib/apt/lists/* && \
-                                               docker-php-ext-configure ldap --with-libdir=lib/x86_64-linux-gnu/ && \
+                                               docker-php-ext-configure ldap --with-libdir=lib/$(gcc -dumpmachine)/ && \
                                                docker-php-ext-install ldap
 
 
@@ -83,7 +83,7 @@ WORKDIR $FIREFLY_PATH
 ADD . $FIREFLY_PATH
 
 # Fix the link to curl:
-#RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/x86_64-linux-gnu/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
+#RUN rm -rf /usr/local/lib/libcurl.so.4 && ln -s /usr/lib/$(gcc -dumpmachine)/libcurl.so.4.4.0 /usr/local/lib/libcurl.so.4
 
 # Run composer
 RUN composer install --prefer-dist --no-dev --no-scripts --no-suggest
