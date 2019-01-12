@@ -66,7 +66,7 @@ return [
     'to'                      => 'A',
     'budget'                  => 'Budget',
     'category'                => 'Categoria',
-    'bill'                    => 'Conto',
+    'bill'                    => 'Bolletta',
     'withdrawal'              => 'Prelievo',
     'deposit'                 => 'Deposito',
     'transfer'                => 'Trasferimento',

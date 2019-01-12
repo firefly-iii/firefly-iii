@@ -31,7 +31,7 @@ return [
     'preferences'         => 'Einstellungen',
     'profile'             => 'Profil',
     'changePassword'      => 'Passwort ändern',
-    'change_email'        => 'E-Mail-Adresse ändern',
+    'change_email'        => 'E-Mail Adresse ändern',
     'bills'               => 'Rechnungen',
     'newBill'             => 'Neue Rechnung',
     'edit_bill'           => 'Rechnung „:name” bearbeiten',
@@ -53,5 +53,5 @@ return [
     'createTag'           => 'Neues Schlagwort erstellen',
     'edit_tag'            => 'Schlagwort „:tag” bearbeiten',
     'delete_tag'          => 'Schlagwort „:tag” löschen',
-    'delete_journal_link' => 'Transaktions-Verknüpfung löschen',
+    'delete_journal_link' => 'Transaktionsverknüpfung löschen',
 ];
