@@ -138,6 +138,18 @@ Route::group(
     }
 );
 
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/account',
+     'as'         => 'api.v1.chart.account.'],
+    function () {
+
+        // Overview API routes:
+        Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
+
+    }
+);
+
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration', 'as' => 'api.v1.configuration.'],
     function () {
@@ -263,6 +275,17 @@ Route::group(
         Route::get('{ruleGroup}/test', ['uses' => 'RuleGroupController@testGroup', 'as' => 'test']);
         Route::get('{ruleGroup}/rules', ['uses' => 'RuleGroupController@rules', 'as' => 'rules']);
         Route::post('{ruleGroup}/trigger', ['uses' => 'RuleGroupController@triggerGroup', 'as' => 'trigger']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'summary',
+     'as'         => 'api.v1.summary.'],
+    function () {
+
+        // Overview API routes:
+        Route::get('basic', ['uses' => 'SummaryController@basic', 'as' => 'basic']);
+
     }
 );
 

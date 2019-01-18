@@ -129,6 +129,14 @@ interface BudgetRepositoryInterface
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
     /**
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return array
+     */
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
+
+    /**
      * Returns all available budget objects.
      *
      * @return Collection

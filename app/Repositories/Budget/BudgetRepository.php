@@ -401,6 +401,26 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return array
+     */
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array
+    {
+        $return           = [];
+        $availableBudgets = $this->user->availableBudgets()
+                                       ->where('start_date', $start->format('Y-m-d 00:00:00'))
+                                       ->where('end_date', $end->format('Y-m-d 00:00:00'))->get();
+        /** @var AvailableBudget $availableBudget */
+        foreach ($availableBudgets as $availableBudget) {
+            $return[$availableBudget->transaction_currency_id] = $availableBudget->amount;
+        }
+
+        return $return;
+    }
+
+    /**
      * Returns all available budget objects.
      *
      * @return Collection
@@ -439,6 +459,8 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return bcdiv($total, (string)$days);
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Budget $budget
@@ -505,7 +527,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * This method is being used to generate the budget overview in the year/multi-year report. Its used
      * in both the year/multi-year budget overview AND in the accompanying chart.
@@ -599,6 +620,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param Collection $accounts
      * @param Carbon     $start
@@ -633,7 +656,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
@@ -661,6 +683,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $availableBudget;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param Budget $budget
      * @param int    $order
@@ -670,8 +694,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         $budget->order = $order;
         $budget->save();
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param User $user
@@ -813,7 +835,7 @@ class BudgetRepository implements BudgetRepositoryInterface
             $collector->setAllAssetAccounts();
         }
 
-        $set = $collector->getTransactions();
+        $set        = $collector->getTransactions();
         $return     = [];
         $total      = [];
         $currencies = [];
@@ -922,6 +944,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $budget;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param AvailableBudget $availableBudget
      * @param array           $data
@@ -950,8 +974,6 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $availableBudget;
 
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param BudgetLimit $budgetLimit
