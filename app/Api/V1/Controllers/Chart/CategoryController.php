@@ -1,0 +1,141 @@
+<?php
+declare(strict_types=1);
+
+namespace FireflyIII\Api\V1\Controllers\Chart;
+
+use Carbon\Carbon;
+use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
+
+/**
+ * Class CategoryController
+ */
+class CategoryController extends Controller
+{
+    /** @var CategoryRepositoryInterface */
+    private $categoryRepository;
+
+    /**
+     * AccountController constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->middleware(
+            function ($request, $next) {
+                /** @var User $user */
+                $user                     = auth()->user();
+                $this->categoryRepository = app(CategoryRepositoryInterface::class);
+                $this->categoryRepository->setUser($user);
+
+                return $next($request);
+            }
+        );
+    }
+
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws FireflyException
+     */
+    public function overview(Request $request): JsonResponse
+    {
+        // parameters for chart:
+        $start = (string)$request->get('start');
+        $end   = (string)$request->get('end');
+        if ('' === $start || '' === $end) {
+            throw new FireflyException('Start and end are mandatory parameters.');
+        }
+        $start      = Carbon::createFromFormat('Y-m-d', $start);
+        $end        = Carbon::createFromFormat('Y-m-d', $end);
+        $tempData   = [];
+        $spent      = $this->categoryRepository->spentInPeriodPerCurrency(new Collection, new Collection, $start, $end);
+        $earned     = $this->categoryRepository->earnedInPeriodPerCurrency(new Collection, new Collection, $start, $end);
+        $categories = [];
+
+        foreach ($earned as $categoryId => $row) {
+            $categoryName = $row['name'];
+
+            // create a new set if necessary, "spent (EUR)":
+            foreach ($row['earned'] as $currencyId => $expense) {
+                // find or make set for currency:
+                $key           = sprintf('%s-e', $currencyId);
+                $decimalPlaces = $expense['currency_decimal_places'];
+                if (!isset($tempData[$key])) {
+                    $tempData[$key] = [
+                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $expense['currency_symbol']]),
+                        'currency_id'             => $expense['currency_id'],
+                        'currency_code'           => $expense['currency_code'],
+                        'currency_symbol'         => $expense['currency_symbol'],
+                        'currency_decimal_places' => $decimalPlaces,
+                        'type'                    => 'bar', // line, area or bar
+                        'yAxisID'                 => 0, // 0, 1, 2
+                        'fill'                    => null, // true, false, null
+                        'backgroundColor'         => null, // null or hex
+                        'entries'                 => [],
+                    ];
+                }
+                $amount                    = round($expense['earned'], $decimalPlaces);
+                $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
+                $tempData[$key]['entries'][$categoryName]
+                                           = $amount;
+
+            }
+        }
+
+        foreach ($spent as $categoryId => $row) {
+            $categoryName = $row['name'];
+            // create a new set if necessary, "spent (EUR)":
+            foreach ($row['spent'] as $currencyId => $expense) {
+                // find or make set for currency:
+                $key           = sprintf('%s-s', $currencyId);
+                $decimalPlaces = $expense['currency_decimal_places'];
+                if (!isset($tempData[$key])) {
+                    $tempData[$key] = [
+                        'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $expense['currency_symbol']]),
+                        'currency_id'             => $expense['currency_id'],
+                        'currency_code'           => $expense['currency_code'],
+                        'currency_symbol'         => $expense['currency_symbol'],
+                        'currency_decimal_places' => $decimalPlaces,
+                        'type'                    => 'bar', // line, area or bar
+                        'yAxisID'                 => 0, // 0, 1, 2
+                        'fill'                    => null, // true, false, null
+                        'backgroundColor'         => null, // null or hex
+                        'entries'                 => [],
+                    ];
+                }
+                $amount                    = round($expense['spent'], $decimalPlaces);
+                $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
+                $tempData[$key]['entries'][$categoryName]
+                                           = $amount;
+
+            }
+        }
+
+
+        asort($categories);
+        $keys = array_keys($categories);
+
+        // re-sort every spent array and add 0 for missing entries.
+        foreach ($tempData as $index => $set) {
+            $oldSet = $set['entries'];
+            $newSet = [];
+            foreach ($keys as $key) {
+                $value        = $oldSet[$key] ?? 0;
+                $value        = $value < 0 ? $value * -1 : $value;
+                $newSet[$key] = $value;
+            }
+            $tempData[$index]['entries'] = $newSet;
+        }
+        $chartData = array_values($tempData);
+
+        return response()->json($chartData);
+    }
+}

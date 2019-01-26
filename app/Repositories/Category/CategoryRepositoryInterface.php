@@ -206,6 +206,16 @@ interface CategoryRepositoryInterface
     public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
+     * @param Collection $categories
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function earnedInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
