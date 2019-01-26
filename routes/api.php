@@ -138,7 +138,7 @@ Route::group(
     }
 );
 
-
+// CHART ROUTES
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/account',
      'as'         => 'api.v1.chart.account.'],
@@ -147,6 +147,16 @@ Route::group(
         // Overview API routes:
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
 
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/ab',
+     'as'         => 'api.v1.chart.ab.'],
+    function () {
+
+        // Overview API routes:
+        Route::get('overview/{availableBudget}', ['uses' => 'AvailableBudgetController@overview', 'as' => 'overview']);
     }
 );
 
@@ -228,6 +238,7 @@ Route::group(
 
         // Preference API routes:
         Route::get('', ['uses' => 'PreferenceController@index', 'as' => 'index']);
+        Route::get('{preference}', ['uses' => 'PreferenceController@show', 'as' => 'show']);
         Route::put('{preference}', ['uses' => 'PreferenceController@update', 'as' => 'update']);
     }
 );
