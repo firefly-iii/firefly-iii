@@ -113,6 +113,15 @@ class Controller extends BaseController
             $bag->set($field, $obj);
         }
 
+        // integer fields:
+        $integers = ['limit'];
+        foreach ($integers as $integer) {
+            $value = request()->query->get($integer);
+            if (null !== $value) {
+                $bag->set($integer, (int)$value);
+            }
+        }
+
         return $bag;
 
     }
