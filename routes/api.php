@@ -138,18 +138,23 @@ Route::group(
     }
 );
 
-// CHART ROUTES
+/**
+ * CHART ROUTES
+ */
+
+// Accounts
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/account',
      'as'         => 'api.v1.chart.account.'],
     function () {
-
-        // Overview API routes:
         Route::get('overview', ['uses' => 'AccountController@overview', 'as' => 'overview']);
+        Route::get('expense', ['uses' => 'AccountController@expenseOverview', 'as' => 'expense']);
+        Route::get('revenue', ['uses' => 'AccountController@revenueOverview', 'as' => 'revenue']);
 
     }
 );
 
+// Available budgets
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/ab',
      'as'         => 'api.v1.chart.ab.'],
@@ -159,6 +164,20 @@ Route::group(
         Route::get('overview/{availableBudget}', ['uses' => 'AvailableBudgetController@overview', 'as' => 'overview']);
     }
 );
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
+     'as'         => 'api.v1.chart.category.'],
+    function () {
+
+        // Overview API routes:
+        Route::get('overview', ['uses' => 'CategoryController@overview', 'as' => 'overview']);
+    }
+);
+
+
+
+
 
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'configuration', 'as' => 'api.v1.configuration.'],
@@ -329,14 +348,21 @@ Route::group(
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tags', 'as' => 'api.v1.tags.'],
     function () {
-
-        // Transaction currency API routes:
+        // Tag API routes:
         Route::get('', ['uses' => 'TagController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'TagController@store', 'as' => 'store']);
         Route::get('{tagOrId}', ['uses' => 'TagController@show', 'as' => 'show']);
         Route::put('{tagOrId}', ['uses' => 'TagController@update', 'as' => 'update']);
         Route::delete('{tagOrId}', ['uses' => 'TagController@delete', 'as' => 'delete']);
         Route::get('{tagOrId}/transactions', ['uses' => 'TagController@transactions', 'as' => 'transactions']);
+    }
+);
+
+Route::group(
+    ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers', 'prefix' => 'tag-cloud', 'as' => 'api.v1.tag-cloud.'],
+    function () {
+        // Tag cloud API routes (to prevent collisions)
+        Route::get('', ['uses' => 'TagController@cloud', 'as' => 'cloud']);
     }
 );
 
