@@ -58,16 +58,23 @@ class PreferencesController extends Controller
     public function index(AccountRepositoryInterface $repository)
     {
         $accounts      = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
+        $accountIds    = $accounts->pluck('id')->toArray();
         $viewRangePref = app('preferences')->get('viewRange', '1M');
         /** @noinspection NullPointerExceptionInspection */
         $viewRange          = $viewRangePref->data;
-        $frontPageAccounts  = app('preferences')->get('frontPageAccounts', []);
+        $frontPageAccounts  = app('preferences')->get('frontPageAccounts', $accountIds);
         $language           = app('preferences')->get('language', config('firefly.default_language', 'en_US'))->data;
         $listPageSize       = app('preferences')->get('listPageSize', 50)->data;
         $customFiscalYear   = app('preferences')->get('customFiscalYear', 0)->data;
         $fiscalYearStartStr = app('preferences')->get('fiscalYearStart', '01-01')->data;
         $fiscalYearStart    = date('Y') . '-' . $fiscalYearStartStr;
         $tjOptionalFields   = app('preferences')->get('transaction_journal_optional_fields', [])->data;
+
+        // an important fallback is that the frontPageAccount array gets refilled automatically
+        // when it turns up empty.
+        if (\count($frontPageAccounts->data) === 0) {
+            $frontPageAccounts = $accountIds;
+        }
 
         return view(
             'preferences.index',
@@ -98,7 +105,7 @@ class PreferencesController extends Controller
     {
         // front page accounts
         $frontPageAccounts = [];
-        if (\is_array($request->get('frontPageAccounts'))) {
+        if (\is_array($request->get('frontPageAccounts')) && \count($request->get('frontPageAccounts')) > 0) {
             foreach ($request->get('frontPageAccounts') as $id) {
                 $frontPageAccounts[] = (int)$id;
             }
