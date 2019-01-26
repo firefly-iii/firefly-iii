@@ -80,6 +80,7 @@ class CurrencyMapper
             'code'           => $data['code'],
             'name'           => $data['name'] ?? $data['code'],
             'symbol'         => $data['symbol'] ?? $data['code'],
+            'enabled'        => true,
             'decimal_places' => 2,
         ];
 
