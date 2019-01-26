@@ -93,7 +93,7 @@ class AccountController extends Controller
             $previous     = round(array_values($range)[0], 12);
             while ($currentStart <= $end) {
                 $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->formatLocalized((string)trans('config.month_and_day'));
+                $label = $currentStart->format('Y-m-d');
                 $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
                 $previous = $balance;
                 $currentStart->addDay();
