@@ -407,7 +407,7 @@ function testRuleTriggers() {
     button.attr('disabled', 'disabled');
 
     // Serialize all trigger data
-    var triggerData = $('.content').find("#ffInput_strict, .rule-trigger-tbody input[type=text], .rule-trigger-tbody input[type=checkbox], .rule-trigger-tbody select").serializeArray();
+    var triggerData = $('.content').find("#ffInput_strict, .rule-trigger-tbody input[type=text], .rule-trigger-tbody input[type=number], .rule-trigger-tbody input[type=checkbox], .rule-trigger-tbody select").serializeArray();
 
     console.log('Found the following trigger data: ');
     console.log(triggerData);
