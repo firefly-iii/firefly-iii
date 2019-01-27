@@ -185,15 +185,18 @@ class CategoryController extends Controller
         /** @var Category $category */
         foreach ($categories as $category) {
             $spentArray = $repository->spentInPeriodPerCurrency(new Collection([$category]), $accounts, $start, $end);
-            foreach ($spentArray as $currencyId => $spent) {
-                if (bccomp($spent, '0') === -1) {
-                    $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull((int)$currencyId);
-                    $tempData[]              = [
-                        'name'        => $category->name,
-                        'spent'       => bcmul($spent, '-1'),
-                        'spent_float' => (float)bcmul($spent, '-1'),
-                        'currency_id' => $currencyId,
-                    ];
+            foreach ($spentArray as $categoryId => $spentInfo) {
+                foreach($spentInfo['spent'] as $currencyId => $row) {
+                    $spent= $row['spent'];
+                    if (bccomp($spent, '0') === -1) {
+                        $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull((int)$currencyId);
+                        $tempData[]              = [
+                            'name'        => $category->name,
+                            'spent'       => bcmul($spent, '-1'),
+                            'spent_float' => (float)bcmul($spent, '-1'),
+                            'currency_id' => $currencyId,
+                        ];
+                    }
                 }
             }
         }
