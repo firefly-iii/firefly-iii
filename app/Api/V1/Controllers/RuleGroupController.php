@@ -234,28 +234,10 @@ class RuleGroupController extends Controller
         if (0 === $rules->count()) {
             throw new FireflyException('No rules in this rule group.');
         }
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $page         = 0 === (int)$request->query('page') ? 1 : (int)$request->query('page');
-        $startDate    = null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date'));
-        $endDate      = null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date'));
-        $searchLimit  = 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit');
-        $triggerLimit = 0 === (int)$request->query('triggered_limit') ? (int)config('firefly.test-triggers.range') : (int)$request->query('triggered_limit');
-        $accountList  = '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts'));
-        $accounts     = new Collection;
-
-        foreach ($accountList as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $accounts->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
-
+        $parameters           = $this->getTestParameters($request);
+        $accounts             = $this->getAccountParameter($parameters['account_list']);
         $matchingTransactions = new Collection;
+
         Log::debug(sprintf('Going to test %d rules', $rules->count()));
         /** @var Rule $rule */
         foreach ($rules as $rule) {
@@ -264,10 +246,10 @@ class RuleGroupController extends Controller
             $matcher = app(TransactionMatcher::class);
             // set all parameters:
             $matcher->setRule($rule);
-            $matcher->setStartDate($startDate);
-            $matcher->setEndDate($endDate);
-            $matcher->setSearchLimit($searchLimit);
-            $matcher->setTriggeredLimit($triggerLimit);
+            $matcher->setStartDate($parameters['start_date']);
+            $matcher->setEndDate($parameters['end_date']);
+            $matcher->setSearchLimit($parameters['search_limit']);
+            $matcher->setTriggeredLimit($parameters['trigger_limit']);
             $matcher->setAccounts($accounts);
 
             $result               = $matcher->findTransactionsByRule();
@@ -277,9 +259,9 @@ class RuleGroupController extends Controller
 
         // make paginator out of results.
         $count        = $matchingTransactions->count();
-        $transactions = $matchingTransactions->slice(($page - 1) * $pageSize, $pageSize);
+        $transactions = $matchingTransactions->slice(($parameters['page'] - 1) * $parameters['page_size'], $parameters['page_size']);
         // make paginator:
-        $paginator = new LengthAwarePaginator($transactions, $count, $pageSize, $this->parameters->get('page'));
+        $paginator = new LengthAwarePaginator($transactions, $count, $parameters['page_size'], $parameters['page']);
         $paginator->setPath(route('api.v1.rule_groups.test', [$group->id]) . $this->buildParams());
 
         // resulting list is presented as JSON thing.
@@ -370,5 +352,50 @@ class RuleGroupController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
+    }
+
+    /**
+     * @param array $accounts
+     *
+     * @return Collection
+     */
+    private function getAccountParameter(array $accounts): Collection
+    {
+        $return = new Collection;
+        foreach ($accounts as $accountId) {
+            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
+            $account = $this->accountRepository->findNull((int)$accountId);
+            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
+                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
+                $return->push($account);
+            }
+            if (null === $account) {
+                Log::debug(sprintf('No asset account with id "%s"', $accountId));
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getTestParameters(Request $request): array
+    {
+        return [
+            'page_size'     => (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data,
+            'page'          => 0 === (int)$request->query('page') ? 1 : (int)$request->query('page'),
+            'start_date'    => null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date')),
+            'end_date'      => null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date')),
+            'search_limit'  => 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit'),
+            'trigger_limit' => 0 === (int)$request->query('triggered_limit')
+                ? (int)config('firefly.test-triggers.range')
+                : (int)$request->query(
+                    'triggered_limit'
+                ),
+            'account_list'  => '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts')),
+        ];
     }
 }
