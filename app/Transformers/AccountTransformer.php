@@ -70,43 +70,14 @@ class AccountTransformer extends AbstractTransformer
         $liabilityType = '' === $liabilityType ? null : $liabilityType;
 
         // get account role (will only work if the type is asset.
-        $accountRole = $this->repository->getMetaValue($account, 'accountRole');
-        if ('asset' !== $accountType || '' === (string)$accountRole) {
-            $accountRole = null;
-        }
+        $accountRole = $this->getAccountRole($account, $accountType);
+        $date        = $this->getDate();
 
-        // get currency. If not 0, get from repository. TODO test me.
-        $currency       = $this->repository->getAccountCurrency($account);
-        $currencyId     = null;
-        $currencyCode   = null;
-        $decimalPlaces  = 2;
-        $currencySymbol = null;
-        if (null !== $currency) {
-            $currencyId     = $currency->id;
-            $currencyCode   = $currency->code;
-            $decimalPlaces  = $currency->decimal_places;
-            $currencySymbol = $currency->symbol;
-        }
+        [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces] = $this->getCurrency($account);
+        [$creditCardType, $monthlyPaymentDate] = $this->getCCInfo($account, $accountRole, $accountType);
+        [$openingBalance, $openingBalanceDate] = $this->getOpeningBalance($account, $accountType, $decimalPlaces);
+        [$interest, $interestPeriod] = $this->getInterest($account, $accountType);
 
-        $date = new Carbon;
-        if (null !== $this->parameters->get('date')) {
-            $date = $this->parameters->get('date');
-        }
-
-        $monthlyPaymentDate = null;
-        $creditCardType     = null;
-        if ('ccAsset' === $accountRole && 'asset' === $accountType) {
-            $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
-            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
-        }
-
-        $openingBalance     = null;
-        $openingBalanceDate = null;
-        if (\in_array($accountType, ['asset', 'liabilities'], true)) {
-            $amount             = $this->repository->getOpeningBalanceAmount($account);
-            $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
-            $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
-        }
         $liabilityAmount = null;
         $liabilityStart  = null;
         if (null !== $liabilityType) {
@@ -114,13 +85,8 @@ class AccountTransformer extends AbstractTransformer
             $liabilityStart  = $openingBalanceDate;
         }
 
-        $interest       = null;
-        $interestPeriod = null;
-        if ('liabilities' === $accountType) {
-            $interest       = $this->repository->getMetaValue($account, 'interest');
-            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
-        }
-        $includeNetworth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
+
+        $includeNetWorth = '0' !== $this->repository->getMetaValue($account, 'include_net_worth');
 
         $data = [
             'id'                      => (int)$account->id,
@@ -150,7 +116,7 @@ class AccountTransformer extends AbstractTransformer
             'liability_start_date'    => $liabilityStart,
             'interest'                => $interest,
             'interest_period'         => $interestPeriod,
-            'include_net_worth'       => $includeNetworth,
+            'include_net_worth'       => $includeNetWorth,
             'links'                   => [
                 [
                     'rel' => 'self',
@@ -160,5 +126,115 @@ class AccountTransformer extends AbstractTransformer
         ];
 
         return $data;
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @param string  $accountType
+     *
+     * @return string
+     */
+    private function getAccountRole(Account $account, string $accountType): string
+    {
+        $accountRole = $this->repository->getMetaValue($account, 'accountRole');
+        if ('asset' !== $accountType || '' === (string)$accountRole) {
+            $accountRole = null;
+        }
+
+        return $accountRole;
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $accountRole
+     * @param string  $accountType
+     *
+     * @return array
+     */
+    private function getCCInfo(Account $account, string $accountRole, string $accountType): array
+    {
+        $monthlyPaymentDate = null;
+        $creditCardType     = null;
+        if ('ccAsset' === $accountRole && 'asset' === $accountType) {
+            $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
+            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
+        }
+
+        return [$creditCardType, $monthlyPaymentDate];
+    }
+
+    /**
+     * @param Account $account
+     *
+     * @return array
+     */
+    private function getCurrency(Account $account): array
+    {
+        $currency       = $this->repository->getAccountCurrency($account);
+        $currencyId     = null;
+        $currencyCode   = null;
+        $decimalPlaces  = 2;
+        $currencySymbol = null;
+        if (null !== $currency) {
+            $currencyId     = $currency->id;
+            $currencyCode   = $currency->code;
+            $decimalPlaces  = $currency->decimal_places;
+            $currencySymbol = $currency->symbol;
+        }
+
+        return [$currencyId, $currencyCode, $currencySymbol, $decimalPlaces];
+    }
+
+    /**
+     * @return Carbon
+     */
+    private function getDate(): Carbon
+    {
+        $date = new Carbon;
+        if (null !== $this->parameters->get('date')) {
+            $date = $this->parameters->get('date');
+        }
+
+        return $date;
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $accountType
+     *
+     * @return array
+     */
+    private function getInterest(Account $account, string $accountType): array
+    {
+        $interest       = null;
+        $interestPeriod = null;
+        if ('liabilities' === $accountType) {
+            $interest       = $this->repository->getMetaValue($account, 'interest');
+            $interestPeriod = $this->repository->getMetaValue($account, 'interest_period');
+        }
+
+        return [$interest, $interestPeriod];
+    }
+
+    /**
+     * @param Account $account
+     * @param string  $accountType
+     *
+     * @param int     $decimalPlaces
+     *
+     * @return array
+     */
+    private function getOpeningBalance(Account $account, string $accountType, int $decimalPlaces): array
+    {
+        $openingBalance     = null;
+        $openingBalanceDate = null;
+        if (\in_array($accountType, ['asset', 'liabilities'], true)) {
+            $amount             = $this->repository->getOpeningBalanceAmount($account);
+            $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
+            $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);
+        }
+
+        return [$openingBalance, $openingBalanceDate];
     }
 }
