@@ -45,7 +45,7 @@ $(function () {
                 },
                 format: 'YYYY-MM-DD',
                 minDate: minDate,
-                drops: 'up'
+                drops: 'down'
             }
         );
 
