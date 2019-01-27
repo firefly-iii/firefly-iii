@@ -75,7 +75,7 @@ class OFXProcessor implements FileProcessorInterface
         foreach ($ofx->bankAccounts as $bankAccount) {
             /** @var Transaction $transaction */
             foreach ($bankAccount->statement->transactions as $transaction) {
-                var_dump($transaction);
+                //var_dump($transaction);
             }
         }
 
