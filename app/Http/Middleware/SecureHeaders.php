@@ -59,8 +59,9 @@ class SecureHeaders
             "img-src 'self' data: https://api.tiles.mapbox.com",
             "manifest-src 'self'",
         ];
-        $route = $request->route()->uri;
-        if($route !== 'oauth/authorize') {
+
+        $route = $request->route();
+        if (null !== $route && $route->uri !== 'oauth/authorize') {
             $csp[] = "form-action 'self'";
         }
 
