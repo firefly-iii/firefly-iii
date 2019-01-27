@@ -191,9 +191,22 @@ interface CategoryRepositoryInterface
      * @param Carbon     $start
      * @param Carbon     $end
      *
-     * @return string
+     * @return array
      */
     public function spentInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * A very cryptic method name that means:
+     *
+     * Get me the amount earned in this period, grouped per currency, where no category was set.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function earnedInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
 
     /**
      * @param Collection $categories
