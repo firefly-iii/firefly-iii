@@ -1,7 +1,7 @@
 <?php
 /**
- * INGDebitCredit.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * BankDebitCredit.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,35 +18,40 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
 namespace FireflyIII\Import\Converter;
 
+
 use Log;
 
 /**
- * Class INGDebitCredit.
+ *
+ * Class BankDebitCredit
  */
-class INGDebitCredit implements ConverterInterface
+class BankDebitCredit implements ConverterInterface
 {
+
     /**
-     * Convert Af or Bij to correct integer values.
+     * Convert a value.
+     *
+     * @return mixed
      *
      * @param $value
-     *
-     * @return int
      */
     public function convert($value): int
     {
-        Log::debug('Going to convert ing debit credit', ['value' => $value]);
-
-        if ('Af' === $value) {
-            Log::debug('Return -1');
-
+        Log::debug('Going to convert ', ['value' => $value]);
+        $negative = [
+            'D', // Old style Rabobank (NL). Short for "Debit"
+            'A', // New style Rabobank (NL). Short for "Af"
+            'Af', // ING (NL).
+            'Debet', // Triodos (NL)
+        ];
+        if (\in_array(trim($value), $negative, true)) {
             return -1;
         }
-
-        Log::debug('Return 1');
 
         return 1;
     }
