@@ -110,7 +110,7 @@ class AccountController extends Controller
         $tempData   = [];
 
         // grab all accounts and names
-        $accounts     = $this->accountRepository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::CASH]);
+        $accounts     = $this->accountRepository->getAccountsByType([AccountType::EXPENSE]);
         $accountNames = $this->extractNames($accounts);
 
         // grab all balances
@@ -542,7 +542,7 @@ class AccountController extends Controller
         $tempData   = [];
 
         // grab all accounts and names
-        $accounts     = $this->accountRepository->getAccountsByType([AccountType::REVENUE, AccountType::CASH]);
+        $accounts     = $this->accountRepository->getAccountsByType([AccountType::REVENUE]);
         $accountNames = $this->extractNames($accounts);
 
         // grab all balances
