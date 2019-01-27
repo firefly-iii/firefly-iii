@@ -1,7 +1,7 @@
 <div class="{{ classes }}" id="{{ name }}_holder">
     <label for="{{ options.id }}" class="col-sm-4 control-label">{{ label }}</label>
     <div class="col-sm-8">
-        {% if env('MAPBOX_API_KEY','') == '' %}
+        {% if config('firefly.mapbox_api_key') == '' %}
         <p class="text-danger">
             {{ trans('firefly.mapbox_api_key')|raw }}
         </p>
@@ -42,7 +42,7 @@
     </div>
 </div>
 
-{% if env('MAPBOX_API_KEY','') != '' %}
+{% if config('firefly.mapbox_api_key') != '' %}
     {% set latitudevar = name~'_latitude' %}
     {% set longitudevar = name~'_longitude' %}
     {% set zoomlevelvar = name~'_zoomlevel' %}

@@ -58,20 +58,19 @@ class TagFactory
     {
         $zoomLevel = 0 === (int)$data['zoom_level'] ? null : (int)$data['zoom_level'];
         $latitude  = 0.0 === (float)$data['latitude'] ? null : (float)$data['latitude'];
-        $longitude = 0.0 === (float)$data['longitude'] ? null : (int)$data['longitude'];
+        $longitude = 0.0 === (float)$data['longitude'] ? null : (float)$data['longitude'];
+        $array     = [
+            'user_id'     => $this->user->id,
+            'tag'         => trim($data['tag']),
+            'tagMode'     => 'nothing',
+            'date'        => $data['date'],
+            'description' => $data['description'],
+            'latitude'    => $latitude,
+            'longitude'   => $longitude,
+            'zoomLevel'   => $zoomLevel,
+        ];
 
-        return Tag::create(
-            [
-                'user_id'     => $this->user->id,
-                'tag'         => trim($data['tag']),
-                'tagMode'     => 'nothing',
-                'date'        => $data['date'],
-                'description' => $data['description'],
-                'latitude'    => $latitude,
-                'longitude '  => $longitude,
-                'zoomLevel'   => $zoomLevel,
-            ]
-        );
+        return Tag::create($array);
     }
 
     /**

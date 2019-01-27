@@ -40,8 +40,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int            $id
  * @property \Carbon\Carbon $date
  * @property int            zoomLevel
- * @property float          longitude
  * @property float          latitude
+ * @property float          longitude
  * @property string         description
  * @property string         amount_sum
  * @property string         tagMode
@@ -64,9 +64,11 @@ class Tag extends Model
             'deleted_at' => 'datetime',
             'date'       => 'date',
             'zoomLevel'  => 'int',
+            'latitude'   => 'float',
+            'longitude'  => 'float',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
+    protected $fillable = ['user_id', 'tag', 'date', 'description', 'latitude', 'longitude', 'zoomLevel', 'tagMode'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).

@@ -168,7 +168,7 @@
 
 {% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
+    <link rel="stylesheet" href="v1/lib/leaflet/leaflet.css?v={{ FF_VERSION }}"/>
 {% endblock %}
 {% block scripts %}
     <script type="text/javascript">
@@ -186,7 +186,7 @@
         var mapboxToken = "{{ config('firefly.mapbox_api_key') }}";
 
     </script>
-    <script src="lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
+    <script src="v1/lib/leaflet/leaflet.js?v={{ FF_VERSION }}"></script>
     <script src="v1/js/ff/tags/show.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/transactions/list.js?v={{ FF_VERSION }}"></script>
 {% endblock %}
