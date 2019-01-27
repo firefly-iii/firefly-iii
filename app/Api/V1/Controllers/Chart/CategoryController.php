@@ -60,20 +60,19 @@ class CategoryController extends Controller
         $earned     = $this->categoryRepository->earnedInPeriodPerCurrency(new Collection, new Collection, $start, $end);
         $categories = [];
 
+        // earned:
         foreach ($earned as $categoryId => $row) {
             $categoryName = $row['name'];
-
-            // create a new set if necessary, "spent (EUR)":
-            foreach ($row['earned'] as $currencyId => $expense) {
+            foreach ($row['earned'] as $currencyId => $income) {
                 // find or make set for currency:
                 $key           = sprintf('%s-e', $currencyId);
-                $decimalPlaces = $expense['currency_decimal_places'];
+                $decimalPlaces = $income['currency_decimal_places'];
                 if (!isset($tempData[$key])) {
                     $tempData[$key] = [
-                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $expense['currency_symbol']]),
-                        'currency_id'             => $expense['currency_id'],
-                        'currency_code'           => $expense['currency_code'],
-                        'currency_symbol'         => $expense['currency_symbol'],
+                        'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $income['currency_symbol']]),
+                        'currency_id'             => $income['currency_id'],
+                        'currency_code'           => $income['currency_code'],
+                        'currency_symbol'         => $income['currency_symbol'],
                         'currency_decimal_places' => $decimalPlaces,
                         'type'                    => 'bar', // line, area or bar
                         'yAxisID'                 => 0, // 0, 1, 2
@@ -82,7 +81,7 @@ class CategoryController extends Controller
                         'entries'                 => [],
                     ];
                 }
-                $amount                    = round($expense['earned'], $decimalPlaces);
+                $amount                    = round($income['earned'], $decimalPlaces);
                 $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
                 $tempData[$key]['entries'][$categoryName]
                                            = $amount;
@@ -90,6 +89,35 @@ class CategoryController extends Controller
             }
         }
 
+        // earned with no category:
+        $noCategory = $this->categoryRepository->earnedInPeriodPcWoCategory(new Collection, $start, $end);
+        foreach ($noCategory as $currencyId => $income) {
+            $categoryName = (string)trans('firefly.no_category');
+            // find or make set for currency:
+            $key           = sprintf('%s-e', $currencyId);
+            $decimalPlaces = $income['currency_decimal_places'];
+            if (!isset($tempData[$key])) {
+                $tempData[$key] = [
+                    'label'                   => (string)trans('firefly.box_earned_in_currency', ['currency' => $income['currency_symbol']]),
+                    'currency_id'             => $income['currency_id'],
+                    'currency_code'           => $income['currency_code'],
+                    'currency_symbol'         => $income['currency_symbol'],
+                    'currency_decimal_places' => $decimalPlaces,
+                    'type'                    => 'bar', // line, area or bar
+                    'yAxisID'                 => 0, // 0, 1, 2
+                    'fill'                    => null, // true, false, null
+                    'backgroundColor'         => null, // null or hex
+                    'entries'                 => [],
+                ];
+            }
+            $amount                    = round($income['spent'], $decimalPlaces);
+            $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
+            $tempData[$key]['entries'][$categoryName]
+                                       = $amount;
+        }
+
+
+        // spent
         foreach ($spent as $categoryId => $row) {
             $categoryName = $row['name'];
             // create a new set if necessary, "spent (EUR)":
@@ -117,6 +145,33 @@ class CategoryController extends Controller
                                            = $amount;
 
             }
+        }
+
+        // spent with no category
+        $noCategory = $this->categoryRepository->spentInPeriodPcWoCategory(new Collection, $start, $end);
+        foreach ($noCategory as $currencyId => $expense) {
+            $categoryName = (string)trans('firefly.no_category');
+            // find or make set for currency:
+            $key           = sprintf('%s-s', $currencyId);
+            $decimalPlaces = $expense['currency_decimal_places'];
+            if (!isset($tempData[$key])) {
+                $tempData[$key] = [
+                    'label'                   => (string)trans('firefly.box_spent_in_currency', ['currency' => $expense['currency_symbol']]),
+                    'currency_id'             => $expense['currency_id'],
+                    'currency_code'           => $expense['currency_code'],
+                    'currency_symbol'         => $expense['currency_symbol'],
+                    'currency_decimal_places' => $decimalPlaces,
+                    'type'                    => 'bar', // line, area or bar
+                    'yAxisID'                 => 0, // 0, 1, 2
+                    'fill'                    => null, // true, false, null
+                    'backgroundColor'         => null, // null or hex
+                    'entries'                 => [],
+                ];
+            }
+            $amount                    = round($expense['spent'], $decimalPlaces);
+            $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
+            $tempData[$key]['entries'][$categoryName]
+                                       = $amount;
         }
 
 
