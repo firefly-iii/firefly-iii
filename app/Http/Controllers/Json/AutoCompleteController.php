@@ -93,60 +93,44 @@ class AutoCompleteController extends Controller
         $unfiltered = null;
         $filtered   = null;
 
-        // search for all accounts.
-        if ('all-accounts' === $subject) {
-            $unfiltered = $this->getAccounts(
-                [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN,
-                 AccountType::DEBT, AccountType::MORTGAGE]
-            );
+        switch ($subject) {
+            default:
+                break;
+            case 'all-accounts':
+                $unfiltered = $this->getAccounts(
+                    [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN,
+                     AccountType::DEBT, AccountType::MORTGAGE]
+                );
+                break;
+            case 'expense-accounts':
+                $unfiltered = $this->getAccounts([AccountType::EXPENSE, AccountType::BENEFICIARY]);
+                break;
+            case 'revenue-accounts':
+                $unfiltered = $this->getAccounts([AccountType::REVENUE]);
+                break;
+            case 'asset-accounts':
+                $unfiltered = $this->getAccounts([AccountType::ASSET, AccountType::DEFAULT]);
+                break;
+            case 'categories':
+                $unfiltered = $this->getCategories();
+                break;
+            case 'budgets':
+                $unfiltered = $this->getBudgets();
+                break;
+            case 'tags':
+                $unfiltered = $this->getTags();
+                break;
+            case 'bills':
+                $unfiltered = $this->getBills();
+                break;
+            case 'currency-names':
+                $unfiltered = $this->getCurrencyNames();
+                break;
+            case 'transaction-types':
+            case 'transaction_types':
+                $unfiltered = $this->getTransactionTypes();
+                break;
         }
-
-        // search for expense accounts.
-        if ('expense-accounts' === $subject) {
-            $unfiltered = $this->getAccounts([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-        }
-
-        // search for revenue accounts.
-        if ('revenue-accounts' === $subject) {
-            $unfiltered = $this->getAccounts([AccountType::REVENUE]);
-        }
-
-        // search for asset accounts.
-        if ('asset-accounts' === $subject) {
-            $unfiltered = $this->getAccounts([AccountType::ASSET, AccountType::DEFAULT]);
-        }
-
-        // search for categories.
-        if ('categories' === $subject) {
-            $unfiltered = $this->getCategories();
-        }
-
-        // search for budgets.
-        if ('budgets' === $subject) {
-            $unfiltered = $this->getBudgets();
-        }
-
-        // search for tags
-        if ('tags' === $subject) {
-            $unfiltered = $this->getTags();
-        }
-
-        // search for bills
-        if ('bills' === $subject) {
-            $unfiltered = $this->getBills();
-        }
-        // search for currency names.
-        if ('currency-names' === $subject) {
-            $unfiltered = $this->getCurrencyNames();
-        }
-        if ('transaction_types' === $subject) {
-            $unfiltered = $this->getTransactionTypes();
-        }
-        if ('transaction-types' === $subject) {
-            $unfiltered = $this->getTransactionTypes();
-        }
-
-        // filter results
         $filtered = $this->filterResult($unfiltered, $search);
 
         if (null === $filtered) {
