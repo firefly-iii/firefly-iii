@@ -220,26 +220,6 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * Find a budget.
-     *
-     * @param string $name
-     *
-     * @return Budget|null
-     */
-    public function findByName(string $name): ?Budget
-    {
-        $budgets = $this->user->budgets()->get(['budgets.*']);
-        /** @var Budget $budget */
-        foreach ($budgets as $budget) {
-            if ($budget->name === $name) {
-                return $budget;
-            }
-        }
-
-        return null;
-    }
-
-    /**
      * Find a budget or return NULL
      *
      * @param int $budgetId |null
