@@ -158,7 +158,7 @@ class CategoryController extends Controller
      *
      * @return JsonResponse
      */
-    public function frontpage(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository): JsonResponse
+    public function frontPage(CategoryRepositoryInterface $repository, AccountRepositoryInterface $accountRepository): JsonResponse
     {
         $start = session('start', Carbon::now()->startOfMonth());
         $end   = session('end', Carbon::now()->endOfMonth());
@@ -168,7 +168,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+            //return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // currency repos:
@@ -200,14 +200,15 @@ class CategoryController extends Controller
                 }
             }
         }
+
         // no category per currency:
         $noCategory = $repository->spentInPeriodPcWoCategory(new Collection, $start, $end);
         foreach ($noCategory as $currencyId => $spent) {
             $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull($currencyId);
             $tempData[]              = [
                 'name'        => trans('firefly.no_category'),
-                'spent'       => bcmul($spent, '-1'),
-                'spent_float' => (float)bcmul($spent, '-1'),
+                'spent'       => bcmul($spent['spent'], '-1'),
+                'spent_float' => (float)bcmul($spent['spent'], '-1'),
                 'currency_id' => $currencyId,
             ];
         }

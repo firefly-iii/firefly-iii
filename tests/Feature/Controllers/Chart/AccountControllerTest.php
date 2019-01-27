@@ -80,7 +80,7 @@ class AccountControllerTest extends TestCase
         $end   = [$firstId => [1 => '121.45', 2 => '234.01',], $secondId => [1 => '121.45', 2 => '234.01',],];
 
         // return them when collected:
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn($accounts);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE]])->andReturn($accounts);
 
         // and return start and end balances:
         Steam::shouldReceive('balancesPerCurrencyByAccounts')->twice()->andReturn($start, $end);

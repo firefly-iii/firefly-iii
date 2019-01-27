@@ -133,9 +133,9 @@ class AccountTransformer extends AbstractTransformer
      *
      * @param string  $accountType
      *
-     * @return string
+     * @return string|null
      */
-    private function getAccountRole(Account $account, string $accountType): string
+    private function getAccountRole(Account $account, string $accountType): ?string
     {
         $accountRole = $this->repository->getMetaValue($account, 'accountRole');
         if ('asset' !== $accountType || '' === (string)$accountRole) {
@@ -146,13 +146,13 @@ class AccountTransformer extends AbstractTransformer
     }
 
     /**
-     * @param Account $account
-     * @param string  $accountRole
-     * @param string  $accountType
+     * @param Account     $account
+     * @param string|null $accountRole
+     * @param string      $accountType
      *
      * @return array
      */
-    private function getCCInfo(Account $account, string $accountRole, string $accountType): array
+    private function getCCInfo(Account $account, ?string $accountRole, string $accountType): array
     {
         $monthlyPaymentDate = null;
         $creditCardType     = null;

@@ -371,7 +371,7 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Chart', 'prefix' => 'chart/category', 'as' => 'chart.category.'],
     function () {
 
-        Route::get('frontpage', ['uses' => 'CategoryController@frontpage', 'as' => 'frontpage']);
+        Route::get('frontpage', ['uses' => 'CategoryController@frontPage', 'as' => 'frontpage']);
         Route::get('period/{category}', ['uses' => 'CategoryController@currentPeriod', 'as' => 'current']);
         Route::get('period/{category}/{date}', ['uses' => 'CategoryController@specificPeriod', 'as' => 'specific']);
         Route::get('all/{category}', ['uses' => 'CategoryController@all', 'as' => 'all']);
