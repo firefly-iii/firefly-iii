@@ -92,7 +92,7 @@ class TagFormRequest extends Request
             'description' => 'min:1|nullable',
             'date'        => 'date|nullable',
             'latitude'    => 'numeric|min:-90|max:90|nullable',
-            'longitude'   => 'numeric|min:-90|max:90|nullable',
+            'longitude'   => 'numeric|min:-180|max:180|nullable',
             'zoom_level'   => 'numeric|min:0|max:80|nullable',
         ];
     }
