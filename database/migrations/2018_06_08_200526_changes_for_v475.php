@@ -71,10 +71,6 @@ class ChangesForV475 extends Migration
             $table->boolean('apply_rules')->default(true);
             $table->boolean('active')->default(true);
 
-            // also separate:
-            // category, budget, tags, notes, bill, piggy bank
-
-
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('transaction_type_id')->references('id')->on('transaction_types')->onDelete('cascade');
         }

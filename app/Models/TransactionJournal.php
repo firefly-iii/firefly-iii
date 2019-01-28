@@ -188,6 +188,15 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return BelongsToMany
+     */
+    public function transactionGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
      *
      * @param $value
      *
