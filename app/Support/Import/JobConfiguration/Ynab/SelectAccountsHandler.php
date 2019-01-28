@@ -86,10 +86,11 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
         $applyRules = 1 === (int)($data['apply_rules'] ?? 0);
         foreach ($mapping as $ynabId => $localId) {
             // validate each
-            $ynabId         = $this->validYnabAccount($ynabId);
-            $accountId      = $this->validLocalAccount((int)$localId);
-            $final[$ynabId] = $accountId;
-
+            $ynabId    = $this->validYnabAccount($ynabId);
+            $accountId = $this->validLocalAccount((int)$localId);
+            if ($accountId !== 0) {
+                $final[$ynabId] = $accountId;
+            }
         }
         Log::debug('Final mapping is:', $final);
         $messages              = new MessageBag;
