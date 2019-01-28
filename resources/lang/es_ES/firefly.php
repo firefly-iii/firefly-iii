@@ -1251,7 +1251,7 @@ return [
     'no_accounts_imperative_revenue'        => 'Las cuentas de ganancias se crean automáticamente cuando usted crea transacciones, pero usted puede crear una manualmente también, si usted quiere. vamos a crear una ahora:',
     'no_accounts_create_revenue'            => 'Crear una cuenta de ingresos',
     'no_accounts_title_liabilities'         => '¡Vamos a crear un pasivo!',
-    'no_accounts_intro_liabilities'         => 'Usted aún no tiene pasivos. Los pasivos son cuentas que registran sus tarjeta(s) de crédito, préstamos y otros débitos.',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your (student) loans and other debts.',
     'no_accounts_imperative_liabilities'    => 'No necesita usar esta función pero, puede ser muy útil si desea hacer un seguimiento de estas cosas.',
     'no_accounts_create_liabilities'        => 'Crear un pasivo',
     'no_budgets_title_default'              => 'Vamos a crear un presupuesto',

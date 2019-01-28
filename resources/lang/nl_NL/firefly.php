@@ -1250,7 +1250,7 @@ return [
     'no_accounts_imperative_revenue'        => 'Crediteuren worden automatisch aangemaakt als je transacties aanmaakt, maar je kan ze ook met de hand maken. Zoals nu:',
     'no_accounts_create_revenue'            => 'Maak een debiteur',
     'no_accounts_title_liabilities'         => 'Maak een passiva!',
-    'no_accounts_intro_liabilities'         => 'Je hebt nog geen passiva. "Passiva" is de technische term voor schulden, leningen, hypotheken en meer van die dingen.',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your (student) loans and other debts.',
     'no_accounts_imperative_liabilities'    => 'Je hoeft deze functie niet gebruiken maar het is handig als je zulke dingen wilt bijhouden.',
     'no_accounts_create_liabilities'        => 'Maak een passiva',
     'no_budgets_title_default'              => 'Je hebt een budget nodig',

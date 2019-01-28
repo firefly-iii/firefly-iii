@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Спонсорский счёт (название)',
     'column_rabo-debit-credit'        => 'Индикатор дебита/кредита, специфичный для Rabobank',
     'column_ing-debit-credit'         => 'Индикатор дебита/кредита, специфичный для ING',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'Идентификатор SEPA end-to-end',
     'column_sepa-ct-op'               => 'Идентификатор учетной записи SEPA',
     'column_sepa-db'                  => 'Идентификатор SEPA Mandate',

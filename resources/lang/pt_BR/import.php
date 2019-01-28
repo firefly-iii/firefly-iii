@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Conta contrária (nome)',
     'column_rabo-debit-credit'        => 'Indicador de débito/crédito específico do Rabobank',
     'column_ing-debit-credit'         => 'Indicador de débito/crédito específico do ING',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'SEPA identificador end-to-end',
     'column_sepa-ct-op'               => 'SEPA Identificador de conta de contrária',
     'column_sepa-db'                  => 'SEPA Identificador de Mandato',

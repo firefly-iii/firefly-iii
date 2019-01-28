@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Karşı hesap (isim)',
     'column_rabo-debit-credit'        => 'Rabobank\'a özel borç / kredi göstergesi',
     'column_ing-debit-credit'         => 'ING\'ye özel borç/kredi göstergesi',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'SEPA end-to-end Identifier',
     'column_sepa-ct-op'               => 'SEPA Opposing Account Identifier',
     'column_sepa-db'                  => 'SEPA Mandate Identifier',

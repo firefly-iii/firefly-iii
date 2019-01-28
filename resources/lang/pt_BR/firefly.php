@@ -1250,7 +1250,7 @@ return [
     'no_accounts_imperative_revenue'        => 'As contas de receita são criadas automaticamente quando você cria transações, mas você também pode criar uma manualmente, se desejar. Vamos criar um agora:',
     'no_accounts_create_revenue'            => 'Criar uma conta de receita',
     'no_accounts_title_liabilities'         => 'Vamos criar um passivo!',
-    'no_accounts_intro_liabilities'         => 'Você ainda não tem nenhum passivo. Passivos são as contas que registram cartão(ões) de crédito, empréstimos e outras dívidas.',
+    'no_accounts_intro_liabilities'         => 'You have no liabilities yet. Liabilities are the accounts that register your (student) loans and other debts.',
     'no_accounts_imperative_liabilities'    => 'Você não precisa usar esse recurso, mas pode ser útil se você quer controlar esse tipo de coisas.',
     'no_accounts_create_liabilities'        => 'Criar um passivo',
     'no_budgets_title_default'              => 'Vamos criar um orçamento',

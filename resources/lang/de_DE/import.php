@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Zielkonto (Name)',
     'column_rabo-debit-credit'        => 'Rabobank-spezifisches Belastungs- und Kreditkennzeichen',
     'column_ing-debit-credit'         => 'ING-spezifisches Belastungs- und Kreditkennzeichen',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'SEPA • Ende-zu-Ende-Identifikationsnummer',
     'column_sepa-ct-op'               => 'SEPA • Zielkonto-Identifikationsnummer',
     'column_sepa-db'                  => 'SEPA - Mandatskennung',

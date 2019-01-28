@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Przeciwstawne konto (nazwa)',
     'column_rabo-debit-credit'        => 'Specyficzny wskaźnik obciążenia/kredytu Rabobank',
     'column_ing-debit-credit'         => 'Specyficzny wskaźnik obciążenia/kredytu ING',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'SEPA end-to-end Identifier',
     'column_sepa-ct-op'               => 'SEPA Opposing Account Identifier',
     'column_sepa-db'                  => 'SEPA Mandate Identifier',

@@ -61,7 +61,7 @@ return [
     'split_journal_explanation'   => 'Diese Überweisung in mehrere Teile aufteilen',
     'currency'                    => 'Währung',
     'account_id'                  => 'Bestandskonto',
-    'budget_id'                   => 'Budget',
+    'budget_id'                   => 'Kostenrahmen',
     'openingBalance'              => 'Eröffnungsbilanz',
     'tagMode'                     => 'Schlagwort-Modus',
     'tag_position'                => 'Schlagwort-Speicherort',

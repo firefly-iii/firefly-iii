@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Conto controparte (nome)',
     'column_rabo-debit-credit'        => 'Indicatore di addebito/accredito specifico di Rabobank',
     'column_ing-debit-credit'         => 'Indicatore di debito/credito specifico di ING',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'ID end-to-end del bonifico SEPA',
     'column_sepa-ct-op'               => 'Identificatore SEPA conto controparte',
     'column_sepa-db'                  => 'Addebito diretto SEPA',

@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => '對應帳戶 (名稱)',
     'column_rabo-debit-credit'        => 'Rabobank 獨有現金/信用卡指標',
     'column_ing-debit-credit'         => 'ING 獨有 現金/信用卡 指標',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'SEPA end-to-end Identifier',
     'column_sepa-ct-op'               => 'SEPA Opposing Account Identifier',
     'column_sepa-db'                  => 'SEPA Mandate Identifier',
