@@ -114,7 +114,7 @@ class AttachmentHelperTest extends TestCase
     public function testSaveAttachmentFromApi(): void
     {
         // mock calls:
-        Crypt::shouldReceive('encrypt')->times(6)->andReturn('Some encrypted content');
+        Crypt::shouldReceive('encrypt')->times(1)->andReturn('Some encrypted content');
         Storage::fake('upload');
 
         $path   = public_path('apple-touch-icon.png');

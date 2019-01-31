@@ -144,49 +144,6 @@ class Account extends Model
     }
 
     /**
-     * @param $value
-     *
-     * @return string
-     *
-     * @throws FireflyException
-     */
-    public function getIbanAttribute($value): string
-    {
-        if ('' === (string)$value) {
-            return '';
-        }
-        try {
-            $result = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            throw new FireflyException('Cannot decrypt value "' . $value . '" for account #' . $this->id);
-        }
-        if (null === $result) {
-            return '';
-        }
-
-        return $result;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getNameAttribute($value): ?string
-    {
-        if ($this->encrypted) {
-            return Crypt::decrypt($value);
-        }
-
-        return $value;
-    }
-
-    /**
      * Returns the opening balance.
      *
      * @return TransactionJournal
@@ -235,31 +192,6 @@ class Account extends Model
             $this->joinedAccountTypes = true;
         }
         $query->whereIn('account_types.type', $types);
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setIbanAttribute($value): void
-    {
-        $this->attributes['iban'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setNameAttribute($value): void
-    {
-        $encrypt                       = config('firefly.encryption');
-        $this->attributes['name']      = $encrypt ? Crypt::encrypt($value) : $value;
-        $this->attributes['encrypted'] = $encrypt;
     }
 
     /**

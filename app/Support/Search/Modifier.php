@@ -63,12 +63,12 @@ class Modifier
         $res = true;
         switch ($modifier['type']) {
             case 'source':
-                $name = app('steam')->tryDecrypt($transaction->account_name);
+                $name = $transaction->account_name;
                 $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Source is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'destination':
-                $name = app('steam')->tryDecrypt($transaction->opposing_account_name);
+                $name = $transaction->opposing_account_name;
                 $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Destination is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
@@ -81,7 +81,7 @@ class Modifier
                 Log::debug(sprintf('Budget is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
             case 'bill':
-                $name = app('steam')->tryDecrypt($transaction->bill_name);
+                $name = $transaction->bill_name;
                 $res  = self::stringCompare($name, $modifier['value']);
                 Log::debug(sprintf('Bill is %s? %s', $modifier['value'], var_export($res, true)));
                 break;
@@ -171,11 +171,11 @@ class Modifier
     {
         $journalBudget = '';
         if (null !== $transaction->transaction_journal_budget_name) {
-            $journalBudget = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
+            $journalBudget = $transaction->transaction_journal_budget_name;
         }
         $transactionBudget = '';
         if (null !== $transaction->transaction_budget_name) {
-            $journalBudget = app('steam')->tryDecrypt($transaction->transaction_budget_name);
+            $journalBudget = $transaction->transaction_budget_name;
         }
 
         return self::stringCompare($journalBudget, $search) || self::stringCompare($transactionBudget, $search);
@@ -191,11 +191,11 @@ class Modifier
     {
         $journalCategory = '';
         if (null !== $transaction->transaction_journal_category_name) {
-            $journalCategory = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
+            $journalCategory = $transaction->transaction_journal_category_name;
         }
         $transactionCategory = '';
         if (null !== $transaction->transaction_category_name) {
-            $journalCategory = app('steam')->tryDecrypt($transaction->transaction_category_name);
+            $journalCategory = $transaction->transaction_category_name;
         }
 
         return self::stringCompare($journalCategory, $search) || self::stringCompare($transactionCategory, $search);

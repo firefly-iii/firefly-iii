@@ -93,63 +93,6 @@ class Tag extends Model
         throw new NotFoundHttpException;
     }
 
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string|null
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getDescriptionAttribute($value): ?string
-    {
-        if (null === $value) {
-            return $value;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string|null
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getTagAttribute($value): ?string
-    {
-        if (null === $value) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setDescriptionAttribute($value): void
-    {
-        $this->attributes['description'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setTagAttribute($value): void
-    {
-        $this->attributes['tag'] = Crypt::encrypt($value);
-    }
 
     /**
      * @codeCoverageIgnore

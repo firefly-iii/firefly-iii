@@ -107,9 +107,6 @@ trait AugumentData
                 $categoryName = $transaction->transaction_journal_category_name;
                 $categoryId   = (int)$transaction->transaction_journal_category_id;
             }
-            if (0 !== $categoryId) {
-                $categoryName = app('steam')->tryDecrypt($categoryName);
-            }
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
@@ -559,9 +556,6 @@ trait AugumentData
                 $budgetName = $transaction->transaction_journal_budget_name;
                 $budgetId   = (int)$transaction->transaction_journal_budget_id;
             }
-            if (0 !== $budgetId) {
-                $budgetName = app('steam')->tryDecrypt($budgetName);
-            }
 
             // if not set, set to zero:
             if (!isset($sum[$budgetId][$currencyId])) {
@@ -626,9 +620,6 @@ trait AugumentData
             if (0 === $categoryId) {
                 $categoryName = $transaction->transaction_journal_category_name;
                 $categoryId   = (int)$transaction->transaction_journal_category_id;
-            }
-            if (0 !== $categoryId) {
-                $categoryName = app('steam')->tryDecrypt($categoryName);
             }
 
             // if not set, set to zero:

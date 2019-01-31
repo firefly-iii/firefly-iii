@@ -467,7 +467,6 @@ class FireflyValidator extends Validator
      */
     public function validateUniqueObjectForUser($attribute, $value, $parameters): bool
     {
-        $value = $this->tryDecrypt($value);
         [$table, $field] = $parameters;
         $exclude = (int)($parameters[2] ?? 0.0);
 
@@ -486,7 +485,7 @@ class FireflyValidator extends Validator
                  ->where('id', '!=', $exclude)->get([$field]);
 
         foreach ($set as $entry) {
-            $fieldValue = $this->tryDecrypt($entry->$field);
+            $fieldValue = $entry->$field;
 
             if ($fieldValue === $value) {
                 return false;
@@ -518,29 +517,13 @@ class FireflyValidator extends Validator
         /** @var PiggyBank $entry */
         foreach ($set as $entry) {
 
-            $fieldValue = $this->tryDecrypt($entry->name);
+            $fieldValue = $entry->name;
             if ($fieldValue === $value) {
                 return false;
             }
         }
 
         return true;
-    }
-
-    /**
-     * @param $value
-     *
-     * @return mixed
-     */
-    private function tryDecrypt($value)
-    {
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            //Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
-        }
-
-        return $value;
     }
 
     /**
@@ -554,7 +537,7 @@ class FireflyValidator extends Validator
 
         $user  = User::find($this->data['user_id']);
         $type  = AccountType::find($this->data['account_type_id'])->first();
-        $value = $this->tryDecrypt($this->data['name']);
+        $value = $this->data['name'];
 
         $set = $user->accounts()->where('account_type_id', $type->id)->get();
         /** @var Account $entry */
@@ -579,7 +562,7 @@ class FireflyValidator extends Validator
 
         $type   = $existingAccount->accountType;
         $ignore = $existingAccount->id;
-        $value  = $this->tryDecrypt($value);
+        $value  = $value;
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
@@ -603,7 +586,6 @@ class FireflyValidator extends Validator
     {
         $type   = AccountType::find($this->data['account_type_id'])->first();
         $ignore = (int)($parameters[0] ?? 0.0);
-        $value  = $this->tryDecrypt($value);
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();

@@ -131,13 +131,13 @@ class Transaction extends Twig_Extension
         $txt = '';
         // journal has a budget:
         if (null !== $transaction->transaction_journal_budget_id) {
-            $name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
+            $name = $transaction->transaction_journal_budget_name;
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
         }
 
         // transaction has a budget
         if (null !== $transaction->transaction_budget_id && '' === $txt) {
-            $name = app('steam')->tryDecrypt($transaction->transaction_budget_name);
+            $name = $transaction->transaction_budget_name;
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
         }
 
@@ -169,13 +169,13 @@ class Transaction extends Twig_Extension
         $txt = '';
         // journal has a category:
         if (null !== $transaction->transaction_journal_category_id) {
-            $name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
+            $name = $transaction->transaction_journal_category_name;
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
         }
 
         // transaction has a category:
         if (null !== $transaction->transaction_category_id && '' === $txt) {
-            $name = app('steam')->tryDecrypt($transaction->transaction_category_name);
+            $name = $transaction->transaction_category_name;
             $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
         }
 
@@ -224,7 +224,7 @@ class Transaction extends Twig_Extension
             return '&mdash;';
         }
 
-        $name          = app('steam')->tryDecrypt($transaction->account_name);
+        $name          = $transaction->account_name;
         $iban          = $transaction->account_iban;
         $transactionId = (int)$transaction->account_id;
         $type          = $transaction->account_type;
@@ -255,7 +255,7 @@ class Transaction extends Twig_Extension
 
                 return '';
             }
-            $name          = app('steam')->tryDecrypt($other->name);
+            $name          = $other->name;
             $transactionId = $other->account_id;
             $type          = $other->type;
         }
@@ -384,7 +384,7 @@ class Transaction extends Twig_Extension
         }
 
         // if the amount is negative, assume that the current account (the one in $transaction) is indeed the source account.
-        $name          = app('steam')->tryDecrypt($transaction->account_name);
+        $name          = $transaction->account_name;
         $transactionId = (int)$transaction->account_id;
         $type          = $transaction->account_type;
         $iban          = $transaction->account_iban;
@@ -408,7 +408,7 @@ class Transaction extends Twig_Extension
                                              ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
                                              ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                              ->first(['transactions.account_id', 'accounts.encrypted', 'accounts.name', 'account_types.type']);
-            $name          = app('steam')->tryDecrypt($other->name);
+            $name          = $other->name;
             $transactionId = $other->account_id;
             $type          = $other->type;
         }

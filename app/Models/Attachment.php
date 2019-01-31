@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -116,127 +115,12 @@ class Attachment extends Model
     }
 
     /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @return null|string
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getDescriptionAttribute($value): ?string
-    {
-        if (null === $value || '' === $value) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @return null|string
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getFilenameAttribute($value): ?string
-    {
-        if (null === $value || '' === $value) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @return null|string
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getMimeAttribute($value): ?string
-    {
-        if (null === $value || '' === $value) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @return null|string
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getTitleAttribute($value): ?string
-    {
-        if (null === $value || '' === $value) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
      * @codeCoverageIgnore
      * Get all of the notes.
      */
     public function notes(): MorphMany
     {
         return $this->morphMany(Note::class, 'noteable');
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string|null $value
-     */
-    public function setDescriptionAttribute(string $value = null): void
-    {
-        if (null !== $value) {
-            $this->attributes['description'] = Crypt::encrypt($value);
-        }
-
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setFilenameAttribute(string $value): void
-    {
-        $this->attributes['filename'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setMimeAttribute(string $value): void
-    {
-        $this->attributes['mime'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param string $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setTitleAttribute(string $value = null): void
-    {
-        if (null !== $value) {
-            $this->attributes['title'] = Crypt::encrypt($value);
-        }
     }
 
     /**
