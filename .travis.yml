@@ -1,9 +1,6 @@
 language: php
-cache:
-    directories:
-        - vendor
-        - $HOME/.composer/cache
-
+sudo: required
+language: bash
 # safelist
 branches:
   only:
@@ -13,7 +10,8 @@ branches:
 services:
   - docker
 
-before_install:
+script:
+  - docker run --rm --privileged multiarch/qemu-user-static:register --reset
   - docker build -t jc5x/ff-test-builds:develop .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push jc5x/ff-test-builds
