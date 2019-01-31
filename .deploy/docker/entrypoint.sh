@@ -44,8 +44,8 @@ php artisan package:discover
 
 echo "Run various artisan commands..."
 php artisan migrate --seed
-php artisan firefly:upgrade-database
 php artisan firefly:decrypt-all
+php artisan firefly:upgrade-database
 php artisan firefly:verify
 php artisan passport:install
 php artisan cache:clear
