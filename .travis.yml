@@ -1,26 +1,8 @@
 language: php
-php:
-  - 7.2
-
 cache:
     directories:
         - vendor
         - $HOME/.composer/cache
-
-install:
-  - rm composer.lock
-  - composer update --no-scripts
-  - cp .env.testing .env
-  - php artisan clear-compiled
-  - php artisan env
-  - wget -q https://github.com/firefly-iii/test-data/raw/master/storage/database.sqlite -O storage/database/database.sqlite
-  - mkdir -p build/logs
-
-script:
-  - ./vendor/bin/phpunit -c phpunit.coverage.xml
-
-after_success:
-  - travis_retry php vendor/bin/php-coveralls -x storage/build/clover-all.xml
 
 # safelist
 branches:
@@ -32,4 +14,6 @@ services:
   - docker
 
 before_install:
-  - docker build -t test_ff_build .
+  - docker build -t jc5x/ff-test-builds:develop .
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+  - docker push jc5x/ff-test-builds
