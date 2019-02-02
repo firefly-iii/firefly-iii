@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
+use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\TransactionViewFilter;
@@ -240,6 +241,9 @@ class MassController extends Controller
                     ];
                     // call repository update function.
                     $repository->update($journal, $data);
+
+                    // trigger rules
+                    event(new UpdatedTransactionJournal($journal));
 
                     ++$count;
                 }

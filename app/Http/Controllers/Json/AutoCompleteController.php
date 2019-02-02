@@ -205,7 +205,7 @@ class AutoCompleteController extends Controller
     {
         $search = (string)$request->get('search');
         $cache  = new CacheProperties;
-        $cache->addProperty('ac-revenue-accounts');
+        $cache->addProperty('ac-journals');
         // very unlikely a user will actually search for this string.
         $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
         $cache->addProperty($key);
