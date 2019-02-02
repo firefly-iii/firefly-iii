@@ -559,7 +559,7 @@ class AccountFactoryTest extends TestCase
         /** @var AccountMeta $meta */
         $currencyId = $account->accountMeta()->where('name', 'currency_id')->first();
         $this->assertNotNull($currencyId);
-        $this->assertEquals($currency->id, $currencyId->data);
+        $this->assertEquals((int)$currency->id, (int)$currencyId->data);
     }
 
     /**

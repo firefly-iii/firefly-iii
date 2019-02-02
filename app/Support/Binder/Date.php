@@ -63,7 +63,10 @@ class Date implements BinderInterface
             'previousFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(Carbon::now())->subYear(),
         ];
         if (isset($magicWords[$value])) {
-            return $magicWords[$value];
+            $return = $magicWords[$value];
+            Log::debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
+
+            return $return;
         }
 
         try {

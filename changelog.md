@@ -64,7 +64,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - New tag cloud in API.
 
 
-
 See the [API docs](https://api-docs.firefly-iii.org/) for more information.
 
 ## [4.7.9] - 2018-12-25
