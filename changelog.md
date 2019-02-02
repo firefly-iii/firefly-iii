@@ -4,6 +4,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [4.7.10] - 2019-xx-xx
 ### Added
+- [Issue 2037](https://github.com/firefly-iii/firefly-iii/issues/2037) Added some new magic keywords to reports.
 - Added a new currency exchange rate service, [ratesapi.io](https://ratesapi.io/), that does not require expensive API keys. Built by [@BoGnY](https://github.com/BoGnY).
 - Added Chinese Traditional translations. Thanks!
 
@@ -12,12 +13,11 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 2031](https://github.com/firefly-iii/firefly-iii/issues/2031) A new generic debit/credit indicator for imports.
 - The new Docker image no longer has the capability to run cron jobs, and will no longer generate your recurring transactions for you. This has been done to simplify the build and make sure your Docker container runs one service, as it should. To set up a cron job for your new Docker container, [check out the documentation](https://docs.firefly-iii.org/en/latest/installation/cronjob.html).
 
-
 ### Deprecated
 - I will no longer accept PR's that introduce new currencies.
 
 ### Removed
-- Nothing so far.
+- Firefly III no longer encrypts the database and will [decrypt the database]() on its first run.
 
 ### Fixed
 - [Issue 1923](https://github.com/firefly-iii/firefly-iii/issues/1923) Broken window position for date picker.
@@ -40,6 +40,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 2001](https://github.com/firefly-iii/firefly-iii/issues/2001) Various issues with tag chart view.
 - [Issue 2009](https://github.com/firefly-iii/firefly-iii/issues/2009) Could not change recurrence back to "forever".
 - [Issue 2033](https://github.com/firefly-iii/firefly-iii/issues/2033) Longitude can go from -180 to 180.
+- [Issue 2034](https://github.com/firefly-iii/firefly-iii/issues/2034) Rules were not being triggered in mass-edit.
 - Fixed broken translations in the recurring transactions overview.
 - When you create a recurring transfer you make make it fill (or empty) a piggy bank. This was not working, despite a fix in 4.7.8.
 - Fixed a bug where the importer would not be capable of creating new currencies.
