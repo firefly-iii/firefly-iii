@@ -1,9 +1,7 @@
 #!/usr/bin/env bash
+
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
-# enable experimental features.
-echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-sudo service docker restart
 
 # get qemu-arm-static binary
 mkdir tmp
