@@ -25,6 +25,12 @@ then
     echo "Touched!"
 fi
 
+if [[ $FF_DB_CONNECTION == "sqlite" ]]
+then
+    touch $FIREFLY_PATH/storage/database/database.sqlite
+    echo "Touched!"
+fi
+
 # make sure we own the volumes:
 echo "Run chown on ${FIREFLY_PATH}/storage..."
 chown -R www-data:www-data -R $FIREFLY_PATH/storage
