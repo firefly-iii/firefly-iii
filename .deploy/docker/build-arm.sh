@@ -15,13 +15,13 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     echo "Build develop arm"
-    docker build --platform arm -t jc5x/firefly-iii:develop-arm -f Dockerfile-ARM .
-    docker push jc5x/firefly-iii:develop-arm
+    docker build --tag jc5x/firefly-iii:develop-arm --file Dockerfile-ARM .
+    docker push jc5x/firefly-iii:develop-arm --platform arm
 fi
 
 if [ "$TRAVIS_BRANCH" == "master" ]; then
     echo "Build master arm"
-    docker build --platform arm -t jc5x/firefly-iii:latest-arm -f Dockerfile-ARM .
+    docker build --platform arm --tag jc5x/firefly-iii:latest-arm --file Dockerfile-ARM .
     docker tag jc5x/firefly-iii:latest-arm jc5x/firefly-iii:release-$VERSION-arm
     docker push jc5x/firefly-iii:latest-arm
     docker push jc5x/firefly-iii:release-$VERSION-arm
