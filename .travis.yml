@@ -12,6 +12,6 @@ services:
 
 script:
   - docker run --rm --privileged multiarch/qemu-user-static:register --reset
-  - docker build -t jc5x/ff-test-builds:develop ./Dockerfile-ARM
+  - docker build -t jc5x/ff-test-builds:develop -f Dockerfile-ARM .
   - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
   - docker push jc5x/ff-test-builds
