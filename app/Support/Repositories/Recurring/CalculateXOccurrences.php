@@ -59,7 +59,6 @@ trait CalculateXOccurrences
         $mutator  = clone $date;
         $total    = 0;
         $attempts = 0;
-        $mutator->addDay(); // always assume today has passed.
         $dayOfMonth = (int)$moment;
         if ($mutator->day > $dayOfMonth) {
             // day has passed already, add a month.
