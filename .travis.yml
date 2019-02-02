@@ -14,3 +14,8 @@ services:
 
 script:
   - .deploy/docker/build-arm.sh
+  - .deploy/docker/build-amd64.sh
+  - docker manifest create jc5x/ff-test-builds jc5x/firefly-iii:develop jc5x/firefly-iii:develop-arm
+  - docker manifest annotate jc5x/ff-test-builds jc5x/firefly-iii:develop-arm --arch arm   --os linux
+  - docker manifest annotate jc5x/ff-test-builds jc5x/firefly-iii:develop     --arch amd64 --os linux
+  - docker manifest push jc5x/ff-test-builds
