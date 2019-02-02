@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 docker run --rm --privileged multiarch/qemu-user-static:register --reset
 
+# enable experimental features.
+echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+sudo service docker restart
+
 # get qemu-arm-static binary
 mkdir tmp
 pushd tmp && \
@@ -13,13 +17,13 @@ echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     echo "Build develop arm"
-    docker build -t jc5x/firefly-iii:develop-arm -f Dockerfile-ARM --platform arm .
+    docker build --platform arm -t jc5x/firefly-iii:develop-arm -f Dockerfile-ARM .
     docker push jc5x/firefly-iii:develop-arm
 fi
 
 if [ "$TRAVIS_BRANCH" == "master" ]; then
     echo "Build master arm"
-    docker build -t jc5x/firefly-iii:latest-arm -f Dockerfile-ARM --platform arm .
+    docker build --platform arm -t jc5x/firefly-iii:latest-arm -f Dockerfile-ARM .
     docker tag jc5x/firefly-iii:latest-arm jc5x/firefly-iii:release-$VERSION-arm
     docker push jc5x/firefly-iii:latest-arm
     docker push jc5x/firefly-iii:release-$VERSION-arm
