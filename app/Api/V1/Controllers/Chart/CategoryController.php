@@ -76,8 +76,6 @@ class CategoryController extends Controller
                         'currency_decimal_places' => $decimalPlaces,
                         'type'                    => 'bar', // line, area or bar
                         'yAxisID'                 => 0, // 0, 1, 2
-                        'fill'                    => null, // true, false, null
-                        'backgroundColor'         => null, // null or hex
                         'entries'                 => [],
                     ];
                 }
@@ -105,8 +103,6 @@ class CategoryController extends Controller
                     'currency_decimal_places' => $decimalPlaces,
                     'type'                    => 'bar', // line, area or bar
                     'yAxisID'                 => 0, // 0, 1, 2
-                    'fill'                    => null, // true, false, null
-                    'backgroundColor'         => null, // null or hex
                     'entries'                 => [],
                 ];
             }
@@ -134,8 +130,6 @@ class CategoryController extends Controller
                         'currency_decimal_places' => $decimalPlaces,
                         'type'                    => 'bar', // line, area or bar
                         'yAxisID'                 => 0, // 0, 1, 2
-                        'fill'                    => null, // true, false, null
-                        'backgroundColor'         => null, // null or hex
                         'entries'                 => [],
                     ];
                 }
@@ -163,8 +157,6 @@ class CategoryController extends Controller
                     'currency_decimal_places' => $decimalPlaces,
                     'type'                    => 'bar', // line, area or bar
                     'yAxisID'                 => 0, // 0, 1, 2
-                    'fill'                    => null, // true, false, null
-                    'backgroundColor'         => null, // null or hex
                     'entries'                 => [],
                 ];
             }

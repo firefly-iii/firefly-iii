@@ -119,8 +119,6 @@ class AccountController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'type'                    => 'bar', // line, area or bar
                 'yAxisID'                 => 0, // 0, 1, 2
-                'fill'                    => null, // true, false, null
-                'backgroundColor'         => null, // null or hex
                 'entries'                 => $this->expandNames($tempData),
             ];
             $chartData[$currencyId] = $currentSet;
@@ -209,8 +207,6 @@ class AccountController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'type'                    => 'bar', // line, area or bar
                 'yAxisID'                 => 0, // 0, 1, 2
-                'fill'                    => null, // true, false, null
-                'backgroundColor'         => null, // null or hex
                 'entries'                 => $this->expandNames($tempData),
             ];
             $chartData[$currencyId] = $currentSet;
@@ -271,8 +267,6 @@ class AccountController extends Controller
                 'currency_decimal_places' => $currency->decimal_places,
                 'type'                    => 'line', // line, area or bar
                 'yAxisID'                 => 0, // 0, 1, 2
-                'fill'                    => null, // true, false, null
-                'backgroundColor'         => null, // null or hex
                 'entries'                 => [],
             ];
 
