@@ -14,8 +14,7 @@ RUN apt-get update && apt-get install -y libpng-dev \
                                             libldap2-dev \
                                             libpq-dev \
                                             locales \
-                                            libmemcached-dev && \
-                                            apt-get clean
+                                            libmemcached-dev
 
 # Copy in Firefly III source
 WORKDIR $FIREFLY_PATH
