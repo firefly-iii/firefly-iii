@@ -1,4 +1,8 @@
 #!/usr/bin/env bash
+
+# Disabled until I can figure out how this works in Travis.
+exit 0
+
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     TARGET=jc5x/firefly-iii:develop
     ARM=jc5x/firefly-iii:develop-arm
