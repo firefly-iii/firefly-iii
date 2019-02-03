@@ -18,5 +18,6 @@ script:
   - sudo service docker restart
   - docker version -f '{{.Server.Experimental}}'
   - docker version
-  - .deploy/docker/build-arm.sh
   - .deploy/docker/build-amd64.sh
+  - .deploy/docker/build-arm.sh
+  - .deploy/docker/manifest.sh
