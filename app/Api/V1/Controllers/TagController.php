@@ -23,7 +23,9 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use Carbon\Carbon;
 use FireflyIII\Api\V1\Requests\TagRequest;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
@@ -69,6 +71,55 @@ class TagController extends Controller
                 return $next($request);
             }
         );
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws FireflyException
+     */
+    public function cloud(Request $request): JsonResponse
+    {
+        // parameters for cloud:
+        $start = (string)$request->get('start');
+        $end   = (string)$request->get('end');
+        if ('' === $start || '' === $end) {
+            throw new FireflyException('Start and end are mandatory parameters.');
+        }
+        $start = Carbon::createFromFormat('Y-m-d', $start);
+        $end   = Carbon::createFromFormat('Y-m-d', $end);
+
+        // get all tags:
+        $tags   = $this->repository->get();
+        $min    = null;
+        $max    = 0;
+        $return = [
+            'tags' => [],
+        ];
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $earned = (float)$this->repository->earnedInPeriod($tag, $start, $end);
+            $spent  = (float)$this->repository->spentInPeriod($tag, $start, $end);
+            $size   = ($spent * -1) + $earned;
+            $min    = $min ?? $size;
+            if ($size > 0) {
+                $max              = $size > $max ? $size : $max;
+                $return['tags'][] = [
+                    'tag'  => $tag->tag,
+                    'id'   => $tag->id,
+                    'size' => $size,
+                ];
+            }
+        }
+        foreach ($return['tags'] as $index => $info) {
+            $return['tags'][$index]['relative'] = $return['tags'][$index]['size'] / $max;
+        }
+        $return['min'] = $min;
+        $return['max'] = $max;
+
+
+        return response()->json($return);
     }
 
     /**
@@ -121,7 +172,6 @@ class TagController extends Controller
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
 
     /**

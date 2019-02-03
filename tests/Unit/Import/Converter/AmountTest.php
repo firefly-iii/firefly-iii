@@ -174,6 +174,12 @@ class AmountTest extends TestCase
             '--$1.23'                 => '1.23',
             '--63 5212.4440'          => '635212.4440',
             '--,2'                    => '0.2',
+
+            // Postbank (DE) tests
+            '1.000,00 €'              => '1000.00',
+            '120,34 €'                => '120.34',
+            '-120,34 €'               => '-120.34',
+            '-1.000,00 €'             => '-1000.00',
         ];
         foreach ($values as $value => $expected) {
             $converter = new Amount;

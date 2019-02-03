@@ -304,26 +304,10 @@ class TransactionCollector implements TransactionCollectorInterface
         // run all filters:
         $set = $this->filter($set);
 
-        // loop for decryption.
+        // loop for date.
         $set->each(
             function (Transaction $transaction) {
-                $transaction->date        = new Carbon($transaction->date);
-                $transaction->description = app('steam')->decrypt((int)$transaction->encrypted, $transaction->description);
-
-                if (null !== $transaction->bill_name) {
-                    $transaction->bill_name = app('steam')->decrypt((int)$transaction->bill_name_encrypted, $transaction->bill_name);
-                }
-                $transaction->account_name          = app('steam')->tryDecrypt($transaction->account_name);
-                $transaction->opposing_account_name = app('steam')->tryDecrypt($transaction->opposing_account_name);
-                $transaction->account_iban          = app('steam')->tryDecrypt($transaction->account_iban);
-                $transaction->opposing_account_iban = app('steam')->tryDecrypt($transaction->opposing_account_iban);
-
-                // budget name
-                $transaction->transaction_journal_budget_name = app('steam')->tryDecrypt($transaction->transaction_journal_budget_name);
-                $transaction->transaction_budget_name         = app('steam')->tryDecrypt($transaction->transaction_budget_name);
-                // category name:
-                $transaction->transaction_journal_category_name = app('steam')->tryDecrypt($transaction->transaction_journal_category_name);
-                $transaction->transaction_category_name         = app('steam')->tryDecrypt($transaction->transaction_category_name);
+                $transaction->date = new Carbon($transaction->date);
             }
 
         );

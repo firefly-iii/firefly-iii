@@ -1,7 +1,7 @@
 <?php
 /**
- * RabobankDebitCredit.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * CronRunner.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,42 +18,36 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Converter;
+namespace FireflyIII\Support\Http\Controllers;
 
-use Log;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
 
 /**
- * Class RabobankDebitCredit.
+ * Trait CronRunner
  */
-class RabobankDebitCredit implements ConverterInterface
+trait CronRunner
 {
     /**
-     * Convert D or A to integer values.
-     *
-     * @param $value
-     *
-     * @return int
+     * @return string
      */
-    public function convert($value): int
+    protected function runRecurring(): string
     {
-        Log::debug('Going to convert ', ['value' => $value]);
-
-        if ('D' === $value) {
-            Log::debug('Return -1');
-
-            return -1;
+        /** @var RecurringCronjob $recurring */
+        $recurring = app(RecurringCronjob::class);
+        try {
+            $result = $recurring->fire();
+        } catch (FireflyException $e) {
+            return $e->getMessage();
         }
-        // old format:
-        if ('A' === $value) {
-            Log::debug('Return -1');
-
-            return -1;
+        if (false === $result) {
+            return 'The recurring transaction cron job did not fire.';
         }
 
-        Log::debug('Return 1');
-
-        return 1;
+        return 'The recurring transaction cron job fired successfully.';
     }
+
 }

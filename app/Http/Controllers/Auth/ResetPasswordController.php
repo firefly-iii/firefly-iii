@@ -60,6 +60,48 @@ class ResetPasswordController extends Controller
     }
 
     /**
+     * Reset the given user's password.
+     *
+     * @param  \Illuminate\Http\Request $request
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
+     * @throws \Illuminate\Validation\ValidationException
+     */
+    public function reset(Request $request)
+    {
+        $loginProvider = config('firefly.login_provider');
+        if ('eloquent' !== $loginProvider) {
+            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
+
+            return view('error', compact('message'));
+        }
+
+        $rules = [
+            'token'    => 'required',
+            'email'    => 'required|email',
+            'password' => 'required|confirmed|min:6|secure_password',
+        ];
+
+        $this->validate($request, $rules, $this->validationErrorMessages());
+
+        // Here we will attempt to reset the user's password. If it is successful we
+        // will update the password on an actual user model and persist it to the
+        // database. Otherwise we will parse the error and return the response.
+        $response = $this->broker()->reset(
+            $this->credentials($request), function ($user, $password) {
+            $this->resetPassword($user, $password);
+        }
+        );
+
+        // If the password was successfully reset, we will redirect the user back to
+        // the application's home authenticated view. If there is an error we can
+        // redirect them back to where they came from with their error message.
+        return $response === Password::PASSWORD_RESET
+            ? $this->sendResetResponse($request, $response)
+            : $this->sendResetFailedResponse($request, $response);
+    }
+
+    /**
      * Display the password reset view for the given token.
      *
      * If no token is present, display the link request form.
@@ -89,57 +131,7 @@ class ResetPasswordController extends Controller
 
         /** @noinspection PhpUndefinedFieldInspection */
         return view('auth.passwords.reset')->with(
-            ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration,'pageTitle' => $pageTitle]
+            ['token' => $token, 'email' => $request->email, 'allowRegistration' => $allowRegistration, 'pageTitle' => $pageTitle]
         );
-    }
-
-    /**
-     * Reset the given user's password.
-     *
-     * @param  \Illuminate\Http\Request $request
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Http\JsonResponse
-     * @throws \Illuminate\Validation\ValidationException
-     */
-    public function reset(Request $request)
-    {
-        $loginProvider = config('firefly.login_provider');
-        if ('eloquent' !== $loginProvider) {
-            $message = sprintf('Cannot reset password when authenticating over "%s".', $loginProvider);
-
-            return view('error', compact('message'));
-        }
-
-        $this->validate($request, $this->rules(), $this->validationErrorMessages());
-
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $response = $this->broker()->reset(
-            $this->credentials($request), function ($user, $password) {
-            $this->resetPassword($user, $password);
-        }
-        );
-
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        return $response === Password::PASSWORD_RESET
-            ? $this->sendResetResponse($request, $response)
-            : $this->sendResetFailedResponse($request, $response);
-    }
-
-    /**
-     * Get the password reset validation rules.
-     *
-     * @return array
-     */
-    protected function rules()
-    {
-        return [
-            'token' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed|min:6|secure_password',
-        ];
     }
 }

@@ -60,6 +60,11 @@ class PreferencesControllerTest extends TestCase
         foreach ($available as $pref) {
             Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), $pref])->once();
         }
+        // extra call for frontpage preference
+        $pref = new Preference;
+        $pref->data =[1];
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'frontPageAccounts',[]])->once()
+            ->andReturn($pref);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();

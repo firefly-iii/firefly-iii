@@ -20,7 +20,7 @@
                         {{ ExpandedForm.text('title') }}
                         {{ ExpandedForm.date('first_date',array.first_date, {helpText: trans('firefly.help_first_date_no_past')}) }}
                         {{ ExpandedForm.select('repetition_type', [], null, {helpText: trans('firefly.change_date_other_options')}) }}
-                        {{ ExpandedForm.number('skip', array.recurrence_repetitions[0].repetition_skip) }}
+                        {{ ExpandedForm.number('skip', array.recurrence_repetitions[0].skip) }}
                         {{ ExpandedForm.select('weekend', weekendResponses, array.recurrence_repetitions[0].weekend, {helpText: trans('firefly.help_weekend')}) }}
                         {{ ExpandedForm.select('repetition_end', repetitionEnds, repetitionEnd) }}
                         {{ ExpandedForm.date('repeat_until',array.repeat_until) }}
@@ -194,7 +194,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <div class="modal-header">
-                <h4 class="modal-title">Calendar view yay</h4>
+                <h4 class="modal-title">{{ 'recurring_calendar_view'|_ }}</h4>
             </div>
             <div class="modal-body">
                 <div id="recurring_calendar" style="max-width: 400px;margin: 0 auto;">
@@ -219,7 +219,7 @@
     <script type="text/javascript" src="v1/js/ff/common/autocomplete.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/bootstrap-tagsinput.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/lib/jquery-ui.min.js?v={{ FF_VERSION }}"></script>
-    <script type="text/javascript" src="v1/js/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}"></script>
+    <script type="text/javascript" src="v1/lib/fc/fullcalendar.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript">
         var transactionType = "{{ preFilled.transaction_type }}";
         var suggestUri = "{{ route('recurring.suggest') }}";

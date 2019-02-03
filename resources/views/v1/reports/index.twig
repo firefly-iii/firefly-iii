@@ -118,7 +118,9 @@
                     <h3 class="box-title">{{ 'quick_link_reports'|_ }}</h3>
                 </div>
                 <div class="box-body">
-
+                    <p>
+                        {{ 'quick_link_examples'|_ }}
+                    </p>
                     <h4>{{ ('quick_link_default_report')|_ }}</h4>
                     <ul>
                         <li>
@@ -132,6 +134,9 @@
                                 <a href="{{ route('reports.report.default',[accountList, 'currentFiscalYearStart','currentFiscalYearEnd']) }}">{{ 'report_this_fiscal_year_quick'|_ }}</a>
                             </li>
                         {% endif %}
+                        <li>
+                            <a href="{{ route('reports.report.default',[accountList, 'previousMonthStart','previousMonthEnd']) }}">{{ 'report_last_month_quick'|_ }}</a>
+                        </li>
                         <li>
                             <a href="{{ route('reports.report.default',[accountList, start.format('Ymd'),'currentMonthEnd']) }}">{{ 'report_all_time_quick'|_ }}</a>
                         </li>

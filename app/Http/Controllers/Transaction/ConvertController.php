@@ -25,10 +25,8 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Http\Request;
@@ -163,6 +161,7 @@ class ConvertController extends Controller
 
         if ($errors->count() > 0) {
             Log::error('Errors while converting: ', $errors->toArray());
+
             return redirect(route('transactions.convert.index', [strtolower($destinationType->type), $journal->id]))->withErrors($errors)->withInput();
         }
 
@@ -173,127 +172,5 @@ class ConvertController extends Controller
         session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
 
         return redirect(route('transactions.show', [$journal->id]));
-    }
-
-
-    /**
-     * Get the destination account. Is complex.
-     *
-     * @param TransactionJournal $journal
-     * @param TransactionType    $destinationType
-     * @param array              $data
-     *
-     * @return Account
-     *
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function getDestinationAccount(TransactionJournal $journal, TransactionType $destinationType, array $data
-    ): Account // helper for conversion. Get info from obj.
-    {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository  = app(AccountRepositoryInterface::class);
-        $sourceAccount      = $this->repository->getJournalSourceAccounts($journal)->first();
-        $destinationAccount = $this->repository->getJournalDestinationAccounts($journal)->first();
-        $sourceType         = $journal->transactionType;
-        $joined             = $sourceType->type . '-' . $destinationType->type;
-        switch ($joined) {
-            default:
-                throw new FireflyException('Cannot handle ' . $joined); // @codeCoverageIgnore
-            case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT:
-                // one
-                $destination = $sourceAccount;
-                break;
-            case TransactionType::WITHDRAWAL . '-' . TransactionType::TRANSFER:
-                // two
-                $destination = $accountRepository->findNull((int)$data['destination_account_asset']);
-                break;
-            case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL:
-            case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL:
-                // three and five
-                if ('' === $data['destination_account_expense'] || null === $data['destination_account_expense']) {
-                    // destination is a cash account.
-                    return $accountRepository->getCashAccount();
-                }
-                $data        = [
-                    'name'            => $data['destination_account_expense'],
-                    'accountType'     => 'expense',
-                    'account_type_id' => null,
-                    'virtualBalance'  => 0,
-                    'active'          => true,
-                    'iban'            => null,
-                ];
-                $destination = $accountRepository->store($data);
-                break;
-            case TransactionType::DEPOSIT . '-' . TransactionType::TRANSFER:
-            case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT:
-                // four and six
-                $destination = $destinationAccount;
-                break;
-        }
-
-        return $destination;
-    }
-
-
-    /**
-     * Get the source account.
-     *
-     * @param TransactionJournal $journal
-     * @param TransactionType    $destinationType
-     * @param array              $data
-     *
-     * @return Account
-     *
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function getSourceAccount(TransactionJournal $journal, TransactionType $destinationType, array $data
-    ): Account // helper for conversion. Get info from obj.
-    {
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository  = app(AccountRepositoryInterface::class);
-        $sourceAccount      = $this->repository->getJournalSourceAccounts($journal)->first();
-        $destinationAccount = $this->repository->getJournalDestinationAccounts($journal)->first();
-        $sourceType         = $journal->transactionType;
-        $joined             = $sourceType->type . '-' . $destinationType->type;
-        switch ($joined) {
-            default:
-                throw new FireflyException('Cannot handle ' . $joined); // @codeCoverageIgnore
-            case TransactionType::WITHDRAWAL . '-' . TransactionType::DEPOSIT:
-            case TransactionType::TRANSFER . '-' . TransactionType::DEPOSIT:
-
-                if ('' === $data['source_account_revenue'] || null === $data['source_account_revenue']) {
-                    // destination is a cash account.
-                    return $accountRepository->getCashAccount();
-                }
-
-                $data   = [
-                    'name'            => $data['source_account_revenue'],
-                    'accountType'     => 'revenue',
-                    'virtualBalance'  => 0,
-                    'active'          => true,
-                    'account_type_id' => null,
-                    'iban'            => null,
-                ];
-                $source = $accountRepository->store($data);
-                break;
-            case TransactionType::WITHDRAWAL . '-' . TransactionType::TRANSFER:
-            case TransactionType::TRANSFER . '-' . TransactionType::WITHDRAWAL:
-                $source = $sourceAccount;
-                break;
-            case TransactionType::DEPOSIT . '-' . TransactionType::WITHDRAWAL:
-                $source = $destinationAccount;
-                break;
-            case TransactionType::DEPOSIT . '-' . TransactionType::TRANSFER:
-                $source = $accountRepository->findNull((int)$data['source_account_asset']);
-                break;
-        }
-
-        return $source;
     }
 }

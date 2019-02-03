@@ -47,15 +47,26 @@ class Date implements BinderInterface
         $fiscalHelper = app(FiscalHelperInterface::class);
 
         $magicWords = [
-            'currentMonthStart'      => Carbon::now()->startOfMonth(),
-            'currentMonthEnd'        => Carbon::now()->endOfMonth(),
-            'currentYearStart'       => Carbon::now()->startOfYear(),
-            'currentYearEnd'         => Carbon::now()->endOfYear(),
-            'currentFiscalYearStart' => $fiscalHelper->startOfFiscalYear(Carbon::now()),
-            'currentFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(Carbon::now()),
+            'currentMonthStart' => Carbon::now()->startOfMonth(),
+            'currentMonthEnd'   => Carbon::now()->endOfMonth(),
+            'currentYearStart'  => Carbon::now()->startOfYear(),
+            'currentYearEnd'    => Carbon::now()->endOfYear(),
+
+            'previousMonthStart' => Carbon::now()->startOfMonth()->subDay()->startOfMonth(),
+            'previousMonthEnd'   => Carbon::now()->startOfMonth()->subDay()->endOfMonth(),
+            'previousYearStart'  => Carbon::now()->startOfYear()->subDay()->startOfYear(),
+            'previousYearEnd'    => Carbon::now()->startOfYear()->subDay()->endOfYear(),
+
+            'currentFiscalYearStart'  => $fiscalHelper->startOfFiscalYear(Carbon::now()),
+            'currentFiscalYearEnd'    => $fiscalHelper->endOfFiscalYear(Carbon::now()),
+            'previousFiscalYearStart' => $fiscalHelper->startOfFiscalYear(Carbon::now())->subYear(),
+            'previousFiscalYearEnd'   => $fiscalHelper->endOfFiscalYear(Carbon::now())->subYear(),
         ];
         if (isset($magicWords[$value])) {
-            return $magicWords[$value];
+            $return = $magicWords[$value];
+            Log::debug(sprintf('User requests "%s", so will return "%s"', $value, $return));
+
+            return $return;
         }
 
         try {

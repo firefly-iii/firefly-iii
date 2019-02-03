@@ -266,6 +266,7 @@ class BillControllerTest extends TestCase
         $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
         $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once();
         $transformer->shouldReceive('getAvailableIncludes')->atLeast()->once();
+        $repository->shouldReceive('getAttachments')->atLeast()->once()->andReturn(new Collection);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
             ['id' => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
                 'currency_symbol' => 'x','amount_min' => '10','amount_max' => '15'

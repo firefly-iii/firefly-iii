@@ -24,6 +24,8 @@
 declare(strict_types=1);
 
 use FireflyIII\Export\Exporter\CsvExporter;
+use FireflyIII\Services\Currency\FixerIOv2;
+use FireflyIII\Services\Currency\RatesApiIOv1;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
@@ -91,9 +93,9 @@ return [
         'is_demo_site'     => false,
     ],
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
-    'version'                      => '4.7.9',
-    'api_version'                  => '0.9.0',
-    'db_version'                   => 6,
+    'version'                      => '4.7.10',
+    'api_version'                  => '0.9.1',
+    'db_version'                   => 7,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),
@@ -111,6 +113,7 @@ return [
     'analytics_id'                 => env('ANALYTICS_ID', ''),
     'disable_frame_header'         => env('DISABLE_FRAME_HEADER', false),
     'login_provider'               => envNonEmpty('LOGIN_PROVIDER', 'eloquent'),
+    'cer_provider'                 => envNonEmpty('CER_PROVIDER', 'fixer'),
     'allowedMimes'                 => [
         /* plain files */
         'text/plain',
@@ -239,17 +242,19 @@ return [
         ],
     'shortNamesByFullName'         =>
         [
-            'Default account'     => 'asset',
-            'Asset account'       => 'asset',
-            'Import account'      => 'import',
-            'Expense account'     => 'expense',
-            'Beneficiary account' => 'expense',
-            'Revenue account'     => 'revenue',
-            'Cash account'        => 'cash',
-            'Credit card'         => 'liabilities',
-            'Loan'                => 'liabilities',
-            'Debt'                => 'liabilities',
-            'Mortgage'            => 'liabilities',
+            'Default account'         => 'asset',
+            'Asset account'           => 'asset',
+            'Import account'          => 'import',
+            'Expense account'         => 'expense',
+            'Beneficiary account'     => 'expense',
+            'Revenue account'         => 'revenue',
+            'Cash account'            => 'cash',
+            'Initial balance account' => 'initial-balance',
+            'Reconciliation account'  => 'reconciliation',
+            'Credit card'             => 'liabilities',
+            'Loan'                    => 'liabilities',
+            'Debt'                    => 'liabilities',
+            'Mortgage'                => 'liabilities',
         ],
     'shortLiabilityNameByFullName' => [
         'Credit card' => 'creditcard',
@@ -258,32 +263,29 @@ return [
         'Mortgage'    => 'mortgage',
     ],
     'languages'                    => [
-        // completed languages
         'en_US' => ['name_locale' => 'English', 'name_english' => 'English'],
-        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'], // 2018-10-26: 96%
-        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],  // 2018-10-26: 100%
-        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'], // 2018-10-26: 100%
-        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'], // 2018-12-23: 65%
-        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'], // 2018-10-26: 100%
-        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 2018-10-26: 100%
-        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '], // 2018-10-26: 76%
-        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 2018-10-26: 77%
-        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 2018-10-26: 80%
-        'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 2018-12-23: 99%
+        'es_ES' => ['name_locale' => 'Español', 'name_english' => 'Spanish'], // 2019-01-28: 93%
+        'de_DE' => ['name_locale' => 'Deutsch', 'name_english' => 'German'],  // 2019-01-28: 99%
+        'fr_FR' => ['name_locale' => 'Français', 'name_english' => 'French'], // 2019-01-28: 99%
+        //'id_ID' => ['name_locale' => 'Bahasa Indonesia', 'name_english' => 'Indonesian'], // 2019-01-28: 65%
+        'it_IT' => ['name_locale' => 'Italiano', 'name_english' => 'Italian'], // 2019-01-28: 100%
+        'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 2019-01-28: 100%
+        'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '], // 2019-01-28: 85%
+        'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 2019-01-28: 80%
+        'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 2019-01-28: 83%
+        'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 2019-01-28: 99%
+        'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'], // 2019-01-28: 99%
         //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 2018-12-23: 70%
-
-        // 
-
-        // very far away:
-        //'nb_NO' => ['name_locale' => 'Norwegian', 'name_english' => 'Norwegian'], // 2018-10-26: 52%
-        //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 2018-10-26: 0%
-        //'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 2018-10-26: 8%
-        //'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'], // 2018-10-26: 3%
-        //'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 2018-10-26: 40%
-
-        //'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'], // 2018-11-21: 1%
-        //'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'], // 2018-10-26: 10%
-        //'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'], // 2018-10-26: 3%
+        //'nb_NO' => ['name_locale' => 'Norwegian', 'name_english' => 'Norwegian'], // 2019-01-28: 52%
+        //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 2019-01-28: 0%
+        //'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'], // 2019-01-28: 0%
+        //'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 2019-01-28: 8%
+        //'he_IL' => ['name_locale' => 'Hebrew', 'name_english' => 'Hebrew'], // 2019-01-28: 2%
+        //'hu_HU' => ['name_locale' => 'Hungarian', 'name_english' => 'Hungarian'], // 2019-01-28: 40%
+        //'sv_SE' => ['name_locale' => 'Svenska', 'name_english' => 'Swedish'], // 2019-01-28: 1%
+        //'sr_CS' => ['name_locale' => 'Serbian (Latin)', 'name_english' => 'Serbian (Latin)'], // 2019-01-28: 0%
+        //'sl_SI' => ['name_locale' => 'Slovenian', 'name_english' => 'Slovenian'], // 2019-01-28: 10%
+        //'uk_UA' => ['name_locale' => 'Ukranian', 'name_english' => 'Ukranian'], // 2019-01-28: 4%
 
 
     ],
@@ -295,7 +297,7 @@ return [
         'transfer'   => ['Transfer'],
         'transfers'  => ['Transfer'],
     ],
-    'transactionTypesToShort'                 => [
+    'transactionTypesToShort'      => [
         'Withdrawal'      => 'withdrawal',
         'Deposit'         => 'deposit',
         'Transfer'        => 'transfer',
@@ -477,4 +479,8 @@ return [
     'search_modifiers' => ['amount_is', 'amount', 'amount_max', 'amount_min', 'amount_less', 'amount_more', 'source', 'destination', 'category',
                            'budget', 'bill', 'type', 'date', 'date_before', 'date_after', 'on', 'before', 'after'],
     // tag notes has_attachments
+    'cer_providers'    => [
+        'fixer'    => FixerIOv2::class,
+        'ratesapi' => RatesApiIOv1::class,
+    ],
 ];

@@ -24,6 +24,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\FiscalHelperInterface;
 use Log;
 
 /**
@@ -175,7 +176,7 @@ class Navigation
             '6M'        => 6,
         ];
 
-        $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', 'year', 'yearly'];
+        $subDay = ['week', 'weekly', '1W', 'month', 'monthly', '1M', '3M', 'quarter', 'quarterly', '6M', 'half-year', '1Y', 'year', 'yearly'];
 
         // if the range is custom, the end of the period
         // is another X days (x is the difference between start)
@@ -583,7 +584,6 @@ class Navigation
             '1W'     => 'endOfWeek',
             '1M'     => 'endOfMonth',
             '3M'     => 'lastOfQuarter',
-            '1Y'     => 'endOfYear',
             'custom' => 'startOfMonth', // this only happens in test situations.
         ];
         $end         = clone $start;
@@ -604,6 +604,16 @@ class Navigation
 
             return $end;
         }
+
+        // make sure 1Y takes the fiscal year into account.
+        if ('1Y' === $range) {
+            /** @var FiscalHelperInterface $fiscalHelper */
+            $fiscalHelper = app(FiscalHelperInterface::class);
+
+            return $fiscalHelper->endOfFiscalYear($end);
+        }
+
+
         throw new FireflyException(sprintf('updateEndDate cannot handle range "%s"', $range));
     }
 
@@ -622,7 +632,6 @@ class Navigation
             '1W'     => 'startOfWeek',
             '1M'     => 'startOfMonth',
             '3M'     => 'firstOfQuarter',
-            '1Y'     => 'startOfYear',
             'custom' => 'startOfMonth', // this only happens in test situations.
         ];
         if (isset($functionMap[$range])) {
@@ -641,6 +650,15 @@ class Navigation
 
             return $start;
         }
+
+        // make sure 1Y takes the fiscal year into account.
+        if ('1Y' === $range) {
+            /** @var FiscalHelperInterface $fiscalHelper */
+            $fiscalHelper = app(FiscalHelperInterface::class);
+
+            return $fiscalHelper->startOfFiscalYear($start);
+        }
+
         throw new FireflyException(sprintf('updateStartDate cannot handle range "%s"', $range));
     }
 }

@@ -40,10 +40,13 @@ $(document).ready(function () {
     $('#ffInput_repetition_end').on('change', respondToRepetitionEnd);
     $('#ffInput_first_date').on('change', respondToFirstDateChange);
 
+    // new date
+    var firstDate = $('#ffInput_first_date').val();
+
     // create calendar on load:
     calendar = $('#recurring_calendar').fullCalendar(
         {
-            defaultDate: '2018-06-13',
+            defaultDate: firstDate,
             editable: false,
             height: 400,
             width: 200,

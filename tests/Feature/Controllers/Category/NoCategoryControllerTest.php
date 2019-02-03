@@ -71,7 +71,10 @@ class NoCategoryControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
 
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
 
         // get the journal with the most recent date for firstNull:
         $journal = $this->user()->transactionJournals()->orderBy('date', 'DESC')->first();
@@ -115,6 +118,9 @@ class NoCategoryControllerTest extends TestCase
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
 
         $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();

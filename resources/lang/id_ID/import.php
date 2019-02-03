@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Akun lawan (nama)',
     'column_rabo-debit-credit'        => 'Indikator debit / kredit khusus Rabobank',
     'column_ing-debit-credit'         => 'Indikator debit / kredit ING yang spesifik',
+    'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
     'column_sepa-ct-id'               => 'SEPA end-to-end Identifier',
     'column_sepa-ct-op'               => 'SEPA Opposing Account Identifier',
     'column_sepa-db'                  => 'SEPA Mandate Identifier',

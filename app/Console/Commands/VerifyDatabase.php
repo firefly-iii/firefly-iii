@@ -450,12 +450,6 @@ class VerifyDatabase extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $objName = $entry->name;
-            try {
-                $objName = Crypt::decrypt($objName);
-            } catch (DecryptException $e) {
-                // it probably was not encrypted.
-                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
-            }
 
             // also count the transactions:
             $countTransactions = DB::table('budget_transaction')->where('budget_id', $entry->id)->count();
@@ -488,12 +482,6 @@ class VerifyDatabase extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $objName = $entry->name;
-            try {
-                $objName = Crypt::decrypt($objName);
-            } catch (DecryptException $e) {
-                // it probably was not encrypted.
-                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
-            }
 
             // also count the transactions:
             $countTransactions = DB::table('category_transaction')->where('category_id', $entry->id)->count();
@@ -627,12 +615,6 @@ class VerifyDatabase extends Command
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $objName = $entry->name;
-            try {
-                $objName = Crypt::decrypt($objName);
-            } catch (DecryptException $e) {
-                // it probably was not encrypted.
-                Log::debug(sprintf('Not a problem: %s', $e->getMessage()));
-            }
 
             $line = sprintf(
                 'User #%d (%s) has %s #%d ("%s") which has no transactions.',

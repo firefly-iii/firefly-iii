@@ -1,4 +1,25 @@
 <?php
+
+/**
+ * CreateRecurringTransactions.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
+ *
+ * This file is part of Firefly III.
+ *
+ * Firefly III is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Firefly III is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
+ */
+
 declare(strict_types=1);
 
 
@@ -27,6 +48,8 @@ namespace FireflyIII\Jobs;
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Factory\PiggyBankEventFactory;
+use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
@@ -335,9 +358,23 @@ class CreateRecurringTransactions implements ShouldQueue
 
             // get piggy bank ID from meta data:
             $piggyBankId = $this->getPiggyId($recurrence);
+            Log::debug(sprintf('Piggy bank ID for recurrence #%d is #%d', $recurrence->id, $piggyBankId));
 
             // trigger event:
-            event(new StoredTransactionJournal($journal, $piggyBankId));
+            event(new StoredTransactionJournal($journal));
+
+            // link to piggy bank:
+            /** @var PiggyBankFactory $factory */
+            $factory = app(PiggyBankFactory::class);
+            $factory->setUser($recurrence->user);
+
+            $piggyBank = $factory->find($piggyBankId, null);
+            if (null !== $piggyBank) {
+                /** @var PiggyBankEventFactory $factory */
+                $factory = app(PiggyBankEventFactory::class);
+                $factory->create($journal, $piggyBank);
+            }
+
 
             $collection->push($journal);
             // update recurring thing:

@@ -368,7 +368,7 @@ class ExpandedProcessor implements ProcessorInterface
         foreach ($set as $entry) {
             $id            = (int)$entry->transaction_journal_id;
             $result[$id]   = $result[$id] ?? [];
-            $result[$id][] = Crypt::decrypt($entry->tag);
+            $result[$id][] = $entry->tag;
         }
 
         return $result;

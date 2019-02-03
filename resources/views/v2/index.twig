@@ -1,8 +1,12 @@
-{% extends "./layout/default" %}
+{% extends "./layout/default-react" %}
 {% block content %}
+
+    <div id="root"></div>
+    <div id="myCard"></div>
+
+    {# Ignore all default stuff #}
+    {#
                 <div class="row row-cards">
-
-
                     <div class="col-6 col-sm-4 col-lg-2">
                         <div class="card">
                             <div class="card-body p-3 text-center">
@@ -1580,6 +1584,7 @@
                         </div>
                     </div>
                 </div>
+                #}
 {% endblock %}
 {% block scripts %}
 {% endblock %}

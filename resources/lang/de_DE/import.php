@@ -78,7 +78,7 @@ return [
 
     // prerequisites:
     'prereq_fake_title'                   => 'Voraussetzungen für einen Import vom Scheinimportanbieter',
-    'prereq_fake_text'                    => 'Dieser Scheinanbieter benötigt einen eigenen API-Schlüssel. Dieser muss 32 Zeichen lang sein. Sie können diese hier verwenden: 123456789012345678901234567890',
+    'prereq_fake_text'                    => 'Dieser Scheinanbieter benötigt einen eigenen API-Schlüssel. Dieser muss 32 Zeichen lang sein. Sie können diese hier verwenden: 123456789012345678901234567890AA',
     'prereq_spectre_title'                => 'Voraussetzungen für einen Import durch Verwendung der Spectre-API',
     'prereq_spectre_text'                 => 'Um Daten über die Spectre-API (v4) zu importieren, müssen Sie Firefly III zwei geheime Werte zur Verfügung stellen. Diese können auf der <a href="https://www.saltedge.com/clients/profile/secrets">Geheimnisse-Seite</a> gefunden werden.',
     'prereq_spectre_pub'                  => 'Ebenso muss die Spectre-API den öffentlichen Schlüssel kennen, der unten angezeigt wird. Ohne diesen wird sie Sie nicht erkennen. Bitte geben Sie diesen öffentlichen Schlüssel auf Ihrer <a href="https://www.saltedge.com/clients/profile/secrets">Geheimnisse-Seite</a> ein.',
@@ -103,9 +103,9 @@ return [
     'job_config_fake_artist_title'        => 'Albumname eingeben',
     'job_config_fake_artist_text'         => 'Viele Importassistent haben einige Konfigurationsschritte, die Sie ausführen müssen. Im Falle des gefälschten Importanbieters müssen Sie einige seltsame Fragen beantworten. Geben Sie in diesem Fall „David Bowie” ein, um fortzufahren.',
     'job_config_fake_song_title'          => 'Titelnamen eingeben',
-    'job_config_fake_song_text'           => 'Nennen Sie den Song „Goldene Jahre”, um mit dem Scheinimport fortzufahren.',
+    'job_config_fake_song_text'           => 'Nennen Sie den Song „Golden years”, um mit dem Scheinimport fortzufahren.',
     'job_config_fake_album_title'         => 'Albumname eingeben',
-    'job_config_fake_album_text'          => 'Einige Importassistenten benötigen nach der Hälfte des Imports zusätzliche Daten. Im Falle des Scheinimportanbieter müssen Sie einige seltsame Fragen beantworten. Geben Sie „Station zu Station” ein, um fortzufahren.',
+    'job_config_fake_album_text'          => 'Einige Importassistenten benötigen nach der Hälfte des Imports zusätzliche Daten. Im Falle des Scheinimportanbieter müssen Sie einige seltsame Fragen beantworten. Geben Sie „Station to station” ein, um fortzufahren.',
     // job configuration form the file provider
     'job_config_file_upload_title'        => 'Import einrichten (1/4) • Ihre Datei hochladen',
     'job_config_file_upload_text'         => 'Diese Assistent wird Ihnen helfen, Dateien von Ihrer Bank in Firefly III zu importieren. ',
@@ -284,7 +284,7 @@ return [
     'column_bill-id'                  => 'Rechnung (ID übereinstimmend mit FF3)',
     'column_bill-name'                => 'Rechnungsname',
     'column_budget-id'                => 'Budget-ID (übereinstimmend mit FF3)',
-    'column_budget-name'              => 'Kostenrahmenname',
+    'column_budget-name'              => 'Name des Budgets',
     'column_category-id'              => 'Kategorie (ID übereinstimmend mit FF3)',
     'column_category-name'            => 'Kategorie (Name)',
     'column_currency-code'            => 'Währungsstandard (ISO 4217)',
@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Zielkonto (Name)',
     'column_rabo-debit-credit'        => 'Rabobank-spezifisches Belastungs- und Kreditkennzeichen',
     'column_ing-debit-credit'         => 'ING-spezifisches Belastungs- und Kreditkennzeichen',
+    'column_generic-debit-credit'     => 'Allgemeine Überziehungs- und Kreditanzeige',
     'column_sepa-ct-id'               => 'SEPA • Ende-zu-Ende-Identifikationsnummer',
     'column_sepa-ct-op'               => 'SEPA • Zielkonto-Identifikationsnummer',
     'column_sepa-db'                  => 'SEPA - Mandatskennung',

@@ -296,6 +296,7 @@ function updateTriggerInput(selectList) {
 
     console.log('Searching for children in this row with query "' + inputQuery + '" resulted in ' + inputResult.length + ' results.');
     inputResult.prop('disabled', false);
+    inputResult.prop('type', 'text');
     switch (selectList.val()) {
         case 'from_account_starts':
         case 'from_account_ends':
@@ -346,6 +347,13 @@ function updateTriggerInput(selectList) {
         case 'currency_is':
             console.log('Select list value is ' + selectList.val() + ', so input needs auto complete.');
             createAutoComplete(inputResult, 'json/currency-names');
+            break;
+        case 'amount_less':
+        case 'amount_more':
+        case 'amount_exactly':
+            console.log('Set value to type=number');
+            inputResult.prop('type', 'number');
+            inputResult.prop('step','any');
             break;
         default:
             console.log('Select list value is ' + selectList.val() + ', destroy auto complete, do nothing else.');
@@ -399,7 +407,7 @@ function testRuleTriggers() {
     button.attr('disabled', 'disabled');
 
     // Serialize all trigger data
-    var triggerData = $('.content').find("#ffInput_strict, .rule-trigger-tbody input[type=text], .rule-trigger-tbody input[type=checkbox], .rule-trigger-tbody select").serializeArray();
+    var triggerData = $('.content').find("#ffInput_strict, .rule-trigger-tbody input[type=text], .rule-trigger-tbody input[type=number], .rule-trigger-tbody input[type=checkbox], .rule-trigger-tbody select").serializeArray();
 
     console.log('Found the following trigger data: ');
     console.log(triggerData);

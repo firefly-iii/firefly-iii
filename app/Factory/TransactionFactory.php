@@ -114,6 +114,13 @@ class TransactionFactory
         $currency        = $this->findCurrency($data['currency_id'], $data['currency_code']);
         $currency        = $currency ?? $defaultCurrency;
 
+        // enable currency:
+        if(false === $currency->enabled) {
+            $currency->enabled = true;
+            $currency->save();
+        }
+
+
         // type of source account and destination account depends on journal type:
         $sourceType      = $this->accountType($journal, 'source');
         $destinationType = $this->accountType($journal, 'destination');

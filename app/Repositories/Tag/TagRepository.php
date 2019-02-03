@@ -253,10 +253,9 @@ class TagRepository implements TagRepositoryInterface
     public function store(array $data): Tag
     {
         /** @var TagFactory $factory */
-        $factory = new TagFactory;
+        $factory = app(TagFactory::class);
         $factory->setUser($this->user);
         return $factory->create($data);
-
     }
 
     /**

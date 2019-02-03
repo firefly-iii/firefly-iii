@@ -247,7 +247,14 @@ class BudgetController extends Controller
     public function transactions(Request $request, Budget $budget): JsonResponse
     {
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $type     = $request->get('type') ?? 'default';
+
+        // user can overrule page size with limit parameter.
+        $limit = $this->parameters->get('limit');
+        if (null !== $limit && $limit > 0) {
+            $pageSize = $limit;
+        }
+
+        $type = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));

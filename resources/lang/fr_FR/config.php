@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 return [
     'html_language'         => 'fr',
-    'locale'                => 'fr, French, fr_FR.utf8, fr_FR.UTF-8',
+    'locale'                => 'fr_FR.utf8, fr_FR.UTF-8',
     'month'                 => '%B %Y',
     'month_and_day'         => '%e %B %Y',
     'month_and_date_day'    => '%A %e %B %Y',

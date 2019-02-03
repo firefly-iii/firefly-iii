@@ -23,14 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\System;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Support\Cronjobs\RecurringCronjob;
+use FireflyIII\Support\Http\Controllers\CronRunner;
 
 /**
  * Class CronController
  */
 class CronController
 {
+    use CronRunner;
+
     /**
      * @param string $token
      *
@@ -43,24 +44,4 @@ class CronController
 
         return implode("<br>\n", $results);
     }
-
-    /**
-     * @return string
-     */
-    private function runRecurring(): string
-    {
-        /** @var RecurringCronjob $recurring */
-        $recurring = app(RecurringCronjob::class);
-        try {
-            $result = $recurring->fire();
-        } catch (FireflyException $e) {
-            return $e->getMessage();
-        }
-        if (false === $result) {
-            return 'The recurring transaction cron job did not fire.';
-        }
-
-        return 'The recurring transaction cron job fired successfully.';
-    }
-
 }

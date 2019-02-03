@@ -27,8 +27,8 @@ namespace Tests\Unit\Support\Import\Routine\File;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\CurrencyMapper;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class CurrencyMapperTest
@@ -111,13 +111,13 @@ class CurrencyMapperTest extends TestCase
 
         // nothing found, mapper will try to create it.
         $repository->shouldReceive('store')
-                   ->withArgs([['code' => $currency->code, 'name' => $currency->name, 'symbol' => $currency->symbol, 'decimal_places' => 2]])
+                   ->withArgs([['code' => $currency->code, 'name' => $currency->name, 'symbol' => $currency->symbol, 'enabled' => true, 'decimal_places' => 2]])
                    ->once()->andReturn($currency);
 
         $mapper = new CurrencyMapper();
         $mapper->setUser($this->user());
 
-        $result = $mapper->map(null, ['name' => $currency->name, 'code' => $currency->code, 'symbol' => $currency->symbol]);
+        $result = $mapper->map(null, ['name' => $currency->name, 'code' => $currency->code, 'enabled' => true, 'symbol' => $currency->symbol]);
         $this->assertEquals($currency->id, $result->id);
     }
 

@@ -115,7 +115,7 @@ trait TransactionValidation
         $journalDescription = (string)($data['description'] ?? null);
         $validDescriptions  = 0;
         foreach ($transactions as $index => $transaction) {
-            if (\strlen((string)($transaction['description'] ?? null)) > 0) {
+            if ('' !== (string)($transaction['description'] ?? null)) {
                 $validDescriptions++;
             }
         }

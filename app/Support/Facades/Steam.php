@@ -39,7 +39,6 @@ use Illuminate\Support\Facades\Facade;
  * @method string negative(string $amount)
  * @method string|null opposite(string $amount = null)
  * @method int phpBytes(string $string)
- * @method tryDecrypt($value)
  * @method string positive(string $amount)
  *
  * @codeCoverageIgnore

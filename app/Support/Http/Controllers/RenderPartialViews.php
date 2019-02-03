@@ -23,11 +23,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Http\Controllers;
 
-
 use FireflyIII\Helpers\Collection\BalanceLine;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleAction;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -43,6 +45,7 @@ use Throwable;
  */
 trait RenderPartialViews
 {
+
     /**
      * Get options for account report.
      *
@@ -103,7 +106,7 @@ trait RenderPartialViews
                 break;
             case BalanceLine::ROLE_DEFAULTROLE === $role && null === $budget && null !== $account:
                 // normal row without a budget:
-                $budget = new Budget;
+                $budget       = new Budget;
                 $journals     = $popupHelper->balanceForNoBudget($account, $attributes);
                 $budget->name = (string)trans('firefly.no_budget');
                 break;
@@ -252,6 +255,85 @@ trait RenderPartialViews
         }
 
         return $view;
+    }
+
+    /**
+     * Get current (from system) rule actions.
+     *
+     * @param Rule $rule
+     *
+     * @return array
+     */
+    protected function getCurrentActions(Rule $rule): array // get info from object and present.
+    {
+        $index   = 0;
+        $actions = [];
+        // todo must be repos
+        $currentActions = $rule->ruleActions()->orderBy('order', 'ASC')->get();
+        /** @var RuleAction $entry */
+        foreach ($currentActions as $entry) {
+            $count = ($index + 1);
+            try {
+                $actions[] = view(
+                    'rules.partials.action',
+                    [
+                        'oldAction'  => $entry->action_type,
+                        'oldValue'   => $entry->action_value,
+                        'oldChecked' => $entry->stop_processing,
+                        'count'      => $count,
+                    ]
+                )->render();
+                // @codeCoverageIgnoreStart
+            } catch (Throwable $e) {
+                Log::debug(sprintf('Throwable was thrown in getCurrentActions(): %s', $e->getMessage()));
+                Log::error($e->getTraceAsString());
+            }
+            // @codeCoverageIgnoreEnd
+            ++$index;
+        }
+
+        return $actions;
+    }
+
+    /**
+     * Get current (from DB) rule triggers.
+     *
+     * @param Rule $rule
+     *
+     * @return array
+     *
+     */
+    protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
+    {
+        $index           = 0;
+        $triggers        = [];
+        // todo must be repos
+        $currentTriggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
+        /** @var RuleTrigger $entry */
+        foreach ($currentTriggers as $entry) {
+            if ('user_action' !== $entry->trigger_type) {
+                $count = ($index + 1);
+                try {
+                    $triggers[] = view(
+                        'rules.partials.trigger',
+                        [
+                            'oldTrigger' => $entry->trigger_type,
+                            'oldValue'   => $entry->trigger_value,
+                            'oldChecked' => $entry->stop_processing,
+                            'count'      => $count,
+                        ]
+                    )->render();
+                    // @codeCoverageIgnoreStart
+                } catch (Throwable $e) {
+                    Log::debug(sprintf('Throwable was thrown in getCurrentTriggers(): %s', $e->getMessage()));
+                    Log::error($e->getTraceAsString());
+                }
+                // @codeCoverageIgnoreEnd
+                ++$index;
+            }
+        }
+
+        return $triggers;
     }
 
     /**

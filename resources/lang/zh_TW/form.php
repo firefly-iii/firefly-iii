@@ -36,7 +36,7 @@ return [
     'amount_min'                  => '最小金額',
     'amount_max'                  => '最大金額',
     'match'                       => '配對於',
-    'strict'                      => '精確模式',
+    'strict'                      => '嚴謹模式',
     'repeat_freq'                 => '重複',
     'journal_currency_id'         => '貨幣',
     'currency_id'                 => '貨幣',

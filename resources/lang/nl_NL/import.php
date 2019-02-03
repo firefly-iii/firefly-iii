@@ -307,6 +307,7 @@ return [
     'column_opposing-name'            => 'Tegenrekeningnaam',
     'column_rabo-debit-credit'        => 'Rabobankspecifiek bij/af indicator',
     'column_ing-debit-credit'         => 'ING-specifieke bij/af indicator',
+    'column_generic-debit-credit'     => 'Generieke bank debet/credit indicator',
     'column_sepa-ct-id'               => 'SEPA end-to-end identificatie',
     'column_sepa-ct-op'               => 'SEPA identificatie tegenpartij',
     'column_sepa-db'                  => 'SEPA mandaatidentificatie',

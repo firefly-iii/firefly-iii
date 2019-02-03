@@ -1,7 +1,8 @@
 <?php
+
 /**
- * INGDebitCredit.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * pagination.php
+ * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,36 +19,10 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
+
 declare(strict_types=1);
 
-namespace FireflyIII\Import\Converter;
-
-use Log;
-
-/**
- * Class INGDebitCredit.
- */
-class INGDebitCredit implements ConverterInterface
-{
-    /**
-     * Convert Af or Bij to correct integer values.
-     *
-     * @param $value
-     *
-     * @return int
-     */
-    public function convert($value): int
-    {
-        Log::debug('Going to convert ing debit credit', ['value' => $value]);
-
-        if ('Af' === $value) {
-            Log::debug('Return -1');
-
-            return -1;
-        }
-
-        Log::debug('Return 1');
-
-        return 1;
-    }
-}
+return [
+    'previous' => '&laquo; 上一页',
+    'next'     => '下一页 &raquo;',
+];

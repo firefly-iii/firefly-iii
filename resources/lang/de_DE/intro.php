@@ -38,12 +38,12 @@ return [
     'accounts_create_asset_virtual'         => 'Es kann manchmal helfen, Ihrem Konto ein virtuelles Gleichgewicht zu geben: eine zusätzliche Menge, die dem tatsächlichen Kontostand immer hinzugefügt oder daraus entfernt wird.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Kostenrahmen werden zur Verwaltung Ihrer Finanzen verwendet und bilden eine der Kernfunktionen von Firefly III.',
-    'budgets_index_set_budget'              => 'Stellen Sie Ihr Gesamthaushaltsplan für jeden Zeitraum so ein, dass Firefly III Ihnen mitteilen kann, ob Sie alle verfügbaren Gelder vorgesehen haben.',
+    'budgets_index_intro'                   => 'Budgets werden zur Verwaltung Ihrer Finanzen verwendet und bilden eine der Kernfunktionen von Firefly III.',
+    'budgets_index_set_budget'              => 'Stellen Sie Ihr Gesamt-Budget für jeden Zeitraum so ein, dass Firefly III Ihnen mitteilen kann, ob Sie alle verfügbaren Gelder einem Budget zugeordnet haben.',
     'budgets_index_see_expenses_bar'        => 'Dieser Balken wird sich langsam füllen, wenn Sie Geld ausgeben.',
-    'budgets_index_navigate_periods'        => 'Navigieren Sie durch Zeitabschnitte, um Kostenrahmen im Voraus festzulegen.',
+    'budgets_index_navigate_periods'        => 'Navigieren Sie durch Zeitabschnitte, um Budgets im Voraus festzulegen.',
     'budgets_index_new_budget'              => 'Erstellen Sie neue Budgets nach Ihren Wünschen.',
-    'budgets_index_list_of_budgets'         => 'Verwenden Sie diese Tabelle, um die Beträge für jeden Kostenrahmen festzulegen und einen Überblick zu erhalten.',
+    'budgets_index_list_of_budgets'         => 'Verwenden Sie diese Tabelle, um die Beträge für jedes Budget festzulegen und einen Überblick zu erhalten.',
     'budgets_index_outro'                   => 'Um mehr über die Finanzplanung zu erfahren, klicken Sie auf das Hilfesymbol in der oberen rechten Ecke.',
 
     // reports (index)
@@ -63,17 +63,17 @@ return [
     'reports_report_category_incomeAndExpensesChart' => 'Diese Tabelle zeigt Ihre Ausgaben und Einnahmen pro Kategorie.',
 
     'reports_report_tag_intro'                  => 'Dieser Bericht gibt Ihnen Einblick in eine oder mehrere Schlagwörter.',
-    'reports_report_tag_pieCharts'              => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen ja Schlagwort, Konto, Kategorie oder Kostenrahmen.',
+    'reports_report_tag_pieCharts'              => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen ja Schlagwort, Konto, Kategorie oder Budget.',
     'reports_report_tag_incomeAndExpensesChart' => 'Diese Tabelle zeigt Ihre Ausgaben und Einnahmen je Schlagwort.',
 
-    'reports_report_budget_intro'                             => 'Dieser Bericht gibt Ihnen Einblick in eine oder mehrere Kostenrahmen.',
-    'reports_report_budget_pieCharts'                         => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen je Kostenrahmen oder Konto.',
+    'reports_report_budget_intro'                             => 'Dieser Bericht gibt Ihnen Einblick in ein oder mehrere Budgets.',
+    'reports_report_budget_pieCharts'                         => 'Diese Diagramme geben Ihnen Einblick in Ausgaben und Einnahmen je Budget oder Konto.',
     'reports_report_budget_incomeAndExpensesChart'            => 'Dieses Diagramm zeigt Ihre Ausgaben und Einnahmen je Budget.',
 
     // create transaction
     'transactions_create_switch_box'                          => 'Verwenden Sie diese Schaltflächen, um schnell den Typ der Transaktion zu ändern, die Sie speichern möchten.',
     'transactions_create_ffInput_category'                    => 'Dies ist ein Freitextfeld. Zuvor erstellte Kategorien werden vorgeschlagen.',
-    'transactions_create_withdrawal_ffInput_budget'           => 'Verknüpfen Sie Ihre Ausgaben mit einem Kostenplan für eine bessere Finanzkontrolle.',
+    'transactions_create_withdrawal_ffInput_budget'           => 'Verknüpfen Sie für eine bessere Finanzkontrolle Ihre Ausgaben mit einem Budget.',
     'transactions_create_withdrawal_currency_dropdown_amount' => 'Verwenden Sie dieses Dropdown, wenn ihre Abbuchung in einer anderen Währung ist.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Verwenden Sie dieses Dropdown, wenn ihre Einzahlung in einer anderen Währung ist.',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Wählen Sie ein Sparschwein aus und verknüpfen Sie diese Umbuchung mit Ihren Ersparnissen.',

@@ -246,7 +246,7 @@ class TransactionController extends Controller
         $data['user'] = auth()->user()->id;
         $journal      = $repository->store($data);
 
-        event(new StoredTransactionJournal($journal, 0));
+        event(new StoredTransactionJournal($journal));
 
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';

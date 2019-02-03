@@ -59,6 +59,7 @@
     "ext-bcmath": "*",
     "ext-curl": "*",
     "ext-gd": "*",
+    "ext-tokenizer": "*",
     "ext-intl": "*",
     "ext-xml": "*",
     "ext-ldap": "*",
@@ -132,6 +133,7 @@
     ],
     "post-update-cmd": [
       "@php artisan firefly:upgrade-database",
+      "@php artisan firefly:decrypt-all",
       "@php artisan firefly:verify",
       "@php artisan firefly:instructions update",
       "@php artisan passport:install"

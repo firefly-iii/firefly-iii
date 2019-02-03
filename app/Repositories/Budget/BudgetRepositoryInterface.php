@@ -81,15 +81,6 @@ interface BudgetRepositoryInterface
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
 
     /**
-     * Find a budget.
-     *
-     * @param string $name
-     *
-     * @return Budget|null
-     */
-    public function findByName(string $name): ?Budget;
-
-    /**
      * @param int|null $budgetId
      *
      * @return Budget|null
@@ -127,6 +118,14 @@ interface BudgetRepositoryInterface
      * @return string
      */
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
+
+    /**
+     * @param Carbon              $start
+     * @param Carbon              $end
+     *
+     * @return array
+     */
+    public function getAvailableBudgetWithCurrency(Carbon $start, Carbon $end): array;
 
     /**
      * Returns all available budget objects.

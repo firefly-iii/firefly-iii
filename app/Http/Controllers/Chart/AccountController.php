@@ -35,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AugumentData;
+use FireflyIII\Support\Http\Controllers\ChartGeneration;
 use FireflyIII\Support\Http\Controllers\DateCalculation;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Collection;
@@ -49,7 +50,7 @@ use Log;
  */
 class AccountController extends Controller
 {
-    use DateCalculation, AugumentData;
+    use DateCalculation, AugumentData, ChartGeneration;
 
     /** @var GeneratorInterface Chart generation methods. */
     protected $generator;
@@ -109,7 +110,7 @@ class AccountController extends Controller
         $tempData   = [];
 
         // grab all accounts and names
-        $accounts     = $this->accountRepository->getAccountsByType([AccountType::EXPENSE, AccountType::BENEFICIARY]);
+        $accounts     = $this->accountRepository->getAccountsByType([AccountType::EXPENSE]);
         $accountNames = $this->extractNames($accounts);
 
         // grab all balances
@@ -603,104 +604,5 @@ class AccountController extends Controller
         $cache->store($data);
 
         return response()->json($data);
-    }
-
-
-    /**
-     * Shows an overview of the account balances for a set of accounts.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function accountBalanceChart(Collection $accounts, Carbon $start, Carbon $end): array // chart helper method.
-    {
-        // chart properties for cache:
-        $cache = new CacheProperties();
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('chart.account.account-balance-chart');
-        $cache->addProperty($accounts);
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-        Log::debug('Regenerate chart.account.account-balance-chart from scratch.');
-
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        /** @var AccountRepositoryInterface $accountRepos */
-        $accountRepos = app(AccountRepositoryInterface::class);
-
-        $default   = app('amount')->getDefaultCurrency();
-        $chartData = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $currency = $repository->findNull((int)$accountRepos->getMetaValue($account, 'currency_id'));
-            if (null === $currency) {
-                $currency = $default;
-            }
-            $currentSet = [
-                'label'           => $account->name,
-                'currency_symbol' => $currency->symbol,
-                'entries'         => [],
-            ];
-
-            $currentStart = clone $start;
-            $range        = app('steam')->balanceInRange($account, $start, clone $end);
-            $previous     = array_values($range)[0];
-            while ($currentStart <= $end) {
-                $format   = $currentStart->format('Y-m-d');
-                $label    = $currentStart->formatLocalized((string)trans('config.month_and_day'));
-                $balance  = isset($range[$format]) ? round($range[$format], 12) : $previous;
-                $previous = $balance;
-                $currentStart->addDay();
-                $currentSet['entries'][$label] = $balance;
-            }
-            $chartData[] = $currentSet;
-        }
-        $data = $this->generator->multiSet($chartData);
-        $cache->store($data);
-
-        return $data;
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     *
-     * @param array $names
-     *
-     * @return array
-     */
-    private function expandNames(array $names): array
-    {
-        $result = [];
-        foreach ($names as $entry) {
-            $result[$entry['name']] = 0;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    private function extractNames(Collection $accounts): array
-    {
-        $return = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $return[$account->id] = $account->name;
-        }
-
-        return $return;
     }
 }

@@ -30,7 +30,7 @@ use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
+use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
@@ -41,7 +41,7 @@ use Log;
  */
 class NoCategoryController extends Controller
 {
-
+    use PeriodOverview;
     /** @var JournalRepositoryInterface Journals and transactions overview */
     private $journalRepos;
 
@@ -134,93 +134,5 @@ class NoCategoryController extends Controller
         $transactions->setPath(route('categories.no-category.all'));
 
         return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
-    }
-
-
-    /**
-     * Show period overview for no category view.
-     *
-     * @param Carbon $theDate
-     *
-     * @return Collection
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    protected function getNoCategoryPeriodOverview(Carbon $theDate): Collection // period overview method.
-    {
-        Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
-        $range = app('preferences')->get('viewRange', '1M')->data;
-        $first = $this->journalRepos->firstNull();
-        $start = null === $first ? new Carbon : $first->date;
-        $end   = $theDate ?? new Carbon;
-
-        Log::debug(sprintf('Start for getNoCategoryPeriodOverview() is %s', $start->format('Y-m-d')));
-        Log::debug(sprintf('End for getNoCategoryPeriodOverview() is %s', $end->format('Y-m-d')));
-
-        // properties for cache
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('no-category-period-entries');
-
-        if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
-        }
-
-        $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-
-        foreach ($dates as $date) {
-
-            // count journals without category in this period:
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $count = $collector->getTransactions()->count();
-
-            // amount transferred
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive((string)$collector->getTransactions()->sum('transaction_amount'));
-
-            // amount spent
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
-                [TransactionType::WITHDRAWAL]
-            );
-            $spent = $collector->getTransactions()->sum('transaction_amount');
-
-            // amount earned
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
-                [TransactionType::DEPOSIT]
-            );
-            $earned = $collector->getTransactions()->sum('transaction_amount');
-            /** @noinspection PhpUndefinedMethodInspection */
-            $dateStr  = $date['end']->format('Y-m-d');
-            $dateName = app('navigation')->periodShow($date['end'], $date['period']);
-            $entries->push(
-                [
-                    'string'      => $dateStr,
-                    'name'        => $dateName,
-                    'count'       => $count,
-                    'spent'       => $spent,
-                    'earned'      => $earned,
-                    'transferred' => $transferred,
-                    'start'       => clone $date['start'],
-                    'end'         => clone $date['end'],
-                ]
-            );
-        }
-        Log::debug('End of loops');
-        $cache->store($entries);
-
-        return $entries;
     }
 }

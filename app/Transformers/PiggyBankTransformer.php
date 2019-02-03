@@ -104,6 +104,7 @@ class PiggyBankTransformer extends AbstractTransformer
             'created_at'              => $piggyBank->created_at->toAtomString(),
             'updated_at'              => $piggyBank->updated_at->toAtomString(),
             'account_id'              => $piggyBank->account_id,
+            'account_name'            => $piggyBank->account->name,
             'name'                    => $piggyBank->name,
             'currency_id'             => $currency->id,
             'currency_code'           => $currency->code,

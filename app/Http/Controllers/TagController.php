@@ -33,6 +33,7 @@ use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Class TagController.
@@ -250,7 +251,10 @@ class TagController extends Controller
     public function store(TagFormRequest $request): RedirectResponse
     {
         $data = $request->collectTagData();
-        $this->repository->store($data);
+        Log::debug('Data from request', $data);
+
+        $result = $this->repository->store($data);
+        Log::debug('Data after storage', $result->toArray());
 
         session()->flash('success', (string)trans('firefly.created_tag', ['tag' => $data['tag']]));
         app('preferences')->mark();

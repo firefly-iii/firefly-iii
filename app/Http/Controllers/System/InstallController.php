@@ -147,7 +147,7 @@ class InstallController extends Controller
                 return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
             }
 
-            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
 
         return response()->json(['error' => false, 'message' => 'OK']);
@@ -174,7 +174,7 @@ class InstallController extends Controller
                 return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
             }
 
-            return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
 
         return response()->json(['error' => false, 'message' => 'OK']);

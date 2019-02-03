@@ -17,74 +17,95 @@
                         {{ trans('firefly.user_id_is',{user: userId})|raw }}
                     </p>
                     {% if not SANDSTORM %}
-                    <ul>
-                        <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
-                        <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
-                        <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
-                    </ul>
+                        <ul>
+                            <li><a href="{{ route('profile.change-email') }}">{{ 'change_your_email'|_ }}</a></li>
+                            <li><a href="{{ route('profile.change-password') }}">{{ 'change_your_password'|_ }}</a></li>
+                            <li><a class="text-danger" href="{{ route('profile.delete-account') }}">{{ 'delete_account'|_ }}</a></li>
+                        </ul>
                     {% endif %}
                 </div>
             </div>
         </div>
     </div>
-    {% if not SANDSTORM %}
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'command_line_token'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p>
-                        {{ 'explain_command_line_token'|_ }}
-                    </p>
-                    <p>
-                        <input id="token" type="text" class="form-control" name="token" value="{{ accessToken.data }}" size="32" maxlength="32" readonly/>
 
-                    </p>
-                    <p>
-                    <form action="{{ route('profile.regenerate') }}" method="post">
-                        <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                        <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-refresh"></i> {{ 'regenerate_command_line_token'|_ }}</button>
-                    </form>
-                    </p>
+    {% if SANDSTORM %}
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Offer template</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            Block for sandstorm thing
+                        </p>
+                        <div>
+                            <iframe style="width: 100%; height: 55px; margin: 0; border: 0;" id="offer-iframe">
+                            </iframe>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
+    {% if not SANDSTORM %}
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'command_line_token'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p>
+                            {{ 'explain_command_line_token'|_ }}
+                        </p>
+                        <p>
+                            <input id="token" type="text" class="form-control" name="token" value="{{ accessToken.data }}" size="32" maxlength="32" readonly/>
+
+                        </p>
+                        <p>
+                        <form action="{{ route('profile.regenerate') }}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                            <button type="submit" class="btn btn-danger btn-xs"><i class="fa fa-refresh"></i> {{ 'regenerate_command_line_token'|_ }}</button>
+                        </form>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
     {% endif %}
 
     {% if not SANDSTORM %}
-    <div class="row">
-        <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
-            <div class="box box-primary">
-                <div class="box-header with-border">
-                    <h3 class="box-title">{{ 'pref_two_factor_auth'|_ }}</h3>
-                </div>
-                <div class="box-body">
-                    <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
-                    {% if enabled2FA == true %}
+        <div class="row">
+            <div class="col-lg-8 col-lg-offset-2 col-md-12 col-sm-12">
+                <div class="box box-primary">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">{{ 'pref_two_factor_auth'|_ }}</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-info">{{ 'pref_two_factor_auth_help'|_ }}</p>
+                        {% if enabled2FA == true %}
 
-                        <div class="btn-group">
-                            <a class="btn btn-info" href="{{ route('profile.code') }}">
-                                <i class="fa fa-recycle"></i>
-                                {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
-                            <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
-                                <i class="fa fa-trash"></i>
-                                {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
-                        </div>
-                    {% else %}
-                        <p>
-                        <form action="{{ route('profile.enable2FA') }}" method="post">
-                            <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
-                            <button type="submit" class="btn btn-info"><i class="fa fa-lock"></i> {{ 'pref_enable_two_factor_auth'|_ }}</button>
-                        </form>
-                        </p>
-                    {% endif %}
+                            <div class="btn-group">
+                                <a class="btn btn-info" href="{{ route('profile.code') }}">
+                                    <i class="fa fa-recycle"></i>
+                                    {{ 'pref_two_factor_auth_reset_code'|_ }}</a>
+                                <a class="btn btn-danger" href="{{ route('profile.delete-code') }}">
+                                    <i class="fa fa-trash"></i>
+                                    {{ 'pref_two_factor_auth_disable_2fa'|_ }}</a>
+                            </div>
+                        {% else %}
+                            <p>
+                            <form action="{{ route('profile.enable2FA') }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token() }}"/>
+                                <button type="submit" class="btn btn-info"><i class="fa fa-lock"></i> {{ 'pref_enable_two_factor_auth'|_ }}</button>
+                            </form>
+                            </p>
+                        {% endif %}
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
     {% endif %}
 
     <div class="row">
@@ -102,4 +123,35 @@
             <passport-personal-access-tokens></passport-personal-access-tokens>
         </div>
     </div>
+{% endblock %}
+{% block scripts %}
+    {% if SANDSTORM %}
+        <script>
+            function requestIframeURL() {
+                var template = "You can use the $API_TOKEN key to reach Firefly III at $API_HOST.";
+                window.parent.postMessage({
+                                              renderTemplate: {
+                                                  rpcId: "0",
+                                                  template: template,
+                                                  clipboardButton: 'left'
+                                              }
+                                          }, "*");
+            }
+
+            document.addEventListener("DOMContentLoaded", requestIframeURL);
+
+            var copyIframeURLToElement = function (event) {
+                if (event.data.rpcId === "0") {
+                    if (event.data.error) {
+                        console.log("ERROR: " + event.data.error);
+                    } else {
+                        var el = document.getElementById("offer-iframe");
+                        el.setAttribute("src", event.data.uri);
+                    }
+                }
+            };
+
+            window.addEventListener("message", copyIframeURLToElement);
+        </script>
+    {% endif %}
 {% endblock %}

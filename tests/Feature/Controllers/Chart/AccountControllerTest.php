@@ -80,7 +80,7 @@ class AccountControllerTest extends TestCase
         $end   = [$firstId => [1 => '121.45', 2 => '234.01',], $secondId => [1 => '121.45', 2 => '234.01',],];
 
         // return them when collected:
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE, AccountType::BENEFICIARY]])->andReturn($accounts);
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::EXPENSE]])->andReturn($accounts);
 
         // and return start and end balances:
         Steam::shouldReceive('balancesPerCurrencyByAccounts')->twice()->andReturn($start, $end);
@@ -239,6 +239,8 @@ class AccountControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
         // change the preference:
         Preferences::setForUser($this->user(), 'frontPageAccounts', []);
 
@@ -381,6 +383,8 @@ class AccountControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
         // grab two expense accounts from the current user.
         $accounts = $this->user()->accounts()->where('account_type_id', 5)->take(2)->get();
 

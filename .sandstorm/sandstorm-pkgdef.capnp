@@ -15,8 +15,8 @@ const pkgdef :Spk.PackageDefinition = (
 
   manifest = (
     appTitle = (defaultText = "Firefly III"),
-    appVersion = 19,
-    appMarketingVersion = (defaultText = "4.7.9"),
+    appVersion = 20,
+    appMarketingVersion = (defaultText = "4.7.10"),
 
     actions = [
       # Define your "new document" handlers here.
@@ -103,7 +103,7 @@ const pkgdef :Spk.PackageDefinition = (
   # not have been detected as a dependency during `spk dev`. If you list
   # a directory here, its entire contents will be included recursively.
 
-  #bridgeConfig = (
+  bridgeConfig = (
   #  # Used for integrating permissions and roles into the Sandstorm shell
   #  # and for sandstorm-http-bridge to pass to your app.
   #  # Uncomment this block and adjust the permissions and roles to make
@@ -165,12 +165,12 @@ const pkgdef :Spk.PackageDefinition = (
   #      ),
   #    ],
   #  ),
-  #  #apiPath = "/api",
+  apiPath = "/api/v1/",
   #  # Apps can export an API to the world.  The API is to be used primarily by Javascript
   #  # code and native apps, so it can't serve out regular HTML to browsers.  If a request
   #  # comes in to your app's API, sandstorm-http-bridge will prefix the request's path with
   #  # this string, if specified.
-  #),
+  ),
 );
 
 const myCommand :Spk.Manifest.Command = (

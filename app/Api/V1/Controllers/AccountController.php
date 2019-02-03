@@ -233,6 +233,12 @@ class AccountController extends Controller
         $type     = $request->get('type') ?? 'default';
         $this->parameters->set('type', $type);
 
+        // user can overrule page size with limit parameter.
+        $limit = $this->parameters->get('limit');
+        if (null !== $limit && $limit > 0) {
+            $pageSize = $limit;
+        }
+
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';

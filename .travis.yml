@@ -1,29 +1,23 @@
-language: php
-php:
-  - 7.2
-
-cache:
-    directories:
-        - vendor
-        - $HOME/.composer/cache
-
-install:
-  - rm composer.lock
-  - composer update --no-scripts
-  - cp .env.testing .env
-  - php artisan clear-compiled
-  - php artisan env
-  - wget -q https://github.com/firefly-iii/test-data/raw/master/storage/database.sqlite -O storage/database/database.sqlite
-  - mkdir -p build/logs
-
-script:
-  - ./vendor/bin/phpunit -c phpunit.coverage.xml
-
-after_success:
-  - travis_retry php vendor/bin/php-coveralls -x storage/build/clover-all.xml
-
+sudo: required
+language: bash
 # safelist
 branches:
   only:
   - develop
   - master
+
+env:
+  - VERSION=4.7.10
+
+services:
+  - docker
+
+script:
+  # enable experimental features.
+  - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  - sudo service docker restart
+  - docker version -f '{{.Server.Experimental}}'
+  - docker version
+  - .deploy/docker/build-amd64.sh
+  - .deploy/docker/build-arm.sh
+  - .deploy/docker/manifest.sh

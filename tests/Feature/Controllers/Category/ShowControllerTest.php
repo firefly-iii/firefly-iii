@@ -71,6 +71,9 @@ class ShowControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -129,6 +132,8 @@ class ShowControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -226,6 +231,8 @@ class ShowControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $collector    = $this->mock(TransactionCollectorInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 

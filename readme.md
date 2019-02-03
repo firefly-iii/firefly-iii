@@ -1,16 +1,8 @@
-<p align="center"><img src="https://firefly-iii.org/static/img/logo-small-new.png"></p>
-<h1 align="center">Firefly III</h1>
+![Firefly III logo](https://firefly-iii.org/static/img/logo-small-new.png)
 
-<p align="center">
-	<!-- version -->
-	<a href="https://packagist.org/packages/grumpydictator/firefly-iii"><img src="https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square" alt="Packagist"></a>
-	<!-- license -->
-	<a href="https://www.gnu.org/licenses/gpl-3.0.en.html"><img src="https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square" alt="License"></a>
-	<!-- Donate -->
-	<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA"><img src="https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square" alt="Donate">
-</p>
+# Firefly III
 
-<!-- MarkdownTOC autolink="true" depth="4" bracket="round" list_bullets="*" -->
+[![Packagist](https://img.shields.io/packagist/v/grumpydictator/firefly-iii.svg?style=flat-square)](https://packagist.org/packages/grumpydictator/firefly-iii) [![License](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square])](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Donate using Paypal](https://img.shields.io/badge/Donate-PayPal-green.svg?style=flat-square)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA) [![OpenCollective](https://opencollective.com/firefly-iii/backers/badge.svg)](https://opencollective.com/firefly-iii) [![OpenCollective](https://opencollective.com/firefly-iii/sponsors/badge.svg)](https://opencollective.com/firefly-iii)
 
 * [Introduction](#introduction)
 	* [Purpose](#purpose)
@@ -28,8 +20,6 @@
 	* [Donate](#donate)
 	* [Alternatives](#alternatives)
 	* [Badges](#badges)
-
-<!-- /MarkdownTOC -->
 
 ## Introduction
 "Firefly III" is a (self-hosted) manager for your personal finances. It can help you keep track of your expenses and income, so you can spend less and save more. Firefly III supports the use of budgets, categories and tags. It can import data from external sources and it has many neat financial reports available. Here are some screenshots:
@@ -50,9 +40,8 @@ Most importantly...
 
 * Firefly III runs on your own server, so you are fully in control of your data. It will not contact other sites or servers.
 * You can import from over 2500 financial providers, in 55 countries when you enable the [Spectre API](https://firefly-iii.readthedocs.io/en/latest/import/spectre.html).
-* You can import from [bunq](https://www.bunq.com/).
-* You can import CSV files from practically any bank.
-* Firefly III features an [JSON REST API](https://firefly-iii.readthedocs.io/en/latest/api/start.html).
+* You can also import from [bunq](https://www.bunq.com/), from **YNAB**, using **FinTS** or simply by uploading **CSV** files.
+* Firefly III features an [JSON REST API](https://api-docs.firefly-iii.org/) with a [Python API client](https://pypi.org/project/Firefly-III-API-Client/) built by [ms32035](https://github.com/ms32035).
 * If you feel you’re missing something you can just ask me and I’ll add it!
 
 But actually, it features:
@@ -147,7 +136,11 @@ This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/L
 ### Donate
 If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved!
 
-OK that was a joke. Thank you for considering donating to Firefly III! Please checkout [my Patreon page](https://www.patreon.com/jc5) or visit [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA).
+OK that was a joke. You can become a backer or a sponsor of the [Firefly III Open Collective](https://opencollective.com/firefly-iii). On that page, I transparently show you the expenses I make and the donations I receive.
+
+You can also donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA).
+
+Thank you for considering donating to Firefly III!  
 
 ### Alternatives
 If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted list](https://github.com/Kickball/awesome-selfhosted) which features not only Firefly III but also noteworthy alternatives such as [Silverstrike](https://github.com/agstrike/silverstrike).
@@ -155,4 +148,4 @@ If you are looking for alternatives, check out [Kickball's Awesome-Selfhosted li
 ### Badges
 I like badges!
 
-[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.2](https://img.shields.io/badge/php-7.2-red.svg?style=flat-square)](https://secure.php.net/downloads.php) [![license](https://img.shields.io/github/license/firefly-iii/firefly-iii.svg?style=flat-square)](https://www.gnu.org/licenses/gpl-3.0.en.html) [![Patreon page](https://img.shields.io/badge/patreon-JC5-brightgreen.svg?longCache=true&style=flat-square)](https://patreon.com/JC5)
+[![Travis branch](https://travis-ci.com/firefly-iii/firefly-iii.svg?branch=master)](https://travis-ci.com/firefly-iii/firefly-iii) [![Scrutinizer](https://img.shields.io/scrutinizer/g/firefly-iii/firefly-iii.svg?style=flat-square)](https://scrutinizer-ci.com/g/firefly-iii/firefly-iii/) [![Coveralls github branch](https://img.shields.io/coveralls/github/firefly-iii/firefly-iii/master.svg?style=flat-square)](https://coveralls.io/github/firefly-iii/firefly-iii) [![Requires PHP7.2](https://img.shields.io/badge/php-7.2-red.svg?style=flat-square)](https://secure.php.net/downloads.php)

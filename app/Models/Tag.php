@@ -40,8 +40,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int            $id
  * @property \Carbon\Carbon $date
  * @property int            zoomLevel
- * @property float          longitude
  * @property float          latitude
+ * @property float          longitude
  * @property string         description
  * @property string         amount_sum
  * @property string         tagMode
@@ -64,9 +64,11 @@ class Tag extends Model
             'deleted_at' => 'datetime',
             'date'       => 'date',
             'zoomLevel'  => 'int',
+            'latitude'   => 'float',
+            'longitude'  => 'float',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['user_id', 'tag', 'date', 'description', 'longitude', 'latitude', 'zoomLevel', 'tagMode'];
+    protected $fillable = ['user_id', 'tag', 'date', 'description', 'latitude', 'longitude', 'zoomLevel', 'tagMode'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -91,63 +93,6 @@ class Tag extends Model
         throw new NotFoundHttpException;
     }
 
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string|null
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getDescriptionAttribute($value): ?string
-    {
-        if (null === $value) {
-            return $value;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string|null
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getTagAttribute($value): ?string
-    {
-        if (null === $value) {
-            return null;
-        }
-
-        return Crypt::decrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setDescriptionAttribute($value): void
-    {
-        $this->attributes['description'] = Crypt::encrypt($value);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setTagAttribute($value): void
-    {
-        $this->attributes['tag'] = Crypt::encrypt($value);
-    }
 
     /**
      * @codeCoverageIgnore

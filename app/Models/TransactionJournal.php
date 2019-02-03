@@ -188,23 +188,14 @@ class TransactionJournal extends Model
 
     /**
      * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string|null
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
+     * @return BelongsToMany
      */
-    public function getDescriptionAttribute($value): ?string
+    public function transactionGroups(): BelongsToMany
     {
-        if ($this->encrypted) {
-            return Crypt::decrypt($value);
-        }
-
-        return $value;
+        return $this->belongsToMany(Category::class);
     }
 
     /**
-     * @codeCoverageIgnore
      * @return bool
      */
     public function isDeposit(): bool
@@ -313,20 +304,6 @@ class TransactionJournal extends Model
         if (\count($types) > 0) {
             $query->whereIn('transaction_types.type', $types);
         }
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setDescriptionAttribute($value): void
-    {
-        $encrypt                         = config('firefly.encryption');
-        $this->attributes['description'] = $encrypt ? Crypt::encrypt($value) : $value;
-        $this->attributes['encrypted']   = $encrypt;
     }
 
     /**

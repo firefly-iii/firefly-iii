@@ -23,8 +23,36 @@
 $(document).ready(function () {
     "use strict";
 
+    // description
+    if ($('input[name^="description["]').length > 0) {
+        console.log('descr');
+        var journalNames = new Bloodhound({
+                                              datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+                                              queryTokenizer: Bloodhound.tokenizers.whitespace,
+                                              prefetch: {
+                                                  url: 'json/transaction-journals/all?uid=' + uid,
+                                                  filter: function (list) {
+                                                      return $.map(list, function (name) {
+                                                          return {name: name};
+                                                      });
+                                                  }
+                                              },
+                                              remote: {
+                                                  url: 'json/transaction-journals/all?search=%QUERY&uid=' + uid,
+                                                  wildcard: '%QUERY',
+                                                  filter: function (list) {
+                                                      return $.map(list, function (name) {
+                                                          return {name: name};
+                                                      });
+                                                  }
+                                              }
+                                          });
+        journalNames.initialize();
+        $('input[name^="description["]').typeahead({hint: true, highlight: true,}, {source: journalNames, displayKey: 'name', autoSelect: false});
+    }
     // destination account names:
     if ($('input[name^="destination_name["]').length > 0) {
+
         var destNames = new Bloodhound({
                                            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
                                            queryTokenizer: Bloodhound.tokenizers.whitespace,

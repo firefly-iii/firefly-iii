@@ -23,7 +23,7 @@
 declare(strict_types=1);
 
 return [
-    'html_language'         => 'tr',
+    'html_language'         => 'en',
     'locale'                => 'tr, Turkish, tr_TR, tr_TR.utf8, tr_TR.UTF-8',
     'month'                 => '%B %Y',
     'month_and_day'         => '%e %B %Y',

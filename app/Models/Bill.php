@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -80,7 +79,7 @@ class Bill extends Model
 
     /** @var array Fields that can be filled */
     protected $fillable
-        = ['name', 'match', 'amount_min', 'match_encrypted', 'name_encrypted', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
+        = ['name', 'match', 'amount_min', 'user_id', 'amount_max', 'date', 'repeat_freq', 'skip',
            'automatch', 'active', 'transaction_currency_id'];
     /** @var array Hidden from view */
     protected $hidden = ['amount_min_encrypted', 'amount_max_encrypted', 'name_encrypted', 'match_encrypted'];
@@ -119,40 +118,6 @@ class Bill extends Model
 
     /**
      * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getMatchAttribute($value): string
-    {
-        if (1 === (int)$this->match_encrypted) {
-            return Crypt::decrypt($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param $value
-     *
-     * @return string|null
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    public function getNameAttribute($value): ?string
-    {
-        if (1 === (int)$this->name_encrypted) {
-            return Crypt::decrypt($value);
-        }
-
-        return $value;
-    }
-
-    /**
-     * @codeCoverageIgnore
      * Get all of the notes.
      */
     public function notes(): MorphMany
@@ -178,32 +143,6 @@ class Bill extends Model
     public function setAmountMinAttribute($value): void
     {
         $this->attributes['amount_min'] = (string)$value;
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setMatchAttribute($value): void
-    {
-        $encrypt                             = config('firefly.encryption');
-        $this->attributes['match']           = $encrypt ? Crypt::encrypt($value) : $value;
-        $this->attributes['match_encrypted'] = $encrypt;
-    }
-
-    /**
-     * @param $value
-     *
-     * @codeCoverageIgnore
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
-     */
-    public function setNameAttribute($value): void
-    {
-        $encrypt                            = config('firefly.encryption');
-        $this->attributes['name']           = $encrypt ? Crypt::encrypt($value) : $value;
-        $this->attributes['name_encrypted'] = $encrypt;
     }
 
     /**

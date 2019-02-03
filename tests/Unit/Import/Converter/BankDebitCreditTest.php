@@ -23,14 +23,16 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Import\Converter;
 
+use FireflyIII\Import\Converter\BankDebitCredit;
 use FireflyIII\Import\Converter\INGDebitCredit;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class INGDebitCreditTest
+ *
+ * Class BankDebitCreditTest
  */
-class INGDebitCreditTest extends TestCase
+class BankDebitCreditTest extends TestCase
 {
     /**
      *
@@ -41,34 +43,53 @@ class INGDebitCreditTest extends TestCase
         Log::info(sprintf('Now in %s.', \get_class($this)));
     }
 
+    /**
+     * @covers \FireflyIII\Import\Converter\BankDebitCredit
+     */
+    public function testConvertA(): void
+    {
+        $converter = new BankDebitCredit;
+        $result    = $converter->convert('A');
+        $this->assertEquals(-1, $result);
+    }
 
     /**
-     * @covers \FireflyIII\Import\Converter\INGDebitCredit
+     * @covers \FireflyIII\Import\Converter\BankDebitCredit
      */
     public function testConvertAf(): void
     {
-        $converter = new INGDebitCredit;
+        $converter = new BankDebitCredit;
         $result    = $converter->convert('Af');
         $this->assertEquals(-1, $result);
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\INGDebitCredit
+     * @covers \FireflyIII\Import\Converter\BankDebitCredit
      */
     public function testConvertAnything(): void
     {
-        $converter = new INGDebitCredit;
+        $converter = new BankDebitCredit;
         $result    = $converter->convert('9083jkdkj');
         $this->assertEquals(1, $result);
     }
 
     /**
-     * @covers \FireflyIII\Import\Converter\INGDebitCredit
+     * @covers \FireflyIII\Import\Converter\BankDebitCredit
      */
     public function testConvertBij(): void
     {
-        $converter = new INGDebitCredit;
+        $converter = new BankDebitCredit;
         $result    = $converter->convert('Bij');
         $this->assertEquals(1, $result);
+    }
+
+    /**
+     * @covers \FireflyIII\Import\Converter\BankDebitCredit
+     */
+    public function testConvertDebet(): void
+    {
+        $converter = new BankDebitCredit;
+        $result    = $converter->convert('Debet');
+        $this->assertEquals(-1, $result);
     }
 }
