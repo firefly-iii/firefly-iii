@@ -12,6 +12,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 1977](https://github.com/firefly-iii/firefly-iii/issues/1977) Docker image now includes memcached support
 - [Issue 2031](https://github.com/firefly-iii/firefly-iii/issues/2031) A new generic debit/credit indicator for imports.
 - The new Docker image no longer has the capability to run cron jobs, and will no longer generate your recurring transactions for you. This has been done to simplify the build and make sure your Docker container runs one service, as it should. To set up a cron job for your new Docker container, [check out the documentation](https://docs.firefly-iii.org/en/latest/installation/cronjob.html).
+- Due to a change in the database structure, this upgrade will reset your preferences. Sorry about that.
 
 ### Deprecated
 - I will no longer accept PR's that introduce new currencies.
@@ -41,6 +42,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 2009](https://github.com/firefly-iii/firefly-iii/issues/2009) Could not change recurrence back to "forever".
 - [Issue 2033](https://github.com/firefly-iii/firefly-iii/issues/2033) Longitude can go from -180 to 180.
 - [Issue 2034](https://github.com/firefly-iii/firefly-iii/issues/2034) Rules were not being triggered in mass-edit.
+- #2043 In rare instances the repetition of a recurring transaction was displayed incorrectly.
 - Fixed broken translations in the recurring transactions overview.
 - When you create a recurring transfer you make make it fill (or empty) a piggy bank. This was not working, despite a fix in 4.7.8.
 - Fixed a bug where the importer would not be capable of creating new currencies.

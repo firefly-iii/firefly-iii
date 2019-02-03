@@ -165,6 +165,7 @@ Route::group(
     }
 );
 
+// Categories
 Route::group(
     ['middleware' => ['auth:api', 'bindings'], 'namespace' => 'FireflyIII\Api\V1\Controllers\Chart', 'prefix' => 'chart/category',
      'as'         => 'api.v1.chart.category.'],
