@@ -125,7 +125,7 @@ return [
     'unique_piggy_bank_for_user'     => 'Nazwa skarbonki musi być unikalna.',
     'secure_password'                => 'To nie jest bezpieczne hasło. Proszę spróbować ponownie. Aby uzyskać więcej informacji odwiedź https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Nieprawidłowy typ powtórzeń dla cyklicznych transakcji.',
-    'valid_recurrence_rep_moment'    => 'Invalid repetition moment for this type of repetition.',
+    'valid_recurrence_rep_moment'    => 'Nieprawidłowy moment powtórzenia dla tego typu powtórzenia.',
     'invalid_account_info'           => 'Nieprawidłowe informacje o koncie.',
     'attributes'                     => [
         'email'                   => 'adres e-mail',
