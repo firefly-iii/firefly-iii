@@ -18,7 +18,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - I will no longer accept PR's that introduce new currencies.
 
 ### Removed
-- Firefly III no longer encrypts the database and will [decrypt the database]() on its first run.
+- Firefly III no longer encrypts the database and will [decrypt the database](https://github.com/firefly-iii/help/wiki/Database-encryption) on its first run.
 
 ### Fixed
 - [Issue 1923](https://github.com/firefly-iii/firefly-iii/issues/1923) Broken window position for date picker.
