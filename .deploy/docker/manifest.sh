@@ -2,7 +2,7 @@
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     TARGET=jc5x/firefly-iii:develop
     ARM=jc5x/firefly-iii:develop-arm
-    AMD=jc5x/firefly-iii:develop
+    AMD=jc5x/firefly-iii:develop-amd
 
     docker manifest create $TARGET $AMD $ARM
     docker manifest annotate $TARGET $ARM --arch arm   --os linux
@@ -15,7 +15,7 @@ echo "The version is $VERSION"
 if [ "$TRAVIS_BRANCH" == "master" ]; then
     TARGET=jc5x/firefly-iii:latest
     ARM=jc5x/firefly-iii:latest-arm
-    AMD=jc5x/firefly-iii:latest
+    AMD=jc5x/firefly-iii:latest-amd
 
     docker manifest create $TARGET $AMD $ARM
     docker manifest annotate $TARGET $ARM --arch arm   --os linux
@@ -25,7 +25,7 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
     # and another one for version specific:
     TARGET=jc5x/firefly-iii:release-$VERSION
     ARM=jc5x/firefly-iii:release-$VERSION-arm
-    AMD=jc5x/firefly-iii:release-$VERSION
+    AMD=jc5x/firefly-iii:release-$VERSION-amd
 
     docker manifest create $TARGET $AMD $ARM
     docker manifest annotate $TARGET $ARM --arch arm   --os linux
