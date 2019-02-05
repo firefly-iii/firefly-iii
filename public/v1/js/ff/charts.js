@@ -346,7 +346,6 @@ function drawAChart(URI, container, chartType, options, colorData) {
             if (typeof drawVerticalLine !== 'undefined') {
                 if (drawVerticalLine !== '') {
                     // draw line using annotation plugin.
-                    console.log('Will draw line');
                     chartOpts.options.annotation = {
                         annotations: [{
                             type: 'line',
