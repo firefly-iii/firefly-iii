@@ -1,6 +1,6 @@
 FROM arm32v7/php:7.2.8-apache-stretch
 ARG TARGETPLATFORM
-#COPY tmp/qemu-arm-static /usr/bin/qemu-arm-static
+COPY tmp/qemu-arm-static /usr/bin/qemu-arm-static
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1
 LABEL version="1.3" maintainer="thegrumpydictator@gmail.com"
 
