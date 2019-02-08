@@ -23,7 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Requests;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
 use Illuminate\Foundation\Http\FormRequest;
+use Log;
 
 /**
  * Class Request.
@@ -130,4 +132,42 @@ class Request extends FormRequest
     {
         return $this->get($field) ? new Carbon($this->get($field)) : null;
     }
+
+    /**
+     * Return date time or NULL.
+     *
+     * @param string $field
+     *
+     * @return Carbon|null
+     */
+    protected function dateTime(string $field): ?Carbon
+    {
+        if (null === $this->get($field)) {
+            return null;
+        }
+        $value = (string)$this->get($field);
+        if (10 === \strlen($value)) {
+            // probably a date format.
+            try {
+                $result = Carbon::createFromFormat('Y-m-d', $value);
+            } catch (InvalidDateException $e) {
+                Log::error(sprintf('"%s" is not a valid date: %s', $value, $e->getMessage()));
+
+                return null;
+            }
+
+            return $result;
+        }
+        // is an atom string, I hope?
+        try {
+            $result = Carbon::parse($value);
+        } catch (InvalidDateException $e) {
+            Log::error(sprintf('"%s" is not a valid date or time: %s', $value, $e->getMessage()));
+
+            return null;
+        }
+
+        return $result;
+    }
+
 }

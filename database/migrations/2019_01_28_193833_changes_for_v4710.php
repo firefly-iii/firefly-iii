@@ -11,7 +11,7 @@ class ChangesForV4710 extends Migration
      *
      * @return void
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('group_journals');
         Schema::dropIfExists('transaction_groups');
@@ -22,7 +22,7 @@ class ChangesForV4710 extends Migration
      *
      * @return void
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable('transaction_groups')) {
             Schema::create(
