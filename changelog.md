@@ -6,13 +6,9 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 ### Added
 - Experimental audit logging channel to track important events (separate from debug logging).
 
-
 ### Changed
 - #2003, #2006 Transactions can be stored with a timestamp. The user-interface does not support this yet. But the API does.
 - Docker image tags a new manifest for arm and amd64.
-
-### Deprecated
-- Initial release.
 
 ### Removed
 - @skuzzle removed an annoying console.log statement.
