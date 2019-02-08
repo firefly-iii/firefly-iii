@@ -457,7 +457,7 @@ class ImportArrayStorage
 
             Log::debug(sprintf('Going to store entry %d of %d', $index + 1, $count));
             // convert the date to an object:
-            $store['date']        = Carbon::createFromFormat('Y-m-d', $store['date']);
+            $store['date']        = Carbon::parse($store['date'], config('app.timezone'));
             $store['description'] = '' === $store['description'] ? '(empty description)' : $store['description'];
             // store the journal.
             try {
@@ -556,7 +556,7 @@ class ImportArrayStorage
                 Log::debug(sprintf('Comparison is a hit! (%s)', $hits));
 
                 // compare date:
-                $transferDate = $transfer->date->format('Y-m-d');
+                $transferDate = $transfer->date->format('Y-m-d H:i:s');
                 Log::debug(sprintf('Comparing dates "%s" to "%s"', $transaction['date'], $transferDate));
                 if ($transaction['date'] !== $transferDate) {
                     continue; // @codeCoverageIgnore
