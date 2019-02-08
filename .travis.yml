@@ -1,6 +1,5 @@
 sudo: required
 env:
-  - VERSION=4.7.10
   matrix:
     - ARCH=arm
     - ARCH=arm64
