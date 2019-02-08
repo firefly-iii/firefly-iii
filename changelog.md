@@ -2,6 +2,32 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.11] - 2019-02-09
+### Added
+- Experimental audit logging channel to track important events (separate from debug logging).
+
+
+### Changed
+- #2003, #2006 Transactions can be stored with a timestamp. The user-interface does not support this yet. But the API does.
+- Docker image tags a new manifest for arm and amd64.
+
+### Deprecated
+- Initial release.
+
+### Removed
+- @skuzzle removed an annoying console.log statement.
+
+### Fixed
+- #2048 Fix "Are you sure?" popup, thanks to @nescafe2002!
+- #2049 Empty preferences would crash Firefly III.
+- #2052 Rules could not auto-covert to liabilities.
+- Webbased upgrade routine will also decrypt the database.
+- Last use date for categories was off.
+
+### API
+- The `date`-field in any transaction object now returns a ISO 8601 timestamp instead of a date. 
+
+
 ## [4.7.10] - 2019-02-03
 ### Added
 - [Issue 2037](https://github.com/firefly-iii/firefly-iii/issues/2037) Added some new magic keywords to reports.
