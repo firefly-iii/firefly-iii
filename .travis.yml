@@ -1,5 +1,6 @@
 sudo: required
 language: bash
+dist: xenial
 # safelist
 branches:
   only:
