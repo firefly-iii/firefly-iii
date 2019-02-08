@@ -67,6 +67,7 @@ class HomeController extends Controller
 
         Log::debug('Received dateRange', ['start' => $request->get('start'), 'end' => $request->get('end'), 'label' => $request->get('label')]);
 
+
         // check if the label is "everything" or "Custom range" which will betray
         // a possible problem with the budgets.
         if ($label === (string)trans('firefly.everything') || $label === (string)trans('firefly.customRange')) {
@@ -102,6 +103,8 @@ class HomeController extends Controller
     {
         $types = config('firefly.accountTypesByIdentifier.asset');
         $count = $repository->count($types);
+
+        Log::channel('audit')->info('User visits homepage.');
 
         if (0 === $count) {
             return redirect(route('new-user.index'));

@@ -19,7 +19,9 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 declare(strict_types=1);
+use FireflyIII\Support\Logging\AuditLogger;
 
 return [
 
@@ -66,12 +68,18 @@ return [
             'path'   => 'php://stdout',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
-
         'daily'     => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-' . PHP_SAPI . '.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
             'days'   => 7,
+        ],
+        'audit'     => [
+            'driver' => 'daily',
+            'path'   => storage_path('logs/ff3-audit.log'),
+            'tap' => [AuditLogger::class],
+            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'days'   => 90,
         ],
         'dailytest' => [
             'driver' => 'daily',
