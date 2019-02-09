@@ -21,6 +21,7 @@
 
 
 declare(strict_types=1);
+
 use FireflyIII\Support\Logging\AuditLogger;
 
 return [
@@ -58,12 +59,12 @@ return [
             'channels' => ['daily', 'slack'],
         ],
 
-        'single' => [
+        'single'    => [
             'driver' => 'single',
             'path'   => storage_path('logs/laravel.log'),
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
         ],
-        'stdout' => [
+        'stdout'    => [
             'driver' => 'single',
             'path'   => 'php://stdout',
             'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
@@ -77,8 +78,8 @@ return [
         'audit'     => [
             'driver' => 'daily',
             'path'   => storage_path('logs/ff3-audit.log'),
-            'tap' => [AuditLogger::class],
-            'level'  => envNonEmpty('APP_LOG_LEVEL', 'info'),
+            'tap'    => [AuditLogger::class],
+            'level'  => 'info',
             'days'   => 90,
         ],
         'dailytest' => [

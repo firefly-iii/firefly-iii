@@ -76,7 +76,7 @@ class SetCategory implements ActionInterface
 
 
         $journal->touch();
-        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to budget #%d ("%s").', $journal->id, $category->id, $category->name));
+        Log::debug(sprintf('RuleAction SetCategory set the category of journal #%d to category #%d ("%s").', $journal->id, $category->id, $category->name));
 
         return true;
     }
