@@ -38,7 +38,7 @@ class RabobankDescription implements SpecificInterface
      */
     public static function getDescription(): string
     {
-        return 'import.specific_pres_descr';
+        return 'import.specific_rabo_descr';
     }
 
     /**

@@ -7,16 +7,16 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Experimental audit logging channel to track important events (separate from debug logging).
 
 ### Changed
-- #2003, #2006 Transactions can be stored with a timestamp. The user-interface does not support this yet. But the API does.
+- [Issue 2003](https://github.com/firefly-iii/firefly-iii/issues/2003), [issue 2006](https://github.com/firefly-iii/firefly-iii/issues/2006) Transactions can be stored with a timestamp. The user-interface does not support this yet. But the API does.
 - Docker image tags a new manifest for arm and amd64.
 
 ### Removed
-- @skuzzle removed an annoying console.log statement.
+- [skuzzle](https://github.com/skuzzle) removed an annoying console.log statement.
 
 ### Fixed
-- #2048 Fix "Are you sure?" popup, thanks to @nescafe2002!
-- #2049 Empty preferences would crash Firefly III.
-- #2052 Rules could not auto-covert to liabilities.
+- [Issue 2048](https://github.com/firefly-iii/firefly-iii/issues/2048) Fix "Are you sure?" popup, thanks to @nescafe2002!
+- [Issue 2049](https://github.com/firefly-iii/firefly-iii/issues/2049) Empty preferences would crash Firefly III.
+- [Issue 2052](https://github.com/firefly-iii/firefly-iii/issues/2052) Rules could not auto-covert to liabilities.
 - Webbased upgrade routine will also decrypt the database.
 - Last use date for categories was off.
 
@@ -64,7 +64,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - [Issue 2009](https://github.com/firefly-iii/firefly-iii/issues/2009) Could not change recurrence back to "forever".
 - [Issue 2033](https://github.com/firefly-iii/firefly-iii/issues/2033) Longitude can go from -180 to 180.
 - [Issue 2034](https://github.com/firefly-iii/firefly-iii/issues/2034) Rules were not being triggered in mass-edit.
-- #2043 In rare instances the repetition of a recurring transaction was displayed incorrectly.
+- [Issue 2043](https://github.com/firefly-iii/firefly-iii/issues/2043) In rare instances the repetition of a recurring transaction was displayed incorrectly.
 - Fixed broken translations in the recurring transactions overview.
 - When you create a recurring transfer you make make it fill (or empty) a piggy bank. This was not working, despite a fix in 4.7.8.
 - Fixed a bug where the importer would not be capable of creating new currencies.
