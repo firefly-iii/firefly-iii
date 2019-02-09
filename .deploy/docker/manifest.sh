@@ -1,12 +1,9 @@
 #!/usr/bin/env bash
 
-# Disabled until I can figure out how this works in Travis.
-exit 0
-
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     TARGET=jc5x/firefly-iii:develop
     ARM=jc5x/firefly-iii:develop-arm
-    AMD=jc5x/firefly-iii:develop-amd
+    AMD=jc5x/firefly-iii:develop-amd64
 
     docker manifest create $TARGET $AMD $ARM
     docker manifest annotate $TARGET $ARM --arch arm   --os linux
@@ -19,7 +16,7 @@ echo "The version is $VERSION"
 if [ "$TRAVIS_BRANCH" == "master" ]; then
     TARGET=jc5x/firefly-iii:latest
     ARM=jc5x/firefly-iii:latest-arm
-    AMD=jc5x/firefly-iii:latest-amd
+    AMD=jc5x/firefly-iii:latest-amd64
 
     docker manifest create $TARGET $AMD $ARM
     docker manifest annotate $TARGET $ARM --arch arm   --os linux
@@ -29,7 +26,7 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
     # and another one for version specific:
     TARGET=jc5x/firefly-iii:release-$VERSION
     ARM=jc5x/firefly-iii:release-$VERSION-arm
-    AMD=jc5x/firefly-iii:release-$VERSION-amd
+    AMD=jc5x/firefly-iii:release-$VERSION-amd64
 
     docker manifest create $TARGET $AMD $ARM
     docker manifest annotate $TARGET $ARM --arch arm   --os linux

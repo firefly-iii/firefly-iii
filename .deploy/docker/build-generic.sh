@@ -4,7 +4,7 @@
 echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
 # get qemu-arm-static binary
-if [ "$TRAVIS_BRANCH" != "amd64" ]; then
+if [ "$TRAVIS_BRANCH" == "arm" ]; then
     mkdir tmp
     pushd tmp && \
     curl -L -o qemu-arm-static.tar.gz https://github.com/multiarch/qemu-user-static/releases/download/v2.6.0/qemu-arm-static.tar.gz && \
@@ -15,15 +15,14 @@ fi
 # build develop
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     echo "Build develop $ARCH"
-    # > original command. docker build -t whoami --build-arg "arch=$ARCH" .
-    docker build -t jc5x/firefly-iii:develop-$ARCH -f Dockerfile.$ARCH --build-arg "arch=$ARCH" .
-    #docker push jc5x/firefly-iii:develop
+    docker build -t jc5x/firefly-iii:develop-$ARCH -f Dockerfile.$ARCH .
+    docker push jc5x/firefly-iii:develop-$ARCH
 fi
 
-#if [ "$TRAVIS_BRANCH" == "master" ]; then
-#    echo "Build master amd64"
-#    docker build -t jc5x/firefly-iii:latest-amd -f Dockerfile .
-#    docker tag jc5x/firefly-iii:latest-amd jc5x/firefly-iii:release-$VERSION-amd
-#    docker push jc5x/firefly-iii:latest-amd
-#    docker push jc5x/firefly-iii:release-$VERSION-amd
-#fi
+if [ "$TRAVIS_BRANCH" == "master" ]; then
+    echo "Build master $ARCH"
+    docker build -t jc5x/firefly-iii:latest-$ARCH -f Dockerfile.$ARCH .
+    docker tag jc5x/firefly-iii:latest-$ARCH jc5x/firefly-iii:release-$VERSION-$ARCH
+    docker push jc5x/firefly-iii:latest-$ARCH
+    docker push jc5x/firefly-iii:release-$VERSION-$ARCH
+fi

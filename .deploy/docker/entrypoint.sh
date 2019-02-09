@@ -2,6 +2,8 @@
 
 echo "Now in entrypoint.sh for Firefly III"
 
+lscpu
+
 # make sure the correct directories exists (suggested by @chrif):
 echo "Making directories..."
 mkdir -p $FIREFLY_PATH/storage/app/public

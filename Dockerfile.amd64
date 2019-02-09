@@ -1,5 +1,5 @@
 FROM php:7.2-apache
-
+ARG ARCH
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1
 LABEL version="1.3" maintainer="thegrumpydictator@gmail.com"
 

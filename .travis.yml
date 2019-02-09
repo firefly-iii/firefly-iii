@@ -1,8 +1,10 @@
 sudo: required
 env:
+  global:
+    - VERSION=4.7.11
   matrix:
     - ARCH=arm
-    - ARCH=arm64
+    #- ARCH=arm64
     - ARCH=amd64
 
 dist: xenial
