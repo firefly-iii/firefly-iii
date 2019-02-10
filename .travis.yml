@@ -1,13 +1,10 @@
 sudo: required
+language: bash
 env:
-  global:
-    - VERSION=4.7.11
-  matrix:
-    - ARCH=arm
-    #- ARCH=arm64
-    - ARCH=amd64
+  - VERSION=4.7.11
 
 dist: xenial
+
 # safelist
 branches:
   only:
@@ -23,5 +20,7 @@ script:
   - sudo service docker restart
   - docker version -f '{{.Server.Experimental}}'
   - docker version
-  - .deploy/docker/build-generic.sh
+  # build everything
+  - .deploy/docker/build-amd64.sh
+  - .deploy/docker/build-arm.sh
   - .deploy/docker/manifest.sh
