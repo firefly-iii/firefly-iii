@@ -31,11 +31,9 @@ return [
     'prerequisites_breadcrumb_ynab'       => 'YNAB için Önkoşullar',
     'job_configuration_breadcrumb'        => 'Yapılandırma için ":key"',
     'job_status_breadcrumb'               => 'Aktarma durumu ":key" için',
-    'cannot_create_for_provider'          => 'Firefly III bir iş için oluşturamıyor ":provider".',
     'disabled_for_demo_user'              => 'demoda devre dışı',
 
     // index page:
-    'general_index_title'                 => 'Bir Dosyayı içe aktar',
     'general_index_intro'                 => 'Firefly aktarım programına hoş geldiniz. Firefly III içine dosya aktarmanın burada bir kaç yolu var, burada olarak görüntülenmekte.',
 
     // import provider strings (index):
@@ -50,9 +48,6 @@ return [
     'button_fints'                        => 'FinTS kullanarak içe aktar',
 
 
-    // global config box (index)
-    'global_config_title'                 => 'Genel aktarma yapılandırması',
-    'global_config_text'                  => 'Gelecekte, bu kutuyu tüm alma sağlayıcıları için yukarıdaki uygulama tercihleri yer alacak.',
     // prerequisites box (index)
     'need_prereq_title'                   => 'Ön Koşullar',
     'need_prereq_intro'                   => 'Bunların kullanılabilmesi için önce bazı alma yöntemleri dikkat etmeniz gereken. Örneğin, özel API anahtar taşı ya da uygulama sırları gerektirebilir. Burada bunları konfigüre edebilirsiniz. Bu önkoşullar karşılandıktan simge gösterir.',
@@ -64,17 +59,6 @@ return [
     'do_prereq_yodlee'                    => 'Yodlee kullanarak içe aktarma için ön koşullar',
     'do_prereq_quovo'                     => 'Quovo kullanarak içe aktarma için ön koşullar',
     'do_prereq_ynab'                      => 'YNAB içeri aktarım için ön şartlar',
-
-    // provider config box (index)
-    'can_config_title'                    => 'İçe aktarma yapılandırması',
-    'can_config_intro'                    => 'Sizin beğeninize göre bazı alma yöntemleri yapılandırılabilir. ',
-    'do_config_fake'                      => 'Sahte sağlayıcı için yapılandırma',
-    'do_config_file'                      => 'Dosya aktarma için ayarlar',
-    'do_config_bunq'                      => 'Bunq ithalat için yapılandırma',
-    'do_config_spectre'                   => 'Spectre içe aktarım için yapılandırma',
-    'do_config_plaid'                     => 'Plaid içe aktarım için yapılandırma',
-    'do_config_yodlee'                    => 'Yodlee içe aktarım için yapılandırma',
-    'do_config_quovo'                     => 'Quovo içe aktarım için yapılandırma',
 
     // prerequisites:
     'prereq_fake_title'                   => 'Prerequisites for an import from the fake import provider',
@@ -138,7 +122,6 @@ return [
     'spectre_login_new_login'             => 'Login with another bank, or one of these banks with different credentials.',
     'job_config_spectre_accounts_title'   => 'Select accounts to import from',
     'job_config_spectre_accounts_text'    => 'You have selected ":name" (:country). You have :count account(s) available from this provider. Please select the Firefly III asset account(s) where the transactions from these accounts should be stored. Remember, in order to import data both the Firefly III account and the ":name"-account must have the same currency.',
-    'spectre_no_supported_accounts'       => 'You cannot import from this account due to a currency mismatch.',
     'spectre_do_not_import'               => '(do not import)',
     'spectre_no_mapping'                  => 'It seems you have not selected any accounts to import from.',
     'imported_from_account'               => 'Imported from ":account"',

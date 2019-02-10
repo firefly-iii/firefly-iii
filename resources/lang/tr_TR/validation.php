@@ -25,6 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Bu geçerli bir IBAN değil.',
     'zero_or_more'                   => 'The value cannot be negative.',
+    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'      => 'Kaynak hesabın hedef hesap eşittir.',
     'unique_account_number_for_user' => 'Bu hesap numarası zaten kullanılmaktadır.',
     'unique_iban_for_user'           => 'Bu IBAN numarası zaten kullanılmaktadır.',

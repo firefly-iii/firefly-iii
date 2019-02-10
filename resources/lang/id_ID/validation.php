@@ -25,6 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Ini bukan IBAN yang valid.',
     'zero_or_more'                   => 'Nilai tidak bisa negatif.',
+    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'      => 'Akun sumber sama dengan akun tujuan.',
     'unique_account_number_for_user' => 'Sepertinya nomor rekening ini sudah digunakan.',
     'unique_iban_for_user'           => 'Sepertinya nomor rekening ini sudah digunakan.',

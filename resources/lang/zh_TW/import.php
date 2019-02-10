@@ -31,11 +31,9 @@ return [
     'prerequisites_breadcrumb_ynab'       => 'YNAB 的先決條件',
     'job_configuration_breadcrumb'        => '":key" 設定',
     'job_status_breadcrumb'               => '":key" 匯入狀態',
-    'cannot_create_for_provider'          => 'Firefly III 無法為 ":provider"-供應商建立工作。',
     'disabled_for_demo_user'              => '在展示中不啟用',
 
     // index page:
-    'general_index_title'                 => '匯入檔案',
     'general_index_intro'                 => '歡迎來到 Firefly III 的匯入例行。有幾種方法可以將資料匯入 Firefly III 中，在此以按鈕表示。',
 
     // import provider strings (index):
@@ -50,9 +48,6 @@ return [
     'button_fints'                        => '使用 FinTS 匯入',
 
 
-    // global config box (index)
-    'global_config_title'                 => '全域匯入設定',
-    'global_config_text'                  => '未來，此區塊將提供可套用至上述全部服務供應商的偏好設定。',
     // prerequisites box (index)
     'need_prereq_title'                   => '匯入先決條件',
     'need_prereq_intro'                   => '部分匯入方式您得先在使用前注意一下。比方說，他們可能需要特別的串接秘鑰或應用程式金鑰，您可在此設定。此圖示表示所屬的先決條件已經媒合。',
@@ -64,17 +59,6 @@ return [
     'do_prereq_yodlee'                    => '使用 Yodlee 匯入的先決條件',
     'do_prereq_quovo'                     => '使用 Quovo 匯入的先決條件',
     'do_prereq_ynab'                      => '從 YNAB 匯入的先決條件',
-
-    // provider config box (index)
-    'can_config_title'                    => '匯入設定',
-    'can_config_intro'                    => '部分匯入方式可以依照您的喜好設定，它們有額外的設定選項可讓您操作。',
-    'do_config_fake'                      => '假供應商的設定',
-    'do_config_file'                      => '檔案匯入的設定',
-    'do_config_bunq'                      => 'bunq 匯入設定',
-    'do_config_spectre'                   => 'Spectre 匯入設定',
-    'do_config_plaid'                     => '自 Plaid 的匯入設定',
-    'do_config_yodlee'                    => '自 Yodlee 匯入的設定',
-    'do_config_quovo'                     => '自 Quovo 匯入的設定',
 
     // prerequisites:
     'prereq_fake_title'                   => '自假的匯入供應商匯入的先決條件',
@@ -138,7 +122,6 @@ return [
     'spectre_login_new_login'             => '使用其他銀行登入，或其中一間具有不同憑證的銀行。',
     'job_config_spectre_accounts_title'   => '選擇欲匯入的帳戶',
     'job_config_spectre_accounts_text'    => '您以選擇 ":name" (:country)。您在這個供應商有 :count 個可用帳戶，請在 Firefly III 的資產帳戶中選擇這些交易應被儲存的帳戶。請記得，若要匯入資料，Firefly III 與 ":name"-帳戶兩者均需使用相同貨幣。',
-    'spectre_no_supported_accounts'       => '因為貨幣不相符，你不能自此帳號匯入。',
     'spectre_do_not_import'               => '(不匯入)',
     'spectre_no_mapping'                  => '您似乎沒有選擇任何欲匯入的帳戶。',
     'imported_from_account'               => '已自 ":account" 匯入',

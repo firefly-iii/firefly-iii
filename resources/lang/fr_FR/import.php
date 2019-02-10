@@ -31,11 +31,9 @@ return [
     'prerequisites_breadcrumb_ynab'       => 'Prérequis pour YNAB',
     'job_configuration_breadcrumb'        => 'Configuration pour ":key"',
     'job_status_breadcrumb'               => 'Statut d\'importation pour ":key"',
-    'cannot_create_for_provider'          => 'Firefly III ne peut pas créer de tâche pour le fournisseur ":provider".',
     'disabled_for_demo_user'              => 'désactivé pour la démo',
 
     // index page:
-    'general_index_title'                 => 'Importer un fichier',
     'general_index_intro'                 => 'Bienvenue dans la routine d\'importation de Firefly III. Il existe différentes façons d\'importer des données dans Firefly III, affichées ici sous forme de boutons.',
 
     // import provider strings (index):
@@ -50,9 +48,6 @@ return [
     'button_fints'                        => 'Importer en utilisant FinTS',
 
 
-    // global config box (index)
-    'global_config_title'                 => 'Configuration d\'importation globale',
-    'global_config_text'                  => 'À l\'avenir, cette boîte contiendra les préférences qui s\'appliquent à TOUTES les sources d\'importation ci-dessus.',
     // prerequisites box (index)
     'need_prereq_title'                   => 'Prérequis d\'importation',
     'need_prereq_intro'                   => 'Certaines méthodes d\'importation nécessitent votre attention avant de pouvoir être utilisées. Par exemple, elles peuvent nécessiter des clés d\'API spéciales ou des clés secrètes. Vous pouvez les configurer ici. L\'icône indique si ces conditions préalables ont été remplies.',
@@ -64,17 +59,6 @@ return [
     'do_prereq_yodlee'                    => 'Prérequis pour les importations depuis Yodlee',
     'do_prereq_quovo'                     => 'Prérequis pour les importations depuis Quovo',
     'do_prereq_ynab'                      => 'Prérequis pour les importations depuis YNAB',
-
-    // provider config box (index)
-    'can_config_title'                    => 'Configuration d\'importation',
-    'can_config_intro'                    => 'Certaines méthodes d’importation peuvent être configurées selon vos préférences. Elles ont des paramètres supplémentaires que vous pouvez modifier.',
-    'do_config_fake'                      => 'Configuration du simulateur d\'importation',
-    'do_config_file'                      => 'Configuration pour l’importation de fichier',
-    'do_config_bunq'                      => 'Configuration pour les importations depuis Bunq',
-    'do_config_spectre'                   => 'Configuration pour les importations depuis Spectre',
-    'do_config_plaid'                     => 'Configuration pour les importations depuis Plaid',
-    'do_config_yodlee'                    => 'Configuration pour les importations depuis Yodlee',
-    'do_config_quovo'                     => 'Configuration pour les importations depuis Quovo',
 
     // prerequisites:
     'prereq_fake_title'                   => 'Prérequis pour une importation utilisant le simulateur d\'importation',
@@ -138,7 +122,6 @@ return [
     'spectre_login_new_login'             => 'S\'identifier avec une autre banque, ou à une de ces banques avec un autre identifiant.',
     'job_config_spectre_accounts_title'   => 'Sélectionnez le·s compte·s à importer',
     'job_config_spectre_accounts_text'    => 'Vous avez sélectionné ":name" (:country). Vous avez :count compte·s disponible·s chez ce fournisseur. Veuillez sélectionner le·s compte·s d\'actifs Firefly III dans le·s·quel·s enregistrer les opérations. Souvenez-vous, pour importer des données, le compte Firefly III et le compte ":name" doivent avoir la même devise.',
-    'spectre_no_supported_accounts'       => 'Vous ne pouvez pas importer de données depuis ce compte car les devises ne sont pas identiques.',
     'spectre_do_not_import'               => '(ne pas importer)',
     'spectre_no_mapping'                  => 'Il semble que vous n\'avez sélectionné aucun compte depuis lequel importer.',
     'imported_from_account'               => 'Importé depuis ":account"',

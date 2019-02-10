@@ -1062,7 +1062,7 @@ return [
     'journal-amount'                          => 'Faktyczna kwota',
     'name'                                    => 'Nazwa',
     'date'                                    => 'Data',
-    'paid'                                    => 'Zpłacone',
+    'paid'                                    => 'Zapłacone',
     'unpaid'                                  => 'Niezapłacone',
     'day'                                     => 'Dzień',
     'budgeted'                                => 'Zabudżetowano',

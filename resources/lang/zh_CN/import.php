@@ -31,11 +31,9 @@ return [
     'prerequisites_breadcrumb_ynab'       => 'YNAB 的先决条件',
     'job_configuration_breadcrumb'        => '":key" 设定',
     'job_status_breadcrumb'               => '":key" 导入状态',
-    'cannot_create_for_provider'          => 'Firefly III 无法为 ":provider"-供应商建立工作。',
     'disabled_for_demo_user'              => '在展示中不启用',
 
     // index page:
-    'general_index_title'                 => '导入档案',
     'general_index_intro'                 => '欢迎来到 Firefly III 的导入例行。有几种方法可以将资料导入 Firefly III 中，在此以按钮表示。',
 
     // import provider strings (index):
@@ -50,9 +48,6 @@ return [
     'button_fints'                        => '使用 FinTS 导入',
 
 
-    // global config box (index)
-    'global_config_title'                 => '全域导入设定',
-    'global_config_text'                  => '未来，此区块将提供可套用至上述全部服务供应商的偏好设定。',
     // prerequisites box (index)
     'need_prereq_title'                   => '导入先决条件',
     'need_prereq_intro'                   => '部分导入方式您得先在使用前注意一下。比方说，他们可能需要特别的串接秘钥或应用程式金钥，您可在此设定。此图示表示所属的先决条件已经媒合。',
@@ -64,17 +59,6 @@ return [
     'do_prereq_yodlee'                    => '使用 Yodlee 导入的先决条件',
     'do_prereq_quovo'                     => '使用 Quovo 导入的先决条件',
     'do_prereq_ynab'                      => '从 YNAB 导入的先决条件',
-
-    // provider config box (index)
-    'can_config_title'                    => '导入设定',
-    'can_config_intro'                    => '部分导入方式可以依照您的喜好设定，它们有额外的设定选项可让您操作。',
-    'do_config_fake'                      => '假供应商的设定',
-    'do_config_file'                      => '档案导入的设定',
-    'do_config_bunq'                      => 'bunq 导入设定',
-    'do_config_spectre'                   => 'Spectre 导入设定',
-    'do_config_plaid'                     => '自 Plaid 的导入设定',
-    'do_config_yodlee'                    => '自 Yodlee 导入的设定',
-    'do_config_quovo'                     => '自 Quovo 导入的设定',
 
     // prerequisites:
     'prereq_fake_title'                   => '自假的导入供应商导入的先决条件',
@@ -138,7 +122,6 @@ return [
     'spectre_login_new_login'             => '使用其他银行登入，或其中一间具有不同凭证的银行。',
     'job_config_spectre_accounts_title'   => '选择欲导入的帐户',
     'job_config_spectre_accounts_text'    => '您以选择 ":name" (:country)。您在这个供应商有 :count 个可用帐户，请在 Firefly III 的资产帐户中选择这些交易应被储存的帐户。请记得，若要导入资料，Firefly III 与 ":name"-帐户两者均需使用相同货币。',
-    'spectre_no_supported_accounts'       => '因为货币不相符，你不能自此帐号导入。',
     'spectre_do_not_import'               => '(不导入)',
     'spectre_no_mapping'                  => '您似乎没有选择任何欲导入的帐户。',
     'imported_from_account'               => '已自 ":account" 导入',

@@ -25,6 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'To nie jest prawidłowy IBAN.',
     'zero_or_more'                   => 'Wartość nie może być ujemna.',
+    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'      => 'Konto źródłowe jest równe kontu docelowemu.',
     'unique_account_number_for_user' => 'Wygląda na to, że ten numer konta jest już w użyciu.',
     'unique_iban_for_user'           => 'Wygląda na to, że ten IBAN jest już używany.',
