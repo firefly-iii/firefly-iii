@@ -28,6 +28,7 @@ use FireflyIII\Http\Requests\LinkTypeFormRequest;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use Illuminate\Http\Request;
+use Log;
 use View;
 
 /**
@@ -63,6 +64,8 @@ class LinkController extends Controller
         $subTitle     = (string)trans('firefly.create_new_link_type');
         $subTitleIcon = 'fa-link';
 
+        Log::channel('audit')->info('User visits link index.');
+
         // put previous url in session if not redirect from store (not "create another").
         if (true !== session('link-types.create.fromStore')) {
             $this->rememberPreviousUri('link-types.create.uri');
@@ -87,6 +90,8 @@ class LinkController extends Controller
 
             return redirect(route('admin.links.index'));
         }
+
+        Log::channel('audit')->info(sprintf('User wants to delete link type #%d', $linkType->id));
 
         $subTitle   = (string)trans('firefly.delete_link_type', ['name' => $linkType->name]);
         $otherTypes = $repository->get();
@@ -116,6 +121,7 @@ class LinkController extends Controller
      */
     public function destroy(Request $request, LinkTypeRepositoryInterface $repository, LinkType $linkType)
     {
+        Log::channel('audit')->info(sprintf('User destroyed link type #%d', $linkType->id));
         $name   = $linkType->name;
         $moveTo = $repository->findNull((int)$request->get('move_link_type_before_delete'));
         $repository->destroy($linkType, $moveTo);
@@ -144,6 +150,8 @@ class LinkController extends Controller
         $subTitle     = (string)trans('firefly.edit_link_type', ['name' => $linkType->name]);
         $subTitleIcon = 'fa-link';
 
+        Log::channel('audit')->info(sprintf('User wants to edit link type #%d', $linkType->id));
+
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('link-types.edit.fromUpdate')) {
             $this->rememberPreviousUri('link-types.edit.uri'); // @codeCoverageIgnore
@@ -165,6 +173,8 @@ class LinkController extends Controller
         $subTitle     = (string)trans('firefly.journal_link_configuration');
         $subTitleIcon = 'fa-link';
         $linkTypes    = $repository->get();
+
+        Log::channel('audit')->info('User on index of link types in admin.');
         $linkTypes->each(
             function (LinkType $linkType) use ($repository) {
                 $linkType->journalCount = $repository->countJournals($linkType);
@@ -187,6 +197,8 @@ class LinkController extends Controller
         $subTitleIcon = 'fa-link';
         $links        = $linkType->transactionJournalLinks()->get();
 
+        Log::channel('audit')->info(sprintf('User viewing link type #%d', $linkType->id));
+
         return view('admin.link.show', compact('subTitle', 'subTitleIcon', 'linkType', 'links'));
     }
 
@@ -206,6 +218,9 @@ class LinkController extends Controller
             'outward' => $request->string('outward'),
         ];
         $linkType = $repository->store($data);
+
+        Log::channel('audit')->info('User stored new link type.', $linkType->toArray());
+
         $request->session()->flash('success', (string)trans('firefly.stored_new_link_type', ['name' => $linkType->name]));
         $redirect = redirect($this->getPreviousUri('link-types.create.uri'));
         if (1 === (int)$request->get('create_another')) {
@@ -242,6 +257,8 @@ class LinkController extends Controller
             'outward' => $request->string('outward'),
         ];
         $repository->update($linkType, $data);
+
+        Log::channel('audit')->info(sprintf('User update link type #%d.', $linkType->id), $data);
 
         $request->session()->flash('success', (string)trans('firefly.updated_link_type', ['name' => $linkType->name]));
         app('preferences')->mark();

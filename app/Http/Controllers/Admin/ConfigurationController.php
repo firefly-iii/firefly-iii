@@ -64,6 +64,8 @@ class ConfigurationController extends Controller
         $subTitle     = (string)trans('firefly.instance_configuration');
         $subTitleIcon = 'fa-wrench';
 
+        Log::channel('audit')->info('User visits admin config index.');
+
         // all available configuration and their default value in case
         // they don't exist yet.
         $singleUserMode = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
@@ -87,6 +89,8 @@ class ConfigurationController extends Controller
     {
         // get config values:
         $data = $request->getConfigurationData();
+
+        Log::channel('audit')->info('User updates global configuration.', $data);
 
         // store config values
         FireflyConfig::set('single_user_mode', $data['single_user_mode']);

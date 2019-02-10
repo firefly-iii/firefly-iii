@@ -62,7 +62,7 @@ class UpdateRequest implements GithubRequest
             $releaseXml = new SimpleXMLElement($res->getBody()->getContents(), LIBXML_NOCDATA);
         } catch (RuntimeException $e) {
             Log::error(sprintf('Could not get body from github updat result: %s', $e->getMessage()));
-            $releaseXml = new SimpleXMLElement('');
+            throw new FireflyException(sprintf('Could not get body from github updat result: %s', $e->getMessage()));
         }
 
         //fetch the products for each category

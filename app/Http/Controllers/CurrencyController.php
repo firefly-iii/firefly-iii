@@ -268,7 +268,7 @@ class CurrencyController extends Controller
         ];
 
         $request->session()->flash('preFilled', $preFilled);
-
+        Log::channel('audit')->info('Edit currency.', $currency->toArray());
 
         // put previous url in session if not redirect from store (not "return_to_edit").
         if (true !== session('currencies.edit.fromUpdate')) {
