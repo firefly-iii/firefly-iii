@@ -50,6 +50,8 @@ trait UpdateTrait
             $request->call();
         } catch (FireflyException $e) {
             Log::error(sprintf('Could not check for updates: %s', $e->getMessage()));
+
+            return null;
         }
 
         // get releases from array.
@@ -79,13 +81,16 @@ trait UpdateTrait
     public function parseResult(int $versionCheck, Release $release = null): string
     {
         Log::debug(sprintf('Now in parseResult(%d)', $versionCheck));
-        $current = (string)config('firefly.version');
-        $return  = '';
+        $current   = (string)config('firefly.version');
+        $return    = '';
+        $triggered = false;
         if ($versionCheck === -2) {
             Log::debug('-2, so give error.');
-            $return = (string)trans('firefly.update_check_error');
+            $return    = (string)trans('firefly.update_check_error');
+            $triggered = true;
         }
         if ($versionCheck === -1 && null !== $release) {
+            $triggered = true;
             Log::debug('New version!');
             // there is a new FF version!
             // has it been released for at least three days?
@@ -106,14 +111,21 @@ trait UpdateTrait
         }
 
         if (0 === $versionCheck) {
+            $triggered = true;
             Log::debug('User is running current version.');
             // you are running the current version!
             $return = (string)trans('firefly.update_current_version_alert', ['version' => $current]);
         }
         if (1 === $versionCheck && null !== $release) {
+            $triggered = true;
             Log::debug('User is running NEWER version.');
             // you are running a newer version!
             $return = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $release->getTitle()]);
+        }
+
+        if (false === $triggered) {
+            Log::debug('No option was triggered.');
+            $return = (string)trans('firefly.update_check_error');
         }
 
         return $return;
@@ -131,6 +143,7 @@ trait UpdateTrait
         Log::debug('Now in versionCheck()');
         if (null === $release) {
             Log::debug('Release is null, return -2.');
+
             return -2;
         }
         $current = (string)config('firefly.version');
