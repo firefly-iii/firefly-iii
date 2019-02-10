@@ -1,3 +1,15 @@
+# 4.7.11
+- Experimental audit logging channel to track important events (separate from debug logging).
+- [Issue 2003](https://github.com/firefly-iii/firefly-iii/issues/2003), [issue 2006](https://github.com/firefly-iii/firefly-iii/issues/2006) Transactions can be stored with a timestamp. The user-interface does not support this yet. But the API does.
+- Docker image tags a new manifest for arm and amd64.
+- [skuzzle](https://github.com/skuzzle) removed an annoying console.log statement.
+- [Issue 2048](https://github.com/firefly-iii/firefly-iii/issues/2048) Fix "Are you sure?" popup, thanks to @nescafe2002!
+- [Issue 2049](https://github.com/firefly-iii/firefly-iii/issues/2049) Empty preferences would crash Firefly III.
+- [Issue 2052](https://github.com/firefly-iii/firefly-iii/issues/2052) Rules could not auto-covert to liabilities.
+- Webbased upgrade routine will also decrypt the database.
+- Last use date for categories was off.
+- The `date`-field in any transaction object now returns a ISO 8601 timestamp instead of a date.
+
 # 4.7.10
 - [Issue 2037](https://github.com/firefly-iii/firefly-iii/issues/2037) Added some new magic keywords to reports.
 - Added a new currency exchange rate service, [ratesapi.io](https://ratesapi.io/), that does not require expensive API keys. Built by [@BoGnY](https://github.com/BoGnY).

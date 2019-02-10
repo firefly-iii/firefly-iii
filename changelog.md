@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [4.7.11] - 2019-02-09
+## [4.7.11 (API 0.9.2)] - 2019-02-10
 ### Added
 - Experimental audit logging channel to track important events (separate from debug logging).
 
@@ -21,8 +21,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 - Last use date for categories was off.
 
 ### API
-- The `date`-field in any transaction object now returns a ISO 8601 timestamp instead of a date. 
-
+- The `date`-field in any transaction object now returns a ISO 8601 timestamp instead of a date.
+ 
 
 ## [4.7.10] - 2019-02-03
 ### Added
