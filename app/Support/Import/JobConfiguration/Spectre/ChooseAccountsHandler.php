@@ -151,7 +151,7 @@ class ChooseAccountsHandler implements SpectreJobConfigurationInterface
         }
 
         // list the users accounts:
-        $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET]);
+        $accounts = $this->accountRepository->getAccountsByType([AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]);
 
         $array = [];
         /** @var AccountModel $account */
