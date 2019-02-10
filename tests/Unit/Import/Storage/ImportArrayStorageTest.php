@@ -125,7 +125,6 @@ class ImportArrayStorageTest extends TestCase
         $transactions       = [$this->singleTransfer(), $this->singleWithdrawal(), $this->basedOnTransfer($transfer)];
         $job->save();
 
-
         // get some stuff:
         $tag                      = $this->user()->tags()->inRandomOrder()->first();
         $journal                  = $this->user()->transactionJournals()->inRandomOrder()->first();
@@ -141,9 +140,9 @@ class ImportArrayStorageTest extends TestCase
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository->shouldReceive('getTransactions')->times(2)->andReturn($transactions);
+
         // mock calls:
         $collector->shouldReceive('setUser')->times(2);
-
         $repository->shouldReceive('setUser')->once();
         $repository->shouldReceive('setStatus')->withAnyArgs();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -554,7 +553,7 @@ class ImportArrayStorageTest extends TestCase
         return
             [
                 'type'               => 'transfer',
-                'date'               => $transfer->date->format('Y-m-d'),
+                'date'               => $transfer->date->format('Y-m-d H:i:s'),
                 'tags'               => '',
                 'user'               => $this->user()->id,
 

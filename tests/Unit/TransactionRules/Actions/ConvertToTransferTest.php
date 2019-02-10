@@ -65,7 +65,7 @@ class ConvertToTransferTest extends TestCase
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::DEFAULT]])->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
 
         // fire the action:
         $ruleAction               = new RuleAction;
@@ -100,7 +100,7 @@ class ConvertToTransferTest extends TestCase
         // mock used stuff:
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::DEFAULT]])->andReturn($asset);
+        $accountRepos->shouldReceive('findByName')->withArgs([$asset->name, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]])->andReturn($asset);
 
         // fire the action:
         $ruleAction               = new RuleAction;

@@ -73,7 +73,7 @@ class ConvertToTransfer implements ActionInterface
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($journal->user);
         $asset = $repository->findByName(
-            $this->action->action_value, [AccountType::ASSET, AccountType::DEFAULT, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
+            $this->action->action_value, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
         );
         if (null === $asset) {
             // @codeCoverageIgnoreStart
