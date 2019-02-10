@@ -31,11 +31,9 @@ return [
     'prerequisites_breadcrumb_ynab'       => 'Pré-requisitos para YNAB',
     'job_configuration_breadcrumb'        => 'Configuração para ":key"',
     'job_status_breadcrumb'               => 'Status de importação para ":key"',
-    'cannot_create_for_provider'          => 'Firefly III não pode criar um trabalho para o provedor ":provider".',
     'disabled_for_demo_user'              => 'desativado no modo demonstração',
 
     // index page:
-    'general_index_title'                 => 'Importar um arquivo',
     'general_index_intro'                 => 'Bem-vindo à rotina de importação do Firefly III. Existem algumas maneiras de importar dados no Firefly III; elas estão mostradas aqui como botões.',
 
     // import provider strings (index):
@@ -50,9 +48,6 @@ return [
     'button_fints'                        => 'Importar usando FinTS',
 
 
-    // global config box (index)
-    'global_config_title'                 => 'Configuração global de importação',
-    'global_config_text'                  => 'No futuro, esta caixa terá preferências que se aplicam a TODOS os provedores de importação acima.',
     // prerequisites box (index)
     'need_prereq_title'                   => 'Pré-requisitos de importação',
     'need_prereq_intro'                   => 'Alguns metodos de importacao necessitam da tua atencao antes que possam ser usados. Por exemplo, eles podem necessitar de uma chave especial da API. Podes configurar tudo aqui. O icon indica se esses pre-requesitos foram cumpridos.',
@@ -64,17 +59,6 @@ return [
     'do_prereq_yodlee'                    => 'Pre-requesitos para a importacao do Yodlee',
     'do_prereq_quovo'                     => 'Pre-requesitos para a importacao do Quovo',
     'do_prereq_ynab'                      => 'Pre-requesitos para a importacao do YNAB',
-
-    // provider config box (index)
-    'can_config_title'                    => 'Importar configuracao',
-    'can_config_intro'                    => 'Alguns metodos de importacao podem ser configurados ao teu gosto. Eles contem propriedades extra que podes ajustar.',
-    'do_config_fake'                      => 'Configuracao para o provedor ficticio',
-    'do_config_file'                      => 'Configuracao para a importacao de ficheiros',
-    'do_config_bunq'                      => 'Configuracao para a importacao pelo bunq',
-    'do_config_spectre'                   => 'Configuracao para a importacao pelo Spectre',
-    'do_config_plaid'                     => 'Configuracao para a importacao pelo Plaid',
-    'do_config_yodlee'                    => 'Configuracao para a importacao pelo Yodlee',
-    'do_config_quovo'                     => 'Configuracao para a importacao pelo Quovo',
 
     // prerequisites:
     'prereq_fake_title'                   => 'Configuracao para a importacao pelo provedor de importacao ficticio',
@@ -138,7 +122,6 @@ return [
     'spectre_login_new_login'             => 'Login with another bank, or one of these banks with different credentials.',
     'job_config_spectre_accounts_title'   => 'Seleccionar as contas de onde vai importar',
     'job_config_spectre_accounts_text'    => 'You have selected ":name" (:country). You have :count account(s) available from this provider. Please select the Firefly III asset account(s) where the transactions from these accounts should be stored. Remember, in order to import data both the Firefly III account and the ":name"-account must have the same currency.',
-    'spectre_no_supported_accounts'       => 'You cannot import from this account due to a currency mismatch.',
     'spectre_do_not_import'               => '(nao importar)',
     'spectre_no_mapping'                  => 'It seems you have not selected any accounts to import from.',
     'imported_from_account'               => 'Importado de ":account"',

@@ -472,7 +472,7 @@ class ChooseAccountsHandlerTest extends TestCase
         $usd    = TransactionCurrency::where('code', 'USD')->first();
         $first  = $this->user()->accounts()->where('account_type_id', 3)->first();
         $second = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $first->id)->first();
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])
                      ->once()->andReturn(new Collection([$first, $second]));
         $accountRepos->shouldReceive('getMetaValue')->twice()->withArgs([Mockery::any(), 'currency_id'])
                      ->andReturn(1, 2);
@@ -625,7 +625,7 @@ class ChooseAccountsHandlerTest extends TestCase
         $usd    = TransactionCurrency::where('code', 'USD')->first();
         $first  = $this->user()->accounts()->where('account_type_id', 3)->first();
         $second = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $first->id)->first();
-        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])
+        $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]])
                      ->once()->andReturn(new Collection([$first, $second]));
         $accountRepos->shouldReceive('getMetaValue')->twice()->withArgs([Mockery::any(), 'currency_id'])
                      ->andReturn(1, 2);

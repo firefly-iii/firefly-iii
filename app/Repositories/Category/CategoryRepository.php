@@ -292,7 +292,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             return $lastTransactionDate;
         }
 
-        if ($lastTransactionDate < $lastJournalDate) {
+        if ($lastTransactionDate > $lastJournalDate) {
             return $lastTransactionDate;
         }
 

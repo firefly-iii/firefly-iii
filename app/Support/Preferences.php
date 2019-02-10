@@ -216,7 +216,21 @@ class Preferences
     {
         $fullName = sprintf('preference%s%s', $user->id, $name);
         Cache::forget($fullName);
+        /** @var Preference $pref */
         $pref = Preference::where('user_id', $user->id)->where('name', $name)->first(['id', 'name', 'data', 'updated_at', 'created_at']);
+
+        if (null !== $pref && null === $value) {
+            try {
+                $pref->delete();
+            } catch (Exception $e) {
+                Log::error(sprintf('Could not delete preference: %s', $e->getMessage()));
+            }
+
+            return new Preference;
+        }
+        if (null === $value) {
+            return new Preference;
+        }
 
         if (null !== $pref) {
             $pref->data = $value;

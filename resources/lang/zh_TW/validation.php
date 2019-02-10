@@ -25,6 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => '這不是有效的 IBAN。',
     'zero_or_more'                   => '此數值不能為負數',
+    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'      => '來源帳戶與目標帳戶相同。',
     'unique_account_number_for_user' => '看起來此帳戶號碼已在使用中。',
     'unique_iban_for_user'           => '看起來此IBAN已在使用中。',

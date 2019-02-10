@@ -30,6 +30,22 @@ function startMigration() {
     $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up DB...');
     $.post(migrateUri, {_token: token}).done(function (data) {
         if(data.error === false) {
+            // move to decrypt routine.
+            startDecryption();
+        } else {
+            displaySoftFail(data.message);
+        }
+
+    }).fail(function () {
+        $('#status-box').html('<i class="fa fa-warning"></i> Migration failed! See log files :(');
+    });
+}
+
+function startDecryption() {
+    $('#status-box').html('<i class="fa fa-spin fa-spinner"></i> Setting up DB #2...');
+    $.post(decryptUri, {_token: token}).done(function (data) {
+        if(data.error === false) {
+            // move to decrypt routine.
             startPassport();
         } else {
             displaySoftFail(data.message);

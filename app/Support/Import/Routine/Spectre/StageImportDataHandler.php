@@ -233,8 +233,8 @@ class StageImportDataHandler
         if (null === $account) {
             throw new FireflyException(sprintf('Cannot find Firefly III asset account with ID #%d. Job must stop now.', $accountId)); // @codeCoverageIgnore
         }
-        if ($account->accountType->type !== AccountType::ASSET) {
-            throw new FireflyException(sprintf('Account with ID #%d is not an asset account. Job must stop now.', $accountId)); // @codeCoverageIgnore
+        if (!\in_array($account->accountType->type ,[AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE, AccountType::DEBT], true)) {
+            throw new FireflyException(sprintf('Account with ID #%d is not an asset/loan/mortgage/debt account. Job must stop now.', $accountId)); // @codeCoverageIgnore
         }
 
         return $account;

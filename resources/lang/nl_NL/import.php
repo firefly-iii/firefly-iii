@@ -31,11 +31,9 @@ return [
     'prerequisites_breadcrumb_ynab'       => 'Vereisten voor YNAB',
     'job_configuration_breadcrumb'        => 'Instellingen voor ":key"',
     'job_status_breadcrumb'               => 'Importstatus voor ":key"',
-    'cannot_create_for_provider'          => 'Firefly III kan niet importeren met behulp van ":provider".',
     'disabled_for_demo_user'              => 'uitgeschakeld in demo',
 
     // index page:
-    'general_index_title'                 => 'Importeer een bestand',
     'general_index_intro'                 => 'Dit is de import-routine van Firefly III. Er zijn verschillende manieren om gegevens te importeren in Firefly III, hier als knoppen weergegeven.',
 
     // import provider strings (index):
@@ -50,9 +48,6 @@ return [
     'button_fints'                        => 'Importeer via FinTS',
 
 
-    // global config box (index)
-    'global_config_title'                 => 'Configuratiebestand',
-    'global_config_text'                  => 'In de toekomst bevat dit vak voorkeuren die van toepassing zijn op ALLE bovenstaande importproviders.',
     // prerequisites box (index)
     'need_prereq_title'                   => 'Importvereisten',
     'need_prereq_intro'                   => 'Sommige importmethoden hebben je aandacht nodig voor ze gebruikt kunnen worden. Ze vereisen bijvoorbeeld speciale API-sleutels of geheime waardes. Je kan ze hier instellen. Het icoontje geeft aan of deze vereisten al ingevuld zijn.',
@@ -64,17 +59,6 @@ return [
     'do_prereq_yodlee'                    => 'Vereisten voor een import via Yodlee',
     'do_prereq_quovo'                     => 'Vereisten voor een import via Quovo',
     'do_prereq_ynab'                      => 'Vereisten voor imports van YNAB',
-
-    // provider config box (index)
-    'can_config_title'                    => 'Importinstellingen',
-    'can_config_intro'                    => 'Sommige importmethodes kunnen ingesteld worden zoals jij dat wilt. Er zijn extra instellingen die je aan kan passen.',
-    'do_config_fake'                      => 'Instellingen voor de nep-importhulp',
-    'do_config_file'                      => 'Instellingen voor importeren van bestanden',
-    'do_config_bunq'                      => 'Instellingen voor importeren uit bunq',
-    'do_config_spectre'                   => 'Instellingen voor importeren uit Spectre',
-    'do_config_plaid'                     => 'Instellingen voor importeren uit Plaid',
-    'do_config_yodlee'                    => 'Instellingen voor importeren uit Yodlee',
-    'do_config_quovo'                     => 'Instellingen voor importeren uit Quovo',
 
     // prerequisites:
     'prereq_fake_title'                   => 'Instellingen voor importeren uit de nep-importhulp',
@@ -138,7 +122,6 @@ return [
     'spectre_login_new_login'             => 'Log in via een andere bank, of via een van deze banken met andere inloggegevens.',
     'job_config_spectre_accounts_title'   => 'Selecteer de rekeningen waaruit je wilt importeren',
     'job_config_spectre_accounts_text'    => 'Je hebt ":name" (:country) geselecteerd. Je hebt :count rekening(en) bij deze provider. Kies de Firefly III betaalrekening(en) waar je de transacties in wilt opslaan. Denk er aan dat zowel de ":name"-rekeningen als de Firefly III rekeningen dezelfde valuta moeten hebben.',
-    'spectre_no_supported_accounts'       => 'Je kan niet importeren van deze rekening omdat de valuta niet overeen komt.',
     'spectre_do_not_import'               => '(niet importeren)',
     'spectre_no_mapping'                  => 'Je hebt geen rekeningen geselecteerd om uit te importeren.',
     'imported_from_account'               => 'Geïmporteerd uit ":account"',

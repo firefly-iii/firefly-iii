@@ -74,7 +74,7 @@ class VersionCheckEventHandlerTest extends TestCase
 
         // request thing:
         $request->shouldReceive('call')->once()->andThrow(new FireflyException('Errrr'));
-        $request->shouldReceive('getReleases')->once();
+        $request->shouldNotReceive('getReleases');
 
 
         $handler = new VersionCheckEventHandler;

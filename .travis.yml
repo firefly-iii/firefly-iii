@@ -1,13 +1,15 @@
 sudo: required
 language: bash
+env:
+  - VERSION=4.7.11
+
+dist: xenial
+
 # safelist
 branches:
   only:
   - develop
   - master
-
-env:
-  - VERSION=4.7.10
 
 services:
   - docker
@@ -18,6 +20,7 @@ script:
   - sudo service docker restart
   - docker version -f '{{.Server.Experimental}}'
   - docker version
+  # build everything
   - .deploy/docker/build-amd64.sh
   - .deploy/docker/build-arm.sh
   - .deploy/docker/manifest.sh

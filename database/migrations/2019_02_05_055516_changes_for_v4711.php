@@ -1,7 +1,7 @@
 <?php
 
 /**
- * server.php
+ * 2019_02_05_055516_changes_for_v4711.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,22 +22,38 @@
 
 declare(strict_types=1);
 
-/**
- * Laravel - A PHP Framework For Web Artisans
- *
- * @package  Laravel
- * @author   Taylor Otwell <taylor@laravel.com>
- */
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
-$uri = urldecode(
-    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-);
+class ChangesForV4711 extends Migration
+{
+    /**
+     * Reverse the migrations.
+     *
+     * @return void
+     */
+    public function down(): void
+    {
+        //
+    }
 
-// This file allows us to emulate Apache's "mod_rewrite" functionality from the
-// built-in PHP web server. This provides a convenient way to test a Laravel
-// application without having installed a "real" web server software here.
-if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
-    return false;
+    /**
+     * Run the migrations.
+     *
+     * @return void
+     */
+    public function up(): void
+    {
+        Schema::table(
+            'transaction_journals', function (Blueprint $table) {
+            $table->dateTimeTz('date')->change();
+        }
+        );
+
+        Schema::table('preferences', function (Blueprint $table) {
+            $table->text('data')->nullable()->change();
+        }
+        );
+    }
 }
-
-require_once __DIR__.'/public/index.php';

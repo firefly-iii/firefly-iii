@@ -105,7 +105,10 @@ class PaymentConverter
             $type = TransactionType::TRANSFER;
             Log::debug('Because both transctions are asset, will make it a transfer.');
         }
-        $created = new Carbon($payment->getCreated());
+        Log::debug(sprintf('Bunq created = %s', $payment->getCreated()));
+        $created = new Carbon($payment->getCreated(), 'UTC');
+        // correct timezone to system timezone.
+        $created->setTimezone(config('app.timezone'));
 
         $description = $payment->getDescription();
         if ('' === $payment->getDescription() && 'SAVINGS' === $payment->getType()) {
@@ -115,7 +118,7 @@ class PaymentConverter
         $storeData = [
             'user'               => $this->importJob->user_id,
             'type'               => $type,
-            'date'               => $created->format('Y-m-d'),
+            'date'               => $created->format('Y-m-d H:i:s'),
             'timestamp'          => $created->toAtomString(),
             'description'        => $description,
             'piggy_bank_id'      => null,
@@ -151,7 +154,7 @@ class PaymentConverter
                 ],
             ],
         ];
-        Log::info(sprintf('Parsed %s: "%s" (%s).', $created->format('Y-m-d'), $storeData['description'], $storeData['transactions'][0]['amount']));
+        Log::info(sprintf('Parsed %s: "%s" (%s).', $created->format('Y-m-d H:i:s'), $storeData['description'], $storeData['transactions'][0]['amount']));
 
         return $storeData;
 

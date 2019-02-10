@@ -72,7 +72,9 @@ class ConvertToTransfer implements ActionInterface
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $repository->setUser($journal->user);
-        $asset = $repository->findByName($this->action->action_value, [AccountType::ASSET, AccountType::DEFAULT]);
+        $asset = $repository->findByName(
+            $this->action->action_value, [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE]
+        );
         if (null === $asset) {
             // @codeCoverageIgnoreStart
             Log::error(
@@ -129,6 +131,7 @@ class ConvertToTransfer implements ActionInterface
 
         return false; // @codeCoverageIgnore
     }
+
     /**
      * A deposit is from Revenue to Asset.
      * We replace the Revenue with another asset.

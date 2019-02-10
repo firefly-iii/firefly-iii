@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
+use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
 
@@ -59,7 +60,7 @@ class TransactionRequest extends Request
     {
         $data = [
             'type'               => $this->string('type'),
-            'date'               => $this->date('date'),
+            'date'               => $this->dateTime('date'),
             'description'        => $this->string('description'),
             'piggy_bank_id'      => $this->integer('piggy_bank_id'),
             'piggy_bank_name'    => $this->string('piggy_bank_name'),
@@ -103,7 +104,7 @@ class TransactionRequest extends Request
             // basic fields for journal:
             'type'                                 => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
             'description'                          => 'between:1,255',
-            'date'                                 => 'required|date',
+            'date'                                 => ['required', new IsDateOrTime],
             'piggy_bank_id'                        => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
             'piggy_bank_name'                      => ['between:1,255', 'nullable', new BelongsUser],
             'bill_id'                              => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],

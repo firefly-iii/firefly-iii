@@ -84,7 +84,7 @@ class TransactionJournal extends Model
             'created_at'    => 'datetime',
             'updated_at'    => 'datetime',
             'deleted_at'    => 'datetime',
-            'date'          => 'date',
+            'date'          => 'datetime',
             'interest_date' => 'date',
             'book_date'     => 'date',
             'process_date'  => 'date',

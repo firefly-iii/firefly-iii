@@ -1,7 +1,7 @@
 <?php
 
 /**
- * server.php
+ * AuditLogger.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,22 +22,23 @@
 
 declare(strict_types=1);
 
+namespace FireflyIII\Support\Logging;
+
 /**
- * Laravel - A PHP Framework For Web Artisans
- *
- * @package  Laravel
- * @author   Taylor Otwell <taylor@laravel.com>
+ * Class AuditLogger
  */
-
-$uri = urldecode(
-    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-);
-
-// This file allows us to emulate Apache's "mod_rewrite" functionality from the
-// built-in PHP web server. This provides a convenient way to test a Laravel
-// application without having installed a "real" web server software here.
-if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
-    return false;
+class AuditLogger
+{
+    /**
+     * Customize the given logger instance.
+     *
+     * @param  \Illuminate\Log\Logger $logger
+     *
+     * @return void
+     */
+    public function __invoke($logger)
+    {
+        $processor  = new AuditProcessor;
+        $logger->pushProcessor($processor);
+    }
 }
-
-require_once __DIR__.'/public/index.php';

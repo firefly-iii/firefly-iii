@@ -1,7 +1,7 @@
 <?php
 
 /**
- * server.php
+ * AuditProcessor.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,22 +22,28 @@
 
 declare(strict_types=1);
 
+namespace FireflyIII\Support\Logging;
+
 /**
- * Laravel - A PHP Framework For Web Artisans
- *
- * @package  Laravel
- * @author   Taylor Otwell <taylor@laravel.com>
+ * Class AuditProcessor
  */
+class AuditProcessor
+{
+    /**
+     * @param array $record
+     *
+     * @return array
+     */
+    public function __invoke(array $record): array
+    {
+        $record['extra']['path'] = request()->method() . ':' . request()->url();
 
-$uri = urldecode(
-    parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH)
-);
+        $record['extra']['IP'] = app('request')->ip();
+        if (auth()->check()) {
+            $record['extra']['user'] = auth()->user()->email;
+        }
 
-// This file allows us to emulate Apache's "mod_rewrite" functionality from the
-// built-in PHP web server. This provides a convenient way to test a Laravel
-// application without having installed a "real" web server software here.
-if ($uri !== '/' && file_exists(__DIR__.'/public'.$uri)) {
-    return false;
+
+        return $record;
+    }
 }
-
-require_once __DIR__.'/public/index.php';

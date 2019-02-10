@@ -52,6 +52,7 @@ class HomeController extends Controller
      */
     public function index()
     {
+        Log::channel('audit')->info('User visits admin index.');
         $title         = (string)trans('firefly.administration');
         $mainTitleIcon = 'fa-hand-spock-o';
         $sandstorm     = 1 === (int)getenv('SANDSTORM');
@@ -68,6 +69,7 @@ class HomeController extends Controller
      */
     public function testMessage(Request $request)
     {
+        Log::channel('audit')->info('User sends test message.');
         /** @var User $user */
         $user      = auth()->user();
         $ipAddress = $request->ip();

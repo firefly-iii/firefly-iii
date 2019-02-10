@@ -104,7 +104,7 @@ class Controller extends BaseController
             $obj  = null;
             if (null !== $date) {
                 try {
-                    $obj = new Carbon($date);
+                    $obj = Carbon::parse($date);
                 } catch (InvalidDateException $e) {
                     // don't care
                     Log::error(sprintf('Invalid date exception in API controller: %s', $e->getMessage()));

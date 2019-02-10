@@ -77,7 +77,7 @@ class TransactionTransformer extends AbstractTransformer
             'description'                     => $transaction->description,
             'journal_description'             => $transaction->description,
             'transaction_description'         => $transaction->transaction_description,
-            'date'                            => $transaction->date->format('Y-m-d'),
+            'date'                            => $transaction->date->toAtomString(),
             'type'                            => $transaction->transaction_type_type,
             'identifier'                      => $transaction->identifier,
             'journal_id'                      => (int)$transaction->journal_id,

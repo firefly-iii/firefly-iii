@@ -25,6 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Este não é um válido IBAN.',
     'zero_or_more'                   => 'O valor não pode ser negativo.',
+    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
     'source_equals_destination'      => 'A conta de origem é igual à conta de destino.',
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
     'unique_iban_for_user'           => 'Parece que este IBAN já está em uso.',

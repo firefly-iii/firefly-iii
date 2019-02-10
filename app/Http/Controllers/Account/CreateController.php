@@ -111,7 +111,7 @@ class CreateController extends Controller
             $this->rememberPreviousUri('accounts.create.uri');
         }
         $request->session()->forget('accounts.create.fromStore');
-
+        Log::channel('audit')->info('Create new account.');
         return view('accounts.create', compact('subTitleIcon', 'what', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
     }
 
@@ -131,7 +131,7 @@ class CreateController extends Controller
         $request->session()->flash('success', (string)trans('firefly.stored_new_account', ['name' => $account->name]));
         app('preferences')->mark();
 
-
+        Log::channel('audit')->info('Store new account.', $data);
 
         // update preferences if necessary:
         $frontPage = app('preferences')->get('frontPageAccounts', [])->data;
