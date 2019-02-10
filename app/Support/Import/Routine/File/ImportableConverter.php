@@ -140,8 +140,14 @@ class ImportableConverter
         $result = null;
         if (null !== $date) {
             try {
-                $object = Carbon::createFromFormat($this->config['date-format'] ?? 'Ymd', $date);
-                $result = $object->format('Y-m-d');
+                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
+                $dateFormat = $this->config['date-format'] ?? 'Ymd';
+                if ('!' !== $dateFormat{0}) {
+                    $dateFormat = '!' . $dateFormat;
+                }
+                $object = Carbon::createFromFormat($dateFormat, $date);
+                $result = $object->format('Y-m-d H:i:s');
+                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
             } catch (InvalidDateException|InvalidArgumentException $e) {
                 Log::error($e->getMessage());
                 Log::error($e->getTraceAsString());
@@ -213,7 +219,7 @@ class ImportableConverter
 
         return [
             'type'               => $transactionType,
-            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d'),
+            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
             'tags'               => $importable->tags,
             'user'               => $this->importJob->user_id,
             'notes'              => $importable->note,
