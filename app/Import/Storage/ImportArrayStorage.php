@@ -139,6 +139,7 @@ class ImportArrayStorage
                         $processor = app(Processor::class);
                         $processor->make($rule);
                         $processor->handleTransactionJournal($journal);
+                        $journal->refresh();
                         if ($rule->stop_processing) {
                             return false;
                         }
