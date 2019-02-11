@@ -130,7 +130,7 @@ class UpgradeDatabase extends Command
             $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
             if (null === $currency) {
                 $this->line('Fall back to default currency in migrateBillsToRules().');
-                $currency = app('amount')->getDefaultCurrency();
+                $currency = app('amount')->getDefaultCurrencyByUser($user);
             }
 
             if (null === $ruleGroup) {
@@ -452,7 +452,7 @@ class UpgradeDatabase extends Command
                 if (null !== $budget) {
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency                             = \Amount::getDefaultCurrencyByUser($user);
+                        $currency                             = app('amount')->getDefaultCurrencyByUser($user);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
                         $this->line(
@@ -464,6 +464,9 @@ class UpgradeDatabase extends Command
         }
     }
 
+    /**
+     * 
+     */
     private function createNewTypes(): void
     {
         // create transaction type "Reconciliation".
