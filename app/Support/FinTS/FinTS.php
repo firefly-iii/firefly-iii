@@ -82,8 +82,8 @@ class FinTS
             return $account->getAccountNumber() === $accountNumber;
         }
         );
-        if (count($filteredAccounts) != 1) {
-            throw new FireflyException("Cannot find account with number " . $accountNumber);
+        if (1 !== count($filteredAccounts)) {
+            throw new FireflyException(sprintf('Cannot find account with number "%s"', $accountNumber));
         }
 
         return reset($filteredAccounts);

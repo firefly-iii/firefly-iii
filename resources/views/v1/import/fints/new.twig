@@ -20,6 +20,7 @@
                         {{ ExpandedForm.text('fints_bank_code', data.fints_bank_code, {required: true}) }}
                         {{ ExpandedForm.text('fints_username', data.fints_username, {helpText: trans('import.job_config_fints_username_help'), required: false}) }}
                         {{ ExpandedForm.password('fints_password', {required: true}) }}
+                        {{ ExpandedForm.checkbox('apply_rules', 1, true) }}
                     </div>
                 </div>
             </div>
