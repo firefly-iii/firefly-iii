@@ -5,6 +5,9 @@
 echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
 sudo service docker restart
 docker version -f '{{.Server.Experimental}}'
+
+echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
+
 docker version
 
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
