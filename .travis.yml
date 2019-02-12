@@ -18,6 +18,7 @@ script:
   # build everything
   - # enable experimental features.
   - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  - touch $HOME/.docker/config.json
   - echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
   - sudo service docker restart
   - docker version -f '{{.Server.Experimental}}'
