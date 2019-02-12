@@ -41,13 +41,6 @@ interface JournalRepositoryInterface
 {
 
     /**
-     * @param TransactionJournalLink $link
-     *
-     * @return string
-     */
-    public function getLinkNoteText(TransactionJournalLink $link): string;
-
-    /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
      * @param Account            $source
@@ -57,15 +50,15 @@ interface JournalRepositoryInterface
      */
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param TransactionJournal $journal
      *
      * @return int
      */
     public function countTransactions(TransactionJournal $journal): int;
+
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Deletes a journal.
@@ -202,6 +195,13 @@ interface JournalRepositoryInterface
      * @return string
      */
     public function getJournalTotal(TransactionJournal $journal): string;
+
+    /**
+     * @param TransactionJournalLink $link
+     *
+     * @return string
+     */
+    public function getLinkNoteText(TransactionJournalLink $link): string;
 
     /**
      * Return Carbon value of a meta field (or NULL).

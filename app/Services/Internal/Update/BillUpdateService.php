@@ -28,6 +28,7 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use Log;
+
 /**
  * @codeCoverageIgnore
  * Class BillUpdateService
@@ -59,7 +60,7 @@ class BillUpdateService
         /** @var TransactionCurrency $currency */
         $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
 
-        if(null === $currency) {
+        if (null === $currency) {
             // use default currency:
             $currency = app('amount')->getDefaultCurrencyByUser($bill->user);
         }

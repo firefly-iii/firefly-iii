@@ -206,7 +206,7 @@ class Transaction extends Twig_Extension
     public function description(TransactionModel $transaction): string
     {
         $description = $transaction->description;
-        if (\strlen((string)$transaction->transaction_description) > 0) {
+        if ('' !== (string)$transaction->transaction_description) {
             $description = $transaction->transaction_description . ' (' . $transaction->description . ')';
         }
 

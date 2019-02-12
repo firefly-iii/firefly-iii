@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\PiggyBank;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\PiggyBankEvent;
@@ -559,7 +560,11 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         if ('' === $note) {
             $dbNote = $piggyBank->notes()->first();
             if (null !== $dbNote) {
-                $dbNote->delete();
+                try {
+                    $dbNote->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Could not delete note: %s', $e->getMessage()));
+                }
             }
 
             return true;

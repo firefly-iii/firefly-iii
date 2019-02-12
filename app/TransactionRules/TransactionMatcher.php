@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\TransactionRules;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Rule;
@@ -69,10 +68,8 @@ class TransactionMatcher
      */
     public function __construct()
     {
-        $this->strict    = false;
-        $this->startDate = null;
-        $this->endDate   = null;
-        $this->accounts  = new Collection;
+        $this->strict   = false;
+        $this->accounts = new Collection;
         Log::debug('Created new transaction matcher');
     }
 
@@ -89,6 +86,7 @@ class TransactionMatcher
         Log::debug('Now in findTransactionsByRule()');
         if (0 === \count($this->rule->ruleTriggers)) {
             Log::error('Rule has no triggers!');
+
             return new Collection;
         }
 
@@ -290,7 +288,7 @@ class TransactionMatcher
             if ($this->accounts->count() > 0) {
                 $collector->setAccounts($this->accounts);
             }
-            if(null !== $this->startDate && null !== $this->endDate) {
+            if (null !== $this->startDate && null !== $this->endDate) {
                 $collector->setRange($this->startDate, $this->endDate);
             }
 

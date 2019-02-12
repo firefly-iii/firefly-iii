@@ -65,7 +65,9 @@ class PaymentConverter
     /**
      * Convert a bunq transaction to a usable transaction for Firefly III.
      *
-     * @param BunqPayment $payment
+     * @param BunqPayment  $payment
+     *
+     * @param LocalAccount $source
      *
      * @return array
      * @throws FireflyException

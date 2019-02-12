@@ -76,10 +76,10 @@ trait CalculateXOccurrences
      */
     protected function getXMonthlyOccurrences(Carbon $date, int $count, int $skipMod, string $moment): array
     {
-        $return   = [];
-        $mutator  = clone $date;
-        $total    = 0;
-        $attempts = 0;
+        $return     = [];
+        $mutator    = clone $date;
+        $total      = 0;
+        $attempts   = 0;
         $dayOfMonth = (int)$moment;
         if ($mutator->day > $dayOfMonth) {
             // day has passed already, add a month.

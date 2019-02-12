@@ -88,7 +88,7 @@ class SelectAccountsHandler implements YnabJobConfigurationInterface
             // validate each
             $ynabId    = $this->validYnabAccount($ynabId);
             $accountId = $this->validLocalAccount((int)$localId);
-            if ($accountId !== 0) {
+            if (0 !== $accountId) {
                 $final[$ynabId] = $accountId;
             }
         }

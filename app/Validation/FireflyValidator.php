@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use Config;
-use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -38,7 +37,6 @@ use FireflyIII\Services\Password\Verifier;
 use FireflyIII\TransactionRules\Triggers\TriggerInterface;
 use FireflyIII\User;
 use Google2FA;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
 use Illuminate\Validation\Validator;
 
@@ -562,7 +560,6 @@ class FireflyValidator extends Validator
 
         $type   = $existingAccount->accountType;
         $ignore = $existingAccount->id;
-        $value  = $value;
 
         /** @var Collection $set */
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();

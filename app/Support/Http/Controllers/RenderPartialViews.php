@@ -305,8 +305,8 @@ trait RenderPartialViews
      */
     protected function getCurrentTriggers(Rule $rule): array // get info from object and present.
     {
-        $index           = 0;
-        $triggers        = [];
+        $index    = 0;
+        $triggers = [];
         // todo must be repos
         $currentTriggers = $rule->ruleTriggers()->orderBy('order', 'ASC')->get();
         /** @var RuleTrigger $entry */

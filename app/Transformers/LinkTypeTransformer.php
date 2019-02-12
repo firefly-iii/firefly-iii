@@ -25,9 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\LinkType;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  *

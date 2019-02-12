@@ -127,7 +127,6 @@ class RecurrenceTransformer extends AbstractTransformer
      * @param Recurrence $recurrence
      *
      * @return array
-     * @throws FireflyException
      */
     private function getMeta(Recurrence $recurrence): array
     {
@@ -211,7 +210,6 @@ class RecurrenceTransformer extends AbstractTransformer
      * @param RecurrenceTransaction $transaction
      *
      * @return array
-     * @throws FireflyException
      */
     private function getTransactionMeta(RecurrenceTransaction $transaction): array
     {

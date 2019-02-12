@@ -62,7 +62,7 @@ class AccountDestroyService
             DB::table('transactions')->where('account_id', $account->id)->update(['account_id' => $moveTo->id]);
 
             // also update recurring transactions:
-            DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' =>  $moveTo->id]);
+            DB::table('recurrences_transactions')->where('source_id', $account->id)->update(['source_id' => $moveTo->id]);
             DB::table('recurrences_transactions')->where('destination_id', $account->id)->update(['destination_id' => $moveTo->id]);
         }
         $service = app(JournalDestroyService::class);

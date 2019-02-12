@@ -39,6 +39,7 @@ class StageFinalHandler
 
     /**
      * @return array
+     * @throws \Exception
      */
     public function getTransactions(): array
     {

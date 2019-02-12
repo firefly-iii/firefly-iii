@@ -158,8 +158,8 @@ class TransactionJournal extends Twig_Extension
 
             if (null !== $transaction->foreign_currency_id) {
                 $foreignAmount = $transaction->foreign_amount ?? '0';
-                $foreignId = $transaction->foreign_currency_id;
-                $foreign   = $transaction->foreignCurrency;
+                $foreignId     = $transaction->foreign_currency_id;
+                $foreign       = $transaction->foreignCurrency;
                 if (!isset($totals[$foreignId])) {
                     $totals[$foreignId] = [
                         'amount'   => '0',

@@ -33,12 +33,6 @@ interface UserRepositoryInterface
 {
 
     /**
-     * @param User $user
-     *
-     * @return string|null
-     */
-    public function getRoleByUser(User $user): ?string;
-    /**
      * Returns a collection of all users.
      *
      * @return Collection
@@ -135,6 +129,13 @@ interface UserRepositoryInterface
      * @return Role|null
      */
     public function getRole(string $role): ?Role;
+
+    /**
+     * @param User $user
+     *
+     * @return string|null
+     */
+    public function getRoleByUser(User $user): ?string;
 
     /**
      * Return basic user information.

@@ -25,9 +25,7 @@ namespace FireflyIII\Transformers;
 
 
 use FireflyIII\Models\ImportJob;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class ImportJobTransformer
@@ -56,11 +54,11 @@ class ImportJobTransformer extends AbstractTransformer
      */
     public function transform(ImportJob $importJob): array
     {
-        $tag= $importJob->tag;
-        $tagId = null;
+        $tag    = $importJob->tag;
+        $tagId  = null;
         $tagTag = null;
-        if(null !== $tag) {
-            $tagId = $tag->id;
+        if (null !== $tag) {
+            $tagId  = $tag->id;
             $tagTag = $tag->tag;
         }
         $data = [
@@ -79,7 +77,7 @@ class ImportJobTransformer extends AbstractTransformer
             'transactions'    => json_encode($importJob->transactions),
             'errors'          => json_encode($importJob->errors),
 
-            'links'           => [
+            'links' => [
                 [
                     'rel' => 'self',
                     'uri' => '/import/' . $importJob->key,

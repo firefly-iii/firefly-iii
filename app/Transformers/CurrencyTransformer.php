@@ -24,9 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\TransactionCurrency;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class CurrencyTransformer

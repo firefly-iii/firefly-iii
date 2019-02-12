@@ -222,7 +222,7 @@ trait AccountServiceTrait
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
-    
+
         return $factory->findOrCreate($opposingAccountName, AccountType::INITIAL_BALANCE);
     }
 

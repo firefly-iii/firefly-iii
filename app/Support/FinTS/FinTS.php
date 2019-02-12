@@ -74,7 +74,7 @@ class FinTS
      * @return SEPAAccount
      * @throws FireflyException
      */
-    public function getAccount(string $accountNumber)
+    public function getAccount(string $accountNumber): SEPAAccount
     {
         $accounts         = $this->getAccounts();
         $filteredAccounts = array_filter(
@@ -93,7 +93,7 @@ class FinTS
      * @return SEPAAccount[]
      * @throws FireflyException
      */
-    public function getAccounts()
+    public function getAccounts(): ?array
     {
         try {
             return $this->finTS->getSEPAAccounts();

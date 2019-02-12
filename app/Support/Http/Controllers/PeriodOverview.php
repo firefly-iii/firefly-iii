@@ -351,7 +351,9 @@ trait PeriodOverview
     /**
      * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
-     * @param Tag $tag
+     * @param Tag    $tag
+     *
+     * @param Carbon $date
      *
      * @return Collection
      */

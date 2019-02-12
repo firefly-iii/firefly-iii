@@ -38,7 +38,7 @@ class AuditLogger
      */
     public function __invoke($logger)
     {
-        $processor  = new AuditProcessor;
+        $processor = new AuditProcessor;
         $logger->pushProcessor($processor);
     }
 }

@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Models\Role;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Log;
@@ -36,6 +35,7 @@ class UserTransformer extends AbstractTransformer
 {
     /** @var UserRepositoryInterface */
     private $repository;
+
     /**
      * UserTransformer constructor.
      *

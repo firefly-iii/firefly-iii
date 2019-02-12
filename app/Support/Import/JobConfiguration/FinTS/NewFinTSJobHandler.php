@@ -48,7 +48,6 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
      * @param array $data
      *
      * @return MessageBag
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function configureJob(array $data): MessageBag
     {

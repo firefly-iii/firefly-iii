@@ -114,7 +114,7 @@ class ImportableConverterTest extends TestCase
 
         // verify content of $result
         $this->assertEquals('withdrawal', $result[0]['type']);
-        $this->assertEquals('2018-09-17', $result[0]['date']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
         $this->assertEquals($importable->tags, $result[0]['tags']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
     }
@@ -177,7 +177,7 @@ class ImportableConverterTest extends TestCase
         // verify content of $result
         $today = new Carbon();
         $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals($today->format('Y-m-d'), $result[0]['date']);
+        $this->assertEquals($today->format('Y-m-d H:i:s'), $result[0]['date']);
         $this->assertEquals([], $result[0]['tags']);
         $this->assertEquals($euro->id, $result[0]['transactions'][0]['currency_id']);
     }
@@ -238,12 +238,12 @@ class ImportableConverterTest extends TestCase
 
         // verify content of $result
         $this->assertEquals('deposit', $result[0]['type']);
-        $this->assertEquals('2018-09-17', $result[0]['date']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
         $this->assertEquals([], $result[0]['tags']);
         $this->assertEquals($usd->id, $result[0]['transactions'][0]['currency_id']);
         $this->assertEquals($revenue->id, $result[0]['transactions'][0]['source_id']);
         $this->assertEquals($asset->id, $result[0]['transactions'][0]['destination_id']);
-        $this->assertEquals('2018-01-02', $result[0]['book_date']);
+        $this->assertEquals('2018-01-02 00:00:00', $result[0]['book_date']);
 
     }
 
@@ -362,7 +362,7 @@ class ImportableConverterTest extends TestCase
 
         // verify content of $result
         $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals('2018-09-17', $result[0]['date']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
         $this->assertEquals([], $result[0]['tags']);
         $this->assertEquals(2, $result[0]['bill_id']); // will NOT be ignored.
         $this->assertEquals($importable->billName, $result[0]['bill_name']);
@@ -435,7 +435,7 @@ class ImportableConverterTest extends TestCase
 
         // verify content of $result
         $this->assertEquals('transfer', $result[0]['type']);
-        $this->assertEquals('2018-09-17', $result[0]['date']);
+        $this->assertEquals('2018-09-17 00:00:00', $result[0]['date']);
         $this->assertEquals([], $result[0]['tags']);
         $this->assertEquals(3, $result[0]['bill_id']);
         $this->assertEquals($importable->billName, $result[0]['bill_name']);
