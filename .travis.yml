@@ -15,8 +15,7 @@ services:
   - docker
 
 script:
-  # build everything
-  - # enable experimental features.
+  # enable experimental features.
   - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
   - mkdir $HOME/.docker
   - touch $HOME/.docker/config.json
@@ -24,6 +23,7 @@ script:
   - sudo service docker restart
   - docker version -f '{{.Server.Experimental}}'
   - docker version
+  # build everything
   - .deploy/docker/build-amd64.sh
   - .deploy/docker/build-arm.sh
   - .deploy/docker/manifest.sh
