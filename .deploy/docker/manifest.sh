@@ -1,15 +1,5 @@
 #!/usr/bin/env bash
 
-
-# enable experimental features.
-echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
-sudo service docker restart
-docker version -f '{{.Server.Experimental}}'
-
-echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
-
-docker version
-
 if [ "$TRAVIS_BRANCH" == "develop" ]; then
     TARGET=jc5x/firefly-iii:develop
     ARM=jc5x/firefly-iii:develop-arm
