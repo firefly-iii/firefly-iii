@@ -273,7 +273,8 @@ class UpgradeDatabase extends Command
                                         ->whereNull('transactions.deleted_at')
                                         ->groupBy(['transaction_journals.id'])
                                         ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
-        $result     = DB::table((string)DB::raw('(' . $subQuery->toSql() . ') AS derived'))
+        /** @noinspection PhpStrictTypeCheckingInspection */
+        $result     = DB::table(DB::raw('(' . $subQuery->toSql() . ') AS derived'))
                         ->mergeBindings($subQuery->getQuery())
                         ->where('t_count', '>', 2)
                         ->select(['id', 't_count']);
