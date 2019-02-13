@@ -80,6 +80,8 @@ class ProfileController extends Controller
     /**
      * Change your email address.
      *
+     * @param Request $request
+     *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
     public function changeEmail(Request $request)
@@ -103,6 +105,8 @@ class ProfileController extends Controller
 
     /**
      * Change your password.
+     *
+     * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -135,7 +139,7 @@ class ProfileController extends Controller
         $secret = Google2FA::generateSecretKey();
         session()->flash('two-factor-secret', $secret);
 
-        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret, 200);
+        $image = Google2FA::getQRCodeInline($domain, auth()->user()->email, $secret);
 
         return view('profile.code', compact('image', 'secret'));
     }
@@ -186,6 +190,8 @@ class ProfileController extends Controller
 
     /**
      * Delete your account view.
+     *
+     * @param Request $request
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

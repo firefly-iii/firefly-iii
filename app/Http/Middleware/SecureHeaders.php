@@ -61,7 +61,7 @@ class SecureHeaders
         ];
 
         $route = $request->route();
-        if (null !== $route && $route->uri !== 'oauth/authorize') {
+        if (null !== $route && 'oauth/authorize' !== $route->uri) {
             $csp[] = "form-action 'self'";
         }
 

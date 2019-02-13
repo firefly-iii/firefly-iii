@@ -26,13 +26,13 @@ namespace FireflyIII\Http\Middleware;
 
 use Closure;
 use DB;
-use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use Illuminate\Database\QueryException;
 use Log;
 
 /**
  * Class Installer
+ *
  * @codeCoverageIgnore
  *
  */
@@ -84,7 +84,7 @@ class Installer
 
         // older version in config than database?
         $configVersion = (int)config('firefly.db_version');
-        $dbVersion     = (int)FireflyConfig::getFresh('db_version', 1)->data;
+        $dbVersion     = (int)app('fireflyconfig')->getFresh('db_version', 1)->data;
         if ($configVersion > $dbVersion) {
             Log::warning(
                 sprintf(

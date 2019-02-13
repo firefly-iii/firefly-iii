@@ -154,6 +154,7 @@ class JobStatusController extends Controller
             // @codeCoverageIgnoreStart
             $message = sprintf('Cannot find import routine class for job of type "%s".', $importProvider);
             Log::error($message);
+
             return response()->json(
                 ['status' => 'NOK', 'message' => $message]
             );
@@ -182,6 +183,7 @@ class JobStatusController extends Controller
 
         // expect nothing from routine, just return OK to user.
         Log::info('Now finished with JobStatusController::start');
+
         return response()->json(['status' => 'OK', 'message' => 'stage_finished']);
     }
 
@@ -227,6 +229,7 @@ class JobStatusController extends Controller
         $this->repository->setStatus($importJob, 'storage_finished');
 
         Log::info('Now finished with JobStatusController::start');
+
         // expect nothing from routine, just return OK to user.
         return response()->json(['status' => 'OK', 'message' => 'storage_finished']);
     }

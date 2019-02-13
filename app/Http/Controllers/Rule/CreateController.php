@@ -29,13 +29,10 @@ use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\AugumentData;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Log;
-use Throwable;
 
 /**
  * Class CreateController

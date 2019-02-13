@@ -194,7 +194,6 @@ class ReconcileController extends Controller
      *
      * @return mixed
      *
-     * @throws FireflyException
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {

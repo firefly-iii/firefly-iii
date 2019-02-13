@@ -31,6 +31,7 @@ use Illuminate\Support\Collection;
  * Class Support.
  * @method Collection getExpenses()
  * @method Collection getIncome()
+ *
  * @codeCoverageIgnore
  */
 class Support

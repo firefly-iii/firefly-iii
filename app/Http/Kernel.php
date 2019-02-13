@@ -82,7 +82,7 @@ class Kernel extends HttpKernel
             // does not check login
             // does not check 2fa
             // does not check activation
-            'web' => [
+            'web'                   => [
                 Sandstorm::class,
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

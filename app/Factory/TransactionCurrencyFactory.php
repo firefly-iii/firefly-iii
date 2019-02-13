@@ -38,6 +38,7 @@ class TransactionCurrencyFactory
 {
     /**
      * TransactionCurrencyFactory constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -100,7 +101,7 @@ class TransactionCurrencyFactory
             Log::warning(sprintf('Currency ID is %d but found nothing!', $currencyId));
         }
         // then by code:
-        if (\strlen($currencyCode) > 0) {
+        if ('' !== $currencyCode) {
             $currency = TransactionCurrency::whereCode($currencyCode)->first();
             if (null !== $currency) {
                 return $currency;

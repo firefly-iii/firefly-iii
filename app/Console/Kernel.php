@@ -30,6 +30,7 @@ use Log;
 
 /**
  * File to make sure commands work.
+ *
  * @codeCoverageIgnore
  */
 class Kernel extends ConsoleKernel
@@ -54,7 +55,9 @@ class Kernel extends ConsoleKernel
     {
         $schedule->call(
             function () {
-                Log::error('Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://firefly-iii.readthedocs.io/en/latest/');
+                Log::error(
+                    'Firefly III no longer users the Laravel scheduler to do cron jobs! Please read the instructions at https://firefly-iii.readthedocs.io/en/latest/'
+                );
                 echo "\n";
                 echo '------------';
                 echo "\n";

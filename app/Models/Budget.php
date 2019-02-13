@@ -45,6 +45,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int         $order
  * @property Carbon      created_at
  * @property Carbon      updated_at
+ * @property User        $user
  */
 class Budget extends Model
 {

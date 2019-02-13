@@ -58,6 +58,33 @@ class InstallController extends Controller
     }
 
     /**
+     * Do database decrypt.
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function decrypt(): JsonResponse
+    {
+        if ($this->hasForbiddenFunctions()) {
+            return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
+        }
+        try {
+            Log::debug('Am now calling decrypt database routine...');
+            Artisan::call('firefly:decrypt-all');
+            Log::debug(Artisan::output());
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+            Log::error($e->getTraceAsString());
+            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
+            }
+
+            return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
+        }
+
+        return response()->json(['error' => false, 'message' => 'OK']);
+    }
+
+    /**
      * Show index.
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
@@ -152,34 +179,6 @@ class InstallController extends Controller
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
-
-    /**
-     * Do database decrypt.
-     *
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function decrypt(): JsonResponse
-    {
-        if ($this->hasForbiddenFunctions()) {
-            return response()->json(['error' => true, 'message' => self::FORBIDDEN_ERROR]);
-        }
-        try {
-            Log::debug('Am now calling decrypt database routine...');
-            Artisan::call('firefly:decrypt-all');
-            Log::debug(Artisan::output());
-        } catch (Exception $e) {
-            Log::error($e->getMessage());
-            Log::error($e->getTraceAsString());
-            if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
-                return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
-            }
-
-            return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
-        }
-
-        return response()->json(['error' => false, 'message' => 'OK']);
-    }
-
 
     /**
      * Do database verification.

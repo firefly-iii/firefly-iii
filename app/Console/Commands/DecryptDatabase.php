@@ -113,7 +113,7 @@ class DecryptDatabase extends Command
         $configName = sprintf('is_decrypted_%s', $table);
         $configVar  = FireflyConfig::get($configName, false);
         if (null !== $configVar) {
-            return $configVar->data;
+            return (bool)$configVar->data;
         }
 
         return false;
@@ -130,7 +130,7 @@ class DecryptDatabase extends Command
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
-            //Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }
 
         return $value;

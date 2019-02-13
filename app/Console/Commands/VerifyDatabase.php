@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
-use Crypt;
 use DB;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
@@ -42,10 +41,8 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
-use Log;
 use Schema;
 use stdClass;
 

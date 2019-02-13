@@ -110,7 +110,7 @@ class UploadCollector extends BasicCollector implements CollectorInterface
             Log::error(sprintf('Could not decrypt old import file "%s". Skipped because: %s', $key, $e->getMessage()));
         }
 
-        if (\strlen($content) > 0) {
+        if ('' !== $content) {
             // add to export disk.
             $date = $job->created_at->format('Y-m-d');
             $file = sprintf('%s-Old %s import dated %s.%s', $this->job->key, strtoupper($job->file_type), $date, $job->file_type);

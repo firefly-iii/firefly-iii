@@ -33,6 +33,9 @@ use Log;
  */
 class PiggyBankFactory
 {
+    /** @var User */
+    private $user;
+
     /**
      * Constructor.
      */
@@ -42,9 +45,6 @@ class PiggyBankFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    /** @var User */
-    private $user;
 
     /**
      * @param int|null    $piggyBankId
@@ -70,7 +70,7 @@ class PiggyBankFactory
         }
 
         // then find by name:
-        if (\strlen($piggyBankName) > 0) {
+        if ('' !== $piggyBankName) {
             /** @var PiggyBank $piggyBank */
             $piggyBank = $this->findByName($piggyBankName);
             if (null !== $piggyBank) {

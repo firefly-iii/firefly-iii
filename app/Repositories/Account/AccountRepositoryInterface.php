@@ -46,20 +46,6 @@ interface AccountRepositoryInterface
     public function count(array $types): int;
 
     /**
-     * @param Account $account
-     *
-     * @return string
-     */
-    public function getAccountType(Account $account): string;
-
-    /**
-     * @param Account $account
-     *
-     * @return TransactionCurrency|null
-     */
-    public function getAccountCurrency(Account $account): ?TransactionCurrency;
-
-    /**
      * Moved here from account CRUD.
      *
      * @param Account      $account
@@ -101,6 +87,20 @@ interface AccountRepositoryInterface
      * @return Account|null
      */
     public function findNull(int $accountId): ?Account;
+
+    /**
+     * @param Account $account
+     *
+     * @return TransactionCurrency|null
+     */
+    public function getAccountCurrency(Account $account): ?TransactionCurrency;
+
+    /**
+     * @param Account $account
+     *
+     * @return string
+     */
+    public function getAccountType(Account $account): string;
 
     /**
      * Return account type or null if not found.

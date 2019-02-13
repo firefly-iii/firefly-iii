@@ -30,6 +30,7 @@ use Throwable;
 
 /**
  * Class MonthReportGenerator.
+ *
  * @codeCoverageIgnore
  */
 class YearReportGenerator implements ReportGeneratorInterface

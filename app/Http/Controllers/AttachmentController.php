@@ -111,7 +111,7 @@ class AttachmentController extends Controller
             $quoted  = sprintf('"%s"', addcslashes(basename($attachment->filename), '"\\'));
 
             /** @var LaravelResponse $response */
-            $response = response($content, 200);
+            $response = response($content);
             $response
                 ->header('Content-Description', 'File Transfer')
                 ->header('Content-Type', 'application/octet-stream')

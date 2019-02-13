@@ -77,12 +77,12 @@ class Authenticate
     /**
      * Determine if the user is logged in to any of the given guards.
      *
+     * @param        $request
      * @param  array $guards
      *
      * @return mixed
-     * @throws \Illuminate\Auth\AuthenticationException
+     * @throws AuthenticationException
      * @throws FireflyException
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */

@@ -145,7 +145,6 @@ class ShowController extends Controller
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
-     * @throws FireflyException
      *
      */
     public function showAll(Request $request, Account $account)
@@ -177,7 +176,7 @@ class ShowController extends Controller
 
         return view(
             'accounts.show',
-            compact('account', 'showAll','isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
+            compact('account', 'showAll', 'isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
         );
     }
 

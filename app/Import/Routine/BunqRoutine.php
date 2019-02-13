@@ -98,8 +98,6 @@ class BunqRoutine implements RoutineInterface
     }
 
 
-
-
     /**
      * Set the import job.
      *

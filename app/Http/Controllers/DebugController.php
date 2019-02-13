@@ -171,7 +171,7 @@ class DebugController extends Controller
                 }
             }
         }
-        if (strlen($logContent) > 0) {
+        if ('' !== $logContent) {
             // last few lines
             $logContent = 'Truncated from this point <----|' . substr($logContent, -8192);
         }

@@ -84,9 +84,9 @@ class CreateController extends Controller
         $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
         $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
         $liabilityTypes = [
-            $debt->id       => (string)trans('firefly.account_type_' . AccountType::DEBT),
-            $loan->id       => (string)trans('firefly.account_type_' . AccountType::LOAN),
-            $mortgage->id   => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
+            $debt->id     => (string)trans('firefly.account_type_' . AccountType::DEBT),
+            $loan->id     => (string)trans('firefly.account_type_' . AccountType::LOAN),
+            $mortgage->id => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
         ];
         asort($liabilityTypes);
 
@@ -112,6 +112,7 @@ class CreateController extends Controller
         }
         $request->session()->forget('accounts.create.fromStore');
         Log::channel('audit')->info('Create new account.');
+
         return view('accounts.create', compact('subTitleIcon', 'what', 'interestPeriods', 'subTitle', 'roles', 'liabilityTypes'));
     }
 

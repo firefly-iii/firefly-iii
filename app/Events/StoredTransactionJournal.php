@@ -46,6 +46,6 @@ class StoredTransactionJournal extends Event
      */
     public function __construct(TransactionJournal $journal)
     {
-        $this->journal     = $journal;
+        $this->journal = $journal;
     }
 }

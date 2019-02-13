@@ -185,7 +185,6 @@ class CreateRecurringTransactions implements ShouldQueue
                         /** @var Processor $processor */
                         $processor = app(Processor::class);
                         $processor->make($rule);
-                        /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                         $processor->handleTransactionJournal($journal);
                         if ($rule->stop_processing) {
                             return;
@@ -487,7 +486,7 @@ class CreateRecurringTransactions implements ShouldQueue
         }
 
         // has repeated X times.
-        $journalCount = $this->repository->getJournalCount($recurrence, null, null);
+        $journalCount = $this->repository->getJournalCount($recurrence);
         if (0 !== $recurrence->repetitions && $journalCount >= $recurrence->repetitions) {
             Log::info(sprintf('Recurrence #%d has run %d times, so will run no longer.', $recurrence->id, $recurrence->repetitions));
 

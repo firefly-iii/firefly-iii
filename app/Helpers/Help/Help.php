@@ -25,7 +25,6 @@ namespace FireflyIII\Helpers\Help;
 use Cache;
 use Exception;
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\GuzzleException;
 use League\CommonMark\CommonMarkConverter;
 use Log;
 use Route;
@@ -87,14 +86,14 @@ class Help implements HelpInterface
             $res        = $client->request('GET', $uri, $opt);
             $statusCode = $res->getStatusCode();
             $content    = trim($res->getBody()->getContents());
-        } catch (GuzzleException|Exception $e) {
+        } catch (Exception $e) {
             Log::info($e->getMessage());
             Log::info($e->getTraceAsString());
         }
 
         Log::debug(sprintf('Status code is %d', $statusCode));
 
-        if (\strlen($content) > 0) {
+        if ('' !== $content) {
             Log::debug('Content is longer than zero. Expect something.');
             $converter = new CommonMarkConverter();
             $content   = $converter->convertToHtml($content);
@@ -153,7 +152,7 @@ class Help implements HelpInterface
     public function putInCache(string $route, string $language, string $content): void
     {
         $key = sprintf(self::CACHEKEY, $route, $language);
-        if (\strlen($content) > 0) {
+        if ('' !== $content) {
             Log::debug(sprintf('Will store entry in cache: %s', $key));
             Cache::put($key, $content, 10080); // a week.
 

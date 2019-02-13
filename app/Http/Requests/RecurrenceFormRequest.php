@@ -227,6 +227,7 @@ class RecurrenceFormRequest extends Request
             $rules['title']      = 'required|between:1,255|uniqueObjectForUser:recurrences,title,' . $recurrence->id;
             $rules['first_date'] = 'required|date';
         }
+
         return $rules;
     }
 

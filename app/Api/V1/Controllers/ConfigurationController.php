@@ -54,7 +54,6 @@ class ConfigurationController extends Controller
                 $admin = auth()->user();
 
                 if (!$this->repository->hasRole($admin, 'owner')) {
-                    /** @noinspection ExceptionsAnnotatingAndHandlingInspection */
                     throw new FireflyException('No access to method.'); // @codeCoverageIgnore
                 }
 
@@ -72,7 +71,7 @@ class ConfigurationController extends Controller
     {
         $configData = $this->getConfigData();
 
-        return response()->json(['data' => $configData], 200)->header('Content-Type', 'application/vnd.api+json');
+        return response()->json(['data' => $configData])->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -82,7 +81,6 @@ class ConfigurationController extends Controller
      * @param string               $name
      *
      * @return JsonResponse
-     * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(ConfigurationRequest $request, string $name): JsonResponse
@@ -91,7 +89,7 @@ class ConfigurationController extends Controller
         app('fireflyconfig')->set($name, $data['value']);
         $configData = $this->getConfigData();
 
-        return response()->json(['data' => $configData], 200)->header('Content-Type', 'application/vnd.api+json');
+        return response()->json(['data' => $configData])->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

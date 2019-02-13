@@ -168,7 +168,7 @@ class CategoryController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('chart.category.frontpage');
         if ($cache->has()) {
-            //return response()->json($cache->get()); // @codeCoverageIgnore
+            return response()->json($cache->get()); // @codeCoverageIgnore
         }
 
         // currency repos:
@@ -186,8 +186,8 @@ class CategoryController extends Controller
         foreach ($categories as $category) {
             $spentArray = $repository->spentInPeriodPerCurrency(new Collection([$category]), $accounts, $start, $end);
             foreach ($spentArray as $categoryId => $spentInfo) {
-                foreach($spentInfo['spent'] as $currencyId => $row) {
-                    $spent= $row['spent'];
+                foreach ($spentInfo['spent'] as $currencyId => $row) {
+                    $spent = $row['spent'];
                     if (bccomp($spent, '0') === -1) {
                         $currencies[$currencyId] = $currencies[$currencyId] ?? $currencyRepository->findNull((int)$currencyId);
                         $tempData[]              = [

@@ -50,7 +50,7 @@ class UpdatedJournalEventHandler
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
         $ruleGroupRepos->setUser($journal->user);
 
-        $groups  = $ruleGroupRepos->getActiveGroups($journal->user);
+        $groups = $ruleGroupRepos->getActiveGroups($journal->user);
 
         /** @var RuleGroup $group */
         foreach ($groups as $group) {

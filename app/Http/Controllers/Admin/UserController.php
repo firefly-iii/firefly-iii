@@ -178,7 +178,7 @@ class UserController extends Controller
         $data = $request->getUserData();
 
         // update password
-        if (\strlen($data['password']) > 0) {
+        if ('' !== $data['password']) {
             $repository->changePassword($user, $data['password']);
         }
 

@@ -90,7 +90,7 @@ class IndexController extends Controller
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
-        $recurring   = [];
+        $recurring = [];
         /** @var Recurrence $recurrence */
         foreach ($recurrences as $recurrence) {
             $array                 = $transformer->transform($recurrence);

@@ -49,6 +49,7 @@ class AccountFactory
 
     /**
      * AccountFactory constructor.
+     *
      * @codeCoverageIgnore
      */
     public function __construct()
@@ -103,7 +104,7 @@ class AccountFactory
                 // use default currency:
                 $currency = app('amount')->getDefaultCurrencyByUser($this->user);
             }
-            $currency->enabled =true;
+            $currency->enabled = true;
             $currency->save();
 
             unset($data['currency_code']);

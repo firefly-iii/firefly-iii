@@ -186,11 +186,13 @@ class AmountController extends Controller
         // the default suggestion is the money the user has spent, on average, over this period.
         $suggested = $spentAverage;
 
-        Log::debug(sprintf('Suggested is now %s (spent average)',$suggested));
+        Log::debug(sprintf('Suggested is now %s (spent average)', $suggested));
 
         // if the user makes less per period, suggest that amount instead.
         if (1 === bccomp($spentAverage, $earnedAverage)) {
-            Log::debug(sprintf('Because earned average (%s) is less than spent average (%s) will suggest earned average instead.', $earnedAverage, $spentAverage));
+            Log::debug(
+                sprintf('Because earned average (%s) is less than spent average (%s) will suggest earned average instead.', $earnedAverage, $spentAverage)
+            );
             $suggested = $earnedAverage;
         }
 

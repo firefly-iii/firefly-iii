@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Admin;
 
-use FireflyConfig;
 use FireflyIII\Helpers\Update\UpdateTrait;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
@@ -87,8 +86,8 @@ class UpdateController extends Controller
     public function post(Request $request)
     {
         $checkForUpdates = (int)$request->get('check_for_updates');
-        FireflyConfig::set('permission_update_check', $checkForUpdates);
-        FireflyConfig::set('last_update_check', time());
+        app('fireflyconfig')->set('permission_update_check', $checkForUpdates);
+        app('fireflyconfig')->set('last_update_check', time());
         session()->flash('success', (string)trans('firefly.configuration_updated'));
 
         return redirect(route('admin.update-check'));
@@ -107,7 +106,7 @@ class UpdateController extends Controller
             // flash info
             session()->flash('info', $resultString);
         }
-        FireflyConfig::set('last_update_check', time());
+        app('fireflyconfig')->set('last_update_check', time());
 
         return response()->json(['result' => $resultString]);
     }

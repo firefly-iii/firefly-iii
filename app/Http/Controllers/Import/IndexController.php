@@ -84,18 +84,19 @@ class IndexController extends Controller
         $isDemoUser     = $this->userRepository->hasRole(auth()->user(), 'demo');
 
         Log::debug(sprintf('Will create job for provider "%s"', $importProvider));
-        Log::debug(sprintf('Is demo user? %s',var_export($isDemoUser, true)));
-        Log::debug(sprintf('Is allowed for user? %s',var_export($allowedForDemo, true)));
-        Log::debug(sprintf('Has prerequisites? %s',var_export($hasPreReq, true)));
-        Log::debug(sprintf('Has config? %s',var_export($hasConfig, true)));
+        Log::debug(sprintf('Is demo user? %s', var_export($isDemoUser, true)));
+        Log::debug(sprintf('Is allowed for user? %s', var_export($allowedForDemo, true)));
+        Log::debug(sprintf('Has prerequisites? %s', var_export($hasPreReq, true)));
+        Log::debug(sprintf('Has config? %s', var_export($hasConfig, true)));
 
 
         if ($isDemoUser && !$allowedForDemo) {
             Log::debug('User is demo and this provider doesnt work for demo users.');
+
             return redirect(route('import.index'));
         }
 
-        $importJob      = $this->repository->create($importProvider);
+        $importJob = $this->repository->create($importProvider);
 
         Log::debug(sprintf('Created job #%d for provider %s', $importJob->id, $importProvider));
 
@@ -163,7 +164,7 @@ class IndexController extends Controller
         $result = json_encode($config, JSON_PRETTY_PRINT);
         $name   = sprintf('"%s"', addcslashes('import-configuration-' . date('Y-m-d') . '.json', '"\\'));
         /** @var LaravelResponse $response */
-        $response = response($result, 200);
+        $response = response($result);
         $response->header('Content-disposition', 'attachment; filename=' . $name)
                  ->header('Content-Type', 'application/json')
                  ->header('Content-Description', 'File Transfer')

@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Export;
 
-use Crypt;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Export\Collector\AttachmentCollector;
@@ -41,8 +40,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
-use Log;
 use Illuminate\Support\Facades\Storage;
+use Log;
 use ZipArchive;
 
 /**
@@ -193,8 +192,8 @@ class ExpandedProcessor implements ProcessorInterface
      */
     public function createZipFile(): bool
     {
-        $zip      = new ZipArchive;
-        $file     = $this->job->key . '.zip';
+        $zip       = new ZipArchive;
+        $file      = $this->job->key . '.zip';
         $localPath = storage_path('export') . '/' . $file;
 
         if (true !== $zip->open($localPath, ZipArchive::CREATE)) {
@@ -339,7 +338,7 @@ class ExpandedProcessor implements ProcessorInterface
         $return = [];
         /** @var Note $note */
         foreach ($notes as $note) {
-            if (\strlen(trim((string)$note->text)) > 0) {
+            if ('' !== trim((string)$note->text)) {
                 $id          = (int)$note->noteable_id;
                 $return[$id] = $note->text;
             }

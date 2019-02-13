@@ -83,7 +83,7 @@ class RecurrenceController extends Controller
 
         // if $firstDate is beyond $end, simply return an empty array.
         if ($firstDate->gt($end)) {
-            return response()->json([]);
+            return response()->json();
         }
         // if $firstDate is beyond start, use that one:
         $actualStart = clone $firstDate;

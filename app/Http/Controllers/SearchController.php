@@ -107,6 +107,7 @@ class SearchController extends Controller
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));
             $html = 'Could not render view.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['count' => $transactions->count(), 'html' => $html]);

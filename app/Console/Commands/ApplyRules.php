@@ -41,6 +41,7 @@ use Illuminate\Support\Collection;
 /**
  *
  * Class ApplyRules
+ *
  * @codeCoverageIgnore
  */
 class ApplyRules extends Command
@@ -184,6 +185,8 @@ class ApplyRules extends Command
     private function applyRuleSelection(Collection $rules, Collection $transactions, bool $breakProcessing): void
     {
         $bar = $this->output->createProgressBar($rules->count() * $transactions->count());
+
+        /** @var Rule $rule */
         foreach ($rules as $rule) {
             /** @var Processor $processor */
             $processor = app(Processor::class);
@@ -191,7 +194,7 @@ class ApplyRules extends Command
 
             /** @var Transaction $transaction */
             foreach ($transactions as $transaction) {
-                /** @var Rule $rule */
+                /** @noinspection DisconnectedForeachInstructionInspection */
                 $bar->advance();
                 $result = $processor->handleTransaction($transaction);
                 if (true === $result) {
@@ -210,6 +213,7 @@ class ApplyRules extends Command
 
     /**
      *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function grabAllRules(): void
     {
@@ -226,6 +230,7 @@ class ApplyRules extends Command
 
     /**
      *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function parseDates(): void
     {

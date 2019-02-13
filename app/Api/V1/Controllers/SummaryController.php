@@ -105,6 +105,7 @@ class SummaryController extends Controller
         $spentData    = $this->getLeftToSpendInfo($start, $end);
         $networthData = $this->getNetWorthInfo($start, $end);
         $total        = array_merge($balanceData, $billData, $spentData, $networthData);
+
         // TODO: liabilities with icon line-chart
 
         return response()->json($total);
@@ -361,7 +362,10 @@ class SummaryController extends Controller
      */
     private function getNetWorthInfo(Carbon $start, Carbon $end): array
     {
+        /** @var User $user */
+        $user = auth()->user();
         $date = Carbon::create()->startOfDay();
+
 
         // start and end in the future? use $end
         if ($this->notInDateRange($date, $start, $end)) {
@@ -371,7 +375,7 @@ class SummaryController extends Controller
 
         /** @var NetWorthInterface $netWorthHelper */
         $netWorthHelper = app(NetWorthInterface::class);
-        $netWorthHelper->setUser(auth()->user());
+        $netWorthHelper->setUser($user);
         $allAccounts = $this->accountRepository->getActiveAccountsByType([AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE]);
 
         // filter list on preference of being included.
@@ -389,7 +393,7 @@ class SummaryController extends Controller
             /** @var TransactionCurrency $currency */
             $currency = $data['currency'];
             $amount   = round($data['balance'], $currency->decimal_places);
-            if ($amount === 0.0) {
+            if (0.0 === $amount) {
                 continue;
             }
             // return stuff

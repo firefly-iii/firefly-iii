@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Auth;
 
 use DB;
-use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
@@ -140,7 +139,7 @@ class LoginController extends Controller
         $request->session()->forget('twoFactorAuthenticated');
 
         // is allowed to?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
         $allowReset        = true;

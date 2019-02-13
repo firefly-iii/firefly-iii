@@ -72,7 +72,7 @@ class PreferencesController extends Controller
 
         // an important fallback is that the frontPageAccount array gets refilled automatically
         // when it turns up empty.
-        if (\count($frontPageAccounts->data) === 0) {
+        if (0 === \count($frontPageAccounts->data)) {
             $frontPageAccounts = $accountIds;
         }
 

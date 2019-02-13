@@ -263,7 +263,9 @@ class CurrencyController extends Controller
     /**
      * List all budget limits
      *
-     * @param Request $request
+     * @param Request             $request
+     *
+     * @param TransactionCurrency $currency
      *
      * @return JsonResponse
      */
@@ -489,7 +491,9 @@ class CurrencyController extends Controller
     /**
      * List all recurring transactions.
      *
-     * @param Request $request
+     * @param Request             $request
+     *
+     * @param TransactionCurrency $currency
      *
      * @return JsonResponse]
      */

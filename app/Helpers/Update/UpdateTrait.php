@@ -96,7 +96,7 @@ trait UpdateTrait
             // has it been released for at least three days?
             $today       = new Carbon;
             $releaseDate = $release->getUpdated();
-            if ($today->diffInDays($releaseDate, true) > 3) {
+            if ($today->diffInDays($releaseDate) > 3) {
                 Log::debug('New version is older than 3 days!');
                 $monthAndDayFormat = (string)trans('config.month_and_day');
                 $return            = (string)trans(

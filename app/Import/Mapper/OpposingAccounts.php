@@ -55,7 +55,7 @@ class OpposingAccounts implements MapperInterface
             $accountId = (int)$account->id;
             $name      = $account->name;
             $iban      = $account->iban ?? '';
-            if (\strlen($iban) > 0) {
+            if ('' !== $iban) {
                 $name .= ' (' . $iban . ')';
             }
             // is a liability?

@@ -52,7 +52,7 @@ class BillRequest extends Request
     public function getAll(): array
     {
         $active = true;
-        if(null !== $this->get('active')) {
+        if (null !== $this->get('active')) {
             $active = $this->boolean('active');
         }
 

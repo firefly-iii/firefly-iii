@@ -46,8 +46,8 @@ class CallbackController extends Controller
      */
     public function ynab(Request $request, ImportJobRepositoryInterface $repository)
     {
-        $code      = (string)$request->get('code');
-        $jobKey    = (string)$request->get('state');
+        $code   = (string)$request->get('code');
+        $jobKey = (string)$request->get('state');
 
         if ('' === $code) {
             return view('error')->with('message', 'You Need A Budget did not reply with a valid authorization code. Firefly III cannot continue.');

@@ -135,7 +135,9 @@ class IndexController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param Request                   $request
+     *
+     * @param BudgetRepositoryInterface $repository
      *
      * @return JsonResponse
      */

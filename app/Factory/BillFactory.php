@@ -38,6 +38,9 @@ class BillFactory
 {
     use BillServiceTrait;
 
+    /** @var User */
+    private $user;
+
     /**
      * Constructor.
      */
@@ -47,9 +50,6 @@ class BillFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    /** @var User */
-    private $user;
 
     /**
      * @param array $data
@@ -63,7 +63,7 @@ class BillFactory
         /** @var TransactionCurrency $currency */
         $currency = $factory->find((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
 
-        if(null === $currency) {
+        if (null === $currency) {
             // use default currency:
             $currency = app('amount')->getDefaultCurrencyByUser($this->user);
         }
@@ -111,7 +111,7 @@ class BillFactory
         }
 
         // then find by name:
-        if (null === $bill && \strlen($billName) > 0) {
+        if (null === $bill && '' !== $billName) {
             $bill = $this->findByName($billName);
         }
 
