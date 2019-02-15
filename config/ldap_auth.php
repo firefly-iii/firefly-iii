@@ -77,6 +77,21 @@ return [
 
     'provider' => Adldap\Laravel\Auth\DatabaseUserProvider::class,
     //'provider' => Adldap\Laravel\Auth\NoDatabaseUserProvider::class,
+
+
+    /*
+    |--------------------------------------------------------------------------
+    | Model
+    |--------------------------------------------------------------------------
+    |
+    | The model to utilize for authentication and importing.
+    |
+    | This option is only applicable to the DatabaseUserProvider.
+    |
+    */
+
+    'model' => FireflyIII\User::class,
+
     /*
     |--------------------------------------------------------------------------
     | Rules

@@ -164,7 +164,8 @@ return [
                 |
                 */
 
-                'domain_controllers' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
+                //'domain_controllers' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
+                'hosts' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
 
                 /*
                 |--------------------------------------------------------------------------
@@ -219,8 +220,10 @@ return [
                 |
                 */
 
-                'admin_username' => env('ADLDAP_ADMIN_USERNAME', ''),
-                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', ''),
+                //'admin_username' => env('ADLDAP_ADMIN_USERNAME', ''),
+                //'admin_password' => env('ADLDAP_ADMIN_PASSWORD', ''),
+                'username' => env('ADLDAP_ADMIN_USERNAME', ''),
+                'password' => env('ADLDAP_ADMIN_PASSWORD', ''),
 
                 /*
                 |--------------------------------------------------------------------------
@@ -246,8 +249,8 @@ return [
                 | If you need to be able to change user passwords on your server, then an
                 | SSL or TLS connection is required. All other operations are allowed
                 | on unsecured protocols.
-                | 
-                | One of these options are definitely recommended if you 
+                |
+                | One of these options are definitely recommended if you
                 | have the ability to connect to your server securely.
                 |
                 */
