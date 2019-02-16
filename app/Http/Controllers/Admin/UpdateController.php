@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\IsSandStormUser;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class HomeController.
@@ -101,6 +102,7 @@ class UpdateController extends Controller
         $latestRelease = $this->getLatestRelease();
         $versionCheck  = $this->versionCheck($latestRelease);
         $resultString  = $this->parseResult($versionCheck, $latestRelease);
+        Log::debug(sprintf('Result string is: "%s"', $resultString));
 
         if (0 !== $versionCheck && '' !== $resultString) {
             // flash info
