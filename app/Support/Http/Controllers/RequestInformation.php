@@ -165,7 +165,7 @@ trait RequestInformation
             }
             $baseHref   = route('index');
             $helpString = sprintf(
-                '<p><em><img src="%s/images/flags/%s.png" /> %s</em></p>', $baseHref, $originalLanguage, (string)trans('firefly.help_translating')
+                '<p><em><img alt="" src="%s/images/flags/%s.png" /> %s</em></p>', $baseHref, $originalLanguage, (string)trans('firefly.help_translating')
             );
             $content    = $helpString . $help->getFromGitHub($route, $language);
         }

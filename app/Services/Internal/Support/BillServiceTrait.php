@@ -66,6 +66,7 @@ trait BillServiceTrait
      * @param string $note
      *
      * @return bool
+     * @throws \Exception
      */
     public function updateNote(Bill $bill, string $note): bool
     {

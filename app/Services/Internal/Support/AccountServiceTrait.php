@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
@@ -340,7 +341,7 @@ trait AccountServiceTrait
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::debug($e->getMessage());
                 }
             }

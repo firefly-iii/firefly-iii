@@ -225,6 +225,7 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param string     $note
      *
      * @return bool
+     * @throws Exception
      */
     public function updateNote(Attachment $attachment, string $note): bool
     {

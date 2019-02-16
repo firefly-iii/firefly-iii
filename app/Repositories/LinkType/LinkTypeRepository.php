@@ -348,6 +348,7 @@ class LinkTypeRepository implements LinkTypeRepositoryInterface
      * @param string                 $text
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @throws \Exception
      */
     private function setNoteText(TransactionJournalLink $link, string $text): void
     {

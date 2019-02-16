@@ -554,6 +554,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * @param string    $note
      *
      * @return bool
+     * @throws \Exception
      */
     private function updateNote(PiggyBank $piggyBank, string $note): bool
     {

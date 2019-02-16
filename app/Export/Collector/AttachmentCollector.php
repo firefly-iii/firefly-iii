@@ -103,6 +103,7 @@ class AttachmentCollector extends BasicCollector implements CollectorInterface
      * @param Attachment $attachment
      *
      * @return bool
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function exportAttachment(Attachment $attachment): bool
     {

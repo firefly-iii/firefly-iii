@@ -189,7 +189,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if ($categories->count() === 0) {
+        if (0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
 
@@ -653,7 +653,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if ($categories->count() === 0) {
+        if (0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
 
