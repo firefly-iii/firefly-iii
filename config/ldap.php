@@ -164,7 +164,6 @@ return [
                 |
                 */
 
-                //'domain_controllers' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
                 'hosts' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
 
                 /*
@@ -220,8 +219,6 @@ return [
                 |
                 */
 
-                //'admin_username' => env('ADLDAP_ADMIN_USERNAME', ''),
-                //'admin_password' => env('ADLDAP_ADMIN_PASSWORD', ''),
                 'username' => env('ADLDAP_ADMIN_USERNAME', ''),
                 'password' => env('ADLDAP_ADMIN_PASSWORD', ''),
 

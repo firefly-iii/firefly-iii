@@ -29,6 +29,7 @@ use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class LoginController
@@ -69,6 +70,7 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
