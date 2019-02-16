@@ -78,7 +78,7 @@ final class FromAccountStarts extends AbstractTrigger implements TriggerInterfac
         $repository = app(JournalRepositoryInterface::class);
 
         /** @var Account $account */
-        foreach ($repository->getJournalSourceAccounts($journal) as $account) {
+        foreach ($repository->getJournalSourceAccounts($journal, false) as $account) {
             $name .= strtolower($account->name);
         }
 
