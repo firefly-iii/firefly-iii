@@ -37,7 +37,6 @@ if ('FreeIPA' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
 if ('ActiveDirectory' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
     $schema = ActiveDirectory::class;
 }
-
 return [
 
     /*

@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use Adldap;
 use DB;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
@@ -70,6 +71,15 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        /**
+         * Temporary bug fix for something that doesn't seem to work in
+         * AdLdap.
+         */
+        $schema = config('ldap.connections.default.schema');
+
+        /** @var Adldap\Connections\Provider $provider */
+        Adldap::getProvider('default')->setSchema(new $schema);
+
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
         $this->validateLogin($request);
 
@@ -77,6 +87,7 @@ class LoginController extends Controller
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if ($this->hasTooManyLoginAttempts($request)) {
+            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get('email')));
             $this->fireLockoutEvent($request);
 
             /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -85,6 +96,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
             // user is logged in. Save in session if the user requested session to be remembered:
             $request->session()->put('remember_login', $request->filled('remember'));
 
@@ -97,7 +109,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-
+        Log::channel('audit')->info(sprintf('Login attempt for user "%s" failed.', $request->get('email')));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->sendFailedLoginResponse($request);
