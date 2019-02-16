@@ -1132,7 +1132,7 @@ return [
     'instance_configuration'                => '組態設定',
     'firefly_instance_configuration'        => 'Firefly III 的組態設定選項',
     'setting_single_user_mode'              => '單使用者模式',
-    'setting_single_user_mode_explain'      => '預設情況下, 螢火蟲 iii 只接受一 (1) 個註冊: 您。這是一項安全措施, 可防止其他人使用您的實例, 除非您允許他們使用。將來的註冊將被阻止。當您取消選中此核取方塊時, 其他人也可以使用您的實例, 假設他們可以到達它 (當它連接到互聯網時)。',
+    'setting_single_user_mode_explain'      => '預設下，Firefly III 只接受一個 (1) 註冊，即您本人。此為安全措施，在除經你同意外，防止其他人使用您的空間，目前註冊功能已關閉。當您取消此核選方塊後，若他們能連接到此空間 (在已聯網狀態)，其他人也可以使用。',
     'store_configuration'                   => '儲存設定',
     'single_user_administration'            => ':email 的使用者管理後臺',
     'edit_user'                             => '編輯使用者 :email',
