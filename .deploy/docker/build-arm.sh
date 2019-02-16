@@ -18,7 +18,7 @@ if [ "$TRAVIS_BRANCH" == "develop" ]; then
     docker build --tag jc5x/firefly-iii:develop-arm --file Dockerfile.arm .
     docker tag jc5x/firefly-iii:develop-arm jc5x/firefly-iii:develop-$VERSION-arm
     docker push jc5x/firefly-iii:develop-arm
-    docker tag jc5x/firefly-iii:develop-$VERSION-arm
+    docker push jc5x/firefly-iii:develop-$VERSION-arm
 fi
 
 if [ "$TRAVIS_BRANCH" == "master" ]; then
