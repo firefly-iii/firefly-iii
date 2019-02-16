@@ -28,9 +28,7 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
@@ -45,10 +43,6 @@ use Log;
 class ShowController extends Controller
 {
     use PeriodOverview;
-    /** @var AccountRepositoryInterface The account repository */
-    private $accountRepos;
-    /** @var JournalRepositoryInterface Journals and transactions overview */
-    private $journalRepos;
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
@@ -63,9 +57,7 @@ class ShowController extends Controller
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.categories'));
                 app('view')->share('mainTitleIcon', 'fa-bar-chart');
-                $this->journalRepos = app(JournalRepositoryInterface::class);
-                $this->repository   = app(CategoryRepositoryInterface::class);
-                $this->accountRepos = app(AccountRepositoryInterface::class);
+                $this->repository = app(CategoryRepositoryInterface::class);
 
                 return $next($request);
             }

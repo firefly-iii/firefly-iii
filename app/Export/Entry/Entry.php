@@ -49,48 +49,24 @@ use FireflyIII\Models\Transaction;
  */
 final class Entry
 {
-    /** @var int ID of the journal */
-    public $journal_id;
-    /** @var int ID of the transaction */
-    public $transaction_id = 0;
-    /** @var string The date. */
-    public $date;
-    /** @var string The description */
-    public $description;
-    /** @var string The currency code. */
-    public $currency_code;
     /** @var string The amount. */
     public $amount;
-    /** @var string The foreign currency code */
-    public $foreign_currency_code = '';
-    /** @var string Foreign amount */
-    public $foreign_amount = '0';
-    /** @var string Transaction type */
-    public $transaction_type;
+    /** @var string Asset account BIC */
+    public $asset_account_bic;
+    /** @var string Asset account IBAN */
+    public $asset_account_iban;
     /** @var string Asset account ID */
     public $asset_account_id;
     /** @var string Asset account name */
     public $asset_account_name;
-    /** @var string Asset account IBAN */
-    public $asset_account_iban;
-    /** @var string Asset account BIC */
-    public $asset_account_bic;
     /** @var string Asset account number */
     public $asset_account_number;
     /** @var string Asset account currency code */
     public $asset_currency_code;
-    /** @var string Opposing account ID */
-    public $opposing_account_id;
-    /** @var string Opposing account name */
-    public $opposing_account_name;
-    /** @var string Opposing account IBAN */
-    public $opposing_account_iban;
-    /** @var string Opposing account BIC */
-    public $opposing_account_bic;
-    /** @var string Opposing account number */
-    public $opposing_account_number;
-    /** @var string Opposing account code */
-    public $opposing_currency_code;
+    /** @var string Bill ID */
+    public $bill_id;
+    /** @var string Bill name */
+    public $bill_name;
     /** @var string Budget ID */
     public $budget_id;
     /** @var string Budget name */
@@ -99,14 +75,38 @@ final class Entry
     public $category_id;
     /** @var string Category name */
     public $category_name;
-    /** @var string Bill ID */
-    public $bill_id;
-    /** @var string Bill name */
-    public $bill_name;
+    /** @var string The currency code. */
+    public $currency_code;
+    /** @var string The date. */
+    public $date;
+    /** @var string The description */
+    public $description;
+    /** @var string Foreign amount */
+    public $foreign_amount = '0';
+    /** @var string The foreign currency code */
+    public $foreign_currency_code = '';
+    /** @var int ID of the journal */
+    public $journal_id;
     /** @var string Notes */
     public $notes;
+    /** @var string Opposing account BIC */
+    public $opposing_account_bic;
+    /** @var string Opposing account IBAN */
+    public $opposing_account_iban;
+    /** @var string Opposing account ID */
+    public $opposing_account_id;
+    /** @var string Opposing account name */
+    public $opposing_account_name;
+    /** @var string Opposing account number */
+    public $opposing_account_number;
+    /** @var string Opposing account code */
+    public $opposing_currency_code;
     /** @var string Tags */
     public $tags;
+    /** @var int ID of the transaction */
+    public $transaction_id = 0;
+    /** @var string Transaction type */
+    public $transaction_type;
 
     /**
      * Entry constructor.
@@ -132,7 +132,7 @@ final class Entry
         $entry->transaction_id = $transaction->id;
         $entry->date           = $transaction->date->format('Ymd');
         $entry->description    = $transaction->description;
-        if (\strlen((string)$transaction->transaction_description) > 0) {
+        if ('' !== (string)$transaction->transaction_description) {
             $entry->description = $transaction->transaction_description . '(' . $transaction->description . ')';
         }
         $entry->currency_code = $transaction->transactionCurrency->code;

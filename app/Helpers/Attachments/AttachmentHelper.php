@@ -26,11 +26,12 @@ use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Attachment;
 use Illuminate\Contracts\Encryption\DecryptException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\MessageBag;
 use Log;
-use Illuminate\Support\Facades\Storage;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 /**
@@ -85,7 +86,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
         try {
             $content = Crypt::decrypt($this->uploadDisk->get(sprintf('at-%d.data', $attachment->id)));
-        } catch (DecryptException $e) {
+        } catch (DecryptException|FileNotFoundException $e) {
             Log::error(sprintf('Could not decrypt data of attachment #%d: %s', $attachment->id, $e->getMessage()));
             $content = '';
         }
@@ -102,8 +103,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      */
     public function getAttachmentLocation(Attachment $attachment): string
     {
-        $path = sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, (int)$attachment->id);
-        return $path;
+        return sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, (int)$attachment->id);
     }
 
     /**
@@ -186,11 +186,11 @@ class AttachmentHelper implements AttachmentHelperInterface
      * @param array|null $files
      *
      * @return bool
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
+     * @throws FireflyException
      */
     public function saveAttachmentsForModel(object $model, ?array $files): bool
     {
-        if(!($model instanceof Model)) {
+        if (!($model instanceof Model)) {
             return false; // @codeCoverageIgnore
         }
         Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
@@ -265,10 +265,10 @@ class AttachmentHelper implements AttachmentHelperInterface
             $attachment->save();
             Log::debug('Created attachment:', $attachment->toArray());
 
-            $fileObject = $file->openFile('r');
+            $fileObject = $file->openFile();
             $fileObject->rewind();
 
-            if(0 === $file->getSize()) {
+            if (0 === $file->getSize()) {
                 throw new FireflyException('Cannot upload empty or non-existent file.'); // @codeCoverageIgnore
             }
 

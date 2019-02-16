@@ -165,9 +165,9 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
         /** @var Processor $processor */
         $processor = app(Processor::class);
         $processor->make($this->rule, true);
-        $hits         = 0;
-        $misses       = 0;
-        $total        = 0;
+        $hits   = 0;
+        $misses = 0;
+        $total  = 0;
         // Execute the rules for each transaction
         foreach ($transactions as $transaction) {
             ++$total;

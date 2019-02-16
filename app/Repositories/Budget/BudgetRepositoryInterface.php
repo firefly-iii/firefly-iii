@@ -120,8 +120,8 @@ interface BudgetRepositoryInterface
     public function getAvailableBudget(TransactionCurrency $currency, Carbon $start, Carbon $end): string;
 
     /**
-     * @param Carbon              $start
-     * @param Carbon              $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */

@@ -31,32 +31,6 @@ trait BasicDataSupport
 {
 
     /**
-     * Filters empty results from getBudgetPeriodReport.
-     *
-     * @param array $data
-     *
-     * @return array
-     */
-    protected function filterPeriodReport(array $data): array // helper function for period overview.
-    {
-        /**
-         * @var int $entryId
-         * @var array $set
-         */
-        foreach ($data as $entryId => $set) {
-            $sum = '0';
-            foreach ($set['entries'] as $amount) {
-                $sum = bcadd($amount, $sum);
-            }
-            $data[$entryId]['sum'] = $sum;
-            if (0 === bccomp('0', $sum)) {
-                unset($data[$entryId]);
-            }
-        }
-
-        return $data;
-    }
-    /**
      * Sum up an array.
      *
      * @param array $array
@@ -74,6 +48,33 @@ trait BasicDataSupport
     }
 
     /**
+     * Filters empty results from getBudgetPeriodReport.
+     *
+     * @param array $data
+     *
+     * @return array
+     */
+    protected function filterPeriodReport(array $data): array // helper function for period overview.
+    {
+        /**
+         * @var int   $entryId
+         * @var array $set
+         */
+        foreach ($data as $entryId => $set) {
+            $sum = '0';
+            foreach ($set['entries'] as $amount) {
+                $sum = bcadd($amount, $sum);
+            }
+            $data[$entryId]['sum'] = $sum;
+            if (0 === bccomp('0', $sum)) {
+                unset($data[$entryId]);
+            }
+        }
+
+        return $data;
+    }
+
+    /**
      * Find the ID in a given array. Return '0' of not there (amount).
      *
      * @param array $array
@@ -83,10 +84,7 @@ trait BasicDataSupport
      */
     protected function isInArray(array $array, int $entryId) // helper for data (math, calculations)
     {
-        $result = '0';
-        if (isset($array[$entryId])) {
-            $result = $array[$entryId];
-        }
+        $result = $array[$entryId] ?? '0';
 
         return $result;
     }

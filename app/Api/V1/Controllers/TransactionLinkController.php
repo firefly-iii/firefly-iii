@@ -29,7 +29,6 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
-use FireflyIII\Transformers\JournalLinkTransformer;
 use FireflyIII\Transformers\TransactionLinkTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;

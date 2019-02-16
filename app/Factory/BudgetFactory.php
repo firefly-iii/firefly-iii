@@ -34,6 +34,9 @@ use Log;
  */
 class BudgetFactory
 {
+    /** @var User */
+    private $user;
+
     /**
      * Constructor.
      */
@@ -43,10 +46,6 @@ class BudgetFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    /** @var User */
-    private $user;
-
 
     /**
      * @param int|null    $budgetId

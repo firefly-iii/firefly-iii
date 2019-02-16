@@ -24,12 +24,10 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\AvailableBudgetRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Transformers\AvailableBudgetTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -48,8 +46,6 @@ use League\Fractal\Serializer\JsonApiSerializer;
  */
 class AvailableBudgetController extends Controller
 {
-    /** @var CurrencyRepositoryInterface The currency repository */
-    private $currencyRepository;
     /** @var BudgetRepositoryInterface The budget repository */
     private $repository;
 
@@ -62,9 +58,8 @@ class AvailableBudgetController extends Controller
         $this->middleware(
             function ($request, $next) {
                 /** @var User $user */
-                $user                     = auth()->user();
-                $this->repository         = app(BudgetRepositoryInterface::class);
-                $this->currencyRepository = app(CurrencyRepositoryInterface::class);
+                $user             = auth()->user();
+                $this->repository = app(BudgetRepositoryInterface::class);
                 $this->repository->setUser($user);
 
                 return $next($request);
@@ -103,16 +98,18 @@ class AvailableBudgetController extends Controller
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of available budgets. Count it and split it.
-        $collection       = $this->repository->getAvailableBudgets();
+        $collection = $this->repository->getAvailableBudgets();
 
         // filter list on start and end date, if present.
         // TODO: put this in the query.
         $start = $this->parameters->get('start');
-        $end = $this->parameters->get('end');
-        if(null !== $start && null !== $end) {
-            $collection = $collection->filter(function(AvailableBudget $availableBudget) use ($start, $end) {
-                return $availableBudget->start_date->gte($start) && $availableBudget->end_date->lte($end);
-            });
+        $end   = $this->parameters->get('end');
+        if (null !== $start && null !== $end) {
+            $collection = $collection->filter(
+                function (AvailableBudget $availableBudget) use ($start, $end) {
+                    return $availableBudget->start_date->gte($start) && $availableBudget->end_date->lte($end);
+                }
+            );
         }
 
         $count            = $collection->count();
@@ -164,7 +161,6 @@ class AvailableBudgetController extends Controller
      * @param AvailableBudgetRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function store(AvailableBudgetRequest $request): JsonResponse
     {

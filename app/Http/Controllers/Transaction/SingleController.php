@@ -190,6 +190,7 @@ class SingleController extends Controller
      * Show a special JSONified view of a transaction, for easier debug purposes.
      *
      * @param TransactionJournal $journal
+     *
      * @codeCoverageIgnore
      * @return JsonResponse
      */

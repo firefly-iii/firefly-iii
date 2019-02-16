@@ -72,9 +72,9 @@ class TransactionJournalFactory
         $description = app('steam')->cleanString($data['description']);
         $description = str_replace(["\n", "\t", "\r"], "\x20", $description);
         /** @var Carbon $carbon */
-        $carbon  = $data['date'];
+        $carbon = $data['date'];
         $carbon->setTimezone(config('app.timezone'));
-        
+
         $journal = TransactionJournal::create(
             [
                 'user_id'                 => $data['user'],

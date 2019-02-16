@@ -48,7 +48,6 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
      * @param array $data
      *
      * @return MessageBag
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function configureJob(array $data): MessageBag
     {
@@ -59,17 +58,19 @@ class NewFinTSJobHandler implements FinTSConfigurationInterface
         $config['fints_bank_code'] = (string)($data['fints_bank_code'] ?? '');
         $config['fints_username']  = (string)($data['fints_username'] ?? '');
         $config['fints_password']  = (string)(Crypt::encrypt($data['fints_password']) ?? '');
+        $config['apply-rules']     = 1 === (int)$data['apply_rules'];
 
         $this->repository->setConfiguration($this->importJob, $config);
+
 
         $incomplete = false;
         foreach ($config as $value) {
             $incomplete = '' === $value or $incomplete;
         }
+
         if ($incomplete) {
             return new MessageBag([trans('import.incomplete_fints_form')]);
         }
-
         $finTS = app(FinTS::class, ['config' => $this->importJob->configuration]);
         if (true !== ($checkConnection = $finTS->checkConnection())) {
             return new MessageBag([trans('import.fints_connection_failed', ['originalError' => $checkConnection])]);

@@ -247,7 +247,7 @@ class RecurrenceController extends Controller
             return response()->json([], 204);
         }
         if (true === $result) {
-            return response()->json([], 200);
+            return response()->json();
         }
 
         return response()->json([], 418); // @codeCoverageIgnore

@@ -163,6 +163,8 @@ lib/x86_64-linux-gnu/libattr.so.1
 lib/x86_64-linux-gnu/libattr.so.1.1.0
 lib/x86_64-linux-gnu/libbsd.so.0
 lib/x86_64-linux-gnu/libbsd.so.0.7.0
+lib/x86_64-linux-gnu/libbz2.so.1.0
+lib/x86_64-linux-gnu/libbz2.so.1.0.4
 lib/x86_64-linux-gnu/libc-2.19.so
 lib/x86_64-linux-gnu/libc.so.6
 lib/x86_64-linux-gnu/libcom_err.so.2
@@ -220,8 +222,6 @@ lib/x86_64-linux-gnu/libwrap.so.0.7.6
 lib/x86_64-linux-gnu/libz.so.1
 lib/x86_64-linux-gnu/libz.so.1.2.8
 lib64/ld-linux-x86-64.so.2
-opt
-opt/app
 opt/app/.env
 opt/app/.env.docker
 opt/app/.env.example
@@ -240,6 +240,7 @@ opt/app/.sandstorm/.vagrant/machines/default/virtualbox/index_uuid
 opt/app/.sandstorm/.vagrant/machines/default/virtualbox/private_key
 opt/app/.sandstorm/.vagrant/machines/default/virtualbox/synced_folders
 opt/app/.sandstorm/.vagrant/machines/default/virtualbox/vagrant_cwd
+opt/app/.sandstorm/.vagrant/rgloader/loader.rb
 opt/app/.sandstorm/Vagrantfile
 opt/app/.sandstorm/app-graphics/firefly-iii-128.png
 opt/app/.sandstorm/app-graphics/firefly-iii-150.png
@@ -261,6 +262,9 @@ opt/app/.sandstorm/service-config/mime.types
 opt/app/.sandstorm/service-config/nginx.conf
 opt/app/.sandstorm/setup.sh
 opt/app/.sandstorm/stack
+opt/app/Dockerfile.amd64
+opt/app/Dockerfile.arm
+opt/app/Dockerfile.arm64
 opt/app/LICENSE
 opt/app/app.json
 opt/app/app/Api/V1/Controllers/AboutController.php
@@ -271,6 +275,9 @@ opt/app/app/Api/V1/Controllers/BillController.php
 opt/app/app/Api/V1/Controllers/BudgetController.php
 opt/app/app/Api/V1/Controllers/BudgetLimitController.php
 opt/app/app/Api/V1/Controllers/CategoryController.php
+opt/app/app/Api/V1/Controllers/Chart/AccountController.php
+opt/app/app/Api/V1/Controllers/Chart/AvailableBudgetController.php
+opt/app/app/Api/V1/Controllers/Chart/CategoryController.php
 opt/app/app/Api/V1/Controllers/ConfigurationController.php
 opt/app/app/Api/V1/Controllers/Controller.php
 opt/app/app/Api/V1/Controllers/CurrencyController.php
@@ -282,6 +289,7 @@ opt/app/app/Api/V1/Controllers/PreferenceController.php
 opt/app/app/Api/V1/Controllers/RecurrenceController.php
 opt/app/app/Api/V1/Controllers/RuleController.php
 opt/app/app/Api/V1/Controllers/RuleGroupController.php
+opt/app/app/Api/V1/Controllers/SummaryController.php
 opt/app/app/Api/V1/Controllers/TagController.php
 opt/app/app/Api/V1/Controllers/TransactionController.php
 opt/app/app/Api/V1/Controllers/TransactionLinkController.php
@@ -312,12 +320,12 @@ opt/app/app/Console/Commands/CreateExport.php
 opt/app/app/Console/Commands/CreateImport.php
 opt/app/app/Console/Commands/Cron.php
 opt/app/app/Console/Commands/DecryptAttachment.php
+opt/app/app/Console/Commands/DecryptDatabase.php
 opt/app/app/Console/Commands/EncryptFile.php
 opt/app/app/Console/Commands/Import.php
 opt/app/app/Console/Commands/ScanAttachments.php
 opt/app/app/Console/Commands/UpgradeDatabase.php
 opt/app/app/Console/Commands/UpgradeFireflyInstructions.php
-opt/app/app/Console/Commands/UseEncryption.php
 opt/app/app/Console/Commands/VerifiesAccessToken.php
 opt/app/app/Console/Commands/VerifyDatabase.php
 opt/app/app/Console/Kernel.php
@@ -575,9 +583,8 @@ opt/app/app/Import/Converter/Amount.php
 opt/app/app/Import/Converter/AmountCredit.php
 opt/app/app/Import/Converter/AmountDebit.php
 opt/app/app/Import/Converter/AmountNegated.php
+opt/app/app/Import/Converter/BankDebitCredit.php
 opt/app/app/Import/Converter/ConverterInterface.php
-opt/app/app/Import/Converter/INGDebitCredit.php
-opt/app/app/Import/Converter/RabobankDebitCredit.php
 opt/app/app/Import/JobConfiguration/BunqJobConfiguration.php
 opt/app/app/Import/JobConfiguration/FakeJobConfiguration.php
 opt/app/app/Import/JobConfiguration/FileJobConfiguration.php
@@ -664,6 +671,7 @@ opt/app/app/Models/RuleTrigger.php
 opt/app/app/Models/Tag.php
 opt/app/app/Models/Transaction.php
 opt/app/app/Models/TransactionCurrency.php
+opt/app/app/Models/TransactionGroup.php
 opt/app/app/Models/TransactionJournal.php
 opt/app/app/Models/TransactionJournalLink.php
 opt/app/app/Models/TransactionJournalMeta.php
@@ -728,6 +736,7 @@ opt/app/app/Repositories/User/UserRepositoryInterface.php
 opt/app/app/Rules/BelongsUser.php
 opt/app/app/Rules/IsAssetAccountId.php
 opt/app/app/Rules/IsBoolean.php
+opt/app/app/Rules/IsDateOrTime.php
 opt/app/app/Rules/IsValidAttachmentModel.php
 opt/app/app/Rules/UniqueIban.php
 opt/app/app/Rules/ValidRecurrenceRepetitionType.php
@@ -739,6 +748,7 @@ opt/app/app/Services/Bunq/MonetaryAccount.php
 opt/app/app/Services/Bunq/Payment.php
 opt/app/app/Services/Currency/ExchangeRateInterface.php
 opt/app/app/Services/Currency/FixerIOv2.php
+opt/app/app/Services/Currency/RatesApiIOv1.php
 opt/app/app/Services/Github/Object/GithubObject.php
 opt/app/app/Services/Github/Object/Release.php
 opt/app/app/Services/Github/Request/GithubRequest.php
@@ -747,6 +757,7 @@ opt/app/app/Services/IP/IPRetrievalInterface.php
 opt/app/app/Services/IP/IpifyOrg.php
 opt/app/app/Services/Internal/Destroy/AccountDestroyService.php
 opt/app/app/Services/Internal/Destroy/BillDestroyService.php
+opt/app/app/Services/Internal/Destroy/BudgetDestroyService.php
 opt/app/app/Services/Internal/Destroy/CategoryDestroyService.php
 opt/app/app/Services/Internal/Destroy/CurrencyDestroyService.php
 opt/app/app/Services/Internal/Destroy/JournalDestroyService.php
@@ -823,8 +834,11 @@ opt/app/app/Support/FireflyConfig.php
 opt/app/app/Support/Http/Api/AccountFilter.php
 opt/app/app/Support/Http/Api/TransactionFilter.php
 opt/app/app/Support/Http/Controllers/AugumentData.php
+opt/app/app/Support/Http/Controllers/AutoCompleteCollector.php
 opt/app/app/Support/Http/Controllers/BasicDataSupport.php
+opt/app/app/Support/Http/Controllers/ChartGeneration.php
 opt/app/app/Support/Http/Controllers/CreateStuff.php
+opt/app/app/Support/Http/Controllers/CronRunner.php
 opt/app/app/Support/Http/Controllers/DateCalculation.php
 opt/app/app/Support/Http/Controllers/GetConfigurationData.php
 opt/app/app/Support/Http/Controllers/ModelInformation.php
@@ -886,8 +900,13 @@ opt/app/app/Support/Import/Routine/Ynab/StageGetAccessHandler.php
 opt/app/app/Support/Import/Routine/Ynab/StageGetBudgetsHandler.php
 opt/app/app/Support/Import/Routine/Ynab/StageGetTransactionsHandler.php
 opt/app/app/Support/Import/Routine/Ynab/StageMatchAccountsHandler.php
+opt/app/app/Support/Logging/AuditLogger.php
+opt/app/app/Support/Logging/AuditProcessor.php
 opt/app/app/Support/Navigation.php
 opt/app/app/Support/Preferences.php
+opt/app/app/Support/Repositories/Recurring/CalculateRangeOccurrences.php
+opt/app/app/Support/Repositories/Recurring/CalculateXOccurrences.php
+opt/app/app/Support/Repositories/Recurring/FiltersWeekends.php
 opt/app/app/Support/Search/Modifier.php
 opt/app/app/Support/Search/Search.php
 opt/app/app/Support/Search/SearchInterface.php
@@ -1052,6 +1071,8 @@ opt/app/database/migrations/2018_04_29_174524_changes_for_v474.php
 opt/app/database/migrations/2018_06_08_200526_changes_for_v475.php
 opt/app/database/migrations/2018_09_05_195147_changes_for_v477.php
 opt/app/database/migrations/2018_11_06_172532_changes_for_v479.php
+opt/app/database/migrations/2019_01_28_193833_changes_for_v4710.php
+opt/app/database/migrations/2019_02_05_055516_changes_for_v4711.php
 opt/app/database/seeds/AccountTypeSeeder.php
 opt/app/database/seeds/ConfigSeeder.php
 opt/app/database/seeds/DatabaseSeeder.php
@@ -1061,7 +1082,6 @@ opt/app/database/seeds/TransactionCurrencySeeder.php
 opt/app/database/seeds/TransactionTypeSeeder.php
 opt/app/docker-compose.yml
 opt/app/index.php
-opt/app/package-lock.json
 opt/app/public/.htaccess
 opt/app/public/.well-known/security.txt
 opt/app/public/android-chrome-192x192.png
@@ -1093,6 +1113,7 @@ opt/app/public/mstile-70x70.png
 opt/app/public/robots.txt
 opt/app/public/safari-pinned-tab.svg
 opt/app/public/site.webmanifest
+opt/app/public/undefined.js
 opt/app/public/v1/css/.htaccess
 opt/app/public/v1/css/bootstrap-multiselect.css
 opt/app/public/v1/css/bootstrap-sortable.css
@@ -2054,9 +2075,6 @@ opt/app/resources/assets/js/components/passport/Clients.vue
 opt/app/resources/assets/js/components/passport/PersonalAccessTokens.vue
 opt/app/resources/assets/sass/_variables.scss
 opt/app/resources/assets/sass/app.scss
-opt/app/resources/js/app.js
-opt/app/resources/js/bootstrap.js
-opt/app/resources/js/components/Example.js
 opt/app/resources/lang/de_DE/auth.php
 opt/app/resources/lang/de_DE/bank.php
 opt/app/resources/lang/de_DE/breadcrumbs.php
@@ -2226,6 +2244,21 @@ opt/app/resources/lang/tr_TR/list.php
 opt/app/resources/lang/tr_TR/pagination.php
 opt/app/resources/lang/tr_TR/passwords.php
 opt/app/resources/lang/tr_TR/validation.php
+opt/app/resources/lang/zh_CN/auth.php
+opt/app/resources/lang/zh_CN/bank.php
+opt/app/resources/lang/zh_CN/breadcrumbs.php
+opt/app/resources/lang/zh_CN/components.php
+opt/app/resources/lang/zh_CN/config.php
+opt/app/resources/lang/zh_CN/csv.php
+opt/app/resources/lang/zh_CN/demo.php
+opt/app/resources/lang/zh_CN/firefly.php
+opt/app/resources/lang/zh_CN/form.php
+opt/app/resources/lang/zh_CN/import.php
+opt/app/resources/lang/zh_CN/intro.php
+opt/app/resources/lang/zh_CN/list.php
+opt/app/resources/lang/zh_CN/pagination.php
+opt/app/resources/lang/zh_CN/passwords.php
+opt/app/resources/lang/zh_CN/validation.php
 opt/app/resources/lang/zh_TW/auth.php
 opt/app/resources/lang/zh_TW/bank.php
 opt/app/resources/lang/zh_TW/breadcrumbs.php
@@ -2241,8 +2274,6 @@ opt/app/resources/lang/zh_TW/list.php
 opt/app/resources/lang/zh_TW/pagination.php
 opt/app/resources/lang/zh_TW/passwords.php
 opt/app/resources/lang/zh_TW/validation.php
-opt/app/resources/sass/_variables.scss
-opt/app/resources/sass/app.scss
 opt/app/resources/stubs/binary.bin
 opt/app/resources/stubs/csv.csv
 opt/app/resources/stubs/demo-configuration.json
@@ -4023,6 +4054,7 @@ opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/Hides
 opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Concerns/QueriesRelationships.php
 opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Factory.php
 opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/FactoryBuilder.php
+opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/HigherOrderBuilderProxy.php
 opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/JsonEncodingException.php
 opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/MassAssignmentException.php
 opt/app/vendor/laravel/framework/src/Illuminate/Database/Eloquent/Model.php
@@ -4746,9 +4778,11 @@ opt/app/vendor/laravel/passport/src/Http/Controllers/RetrievesAuthRequestFromSes
 opt/app/vendor/laravel/passport/src/Http/Controllers/ScopeController.php
 opt/app/vendor/laravel/passport/src/Http/Controllers/TransientTokenController.php
 opt/app/vendor/laravel/passport/src/Http/Middleware/CheckClientCredentials.php
+opt/app/vendor/laravel/passport/src/Http/Middleware/CheckClientCredentialsForAnyScope.php
 opt/app/vendor/laravel/passport/src/Http/Middleware/CheckForAnyScope.php
 opt/app/vendor/laravel/passport/src/Http/Middleware/CheckScopes.php
 opt/app/vendor/laravel/passport/src/Http/Middleware/CreateFreshApiToken.php
+opt/app/vendor/laravel/passport/src/Http/Rules/RedirectRule.php
 opt/app/vendor/laravel/passport/src/Passport.php
 opt/app/vendor/laravel/passport/src/PassportServiceProvider.php
 opt/app/vendor/laravel/passport/src/PersonalAccessClient.php
@@ -5023,6 +5057,7 @@ opt/app/vendor/league/flysystem-replicate-adapter/phpunit.php
 opt/app/vendor/league/flysystem-replicate-adapter/readme.md
 opt/app/vendor/league/flysystem-replicate-adapter/src/ReplicateAdapter.php
 opt/app/vendor/league/flysystem-replicate-adapter/tests/ReplicateAdapterTests.php
+opt/app/vendor/league/flysystem-sftp/LICENSE
 opt/app/vendor/league/flysystem-sftp/composer.json
 opt/app/vendor/league/flysystem-sftp/readme.md
 opt/app/vendor/league/flysystem-sftp/src/SftpAdapter.php
@@ -5512,8 +5547,6 @@ opt/app/vendor/nesbot/carbon/src/Carbon/Translator.php
 opt/app/vendor/nesbot/carbon/src/JsonSerializable.php
 opt/app/vendor/nexmo/client/LICENSE.txt
 opt/app/vendor/nexmo/client/composer.json
-opt/app/vendor/nexmo/client/examples/fetch_recording.php
-opt/app/vendor/nexmo/client/examples/send.php
 opt/app/vendor/nexmo/client/phpcs.xml
 opt/app/vendor/nexmo/client/src/Account/Balance.php
 opt/app/vendor/nexmo/client/src/Account/Client.php
@@ -5611,6 +5644,10 @@ opt/app/vendor/nexmo/client/src/Message/MessageInterface.php
 opt/app/vendor/nexmo/client/src/Message/Query.php
 opt/app/vendor/nexmo/client/src/Message/Response/Collection.php
 opt/app/vendor/nexmo/client/src/Message/Response/Message.php
+opt/app/vendor/nexmo/client/src/Message/Shortcode.php
+opt/app/vendor/nexmo/client/src/Message/Shortcode/Alert.php
+opt/app/vendor/nexmo/client/src/Message/Shortcode/Marketing.php
+opt/app/vendor/nexmo/client/src/Message/Shortcode/TwoFactor.php
 opt/app/vendor/nexmo/client/src/Message/Text.php
 opt/app/vendor/nexmo/client/src/Message/Unicode.php
 opt/app/vendor/nexmo/client/src/Message/Vcal.php
@@ -6567,6 +6604,7 @@ opt/app/vendor/symfony/console/Tests/Output/ConsoleSectionOutputTest.php
 opt/app/vendor/symfony/console/Tests/Output/NullOutputTest.php
 opt/app/vendor/symfony/console/Tests/Output/OutputTest.php
 opt/app/vendor/symfony/console/Tests/Output/StreamOutputTest.php
+opt/app/vendor/symfony/console/Tests/Question/ConfirmationQuestionTest.php
 opt/app/vendor/symfony/console/Tests/Style/SymfonyStyleTest.php
 opt/app/vendor/symfony/console/Tests/TerminalTest.php
 opt/app/vendor/symfony/console/Tests/Tester/ApplicationTesterTest.php
@@ -6710,7 +6748,7 @@ opt/app/vendor/symfony/debug/Tests/Fixtures/ClassWithAnnotatedParameters.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/DeprecatedClass.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/DeprecatedInterface.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/ExtendedFinalMethod.php
-opt/app/vendor/symfony/debug/Tests/Fixtures/FinalClass.php
+opt/app/vendor/symfony/debug/Tests/Fixtures/FinalClasses.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/FinalMethod.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/FinalMethod2Trait.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/InterfaceWithAnnotatedParameters.php
@@ -6718,6 +6756,7 @@ opt/app/vendor/symfony/debug/Tests/Fixtures/InternalClass.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/InternalInterface.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/InternalTrait.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/InternalTrait2.php
+opt/app/vendor/symfony/debug/Tests/Fixtures/LoggerThatSetAnErrorHandler.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/NonDeprecatedInterface.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/PEARClass.php
 opt/app/vendor/symfony/debug/Tests/Fixtures/SubClassWithAnnotatedParameters.php
@@ -7816,6 +7855,8 @@ opt/app/vendor/symfony/var-dumper/Tests/Caster/StubCasterTest.php
 opt/app/vendor/symfony/var-dumper/Tests/Caster/XmlReaderCasterTest.php
 opt/app/vendor/symfony/var-dumper/Tests/Cloner/DataTest.php
 opt/app/vendor/symfony/var-dumper/Tests/Cloner/VarClonerTest.php
+opt/app/vendor/symfony/var-dumper/Tests/Command/Descriptor/CliDescriptorTest.php
+opt/app/vendor/symfony/var-dumper/Tests/Command/Descriptor/HtmlDescriptorTest.php
 opt/app/vendor/symfony/var-dumper/Tests/Dumper/CliDumperTest.php
 opt/app/vendor/symfony/var-dumper/Tests/Dumper/FunctionsTest.php
 opt/app/vendor/symfony/var-dumper/Tests/Dumper/HtmlDumperTest.php
@@ -8353,6 +8394,7 @@ opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/comparison.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/divisibleby.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/dotdot.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/ends_with.test
+opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/floats.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/grouping.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/literals.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/expressions/magic_call.test
@@ -8544,6 +8586,7 @@ opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/nested_blocks
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/nested_blocks_parent_only.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/nested_inheritance.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/parent.test
+opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/parent_as_template_wrapper.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/parent_change.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/parent_in_a_block.test
 opt/app/vendor/twig/twig/test/Twig/Tests/Fixtures/tags/inheritance/parent_isolation.test
@@ -8704,6 +8747,7 @@ opt/app/vendor/vlucas/phpdotenv/src/Exception/InvalidFileException.php
 opt/app/vendor/vlucas/phpdotenv/src/Exception/InvalidPathException.php
 opt/app/vendor/vlucas/phpdotenv/src/Exception/ValidationException.php
 opt/app/vendor/vlucas/phpdotenv/src/Loader.php
+opt/app/vendor/vlucas/phpdotenv/src/Parser.php
 opt/app/vendor/vlucas/phpdotenv/src/Validator.php
 opt/app/vendor/zendframework/zend-diactoros/.coveralls.yml
 opt/app/vendor/zendframework/zend-diactoros/CHANGELOG.md
@@ -8754,6 +8798,7 @@ opt/app/vendor/zendframework/zend-diactoros/src/functions/marshal_uri_from_sapi.
 opt/app/vendor/zendframework/zend-diactoros/src/functions/normalize_server.php
 opt/app/vendor/zendframework/zend-diactoros/src/functions/normalize_uploaded_files.php
 opt/app/vendor/zendframework/zend-diactoros/src/functions/parse_cookie_header.php
+opt/app/yarn.lock
 proc/cpuinfo
 sandstorm-http-bridge
 sandstorm-http-bridge-config
@@ -8872,7 +8917,7 @@ usr/lib/x86_64-linux-gnu/librtmp.so.1
 usr/lib/x86_64-linux-gnu/libsasl2.so.2
 usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25
 usr/lib/x86_64-linux-gnu/libsodium.so.23
-usr/lib/x86_64-linux-gnu/libsodium.so.23.1.0
+usr/lib/x86_64-linux-gnu/libsodium.so.23.2.0
 usr/lib/x86_64-linux-gnu/libssh2.so.1
 usr/lib/x86_64-linux-gnu/libssh2.so.1.0.1
 usr/lib/x86_64-linux-gnu/libssl.so.1.0.0
@@ -8891,8 +8936,8 @@ usr/lib/x86_64-linux-gnu/libxml2.so.2
 usr/lib/x86_64-linux-gnu/libxml2.so.2.9.1
 usr/lib/x86_64-linux-gnu/libxslt.so.1
 usr/lib/x86_64-linux-gnu/libxslt.so.1.1.28
-usr/lib/x86_64-linux-gnu/libzip.so.5
-usr/lib/x86_64-linux-gnu/libzip.so.5.0.0
+usr/lib/x86_64-linux-gnu/libzip.so.4
+usr/lib/x86_64-linux-gnu/libzip.so.4.0
 usr/sbin/mysqld
 usr/sbin/nginx
 usr/sbin/php-fpm7.2

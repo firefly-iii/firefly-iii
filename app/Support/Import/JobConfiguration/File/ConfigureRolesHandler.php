@@ -151,7 +151,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
     {
         foreach ($line as $column => $value) {
             $value = trim($value);
-            if (\strlen($value) > 0) {
+            if ('' != $value) {
                 $this->examples[$column][] = $value;
             }
         }
@@ -219,7 +219,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
             try {
                 $stmt    = (new Statement)->limit(1)->offset(0);
                 $records = $stmt->process($reader);
-                $headers = $records->fetchOne(0);
+                $headers = $records->fetchOne();
                 // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::error($e->getMessage());

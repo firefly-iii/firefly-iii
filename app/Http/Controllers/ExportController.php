@@ -80,7 +80,7 @@ class ExportController extends Controller
 
         $repository->changeStatus($job, 'export_downloaded');
         /** @var LaravelResponse $response */
-        $response = response($content, 200);
+        $response = response($content);
         $response
             ->header('Content-Description', 'File Transfer')
             ->header('Content-Type', 'application/octet-stream')

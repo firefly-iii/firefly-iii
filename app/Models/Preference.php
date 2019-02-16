@@ -23,14 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Crypt;
-use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
-use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
@@ -54,7 +49,7 @@ class Preference extends Model
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
-            'data' => 'array',
+            'data'       => 'array',
         ];
 
     /** @var array Fields that can be filled */

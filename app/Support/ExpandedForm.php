@@ -584,8 +584,6 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws \FireflyIII\Exceptions\FireflyException
-     *
      */
     public function nonSelectableAmount(string $name, $value = null, array $options = null): string
     {
@@ -914,6 +912,7 @@ class ExpandedForm
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param string $name
      * @param string $view
@@ -921,11 +920,9 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws FireflyException
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function currencyField(string $name, string $view, $value = null, array $options = null): string
+    protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -934,7 +931,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         /** @var Collection $currencies */
-        $currencies = app('amount')->getCurrencies();
+        $currencies = app('amount')->getAllCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)
@@ -968,6 +965,7 @@ class ExpandedForm
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param string $name
      * @param string $view
@@ -975,11 +973,9 @@ class ExpandedForm
      * @param array  $options
      *
      * @return string
-     * @throws FireflyException
-     *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    protected function allCurrencyField(string $name, string $view, $value = null, array $options = null): string
+    protected function currencyField(string $name, string $view, $value = null, array $options = null): string
     {
         $label           = $this->label($name, $options);
         $options         = $this->expandOptionArray($name, $label, $options);
@@ -988,7 +984,7 @@ class ExpandedForm
         $options['step'] = 'any';
         $defaultCurrency = $options['currency'] ?? Amt::getDefaultCurrency();
         /** @var Collection $currencies */
-        $currencies = app('amount')->getAllCurrencies();
+        $currencies = app('amount')->getCurrencies();
         unset($options['currency'], $options['placeholder']);
 
         // perhaps the currency has been sent to us in the field $amount_currency_id_$name (amount_currency_id_amount)

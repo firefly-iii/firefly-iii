@@ -64,7 +64,7 @@ class EncryptService
             throw new FireflyException($message);
         }
         $newName = sprintf('%s.upload', $key);
-        $disk = Storage::disk('upload');
+        $disk    = Storage::disk('upload');
         $disk->put($newName, $content);
     }
 

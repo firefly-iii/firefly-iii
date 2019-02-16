@@ -74,7 +74,7 @@ class FinTS
      * @return SEPAAccount
      * @throws FireflyException
      */
-    public function getAccount(string $accountNumber)
+    public function getAccount(string $accountNumber): SEPAAccount
     {
         $accounts         = $this->getAccounts();
         $filteredAccounts = array_filter(
@@ -82,8 +82,8 @@ class FinTS
             return $account->getAccountNumber() === $accountNumber;
         }
         );
-        if (count($filteredAccounts) != 1) {
-            throw new FireflyException("Cannot find account with number " . $accountNumber);
+        if (1 !== count($filteredAccounts)) {
+            throw new FireflyException(sprintf('Cannot find account with number "%s"', $accountNumber));
         }
 
         return reset($filteredAccounts);
@@ -93,7 +93,7 @@ class FinTS
      * @return SEPAAccount[]
      * @throws FireflyException
      */
-    public function getAccounts()
+    public function getAccounts(): ?array
     {
         try {
             return $this->finTS->getSEPAAccounts();

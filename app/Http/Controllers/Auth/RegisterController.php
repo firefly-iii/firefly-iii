@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
-use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Support\Http\Controllers\CreateStuff;
 use FireflyIII\Support\Http\Controllers\RequestInformation;
@@ -73,7 +72,7 @@ class RegisterController extends Controller
         // is allowed to?
         $allowRegistration = true;
         $loginProvider     = config('firefly.login_provider');
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         if (true === $singleUserMode && $userCount > 0 && 'eloquent' === $loginProvider) {
             $allowRegistration = false;
@@ -114,8 +113,8 @@ class RegisterController extends Controller
     {
         $allowRegistration = true;
         $loginProvider     = config('firefly.login_provider');
-        $isDemoSite        = FireflyConfig::get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $isDemoSite        = app('fireflyconfig')->get('is_demo_site', config('firefly.configuration.is_demo_site'))->data;
+        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $pageTitle         = (string)trans('firefly.register_page_title');
 

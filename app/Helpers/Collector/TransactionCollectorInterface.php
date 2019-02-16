@@ -146,15 +146,6 @@ interface TransactionCollectorInterface
     public function setAllAssetAccounts(): TransactionCollectorInterface;
 
     /**
-     * Set the required currency (local or foreign)
-     *
-     * @param TransactionCurrency $currency
-     *
-     * @return TransactionCollectorInterface
-     */
-    public function setCurrency(TransactionCurrency $currency): TransactionCollectorInterface;
-
-    /**
      * Collect transactions before a specific date.
      *
      * @param Carbon $before
@@ -207,6 +198,15 @@ interface TransactionCollectorInterface
      * @return TransactionCollectorInterface
      */
     public function setCategory(Category $category): TransactionCollectorInterface;
+
+    /**
+     * Set the required currency (local or foreign)
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setCurrency(TransactionCurrency $currency): TransactionCollectorInterface;
 
     /**
      * Set the journal IDs to filter on.

@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Binder;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -38,8 +37,7 @@ class TagOrId implements BinderInterface
      * @param string $value
      * @param Route  $route
      *
-     * @return Collection
-     * @throws \Symfony\Component\HttpKernel\Exception\NotFoundHttpException
+     * @return Tag
      */
     public static function routeBinder(string $value, Route $route): Tag
     {

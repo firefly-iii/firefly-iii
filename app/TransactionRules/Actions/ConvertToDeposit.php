@@ -102,10 +102,12 @@ class ConvertToDeposit implements ActionInterface
 
         if (TransactionType::WITHDRAWAL === $type) {
             Log::debug('Going to transform a withdrawal to a deposit.');
+
             return $this->convertWithdrawal($journal);
         }
         if (TransactionType::TRANSFER === $type) {
             Log::debug('Going to transform a transfer to a deposit.');
+
             return $this->convertTransfer($journal);
         }
 
@@ -133,7 +135,7 @@ class ConvertToDeposit implements ActionInterface
         // get the action value, or use the original source name in case the action value is empty:
         // this becomes a new or existing revenue account.
         /** @var Account $source */
-        $source = $sourceTransactions->first()->account;
+        $source      = $sourceTransactions->first()->account;
         $revenueName = '' === $this->action->action_value ? $source->name : $this->action->action_value;
         $revenue     = $factory->findOrCreate($revenueName, AccountType::REVENUE);
 

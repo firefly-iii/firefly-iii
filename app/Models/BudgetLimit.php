@@ -30,16 +30,16 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class BudgetLimit.
  *
- * @property Budget $budget
- * @property int    $id
- * @property Carbon $created_at
- * @property Carbon $updated_at
- * @property Carbon $start_date
- * @property Carbon $end_date
- * @property string $amount
- * @property int    $budget_id
- * @property string spent
- * @property int $transaction_currency_id
+ * @property Budget              $budget
+ * @property int                 $id
+ * @property Carbon              $created_at
+ * @property Carbon              $updated_at
+ * @property Carbon              $start_date
+ * @property Carbon              $end_date
+ * @property string              $amount
+ * @property int                 $budget_id
+ * @property string              spent
+ * @property int                 $transaction_currency_id
  * @property TransactionCurrency $transactionCurrency
  */
 class BudgetLimit extends Model

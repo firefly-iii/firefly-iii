@@ -23,13 +23,14 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Auth;
 
+use Adldap;
 use DB;
-use FireflyConfig;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\User;
 use Illuminate\Cookie\CookieJar;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class LoginController
@@ -70,12 +71,23 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
+        /**
+         * Temporary bug fix for something that doesn't seem to work in
+         * AdLdap.
+         */
+        $schema = config('ldap.connections.default.schema');
+
+        /** @var Adldap\Connections\Provider $provider */
+        Adldap::getProvider('default')->setSchema(new $schema);
+
+        Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
         // the login attempts for this application. We'll key this by the username and
         // the IP address of the client making these requests into this application.
         if ($this->hasTooManyLoginAttempts($request)) {
+            Log::channel('audit')->info(sprintf('Login for user "%s" was locked out.', $request->get('email')));
             $this->fireLockoutEvent($request);
 
             /** @noinspection PhpInconsistentReturnPointsInspection */
@@ -84,6 +96,7 @@ class LoginController extends Controller
         }
 
         if ($this->attemptLogin($request)) {
+            Log::channel('audit')->info(sprintf('User "%s" has been logged in.', $request->get('email')));
             // user is logged in. Save in session if the user requested session to be remembered:
             $request->session()->put('remember_login', $request->filled('remember'));
 
@@ -96,7 +109,7 @@ class LoginController extends Controller
         // to login and redirect the user back to the login form. Of course, when this
         // user surpasses their maximum number of attempts they will get locked out.
         $this->incrementLoginAttempts($request);
-
+        Log::channel('audit')->info(sprintf('Login attempt for user "%s" failed.', $request->get('email')));
         /** @noinspection PhpInconsistentReturnPointsInspection */
         /** @noinspection PhpVoidFunctionResultUsedInspection */
         return $this->sendFailedLoginResponse($request);
@@ -140,7 +153,7 @@ class LoginController extends Controller
         $request->session()->forget('twoFactorAuthenticated');
 
         // is allowed to?
-        $singleUserMode    = FireflyConfig::get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
+        $singleUserMode    = app('fireflyconfig')->get('single_user_mode', config('firefly.configuration.single_user_mode'))->data;
         $userCount         = User::count();
         $allowRegistration = true;
         $allowReset        = true;

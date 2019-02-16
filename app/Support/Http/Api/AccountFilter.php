@@ -80,10 +80,7 @@ trait AccountFilter
             'cc'                         => [AccountType::CREDITCARD],
 
         ];
-        $return = $types['all'];
-        if (isset($types[$type])) {
-            $return = $types[$type];
-        }
+        $return = $types[$type] ?? $types['all'];
 
         return $return; // @codeCoverageIgnore
     }

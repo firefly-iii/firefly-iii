@@ -78,7 +78,6 @@ class ChooseAccountHandler implements FinTSConfigurationInterface
      * Get the data necessary to show the configuration screen.
      *
      * @return array
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function getNextData(): array
     {

@@ -63,22 +63,6 @@ class Processor
     }
 
     /**
-     * @return bool
-     */
-    public function isStrict(): bool
-    {
-        return $this->strict;
-    }
-
-    /**
-     * @param bool $strict
-     */
-    public function setStrict(bool $strict): void
-    {
-        $this->strict = $strict;
-    }
-
-    /**
      * Return found triggers
      *
      * @return int
@@ -168,6 +152,22 @@ class Processor
         }
 
         return false;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isStrict(): bool
+    {
+        return $this->strict;
+    }
+
+    /**
+     * @param bool $strict
+     */
+    public function setStrict(bool $strict): void
+    {
+        $this->strict = $strict;
     }
 
     /**

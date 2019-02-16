@@ -30,7 +30,6 @@ use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**
@@ -60,13 +59,11 @@ class AvailableBudgetController extends Controller
     }
 
     /**
-     * @param Request         $request
-     *
      * @param AvailableBudget $availableBudget
      *
      * @return JsonResponse
      */
-    public function overview(Request $request, AvailableBudget $availableBudget): JsonResponse
+    public function overview(AvailableBudget $availableBudget): JsonResponse
     {
         $currency          = $availableBudget->transactionCurrency;
         $budgets           = $this->repository->getActiveBudgets();

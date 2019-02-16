@@ -65,7 +65,7 @@
                                     <td>
                                         {# DATE #}
                                         <input class="form-control input-sm" autocomplete="off"
-                                               name="date[{{ transaction.journal_id }}]" type="date" value="{{ transaction.date }}">
+                                               name="date[{{ transaction.journal_id }}]" type="date" value="{{ transaction.date.format('Y-m-d') }}">
                                     </td>
                                     <td style="position: relative;">
                                         {# SOURCE ACCOUNT ID FOR TRANSFER OR WITHDRAWAL #}

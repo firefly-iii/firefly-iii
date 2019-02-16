@@ -139,6 +139,7 @@ class ImportArrayStorage
                         $processor = app(Processor::class);
                         $processor->make($rule);
                         $processor->handleTransactionJournal($journal);
+                        $journal->refresh();
                         if ($rule->stop_processing) {
                             return false;
                         }
@@ -226,7 +227,7 @@ class ImportArrayStorage
             throw new FireflyException('Could not encode import array. Please see the logs.');
             // @codeCoverageIgnoreEnd
         }
-        $hash = hash('sha256', $json, false);
+        $hash = hash('sha256', $json);
         Log::debug(sprintf('The hash is: %s', $hash));
 
         return $hash;
@@ -337,7 +338,7 @@ class ImportArrayStorage
             'description' => null,
             'latitude'    => null,
             'longitude'   => null,
-            'zoom_level'   => null,
+            'zoom_level'  => null,
             'tagMode'     => 'nothing',
         ];
         $tag  = $repository->store($data);

@@ -26,6 +26,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
+
 /**
  * Class TransferFilter.
  *

@@ -134,8 +134,8 @@ class CreateExport extends Command
         }
 
         $processor->createZipFile();
-        $disk     = Storage::disk('export');
-        $fileName = sprintf('export-%s.zip', date('Y-m-d_H-i-s'));
+        $disk      = Storage::disk('export');
+        $fileName  = sprintf('export-%s.zip', date('Y-m-d_H-i-s'));
         $localPath = storage_path('export') . '/' . $job->key . '.zip';
 
         // "move" from local to export disk

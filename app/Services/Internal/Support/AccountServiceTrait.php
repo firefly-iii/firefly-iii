@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Exception;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\AccountMetaFactory;
 use FireflyIII\Factory\TransactionFactory;
@@ -222,7 +223,7 @@ trait AccountServiceTrait
         /** @var AccountFactory $factory */
         $factory = app(AccountFactory::class);
         $factory->setUser($user);
-    
+
         return $factory->findOrCreate($opposingAccountName, AccountType::INITIAL_BALANCE);
     }
 
@@ -340,7 +341,7 @@ trait AccountServiceTrait
             if (null !== $dbNote) {
                 try {
                     $dbNote->delete();
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     Log::debug($e->getMessage());
                 }
             }

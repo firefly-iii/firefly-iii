@@ -26,9 +26,7 @@ namespace FireflyIII\Transformers;
 
 use FireflyIII\Models\Attachment;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class AttachmentTransformer
@@ -67,7 +65,7 @@ class AttachmentTransformer extends AbstractTransformer
             'created_at'      => $attachment->created_at->toAtomString(),
             'updated_at'      => $attachment->updated_at->toAtomString(),
             'attachable_id'   => $attachment->attachable_id,
-            'attachable_type' => str_replace('FireflyIII\\Models\\','',$attachment->attachable_type),
+            'attachable_type' => str_replace('FireflyIII\\Models\\', '', $attachment->attachable_type),
             'md5'             => $attachment->md5,
             'filename'        => $attachment->filename,
             'download_uri'    => route('api.v1.attachments.download', [$attachment->id]),

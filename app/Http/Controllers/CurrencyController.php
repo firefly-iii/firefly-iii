@@ -189,6 +189,7 @@ class CurrencyController extends Controller
     }
 
     /**
+     * @param Request             $request
      * @param TransactionCurrency $currency
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector

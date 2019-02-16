@@ -115,7 +115,7 @@ class TransactionFactory
         $currency        = $currency ?? $defaultCurrency;
 
         // enable currency:
-        if(false === $currency->enabled) {
+        if (false === $currency->enabled) {
             $currency->enabled = true;
             $currency->save();
         }

@@ -60,7 +60,7 @@ class AboutController extends Controller
             'driver'      => $currentDriver,
         ];
 
-        return response()->json(['data' => $data], 200)->header('Content-Type', 'application/vnd.api+json');
+        return response()->json(['data' => $data])->header('Content-Type', 'application/vnd.api+json');
     }
 
     /**

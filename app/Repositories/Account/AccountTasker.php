@@ -254,7 +254,7 @@ class AccountTasker implements AccountTaskerInterface
         $keys = array_keys($expenses);
         foreach ($keys as $key) {
             $opposingId = $expenses[$key]['id'];
-            if(1===$countAccounts[$opposingId]) {
+            if (1 === $countAccounts[$opposingId]) {
                 $expenses[$key]['name'] = $expenses[$key]['original'];
             }
 

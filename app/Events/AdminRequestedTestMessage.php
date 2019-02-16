@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class AdminRequestedTestMessage.
+ *
  * @codeCoverageIgnore
  */
 class AdminRequestedTestMessage extends Event

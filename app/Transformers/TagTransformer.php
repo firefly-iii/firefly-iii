@@ -24,13 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Transformers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Tag;
-use League\Fractal\Resource\Collection as FractalCollection;
-use League\Fractal\Resource\Item;
-use League\Fractal\TransformerAbstract;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class TagTransformer
@@ -69,7 +64,7 @@ class TagTransformer extends AbstractTransformer
             'date'        => $date,
             'description' => '' === $tag->description ? null : $tag->description,
             'latitude'    => null === $tag->latitude ? null : (float)$tag->latitude,
-            'longitude'   => null === $tag->longitude? null : (float)$tag->longitude,
+            'longitude'   => null === $tag->longitude ? null : (float)$tag->longitude,
             'zoom_level'  => null === $tag->zoomLevel ? null : (int)$tag->zoomLevel,
             'links'       => [
                 [

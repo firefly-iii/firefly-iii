@@ -117,6 +117,61 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * A very cryptic method name that means:
+     *
+     * Get me the amount earned in this period, grouped per currency, where no category was set.
+     *
+     * @param Collection $accounts
+     * @param Carbon     $start
+     * @param Carbon     $end
+     *
+     * @return array
+     */
+    public function earnedInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array
+    {
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
+
+        if ($accounts->count() > 0) {
+            $collector->setAccounts($accounts);
+        }
+        if (0 === $accounts->count()) {
+            $collector->setAllAssetAccounts();
+        }
+
+        $set = $collector->getTransactions();
+        $set = $set->filter(
+            function (Transaction $transaction) {
+                if (bccomp($transaction->transaction_amount, '0') === 1) {
+                    return $transaction;
+                }
+
+                return null;
+            }
+        );
+
+        $return = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $currencyId = $transaction->transaction_currency_id;
+            if (!isset($return[$currencyId])) {
+                $return[$currencyId] = [
+                    'spent'                   => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_symbol'         => $transaction->transaction_currency_symbol,
+                    'currency_code'           => $transaction->transaction_currency_code,
+                    'currency_decimal_places' => $transaction->transaction_currency_dp,
+                ];
+            }
+            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $transaction->transaction_amount);
+        }
+
+        return $return;
+    }
+
+    /**
      * @param Collection $categories
      * @param Collection $accounts
      * @param Carbon     $start
@@ -134,7 +189,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if ($categories->count() === 0) {
+        if (0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
 
@@ -237,6 +292,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $firstJournalDate;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get all categories with ID's.
      *
@@ -248,8 +305,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return $this->user->categories()->whereIn('id', $categoryIds)->get();
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Returns a list of all the categories belonging to a user.
@@ -268,6 +323,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $set;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Category   $category
@@ -298,8 +355,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $lastJournalDate;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $categories
@@ -383,6 +438,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $result;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $categories
@@ -481,8 +538,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $this->user = $user;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $categories
@@ -598,7 +653,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($categories->count() > 0) {
             $collector->setCategories($categories);
         }
-        if ($categories->count() === 0) {
+        if (0 === $categories->count()) {
             $collector->setCategories($this->getCategories());
         }
 
@@ -790,60 +845,5 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         return null;
-    }
-
-    /**
-     * A very cryptic method name that means:
-     *
-     * Get me the amount earned in this period, grouped per currency, where no category was set.
-     *
-     * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
-     *
-     * @return array
-     */
-    public function earnedInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array
-    {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
-
-        if ($accounts->count() > 0) {
-            $collector->setAccounts($accounts);
-        }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
-
-        $set = $collector->getTransactions();
-        $set = $set->filter(
-            function (Transaction $transaction) {
-                if (bccomp($transaction->transaction_amount, '0') === 1) {
-                    return $transaction;
-                }
-
-                return null;
-            }
-        );
-
-        $return = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
-            if (!isset($return[$currencyId])) {
-                $return[$currencyId] = [
-                    'spent'                   => '0',
-                    'currency_id'             => $currencyId,
-                    'currency_symbol'         => $transaction->transaction_currency_symbol,
-                    'currency_code'           => $transaction->transaction_currency_code,
-                    'currency_decimal_places' => $transaction->transaction_currency_dp,
-                ];
-            }
-            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $transaction->transaction_amount);
-        }
-
-        return $return;
     }
 }

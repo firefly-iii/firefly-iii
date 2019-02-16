@@ -37,7 +37,6 @@ if ('FreeIPA' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
 if ('ActiveDirectory' === envNonEmpty('ADLDAP_CONNECTION_SCHEME', 'OpenLDAP')) {
     $schema = ActiveDirectory::class;
 }
-
 return [
 
     /*
@@ -52,7 +51,6 @@ return [
     | an array of configuration settings.
     |
     */
-
     'connections' => [
 
         'default' => [
@@ -123,7 +121,7 @@ return [
             |
             */
 
-            'connection_settings' => [
+            'settings' => [
 
                 /*
                 |--------------------------------------------------------------------------
@@ -165,7 +163,7 @@ return [
                 |
                 */
 
-                'domain_controllers' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
+                'hosts' => explode(' ', env('ADLDAP_CONTROLLERS', '127.0.0.1')),
 
                 /*
                 |--------------------------------------------------------------------------
@@ -209,22 +207,6 @@ return [
 
                 /*
                 |--------------------------------------------------------------------------
-                | Administrator Account Suffix / Prefix
-                |--------------------------------------------------------------------------
-                |
-                | This option allows you to set a different account prefix and suffix
-                | for your configured administrator account upon binding.
-                |
-                | If left empty or set to `null`, your `account_prefix` and
-                | `account_suffix` options above will be used.
-                |
-                */
-
-                'admin_account_prefix' => env('ADLDAP_ADMIN_ACCOUNT_PREFIX', ''),
-                'admin_account_suffix' => env('ADLDAP_ADMIN_ACCOUNT_SUFFIX', ''),
-
-                /*
-                |--------------------------------------------------------------------------
                 | Administrator Username & Password
                 |--------------------------------------------------------------------------
                 |
@@ -236,8 +218,8 @@ return [
                 |
                 */
 
-                'admin_username' => env('ADLDAP_ADMIN_USERNAME', ''),
-                'admin_password' => env('ADLDAP_ADMIN_PASSWORD', ''),
+                'username' => env('ADLDAP_ADMIN_USERNAME', ''),
+                'password' => env('ADLDAP_ADMIN_PASSWORD', ''),
 
                 /*
                 |--------------------------------------------------------------------------
@@ -263,8 +245,8 @@ return [
                 | If you need to be able to change user passwords on your server, then an
                 | SSL or TLS connection is required. All other operations are allowed
                 | on unsecured protocols.
-                | 
-                | One of these options are definitely recommended if you 
+                |
+                | One of these options are definitely recommended if you
                 | have the ability to connect to your server securely.
                 |
                 */

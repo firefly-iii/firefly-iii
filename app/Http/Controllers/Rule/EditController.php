@@ -27,16 +27,11 @@ namespace FireflyIII\Http\Controllers\Rule;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\RuleFormRequest;
 use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
-use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\RenderPartialViews;
 use FireflyIII\Support\Http\Controllers\RuleManagement;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Log;
-use Throwable;
 
 /**
  * Class EditController

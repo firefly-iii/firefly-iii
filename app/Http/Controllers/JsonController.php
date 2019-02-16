@@ -54,6 +54,7 @@ class JsonController extends Controller
             Log::error(sprintf('Cannot render rules.partials.action: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view]);
@@ -85,6 +86,7 @@ class JsonController extends Controller
             Log::error(sprintf('Cannot render rules.partials.trigger: %s', $e->getMessage()));
             $view = 'Could not render view.';
         }
+
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $view]);

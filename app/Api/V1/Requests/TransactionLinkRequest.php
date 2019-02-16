@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Validation\Validator;
 
 /**
@@ -98,13 +99,15 @@ class TransactionLinkRequest extends Request
      */
     private function validateExistingLink(Validator $validator): void
     {
+        /** @var User $user */
+        $user = auth()->user();
         /** @var LinkTypeRepositoryInterface $repository */
         $repository = app(LinkTypeRepositoryInterface::class);
-        $repository->setUser(auth()->user());
+        $repository->setUser($user);
 
         /** @var JournalRepositoryInterface $journalRepos */
         $journalRepos = app(JournalRepositoryInterface::class);
-        $journalRepos->setUser(auth()->user());
+        $journalRepos->setUser($user);
 
         $data      = $validator->getData();
         $inwardId  = (int)($data['inward_id'] ?? 0);

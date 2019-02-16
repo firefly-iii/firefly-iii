@@ -184,6 +184,7 @@ trait CalculateRangeOccurrences
 
         return $return;
     }
+
     /**
      * Get the number of daily occurrences for a recurring transaction until date $end is reached. Will skip every $skipMod-1 occurrences.
      *

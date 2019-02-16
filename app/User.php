@@ -212,6 +212,7 @@ class User extends Authenticatable
      * Generates access token.
      *
      * @return string
+     * @throws \Exception
      */
     public function generateAccessToken(): string
     {

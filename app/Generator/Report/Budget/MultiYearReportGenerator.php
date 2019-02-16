@@ -24,6 +24,7 @@ namespace FireflyIII\Generator\Report\Budget;
 
 /**
  * Class MultiYearReportGenerator.
+ *
  * @codeCoverageIgnore
  */
 class MultiYearReportGenerator extends MonthReportGenerator

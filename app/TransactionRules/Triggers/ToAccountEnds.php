@@ -78,7 +78,7 @@ final class ToAccountEnds extends AbstractTrigger implements TriggerInterface
         $repository = app(JournalRepositoryInterface::class);
 
         /** @var Account $account */
-        foreach ($repository->getJournalDestinationAccounts($journal) as $account) {
+        foreach ($repository->getJournalDestinationAccounts($journal, false) as $account) {
             $toAccountName .= strtolower($account->name);
         }
 

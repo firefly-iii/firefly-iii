@@ -57,10 +57,10 @@ class TagList implements BinderInterface
 
             $collection = $allTags->filter(
                 function (Tag $tag) use ($list) {
-                    if(\in_array(strtolower($tag->tag), $list, true)) {
+                    if (\in_array(strtolower($tag->tag), $list, true)) {
                         return true;
                     }
-                    if(\in_array((string)$tag->id, $list, true)) {
+                    if (\in_array((string)$tag->id, $list, true)) {
                         return true;
                     }
 

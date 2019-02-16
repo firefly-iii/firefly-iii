@@ -82,7 +82,7 @@ class Amount implements ConverterInterface
             $value  = str_replace($search, '', $value);
             Log::debug(sprintf('No decimal character found. Converted amount from "%s" to "%s".', $original, $value));
         }
-        if ('.' === $value{0}) {
+        if (strpos($value, '.') === 0) {
             $value = '0' . $value;
         }
 

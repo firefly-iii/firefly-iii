@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Attachments\AttachmentHelper;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -218,7 +217,6 @@ class TransactionController extends Controller
      *
      * @param TransactionJournal          $journal
      * @param LinkTypeRepositoryInterface $linkTypeRepository
-     * @param AttachmentHelper            $attHelper
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      * @throws FireflyException
@@ -267,7 +265,7 @@ class TransactionController extends Controller
         $what     = strtolower($transactionType);
         $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
 
-        return view('transactions.show', compact('journal','attachments', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
+        return view('transactions.show', compact('journal', 'attachments', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
     }
 
 

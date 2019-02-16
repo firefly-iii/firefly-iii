@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
-use Crypt;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -187,15 +186,6 @@ class TransactionJournal extends Model
     }
 
     /**
-     * @codeCoverageIgnore
-     * @return BelongsToMany
-     */
-    public function transactionGroups(): BelongsToMany
-    {
-        return $this->belongsToMany(Category::class);
-    }
-
-    /**
      * @return bool
      */
     public function isDeposit(): bool
@@ -331,6 +321,15 @@ class TransactionJournal extends Model
     public function transactionCurrency(): BelongsTo
     {
         return $this->belongsTo(TransactionCurrency::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsToMany
+     */
+    public function transactionGroups(): BelongsToMany
+    {
+        return $this->belongsToMany(Category::class);
     }
 
     /**

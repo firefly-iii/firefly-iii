@@ -1,7 +1,7 @@
 sudo: required
 language: bash
 env:
-  - VERSION=4.7.11
+  - VERSION=4.7.12
 
 dist: xenial
 
@@ -17,6 +17,9 @@ services:
 script:
   # enable experimental features.
   - echo '{"experimental":true}' | sudo tee /etc/docker/daemon.json
+  - mkdir $HOME/.docker
+  - touch $HOME/.docker/config.json
+  - echo '{"experimental":"enabled"}' | sudo tee $HOME/.docker/config.json
   - sudo service docker restart
   - docker version -f '{{.Server.Experimental}}'
   - docker version

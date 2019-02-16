@@ -39,6 +39,11 @@ use Log;
  */
 class RecurrenceFactory
 {
+    /** @var User */
+    private $user;
+
+    use TransactionTypeTrait, TransactionServiceTrait, RecurringTransactionTrait;
+
     /**
      * Constructor.
      */
@@ -48,11 +53,6 @@ class RecurrenceFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
-
-    use TransactionTypeTrait, TransactionServiceTrait, RecurringTransactionTrait;
-
-    /** @var User */
-    private $user;
 
     /**
      * @param array $data

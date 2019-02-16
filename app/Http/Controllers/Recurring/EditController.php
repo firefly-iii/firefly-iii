@@ -85,8 +85,8 @@ class EditController extends Controller
         $transformer = app(RecurrenceTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
-        $array       = $transformer->transform($recurrence);
-        $budgets     = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
+        $array   = $transformer->transform($recurrence);
+        $budgets = app('expandedform')->makeSelectListWithEmpty($this->budgets->getActiveBudgets());
 
         /** @var RecurrenceRepetition $repetition */
         $repetition     = $recurrence->recurrenceRepetitions()->first();

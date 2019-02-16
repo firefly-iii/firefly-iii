@@ -152,7 +152,7 @@ class NewYnabJobHandler implements YnabJobConfigurationInterface
 
         $client = new Client();
         try {
-            $res = $client->request('post', $uri, []);
+            $res = $client->request('post', $uri);
         } catch (GuzzleException $e) {
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());

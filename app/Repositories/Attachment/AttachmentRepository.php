@@ -33,8 +33,8 @@ use FireflyIII\Models\Note;
 use FireflyIII\User;
 use Illuminate\Contracts\Filesystem\FileNotFoundException;
 use Illuminate\Support\Collection;
-use Log;
 use Illuminate\Support\Facades\Storage;
+use Log;
 
 /**
  * Class AttachmentRepository.
@@ -225,13 +225,18 @@ class AttachmentRepository implements AttachmentRepositoryInterface
      * @param string     $note
      *
      * @return bool
+     * @throws Exception
      */
     public function updateNote(Attachment $attachment, string $note): bool
     {
         if ('' === $note) {
             $dbNote = $attachment->notes()->first();
             if (null !== $dbNote) {
-                $dbNote->delete();
+                try {
+                    $dbNote->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Could not delete note: %s', $e->getMessage()));
+                }
             }
 
             return true;

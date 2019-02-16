@@ -445,9 +445,9 @@ class PiggyBankController extends Controller
         /** @var PiggyBankTransformer $transformer */
         $transformer = app(PiggyBankTransformer::class);
         $transformer->setParameters($parameters);
-        $piggy       = $transformer->transform($piggyBank);
-        $events      = $this->piggyRepos->getEvents($piggyBank);
-        $subTitle    = $piggyBank->name;
+        $piggy    = $transformer->transform($piggyBank);
+        $events   = $this->piggyRepos->getEvents($piggyBank);
+        $subTitle = $piggyBank->name;
 
         return view('piggy-banks.show', compact('piggyBank', 'events', 'subTitle', 'piggy'));
     }

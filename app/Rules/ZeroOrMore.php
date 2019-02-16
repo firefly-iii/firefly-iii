@@ -58,10 +58,7 @@ class ZeroOrMore implements Rule
             return true;
         }
         $res = bccomp('0', $value);
-        if ($res > 0) {
-            return false;
-        }
 
-        return true;
+        return !($res > 0);
     }
 }

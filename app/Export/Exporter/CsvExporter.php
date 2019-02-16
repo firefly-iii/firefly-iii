@@ -25,8 +25,8 @@ declare(strict_types=1);
 namespace FireflyIII\Export\Exporter;
 
 use FireflyIII\Export\Entry\Entry;
-use League\Csv\Writer;
 use Illuminate\Support\Facades\Storage;
+use League\Csv\Writer;
 
 /**
  * Class CsvExporter.

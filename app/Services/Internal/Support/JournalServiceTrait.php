@@ -55,7 +55,7 @@ trait JournalServiceTrait
             return; // @codeCoverageIgnore
         }
         foreach ($data['tags'] as $string) {
-            if (\strlen($string) > 0) {
+            if ('' != $string) {
                 $tag = $factory->findOrCreate($string);
                 if (null !== $tag) {
                     $set[] = $tag->id;
@@ -116,7 +116,7 @@ trait JournalServiceTrait
     protected function storeNote(TransactionJournal $journal, ?string $notes): void
     {
         $notes = (string)$notes;
-        if (\strlen($notes) > 0) {
+        if ('' !== $notes) {
             $note = $journal->notes()->first();
             if (null === $note) {
                 $note = new Note;

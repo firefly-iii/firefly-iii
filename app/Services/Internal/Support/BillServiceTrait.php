@@ -23,10 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Services\Internal\Support;
 
+use Exception;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use Illuminate\Support\Collection;
+use Log;
 
 /**
  * Trait BillServiceTrait
@@ -64,13 +66,18 @@ trait BillServiceTrait
      * @param string $note
      *
      * @return bool
+     * @throws \Exception
      */
     public function updateNote(Bill $bill, string $note): bool
     {
         if ('' === $note) {
             $dbNote = $bill->notes()->first();
             if (null !== $dbNote) {
-                $dbNote->delete(); // @codeCoverageIgnore
+                try {
+                    $dbNote->delete();
+                } catch (Exception $e) {
+                    Log::debug(sprintf('Error deleting note: %s', $e->getMessage()));
+                }
             }
 
             return true;

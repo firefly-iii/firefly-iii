@@ -40,7 +40,9 @@ class AssetAccounts implements MapperInterface
     {
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
-        $set               = $accountRepository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE,]);
+        $set               = $accountRepository->getAccountsByType(
+            [AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::CREDITCARD, AccountType::MORTGAGE,]
+        );
         $list              = [];
 
         /** @var Account $account */
@@ -48,7 +50,7 @@ class AssetAccounts implements MapperInterface
             $accountId = (int)$account->id;
             $name      = $account->name;
             $iban      = $account->iban ?? '';
-            if (\strlen($iban) > 0) {
+            if ('' !== $iban) {
                 $name .= ' (' . $iban . ')';
             }
 

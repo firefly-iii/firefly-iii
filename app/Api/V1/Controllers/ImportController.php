@@ -127,6 +127,7 @@ class ImportController extends Controller
     /**
      * Show all transactions
      *
+     * @param Request   $request
      * @param ImportJob $importJob
      *
      * @return JsonResponse

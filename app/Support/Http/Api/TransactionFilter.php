@@ -58,10 +58,7 @@ trait TransactionFilter
             'specials'        => [TransactionType::OPENING_BALANCE, TransactionType::RECONCILIATION,],
             'default'         => [TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER,],
         ];
-        $return = $types['default'];
-        if (isset($types[$type])) {
-            $return = $types[$type];
-        }
+        $return = $types[$type] ?? $types['default'];
 
         return $return;
 

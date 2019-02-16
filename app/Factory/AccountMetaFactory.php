@@ -43,6 +43,7 @@ class AccountMetaFactory
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
     }
+
     /**
      * @param array $data
      *
@@ -73,6 +74,7 @@ class AccountMetaFactory
             // if $data has field and $entry is null, create new one:
             if (null === $entry) {
                 Log::debug(sprintf('Created meta-field "%s":"%s" for account #%d ("%s") ', $field, $value, $account->id, $account->name));
+
                 return $this->create(['account_id' => $account->id, 'name' => $field, 'data' => $value]);
             }
 
@@ -89,6 +91,7 @@ class AccountMetaFactory
             } catch (Exception $e) { // @codeCoverageIgnore
                 Log::debug(sprintf('Could not delete entry: %s', $e->getMessage())); // @codeCoverageIgnore
             }
+
             return null;
         }
 

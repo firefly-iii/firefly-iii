@@ -66,13 +66,13 @@ class StageImportDataHandler
     /**
      * @throws FireflyException
      */
-    public function run()
+    public function run(): void
     {
         Log::debug('Now in StageImportDataHandler::run()');
 
         $localAccount = $this->accountRepository->findNull((int)$this->importJob->configuration['local_account']);
         if (null === $localAccount) {
-            throw new FireflyException(sprintf('Cannot find Firefly account with id #%d ' , $this->importJob->configuration['local_account']));
+            throw new FireflyException(sprintf('Cannot find Firefly account with id #%d ', $this->importJob->configuration['local_account']));
         }
         $finTS              = app(FinTS::class, ['config' => $this->importJob->configuration]);
         $fintTSAccount      = $finTS->getAccount($this->importJob->configuration['fints_account']);
@@ -143,8 +143,8 @@ class StageImportDataHandler
         }
 
         $metadataParser = new MetadataParser();
-        $description = $metadataParser->getDescription($transaction);
-        
+        $description    = $metadataParser->getDescription($transaction);
+
         $storeData = [
             'user'               => $this->importJob->user_id,
             'type'               => $type,

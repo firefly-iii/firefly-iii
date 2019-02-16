@@ -59,7 +59,7 @@ class PreferenceController extends Controller
                 // an important fallback is that the frontPageAccount array gets refilled automatically
                 // when it turns up empty.
                 $frontPageAccounts = app('preferences')->getForUser($user, 'frontPageAccounts', [])->data;
-                if (\count($frontPageAccounts) === 0) {
+                if (0 === \count($frontPageAccounts)) {
                     /** @var Collection $accounts */
                     $accounts   = $repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
                     $accountIds = $accounts->pluck('id')->toArray();

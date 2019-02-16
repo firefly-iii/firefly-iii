@@ -29,6 +29,7 @@ use Illuminate\Queue\SerializesModels;
 
 /**
  * Class RegisteredUser.
+ *
  * @codeCoverageIgnore
  */
 class RegisteredUser extends Event

@@ -35,6 +35,7 @@ use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
@@ -130,7 +131,7 @@ class UpgradeDatabase extends Command
             $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
             if (null === $currency) {
                 $this->line('Fall back to default currency in migrateBillsToRules().');
-                $currency = app('amount')->getDefaultCurrency();
+                $currency = app('amount')->getDefaultCurrencyByUser($user);
             }
 
             if (null === $ruleGroup) {
@@ -272,6 +273,7 @@ class UpgradeDatabase extends Command
                                         ->whereNull('transactions.deleted_at')
                                         ->groupBy(['transaction_journals.id'])
                                         ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
+        /** @noinspection PhpStrictTypeCheckingInspection */
         $result     = DB::table(DB::raw('(' . $subQuery->toSql() . ') AS derived'))
                         ->mergeBindings($subQuery->getQuery())
                         ->where('t_count', '>', 2)
@@ -448,11 +450,12 @@ class UpgradeDatabase extends Command
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
             if (null === $budgetLimit->transaction_currency_id) {
+                /** @var Budget $budget */
                 $budget = $budgetLimit->budget;
                 if (null !== $budget) {
                     $user = $budget->user;
                     if (null !== $user) {
-                        $currency                             = \Amount::getDefaultCurrencyByUser($user);
+                        $currency                             = app('amount')->getDefaultCurrencyByUser($user);
                         $budgetLimit->transaction_currency_id = $currency->id;
                         $budgetLimit->save();
                         $this->line(
@@ -464,6 +467,9 @@ class UpgradeDatabase extends Command
         }
     }
 
+    /**
+     *
+     */
     private function createNewTypes(): void
     {
         // create transaction type "Reconciliation".
@@ -490,7 +496,7 @@ class UpgradeDatabase extends Command
 
             // move description:
             $description = (string)$att->description;
-            if (\strlen($description) > 0) {
+            if ('' !== $description) {
                 // find or create note:
                 $note = $att->notes()->first();
                 if (null === $note) {
@@ -541,19 +547,19 @@ class UpgradeDatabase extends Command
      */
     private function removeCCLiabilities(): void
     {
-        $ccType = AccountType::where('type', AccountType::CREDITCARD)->first();
-        $debtType =AccountType::where('type', AccountType::DEBT)->first();
-        if(null === $ccType || null === $debtType) {
+        $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
+        $debtType = AccountType::where('type', AccountType::DEBT)->first();
+        if (null === $ccType || null === $debtType) {
             return;
         }
         /** @var Collection $accounts */
         $accounts = Account::where('account_type_id', $ccType->id)->get();
-        foreach($accounts as $account) {
+        foreach ($accounts as $account) {
             $account->account_type_id = $debtType->id;
             $account->save();
             $this->line(sprintf('Converted credit card liability account "%s" (#%d) to generic debt liability.', $account->name, $account->id));
         }
-        if($accounts->count() > 0) {
+        if ($accounts->count() > 0) {
             $this->info('Credit card liability types are no longer supported and have been converted to generic debts. See: http://bit.ly/FF3-credit-cards');
         }
     }

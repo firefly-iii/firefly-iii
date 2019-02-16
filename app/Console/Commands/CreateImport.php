@@ -97,7 +97,7 @@ class CreateImport extends Command
 
             return 1;
         }
-        if (\strlen($configuration) > 0) {
+        if ('' !== $configuration) {
             $configurationData = json_decode(file_get_contents($configuration), true);
             if (null === $configurationData) {
                 $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
@@ -136,7 +136,7 @@ class CreateImport extends Command
         }
 
         // store file as attachment.
-        if (\strlen($file) > 0) {
+        if ('' !== $file) {
             $messages = $jobRepository->storeCLIUpload($importJob, 'import_file', $file);
             if ($messages->count() > 0) {
                 $this->errorLine($messages->first());

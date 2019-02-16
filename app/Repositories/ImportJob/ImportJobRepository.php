@@ -437,7 +437,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->size     = $file->getSize();
         $attachment->uploaded = false;
         $attachment->save();
-        $fileObject = $file->openFile('r');
+        $fileObject = $file->openFile();
         $fileObject->rewind();
 
 

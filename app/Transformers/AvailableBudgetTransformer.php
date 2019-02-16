@@ -86,7 +86,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
         $end      = $this->parameters->get('end');
         if (null !== $start && null !== $end) {
             $data['spent_in_budgets'] = $this->getSpentInBudgets();
-            $data['spent_no_budget'] = $this->spentOutsideBudgets();
+            $data['spent_no_budget']  = $this->spentOutsideBudgets();
         }
 
         return $data;
@@ -98,6 +98,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
     private function getSpentInBudgets(): array
     {
         $allActive = $this->repository->getActiveBudgets();
+
         return $this->repository->spentInPeriodMc(
             $allActive, new Collection, $this->parameters->get('start'), $this->parameters->get('end')
         );
@@ -109,7 +110,7 @@ class AvailableBudgetTransformer extends AbstractTransformer
      */
     private function spentOutsideBudgets(): array
     {
-        return $this->repository->spentInPeriodWoBudgetMc(new Collection,$this->parameters->get('start'), $this->parameters->get('end'));
+        return $this->repository->spentInPeriodWoBudgetMc(new Collection, $this->parameters->get('start'), $this->parameters->get('end'));
     }
 
 }

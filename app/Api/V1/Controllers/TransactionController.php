@@ -179,7 +179,7 @@ class TransactionController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        $events = $this->repository->getPiggyBankEventsByTr($transaction);
+        $events = $this->repository->getPiggyBankEventsbyTr($transaction);
 
         /** @var PiggyBankEventTransformer $transformer */
         $transformer = app(PiggyBankEventTransformer::class);
