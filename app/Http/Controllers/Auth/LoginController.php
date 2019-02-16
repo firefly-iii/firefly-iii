@@ -71,16 +71,18 @@ class LoginController extends Controller
      */
     public function login(Request $request)
     {
-        /**
-         * Temporary bug fix for something that doesn't seem to work in
-         * AdLdap.
-         */
-        $schema = config('ldap.connections.default.schema');
-
-        /** @var Adldap\Connections\Provider $provider */
-        Adldap::getProvider('default')->setSchema(new $schema);
-
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
+
+        if ('ldap' === config('auth.providers.users.driver')) {
+            /**
+             * Temporary bug fix for something that doesn't seem to work in
+             * AdLdap.
+             */
+            $schema = config('ldap.connections.default.schema');
+
+            /** @var Adldap\Connections\Provider $provider */
+            Adldap::getProvider('default')->setSchema(new $schema);
+        }
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
