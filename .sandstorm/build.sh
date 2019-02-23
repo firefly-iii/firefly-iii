@@ -6,7 +6,7 @@ set -euo pipefail
 echo "In build.sh"
 
 cd /opt/app
-cp .env.sandstorm .env
+cp .deploy/sandstorm/.env.sandstorm .env
 
 if [ -f /opt/app/composer.json ] ; then
     if [ ! -f composer.phar ] ; then

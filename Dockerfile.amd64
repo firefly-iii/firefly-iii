@@ -1,7 +1,7 @@
 FROM php:7.2-apache
 ARG ARCH
 ENV FIREFLY_PATH=/var/www/firefly-iii COMPOSER_ALLOW_SUPERUSER=1
-LABEL version="1.3" maintainer="thegrumpydictator@gmail.com"
+LABEL version="1.4" maintainer="thegrumpydictator@gmail.com"
 
 # Create volumes
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
@@ -43,6 +43,12 @@ RUN chown -R www-data:www-data /var/www && \
     echo "de_DE.UTF-8 UTF-8\nen_US.UTF-8 UTF-8\nes_ES.UTF-8 UTF-8\nfr_FR.UTF-8 UTF-8\nid_ID.UTF-8 UTF-8\nit_IT.UTF-8 UTF-8\nnl_NL.UTF-8 UTF-8\npl_PL.UTF-8 UTF-8\npt_BR.UTF-8 UTF-8\nru_RU.UTF-8 UTF-8\ntr_TR.UTF-8 UTF-8\nzh_TW.UTF-8 UTF-8\nzh_CN.UTF-8 UTF-8\n\n" > /etc/locale.gen && \
     locale-gen && \
     composer install --prefer-dist --no-dev --no-scripts --no-suggest
+
+# configure PHP
+RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
+    sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
+    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
+
 
 # Expose port 80
 EXPOSE 80

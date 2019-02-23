@@ -26,6 +26,7 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use DB;
+use Exception;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
@@ -43,6 +44,7 @@ use FireflyIII\User;
 use Illuminate\Console\Command;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Log;
 use Schema;
 use stdClass;
 
@@ -97,6 +99,7 @@ class VerifyDatabase extends Command
         $this->fixBadMeta();
         $this->removeBills();
         $this->enableCurrencies();
+        $this->reportZeroAmount();
 
         return 0;
     }
@@ -688,4 +691,24 @@ class VerifyDatabase extends Command
             );
         }
     }
+
+    /**
+     * Collect all journals with empty amount.
+     */
+    private function reportZeroAmount(): void
+    {
+        $set = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $set = array_unique($set);
+        /** @var Collection $journals */
+        $journals = TransactionJournal::whereIn('id', $set)->get();
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $message = sprintf(
+                'Transaction "%s" (#%d), owned by user %s, has amount zero (0.00). It should be deleted.', $journal->description,
+                $journal->id, $journal->user->email
+            );
+            $this->error($message);
+        }
+    }
+
 }

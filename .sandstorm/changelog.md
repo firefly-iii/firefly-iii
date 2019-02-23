@@ -1,3 +1,11 @@
+# 4.7.13 (API 0.9.2)
+- 4.7.13 was released to fix an issue that affected the Softaculous build.
+- A routine has been added that warns about transactions with a 0.00 amount.
+- PHP maximum execution time is now 600 seconds in the Docker image.
+- Moved several files outside of the root of Firefly III
+- Fix issue where missing preference breaks the database upgrade.
+- [Issue 2100](https://github.com/firefly-iii/firefly-iii/issues/2100) Mass edit transactions results in a reset of the date.
+
 # 4.7.12
 - 4.7.12 was released to fix several shortcomings in v4.7.11's Docker image. Those in turn were caused by me. My apologies.
 - [Issue 2085](https://github.com/firefly-iii/firefly-iii/issues/2085) Upgraded the LDAP code. To keep using LDAP, set the `LOGIN_PROVIDER` to `ldap`.
