@@ -2,6 +2,21 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.13 (API 0.9.2)] - 2019-02-23
+
+4.7.13 was released to fix an issue that affected the Softaculous build.
+
+### Added
+- A routine has been added that warns about transactions with a 0.00 amount.
+
+### Changed
+- PHP maximum execution time is now 600 seconds in the Docker image.
+- Moved several files outside of the root of Firefly III
+
+### Fixed
+- Fix issue where missing preference breaks the database upgrade.
+- [Issue 2100](https://github.com/firefly-iii/firefly-iii/issues/2100) Mass edit transactions results in a reset of the date.
+
 ## [4.7.12 (API 0.9.2)] - 2019-02-16
 
 4.7.12 was released to fix several shortcomings in v4.7.11's Docker image. Those in turn were caused by me. My apologies.

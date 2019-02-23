@@ -704,19 +704,10 @@ class VerifyDatabase extends Command
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $message = sprintf(
-                'Transaction "%s" (#%d), owned by user %s, has amount zero (0.00). It has been deleted.', $journal->description,
+                'Transaction "%s" (#%d), owned by user %s, has amount zero (0.00). It should be deleted.', $journal->description,
                 $journal->id, $journal->user->email
             );
             $this->error($message);
-            try {
-                foreach($journal->transactions as $t) {
-                    $t->delete();
-                }
-                $journal->delete();
-
-            } catch (Exception $e) {
-                Log::debug(sprintf('Could not delete journal: %s', $e->getMessage()));
-            }
         }
     }
 
