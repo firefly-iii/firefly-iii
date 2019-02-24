@@ -164,6 +164,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      */
     public function createEventWithJournal(PiggyBank $piggyBank, string $amount, TransactionJournal $journal): PiggyBankEvent
     {
+        //TODO:
         /** @var PiggyBankEvent $event */
         $event = PiggyBankEvent::create(
             [
@@ -171,6 +172,10 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                 'transaction_journal_id' => $journal->id,
                 'date'                   => $journal->date->format('Y-m-d'),
                 'amount'                 => $amount]
+            //     'transfer'                 => $amount,
+            //     'account_id' => $piggyBank->account_id,
+            //     'from_account_id' => $piggyBank->account_id
+            // ]
         );
 
         return $event;
