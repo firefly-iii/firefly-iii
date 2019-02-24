@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.14 (API 0.9.2)] - 2019-02-24
+
+4.7.14 was released to fix an issue with the Composer installation script.
+
 ## [4.7.13 (API 0.9.2)] - 2019-02-23
 
 4.7.13 was released to fix an issue that affected the Softaculous build.

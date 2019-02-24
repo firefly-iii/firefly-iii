@@ -5564,21 +5564,21 @@
         },
         {
             "name": "johnkary/phpunit-speedtrap",
-            "version": "v3.0.0",
+            "version": "v3.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/johnkary/phpunit-speedtrap.git",
-                "reference": "5f1ede99bd53fd0e5ff72669877420e801256d90"
+                "reference": "dac11b8640d4be7a70f336616947fa84f169835a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/5f1ede99bd53fd0e5ff72669877420e801256d90",
-                "reference": "5f1ede99bd53fd0e5ff72669877420e801256d90",
+                "url": "https://api.github.com/repos/johnkary/phpunit-speedtrap/zipball/dac11b8640d4be7a70f336616947fa84f169835a",
+                "reference": "dac11b8640d4be7a70f336616947fa84f169835a",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.1",
-                "phpunit/phpunit": "^7.0"
+                "phpunit/phpunit": "^7.0 || ^8.0"
             },
             "type": "library",
             "extra": {
@@ -5608,7 +5608,7 @@
                 "profile",
                 "slow"
             ],
-            "time": "2018-02-24T18:55:28+00:00"
+            "time": "2019-02-24T02:40:12+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
