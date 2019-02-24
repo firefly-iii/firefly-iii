@@ -54,7 +54,7 @@ class PiggyBankEvent extends Model
             'date'       => 'date',
         ];
     /** @var array Fields that can be filled */
-    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount'];
+    protected $fillable = ['piggy_bank_id', 'transaction_journal_id', 'date', 'amount', 'transfer', 'account_id', 'from_account_id'];
     /** @var array Hidden from view */
     protected $hidden = ['amount_encrypted'];
 

@@ -150,7 +150,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     public function createEvent(PiggyBank $piggyBank, string $amount): PiggyBankEvent
     {
         /** @var PiggyBankEvent $event */
-        $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id]);
+        $event = PiggyBankEvent::create(['date' => Carbon::now(), 'amount' => $amount, 'piggy_bank_id' => $piggyBank->id, 'account_id' => $piggyBank->account_id]);
 
         return $event;
     }
