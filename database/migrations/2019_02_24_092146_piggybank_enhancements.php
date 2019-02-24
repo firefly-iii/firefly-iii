@@ -30,8 +30,8 @@ class PiggybankEnhancements extends Migration
         Schema::table('piggy_bank_events',
             function (Blueprint $table) {
                 // $table->decimal('transfer', 22, 12)->after('amount')->nullable();
-                $table->integer('account_id', false, true)->after('piggy_bank_id')->nullable();
-                $table->integer('from_account_id', false, true)->after('account_id')->nullable();
+                $table->unsignedInteger('account_id', false, true)->after('piggy_bank_id')->nullable();
+                $table->unsignedInteger('from_account_id', false, true)->after('account_id')->nullable();
                 $table->foreign('from_account_id')->references('id')->onUpdate('cascade')->on('accounts')->onDelete('cascade');
             }
         );
@@ -48,8 +48,8 @@ class PiggybankEnhancements extends Migration
         ');
 
         Schema::table('piggy_bank_events', function (Blueprint $table) {
-            $table->integer('account_id')->nullable(false)->change();
-            // $table->foreign('account_id')->references('id')->onUpdate('cascade')->on('accounts')->onDelete('cascade');
+            $table->unsignedInteger('account_id')->nullable(false)->change();
+            $table->foreign('account_id')->references('id')->onUpdate('cascade')->on('accounts')->onDelete('cascade');
         });
 
         // DB::statement('ALTER TABLE `piggy_bank_events` MODIFY `age` DATETIME');
@@ -100,7 +100,7 @@ class PiggybankEnhancements extends Migration
         // Schema::dropIfExists('piggy_bank_accounts');
         Schema::table('piggy_bank_events', function (Blueprint $table) {
             // $table->dropColumn(['transfer']);
-            // $table->dropForeign('piggy_bank_events_account_id_foreign');
+            $table->dropForeign('piggy_bank_events_account_id_foreign');
             $table->dropColumn(['account_id']);
 
             $table->dropForeign('piggy_bank_events_from_account_id_foreign');
