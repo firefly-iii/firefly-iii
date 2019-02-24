@@ -43,12 +43,6 @@ RUN chown -R www-data:www-data /var/www && \
     locale-gen && \
     composer install --prefer-dist --no-dev --no-scripts --no-suggest
 
-# configure PHP
-RUN cp /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini && \
-    sed -i 's/max_execution_time = 30/max_execution_time = 600/' /usr/local/etc/php/php.ini && \
-    sed -i 's/memory_limit = 128M/memory_limit = 512M/' /usr/local/etc/php/php.ini
-
-
 # Expose port 80
 EXPOSE 80
 
