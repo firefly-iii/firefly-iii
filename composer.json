@@ -123,7 +123,7 @@
   },
   "scripts": {
     "pre-install-cmd": [
-      "@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.deploy/heroku/.env.heroku', '.env');copy('.deploy/heroku/.locales', '.locales')}\""
+      "@php -r \"if (!(getenv('DYNO'))===false){file_exists('.env') || copy('.deploy/heroku/.env.heroku', '.env');copy('.deploy/heroku/.locales', '.locales');}\""
     ],
     "post-root-package-install": [
       "@php -r \"file_exists('.env') || copy('.env.example', '.env');\""

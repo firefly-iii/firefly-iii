@@ -1,3 +1,6 @@
+# 4.7.14 (API 0.9.2)
+- 4.7.14 was released to fix an issue with the Composer installation script.
+
 # 4.7.13 (API 0.9.2)
 - 4.7.13 was released to fix an issue that affected the Softaculous build.
 - A routine has been added that warns about transactions with a 0.00 amount.
