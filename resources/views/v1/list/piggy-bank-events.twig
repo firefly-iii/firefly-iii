@@ -5,9 +5,11 @@
         {% endif %}
         <th>{{ trans('list.date') }}</th>
         <th>{{ trans('list.amount') }}</th>
+        <th>{{ 'account'|_ }}</th>
+        <th>{{ trans('list.source_account') }}</th>
     </tr>
     {% for event in events %}
-        <tr>
+        <tr data-name="{{ event.account_id }} {{ event.from_account_id }}">
             {% if showPiggyBank %}
                 <td>
                     <a href="{{ route('piggy-banks.show',event.piggyBank.id) }}">{{ event.piggyBank.name }}</a>
@@ -24,10 +26,20 @@
 
             <td style="text-align: right;">
 
-                {% if event.amount < 0 %}
+                {% if event.transfer > 0 %}
+                    <span class="text-info">{{ trans('firefly.transferred', {amount: formatAmountByAccount(event.piggyBank.account, event.transfer, false)})|raw }} {{formatAmountByAccount(event.piggyBank.account, event.transfer, false)}}</span>
+                {% elseif event.amount < 0 %}
                     <span class="text-danger">{{ trans('firefly.removed_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
                 {% else %}
                     <span class="text-success">{{ trans('firefly.added_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
+                {% endif %}
+            </td>
+            <td> 
+                <a href="{{ route('accounts.show', event.account_id) }}">{{ event.account.name }}</a>
+            </td>
+            <td >
+                {% if event.from_account_id %}
+                    <a href="{{ route('accounts.show', event.from_account_id) }}">{{ event.from.name }}</a>
                 {% endif %}
             </td>
         </tr>

@@ -69,6 +69,24 @@ class PiggyBankEvent extends Model
 
     /**
      * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function account(): BelongsTo
+    {
+        return $this->belongsTo(Account::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return BelongsTo
+     */
+    public function from(): BelongsTo
+    {
+        return $this->belongsTo(Account::class, 'from_account_id');
+    }
+
+    /**
+     * @codeCoverageIgnore
      *
      * @param $value
      */
