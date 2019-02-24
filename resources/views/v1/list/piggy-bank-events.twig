@@ -27,7 +27,7 @@
             <td style="text-align: right;">
 
                 {% if event.transfer > 0 %}
-                    <span class="text-info">{{ trans('firefly.transferred', {amount: formatAmountByAccount(event.piggyBank.account, event.transfer, false)})|raw }} {{formatAmountByAccount(event.piggyBank.account, event.transfer, false)}}</span>
+                    <span class="text-info">{{ trans('firefly.transferred')|raw }} {{formatAmountByAccount(event.piggyBank.account, event.transfer, false)}}</span>
                 {% elseif event.amount < 0 %}
                     <span class="text-danger">{{ trans('firefly.removed_amount', {amount: formatAmountByAccount(event.piggyBank.account, event.amount, false)})|raw }}</span>
                 {% else %}
