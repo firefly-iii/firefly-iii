@@ -9,7 +9,7 @@
         <th>{{ trans('list.source_account') }}</th>
     </tr>
     {% for event in events %}
-        <tr data-name="{{ event.account_id }} {{ event.from_account_id }}">
+        <tr>
             {% if showPiggyBank %}
                 <td>
                     <a href="{{ route('piggy-banks.show',event.piggyBank.id) }}">{{ event.piggyBank.name }}</a>

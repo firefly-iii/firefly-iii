@@ -57,16 +57,16 @@ class PiggyBank extends Model
      * @var array
      */
     protected $casts
-        = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'startdate'  => 'date',
-            'targetdate' => 'date',
-            'order'      => 'int',
-            'active'     => 'boolean',
-            'encrypted'  => 'boolean',
-        ];
+    = [
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime',
+        'startdate'  => 'date',
+        'targetdate' => 'date',
+        'order'      => 'int',
+        'active'     => 'boolean',
+        'encrypted'  => 'boolean',
+    ];
     /** @var array Fields that can be filled */
     protected $fillable = ['name', 'account_id', 'order', 'targetamount', 'startdate', 'targetdate', 'active'];
     /** @var array Hidden from view */
@@ -85,8 +85,8 @@ class PiggyBank extends Model
         if (auth()->check()) {
             $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                               ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                               ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+                                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -119,6 +119,17 @@ class PiggyBank extends Model
     public function piggyBankEvents(): HasMany
     {
         return $this->hasMany(PiggyBankEvent::class);
+    }
+
+    /**
+     * display Piggy bank accounts with total values adding and subtracting transfers as needed
+     * @codeCoverageIgnore
+     * @return HasMany
+     */
+    public function accounts(): HasMany
+    {
+        $events = $this->hasMany(PiggyBankEvent::class)->selectRaw('piggy_bank_events.account_id as id,accounts.name,(SUM(piggy_bank_events.amount) + (select SUM(p1.transfer) FROM `piggy_bank_events` as p1 where p1.account_id=piggy_bank_events.account_id) - (select SUM(p2.transfer) FROM `piggy_bank_events` as p2 where p2.from_account_id=piggy_bank_events.account_id)) as total')->join('accounts', 'piggy_bank_events.account_id', '=', 'accounts.id')->groupBy('piggy_bank_events.account_id');
+        return $events;
     }
 
     /**

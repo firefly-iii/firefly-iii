@@ -90,6 +90,30 @@
             </div>
             <div class="box">
                 <div class="box-header with-border">
+                    <h3 class="box-title">{{ 'accounts'|_ }}</h3>
+                </div>
+                <div class="box-body table-responsive no-padding" id="piggyAccounts">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>{{ 'account'|_ }}</th>
+                            <th>{{ trans('list.amount') }}</th>
+                        </tr>
+                        {% for account in piggyBank.accounts %}
+                            <tr>
+                                <td> 
+                                    <a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a>
+                                </td>
+                                <td style="text-align: right;">
+                                    {{formatAmountByAccount(piggyBank.account, account.total, false)}}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
                 </div>
                 <div class="box-body table-responsive no-padding" id="piggyEvents">
