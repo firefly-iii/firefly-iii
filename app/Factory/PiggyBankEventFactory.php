@@ -19,7 +19,7 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 /** @noinspection MultipleReturnStatementsInspection */
-declare(strict_types=1);
+declare (strict_types = 1);
 
 namespace FireflyIII\Factory;
 
@@ -84,8 +84,10 @@ class PiggyBankEventFactory
 
             return null;
         }
-
-        $piggyRepos->addAmountToRepetition($repetition, $amount);
+        // only add if not Transfer
+        if (!$journal->isTransfer()) {
+            $piggyRepos->addAmountToRepetition($repetition, $amount);
+        }
         $event = $piggyRepos->createEventWithJournal($piggyBank, $amount, $journal);
         Log::debug(sprintf('Created piggy bank event #%d', $event->id));
 
