@@ -51,43 +51,6 @@ class PiggybankEnhancements extends Migration
             $table->unsignedInteger('account_id')->nullable(false)->change();
             $table->foreign('account_id')->references('id')->onUpdate('cascade')->on('accounts')->onDelete('cascade');
         });
-
-        // DB::statement('ALTER TABLE `piggy_bank_events` MODIFY `age` DATETIME');
-
-        // DB::statement('UPDATE `piggy_bank_events`
-        // SET
-        // `id` = <{id: }>,
-        // `created_at` = <{created_at: }>,
-        // `updated_at` = <{updated_at: }>,
-        // `piggy_bank_id` = <{piggy_bank_id: }>,
-        // `account_id` = <{account_id: }>,
-        // `transaction_journal_id` = <{transaction_journal_id: }>,
-        // `date` = <{date: }>,
-        // `amount` = <{amount: }>
-        // WHERE `id` = <{expr}>;
-        // SELECT * FROM fireflydev.piggy_bank_events;');
-
-        // setup composite keys
-        // $piggy_banks = DB::Select(DB::Raw('SELECT * FROM piggy_banks'));
-
-        //     DB::Statement('
-        //     INSERT INTO account (created_at, updated_at, name, project_id)
-        //     VALUES (NOW(), NOW(), "Migrated account", ' . $piggy_bank->account_id . ')
-        // ');
-        //     foreach ($piggy_banks as $piggy_bank) {
-        //         DB::Statement('
-        //     INSERT INTO account (created_at, updated_at, name, project_id)
-        //     VALUES (NOW(), NOW(), "Migrated account", ' . $project->project_id . ')
-        // ');
-        //     }
-        // update with id
-        // add foreign key
-        // Schema::table(
-        //     'piggy_bank_events',
-        //     function (Blueprint $table) {
-        //         $table->foreign('account_id')->references('id')->onUpdate('cascade')->on('accounts')->onDelete('cascade');
-        //     }
-        // );
     }
 
     /**
