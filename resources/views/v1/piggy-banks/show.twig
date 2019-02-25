@@ -104,7 +104,7 @@
                                     <a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a>
                                 </td>
                                 <td style="text-align: right;">
-                                    {{formatAmountByAccount(piggyBank.account, account.total, false)}}
+                                    {{formatAmountByAccount(piggyBank.account, account.sum + account.transfers - account.withdrawals, false)}}
                                 </td>
                             </tr>
                         {% endfor %}
