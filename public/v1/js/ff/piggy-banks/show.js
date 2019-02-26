@@ -24,4 +24,51 @@ $(function () {
     if (typeof(lineChart) === 'function' && typeof(piggyBankID) !== 'undefined') {
         lineChart('chart/piggy-bank/' + piggyBankID, 'piggy-bank-history');
     }
+
+    $.getJSON('api/v1/currencies').done(function (currencyData) {
+        var accountCode = document.querySelector(`span#currency_code`).innerText
+        var accountCodes = document.querySelectorAll(`td.account_code`)
+        for (let i = 0; i < accountCodes.length; i++) {
+            var codeId = accountCodes[i].innerText.trim()
+            codeId = parseInt(codeId.substring(1, codeId.length - 1));
+            for (let x = 0; x < currencyData.data.length; x++) {
+                if (currencyData.data[x].id == codeId) {
+                    accountCodes[i].innerText = currencyData.data[x].attributes.code
+                    break;
+                }
+
+            }
+        }
+        // calculate total by using currencies
+        $.getJSON('chart/piggy-bank/currencies/' + accountCode).done(function (data) {
+            var saved = 0;
+            var accountAmmounts = document.querySelectorAll(`td.account_amount`)
+            var accountCalculated = document.querySelectorAll(`td.account_calculated`)
+            var ratesData = JSON.parse(data)
+            for (let i = 0; i < accountCodes.length; i++) {
+                var code = accountCodes[i].innerText.trim()
+                var accountAmmount = accountAmmounts[i].innerText
+                accountAmmount = parseFloat(accountAmmount.replace(/[^0-9\.]+/g, ''))
+                if (code == accountCode) {
+                    saved += accountAmmount
+                    continue;
+                }
+                for (const key in ratesData.rates) {
+                    if (ratesData.rates.hasOwnProperty(key)) {
+                        if (key == code) {
+                            var convertCurr = accountAmmount / ratesData.rates[key]
+                            accountCalculated[i].innerText = convertCurr.toFixed(2)
+                            saved += convertCurr
+                            break;
+                        }
+                    }
+                }
+            }
+            var target = document.querySelector(`td#target_amount>span`).innerText
+            target = parseFloat(target.replace(/[^0-9\.]+/g, ''))
+            document.querySelector(`#saved_so_far>span`).innerText = saved.toFixed(2)
+            document.querySelector(`#left_to_save`).innerText = (target - saved).toFixed(2)
+
+        })
+    })
 });

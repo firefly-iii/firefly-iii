@@ -40,20 +40,26 @@
                         </tr>
                         <tr>
                             <td>{{ 'target_amount'|_ }}</td>
-                            <td>
+                            <td id="target_amount">
                                 {{ formatAmountBySymbol(piggy.target_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
                             </td>
                         </tr>
                         <tr>
                             <td>{{ 'saved_so_far'|_ }}</td>
                             <td>
-                                {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                <span id="saved_so_far">
+                                    {{ formatAmountBySymbol(piggy.current_amount, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                </span>
+                                <span id="currency_code">
+                                    {{piggy.currency_code}}
+                                </span>
                             </td>
                         </tr>
                         <tr>
                             <td>{{ 'left_to_save'|_ }}</td>
-                            <td>
-                                {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                <span id="left_to_save">
+                                    {{ formatAmountBySymbol(piggy.left_to_save, piggy.currency_symbol, piggy.currency_decimal_places) }}
+                                </span>
                             </td>
                         </tr>
                         <tr>
@@ -61,7 +67,7 @@
                             <td>
                                 {% if piggyBank.startdate %}
                                     {{ piggyBank.startdate.formatLocalized(monthAndDayFormat) }}
-                                {% else %}
+                                    {% else %}
                                     <em>{{ 'no_start_date'|_ }}</em>
                                 {% endif %}
                             </td>
@@ -71,7 +77,7 @@
                             <td>
                                 {% if piggyBank.targetdate %}
                                     {{ piggyBank.targetdate.formatLocalized(monthAndDayFormat) }}
-                                {% else %}
+                                    {% else %}
                                     <em>{{ 'no_target_date'|_ }}</em>
                                 {% endif %}
                             </td>
@@ -97,14 +103,25 @@
                         <tr>
                             <th>{{ 'account'|_ }}</th>
                             <th>{{ trans('list.amount') }}</th>
+                            <th>
+                                {{ trans('list.amount') }}
+                            </th>
+                            <th>
+                                {{ trans('list.total_amount') }}
+                            </th>
                         </tr>
                         {% for account in piggyBank.accounts %}
                             <tr>
                                 <td> 
                                     <a href="{{ route('accounts.show', account.id) }}">{{ account.name }}</a>
                                 </td>
-                                <td style="text-align: right;">
-                                    {{formatAmountByAccount(piggyBank.account, account.sum + account.transfers - account.withdrawals, false)}}
+                                <td style="text-align: right;" class="account_code">
+                                    {{account.data}}
+                                </td>
+                                <td class="account_amount">
+                                        {{account.sum + account.transfers - account.withdrawals}}
+                                </td>
+                                <td style="text-align: right;" class="account_calculated">
                                 </td>
                             </tr>
                         {% endfor %}
@@ -123,7 +140,7 @@
         </div>
     </div>
 
-    {% if piggy.notes %}
+{% if piggy.notes %}
         <div class="row">
             <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
 
@@ -144,7 +161,7 @@
     <script type="text/javascript">
         var piggyBankID = {{ piggyBank.id }};
     </script>
-
+    
     <script type="text/javascript" src="v1/js/lib/Chart.bundle.min.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.defaults.js?v={{ FF_VERSION }}"></script>
     <script type="text/javascript" src="v1/js/ff/charts.js?v={{ FF_VERSION }}"></script>

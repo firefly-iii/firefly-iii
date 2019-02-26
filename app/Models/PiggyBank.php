@@ -85,8 +85,8 @@ class PiggyBank extends Model
         if (auth()->check()) {
             $piggyBankId = (int)$value;
             $piggyBank   = self::where('piggy_banks.id', $piggyBankId)
-                                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
-                                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
+                ->leftJoin('accounts', 'accounts.id', '=', 'piggy_banks.account_id')
+                ->where('accounts.user_id', auth()->user()->id)->first(['piggy_banks.*']);
             if (null !== $piggyBank) {
                 return $piggyBank;
             }
@@ -128,7 +128,15 @@ class PiggyBank extends Model
      */
     public function accounts(): HasMany
     {
-        $events = $this->hasMany(PiggyBankEvent::class)->selectRaw('piggy_bank_events.account_id as id,accounts.name, SUM(piggy_bank_events.amount) as sum, (select SUM(p1.transfer) FROM `piggy_bank_events` as p1 where p1.account_id=piggy_bank_events.account_id and p1.piggy_bank_id=piggy_bank_events.piggy_bank_id) as transfers, (select SUM(p2.transfer) FROM `piggy_bank_events` as p2 where p2.from_account_id=piggy_bank_events.account_id and p2.piggy_bank_id=piggy_bank_events.piggy_bank_id) as withdrawals')->join('accounts', 'piggy_bank_events.account_id', '=', 'accounts.id')->groupBy('piggy_bank_events.account_id')->groupBy('piggy_bank_events.piggy_bank_id');
+        $events = $this->hasMany(PiggyBankEvent::class)->selectRaw('
+            piggy_bank_events.account_id as id,accounts.name, `account_meta`.`data`, SUM(piggy_bank_events.amount) as sum, (select SUM(p1.transfer) FROM `piggy_bank_events` as p1 where p1.account_id=piggy_bank_events.account_id and p1.piggy_bank_id=piggy_bank_events.piggy_bank_id) as transfers, (select SUM(p2.transfer) FROM `piggy_bank_events` as p2 where p2.from_account_id=piggy_bank_events.account_id and p2.piggy_bank_id=piggy_bank_events.piggy_bank_id) as withdrawals
+        ')
+            ->join('accounts', 'piggy_bank_events.account_id', '=', 'accounts.id')
+            ->join('account_meta', 'accounts.id', '=', 'account_meta.account_id')
+            ->where('account_meta.name', 'currency_id')
+            ->groupBy('piggy_bank_events.account_id')
+            ->groupBy('account_meta.data')
+            ->groupBy('piggy_bank_events.piggy_bank_id');
         return $events;
     }
 
