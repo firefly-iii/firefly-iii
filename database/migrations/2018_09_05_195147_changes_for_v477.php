@@ -39,6 +39,10 @@ class ChangesForV477 extends Migration
     public function down(): void
     {
         //
+         Schema::table('budget_limits', function (Blueprint $table) {
+            $table->dropForeign('budget_limits_transaction_currency_id_foreign');
+            $table->dropColumn(['transaction_currency_id']);
+        });
     }
 
     /**
