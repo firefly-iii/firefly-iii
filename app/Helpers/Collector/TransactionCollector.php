@@ -652,6 +652,40 @@ class TransactionCollector implements TransactionCollectorInterface
     }
 
     /**
+     * Search for words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setSearchWords(array $array): TransactionCollectorInterface
+    {
+        // 'transaction_journals.description',
+        $this->query->where(
+            function (EloquentBuilder $q) use ($array) {
+                $q->where(
+                    function (EloquentBuilder $q1) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s%%', $word);
+                            $q1->where('transaction_journals.description', 'LIKE', $keyword);
+                        }
+                    }
+                );
+                $q->orWhere(
+                    function (EloquentBuilder $q2) use ($array) {
+                        foreach ($array as $word) {
+                            $keyword = sprintf('%%%s%%', $word);
+                            $q2->where('transactions.description', 'LIKE', $keyword);
+                        }
+                    }
+                );
+            }
+        );
+
+        return $this;
+    }
+
+    /**
      * @param Tag $tag
      *
      * @return TransactionCollectorInterface

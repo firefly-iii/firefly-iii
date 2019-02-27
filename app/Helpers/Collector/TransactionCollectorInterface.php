@@ -273,6 +273,15 @@ interface TransactionCollectorInterface
     public function setRange(Carbon $start, Carbon $end): TransactionCollectorInterface;
 
     /**
+     * Search for words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return TransactionCollectorInterface
+     */
+    public function setSearchWords(array $array): TransactionCollectorInterface;
+
+    /**
      * Set the tag to collect from.
      *
      * @param Tag $tag

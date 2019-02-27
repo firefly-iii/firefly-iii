@@ -164,7 +164,7 @@ class SelectBudgetHandler implements YnabJobConfigurationInterface
     {
         $currency = $this->currencyRepository->findByCodeNull($code);
         if (null === $currency) {
-            Log::debug(sprintf('No currency found with code "%s"', $code));
+            Log::debug(sprintf('No currency X found with code "%s"', $code));
 
             return false;
         }

@@ -24,9 +24,10 @@ namespace FireflyIII\Support\Search;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Filter\DoubleTransactionFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Models\Transaction;
 use FireflyIII\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -59,7 +60,14 @@ class Search implements SearchInterface
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
+    }
 
+    /**
+     * @return Collection
+     */
+    public function getModifiers(): Collection
+    {
+        return $this->modifiers;
     }
 
     /**
@@ -99,78 +107,38 @@ class Search implements SearchInterface
             $filteredQuery = str_replace($match, '', $filteredQuery);
         }
         $filteredQuery = trim(str_replace(['"', "'"], '', $filteredQuery));
-        if ('' != $filteredQuery) {
+        if ('' !== $filteredQuery) {
             $this->words = array_map('trim', explode(' ', $filteredQuery));
         }
     }
 
     /**
-     * @return Collection
+     * @return LengthAwarePaginator
      */
-    public function searchTransactions(): Collection
+    public function searchTransactions(): LengthAwarePaginator
     {
         Log::debug('Start of searchTransactions()');
-        $pageSize  = 100;
-        $processed = 0;
-        $page      = 1;
-        $result    = new Collection();
-        $startTime = microtime(true);
-        do {
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
-            if ($this->hasModifiers()) {
-                $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-            }
+        $pageSize = 50;
+        $page     = 1;
 
-            // some modifiers can be applied to the collector directly.
-            $collector = $this->applyModifiers($collector);
+        /** @var TransactionCollectorInterface $collector */
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setAllAssetAccounts()->setLimit($pageSize)->setPage($page)->withOpposingAccount();
+        if ($this->hasModifiers()) {
+            $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        }
 
-            $collector->removeFilter(InternalTransferFilter::class);
-            $set = $collector->getPaginatedTransactions()->getCollection();
 
-            Log::debug(sprintf('Found %d journals to check. ', $set->count()));
 
-            // Filter transactions that match the given triggers.
-            $filtered = $set->filter(
-                function (Transaction $transaction) {
-                    if ($this->matchModifiers($transaction)) {
-                        return $transaction;
-                    }
+        $collector->setSearchWords($this->words);
+        $collector->removeFilter(InternalTransferFilter::class);
+        $collector->addFilter(DoubleTransactionFilter::class);
 
-                    // return false:
-                    return false;
-                }
-            );
+        // Most modifiers can be applied to the collector directly.
+        $collector = $this->applyModifiers($collector);
 
-            Log::debug(sprintf('Found %d journals that match.', $filtered->count()));
+        return $collector->getPaginatedTransactions();
 
-            // merge:
-            /** @var Collection $result */
-            $result = $result->merge($filtered);
-            Log::debug(sprintf('Total count is now %d', $result->count()));
-
-            // Update counters
-            ++$page;
-            $processed += \count($set);
-
-            Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
-
-            // Check for conditions to finish the loop
-            $reachedEndOfList = $set->count() < 1;
-            $foundEnough      = $result->count() >= $this->limit;
-
-            Log::debug(sprintf('reachedEndOfList: %s', var_export($reachedEndOfList, true)));
-            Log::debug(sprintf('foundEnough: %s', var_export($foundEnough, true)));
-
-            // break at some point so the script does not crash:
-            $currentTime = microtime(true) - $startTime;
-            Log::debug(sprintf('Have been running for %f seconds.', $currentTime));
-        } while (!$reachedEndOfList && !$foundEnough && $currentTime <= 30);
-
-        $result = $result->slice(0, $this->limit);
-
-        return $result;
     }
 
     /**
@@ -197,8 +165,17 @@ class Search implements SearchInterface
      */
     private function applyModifiers(TransactionCollectorInterface $collector): TransactionCollectorInterface
     {
+        /*
+         * TODO:
+         * 'source', 'destination',
+         * 'category','budget',
+         * 'bill',
+         */
+
         foreach ($this->modifiers as $modifier) {
             switch ($modifier['type']) {
+                default:
+                    die(sprintf('unsupported modifier: "%s"', $modifier['type']));
                 case 'amount_is':
                 case 'amount':
                     $amount = app('steam')->positive((string)$modifier['value']);
@@ -259,56 +236,5 @@ class Search implements SearchInterface
                 $this->modifiers->push(['type' => $type, 'value' => $value]);
             }
         }
-    }
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return bool
-     *
-     */
-    private function matchModifiers(Transaction $transaction): bool
-    {
-        Log::debug(sprintf('Now at transaction #%d', $transaction->id));
-        // first "modifier" is always the text of the search:
-        // check descr of journal:
-        if (\count($this->words) > 0
-            && !$this->strposArray(strtolower((string)$transaction->description), $this->words)
-            && !$this->strposArray(strtolower((string)$transaction->transaction_description), $this->words)
-        ) {
-            Log::debug('Description does not match', $this->words);
-
-            return false;
-        }
-
-        // then a for-each and a switch for every possible other thingie.
-        foreach ($this->modifiers as $modifier) {
-            $res = Modifier::apply($modifier, $transaction);
-            if (false === $res) {
-                return $res;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * @param string $haystack
-     * @param array  $needle
-     *
-     * @return bool
-     */
-    private function strposArray(string $haystack, array $needle): bool
-    {
-        if ('' === $haystack) {
-            return false;
-        }
-        foreach ($needle as $what) {
-            if (false !== stripos($haystack, $what)) {
-                return true;
-            }
-        }
-
-        return false;
     }
 }

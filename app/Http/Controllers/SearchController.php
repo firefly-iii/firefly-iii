@@ -67,6 +67,11 @@ class SearchController extends Controller
         // parse search terms:
         $searcher->parseQuery($fullQuery);
         $query    = $searcher->getWordsAsString();
+
+
+        //also get modifiers to display:
+
+
         $subTitle = (string)trans('breadcrumbs.search_result', ['query' => $query]);
 
         return view('search.index', compact('query', 'fullQuery', 'subTitle'));
@@ -83,23 +88,11 @@ class SearchController extends Controller
     public function search(Request $request, SearchInterface $searcher): JsonResponse
     {
         $fullQuery    = (string)$request->get('query');
-        $transactions = new Collection;
-        // cache
-        $cache = new CacheProperties;
-        $cache->addProperty('search');
-        $cache->addProperty($fullQuery);
 
-        if ($cache->has()) {
-            $transactions = $cache->get(); // @codeCoverageIgnore
-        }
+        $searcher->parseQuery($fullQuery);
+        $searcher->setLimit((int)config('firefly.search_result_limit'));
+        $transactions = $searcher->searchTransactions();
 
-        if (!$cache->has()) {
-            // parse search terms:
-            $searcher->parseQuery($fullQuery);
-            $searcher->setLimit((int)config('firefly.search_result_limit'));
-            $transactions = $searcher->searchTransactions();
-            $cache->store($transactions);
-        }
         try {
             $html = view('search.search', compact('transactions'))->render();
             // @codeCoverageIgnoreStart
