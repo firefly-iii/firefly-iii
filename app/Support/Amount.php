@@ -225,23 +225,6 @@ class Amount
     }
 
     /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private function tryDecrypt(string $value): string
-    {
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
-        }
-
-        return $value;
-    }
-
-
-    /**
      * @param User $user
      *
      * @return \FireflyIII\Models\TransactionCurrency
@@ -260,7 +243,13 @@ class Amount
 
         // at this point the currency preference could be encrypted, if coming from an old version.
         $currencyCode = $this->tryDecrypt((string)$currencyPreference->data);
-        $currency           = TransactionCurrency::where('code', $currencyCode)->first();
+
+        // could still be json encoded:
+        if (\strlen($currencyCode) > 3) {
+            $currencyCode = null === json_decode($currencyCode) ? 'EUR' : $currencyCode;
+        }
+
+        $currency = TransactionCurrency::where('code', $currencyCode)->first();
         if (null === $currency) {
             throw new FireflyException(sprintf('No currency found with code "%s"', $currencyCode));
         }
@@ -287,5 +276,21 @@ class Amount
             'neg'  => $negative,
             'zero' => $positive,
         ];
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function tryDecrypt(string $value): string
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+        }
+
+        return $value;
     }
 }
