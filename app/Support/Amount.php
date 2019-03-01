@@ -246,7 +246,7 @@ class Amount
 
         // could still be json encoded:
         if (\strlen($currencyCode) > 3) {
-            $currencyCode = null === json_decode($currencyCode) ? 'EUR' : $currencyCode;
+            $currencyCode = json_decode($currencyCode) ?? 'EUR';
         }
 
         $currency = TransactionCurrency::where('code', $currencyCode)->first();
