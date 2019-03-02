@@ -2,6 +2,22 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.15 (API 0.9.2)] - 2019-03-02
+
+4.7.15 was released to fix some issues upgrading from older versions.
+
+### Added
+- [Issue 2128](https://github.com/firefly-iii/firefly-iii/issues/2128) Support for Postgres SSL
+
+### Changed
+- [Issue 2120](https://github.com/firefly-iii/firefly-iii/issues/2120) Add a missing meta tag, thanks to @lastlink
+- Search is a lot faster now.
+
+### Fixed
+- [Issue 2125](https://github.com/firefly-iii/firefly-iii/issues/2125) Decryption issues during upgrade
+- [Issue 2130](https://github.com/firefly-iii/firefly-iii/issues/2130) Fixed database migrations and rollbacks.
+- [Issue 2135](https://github.com/firefly-iii/firefly-iii/issues/2135) Date fixes in transaction overview
+
 ## [4.7.14 (API 0.9.2)] - 2019-02-24
 
 4.7.14 was released to fix an issue with the Composer installation script.
