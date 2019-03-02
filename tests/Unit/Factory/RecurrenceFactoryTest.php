@@ -96,7 +96,7 @@ class RecurrenceFactoryTest extends TestCase
         $data        = [
             'recurrence'   => [
                 'type'         => 'withdrawal',
-                'first_date'   => Carbon::create()->addDay(),
+                'first_date'   => Carbon::now()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
                 'description'  => 'Description thing',
@@ -190,7 +190,7 @@ class RecurrenceFactoryTest extends TestCase
         $data = [
             'recurrence'   => [
                 'type'         => 'deposit',
-                'first_date'   => Carbon::create()->addDay(),
+                'first_date'   => Carbon::now()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
                 'description'  => 'Description thing',
@@ -286,7 +286,7 @@ class RecurrenceFactoryTest extends TestCase
         $data        = [
             'recurrence'   => [
                 'type'         => 'withdrawal',
-                'first_date'   => Carbon::create()->addDay(),
+                'first_date'   => Carbon::now()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
                 'description'  => 'Description thing',
@@ -380,7 +380,7 @@ class RecurrenceFactoryTest extends TestCase
         $data        = [
             'recurrence'   => [
                 'type'         => 'withdrawal',
-                'first_date'   => Carbon::create()->addDay(),
+                'first_date'   => Carbon::now()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
                 'description'  => 'Description thing',
@@ -474,7 +474,7 @@ class RecurrenceFactoryTest extends TestCase
         $data = [
             'recurrence'   => [
                 'type'         => 'transfer',
-                'first_date'   => Carbon::create()->addDay(),
+                'first_date'   => Carbon::now()->addDay(),
                 'repetitions'  => 0,
                 'title'        => 'Test recurrence' . random_int(1, 100000),
                 'description'  => 'Description thing',

@@ -243,7 +243,7 @@ class BoxController extends Controller
      */
     public function netWorth(): JsonResponse
     {
-        $date = Carbon::create()->startOfDay();
+        $date = Carbon::now()->startOfDay();
 
         // start and end in the future? use $end
         if ($this->notInSessionRange($date)) {

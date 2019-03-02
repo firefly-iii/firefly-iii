@@ -61,8 +61,8 @@ class MonthReportGeneratorTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $date      = new Carbon;
-        $start     = Carbon::create()->startOfMonth();
-        $end       = Carbon::create()->endOfMonth();
+        $start     = Carbon::now()->startOfMonth();
+        $end       = Carbon::now()->endOfMonth();
         $generator = new MonthReportGenerator();
         $generator->setStartDate($start);
         $generator->setEndDate($end);
@@ -103,8 +103,8 @@ class MonthReportGeneratorTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $date      = new Carbon;
-        $start     = Carbon::create()->startOfMonth();
-        $end       = Carbon::create()->endOfMonth();
+        $start     = Carbon::now()->startOfMonth();
+        $end       = Carbon::now()->endOfMonth();
         $generator = new MonthReportGenerator();
         $generator->setStartDate($start);
         $generator->setEndDate($end);
@@ -143,8 +143,8 @@ class MonthReportGeneratorTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $date      = new Carbon;
-        $start     = Carbon::create()->startOfMonth();
-        $end       = Carbon::create()->endOfMonth();
+        $start     = Carbon::now()->startOfMonth();
+        $end       = Carbon::now()->endOfMonth();
         $generator = new MonthReportGenerator();
         $generator->setStartDate($start);
         $generator->setEndDate($end);
@@ -190,8 +190,8 @@ class MonthReportGeneratorTest extends TestCase
         /** @var Account $account */
         $account   = $this->user()->accounts()->where('account_type_id', 3)->first();
         $date      = new Carbon;
-        $start     = Carbon::create()->startOfMonth();
-        $end       = Carbon::create()->endOfMonth();
+        $start     = Carbon::now()->startOfMonth();
+        $end       = Carbon::now()->endOfMonth();
         $generator = new MonthReportGenerator();
         $generator->setStartDate($start);
         $generator->setEndDate($end);

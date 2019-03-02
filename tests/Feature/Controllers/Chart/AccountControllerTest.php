@@ -153,7 +153,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
-        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
+        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromFormat('U',time())->startOfMonth());
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -219,7 +219,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
-        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
+        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromFormat('U',time())->startOfMonth());
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -313,7 +313,7 @@ class AccountControllerTest extends TestCase
         $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
-        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromTimestamp(time())->startOfMonth());
+        $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromFormat('U',time())->startOfMonth());
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);

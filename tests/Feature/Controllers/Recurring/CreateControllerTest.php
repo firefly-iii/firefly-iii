@@ -92,7 +92,7 @@ class CreateControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),
@@ -147,7 +147,7 @@ class CreateControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),
@@ -202,7 +202,7 @@ class CreateControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),
@@ -257,7 +257,7 @@ class CreateControllerTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),
@@ -313,7 +313,7 @@ class CreateControllerTest extends TestCase
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),
@@ -371,7 +371,7 @@ class CreateControllerTest extends TestCase
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),
@@ -429,7 +429,7 @@ class CreateControllerTest extends TestCase
         $piggyRepos     = $this->mock(PiggyBankRepositoryInterface::class);
 
 
-        $tomorrow       = Carbon::create()->addDays(2);
+        $tomorrow       = Carbon::now()->addDays(2);
         $recurrence     = $this->user()->recurrences()->first();
         $data           = [
             'title'                   => 'hello' . random_int(1, 100000),

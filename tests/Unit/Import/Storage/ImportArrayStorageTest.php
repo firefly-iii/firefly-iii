@@ -603,7 +603,7 @@ class ImportArrayStorageTest extends TestCase
         return
             [
                 'type'               => 'transfer',
-                'date'               => Carbon::create()->format('Y-m-d'),
+                'date'               => Carbon::now()->format('Y-m-d'),
                 'tags'               => '',
                 'user'               => $this->user()->id,
 
@@ -652,7 +652,7 @@ class ImportArrayStorageTest extends TestCase
         return
             [
                 'type'               => 'withdrawal',
-                'date'               => Carbon::create()->format('Y-m-d'),
+                'date'               => Carbon::now()->format('Y-m-d'),
                 'tags'               => '',
                 'user'               => $this->user()->id,
 
