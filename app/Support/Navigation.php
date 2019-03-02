@@ -151,7 +151,7 @@ class Navigation
         // per year
         while ($perYearEnd >= $perYearStart) {
             $perYearEnd = $this->startOfPeriod($perYearEnd, '1Y');
-            $currentEnd = $this->endOfPeriod($perYearEnd, '1Y')->subDay()->endOfDay();
+            $currentEnd = $this->endOfPeriod($perYearEnd, '1Y')->endOfDay();
             if ($currentEnd->gt($start)) {
                 $periods[] = [
                     'start'  => $perYearEnd,

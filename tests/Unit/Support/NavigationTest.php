@@ -134,6 +134,184 @@ class NavigationTest extends TestCase
     /**
      * @covers \FireflyIII\Support\Navigation
      */
+    public function testBlockPeriods(): void
+    {
+        $tests = [
+            [
+                'start'    => '2014-01-01',
+                'end'      => '2018-12-31',
+                'range'    => '1M',
+                'expected' =>
+                    [
+                            [
+                                'start'  => '2018-12-01',
+                                'end'    => '2018-12-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-11-01',
+                                'end'    => '2018-11-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-10-01',
+                                'end'    => '2018-10-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-09-01',
+                                'end'    => '2018-09-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-08-01',
+                                'end'    => '2018-08-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-07-01',
+                                'end'    => '2018-07-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-06-01',
+                                'end'    => '2018-06-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-05-01',
+                                'end'    => '2018-05-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-04-01',
+                                'end'    => '2018-04-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-03-01',
+                                'end'    => '2018-03-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-02-01',
+                                'end'    => '2018-02-28',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2018-01-01',
+                                'end'    => '2018-01-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-12-01',
+                                'end'    => '2017-12-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-11-01',
+                                'end'    => '2017-11-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-10-01',
+                                'end'    => '2017-10-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-09-01',
+                                'end'    => '2017-09-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-08-01',
+                                'end'    => '2017-08-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-07-01',
+                                'end'    => '2017-07-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-06-01',
+                                'end'    => '2017-06-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-05-01',
+                                'end'    => '2017-05-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-04-01',
+                                'end'    => '2017-04-30',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-03-01',
+                                'end'    => '2017-03-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-02-01',
+                                'end'    => '2017-02-28',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2017-01-01',
+                                'end'    => '2017-01-31',
+                                'period' => '1M',
+                            ],
+                            [
+                                'start'  => '2016-01-01',
+                                'end'    => '2016-12-31',
+                                'period' => '1Y',
+                            ],
+                            [
+                                'start'  => '2015-01-01',
+                                'end'    => '2015-12-31',
+                                'period' => '1Y',
+                            ],
+                            [
+                                'start'  => '2014-01-01',
+                                'end'    => '2014-12-31',
+                                'period' => '1Y',
+                            ],
+                    ]
+
+                ,
+            ],
+        ];
+
+        /** @var array $test */
+        foreach ($tests as $test) {
+
+            $start = new Carbon($test['start']);
+            $end   = new Carbon($test['end']);
+            $range = $test['range'];
+            $nav   = new Navigation;
+            try {
+                $result = $nav->blockPeriods($start, $end, $range);
+            } catch (FireflyException $e) {
+                $this->assertFalse(true, $e->getMessage());
+            }
+            $parsedResult = [];
+            foreach ($result as $entry) {
+                $parsedResult[] = [
+                    'start'  => $entry['start']->format('Y-m-d'),
+                    'end'    => $entry['end']->format('Y-m-d'),
+                    'period' => $entry['period'],
+                ];
+            }
+            $this->assertEquals($test['expected'], $parsedResult);
+
+        }
+    }
+
+    /**
+     * @covers \FireflyIII\Support\Navigation
+     */
     public function testEndOfPeriod(): void
     {
 
