@@ -32,8 +32,14 @@ class ChangesForV470a extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
+        Schema::table(
+            'transactions',
+            function (Blueprint $table) {
+                $table->dropColumn('reconciled');
+            }
+        );
     }
 
     /**
@@ -41,7 +47,7 @@ class ChangesForV470a extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(
             'transactions',

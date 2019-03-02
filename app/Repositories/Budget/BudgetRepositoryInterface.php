@@ -169,8 +169,6 @@ interface BudgetRepositoryInterface
      */
     public function getBudgets(): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Get all budgets with these ID's.
      *
@@ -179,6 +177,8 @@ interface BudgetRepositoryInterface
      * @return Collection
      */
     public function getByIds(array $budgetIds): Collection;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @return Collection
@@ -193,6 +193,13 @@ interface BudgetRepositoryInterface
      * @return array
      */
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /**
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchBudget(string $query): Collection;
 
     /**
      * @param TransactionCurrency $currency

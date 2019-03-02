@@ -31,7 +31,7 @@ class ChangesForV410 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('notes');
     }
@@ -41,7 +41,7 @@ class ChangesForV410 extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         Schema::create(
             'notes',

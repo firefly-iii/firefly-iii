@@ -38,7 +38,17 @@ class ChangesForV477 extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table(
+            'budget_limits', function (Blueprint $table) {
+
+                // cannot drop foreign keys in SQLite:
+            if ('sqlite' !== config('database.default')) {
+                $table->dropForeign('budget_limits_transaction_currency_id_foreign');
+            }
+
+            $table->dropColumn(['transaction_currency_id']);
+        }
+        );
     }
 
     /**

@@ -39,8 +39,6 @@ function searchFailure() {
 
 function presentSearchResults(data) {
     $('.search_ongoing').hide();
-    $('p.search_count').show();
-    $('span.search_count').text(data.count);
     $('.search_box').find('.overlay').remove();
     $('.search_results').html(data.html).show();
 

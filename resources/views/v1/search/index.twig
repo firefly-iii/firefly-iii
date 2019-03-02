@@ -20,7 +20,8 @@
                         <div class="form-group">
                             <label for="query" class="col-sm-1 control-label">{{ 'search_query'|_ }}</label>
                             <div class="col-sm-10">
-                                <input autocomplete="off" type="text" name="q" id="query" value="{{ fullQuery }}" class="form-control" placeholder="{{ fullQuery }}">
+                                <input autocomplete="off" type="text" name="q" id="query" value="{{ fullQuery }}" class="form-control"
+                                       placeholder="{{ fullQuery }}">
                             </div>
                         </div>
                         <div class="form-group">
@@ -29,6 +30,17 @@
                             </div>
                         </div>
                     </form>
+                    <p>
+                        {{ trans('firefly.search_for_query', {query: query})|raw}}
+                    </p>
+                    {% if modifiers|length > 0 %}
+                        <p>{{ trans('firefly.modifiers_applies_are') }}</p>
+                        <ul>
+                            {% for modifier in modifiers %}
+                                <li>{{ trans('firefly.search_modifier_'~modifier.type, {value: modifier.value}) }}</li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -44,11 +56,7 @@
                         <p class="search_ongoing text-center" style="margin-top:70px;">
                             {{ 'search_searching'|_ }}
                         </p>
-                        <p class="search_count" style="display: none;">
-                            {{ 'search_found_transactions'|_ }} <span class="search_count"></span>
-                        </p>
-                        <div class="search_results" style="display: none;">
-                        </div>
+                        <div class="search_results" style="display: none;"></div>
                         {# loading indicator #}
                         <div class="overlay">
                             <i class="fa fa-refresh fa-spin"></i>

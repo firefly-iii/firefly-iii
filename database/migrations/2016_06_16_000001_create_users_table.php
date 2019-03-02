@@ -31,7 +31,7 @@ class CreateUsersTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('users');
     }
@@ -41,7 +41,7 @@ class CreateUsersTable extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable('users')) {
             Schema::create(

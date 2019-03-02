@@ -34,7 +34,7 @@ class CreateOauthAccessTokensTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('oauth_access_tokens');
     }
@@ -42,7 +42,7 @@ class CreateOauthAccessTokensTable extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create(
             'oauth_access_tokens', function (Blueprint $table) {

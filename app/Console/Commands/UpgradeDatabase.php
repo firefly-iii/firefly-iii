@@ -28,6 +28,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands;
 
+use Crypt;
 use DB;
 use Exception;
 use FireflyIII\Models\Account;
@@ -53,6 +54,7 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
@@ -107,6 +109,22 @@ class UpgradeDatabase extends Command
     }
 
     /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function tryDecrypt(string $value): string
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+        }
+
+        return $value;
+    }
+
+    /**
      * Since it is one routine these warnings make sense and should be supressed.
      *
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -127,8 +145,14 @@ class UpgradeDatabase extends Command
 
                 return;
             }
+            $currencyCode = $this->tryDecrypt($currencyPreference->data);
 
-            $currency = TransactionCurrency::where('code', $currencyPreference->data)->first();
+            // try json decrypt just in case.
+            if (\strlen($currencyCode) > 3) {
+                $currencyCode = json_decode($currencyCode) ?? 'EUR';
+            }
+
+            $currency = TransactionCurrency::where('code', $currencyCode)->first();
             if (null === $currency) {
                 $this->line('Fall back to default currency in migrateBillsToRules().');
                 $currency = app('amount')->getDefaultCurrencyByUser($user);

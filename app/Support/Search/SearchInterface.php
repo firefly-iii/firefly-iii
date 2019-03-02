@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Search;
 
 use FireflyIII\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -30,6 +31,11 @@ use Illuminate\Support\Collection;
  */
 interface SearchInterface
 {
+    /**
+     * @return Collection
+     */
+    public function getModifiers(): Collection;
+
     /**
      * @return string
      */
@@ -46,9 +52,14 @@ interface SearchInterface
     public function parseQuery(string $query);
 
     /**
-     * @return Collection
+     * @return float
      */
-    public function searchTransactions(): Collection;
+    public function searchTime(): float;
+
+    /**
+     * @return LengthAwarePaginator
+     */
+    public function searchTransactions(): LengthAwarePaginator;
 
     /**
      * @param int $limit

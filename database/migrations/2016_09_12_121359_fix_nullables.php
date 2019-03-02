@@ -31,7 +31,7 @@ class FixNullables extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
     }
 
@@ -40,7 +40,7 @@ class FixNullables extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(
             'rule_groups',

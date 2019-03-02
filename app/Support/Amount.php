@@ -22,10 +22,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support;
 
+use Crypt;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
+use Illuminate\Contracts\Encryption\DecryptException;
 use Illuminate\Support\Collection;
+use Log;
 use Preferences as Prefs;
 
 /**
@@ -237,9 +240,18 @@ class Amount
             return $cache->get(); // @codeCoverageIgnore
         }
         $currencyPreference = Prefs::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
-        $currency           = TransactionCurrency::where('code', $currencyPreference->data)->first();
+
+        // at this point the currency preference could be encrypted, if coming from an old version.
+        $currencyCode = $this->tryDecrypt((string)$currencyPreference->data);
+
+        // could still be json encoded:
+        if (\strlen($currencyCode) > 3) {
+            $currencyCode = json_decode($currencyCode) ?? 'EUR';
+        }
+
+        $currency = TransactionCurrency::where('code', $currencyCode)->first();
         if (null === $currency) {
-            throw new FireflyException(sprintf('No currency found with code "%s"', $currencyPreference->data));
+            throw new FireflyException(sprintf('No currency found with code "%s"', $currencyCode));
         }
         $cache->store($currency);
 
@@ -264,5 +276,21 @@ class Amount
             'neg'  => $negative,
             'zero' => $positive,
         ];
+    }
+
+    /**
+     * @param string $value
+     *
+     * @return string
+     */
+    private function tryDecrypt(string $value): string
+    {
+        try {
+            $value = Crypt::decrypt($value);
+        } catch (DecryptException $e) {
+            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+        }
+
+        return $value;
     }
 }

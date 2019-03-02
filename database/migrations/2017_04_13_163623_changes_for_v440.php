@@ -31,11 +31,23 @@ class ChangesForV440 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         if (Schema::hasTable('currency_exchange_rates')) {
             Schema::drop('currency_exchange_rates');
         }
+
+        Schema::table(
+            'transactions',
+            function (Blueprint $table) {
+
+                // cannot drop foreign keys in SQLite:
+                if ('sqlite' !== config('database.default')) {
+                    $table->dropForeign('transactions_transaction_currency_id_foreign');
+                }
+                $table->dropColumn('transaction_currency_id');
+            }
+        );
     }
 
     /**
@@ -43,7 +55,7 @@ class ChangesForV440 extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable('currency_exchange_rates')) {
             Schema::create(

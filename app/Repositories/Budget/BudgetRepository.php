@@ -636,6 +636,20 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchBudget(string $query): Collection
+    {
+        $query = sprintf('%%%s%%', $query);
+
+        return $this->user->budgets()->where('name', 'LIKE', $query)->get();
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
      * @param TransactionCurrency $currency
      * @param Carbon              $start
      * @param Carbon              $end
@@ -661,8 +675,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $availableBudget;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Budget $budget
@@ -903,6 +915,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $limit;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param Budget $budget
      * @param array  $data
@@ -921,8 +935,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $budget;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param AvailableBudget $availableBudget
