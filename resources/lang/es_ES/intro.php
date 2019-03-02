@@ -43,7 +43,7 @@ return [
     'budgets_index_see_expenses_bar'        => 'Gastar dinero irá llenando poco a poco esta barra.',
     'budgets_index_navigate_periods'        => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
     'budgets_index_new_budget'              => 'Crea nuevos presupuestos como mejor te parezca.',
-    'budgets_index_list_of_budgets'         => 'Use esta tabla para establecer el monto de cada presupuesto y ver como lo viene administrando.',
+    'budgets_index_list_of_budgets'         => 'Use esta tabla para establecer las cantidades para cada presupuesto y ver cómo está haciendo.',
     'budgets_index_outro'                   => 'Para aprender mas acerca de los presupuestos, revise el icono de ayuda en el tope de la esquina derecha.',
 
     // reports (index)
@@ -79,9 +79,9 @@ return [
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Seleccione una alcancía y vincule esta transferencia con sus ahorros.',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => 'Este campo le muestra cuanto ha ahorrado usted en cada alcancía.',
-    'piggy-banks_index_button'                                => 'Junto con esta barra de progreso hay dos botones (+ y -) para añadir o eliminar dinero de cada alcancía.',
-    'piggy-banks_index_accountStatus'                         => 'Para cada cuenta de activos con al menos una alcancía, el estado esta listado en esta tabla.',
+    'piggy-banks_index_saved'                                 => 'Este campo le muestra cuánto ha ahorrado usted en cada hucha.',
+    'piggy-banks_index_button'                                => 'Junto con esta barra de progreso hay dos botones (+ y -) para añadir o quitar dinero de cada hucha.',
+    'piggy-banks_index_accountStatus'                         => 'Para cada cuenta de activos con al menos una hucha, el estado está listado en esta tabla.',
 
     // create piggy
     'piggy-banks_create_name'                                 => '¿Cuál es tu meta? ¿Un nuevo sofá, una cámara, dinero para emergencias?',
@@ -89,7 +89,7 @@ return [
 
     // show piggy
     'piggy-banks_show_piggyChart'                             => 'Este informe le mostrara la historia de esta alcancía.',
-    'piggy-banks_show_piggyDetails'                           => 'Algunos detalles sobre tu alcancía',
+    'piggy-banks_show_piggyDetails'                           => 'Algunos detalles sobre tu hucha',
     'piggy-banks_show_piggyEvents'                            => 'Cualquier adición o eliminación también se listan aquí.',
 
     // bill index
@@ -130,8 +130,8 @@ return [
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III da soporte a múltiples monedas, que usted puede cambiar en esta página.',
-    'currencies_index_default'                                => 'Firefly III has one default currency.',
-    'currencies_index_buttons'                                => 'Use these buttons to change the default currency or enable other currencies.',
+    'currencies_index_default'                                => 'Firefly III tiene una moneda por defecto.',
+    'currencies_index_buttons'                                => 'Utilice estos botones para cambiar la moneda por defecto o habilitar otras monedas.',
 
     // create currency
     'currencies_create_code'                                  => 'Este código debe ser compatible con ISO (Googlee para su nueva moneda).',
