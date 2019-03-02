@@ -145,7 +145,7 @@ class ImportDataHandler
             }
 
             $destinationData = [
-                'name'   => $transaction['payee_name'],
+                'name'   => str_replace('Transfer: ', '', $transaction['payee_name']),
                 'iban'   => null,
                 'number' => $transaction['payee_id'],
                 'bic'    => null,
