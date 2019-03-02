@@ -147,6 +147,11 @@ class UpgradeDatabase extends Command
             }
             $currencyCode = $this->tryDecrypt($currencyPreference->data);
 
+            // try json decrypt just in case.
+            if (\strlen($currencyCode) > 3) {
+                $currencyCode = json_decode($currencyCode) ?? 'EUR';
+            }
+
             $currency = TransactionCurrency::where('code', $currencyCode)->first();
             if (null === $currency) {
                 $this->line('Fall back to default currency in migrateBillsToRules().');
