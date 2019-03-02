@@ -31,8 +31,14 @@ class ExpandTransactionsTable extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
+        Schema::table(
+            'transactions',
+            function (Blueprint $table) {
+                $table->dropColumn('identifier');
+            }
+        );
     }
 
     /**
@@ -40,7 +46,7 @@ class ExpandTransactionsTable extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(
             'transactions',

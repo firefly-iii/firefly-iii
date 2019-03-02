@@ -37,6 +37,23 @@ class ChangesForV474 extends Migration
      */
     public function down(): void
     {
+        Schema::table(
+            'import_jobs',
+            function (Blueprint $table) {
+
+                // cannot drop foreign keys in SQLite:
+                if ('sqlite' !== config('database.default')) {
+                    $table->dropForeign('import_jobs_tag_id_foreign');
+                }
+
+                $table->dropColumn('provider');
+                $table->dropColumn('stage');
+                $table->dropColumn('transactions');
+                $table->dropColumn('errors');
+                $table->dropColumn('tag_id');
+
+            }
+        );
     }
 
     /**

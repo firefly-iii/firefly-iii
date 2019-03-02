@@ -37,7 +37,18 @@ class ChangesForV472 extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::table(
+            'attachments',
+            function (Blueprint $table) {
+                $table->text('notes')->nullable();
+            }
+        );
+        Schema::table(
+            'budgets',
+            function (Blueprint $table) {
+                $table->dropColumn('order');
+            }
+        );
     }
 
     /**

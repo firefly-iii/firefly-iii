@@ -31,8 +31,20 @@ class ChangesForV450 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
+        Schema::table(
+            'transactions',
+            function (Blueprint $table) {
+                $table->dropColumn('foreign_amount');
+
+                // cannot drop foreign keys in SQLite:
+                if ('sqlite' !== config('database.default')) {
+                    $table->dropForeign('transactions_foreign_currency_id_foreign');
+                }
+                $table->dropColumn('foreign_currency_id');
+            }
+        );
     }
 
     /**
@@ -40,7 +52,7 @@ class ChangesForV450 extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         // add "foreign_amount" to transactions
         Schema::table(

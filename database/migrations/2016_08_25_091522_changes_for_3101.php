@@ -31,8 +31,14 @@ class ChangesFor3101 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
+        Schema::table(
+            'import_jobs',
+            function (Blueprint $table) {
+                $table->dropColumn('extended_status');
+            }
+        );
     }
 
     /**
@@ -40,7 +46,7 @@ class ChangesFor3101 extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(
             'import_jobs',

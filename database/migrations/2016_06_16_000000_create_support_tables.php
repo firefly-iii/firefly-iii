@@ -31,7 +31,7 @@ class CreateSupportTables extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::drop('account_types');
         Schema::drop('transaction_currencies');
@@ -50,7 +50,7 @@ class CreateSupportTables extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         $this->createAccountTypeTable();
         $this->createCurrencyTable();
@@ -67,7 +67,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createAccountTypeTable()
+    private function createAccountTypeTable(): void
     {
         if (!Schema::hasTable('account_types')) {
             Schema::create(
@@ -84,7 +84,7 @@ class CreateSupportTables extends Migration
         }
     }
 
-    private function createConfigurationTable()
+    private function createConfigurationTable(): void
     {
         if (!Schema::hasTable('configuration')) {
             Schema::create(
@@ -104,7 +104,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createCurrencyTable()
+    private function createCurrencyTable(): void
     {
         if (!Schema::hasTable('transaction_currencies')) {
             Schema::create(
@@ -127,7 +127,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createJobsTable()
+    private function createJobsTable(): void
     {
         if (!Schema::hasTable('jobs')) {
             Schema::create(
@@ -151,7 +151,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createPasswordTable()
+    private function createPasswordTable(): void
     {
         if (!Schema::hasTable('password_resets')) {
             Schema::create(
@@ -169,7 +169,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createPermissionRoleTable()
+    private function createPermissionRoleTable(): void
     {
         if (!Schema::hasTable('permission_role')) {
             Schema::create(
@@ -190,7 +190,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createPermissionsTable()
+    private function createPermissionsTable(): void
     {
         if (!Schema::hasTable('permissions')) {
             Schema::create(
@@ -209,7 +209,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createRolesTable()
+    private function createRolesTable(): void
     {
         if (!Schema::hasTable('roles')) {
             Schema::create(
@@ -228,7 +228,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createSessionsTable()
+    private function createSessionsTable(): void
     {
         if (!Schema::hasTable('sessions')) {
             Schema::create(
@@ -248,7 +248,7 @@ class CreateSupportTables extends Migration
     /**
      *
      */
-    private function createTransactionTypeTable()
+    private function createTransactionTypeTable(): void
     {
         if (!Schema::hasTable('transaction_types')) {
             Schema::create(

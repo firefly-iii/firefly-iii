@@ -31,8 +31,14 @@ class ChangesForV420 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
+        Schema::table(
+            'journal_meta',
+            function (Blueprint $table) {
+                $table->dropSoftDeletes();
+            }
+        );
     }
 
     /**
@@ -40,7 +46,7 @@ class ChangesForV420 extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         Schema::table(
             'journal_meta',

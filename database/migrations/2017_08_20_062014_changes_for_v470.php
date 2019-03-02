@@ -32,7 +32,7 @@ class ChangesForV470 extends Migration
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::dropIfExists('journal_links');
         Schema::dropIfExists('link_types');
@@ -43,7 +43,7 @@ class ChangesForV470 extends Migration
      *
      * @SuppressWarnings(PHPMD.ShortMethodName)
      */
-    public function up()
+    public function up(): void
     {
         if (!Schema::hasTable('link_types')) {
             Schema::create(
