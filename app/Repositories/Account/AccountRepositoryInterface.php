@@ -36,6 +36,7 @@ use Illuminate\Support\Collection;
  */
 interface AccountRepositoryInterface
 {
+
     /**
      * Moved here from account CRUD.
      *
@@ -246,6 +247,14 @@ interface AccountRepositoryInterface
      * @return Carbon|null
      */
     public function oldestJournalDate(Account $account): ?Carbon;
+
+    /**
+     * @param string $query
+     * @param array  $types
+     *
+     * @return Collection
+     */
+    public function searchAccount(string $query, array $types): Collection;
 
     /**
      * @param User $user

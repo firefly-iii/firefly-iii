@@ -32,6 +32,11 @@ use Illuminate\Support\Collection;
 interface SearchInterface
 {
     /**
+     * @return Collection
+     */
+    public function getModifiers(): Collection;
+
+    /**
      * @return string
      */
     public function getWordsAsString(): string;
@@ -45,6 +50,11 @@ interface SearchInterface
      * @param string $query
      */
     public function parseQuery(string $query);
+
+    /**
+     * @return float
+     */
+    public function searchTime(): float;
 
     /**
      * @return LengthAwarePaginator

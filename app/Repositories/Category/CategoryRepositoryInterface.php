@@ -40,7 +40,6 @@ interface CategoryRepositoryInterface
      */
     public function destroy(Category $category): bool;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -52,6 +51,7 @@ interface CategoryRepositoryInterface
     public function earnedInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string;
 
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -61,6 +61,8 @@ interface CategoryRepositoryInterface
      * @return Collection
      */
     public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * A very cryptic method name that means:
@@ -119,14 +121,14 @@ interface CategoryRepositoryInterface
      */
     public function getByIds(array $categoryIds): Collection;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Returns a list of all the categories belonging to a user.
      *
      * @return Collection
      */
     public function getCategories(): Collection;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Return most recent transaction(journal) date or null when never used before.
@@ -138,8 +140,6 @@ interface CategoryRepositoryInterface
      */
     public function lastUseDate(Category $category, Collection $accounts): ?Carbon;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Collection $categories
      * @param Collection $accounts
@@ -149,6 +149,8 @@ interface CategoryRepositoryInterface
      * @return array
      */
     public function periodExpenses(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $accounts
@@ -169,8 +171,6 @@ interface CategoryRepositoryInterface
      */
     public function periodIncome(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array;
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Collection $accounts
      * @param Carbon     $start
@@ -179,6 +179,15 @@ interface CategoryRepositoryInterface
      * @return array
      */
     public function periodIncomeNoCategory(Collection $accounts, Carbon $start, Carbon $end): array;
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchCategory(string $query): Collection;
 
     /** @noinspection MoreThanThreeArgumentsInspection */
 

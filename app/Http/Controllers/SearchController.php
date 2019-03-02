@@ -67,14 +67,10 @@ class SearchController extends Controller
         // parse search terms:
         $searcher->parseQuery($fullQuery);
         $query    = $searcher->getWordsAsString();
-
-
-        //also get modifiers to display:
-
-
+        $modifiers = $searcher->getModifiers();
         $subTitle = (string)trans('breadcrumbs.search_result', ['query' => $query]);
 
-        return view('search.index', compact('query', 'fullQuery', 'subTitle'));
+        return view('search.index', compact('query','modifiers', 'fullQuery', 'subTitle'));
     }
 
     /**
@@ -92,9 +88,10 @@ class SearchController extends Controller
         $searcher->parseQuery($fullQuery);
         $searcher->setLimit((int)config('firefly.search_result_limit'));
         $transactions = $searcher->searchTransactions();
+        $searchTime = $searcher->searchTime(); // in seconds
 
         try {
-            $html = view('search.search', compact('transactions'))->render();
+            $html = view('search.search', compact('transactions','searchTime'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render search.search: %s', $e->getMessage()));

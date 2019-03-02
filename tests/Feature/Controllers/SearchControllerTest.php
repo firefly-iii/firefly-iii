@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Support\Search\SearchInterface;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -61,6 +62,7 @@ class SearchControllerTest extends TestCase
 
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('getWordsAsString')->once()->andReturn('test');
+        $search->shouldReceive('getModifiers')->once()->andReturn(new Collection);
         $this->be($this->user());
         $response = $this->get(route('search.index') . '?q=test');
         $response->assertStatus(200);
@@ -78,7 +80,8 @@ class SearchControllerTest extends TestCase
 
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('setLimit')->withArgs([50])->once();
-        $search->shouldReceive('searchTransactions')->once()->andReturn(new Collection);
+        $search->shouldReceive('searchTransactions')->once()->andReturn(new LengthAwarePaginator([],0,10));
+        $search->shouldReceive('searchTime')->once()->andReturn(0.2);
 
         $this->be($this->user());
 

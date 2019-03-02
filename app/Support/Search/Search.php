@@ -26,6 +26,11 @@ use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\DoubleTransactionFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -36,12 +41,22 @@ use Log;
  */
 class Search implements SearchInterface
 {
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
+    /** @var BillRepositoryInterface */
+    private $billRepository;
+    /** @var BudgetRepositoryInterface */
+    private $budgetRepository;
+    /** @var CategoryRepositoryInterface */
+    private $categoryRepository;
     /** @var int */
     private $limit = 100;
     /** @var Collection */
     private $modifiers;
     /** @var string */
     private $originalQuery = '';
+    /** @var float */
+    private $startTime;
     /** @var User */
     private $user;
     /** @var array */
@@ -54,8 +69,13 @@ class Search implements SearchInterface
      */
     public function __construct()
     {
-        $this->modifiers      = new Collection;
-        $this->validModifiers = (array)config('firefly.search_modifiers');
+        $this->modifiers          = new Collection;
+        $this->validModifiers     = (array)config('firefly.search_modifiers');
+        $this->startTime          = microtime(true);
+        $this->accountRepository  = app(AccountRepositoryInterface::class);
+        $this->categoryRepository = app(CategoryRepositoryInterface::class);
+        $this->budgetRepository   = app(BudgetRepositoryInterface::class);
+        $this->billRepository     = app(BillRepositoryInterface::class);
 
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
@@ -113,6 +133,14 @@ class Search implements SearchInterface
     }
 
     /**
+     * @return float
+     */
+    public function searchTime(): float
+    {
+        return microtime(true) - $this->startTime;
+    }
+
+    /**
      * @return LengthAwarePaginator
      */
     public function searchTransactions(): LengthAwarePaginator
@@ -127,8 +155,6 @@ class Search implements SearchInterface
         if ($this->hasModifiers()) {
             $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         }
-
-
 
         $collector->setSearchWords($this->words);
         $collector->removeFilter(InternalTransferFilter::class);
@@ -155,6 +181,10 @@ class Search implements SearchInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
+        $this->accountRepository->setUser($user);
+        $this->billRepository->setUser($user);
+        $this->categoryRepository->setUser($user);
+        $this->budgetRepository->setUser($user);
     }
 
     /**
@@ -167,8 +197,6 @@ class Search implements SearchInterface
     {
         /*
          * TODO:
-         * 'source', 'destination',
-         * 'category','budget',
          * 'bill',
          */
 
@@ -176,6 +204,40 @@ class Search implements SearchInterface
             switch ($modifier['type']) {
                 default:
                     die(sprintf('unsupported modifier: "%s"', $modifier['type']));
+                case 'source':
+                    // source can only be asset, liability or revenue account:
+                    $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::REVENUE];
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    if ($accounts->count() > 0) {
+                        $collector->setAccounts($accounts);
+                    }
+                    break;
+                case 'destination':
+                    // source can only be asset, liability or expense account:
+                    $searchTypes = [AccountType::ASSET, AccountType::MORTGAGE, AccountType::LOAN, AccountType::DEBT, AccountType::EXPENSE];
+                    $accounts    = $this->accountRepository->searchAccount($modifier['value'], $searchTypes);
+                    if ($accounts->count() > 0) {
+                        $collector->setOpposingAccounts($accounts);
+                    }
+                    break;
+                case 'category':
+                    $result = $this->categoryRepository->searchCategory($modifier['value']);
+                    if ($result->count() > 0) {
+                        $collector->setCategories($result);
+                    }
+                    break;
+                case 'bill':
+                    $result = $this->billRepository->searchBill($modifier['value']);
+                    if ($result->count() > 0) {
+                        $collector->setBills($result);
+                    }
+                    break;
+                case 'budget':
+                    $result = $this->budgetRepository->searchBudget($modifier['value']);
+                    if ($result->count() > 0) {
+                        $collector->setBudgets($result);
+                    }
+                    break;
                 case 'amount_is':
                 case 'amount':
                     $amount = app('steam')->positive((string)$modifier['value']);

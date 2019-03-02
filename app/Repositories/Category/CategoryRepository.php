@@ -532,6 +532,18 @@ class CategoryRepository implements CategoryRepositoryInterface
     /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchCategory(string $query): Collection
+    {
+        $query = sprintf('%%%s%%', $query);
+
+        return $this->user->categories()->where('name', 'LIKE', $query)->get();
+    }
+
+    /**
      * @param User $user
      */
     public function setUser(User $user): void

@@ -33,7 +33,6 @@ use Illuminate\Support\Collection;
  */
 interface BillRepositoryInterface
 {
-
     /**
      * @param Bill $bill
      *
@@ -235,6 +234,13 @@ interface BillRepositoryInterface
      * @return \Carbon\Carbon
      */
     public function nextExpectedMatch(Bill $bill, Carbon $date): Carbon;
+
+    /**
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchBill(string $query): Collection;
 
     /**
      * @param User $user
