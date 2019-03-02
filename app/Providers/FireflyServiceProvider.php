@@ -96,7 +96,7 @@ class FireflyServiceProvider extends ServiceProvider
             }
         );
         $config = app('config');
-        Twig::addExtension(new Functions($config));
+        //Twig::addExtension(new Functions($config));
         Twig::addRuntimeLoader(new TransactionLoader);
         Twig::addRuntimeLoader(new AccountLoader);
         Twig::addRuntimeLoader(new TransactionJournalLoader);
@@ -106,7 +106,7 @@ class FireflyServiceProvider extends ServiceProvider
         Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
         Twig::addExtension(new AmountFormat);
-        Twig::addExtension(new Twig_Extension_Debug);
+        //Twig::addExtension(new Twig_Extension_Debug);
     }
 
     /**
