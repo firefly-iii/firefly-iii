@@ -171,8 +171,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
                     'piggy_bank_id' => $piggyBank->id,
                     'transaction_journal_id' => $journal->id,
                     'date' => $journal->date->format('Y-m-d'),
-                    'amount' => 0,
-                    'transfer' => $amount,
+                    'amount' => $amount,
                     'account_id' => $journal->transactions[1]->account_id,
                     'from_account_id' => $journal->transactions[0]->account_id,
                 ]

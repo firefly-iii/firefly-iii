@@ -348,7 +348,8 @@ class VerifyDatabase extends Command
                 }
 
                 $type = $journal->transactionType->type;
-                if (TransactionType::TRANSFER !== $type) {
+                // should be one of the 3 types
+                if (TransactionType::TRANSFER !== $type && TransactionType::DEPOSIT !== $type && TransactionType::WITHDRAWAL !== $type) {
                     $event->transaction_journal_id = null;
                     $event->save();
                     $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
