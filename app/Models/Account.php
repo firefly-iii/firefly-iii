@@ -115,6 +115,7 @@ class Account extends Model
             ->selectRaw('piggy_bank_id,piggy_banks.name,sum(amount) as Total, 
             (select SUM(p2.amount) FROM `piggy_bank_events` as p2 where p2.from_account_id=piggy_bank_events.account_id and p2.piggy_bank_id=piggy_bank_events.piggy_bank_id) as Transfers')
             ->join('piggy_banks', 'piggy_bank_events.piggy_bank_id', '=', 'piggy_banks.id')
+            ->where('piggy_banks.deleted_at', null)
             ->groupBy('piggy_banks.id')
             ->groupBy('piggy_bank_events.account_id');
 
