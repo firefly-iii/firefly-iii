@@ -33,6 +33,7 @@ return [
     'last_seven_days'                            => 'Last seven days',
     'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'What\'s playing?',
+    'welcome_back'                                => 'What\'s playing?',
     'everything'                                 => 'Everything',
     'today'                                      => 'today',
     'customRange'                                => 'Custom range',
