@@ -33,6 +33,7 @@ return [
     'last_seven_days'                            => '7 hari terakhir',
     'last_thirty_days'                           => '30 hari terakhir',
     'welcomeBack'                                => 'Apa yang sedang diputar?',
+    'welcome_back'                                => 'What\'s playing?',
     'everything'                                 => 'Segala sesuatu',
     'today'                                      => 'hari ini',
     'customRange'                                => 'Rentang khusus',

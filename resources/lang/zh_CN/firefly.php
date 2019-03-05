@@ -33,6 +33,7 @@ return [
     'last_seven_days'                            => '最近7天',
     'last_thirty_days'                           => '最近30天',
     'welcomeBack'                                => '吃饱没？',
+    'welcome_back'                                => 'What\'s playing?',
     'everything'                                 => '所有',
     'today'                                      => '今天',
     'customRange'                                => '自订范围',
