@@ -26,6 +26,8 @@ namespace FireflyIII\Console\Commands;
 
 use Crypt;
 use DB;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Preference;
 use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
@@ -86,6 +88,22 @@ class DecryptDatabase extends Command
                     }
                     $id    = $row->id;
                     $value = $this->tryDecrypt($original);
+
+                    // A separate routine for preferences:
+                    if ('preferences' === $table) {
+                        // try to json_decrypt the value.
+                        $value = json_decode($value, true) ?? $value;
+                        Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, print_r($value, true), $table, $id));
+
+                        /** @var Preference $object */
+                        $object = Preference::find((int)$id);
+                        if (null !== $object) {
+                            $object->data = $value;
+                            $object->save();
+                        }
+                        continue;
+                    }
+
                     if ($value !== $original) {
                         Log::debug(sprintf('Decrypted field "%s" "%s" to "%s" in table "%s" (row #%d)', $field, $original, $value, $table, $id));
                         DB::table($table)->where('id', $id)->update([$field => $value]);
@@ -130,6 +148,9 @@ class DecryptDatabase extends Command
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
+            if ('The MAC is invalid.' === $e->getMessage()) {
+                throw new FireflyException($e->getMessage());
+            }
             Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }
 
