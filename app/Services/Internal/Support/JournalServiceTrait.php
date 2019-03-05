@@ -25,8 +25,12 @@ namespace FireflyIII\Services\Internal\Support;
 
 use Exception;
 use FireflyIII\Factory\BillFactory;
+use FireflyIII\Factory\BudgetFactory;
+use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionJournal;
 use Log;
@@ -88,6 +92,70 @@ trait JournalServiceTrait
         $journal->save();
 
     }
+
+    /**
+     * @param int|null    $budgetId
+     * @param null|string $budgetName
+     *
+     * @return Budget|null
+     */
+    protected function findBudget(?int $budgetId, ?string $budgetName): ?Budget
+    {
+        /** @var BudgetFactory $factory */
+        $factory = app(BudgetFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->find($budgetId, $budgetName);
+    }
+
+    /**
+     * @param int|null    $categoryId
+     * @param null|string $categoryName
+     *
+     * @return Category|null
+     */
+    protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
+    {
+        Log::debug(sprintf('Going to find or create category #%d, with name "%s"', $categoryId, $categoryName));
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->findOrCreate($categoryId, $categoryName);
+    }
+
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Budget|null        $budget
+     */
+    protected function setBudget(TransactionJournal $journal, ?Budget $budget): void
+    {
+        if (null === $budget) {
+            $journal->budgets()->sync([]);
+
+            return;
+        }
+        $journal->budgets()->sync([$budget->id]);
+
+    }
+
+
+    /**
+     * @param TransactionJournal $journal
+     * @param Category|null      $category
+     */
+    protected function setCategory(TransactionJournal $journal, ?Category $category): void
+    {
+        if (null === $category) {
+            $journal->categories()->sync([]);
+
+            return;
+        }
+        $journal->categories()->sync([$category->id]);
+
+    }
+
 
     /**
      * @param TransactionJournal $journal

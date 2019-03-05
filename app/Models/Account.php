@@ -56,8 +56,39 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string      accountTypeString
  * @property Carbon      created_at
  * @property Carbon      updated_at
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property int $account_type_id
+ * @property bool $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
+ * @property-read string $edit_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account accountTypeIn($types)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereAccountTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereIban($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereUserId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account whereVirtualBalance($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Account withoutTrashed()
+ * @mixin \Eloquent
  */
 class Account extends Model
 {

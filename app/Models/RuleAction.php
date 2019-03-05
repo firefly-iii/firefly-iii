@@ -38,6 +38,20 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property bool   $active
  * @property bool   $stop_processing
  * @property Rule   $rule
+ * @property int $rule_id
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereActionType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereActionValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereRuleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereStopProcessing($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleAction whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class RuleAction extends Model
 {

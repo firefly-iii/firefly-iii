@@ -371,6 +371,7 @@ class Steam
         ];
         $replace = "\x20"; // plain old normal space
         $string  = str_replace($search, $replace, $string);
+        $string  = str_replace(["\n", "\t", "\r"], "\x20", $string);
 
         return trim($string);
     }

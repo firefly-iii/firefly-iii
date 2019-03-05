@@ -37,6 +37,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int    $order
  * @property bool   $active
  * @property bool   $stop_processing
+ * @property int $rule_id
+ * @property-read \FireflyIII\Models\Rule $rule
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereRuleId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereStopProcessing($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereTriggerType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereTriggerValue($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleTrigger whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class RuleTrigger extends Model
 {

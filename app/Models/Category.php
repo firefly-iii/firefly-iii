@@ -42,6 +42,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property User        $user
  * @property Carbon      $created_at
  * @property Carbon      $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property bool $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Category whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Category withoutTrashed()
+ * @mixin \Eloquent
  */
 class Category extends Model
 {

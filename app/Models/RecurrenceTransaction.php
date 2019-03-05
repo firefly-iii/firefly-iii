@@ -30,7 +30,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- *
  * Class RecurrenceTransaction
  *
  * @property int                                    $transaction_currency_id,
@@ -47,6 +46,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Illuminate\Support\Collection         $recurrenceTransactionMeta
  * @property int                                    $id
  * @property Recurrence                             $recurrence
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $recurrence_id
+ * @property int $transaction_currency_id
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceTransaction onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereDestinationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereForeignAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereForeignCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereRecurrenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereSourceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceTransaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceTransaction withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceTransaction withoutTrashed()
+ * @mixin \Eloquent
  */
 class RecurrenceTransaction extends Model
 {

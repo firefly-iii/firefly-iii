@@ -31,6 +31,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
  *
  * @property int    $id
  * @property string $name
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string|null $display_name
+ * @property string|null $description
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\User[] $users
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role whereDisplayName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Role whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class Role extends Model
 {

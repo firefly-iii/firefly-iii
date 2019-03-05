@@ -44,6 +44,27 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int        $order
  * @property Collection $rules
  * @property string     description
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property string|null $description
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RuleGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RuleGroup withoutTrashed()
+ * @mixin \Eloquent
  */
 class RuleGroup extends Model
 {

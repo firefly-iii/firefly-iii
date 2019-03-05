@@ -65,9 +65,46 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Collection          budgets
  * @property Bill                $bill
  * @property Collection          transactionJournalMeta
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings (PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $tag_count
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $sourceJournalLinks
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $transactionGroups
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal after(\Carbon\Carbon $date)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal before(\Carbon\Carbon $date)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal transactionTypes($types)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereBillId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereBookDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereCompleted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereInterestDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereProcessDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereTagCount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereTransactionTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournal whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionJournal withoutTrashed()
+ * @mixin \Eloquent
  */
 class TransactionJournal extends Model
 {
@@ -329,7 +366,7 @@ class TransactionJournal extends Model
      */
     public function transactionGroups(): BelongsToMany
     {
-        return $this->belongsToMany(Category::class);
+        return $this->belongsToMany(TransactionGroup::class,'group_journals');
     }
 
     /**

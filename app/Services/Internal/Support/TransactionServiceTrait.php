@@ -93,8 +93,6 @@ trait TransactionServiceTrait
         $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
 
-        Log::debug(sprintf('Going to find account #%d ("%s")', $accountId, $accountName));
-
         if (null === $expectedType) {
             return $repository->findNull($accountId);
         }
@@ -119,37 +117,6 @@ trait TransactionServiceTrait
     }
 
     /**
-     * @param int|null    $budgetId
-     * @param null|string $budgetName
-     *
-     * @return Budget|null
-     */
-    protected function findBudget(?int $budgetId, ?string $budgetName): ?Budget
-    {
-        /** @var BudgetFactory $factory */
-        $factory = app(BudgetFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->find($budgetId, $budgetName);
-    }
-
-    /**
-     * @param int|null    $categoryId
-     * @param null|string $categoryName
-     *
-     * @return Category|null
-     */
-    protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
-    {
-        Log::debug(sprintf('Going to find or create category #%d, with name "%s"', $categoryId, $categoryName));
-        /** @var CategoryFactory $factory */
-        $factory = app(CategoryFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->findOrCreate($categoryId, $categoryName);
-    }
-
-    /**
      * @param int|null    $currencyId
      * @param null|string $currencyCode
      *
@@ -161,38 +128,6 @@ trait TransactionServiceTrait
 
         return $factory->find($currencyId, $currencyCode);
     }
-
-    /**
-     * @param Transaction $transaction
-     * @param Budget|null $budget
-     */
-    protected function setBudget(Transaction $transaction, ?Budget $budget): void
-    {
-        if (null === $budget) {
-            $transaction->budgets()->sync([]);
-
-            return;
-        }
-        $transaction->budgets()->sync([$budget->id]);
-
-    }
-
-
-    /**
-     * @param Transaction   $transaction
-     * @param Category|null $category
-     */
-    protected function setCategory(Transaction $transaction, ?Category $category): void
-    {
-        if (null === $category) {
-            $transaction->categories()->sync([]);
-
-            return;
-        }
-        $transaction->categories()->sync([$category->id]);
-
-    }
-
 
     /**
      * @param Transaction $transaction

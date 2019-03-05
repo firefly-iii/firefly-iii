@@ -32,6 +32,30 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class TransactionGroup.
+ *
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property string|null $title
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read \FireflyIII\User $user
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withoutTrashed()
+ * @mixin \Eloquent
  */
 class TransactionGroup extends Model
 {
@@ -51,8 +75,7 @@ class TransactionGroup extends Model
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable
-        = ['user_id', 'title'];
+    protected $fillable = ['user_id', 'title'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -69,8 +92,7 @@ class TransactionGroup extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionGroup $group */
-            $group = $user->transactionGroups()->where('transaction_groups.id', $groupId)
-                          ->first(['transaction_groups.*']);
+            $group = $user->transactionGroups()->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
                 return $group;
             }
@@ -85,7 +107,7 @@ class TransactionGroup extends Model
      */
     public function transactionJournals(): BelongsToMany
     {
-        return $this->belongsToMany(TransactionJournal::class);
+        return $this->belongsToMany(TransactionJournal::class,'group_journals');
     }
 
     /**

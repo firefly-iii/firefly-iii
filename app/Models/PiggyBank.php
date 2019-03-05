@@ -45,7 +45,32 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool    $active
  * @property int     $account_id
  * @property bool    encrypted
- *
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool $encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankEvent[] $piggyBankEvents
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBankRepetition[] $piggyBankRepetitions
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereOrder($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereStartdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereTargetamount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereTargetdate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBank whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\PiggyBank withoutTrashed()
+ * @mixin \Eloquent
  */
 class PiggyBank extends Model
 {

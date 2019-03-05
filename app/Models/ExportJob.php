@@ -35,6 +35,20 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $user_id
  * @property string status
  * @property int    id
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property string $status
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob whereKey($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob whereStatus($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\ExportJob whereUserId($value)
+ * @mixin \Eloquent
  */
 class ExportJob extends Model
 {
