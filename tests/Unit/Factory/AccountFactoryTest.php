@@ -662,7 +662,7 @@ class AccountFactoryTest extends TestCase
         try {
             $factory->create($data);
         } catch (FireflyException $e) {
-            $this->assertContains('AccountFactory::create() was unable to find account type #0 ("bla-bla").', $e->getMessage());
+            $this->assertStringContainsString('AccountFactory::create() was unable to find account type #0 ("bla-bla").', $e->getMessage());
         }
     }
 

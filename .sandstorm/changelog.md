@@ -1,3 +1,7 @@
+# 4.7.16 (API 0.9.2)
+- 4.7.16 was released to fix a persistent issue with broken user preferences.
+- Firefly III now uses Laravel 5.8
+
 # 4.7.15 (API 0.9.2)
 - 4.7.15 was released to fix some issues upgrading from older versions.
 - [Issue 2128](https://github.com/firefly-iii/firefly-iii/issues/2128) Support for Postgres SSL

@@ -33,6 +33,7 @@ return [
     'last_seven_days'                            => 'Последние 7 дней',
     'last_thirty_days'                           => 'Последние 30 дней',
     'welcomeBack'                                => 'Что происходит с моими финансами?',
+    'welcome_back'                                => 'What\'s playing?',
     'everything'                                 => 'Всё',
     'today'                                      => 'сегодня',
     'customRange'                                => 'Другой интервал',

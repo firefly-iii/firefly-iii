@@ -225,7 +225,7 @@
                             </tr>
                         {% endif %}
 
-                        {% if journal.bill %}
+                        {% if journal.bill_id %}
                             <tr>
                                 <td>{{ 'bill'|_ }}</td>
                                 <td><a href="{{ route('bills.show', journal.bill_id) }}">{{ journal.bill.name }}</a></td>
