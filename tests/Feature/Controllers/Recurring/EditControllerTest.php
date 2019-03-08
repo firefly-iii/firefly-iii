@@ -107,7 +107,7 @@ class EditControllerTest extends TestCase
 
         $recurringRepos->shouldReceive('update')->once();
 
-        $tomorrow   = Carbon::create()->addDays(2);
+        $tomorrow   = Carbon::now()->addDays(2);
         $recurrence = $this->user()->recurrences()->first();
         $data       = [
             'id'                      => $recurrence->id,

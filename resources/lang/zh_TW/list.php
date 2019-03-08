@@ -79,7 +79,7 @@ return [
     'is_blocked'              => '被封鎖',
     'is_admin'                => '是管理員',
     'has_two_factor'          => '有雙重身份驗證 (2FA)',
-    'blocked_code'            => '區塊代碼',
+    'blocked_code'            => '封鎖代碼',
     'source_account'          => '來源帳戶',
     'destination_account'     => '目標帳戶',
     'accounts_count'          => '帳戶數量',

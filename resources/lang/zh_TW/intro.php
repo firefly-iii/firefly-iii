@@ -28,35 +28,36 @@ return [
     'index_accounts-chart'                  => '此圖表顯示您的資產帳戶的目前餘額，您可以在偏好設定中選擇此處可見的帳戶。',
     'index_box_out_holder'                  => '這個小盒子和這個旁邊的盒子會提供您財務狀況的快速概覽。',
     'index_help'                            => '如果您需要有關頁面或表單的説明，請按此按鈕。',
-    'index_outro'                           => 'Firefly III 的大多數頁面將從像這樣的小介紹開始，如果您有任何問題或意見，請與我聯繫。請享受！',
+    'index_outro'                           => 'Firefly III 大多數頁面將以這樣的小介紹開始，如有問題或意見，不妨與我聯繫。祝您順心使用！',
     'index_sidebar-toggle'                  => '若要建立新的交易記錄、帳戶或其他內容，請使用此圖示下的選單。',
 
     // create account:
     'accounts_create_iban'                  => '給您的帳戶一個有效的 IBAN，可俾利未來資料匯入。',
-    'accounts_create_asset_opening_balance' => '資產帳戶可能有一個 "初始餘額"，表示此帳戶在 Firefly III 中的紀錄開始。',
-    'accounts_create_asset_currency'        => 'Fireflly III 支援多種貨幣。資產帳戶有一種主要貨幣，您必須在此處設定。',
-    'accounts_create_asset_virtual'         => '有時，它可以協助賦予你的帳戶一個虛擬額度：一個總是增加至實際餘額中，或自其中刪減的固定金額。',
+    'accounts_create_asset_opening_balance' => '資產帳戶可以設定一個 "初始餘額"，表示此帳戶在 Firefly III 中開始時的紀錄。',
+    'accounts_create_asset_currency'        => 'Fireflly III 支援多種貨幣。資產帳戶有一種主要貨幣，須在此設定。',
+    'accounts_create_asset_virtual'         => '有時，您或會想給予帳戶一個虛擬額度：即在實際餘額之上加減一個定額。',
 
     // budgets index
-    'budgets_index_intro'                   => '預算是用來管理你的財務，也是 Firefly III 的核心功能之一。',
-    'budgets_index_set_budget'              => '設定每個期間的總預算，這樣 Firefly III 就可以告訴你，是否已經將所有可用的錢設定預算。',
+    'budgets_index_intro'                   => '預算用來管理您的財務，是 Firefly III 的
+核心功能之一。',
+    'budgets_index_set_budget'              => '設定每個時期的總預算，讓 Firefly III 能告訴您，所有可用的錢是否都已設定預算。',
     'budgets_index_see_expenses_bar'        => '消費金額會慢慢地填滿這個橫條。',
-    'budgets_index_navigate_periods'        => '前往區間，以便提前輕鬆設定預算。',
-    'budgets_index_new_budget'              => '根據需要建立新預算。',
-    'budgets_index_list_of_budgets'         => '使用此表可以設定每個預算的金額，並查看您的情況。',
+    'budgets_index_navigate_periods'        => '往前後不同時期，輕鬆預先設定預算。',
+    'budgets_index_new_budget'              => '隨意建立新預算。',
+    'budgets_index_list_of_budgets'         => '在此表上設定每個預算的金額，查看表現如何。',
     'budgets_index_outro'                   => '要瞭解有關預算的詳細資訊，請查看右上角的説明圖示。',
 
     // reports (index)
-    'reports_index_intro'                   => '使用這些報表可以獲得有關您財務狀況的詳細洞察報告。',
+    'reports_index_intro'                   => '從這些報表洞察您的詳細財務狀況。',
     'reports_index_inputReportType'         => '選擇報表類型。查看説明頁面以瞭解每個報表向您顯示的內容。',
     'reports_index_inputAccountsSelect'     => '您可以根據需要排除或包括資產帳戶。',
     'reports_index_inputDateRange'          => '所選日期範圍完全由您決定：從1天到10年不等。',
     'reports_index_extra-options-box'       => '根據您選擇的報表，您可以在此處選擇額外的篩選標準和選項。更改報表類型時，請查看此區塊。',
 
     // reports (reports)
-    'reports_report_default_intro'          => '這份報表將為您提供一個快速和全面的個人財務概覽。如果你想看其他的東西，請不要猶豫並聯繫我！',
-    'reports_report_audit_intro'            => '此報表將為您提供有關資產帳戶的詳細洞察報告。',
-    'reports_report_audit_optionsBox'       => '使用這些選取方塊可以顯示或隱藏您感興趣的欄。',
+    'reports_report_default_intro'          => '這份報表可快速全面概覽您的個人財務狀況。如有未羅列的項目，歡迎與我聯繫！',
+    'reports_report_audit_intro'            => '這份報表可讓您洞悉資產帳戶的詳細狀況。',
+    'reports_report_audit_optionsBox'       => '在這些選取方塊勾選您感興趣想顯示的欄。',
 
     'reports_report_category_intro'                  => '此報表將提供您一個或多個類別洞察報告。',
     'reports_report_category_pieCharts'              => '這些圖表將提供您每個類別或每個帳戶中，支出和所得的洞察報告。',
@@ -72,19 +73,19 @@ return [
 
     // create transaction
     'transactions_create_switch_box'                          => '使用這些按鈕可以快速切換要保存的交易類型。',
-    'transactions_create_ffInput_category'                    => '您可以在此欄位中隨意輸入，會建議您先前已建立的分類。',
+    'transactions_create_ffInput_category'                    => '此欄位自由輸入，會顯示先前已建立分類的建議。',
     'transactions_create_withdrawal_ffInput_budget'           => '將您的提款連結至預算，以利財務管控。',
-    'transactions_create_withdrawal_currency_dropdown_amount' => '當您的提款使用另一種貨幣時, 請使用此下拉清單。',
-    'transactions_create_deposit_currency_dropdown_amount'    => '當您的存款使用另一種貨幣時, 請使用此下拉清單。',
+    'transactions_create_withdrawal_currency_dropdown_amount' => '在此下拉清單為提款選取另一種貨幣。',
+    'transactions_create_deposit_currency_dropdown_amount'    => '在此下拉清單為存款選取另一種貨幣。',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => '選擇一個小豬撲滿，並將此轉帳連結到您的儲蓄。',
 
     // piggy banks index:
     'piggy-banks_index_saved'                                 => '此欄位顯示您在每個小豬撲滿中保存了多少。',
-    'piggy-banks_index_button'                                => '此進度條旁邊有兩個按鈕 (+ 和-)，用於從每個小豬撲滿中增加或刪除資金。',
+    'piggy-banks_index_button'                                => '進度橫條旁有兩個按鈕 (+ 和-)，可以在每個小豬撲滿中加減金額。',
     'piggy-banks_index_accountStatus'                         => '此表中列出了每一個至少有一個小豬撲滿的資產帳戶的狀態。',
 
     // create piggy
-    'piggy-banks_create_name'                                 => '你的目標是什麼？一個新沙發、一個相機、急難用金？',
+    'piggy-banks_create_name'                                 => '您的目標為何？一張新沙發、一台相機，還是應急備用？',
     'piggy-banks_create_date'                                 => '您可以為小豬撲滿設定目標日期或截止日期。',
 
     // show piggy
@@ -113,20 +114,20 @@ return [
     // rules index
     'rules_index_intro'                                       => 'Firefly III 允許您管理規則，這些規則將魔幻自動地應用於您建立或編輯的任何交易。',
     'rules_index_new_rule_group'                              => '您可以將規則整併為群組，以便於管理。',
-    'rules_index_new_rule'                                    => '建立任意數量的規則。',
-    'rules_index_prio_buttons'                                => '以你認為合適的任何方式排序它們。',
-    'rules_index_test_buttons'                                => '您可以測試規則或將其套用至現有交易。',
-    'rules_index_rule-triggers'                               => '規則具有 "觸發器" 和 "操作"，您可以通過拖放進行排序。',
-    'rules_index_outro'                                       => '請務必使用右上角的 (?) 圖示查看説明頁面！',
+    'rules_index_new_rule'                                    => '規則多寡，隨您喜歡。',
+    'rules_index_prio_buttons'                                => '排序方式不拘。',
+    'rules_index_test_buttons'                                => '您可以測試或套用規則至現有交易。',
+    'rules_index_rule-triggers'                               => '規則的 "觸發器" 和 "動作" 可拖放排序。',
+    'rules_index_outro'                                       => '記得按下右上角的 (?) 圖示查看説明頁面！',
 
     // create rule:
-    'rules_create_mandatory'                                  => '選擇一個描述性標題，並設定應觸發規則的時機。',
-    'rules_create_ruletriggerholder'                          => '增加任意數量的觸發器，但請記住在任一動作啟用前，所有觸發器必須配對。',
+    'rules_create_mandatory'                                  => '訂下一個適切描述的標題，並設定規則觸發的時機。',
+    'rules_create_ruletriggerholder'                          => '觸發器隨意增加，惟需謹記，必須符合<strong>所有</strong>觸發器，動作才會觸發。',
     'rules_create_test_rule_triggers'                         => '使用此按鈕可以查看哪些交易記錄將配對您的規則。',
     'rules_create_actions'                                    => '設定任意數量的動作。',
 
     // preferences
-    'preferences_index_tabs'                                  => '這些標籤頁後尚有更多選項可用。',
+    'preferences_index_tabs'                                  => '這些標籤頁尚有更多可用選項。',
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III 支援多種貨幣，您可以在此頁面上更改。',

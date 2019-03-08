@@ -33,6 +33,7 @@ return [
     'last_seven_days'                            => 'Last seven days',
     'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'Neler oluyor?',
+    'welcome_back'                                => 'What\'s playing?',
     'everything'                                 => 'Her şey',
     'today'                                      => 'bugün',
     'customRange'                                => 'Özel menzil',

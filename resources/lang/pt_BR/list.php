@@ -63,7 +63,7 @@ return [
     'notes'                   => 'Notas',
     'from'                    => 'De',
     'piggy_bank'              => 'Cofrinho',
-    'to'                      => 'Até',
+    'to'                      => 'Para',
     'budget'                  => 'Orçamento',
     'category'                => 'Categoria',
     'bill'                    => 'Fatura',

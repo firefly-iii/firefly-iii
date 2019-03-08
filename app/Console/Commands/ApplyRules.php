@@ -235,7 +235,7 @@ class ApplyRules extends Command
     private function parseDates(): void
     {
         // parse start date.
-        $startDate   = Carbon::create()->startOfMonth();
+        $startDate   = Carbon::now()->startOfMonth();
         $startString = $this->option('start_date');
         if (null === $startString) {
             /** @var JournalRepositoryInterface $repository */

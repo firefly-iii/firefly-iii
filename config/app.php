@@ -74,7 +74,7 @@ return [
         FireflyIII\Providers\RouteServiceProvider::class,
 
         // own stuff:
-        TwigBridge\ServiceProvider::class,
+//        TwigBridge\ServiceProvider::class,
         PragmaRX\Google2FALaravel\ServiceProvider::class,
 
 
@@ -134,7 +134,7 @@ return [
         'URL'           => Illuminate\Support\Facades\URL::class,
         'Validator'     => Illuminate\Support\Facades\Validator::class,
         'View'          => Illuminate\Support\Facades\View::class,
-        'Twig'          => TwigBridge\Facade\Twig::class,
+        //'Twig'          => TwigBridge\Facade\Twig::class,
         'Form'          => Collective\Html\FormFacade::class,
         'Html'          => Collective\Html\HtmlFacade::class,
         'Preferences'   => \FireflyIII\Support\Facades\Preferences::class,

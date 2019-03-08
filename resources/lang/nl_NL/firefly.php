@@ -33,6 +33,7 @@ return [
     'last_seven_days'                            => 'Laatste zeven dagen',
     'last_thirty_days'                           => 'Laatste dertig dagen',
     'welcomeBack'                                => 'Hoe staat het er voor?',
+    'welcome_back'                                => 'What\'s playing?',
     'everything'                                 => 'Alles',
     'today'                                      => 'vandaag',
     'customRange'                                => 'Zelf bereik kiezen',

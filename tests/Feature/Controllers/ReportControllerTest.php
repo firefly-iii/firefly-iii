@@ -82,8 +82,8 @@ class ReportControllerTest extends TestCase
         $budgetRepository->shouldReceive('cleanupBudgets');
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        $start = Carbon::create()->startOfYear();
-        $end   = Carbon::create()->endOfYear();
+        $start = Carbon::now()->startOfYear();
+        $end   = Carbon::now()->endOfYear();
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
 
@@ -115,8 +115,8 @@ class ReportControllerTest extends TestCase
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        $start = Carbon::create()->startOfYear();
-        $end   = Carbon::create()->endOfYear();
+        $start = Carbon::now()->startOfYear();
+        $end   = Carbon::now()->endOfYear();
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
 
@@ -141,8 +141,8 @@ class ReportControllerTest extends TestCase
         $generator        = $this->mock(BYRG::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $reportHelper     = $this->mock(ReportHelperInterface::class);
-        $start            = Carbon::create()->startOfYear();
-        $end              = Carbon::create()->endOfYear();
+        $start            = Carbon::now()->startOfYear();
+        $end              = Carbon::now()->endOfYear();
 
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
@@ -171,8 +171,8 @@ class ReportControllerTest extends TestCase
         $generator        = $this->mock(CYRG::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $reportHelper     = $this->mock(ReportHelperInterface::class);
-        $start            = Carbon::create()->startOfYear();
-        $end              = Carbon::create()->endOfYear();
+        $start            = Carbon::now()->startOfYear();
+        $end              = Carbon::now()->endOfYear();
 
         $budgetRepository->shouldReceive('cleanupBudgets');
 
@@ -203,8 +203,8 @@ class ReportControllerTest extends TestCase
         $generator        = $this->mock(SYRG::class);
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $reportHelper     = $this->mock(ReportHelperInterface::class);
-        $start = Carbon::create()->startOfYear();
-        $end   = Carbon::create()->endOfYear();
+        $start = Carbon::now()->startOfYear();
+        $end   = Carbon::now()->endOfYear();
 
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
@@ -231,8 +231,8 @@ class ReportControllerTest extends TestCase
         $journalRepos     = $this->mock(JournalRepositoryInterface::class);
         $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
         $reportHelper     = $this->mock(ReportHelperInterface::class);
-        $start = Carbon::create()->startOfYear();
-        $end   = Carbon::create()->endOfYear();
+        $start = Carbon::now()->startOfYear();
+        $end   = Carbon::now()->endOfYear();
 
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
@@ -823,8 +823,8 @@ class ReportControllerTest extends TestCase
         $fiscalHelper     = $this->mock(FiscalHelperInterface::class);
         $reportHelper     = $this->mock(ReportHelperInterface::class);
         $tag              = $this->user()->tags()->find(1);
-        $start = Carbon::create()->startOfYear();
-        $end   = Carbon::create()->endOfYear();
+        $start = Carbon::now()->startOfYear();
+        $end   = Carbon::now()->endOfYear();
 
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($start);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($end);
