@@ -28,5 +28,5 @@ return [
 
     // bills:
     'not_expected_period'    => 'Período inesperado',
-    'not_or_not_yet'         => 'No (o todavía no)',
+    'not_or_not_yet'         => 'No (todavía)',
 ];

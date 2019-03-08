@@ -23,10 +23,10 @@
 declare(strict_types=1);
 
 return [
-    'no_demo_text'           => '抱歉，沒有額外的展示說明文字可供 <abbr title=":route">此頁</abbr>。',
-    'see_help_icon'          => '不過，右上角的這個 <i class="fa fa-question-circle"></i>-圖示或許可以告訴你更多資訊。',
-    'index'                  => '歡迎來到 <strong>Firefly III</strong>！您可在此頁快速概覽您的財務狀況。如需更多資， 請前往帳戶 &rarr; <a href=":asset">資產帳戶</a> 亦或是 <a href=":budgets">預算</a> 以及 <a href=":reports">報表</a> 頁面。您也可以繼續瀏覽此頁。',
-    'accounts-index'         => '資產帳戶是您的個人銀行帳戶。支出帳戶是您花費金錢的帳戶，如商家或其他友人。收入帳戶是您獲得收入的地方，如您的工作、政府或其他收入源。債務是您的借貸，如信用卡帳單或學生貸款。在此頁面您可以編輯或刪除這些項目。',
+    'no_demo_text'           => '抱歉，<abbr title=":route">此頁</abbr> 未提供額外的展示說明。',
+    'see_help_icon'          => '不過，右上角的 <i class="fa fa-question-circle"></i> 圖示也許會給您一點資訊。',
+    'index'                  => '歡迎使用 <strong>Firefly III</strong>！此頁可讓您快速概覽財務狀況。至於詳細資料，可見 帳戶 &rarr; <a href=":asset">資產帳戶</a>，還有 <a href=":budgets">預算</a> 和 <a href=":reports">報表</a> 頁面。當然，您也可以到處逛逛看。',
+    'accounts-index'         => '資產帳戶比如是您的銀行個人帳戶。支出帳戶是您花錢的帳戶，如商家或其他友人。收入帳戶是您的財源，如工作、政府或其他收入來源。債務是您的借貸，如信用卡帳單或學生貸款。這些都可在此頁編輯或刪除。',
     'budgets-index'          => '此頁面顯示您的預算概覽。上方橫條顯示可用預算額，它可隨時透過點選右方的總額進行客製化。您已花費的額度則顯示在下方橫條，而以下則是每條預算的支出以及您已編列的預算。',
     'reports-index-start'    => 'Firefly III 支援數種不同的報表形式，您可以點選右上方的 <i class="fa fa-question-circle"></i>-圖示獲得更多資訊。',
     'reports-index-examples' => '請確認您以檢閱過以下範例：<a href=":one">月財務概覽</a>、<a href=":two">年度財務概覽</a> 以及 <a href=":three">預算概覽</a>。',

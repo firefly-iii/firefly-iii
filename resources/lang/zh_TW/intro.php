@@ -35,7 +35,7 @@ return [
     'accounts_create_iban'                  => '給您的帳戶一個有效的 IBAN，可俾利未來資料匯入。',
     'accounts_create_asset_opening_balance' => '資產帳戶可以設定一個 "初始餘額"，表示此帳戶在 Firefly III 中開始時的紀錄。',
     'accounts_create_asset_currency'        => 'Fireflly III 支援多種貨幣。資產帳戶有一種主要貨幣，須在此設定。',
-    'accounts_create_asset_virtual'         => '有時，您或會想給予帳戶一個虛擬額度：一個在實際餘額之上加減的定額。',
+    'accounts_create_asset_virtual'         => '有時，您或會想給予帳戶一個虛擬額度：即在實際餘額之上加減一個定額。',
 
     // budgets index
     'budgets_index_intro'                   => '預算用來管理您的財務，是 Firefly III 的
@@ -114,20 +114,20 @@ return [
     // rules index
     'rules_index_intro'                                       => 'Firefly III 允許您管理規則，這些規則將魔幻自動地應用於您建立或編輯的任何交易。',
     'rules_index_new_rule_group'                              => '您可以將規則整併為群組，以便於管理。',
-    'rules_index_new_rule'                                    => '建立任意數量的規則。',
-    'rules_index_prio_buttons'                                => '以你認為合適的任何方式排序它們。',
-    'rules_index_test_buttons'                                => '您可以測試規則或將其套用至現有交易。',
-    'rules_index_rule-triggers'                               => '規則具有 "觸發器" 和 "操作"，您可以通過拖放進行排序。',
-    'rules_index_outro'                                       => '請務必使用右上角的 (?) 圖示查看説明頁面！',
+    'rules_index_new_rule'                                    => '規則多寡，隨您喜歡。',
+    'rules_index_prio_buttons'                                => '排序方式不拘。',
+    'rules_index_test_buttons'                                => '您可以測試或套用規則至現有交易。',
+    'rules_index_rule-triggers'                               => '規則的 "觸發器" 和 "動作" 可拖放排序。',
+    'rules_index_outro'                                       => '記得按下右上角的 (?) 圖示查看説明頁面！',
 
     // create rule:
-    'rules_create_mandatory'                                  => '選擇一個描述性標題，並設定應觸發規則的時機。',
-    'rules_create_ruletriggerholder'                          => '增加任意數量的觸發器，但請記住在任一動作啟用前，所有觸發器必須配對。',
+    'rules_create_mandatory'                                  => '訂下一個適切描述的標題，並設定規則觸發的時機。',
+    'rules_create_ruletriggerholder'                          => '觸發器隨意增加，惟需謹記，必須符合<strong>所有</strong>觸發器，動作才會觸發。',
     'rules_create_test_rule_triggers'                         => '使用此按鈕可以查看哪些交易記錄將配對您的規則。',
     'rules_create_actions'                                    => '設定任意數量的動作。',
 
     // preferences
-    'preferences_index_tabs'                                  => '這些標籤頁後尚有更多選項可用。',
+    'preferences_index_tabs'                                  => '這些標籤頁尚有更多可用選項。',
 
     // currencies
     'currencies_index_intro'                                  => 'Firefly III 支援多種貨幣，您可以在此頁面上更改。',
