@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Middleware;
 
 use Illuminate\Http\Request;
 use Illuminate\Session\Middleware\StartSession;
+use Log;
 
 /**
  * Class StartFireflySession.
@@ -42,8 +43,13 @@ class StartFireflySession extends StartSession
     {
         $uri    = $request->fullUrl();
         $strpos = strpos($uri, 'jscript');
+
         if (false === $strpos && 'GET' === $request->method() && !$request->ajax()) {
             $session->setPreviousUrl($uri);
+            Log::debug(sprintf('Will set previous URL to %s', $uri));
+
+            return;
         }
+        Log::debug(sprintf('Will NOT set previous URL to %s', $uri));
     }
 }
