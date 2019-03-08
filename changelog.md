@@ -8,7 +8,7 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Changed
 
-- Firefly III now uses Laravel 5.8
+- Firefly III now uses Laravel 5.8.
 
 ## [4.7.15 (API 0.9.2)] - 2019-03-02
 
