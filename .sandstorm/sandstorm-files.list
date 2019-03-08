@@ -163,6 +163,8 @@ lib/x86_64-linux-gnu/libattr.so.1
 lib/x86_64-linux-gnu/libattr.so.1.1.0
 lib/x86_64-linux-gnu/libbsd.so.0
 lib/x86_64-linux-gnu/libbsd.so.0.7.0
+lib/x86_64-linux-gnu/libbz2.so.1.0
+lib/x86_64-linux-gnu/libbz2.so.1.0.4
 lib/x86_64-linux-gnu/libc-2.19.so
 lib/x86_64-linux-gnu/libc.so.6
 lib/x86_64-linux-gnu/libcom_err.so.2
@@ -308,6 +310,7 @@ opt/app/app/Api/V1/Requests/TagRequest.php
 opt/app/app/Api/V1/Requests/TransactionLinkRequest.php
 opt/app/app/Api/V1/Requests/TransactionRequest.php
 opt/app/app/Api/V1/Requests/UserRequest.php
+opt/app/app/Console/Commands
 opt/app/app/Console/Commands/ApplyRules.php
 opt/app/app/Console/Commands/CreateExport.php
 opt/app/app/Console/Commands/CreateImport.php
@@ -1011,6 +1014,7 @@ opt/app/changelog.md
 opt/app/composer.json
 opt/app/composer.lock
 opt/app/composer.phar
+opt/app/config
 opt/app/config/app.php
 opt/app/config/auth.php
 opt/app/config/breadcrumbs.php
@@ -1037,6 +1041,7 @@ opt/app/config/view.php
 opt/app/database/factories/AccountFactory.php
 opt/app/database/factories/ModelFactory.php
 opt/app/database/factories/UserFactory.php
+opt/app/database/migrations
 opt/app/database/migrations/2016_06_16_000000_create_support_tables.php
 opt/app/database/migrations/2016_06_16_000001_create_users_table.php
 opt/app/database/migrations/2016_06_16_000002_create_main_tables.php
@@ -9381,6 +9386,7 @@ usr/lib/x86_64-linux-gnu/librtmp.so.1
 usr/lib/x86_64-linux-gnu/libsasl2.so.2
 usr/lib/x86_64-linux-gnu/libsasl2.so.2.0.25
 usr/lib/x86_64-linux-gnu/libsodium.so.23
+usr/lib/x86_64-linux-gnu/libsodium.so.23.2.0
 usr/lib/x86_64-linux-gnu/libssh2.so.1
 usr/lib/x86_64-linux-gnu/libssh2.so.1.0.1
 usr/lib/x86_64-linux-gnu/libssl.so.1.0.0
@@ -9399,6 +9405,8 @@ usr/lib/x86_64-linux-gnu/libxml2.so.2
 usr/lib/x86_64-linux-gnu/libxml2.so.2.9.1
 usr/lib/x86_64-linux-gnu/libxslt.so.1
 usr/lib/x86_64-linux-gnu/libxslt.so.1.1.28
+usr/lib/x86_64-linux-gnu/libzip.so.4
+usr/lib/x86_64-linux-gnu/libzip.so.4.0
 usr/sbin/mysqld
 usr/sbin/nginx
 usr/sbin/php-fpm7.2
