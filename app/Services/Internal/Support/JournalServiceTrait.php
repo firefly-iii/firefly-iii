@@ -29,6 +29,7 @@ use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Note;
@@ -59,7 +60,7 @@ trait JournalServiceTrait
             return; // @codeCoverageIgnore
         }
         foreach ($data['tags'] as $string) {
-            if ('' != $string) {
+            if ('' !== $string) {
                 $tag = $factory->findOrCreate($string);
                 if (null !== $tag) {
                     $set[] = $tag->id;
@@ -69,29 +70,6 @@ trait JournalServiceTrait
         $journal->tags()->sync($set);
     }
 
-    /**
-     * Connect bill if present.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $data
-     */
-    protected function connectBill(TransactionJournal $journal, array $data): void
-    {
-        /** @var BillFactory $factory */
-        $factory = app(BillFactory::class);
-        $factory->setUser($journal->user);
-        $bill = $factory->find((int)$data['bill_id'], $data['bill_name']);
-
-        if (null !== $bill) {
-            $journal->bill_id = $bill->id;
-            $journal->save();
-
-            return;
-        }
-        $journal->bill_id = null;
-        $journal->save();
-
-    }
 
     /**
      * @param int|null    $budgetId

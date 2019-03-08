@@ -25,13 +25,9 @@ namespace FireflyIII\Services\Internal\Support;
 
 
 use FireflyIII\Factory\AccountFactory;
-use FireflyIII\Factory\BudgetFactory;
-use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -86,8 +82,14 @@ trait TransactionServiceTrait
      * @throws \FireflyIII\Exceptions\FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account
+    public function findAccount(?string $expectedType, ?Account $account, ?int $accountId, ?string $accountName): ?Account
     {
+        $result = null;
+
+        if (null !== $account && $account->user_id === $this->user->id) {
+            return $account;
+        }
+
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         $repository  = app(AccountRepositoryInterface::class);

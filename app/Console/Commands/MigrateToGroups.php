@@ -96,42 +96,13 @@ class MigrateToGroups extends Command
 
         $data = [
             // mandatory fields.
-            'type'               => strtolower($journal->transactionType->type),
-            'date'               => $journal->date,
-            'user'               => $journal->user_id,
+            'type'         => strtolower($journal->transactionType->type),
+            'date'         => $journal->date,
+            'user'         => $journal->user_id,
+            'description'  => $journal->description,
 
-            // currency fields:
-            'currency'           => null,
-            'currency_id'        => null,
-            'currency_code'      => null,
-
-            // all custom fields:
-            'internal_reference' => $this->journalRepository->getMetaField($journal, 'internal-reference'),
-            'sepa-cc'            => $this->journalRepository->getMetaField($journal, 'sepa-cc'),
-            'sepa-ct-op'         => $this->journalRepository->getMetaField($journal, 'sepa-ct-op'),
-            'sepa-ct-id'         => $this->journalRepository->getMetaField($journal, 'sepa-ct-id'),
-            'sepa-db'            => $this->journalRepository->getMetaField($journal, 'sepa-db'),
-            'sepa-country'       => $this->journalRepository->getMetaField($journal, 'sepa-country'),
-            'sepa-ep'            => $this->journalRepository->getMetaField($journal, 'sepa-ep'),
-            'sepa-ci'            => $this->journalRepository->getMetaField($journal, 'sepa-ci'),
-            'sepa-batch-id'      => $this->journalRepository->getMetaField($journal, 'sepa-batch-id'),
-            'interest_date'      => $this->journalRepository->getMetaDateString($journal, 'interest_date'),
-            'book_date'          => $this->journalRepository->getMetaDateString($journal, 'book_date'),
-            'process_date'       => $this->journalRepository->getMetaDateString($journal, 'process_date'),
-            'due_date'           => $this->journalRepository->getMetaDateString($journal, 'due_date'),
-            'payment_date'       => $this->journalRepository->getMetaDateString($journal, 'payment_date'),
-            'invoice_date'       => $this->journalRepository->getMetaDateString($journal, 'invoice_date'),
-            'external_id'        => $this->journalRepository->getMetaField($journal, 'external-id'),
-            'original-source'    => $this->journalRepository->getMetaField($journal, 'original-source'),
-            // journal data:
-            'description'        => $journal->description,
-            'piggy_bank_id'      => null,
-            'piggy_bank_name'    => null,
-            'bill_id'            => $journal->bill_id,
-            'bill_name'          => null,
-            'tags'               => null,
-            'notes'              => null,
-            'transactions'       => [],
+            // transactions:
+            'transactions' => [],
         ];
 
 
@@ -157,40 +128,88 @@ class MigrateToGroups extends Command
                 return;
             }
 
-            $tArray = [
-                'notes'                 => $this->journalRepository->getNoteText($journal),
-                'tags'                  => $journal->tags->pluck('tag')->toArray(),
-                'currency' 				=> null,
+            $tArray                 = [
+
+                // currency and foreign currency
+                'currency'              => null,
                 'currency_id'           => $transaction->transaction_currency_id,
                 'currency_code'         => null,
-                'description'           => $transaction->description,
-                'amount'                => $transaction->amount,
-                'budget'				=> null,
-                'budget_id'             => $budgetId,
-                'budget_name'           => null,
-                'category' 				=> null,
-                'category_id'           => $categoryId,
-                'category_name'         => null,
-                'source' 				=> null,
-                'source_id'             => $opposing->account_id,
-                'source_name'           => null,
-                'destination' => null,
-                'destination_id'        => $transaction->account_id,
-                'destination_name'      => null,
-                'foreign_currency' 		=> null,
+                'foreign_currency'      => null,
                 'foreign_currency_id'   => $transaction->foreign_currency_id,
                 'foreign_currency_code' => null,
+
+                // amount and foreign amount
+                'amount'                => $transaction->amount,
                 'foreign_amount'        => $transaction->foreign_amount,
+
+                // description
+                'description'           => $transaction->description,
+
+                // source
+                'source'                => null,
+                'source_id'             => $opposing->account_id,
+                'source_name'           => null,
+
+                // destination
+                'destination'           => null,
+                'destination_id'        => $transaction->account_id,
+                'destination_name'      => null,
+
+                // budget
+                'budget'                => null,
+                'budget_id'             => $budgetId,
+                'budget_name'           => null,
+
+                // category
+                'category'              => null,
+                'category_id'           => $categoryId,
+                'category_name'         => null,
+
+                // piggy bank (if transfer)
+                'piggy_bank'            => null,
+                'piggy_bank_id'         => null,
+                'piggy_bank_name'       => null,
+
+                // bill (if withdrawal)
+                'bill'                  => null,
+                'bill_id'               => $journal->bill_id,
+                'bill_name'             => null,
+
+                // some other interesting properties
                 'reconciled'            => false,
+                'notes'                 => $this->journalRepository->getNoteText($journal),
+                'tags'                  => $journal->tags->pluck('tag')->toArray(),
+
+                // all custom fields:
+                'internal_reference'    => $this->journalRepository->getMetaField($journal, 'internal-reference'),
+                'sepa-cc'               => $this->journalRepository->getMetaField($journal, 'sepa-cc'),
+                'sepa-ct-op'            => $this->journalRepository->getMetaField($journal, 'sepa-ct-op'),
+                'sepa-ct-id'            => $this->journalRepository->getMetaField($journal, 'sepa-ct-id'),
+                'sepa-db'               => $this->journalRepository->getMetaField($journal, 'sepa-db'),
+                'sepa-country'          => $this->journalRepository->getMetaField($journal, 'sepa-country'),
+                'sepa-ep'               => $this->journalRepository->getMetaField($journal, 'sepa-ep'),
+                'sepa-ci'               => $this->journalRepository->getMetaField($journal, 'sepa-ci'),
+                'sepa-batch-id'         => $this->journalRepository->getMetaField($journal, 'sepa-batch-id'),
+                'interest_date'         => $this->journalRepository->getMetaDate($journal, 'interest_date'),
+                'book_date'             => $this->journalRepository->getMetaDate($journal, 'book_date'),
+                'process_date'          => $this->journalRepository->getMetaDate($journal, 'process_date'),
+                'due_date'              => $this->journalRepository->getMetaDate($journal, 'due_date'),
+                'payment_date'          => $this->journalRepository->getMetaDate($journal, 'payment_date'),
+                'invoice_date'          => $this->journalRepository->getMetaDate($journal, 'invoice_date'),
+                'external_id'           => $this->journalRepository->getMetaField($journal, 'external-id'),
+                'original-source'       => $this->journalRepository->getMetaField($journal, 'original-source'),
+                'recurrence_id'         => $this->journalRepository->getMetaField($journal, 'recurrence_id'),
+                'bunq_payment_id'       => $this->journalRepository->getMetaField($journal, 'bunq_payment_id'),
+                'importHash'            => $this->journalRepository->getMetaField($journal, 'importHash'),
+                'importHashV2'          => $this->journalRepository->getMetaField($journal, 'importHashV2'),
             ];
-
-
             $data['transactions'][] = $tArray;
         }
-        $this->journalFactory->create($data);
+        $result = $this->journalFactory->create($data);
         // create a new transaction journal based on this particular transaction using the factory.
         // delete the old transaction journal.
         //$journal->delete();
+        Log::debug(sprintf('Migrated journal #%d into %s', $journal->id, implode(', ', $result->pluck('id')->toArray())));
     }
 
     /**

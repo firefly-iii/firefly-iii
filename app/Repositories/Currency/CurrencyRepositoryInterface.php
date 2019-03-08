@@ -133,6 +133,17 @@ interface CurrencyRepositoryInterface
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency;
 
     /**
+     * Find by object, ID or code. Returns user default or system default.
+     *
+     * @param TransactionCurrency|null $currency
+     * @param int|null                 $currencyId
+     * @param string|null              $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrency(?TransactionCurrency $currency, ?int $currencyId, ?string $currencyCode): TransactionCurrency;
+
+    /**
      * Find by ID, return NULL if not found.
      *
      * @param int $currencyId

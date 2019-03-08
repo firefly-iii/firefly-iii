@@ -256,6 +256,41 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     }
 
     /**
+     * Find by object, ID or code. Returns user default or system default.
+     *
+     * @param TransactionCurrency|null $currency
+     * @param int|null                 $currencyId
+     * @param string|null              $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrency(?TransactionCurrency $currency, ?int $currencyId, ?string $currencyCode): TransactionCurrency
+    {
+        $result = null;
+        if (null !== $currency) {
+            $result = $currency;
+        }
+
+        if (null === $result) {
+            $result = $this->find((int)$currencyId);
+        }
+        if (null === $result) {
+            $result = $this->findByCode((string)$currencyCode);
+        }
+        if (null === $result) {
+            $result = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+        if (null === $result) {
+            $result = $this->findByCode('EUR');
+        }
+        if (false === $result->enabled) {
+            $this->enable($result);
+        }
+
+        return $result;
+    }
+
+    /**
      * Find by ID, return NULL if not found.
      * Used in Import Currency!
      *
