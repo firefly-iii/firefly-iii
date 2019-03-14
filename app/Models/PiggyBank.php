@@ -135,6 +135,7 @@ class PiggyBank extends Model
             ->join('account_meta', 'accounts.id', '=', 'account_meta.account_id')
             ->where('account_meta.name', 'currency_id')
             ->groupBy('piggy_bank_events.account_id')
+            ->groupBy('accounts.name')
             ->groupBy('account_meta.data')
             ->groupBy('piggy_bank_events.piggy_bank_id');
         return $events;
