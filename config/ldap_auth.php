@@ -143,7 +143,7 @@ return [
 
     'scopes' => $scopes,
 
-    'usernames' => [
+    'identifiers' => [
 
         /*
         |--------------------------------------------------------------------------
@@ -173,8 +173,8 @@ return [
 
         'ldap' => [
 
-            'discover'     => envNonEmpty('ADLDAP_DISCOVER_FIELD', 'userprincipalname'),
-            'authenticate' => envNonEmpty('ADLDAP_AUTH_FIELD', 'distinguishedname'),
+            'locate_users_by'     => envNonEmpty('ADLDAP_DISCOVER_FIELD', 'userprincipalname'),
+            'bind_users_by' => envNonEmpty('ADLDAP_AUTH_FIELD', 'distinguishedname'),
 
         ],
 
