@@ -184,7 +184,21 @@ class Kernel extends HttpKernel
                 'bindings',
             ],
         ];
-
+    /**
+     * The priority-sorted list of middleware.
+     *
+     * This forces non-global middleware to always be in the given order.
+     *
+     * @var array
+     */
+    protected $middlewarePriority
+        = [
+            StartFireflySession::class,
+            ShareErrorsFromSession::class,
+            Authenticate::class,
+            Binder::class,
+            Authorize::class,
+        ];
     /**
      * The application's route middleware.
      *

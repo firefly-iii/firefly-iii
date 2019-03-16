@@ -50,6 +50,7 @@ trait UserNavigation
      */
     protected function getPreviousUri(string $identifier): string
     {
+        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         // "forbidden" words for specific identifiers:
         // if these are in the previous URI, don't refer back there.
         $array     = [

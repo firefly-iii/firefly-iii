@@ -221,6 +221,7 @@ class SingleController extends Controller
      */
     public function delete(TransactionJournal $journal)
     {
+        Log::debug(sprintf('Start of delete view for journal #%d', $journal->id));
         // Covered by another controller's tests
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
@@ -232,6 +233,7 @@ class SingleController extends Controller
         $subTitle = (string)trans('firefly.delete_' . $what, ['description' => $journal->description]);
 
         // put previous url in session
+        Log::debug('Will try to remember previous URI');
         $this->rememberPreviousUri('transactions.delete.uri');
 
         return view('transactions.single.delete', compact('journal', 'subTitle', 'what'));
