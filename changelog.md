@@ -2,6 +2,24 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.17 (API 0.9.2)] - 2019-03-17
+
+### Added
+- Support for Norwegian!
+
+### Changed
+- Clear cache during install routine.
+- Add Firefly III version number to install routine.
+
+### Removed
+- Initial release.
+
+### Fixed
+- [Issue 2159](https://github.com/firefly-iii/firefly-iii/issues/2159) Bad redirect due to Laravel upgrade.
+- [Issue 2166](https://github.com/firefly-iii/firefly-iii/issues/2166) Importer had some issues with distinguishing double transfers.
+- [Issue 2167](https://github.com/firefly-iii/firefly-iii/issues/2167) New LDAP package gave some configuration changes.
+- [Issue 2173](https://github.com/firefly-iii/firefly-iii/issues/2173) Missing class when generating 2FA codes.
+
 ## [4.7.16 (API 0.9.2)] - 2019-03-08
 
 4.7.16 was released to fix a persistent issue with broken user preferences.
