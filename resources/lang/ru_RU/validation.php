@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Это некорректный IBAN.',
     'zero_or_more'                   => 'Это значение не может быть отрицательным.',
-    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
+    'date_or_time'                   => 'Значение должно быть корректной датой или временем (ISO 8601).',
     'source_equals_destination'      => 'Счёт источник и счёт назначения совпадают.',
     'unique_account_number_for_user' => 'Этот номер счёта уже используется.',
     'unique_iban_for_user'           => 'Этот IBAN уже используется.',
