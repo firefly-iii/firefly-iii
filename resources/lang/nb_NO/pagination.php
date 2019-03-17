@@ -1,7 +1,7 @@
 <?php
 
 /**
- * components.php
+ * pagination.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,10 +23,6 @@
 declare(strict_types=1);
 
 return [
-    // profile
-    'personal_access_tokens' => '個人存取權杖',
-
-    // bills:
-    'not_expected_period'    => '未預期在此時期內',
-    'not_or_not_yet'         => '(還) 沒有',
+    'previous' => '&laquo; Forrige',
+    'next'     => 'Neste &raquo;',
 ];

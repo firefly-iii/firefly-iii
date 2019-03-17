@@ -242,6 +242,7 @@ class Amount
         $currencyPreference = Prefs::getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
 
         // at this point the currency preference could be encrypted, if coming from an old version.
+        Log::debug('Going to try to decrypt users currency preference.');
         $currencyCode = $this->tryDecrypt((string)$currencyPreference->data);
 
         // could still be json encoded:
@@ -288,7 +289,7 @@ class Amount
         try {
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
-            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
+            Log::debug(sprintf('Could not decrypt "%s". %s', $value, $e->getMessage()));
         }
 
         return $value;

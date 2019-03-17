@@ -50,6 +50,7 @@ trait UserNavigation
      */
     protected function getPreviousUri(string $identifier): string
     {
+        Log::debug(sprintf('Trying to retrieve URL stored under "%s"', $identifier));
         // "forbidden" words for specific identifiers:
         // if these are in the previous URI, don't refer back there.
         $array     = [
@@ -66,17 +67,24 @@ trait UserNavigation
             'transactions.mass-delete.uri' => '/transactions/show/',
         ];
         $forbidden = $array[$identifier] ?? '/show/';
-
+        Log::debug(sprintf('The forbidden word for %s is "%s"', $identifier, $forbidden));
 
         $uri = (string)session($identifier);
+        Log::debug(sprintf('The URI is %s', $uri));
         if (
             !(false === strpos($identifier, 'delete'))
             && !(false === strpos($uri, $forbidden))) {
             $uri = $this->redirectUri;
+            Log::debug(sprintf('URI is now %s (identifier contains "delete")', $uri));
         }
         if (!(false === strpos($uri, 'jscript'))) {
             $uri = $this->redirectUri; // @codeCoverageIgnore
+            Log::debug(sprintf('URI is now %s (uri contains jscript)', $uri));
         }
+
+        // more debug notes:
+        Log::debug(sprintf('strpos($identifier, "delete"): %s', var_export(strpos($identifier, 'delete'), true)));
+        Log::debug(sprintf('strpos($uri, $forbidden): %s', var_export(strpos($uri, $forbidden), true)));
 
         return $uri;
     }
@@ -147,6 +155,9 @@ trait UserNavigation
             $url = app('url')->previous();
             session()->put($identifier, $url);
             Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
+
+            return;
         }
+        Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
     }
 }

@@ -25,10 +25,13 @@ namespace FireflyIII\Http\Controllers\System;
 
 
 use Artisan;
+use Cache;
 use Exception;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Support\Facades\Preferences;
 use FireflyIII\Support\Http\Controllers\GetConfigurationData;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Arr;
 use Laravel\Passport\Passport;
 use Log;
 use phpseclib\Crypt\RSA;
@@ -75,11 +78,17 @@ class InstallController extends Controller
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
             if (strpos($e->getMessage(), 'open_basedir restriction in effect')) {
+                Cache::clear();
+
                 return response()->json(['error' => true, 'message' => self::BASEDIR_ERROR]);
             }
 
             return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
+        // clear cache as well.
+        Cache::clear();
+        Preferences::mark();
+
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
@@ -91,6 +100,9 @@ class InstallController extends Controller
      */
     public function index()
     {
+        // index will set FF3 version.
+        app('fireflyconfig')->set('ff3_version', (string)config('firefly.version'));
+
         return view('install.index');
     }
 
@@ -118,8 +130,12 @@ class InstallController extends Controller
             return response()->json(['error' => false, 'message' => 'OK']);
         }
 
-        file_put_contents($publicKey, array_get($keys, 'publickey'));
-        file_put_contents($privateKey, array_get($keys, 'privatekey'));
+        file_put_contents($publicKey, Arr::get($keys, 'publickey'));
+        file_put_contents($privateKey, Arr::get($keys, 'privatekey'));
+
+        // clear cache as well.
+        Cache::clear();
+        Preferences::mark();
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
@@ -148,6 +164,9 @@ class InstallController extends Controller
 
             return response()->json(['error' => true, 'message' => self::OTHER_ERROR]);
         }
+        // clear cache as well.
+        Cache::clear();
+        Preferences::mark();
 
 
         return response()->json(['error' => false, 'message' => 'OK']);
@@ -176,6 +195,10 @@ class InstallController extends Controller
 
             return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
+        // clear cache as well.
+        Cache::clear();
+        Preferences::mark();
+
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
@@ -203,6 +226,11 @@ class InstallController extends Controller
 
             return response()->json(['error' => true, 'message' => self::OTHER_ERROR . ' ' . $e->getMessage()]);
         }
+
+
+        // clear cache as well.
+        Cache::clear();
+        Preferences::mark();
 
         return response()->json(['error' => false, 'message' => 'OK']);
     }
