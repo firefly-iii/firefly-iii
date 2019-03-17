@@ -43,7 +43,7 @@ return [
     'budgets_index_see_expenses_bar'        => 'Gastar dinero irá llenando poco a poco esta barra.',
     'budgets_index_navigate_periods'        => 'Navega a través de períodos para configurar fácilmente presupuestos con anticipación.',
     'budgets_index_new_budget'              => 'Crea nuevos presupuestos como mejor te parezca.',
-    'budgets_index_list_of_budgets'         => 'Use esta tabla para establecer las cantidades para cada presupuesto y ver cómo está haciendo.',
+    'budgets_index_list_of_budgets'         => 'Use esta tabla para establecer las cantidades para cada presupuesto y ver cómo lo está haciendo.',
     'budgets_index_outro'                   => 'Para aprender mas acerca de los presupuestos, revise el icono de ayuda en el tope de la esquina derecha.',
 
     // reports (index)
@@ -106,7 +106,7 @@ return [
     'bills_create_intro'                                      => 'Use facturas para rastrear la cantidad de dinero correspondiente a cada período. Piense en gastos como renta, seguro o pagos de hipoteca.',
     'bills_create_name'                                       => 'Use un nombre descriptivo como "alquiler" o "seguro de salud".',
     //'bills_create_match'                                      => 'To match transactions, use terms from those transactions or the expense account involved. All words must match.',
-    'bills_create_amount_min_holder'                          => 'Seleccione un monto mínimo y uno máximo para esta factura.',
+    'bills_create_amount_min_holder'                          => 'Seleccione un importe mínimo y máximo para esta factura.',
     'bills_create_repeat_freq_holder'                         => 'La mayoría de facturas se repiten mensualmente, pero usted puede establecer otra frecuencia aquí.',
     'bills_create_skip_holder'                                => 'Si una cuenta se repite cada 2 semanas, el campo "saltar" debe estar marcado como "1" para saltar una semana y generar el gasto cada 2.',
 

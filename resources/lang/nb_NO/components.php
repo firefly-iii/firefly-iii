@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => 'Tokens de acceso personal',
+    'personal_access_tokens' => 'Personlige tilgangsnøkler',
 
     // bills:
-    'not_expected_period'    => 'Período inesperado',
-    'not_or_not_yet'         => 'No (todavía)',
+    'not_expected_period'    => 'Ikke forventet denne perioden',
+    'not_or_not_yet'         => 'Ikke (ennå)',
 ];

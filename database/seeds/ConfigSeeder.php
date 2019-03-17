@@ -32,7 +32,7 @@ class ConfigSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run()
+    public function run(): void
     {
         $entry = Configuration::where('name', 'db_version')->first();
         if (null === $entry) {

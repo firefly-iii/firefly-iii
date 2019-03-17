@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'iban'                           => 'Este não é um válido IBAN.',
     'zero_or_more'                   => 'O valor não pode ser negativo.',
-    'date_or_time'                   => 'The value must be a valid date or time value (ISO 8601).',
+    'date_or_time'                   => 'O valor deve ser uma data válida (ISO 8601).',
     'source_equals_destination'      => 'A conta de origem é igual à conta de destino.',
     'unique_account_number_for_user' => 'Parece que este número de conta já está em uso.',
     'unique_iban_for_user'           => 'Parece que este IBAN já está em uso.',
@@ -124,7 +124,7 @@ return [
     'present'                        => 'O campo :attribute deve estar presente.',
     'amount_zero'                    => 'O montante total não pode ser zero.',
     'unique_piggy_bank_for_user'     => 'O nome do cofrinho deve ser único.',
-    'secure_password'                => 'Esta nao e uma password segura. Tenta de novo por favor. Para mais informacoes visita https://bit.ly/FF3-password-security',
+    'secure_password'                => 'Esta não é uma senha segura. Por favor, tente novamente. Para mais informações, visite https://bit.ly/FF3-password-security',
     'valid_recurrence_rep_type'      => 'Tipo de repetição inválido para transações recorrentes.',
     'valid_recurrence_rep_moment'    => 'Momento de repetição inválido para esse tipo de repetição.',
     'invalid_account_info'           => 'Informação de conta inválida.',

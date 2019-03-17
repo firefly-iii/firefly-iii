@@ -153,7 +153,7 @@ return [
     'ynab_account_type_merchantAccount'    => 'merchant account',
     'ynab_account_type_investmentAccount'  => 'investment account',
     'ynab_account_type_mortgage'           => 'ипотека',
-    'ynab_do_not_import'                   => '(do not import)',
+    'ynab_do_not_import'                   => '(не импортировать)',
     'job_config_ynab_apply_rules'          => 'Применить правила',
     'job_config_ynab_apply_rules_text'     => 'By default, your rules will be applied to the transactions created during this import routine. If you do not want this to happen, deselect this checkbox.',
 
@@ -163,7 +163,7 @@ return [
     'job_config_ynab_no_budgets'           => 'There are no budgets available to be imported from.',
     'ynab_no_mapping'                      => 'It seems you have not selected any accounts to import from.',
     'job_config_ynab_bad_currency'         => 'You cannot import from the following budget(s), because you do not have accounts with the same currency as these budgets.',
-    'job_config_ynab_accounts_title'       => 'Select accounts',
+    'job_config_ynab_accounts_title'       => 'Выберите аккаунты',
     'job_config_ynab_accounts_text'        => 'You have the following accounts available in this budget. Please select from which accounts you want to import, and where the transactions should be stored.',
 
 
@@ -171,9 +171,9 @@ return [
     'spectre_extra_key_iban'               => 'IBAN',
     'spectre_extra_key_swift'              => 'SWIFT',
     'spectre_extra_key_status'             => 'Статус',
-    'spectre_extra_key_card_type'          => 'Card type',
-    'spectre_extra_key_account_name'       => 'Account name',
-    'spectre_extra_key_client_name'        => 'Client name',
+    'spectre_extra_key_card_type'          => 'Тип карты',
+    'spectre_extra_key_account_name'       => 'Название счёта',
+    'spectre_extra_key_client_name'        => 'Имя клиента',
     'spectre_extra_key_account_number'     => 'Account number',
     'spectre_extra_key_blocked_amount'     => 'Blocked amount',
     'spectre_extra_key_available_amount'   => 'Available amount',

@@ -33,7 +33,7 @@ return [
     'last_seven_days'                            => 'Ultimi sette giorni',
     'last_thirty_days'                           => 'Ultimi trenta giorni',
     'welcomeBack'                                => 'La tua situazione finanziaria',
-    'welcome_back'                                => 'What\'s playing?',
+    'welcome_back'                                => 'La tua situazione finanziaria',
     'everything'                                 => 'Tutto',
     'today'                                      => 'oggi',
     'customRange'                                => 'Intervallo personalizzato',

@@ -24,9 +24,9 @@ declare(strict_types=1);
 
 return [
     // profile
-    'personal_access_tokens' => '個人訪問權杖',
+    'personal_access_tokens' => '個人存取權杖',
 
     // bills:
-    'not_expected_period'    => '本期未預期',
+    'not_expected_period'    => '未預期在此時期內',
     'not_or_not_yet'         => '(還) 沒有',
 ];

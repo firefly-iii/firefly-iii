@@ -1,7 +1,7 @@
 <?php
 
 /**
- * components.php
+ * passwords.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -23,10 +23,10 @@
 declare(strict_types=1);
 
 return [
-    // profile
-    'personal_access_tokens' => 'Tokens de acceso personal',
-
-    // bills:
-    'not_expected_period'    => 'Período inesperado',
-    'not_or_not_yet'         => 'No (todavía)',
+    'password' => 'Passord må være minst seks tegn og samsvare med bekreftelsen.',
+    'user'     => 'Vi finner ikke noen bruker med denne epostadressen.',
+    'token'    => 'Passord-nullstillingskoden er ikke gyldig.',
+    'sent'     => 'Passord-nullstillingslenke sendt!',
+    'reset'    => 'Passordet er tilbakestilt!',
+    'blocked'  => 'Du skal ha for forsøket.',
 ];

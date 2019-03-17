@@ -575,21 +575,24 @@ class ImportArrayStorage
                     ++$hits;
                     Log::debug(sprintf('Source IDs are the same! (%d)', $hits));
                 }
+                Log::debug('Source IDs are not the same.');
                 unset($transferSourceIDs);
 
                 // compare source and destination names
-                $transferSource = [(string)$transfer->account_name, (int)$transfer->opposing_account_name];
+                $transferSource = [(string)$transfer->account_name, (string)$transfer->opposing_account_name];
                 sort($transferSource);
                 /** @noinspection DisconnectedForeachInstructionInspection */
                 Log::debug('Comparing current transaction source+dest names', $currentSourceNames);
                 Log::debug('.. with current transfer source+dest names', $transferSource);
                 if ($currentSourceNames === $transferSource) {
                     // @codeCoverageIgnoreStart
-                    Log::debug(sprintf('Source names are the same! (%d)', $hits));
                     ++$hits;
+                    Log::debug(sprintf('Source names are the same! (%d)', $hits));
                     // @codeCoverageIgnoreEnd
                 }
+                Log::debug('Source names are not the same.');
                 $totalHits += $hits;
+                Log::debug(sprintf('Total hits is now %d, hits is %d', $totalHits, $hits));
                 if ($totalHits >= $requiredHits) {
                     return true;
                 }

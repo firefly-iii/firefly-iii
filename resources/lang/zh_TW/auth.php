@@ -24,5 +24,5 @@ declare(strict_types=1);
 
 return [
     'failed'   => '憑證與系統記錄不符。',
-    'throttle' => '過多登入嘗試，請於 :seconds 秒後重試。',
+    'throttle' => '登入嘗試太多，請於 :seconds 秒後重試。',
 ];
