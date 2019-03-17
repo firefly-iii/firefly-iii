@@ -95,7 +95,7 @@ return [
     'encryption'                   => null === env('USE_ENCRYPTION') || env('USE_ENCRYPTION') === true,
     'version'                      => '4.7.17',
     'api_version'                  => '0.9.2',
-    'db_version'                   => 9,
+    'db_version'                   => 10,
     'maxUploadSize'                => 15242880,
     'send_error_message'           => env('SEND_ERROR_MESSAGE', true),
     'site_owner'                   => env('SITE_OWNER', ''),
@@ -276,7 +276,7 @@ return [
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 100%
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'], // 99%
         //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 71%
-        //'nb_NO' => ['name_locale' => 'Norwegian', 'name_english' => 'Norwegian'], // 52%
+        'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 0%
         //'ja_JA' => ['name_locale' => 'Japanese', 'name_english' => 'Japanese'], // 0%
         //'cs_CZ' => ['name_locale' => 'Czech', 'name_english' => 'Czech'], // 35%
