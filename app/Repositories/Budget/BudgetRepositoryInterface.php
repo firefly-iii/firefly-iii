@@ -35,6 +35,7 @@ use Illuminate\Support\Collection;
  */
 interface BudgetRepositoryInterface
 {
+
     /**
      * A method that returns the amount of money budgeted per day for this budget,
      * on average.
@@ -79,6 +80,24 @@ interface BudgetRepositoryInterface
      * @param BudgetLimit $budgetLimit
      */
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
+
+    /**
+     * @param Budget|null $budget
+     * @param int|null    $budgetId
+     * @param string|null $budgetName
+     *
+     * @return Budget|null
+     */
+    public function findBudget(?Budget $budget, ?int $budgetId, ?string $budgetName): ?Budget;
+
+    /**
+     * Find budget by name.
+     *
+     * @param string|null $name
+     *
+     * @return Budget|null
+     */
+    public function findByName(?string $name): ?Budget;
 
     /**
      * @param int|null $budgetId

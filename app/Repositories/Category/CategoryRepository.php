@@ -253,6 +253,42 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Category|null $category
+     * @param int|null      $categoryId
+     * @param string|null   $categoryName
+     *
+     * @return Category|null
+     */
+    public function findCategory(?Category $category, ?int $categoryId, ?string $categoryName): ?Category
+    {
+        Log::debug('Now in findCategory()');
+        $result = null;
+        if (null !== $category) {
+            Log::debug(sprintf('Parameters contain category #%d, will return this.', $category->id));
+            $result = $category;
+        }
+
+        if (null === $result) {
+            Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
+            $result = $this->findNull((int)$categoryId);
+        }
+        if (null === $result) {
+            Log::debug(sprintf('Searching for category with name %s...', $categoryName));
+            $result = $this->findByName((string)$categoryName);
+            if (null === $result && '' !== (string)$categoryName) {
+                // create it!
+                $result = $this->store(['name' => $categoryName]);
+            }
+        }
+        if (null !== $result) {
+            Log::debug(sprintf('Found category #%d: %s', $result->id, $result->name));
+        }
+        Log::debug(sprintf('Found category result is null? %s', var_export(null === $result, true)));
+
+        return $result;
+    }
+
+    /**
      * Find a category or return NULL
      *
      * @param int $categoryId
@@ -263,6 +299,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return $this->user->categories()->find($categoryId);
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Category $category
@@ -292,8 +330,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $firstJournalDate;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Get all categories with ID's.
      *
@@ -305,6 +341,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return $this->user->categories()->whereIn('id', $categoryIds)->get();
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Returns a list of all the categories belonging to a user.
@@ -323,8 +361,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $set;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Category   $category
@@ -400,6 +436,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $data;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $accounts
@@ -528,8 +566,6 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $result;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param string $query
@@ -839,6 +875,7 @@ class CategoryRepository implements CategoryRepositoryInterface
      * @param Collection $accounts
      *
      * @return Carbon|null
+     * @throws \Exception
      */
     private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
     {

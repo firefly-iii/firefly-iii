@@ -87,6 +87,45 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Find bill by parameters.
+     *
+     * @param Bill|null   $bill
+     * @param int|null    $billId
+     * @param string|null $billName
+     *
+     * @return Bill|null
+     */
+    public function findBill(?Bill $bill, ?int $billId, ?string $billName): ?Bill
+    {
+        Log::debug('Searching for bill information.');
+        if ($bill instanceof Bill && $bill->user_id === $this->user->id) {
+            Log::debug(sprintf('Bill object in parameters, will return Bill #%d', $bill->id));
+
+            return $bill;
+        }
+
+        if (null !== $billId) {
+            $searchResult = $this->find((int)$billId);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found bill based on #%d, will return it.', $billId));
+
+                return $searchResult;
+            }
+        }
+        if (null !== $billName) {
+            $searchResult = $this->findByName((string)$billName);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found bill based on "%s", will return it.', $billName));
+
+                return $searchResult;
+            }
+        }
+        Log::debug('Found nothing');
+
+        return null;
+    }
+
+    /**
      * Find a bill by name.
      *
      * @param string $name

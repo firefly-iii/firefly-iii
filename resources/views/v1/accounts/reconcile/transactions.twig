@@ -88,7 +88,7 @@
                     {% set transactionAmount = transaction.transaction_foreign_amount %}
                 {% endif %}
 
-                {% if transaction.reconciled %}
+                {% if transaction.$array[$direction][$transactionType] %}
                     {{ transaction|transactionReconciled }}
                     <input type="hidden" name="cleared[]" data-younger="{% if transaction.date < start %}true{% else %}false{% endif %}"
                            data-inrange="{% if transaction.date >= start and transaction.date <= end  %}true{% else %}false"{% endif %}"

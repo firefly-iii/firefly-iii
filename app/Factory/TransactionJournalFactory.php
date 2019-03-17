@@ -26,48 +26,69 @@ namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Models\Note;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Bill\BillRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
+use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
+use function nspl\ds\defaultarray;
 
 /**
  * Class TransactionJournalFactory
  */
 class TransactionJournalFactory
 {
+    /** @var BillRepositoryInterface */
+    private $billRepository;
+    /** @var BudgetRepositoryInterface */
+    private $budgetRepository;
+    /** @var CategoryRepositoryInterface */
+    private $categoryRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
-
+    /** @var array */
+    private $fields;
+    /** @var PiggyBankRepositoryInterface */
+    private $piggyRepository;
     /** @var TransactionFactory */
     private $transactionFactory;
-
     /** @var TransactionTypeRepositoryInterface */
     private $typeRepository;
-
-    //    private $fields;
     /** @var User The user */
     private $user;
 
-    //
-    //    use JournalServiceTrait, TransactionTypeTrait;
-
     /**
      * Constructor.
+     *
+     * @throws Exception
      */
     public function __construct()
     {
-        //        $this->fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
-        //                         'due_date', 'recurrence_id', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash', 'importHashV2',
-        //                         'external_id', 'sepa-batch-id', 'original-source'];
+        $this->fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
+                         'due_date', 'recurrence_id', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash', 'importHashV2',
+                         'external_id', 'sepa-batch-id', 'original-source'];
+
+
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
         $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
         $this->transactionFactory = app(TransactionFactory::class);
+        $this->billRepository     = app(BillRepositoryInterface::class);
+        $this->budgetRepository   = app(BudgetRepositoryInterface::class);
+        $this->categoryRepository = app(CategoryRepositoryInterface::class);
+        $this->piggyRepository    = app(PiggyBankRepositoryInterface::class);
     }
 
     /**
@@ -84,22 +105,36 @@ class TransactionJournalFactory
         $collection   = new Collection;
         $transactions = $data['transactions'] ?? [];
         $type         = $this->typeRepository->findTransactionType(null, $data['type']);
-        $description  = app('steam')->cleanString($data['description']);
         $carbon       = $data['date'] ?? new Carbon;
         $carbon->setTimezone(config('app.timezone'));
 
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
+        Log::debug(sprintf('Going to store a %s.', $type->type));
 
+        if (0 === \count($transactions)) {
+            Log::error('There are no transactions in the array, cannot continue.');
+
+            return new Collection;
+        }
+
+        /** @var array $row */
+        foreach ($transactions as $index => $row) {
+            $transaction = new NullArrayObject($row);
+            Log::debug(sprintf('Now creating journal %d/%d', $index + 1, \count($transactions)));
             /** Get basic fields */
-            $currency = $this->currencyRepository->findCurrency($transaction['currency'], $transaction['currency_id'], $transaction['currency_code']);
+
+            $currency        = $this->currencyRepository->findCurrency($transaction['currency'], $transaction['currency_id'], $transaction['currency_code']);
+            $foreignCurrency = $this->findForeignCurrency($transaction);
+
+            $bill        = $this->billRepository->findBill($transaction['bill'], $transaction['bill_id'], $transaction['bill_name']);
+            $billId      = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
+            $description = app('steam')->cleanString($transaction['description']);
 
             /** Create a basic journal. */
             $journal = TransactionJournal::create(
                 [
                     'user_id'                 => $this->user->id,
                     'transaction_type_id'     => $type->id,
-                    'bill_id'                 => null,
+                    'bill_id'                 => $billId,
                     'transaction_currency_id' => $currency->id,
                     'description'             => $description,
                     'date'                    => $carbon->format('Y-m-d H:i:s'),
@@ -108,130 +143,41 @@ class TransactionJournalFactory
                     'completed'               => 0,
                 ]
             );
+            Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
             /** Create two transactions. */
             $this->transactionFactory->setJournal($journal);
-            $children = $this->transactionFactory->createPair($currency, $transaction);
+            $this->transactionFactory->createPair($transaction, $currency, $foreignCurrency);
 
+            /** Link all other data to the journal. */
 
+            /** Link budget */
+            $this->storeBudget($journal, $transaction);
 
+            /** Link category */
+            $this->storeCategory($journal, $transaction);
+
+            /** Set notes */
+            $this->storeNote($journal, $transaction['notes']);
+
+            /** Set piggy bank */
+            $this->storePiggyEvent($journal, $transaction);
+
+            /** Set tags */
+            $this->storeTags($journal, $transaction['tags']);
+
+            /** set all meta fields */
+            $this->storeMetaFields($journal, $transaction);
 
             $collection->push($journal);
-            Log::debug(sprintf('Created journal #%d', $journal->id));
-
-            return $collection;
-
-
-            /** Create two basic transactions */
+        }
+        if ($collection->count() > 1) {
+            $this->storeGroup($collection, $data['group_title']);
         }
 
+        return $collection;
 
-        //        /** @var TransactionFactory $factory */
-        //        $factory     = app(TransactionFactory::class);
-        //        $journals    = new Collection;
-        //        ;
-        //        $type        = $this->findTransactionType($data['type']);
-        //
-        //
-        //
-        //        $factory->setUser($this->user);
-        //
-        //        Log::debug(sprintf('New journal(group): %s with description "%s"', $type->type, $description));
-        //
-        //        // loop each transaction.
-        //        /**
-        //         * @var int   $index
-        //         * @var array $transactionData
-        //         */
-        //        foreach ($data['transactions'] as $index => $transactionData) {
-        //            Log::debug(sprintf('Now at journal #%d from %d', $index + 1, count($data['transactions'])));
-        //
-        //            // catch to stop empty amounts:
-        //            if ('' === (string)$transactionData['amount'] || 0.0 === (float)$transactionData['amount']) {
-        //                continue;
-        //            }
-        //            // currency & foreign currency
-        //            $transactionData['currency']         = $this->getCurrency($transactionData, $index);
-        //            $transactionData['foreign_currency'] = $this->getForeignCurrency($transactionData, $index);
-        //
-        //            // store basic journal first.
-        //            $journal = TransactionJournal::create(
-        //                [
-        //                    'user_id'                 => $data['user'],
-        //                    'transaction_type_id'     => $type->id,
-        //                    'bill_id'                 => null,
-        //                    'transaction_currency_id' => $transactionData['currency']->id,
-        //                    'description'             => $description,
-        //                    'date'                    => $carbon->format('Y-m-d H:i:s'),
-        //                    'order'                   => 0,
-        //                    'tag_count'               => 0,
-        //                    'completed'               => 0,
-        //                ]
-        //            );
-        //            Log::debug(sprintf('Stored journal under ID #%d', $journal->id));
-        //
-        //            // store transactions for this journal:
-        //            $factory->createPair($journal, $transactionData);
-        //
-        //            // link bill
-        //            Log::debug('Connect bill');
-        //            $this->connectBill($journal, $transactionData);
-        //
-        //            // link piggy bank (if transfer)
-        //            $this->connectPiggyBank($journal, $transactionData);
-        //
-        //            // link tags
-        //            $this->connectTags($journal, $transactionData);
-        //
-        //            // store note
-        //            $this->storeNote($journal, $transactionData['notes']);
-        //
-        //            // save journal:
-        //            $journal->completed = true;
-        //            $journal->save();
-        //
-        //
-        //
-        //            //            if ($journal->transactionType->type !== TransactionType::WITHDRAWAL) {
-        //            //                $transactionData['budget_id']   = null;
-        //            //                $transactionData['budget_name'] = null;
-        //            //            }
-        //            //            // save budget  TODO
-        //            //            $budget = $this->findBudget($data['budget_id'], $data['budget_name']);
-        //            //            $this->setBudget($journal, $budget);
-        //            //
-        //            //            // set category TODO
-        //            //            $category = $this->findCategory($data['category_id'], $data['category_name']);
-        //            //            $this->setCategory($journal, $category);
-        //            //
-        //            //            // store meta data TODO
-        //            //            foreach ($this->fields as $field) {
-        //            //                $this->storeMeta($journal, $data, $field);
-        //            //            }
-        //
-        //            // add to array
-        //            $journals->push($journal);
-        //        }
-        //
-        //        // create group if necessary
-        //        if ($journals->count() > 1) {
-        //            $group = new TransactionGroup;
-        //            $group->user()->associate($this->user);
-        //            $group->title = $description;
-        //            $group->save();
-        //            $group->transactionJournals()->saveMany($journals);
-        //
-        //            Log::debug(sprintf('More than one journal, created group #%d.', $group->id));
-        //        }
-        //
-        //
-        //        Log::debug('End of TransactionJournalFactory::create()');
-        //        // invalidate cache.
-        //        app('preferences')->mark();
-        //
-        //        return $journals;
     }
-
 
     /**
      * Set the user.
@@ -243,165 +189,214 @@ class TransactionJournalFactory
         $this->user = $user;
         $this->currencyRepository->setUser($this->user);
         $this->transactionFactory->setUser($this->user);
+        $this->billRepository->setUser($this->user);
+        $this->budgetRepository->setUser($this->user);
+        $this->categoryRepository->setUser($this->user);
+        $this->piggyRepository->setUser($this->user);
     }
 
-    //    /**
-    //     * Connect bill if present.
-    //     *
-    //     * @param TransactionJournal $journal
-    //     * @param array              $data
-    //     */
-    //    protected function connectBill(TransactionJournal $journal, array $data): void
-    //    {
-    //        if (!$journal->isWithdrawal()) {
-    //            Log::debug(sprintf('Journal #%d is not a withdrawal', $journal->id));
-    //
-    //            return;
-    //        }
-    //        /** @var BillFactory $factory */
-    //        $factory = app(BillFactory::class);
-    //        $factory->setUser($journal->user);
-    //
-    //        $bill = null;
-    //
-    //        if (isset($data['bill']) && $data['bill'] instanceof Bill && $data['bill']->user_id === $this->user->id) {
-    //            Log::debug('Bill object found and belongs to user');
-    //            $bill = $data['bill'];
-    //        }
-    //        if (null === $data['bill']) {
-    //            Log::debug('Bill object not found, search by bill data.');
-    //            $bill = $factory->find((int)$data['bill_id'], $data['bill_name']);
-    //        }
-    //
-    //        if (null !== $bill) {
-    //            Log::debug(sprintf('Connected bill #%d (%s) to journal #%d', $bill->id, $bill->name, $journal->id));
-    //            $journal->bill_id = $bill->id;
-    //            $journal->save();
-    //
-    //            return;
-    //        }
-    //        Log::debug('Bill data is NULL.');
-    //        $journal->bill_id = null;
-    //        $journal->save();
-    //
-    //    }
-    //
-    //    /**
-    //     * Link a piggy bank to this journal.
-    //     *
-    //     * @param TransactionJournal $journal
-    //     * @param array              $data
-    //     */
-    //    protected function connectPiggyBank(TransactionJournal $journal, array $data): void
-    //    {
-    //        if (!$journal->isTransfer()) {
-    //
-    //            return;
-    //        }
-    //        /** @var PiggyBankFactory $factory */
-    //        $factory = app(PiggyBankFactory::class);
-    //        $factory->setUser($this->user);
-    //        $piggyBank = null;
-    //
-    //        if (isset($data['piggy_bank']) && $data['piggy_bank'] instanceof PiggyBank && $data['piggy_bank']->account->user_id === $this->user->id) {
-    //            Log::debug('Piggy found and belongs to user');
-    //            $piggyBank = $data['piggy_bank'];
-    //        }
-    //        if (null === $data['piggy_bank']) {
-    //            Log::debug('Piggy not found, search by piggy data.');
-    //            $piggyBank = $factory->find($data['piggy_bank_id'], $data['piggy_bank_name']);
-    //        }
-    //
-    //        if (null !== $piggyBank) {
-    //            /** @var PiggyBankEventFactory $factory */
-    //            $factory = app(PiggyBankEventFactory::class);
-    //            $factory->create($journal, $piggyBank);
-    //            Log::debug('Create piggy event.');
-    //
-    //            return;
-    //        }
-    //        Log::debug('Create no piggy event');
-    //    }
-    //
-    //    /**
-    //     * @param array $data
-    //     * @param int   $index
-    //     *
-    //     * @return TransactionCurrency
-    //     */
-    //    private function getCurrency(array $data, int $index): TransactionCurrency
-    //    {
-    //        $currency = null;
-    //        // check currency object:
-    //        if (null === $currency && isset($data['currency']) && $data['currency'] instanceof TransactionCurrency) {
-    //            $currency = $data['currency'];
-    //        }
-    //
-    //        // check currency ID:
-    //        if (null === $currency && isset($data['currency_id']) && (int)$data['currency_id'] > 0) {
-    //            $currencyId = (int)$data['currency_id'];
-    //            $currency   = TransactionCurrency::find($currencyId);
-    //        }
-    //
-    //        // check currency code
-    //        if (null === $currency && isset($data['currency_code']) && 3 === \strlen($data['currency_code'])) {
-    //            $currency = TransactionCurrency::whereCode($data['currency_code'])->first();
-    //        }
-    //        if (null === $currency) {
-    //            // return user's default currency:
-    //            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-    //        }
-    //
-    //        // enable currency:
-    //        if (false === $currency->enabled) {
-    //            $currency->enabled = true;
-    //            $currency->save();
-    //        }
-    //        Log::debug(sprintf('Journal currency will be #%d (%s)', $currency->id, $currency->code));
-    //
-    //        return $currency;
-    //
-    //    }
-    //
-    //    /**
-    //     * @param array $data
-    //     * @param int   $index
-    //     *
-    //     * @return TransactionCurrency|null
-    //     */
-    //    private function getForeignCurrency(array $data, int $index): ?TransactionCurrency
-    //    {
-    //        $currency = null;
-    //
-    //        // check currency object:
-    //        if (null === $currency && isset($data['foreign_currency']) && $data['foreign_currency'] instanceof TransactionCurrency) {
-    //            $currency = $data['foreign_currency'];
-    //        }
-    //
-    //        // check currency ID:
-    //        if (null === $currency && isset($data['foreign_currency_id']) && (int)$data['foreign_currency_id'] > 0) {
-    //            $currencyId = (int)$data['foreign_currency_id'];
-    //            $currency   = TransactionCurrency::find($currencyId);
-    //        }
-    //
-    //        // check currency code
-    //        if (null === $currency && isset($data['foreign_currency_code']) && 3 === \strlen($data['foreign_currency_code'])) {
-    //            $currency = TransactionCurrency::whereCode($data['foreign_currency_code'])->first();
-    //        }
-    //
-    //        // enable currency:
-    //        if (null !== $currency && false === $currency->enabled) {
-    //            $currency->enabled = true;
-    //            $currency->save();
-    //        }
-    //        if (null !== $currency) {
-    //            Log::debug(sprintf('Journal foreign currency will be #%d (%s)', $currency->id, $currency->code));
-    //        }
-    //        if (null === $currency) {
-    //            Log::debug('Journal foreign currency will be NULL');
-    //        }
-    //
-    //        return $currency;
-    //    }
+    /**
+     * Join multiple journals in a group.
+     *
+     * @param Collection  $collection
+     * @param string|null $title
+     *
+     * @return TransactionGroup|null
+     */
+    public function storeGroup(Collection $collection, ?string $title): ?TransactionGroup
+    {
+        if ($collection->count() < 2) {
+            return null;
+        }
+        /** @var TransactionJournal $first */
+        $first = $collection->first();
+        $group = new TransactionGroup;
+        $group->user()->associate($first->user);
+        $group->title = $title ?? $first->description;
+        $group->save();
+
+        $group->transactionJournals()->saveMany($collection);
+
+        return $group;
+    }
+
+    /**
+     * Link a piggy bank to this journal.
+     *
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $data
+     */
+    public function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        Log::debug('Will now store piggy event.');
+        if (!$journal->isTransfer()) {
+            Log::debug('Journal is not a transfer, do nothing.');
+
+            return;
+        }
+
+        $piggyBank = $this->piggyRepository->findPiggyBank($data['piggy_bank'], $data['piggy_bank_id'], $data['piggy_bank_name']);
+
+        if (null !== $piggyBank) {
+            /** @var PiggyBankEventFactory $factory */
+            $factory = app(PiggyBankEventFactory::class);
+            $factory->create($journal, $piggyBank);
+            Log::debug('Create piggy event.');
+        }
+
+
+        /** @var PiggyBankFactory $factory */
+        $factory = app(PiggyBankFactory::class);
+        $factory->setUser($this->user);
+        $piggyBank = null;
+
+        if (isset($data['piggy_bank']) && $data['piggy_bank'] instanceof PiggyBank && $data['piggy_bank']->account->user_id === $this->user->id) {
+            Log::debug('Piggy found and belongs to user');
+            $piggyBank = $data['piggy_bank'];
+        }
+        if (null === $data['piggy_bank']) {
+            Log::debug('Piggy not found, search by piggy data.');
+            $piggyBank = $factory->find($data['piggy_bank_id'], $data['piggy_bank_name']);
+        }
+
+        if (null !== $piggyBank) {
+
+
+            return;
+        }
+        Log::debug('Create no piggy event');
+    }
+
+    /**
+     * Link tags to journal.
+     *
+     * @param TransactionJournal $journal
+     * @param array              $tags
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function storeTags(TransactionJournal $journal, ?array $tags): void
+    {
+        /** @var TagFactory $factory */
+        $factory = app(TagFactory::class);
+        $factory->setUser($journal->user);
+        $set = [];
+        if (!\is_array($tags)) {
+            return; // @codeCoverageIgnore
+        }
+        foreach ($tags as $string) {
+            if ('' !== $string) {
+                $tag = $factory->findOrCreate($string);
+                if (null !== $tag) {
+                    $set[] = $tag->id;
+                }
+            }
+        }
+        $journal->tags()->sync($set);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $data
+     * @param string             $field
+     */
+    protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
+    {
+        $set = [
+            'journal' => $journal,
+            'name'    => $field,
+            'data'    => (string)($data[$field] ?? ''),
+        ];
+
+        Log::debug(sprintf('Going to store meta-field "%s", with value "%s".', $set['name'], $set['data']));
+
+        /** @var TransactionJournalMetaFactory $factory */
+        $factory = app(TransactionJournalMetaFactory::class);
+        $factory->updateOrCreate($set);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string             $notes
+     */
+    protected function storeNote(TransactionJournal $journal, ?string $notes): void
+    {
+        $notes = (string)$notes;
+        if ('' !== $notes) {
+            $note = $journal->notes()->first();
+            if (null === $note) {
+                $note = new Note;
+                $note->noteable()->associate($journal);
+            }
+            $note->text = $notes;
+            $note->save();
+            Log::debug(sprintf('Stored notes for journal #%d', $journal->id));
+
+            return;
+        }
+        $note = $journal->notes()->first();
+        if (null !== $note) {
+            try {
+                $note->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Journal service trait could not delete note: %s', $e->getMessage()));
+            }
+        }
+    }
+
+    /**
+     * This is a separate function because "findCurrency" will default to EUR and that may not be what we want.
+     *
+     * @param NullArrayObject $transaction
+     *
+     * @return TransactionCurrency|null
+     */
+    private function findForeignCurrency(NullArrayObject $transaction): ?TransactionCurrency
+    {
+        if (null === $transaction['foreign_currency'] && null === $transaction['foreign_currency_id'] && null === $transaction['foreign_currency_code']) {
+            return null;
+        }
+
+        return $this->currencyRepository->findCurrency(
+            $transaction['foreign_currency'], $transaction['foreign_currency_id'], $transaction['foreign_currency_code']
+        );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $data
+     */
+    private function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        $budget = $this->budgetRepository->findBudget($data['budget'], $data['budget_id'], $data['budget_name']);
+        if (null !== $budget) {
+            Log::debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));
+            $journal->budgets()->sync([$budget->id]);
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $data
+     */
+    private function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
+    {
+        $category = $this->categoryRepository->findCategory($data['category'], $data['category_id'], $data['category_name']);
+        if (null !== $category) {
+            Log::debug(sprintf('Link category #%d to journal #%d', $category->id, $journal->id));
+            $journal->categories()->sync([$category->id]);
+        }
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param NullArrayObject    $transaction
+     */
+    private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
+    {
+        foreach ($this->fields as $field) {
+            $this->storeMeta($journal, $transaction, $field);
+        }
+    }
+
 
 }

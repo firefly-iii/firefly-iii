@@ -10,7 +10,6 @@
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transaction_journal_information'|_ }}</h3>
-
                     <div class="box-tools pull-right">
                         <div class="btn-group">
                             <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i>
@@ -72,7 +71,12 @@
                         </tr>
                         <tr>
                             <td>{{ trans('list.description') }}</td>
-                            <td>{{ journal.description }}</td>
+                            <td>
+                                {% if transactions[0].reconciled %}
+                                    <i class="fa fa-check"></i>
+                                {% endif %}
+
+                                {{ journal.description }}</td>
                         </tr>
                         <tr>
                             <td>{{ 'source_accounts'|_ }}</td>

@@ -22,7 +22,7 @@
     {# description #}
     <td>
         {# is reconciled? #}
-        {{ transaction|transactionReconciled }}
+        {{ transaction|transaction$array[$direction][$transactionType] }}
 
         <a href="{{ route('transactions.show',transaction.journal_id) }}">
             {{ transaction|transactionDescription }}

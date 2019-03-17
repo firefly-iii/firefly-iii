@@ -225,6 +225,43 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
+     * @param PiggyBank|null $piggyBank
+     * @param int|null       $piggyBankId
+     * @param string|null    $piggyBankName
+     *
+     * @return PiggyBank|null
+     */
+    public function findPiggyBank(?PiggyBank $piggyBank, ?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
+    {
+        Log::debug('Searching for piggy information.');
+        if ($piggyBank instanceof PiggyBank && $piggyBank->account->user_id === $this->user->id) {
+            Log::debug(sprintf('Piggy object in parameters, will return Piggy #%d', $piggyBank->id));
+
+            return $piggyBank;
+        }
+
+        if (null !== $piggyBankId) {
+            $searchResult = $this->findNull((int)$piggyBankId);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found piggy based on #%d, will return it.', $piggyBankId));
+
+                return $searchResult;
+            }
+        }
+        if (null !== $piggyBankName) {
+            $searchResult = $this->findByName((string)$piggyBankName);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found piggy based on "%s", will return it.', $piggyBankName));
+
+                return $searchResult;
+            }
+        }
+        Log::debug('Found nothing');
+
+        return null;
+    }
+
+    /**
      * Get current amount saved in piggy bank.
      *
      * @param PiggyBank $piggyBank

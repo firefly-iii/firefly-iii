@@ -33,6 +33,7 @@ use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
@@ -97,104 +98,42 @@ class TransactionFactory
     }
 
     /**
-     * @param TransactionCurrency $currency
-     * @param array               $data
+     * @param NullArrayObject          $data
+     * @param TransactionCurrency      $currency
+     * @param TransactionCurrency|null $foreignCurrency
      *
      * @return Collection
      * @throws FireflyException
      */
-    public function createPair(TransactionCurrency $currency, array $data): Collection
+    public function createPair(NullArrayObject $data, TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): Collection
     {
         $sourceAccount      = $this->getAccount('source', $data['source'], $data['source_id'], $data['source_name']);
         $destinationAccount = $this->getAccount('destination', $data['destination'], $data['destination_id'], $data['destination_name']);
         $amount             = $this->getAmount($data['amount']);
+        $foreignAmount      = $this->getForeignAmount($data['foreign_amount']);
 
         $one = $this->create($sourceAccount, $currency, app('steam')->negative($amount));
         $two = $this->create($destinationAccount, $currency, app('steam')->positive($amount));
 
+        $one->reconciled = $data['reconciled'] ?? false;
+        $two->reconciled = $data['reconciled'] ?? false;
+
+        // add foreign currency info to $one and $two if necessary.
+        if (null !== $foreignCurrency) {
+            $one->foreign_currency_id = $foreignCurrency->id;
+            $two->foreign_currency_id = $foreignCurrency->id;
+            $one->foreign_amount      = $foreignAmount;
+            $two->foreign_amount      = $foreignAmount;
+        }
+
+
+        $one->save();
+        $two->save();
+
         return new Collection([$one, $two]);
 
-        //        Log::debug('Start of TransactionFactory::createPair()'  );
-        //
-        //        // type of source account and destination account depends on journal type:
-        //        $sourceType      = $this->accountType($journal, 'source');
-        //        $destinationType = $this->accountType($journal, 'destination');
-        //
-        //        Log::debug(sprintf('Journal is a %s.', $journal->transactionType->type));
-        //        Log::debug(sprintf('Expect source account to be of type "%s"', $sourceType));
-        //        Log::debug(sprintf('Expect source destination to be of type "%s"', $destinationType));
-        //
-        //        // find source and destination account:
-        //        $sourceAccount      = $this->findAccount($sourceType, $data['source'], (int)$data['source_id'], $data['source_name']);
-        //        $destinationAccount = $this->findAccount($destinationType, $data['destination'], (int)$data['destination_id'], $data['destination_name']);
-        //
-        //        if (null === $sourceAccount || null === $destinationAccount) {
-        //            $debugData                = $data;
-        //            $debugData['source_type'] = $sourceType;
-        //            $debugData['dest_type']   = $destinationType;
-        //            Log::error('Info about source/dest:', $debugData);
-        //            throw new FireflyException('Could not determine source or destination account.');
-        //        }
-        //
-        //        Log::debug(sprintf('Source type is "%s", destination type is "%s"', $sourceAccount->accountType->type, $destinationAccount->accountType->type));
-        //
-        //        // based on the source type, destination type and transaction type, the system can start throwing FireflyExceptions.
-        //        $this->validateTransaction($sourceAccount->accountType->type, $destinationAccount->accountType->type, $journal->transactionType->type);
-        //        $source = $this->create(
-        //            [
-        //                'description'         => null,
-        //                'amount'              => app('steam')->negative((string)$data['amount']),
-        //                'foreign_amount'      => $data['foreign_amount'] ? app('steam')->negative((string)$data['foreign_amount']): null,
-        //                'currency'            => $data['currency'],
-        //                'foreign_currency'    => $data['foreign_currency'],
-        //                'account'             => $sourceAccount,
-        //                'transaction_journal' => $journal,
-        //                'reconciled'          => $data['reconciled'],
-        //            ]
-        //        );
-        //        $dest   = $this->create(
-        //            [
-        //                'description'         => null,
-        //                'amount'              => app('steam')->positive((string)$data['amount']),
-        //                'foreign_amount'      => $data['foreign_amount'] ? app('steam')->positive((string)$data['foreign_amount']): null,
-        //                'currency'            => $data['currency'],
-        //                'foreign_currency'    => $data['foreign_currency'],
-        //                'account'             => $destinationAccount,
-        //                'transaction_journal' => $journal,
-        //                'reconciled'          => $data['reconciled'],
-        //            ]
-        //        );
-        //        if (null === $source || null === $dest) {
-        //            throw new FireflyException('Could not create transactions.'); // @codeCoverageIgnore
-        //        }
-        //
-        //        return new Collection([$source, $dest]);
     }
 
-    //    /**
-    //     * @param array $data
-    //     *
-    //     * @return Transaction
-    //     */
-    //    public function create(array $data): ?Transaction
-    //    {
-    //        $data['foreign_amount'] = '' === (string)$data['foreign_amount'] ? null : $data['foreign_amount'];
-    //        Log::debug(sprintf('Create transaction for account #%d ("%s") with amount %s', $data['account']->id, $data['account']->name, $data['amount']));
-    //
-    //        return Transaction::create(
-    //            [
-    //                'reconciled'              => $data['reconciled'],
-    //                'account_id'              => $data['account']->id,
-    //                'transaction_journal_id'  => $data['transaction_journal']->id,
-    //                'description'             => $data['description'],
-    //                'transaction_currency_id' => $data['currency']->id,
-    //                'amount'                  => $data['amount'],
-    //                'foreign_amount'          => $data['foreign_amount'],
-    //                'foreign_currency_id'     => $data['foreign_currency'] ? $data['foreign_currency']->id : null,
-    //                'identifier'              => 0,
-    //            ]
-    //        );
-    //    }
 
     /**
      * @param TransactionJournal $journal
@@ -224,6 +163,8 @@ class TransactionFactory
      */
     private function getAccount(string $direction, ?Account $source, ?int $sourceId, ?string $sourceName): Account
     {
+        Log::debug(sprintf('Now in getAccount(%s)', $direction));
+        Log::debug(sprintf('Parameters: ((account), %s, %s)', var_export($sourceId, true), var_export($sourceName, true)));
         // expected type of source account, in order of preference
         $array         = [
             'source'      => [
@@ -252,11 +193,10 @@ class TransactionFactory
         $transactionType = $this->journal->transactionType->type;
         Log::debug(
             sprintf(
-                'Based on the fact that the transaction is a %s, the %s account should be in %s', $transactionType, $direction,
+                'Based on the fact that the transaction is a %s, the %s account should be in: %s', $transactionType, $direction,
                 implode(', ', $expectedTypes[$transactionType])
             )
         );
-
 
         // first attempt, check the "source" object.
         if (null !== $source && $source->user_id === $this->user->id && \in_array($source->accountType->type, $expectedTypes[$transactionType], true)) {
@@ -268,6 +208,10 @@ class TransactionFactory
         // second attempt, find by ID.
         if (null !== $sourceId) {
             $source = $this->accountRepository->findNull($sourceId);
+            if (null !== $source) {
+                Log::debug(sprintf('Found account #%d ("%s" of type "%s") based on #%d.', $source->id, $source->name, $source->accountType->type, $sourceId));
+            }
+
             if (null !== $source && \in_array($source->accountType->type, $expectedTypes[$transactionType], true)) {
                 Log::debug(sprintf('Found "account_id" object for %s: #%d, %s', $direction, $source->id, $source->name));
 
@@ -288,7 +232,7 @@ class TransactionFactory
                 return $source;
             }
         }
-
+        $sourceName = $sourceName ?? '(no name)';
         // final attempt, create it.
         $preferredType = $expectedTypes[$transactionType][0];
         if (AccountType::ASSET === $preferredType) {
@@ -320,6 +264,33 @@ class TransactionFactory
         if (0 === bccomp('0', $amount)) {
             throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
         }
+
+        return $amount;
+    }
+
+    /**
+     * @param string|null $amount
+     *
+     * @return string
+     */
+    private function getForeignAmount(?string $amount): ?string
+    {
+        if (null === $amount) {
+            Log::debug('No foreign amount info in array. Return NULL');
+
+            return null;
+        }
+        if ('' === $amount) {
+            Log::debug('Foreign amount is empty string, return NULL.');
+
+            return null;
+        }
+        if (0 === bccomp('0', $amount)) {
+            Log::debug('Foreign amount is 0.0, return NULL.');
+
+            return null;
+        }
+        Log::debug(sprintf('Foreign amount is %s', $amount));
 
         return $amount;
     }

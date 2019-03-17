@@ -219,6 +219,55 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
+     * @param Budget|null $budget
+     * @param int|null    $budgetId
+     * @param string|null $budgetName
+     *
+     * @return Budget|null
+     */
+    public function findBudget(?Budget $budget, ?int $budgetId, ?string $budgetName): ?Budget
+    {
+        Log::debug('Now in findBudget()');
+        $result = null;
+        if (null !== $budget) {
+            Log::debug(sprintf('Parameters contain budget #%d, will return this.', $budget->id));
+            $result = $budget;
+        }
+
+        if (null === $result) {
+            Log::debug(sprintf('Searching for budget with ID #%d...', $budgetId));
+            $result = $this->findNull((int)$budgetId);
+        }
+        if (null === $result) {
+            Log::debug(sprintf('Searching for budget with name %s...', $budgetName));
+            $result = $this->findByName((string)$budgetName);
+        }
+        if (null !== $result) {
+            Log::debug(sprintf('Found budget #%d: %s', $result->id, $result->name));
+        }
+        Log::debug(sprintf('Found result is null? %s', var_export(null === $result, true)));
+
+        return $result;
+    }
+
+    /**
+     * Find budget by name.
+     *
+     * @param string|null $name
+     *
+     * @return Budget|null
+     */
+    public function findByName(?string $name): ?Budget
+    {
+        if (null === $name) {
+            return null;
+        }
+        $query = sprintf('%%%s%%', $name);
+
+        return $this->user->budgets()->where('name', 'LIKE', $query)->first();
+    }
+
+    /**
      * Find a budget or return NULL
      *
      * @param int $budgetId |null
@@ -399,6 +448,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Returns all available budget objects.
      *
@@ -438,8 +489,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return bcdiv($total, (string)$days);
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Budget $budget
@@ -568,6 +617,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $set;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Get all budgets with these ID's.
      *
@@ -646,8 +697,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $this->user->budgets()->where('name', 'LIKE', $query)->get();
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param TransactionCurrency $currency
@@ -853,6 +902,8 @@ class BudgetRepository implements BudgetRepositoryInterface
         return $return;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param array $data
      *
@@ -914,8 +965,6 @@ class BudgetRepository implements BudgetRepositoryInterface
 
         return $limit;
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Budget $budget
