@@ -41,10 +41,13 @@ class StartFireflySession extends StartSession
      */
     protected function storeCurrentUrl(Request $request, $session): void
     {
-        $uri    = $request->fullUrl();
-        $strpos = strpos($uri, 'jscript');
+        $uri           = $request->fullUrl();
+        $isScriptPage = strpos($uri, 'jscript');
+        $isDeletePage  = strpos($uri, 'delete');
 
-        if (false === $strpos && 'GET' === $request->method() && !$request->ajax()) {
+        // also stop remembering "delete" URL's.
+
+        if (false === $isScriptPage && false === $isDeletePage && 'GET' === $request->method() && !$request->ajax()) {
             $session->setPreviousUrl($uri);
             Log::debug(sprintf('Will set previous URL to %s', $uri));
 
