@@ -1,7 +1,7 @@
 <?php
 
 /**
- * UpgradeDatabase.php
+ * UpgradeDatabaseX.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -70,7 +70,7 @@ use UnexpectedValueException;
  *
  * @codeCoverageIgnore
  */
-class UpgradeDatabase extends Command
+class UpgradeDatabaseX extends Command
 {
     /**
      * The console command description.
@@ -83,14 +83,13 @@ class UpgradeDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:upgrade-database';
+    protected $signature = 'firefly:upgrade-databaseX';
 
     /**
      * Execute the console command.
      */
     public function handle(): int
     {
-        $this->setTransactionIdentifier();
         $this->updateAccountCurrencies();
         $this->createNewTypes();
         $this->line('Updating currency information..');
@@ -277,112 +276,8 @@ class UpgradeDatabase extends Command
         }
     }
 
-    /**
-     * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
-     * to easier to match to their counterpart. When a journal is split, it has two or three transactions: -3, -4 and -5 for example.
-     *
-     * In the database this is reflected as 6 transactions: -3/+3, -4/+4, -5/+5.
-     *
-     * When either of these are the same amount, FF3 can't keep them apart: +3/-3, +3/-3, +3/-3. This happens more often than you would
-     * think. So each set gets a number (1,2,3) to keep them apart.
-     */
-    public function setTransactionIdentifier(): void
-    {
-        // if table does not exist, return false
-        if (!Schema::hasTable('transaction_journals')) {
-            return;
-        }
-        $subQuery = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                      ->whereNull('transaction_journals.deleted_at')
-                                      ->whereNull('transactions.deleted_at')
-                                      ->groupBy(['transaction_journals.id'])
-                                      ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
-        /** @noinspection PhpStrictTypeCheckingInspection */
-        $result     = DB::table(DB::raw('(' . $subQuery->toSql() . ') AS derived'))
-                        ->mergeBindings($subQuery->getQuery())
-                        ->where('t_count', '>', 2)
-                        ->select(['id', 't_count']);
-        $journalIds = array_unique($result->pluck('id')->toArray());
 
-        foreach ($journalIds as $journalId) {
-            $this->updateJournalidentifiers((int)$journalId);
-        }
 
-    }
-
-    /**
-     * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     */
-    public function updateAccountCurrencies(): void
-    {
-        Log::debug('Now in updateAccountCurrencies()');
-
-        $defaultConfig = (string)config('firefly.default_currency', 'EUR');
-        Log::debug(sprintf('System default currency is "%s"', $defaultConfig));
-
-        $accounts = Account::leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                           ->whereIn('account_types.type', [AccountType::DEFAULT, AccountType::ASSET])->get(['accounts.*']);
-        /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        $accounts->each(
-            function (Account $account) use ($repository, $defaultConfig) {
-                $repository->setUser($account->user);
-                // get users preference, fall back to system pref.
-
-                // expand and debug routine.
-                $defaultCurrencyCode = app('preferences')->getForUser($account->user, 'currencyPreference', $defaultConfig)->data;
-                Log::debug(sprintf('Default currency code is "%s"', var_export($defaultCurrencyCode, true)));
-                if (!is_string($defaultCurrencyCode)) {
-                    $defaultCurrencyCode = $defaultConfig;
-                    Log::debug(sprintf('Default currency code is not a string, now set to "%s"', $defaultCurrencyCode));
-                }
-                $defaultCurrency = TransactionCurrency::where('code', $defaultCurrencyCode)->first();
-                $accountCurrency = (int)$repository->getMetaValue($account, 'currency_id');
-                $openingBalance  = $account->getOpeningBalance();
-                $obCurrency      = (int)$openingBalance->transaction_currency_id;
-
-                if (null === $defaultCurrency) {
-                    throw new UnexpectedValueException(sprintf('User has a preference for "%s", but this currency does not exist.', $defaultCurrencyCode));
-                }
-                Log::debug(
-                    sprintf('Found default currency #%d (%s) while searching for "%s"', $defaultCurrency->id, $defaultCurrency->code, $defaultCurrencyCode)
-                );
-
-                // both 0? set to default currency:
-                if (0 === $accountCurrency && 0 === $obCurrency) {
-                    AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
-                    AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $defaultCurrency->id]);
-                    $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
-
-                    return true;
-                }
-
-                // account is set to 0, opening balance is not?
-                if (0 === $accountCurrency && $obCurrency > 0) {
-                    AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
-                    $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $defaultCurrencyCode));
-
-                    return true;
-                }
-
-                // do not match and opening balance id is not null.
-                if ($accountCurrency !== $obCurrency && $openingBalance->id > 0) {
-                    // update opening balance:
-                    $openingBalance->transaction_currency_id = $accountCurrency;
-                    $openingBalance->save();
-                    $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
-
-                    return true;
-                }
-
-                return true;
-            }
-        );
-
-    }
 
     /**
      * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
@@ -638,50 +533,7 @@ class UpgradeDatabase extends Command
 
     }
 
-    /**
-     * grab all positive transactiosn from this journal that are not deleted. for each one, grab the negative opposing one
-     * which has 0 as an identifier and give it the same identifier.
-     *
-     * @param int $journalId
-     */
-    private function updateJournalidentifiers(int $journalId): void
-    {
-        $identifier   = 0;
-        $processed    = [];
-        $transactions = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->get();
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            // find opposing:
-            $amount = bcmul((string)$transaction->amount, '-1');
 
-            try {
-                /** @var Transaction $opposing */
-                $opposing = Transaction::where('transaction_journal_id', $journalId)
-                                       ->where('amount', $amount)->where('identifier', '=', 0)
-                                       ->whereNotIn('id', $processed)
-                                       ->first();
-            } catch (QueryException $e) {
-                Log::error($e->getMessage());
-                $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
-                $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
-                $this->error('Please run "php artisan migrate" to add this field to the table.');
-                $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
-
-                return;
-            }
-            if (null !== $opposing) {
-                // give both a new identifier:
-                $transaction->identifier = $identifier;
-                $opposing->identifier    = $identifier;
-                $transaction->save();
-                $opposing->save();
-                $processed[] = $transaction->id;
-                $processed[] = $opposing->id;
-            }
-            ++$identifier;
-        }
-
-    }
 
     /**
      * This method makes sure that the tranaction uses the same currency as the source account does.

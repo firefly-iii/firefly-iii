@@ -21,17 +21,13 @@
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-use Carbon\Carbon;
-use DB;
 use Exception;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -43,6 +39,7 @@ use Log;
  */
 class MigrateToGroups extends Command
 {
+    public const CONFIG_NAME = '4780_migrated_to_groups';
     /**
      * The console command description.
      *
@@ -54,13 +51,16 @@ class MigrateToGroups extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
+    protected $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
 
     /** @var TransactionJournalFactory */
     private $journalFactory;
 
     /** @var JournalRepositoryInterface */
     private $journalRepository;
+
+    /** @var JournalDestroyService */
+    private $service;
 
     /**
      * Create a new command instance.
@@ -72,80 +72,7 @@ class MigrateToGroups extends Command
         parent::__construct();
         $this->journalFactory    = app(TransactionJournalFactory::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
-     *
-     * @return int
-     */
-    public function getBudgetId(TransactionJournal $journal, Transaction $transaction): int
-    {
-        $budgetId = 0;
-        if (null !== $transaction->budgets()->first()) {
-            $budgetId = (int)$transaction->budgets()->first()->id; // done!
-            Log::debug(sprintf('Transaction #%d has a reference to budget #%d so will use that one.', $transaction->id, $budgetId));
-        }
-        if (0 === $budgetId && $journal->budgets()->first()) {
-            $budgetId = (int)$journal->budgets()->first()->id; // also done!
-            Log::debug(
-                sprintf('Transaction #%d has NO budget, but journal #%d has budget #%d so will use that one.', $transaction->id, $journal->id, $budgetId)
-            );
-        }
-        Log::debug(sprintf('Final budget ID for journal #%d and transaction #%d is %d', $journal->id, $transaction->id, $budgetId));
-
-        return $budgetId;
-
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
-     *
-     * @return int
-     */
-    public function getCategoryId(TransactionJournal $journal, Transaction $transaction): int
-    {
-        $categoryId = 0;
-        if (null !== $transaction->categories()->first()) {
-            $categoryId = (int)$transaction->categories()->first()->id; // done!
-            Log::debug(sprintf('Transaction #%d has a reference to category #%d so will use that one.', $transaction->id, $categoryId));
-        }
-        if (0 === $categoryId && $journal->categories()->first()) {
-            $categoryId = (int)$journal->categories()->first()->id; // also done!
-            Log::debug(
-                sprintf('Transaction #%d has NO category, but journal #%d has category #%d so will use that one.', $transaction->id, $journal->id, $categoryId)
-            );
-        }
-        Log::debug(sprintf('Final category ID for journal #%d and transaction #%d is %d', $journal->id, $transaction->id, $categoryId));
-
-        return $categoryId;
-
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param Transaction        $transaction
-     *
-     * @return Transaction
-     * @throws FireflyException
-     */
-    public function getOpposingTransaction(TransactionJournal $journal, Transaction $transaction): Transaction
-    {
-        /** @var Transaction $opposing */
-        $opposing = $journal->transactions()->where('amount', $transaction->amount * -1)->where('identifier', $transaction->identifier)->first();
-        if (null === $opposing) {
-            $message = sprintf(
-                'Could not convert journal #%d ("%s") because transaction #%d has no opposite entry in the database. This requires manual intervention beyond the capabilities of this script. Please open an issue on GitHub.',
-                $journal->id, $journal->description, $transaction->id
-            );
-            $this->error($message);
-            throw new FireflyException($message);
-        }
-        Log::debug(sprintf('Found opposing transaction #%d for transaction #%d (both part of journal #%d)', $opposing->id, $transaction->id, $journal->id));
-
-        return $opposing;
+        $this->service           = app(JournalDestroyService::class);
     }
 
     /**
@@ -158,6 +85,8 @@ class MigrateToGroups extends Command
     {
         if ($this->isMigrated() && true !== $this->option('force')) {
             $this->info('Database already seems to be migrated.');
+
+            return 0;
         }
         if (true === $this->option('force')) {
             $this->warn('Forcing the migration.');
@@ -177,13 +106,12 @@ class MigrateToGroups extends Command
      */
     private function isMigrated(): bool
     {
-        $configName = 'migrated_to_groups_4780';
-        $configVar  = app('fireflyconfig')->get($configName, false);
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
         if (null !== $configVar) {
             return (bool)$configVar->data;
         }
 
-        return false;
+        return false; // @codeCoverageIgnore
     }
 
     /**
@@ -204,9 +132,6 @@ class MigrateToGroups extends Command
         $this->journalRepository->setUser($journal->user);
         $this->journalFactory->setUser($journal->user);
 
-        /** @var JournalDestroyService $service */
-        $service = app(JournalDestroyService::class);
-
         $data = [
             // mandatory fields.
             'type'         => strtolower($journal->transactionType->type),
@@ -222,12 +147,21 @@ class MigrateToGroups extends Command
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
             Log::debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
-            $budgetId   = $this->getBudgetId($journal, $transaction);
-            $categoryId = $this->getCategoryId($journal, $transaction);
-            $opposingTr = $this->getOpposingTransaction($journal, $transaction);
-            $tArray     = [
+            $budgetId   = $this->journalRepository->getJournalBudgetId($journal);
+            $categoryId = $this->journalRepository->getJournalCategoryId($journal);
+            $opposingTr = $this->journalRepository->findOpposingTransaction($transaction);
 
-                // currency and foreign currency
+            if (null === $opposingTr) {
+                $this->error(
+                    sprintf(
+                        'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
+                        $journal->id, $transaction->id
+                    )
+                );
+                continue;
+            }
+
+            $tArray = [
                 'currency_id'         => $transaction->transaction_currency_id,
                 'foreign_currency_id' => $transaction->foreign_currency_id,
                 'amount'              => $transaction->amount,
@@ -239,7 +173,7 @@ class MigrateToGroups extends Command
                 'category_id'         => $categoryId,
                 'bill_id'             => $journal->bill_id,
                 'notes'               => $this->journalRepository->getNoteText($journal),
-                'tags'                => $journal->tags->pluck('tag')->toArray(),
+                'tags'                => $this->journalRepository->getTags($journal),
                 'internal_reference'  => $this->journalRepository->getMetaField($journal, 'internal-reference'),
                 'sepa-cc'             => $this->journalRepository->getMetaField($journal, 'sepa-cc'),
                 'sepa-ct-op'          => $this->journalRepository->getMetaField($journal, 'sepa-ct-op'),
@@ -270,7 +204,7 @@ class MigrateToGroups extends Command
         Log::debug('Done calling transaction journal factory');
 
         // delete the old transaction journal.
-        //$service->destroy($journal);
+        //$this->service->destroy($journal);
 
         // report on result:
         Log::debug(sprintf('Migrated journal #%d into these journals: %s', $journal->id, implode(', ', $result->pluck('id')->toArray())));
@@ -283,22 +217,17 @@ class MigrateToGroups extends Command
      */
     private function makeGroups(): void
     {
-        // grab all split transactions:
-        $all = Transaction::groupBy('transaction_journal_id')->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as result')]);
-        /** @var Collection $filtered */
-        $filtered      = $all->filter(
-            function (Transaction $transaction) {
-                return (int)$transaction->result > 2;
-            }
-        );
-        $journalIds    = array_unique($filtered->pluck('transaction_journal_id')->toArray());
-        $splitJournals = TransactionJournal::whereIn('id', $journalIds)->get();
+        $splitJournals = $this->journalRepository->getSplitJournals();
+
         if ($splitJournals->count() > 0) {
             $this->info(sprintf('Going to un-split %d transaction(s). This could take some time.', $splitJournals->count()));
             /** @var TransactionJournal $journal */
             foreach ($splitJournals as $journal) {
                 $this->makeGroup($journal);
             }
+        }
+        if (0 === $splitJournals->count()) {
+            $this->info('Found no split journals. Nothing to do.');
         }
     }
 
@@ -307,7 +236,7 @@ class MigrateToGroups extends Command
      */
     private function markAsMigrated(): void
     {
-        app('fireflyconfig')->set('migrated_to_groups_4780', true);
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
 }
