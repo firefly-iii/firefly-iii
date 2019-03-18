@@ -123,6 +123,14 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return Account
+     */
+    public function getRandomLoan(): Account
+    {
+        return $this->getRandomAccount(AccountType::LOAN);
+    }
+
+    /**
      * @return TransactionJournal
      */
     public function getRandomDeposit(): TransactionJournal

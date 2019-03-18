@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionJournalFactory;
@@ -321,6 +322,28 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalCategoryId(TransactionJournal $journal): int
+    {
+        $category = $journal->categories()->first();
+        if (null !== $category) {
+            return $category->id;
+        }
+        /** @noinspection NullPointerExceptionInspection */
+        $category = $journal->transactions()->first()->categories()->first();
+        if (null !== $category) {
+            return $category->id;
+        }
+
+        return 0;
+    }
+
+    /**
      * Return the name of the category linked to the journal (if any) or to the transactions (if any).
      *
      * @param TransactionJournal $journal
@@ -613,6 +636,27 @@ class JournalRepository implements JournalRepositoryInterface
     public function getPiggyBankEventsbyTr(Transaction $transaction): Collection
     {
         return $transaction->transactionJournal->piggyBankEvents()->get();
+    }
+
+    /**
+     * Returns all journals with more than 2 transactions. Should only return empty collections
+     * in Firefly III > v4.8.0.
+     *
+     * @return Collection
+     */
+    public function getSplitJournals(): Collection
+    {
+        // grab all split transactions:
+        $all = Transaction::groupBy('transaction_journal_id')->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as result')]);
+        /** @var Collection $filtered */
+        $filtered   = $all->filter(
+            function (Transaction $transaction) {
+                return (int)$transaction->result > 2;
+            }
+        );
+        $journalIds = array_unique($filtered->pluck('transaction_journal_id')->toArray());
+
+        return TransactionJournal::whereIn('id', $journalIds)->get();
     }
 
     /**

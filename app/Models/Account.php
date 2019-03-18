@@ -36,37 +36,31 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class Account.
  *
- * @property int         $id
- * @property string      $name
- * @property string      $iban
- * @property AccountType $accountType
- * @property bool        $active
- * @property string      $virtual_balance
- * @property User        $user
- * @property string      startBalance
- * @property string      endBalance
- * @property string      difference
- * @property Carbon      lastActivityDate
- * @property Collection  accountMeta
- * @property bool        encrypted
- * @property int         account_type_id
- * @property Collection  piggyBanks
- * @property string      $interest
- * @property string      $interestPeriod
- * @property string      accountTypeString
- * @property Carbon      created_at
- * @property Carbon      updated_at
+ * @property int                                                                            $id
+ * @property string                                                                         $name
+ * @property string                                                                         $iban
+ * @property AccountType                                                                    $accountType
+ * @property bool                                                                           $active
+ * @property string                                                                         $virtual_balance
+ * @property User                                                                           $user
+ * @property string                                                                         startBalance
+ * @property string                                                                         endBalance
+ * @property string                                                                         difference
+ * @property Carbon                                                                         lastActivityDate
+ * @property Collection                                                                     accountMeta
+ * @property bool                                                                           encrypted
+ * @property int                                                                            account_type_id
+ * @property Collection                                                                     piggyBanks
+ * @property string                                                                         $interest
+ * @property string                                                                         $interestPeriod
+ * @property string                                                                         accountTypeString
+ * @property Carbon                                                                         created_at
+ * @property Carbon                                                                         updated_at
  * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property int $account_type_id
- * @property bool $encrypted
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AccountMeta[] $accountMeta
- * @property-read string $edit_name
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
+ * @property \Illuminate\Support\Carbon|null                                                $deleted_at
+ * @property int                                                                            $user_id
+ * @property-read string                                                                    $edit_name
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[]        $notes
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Transaction[] $transactions
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Account accountTypeIn($types)
  * @method static bool|null forceDelete()
@@ -103,6 +97,7 @@ class Account extends Model
         = [
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
+            'user_id'    => 'integer',
             'deleted_at' => 'datetime',
             'active'     => 'boolean',
             'encrypted'  => 'boolean',

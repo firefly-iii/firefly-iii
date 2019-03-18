@@ -35,6 +35,7 @@ use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -61,8 +62,6 @@ class TransactionFactory
         $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
-    //use TransactionServiceTrait;
-
     /**
      * @param Account             $account
      * @param TransactionCurrency $currency
@@ -72,19 +71,23 @@ class TransactionFactory
      */
     public function create(Account $account, TransactionCurrency $currency, string $amount): ?Transaction
     {
-        $result = Transaction::create(
-            [
-                'reconciled'              => false,
-                'account_id'              => $account->id,
-                'transaction_journal_id'  => $this->journal->id,
-                'description'             => null,
-                'transaction_currency_id' => $currency->id,
-                'amount'                  => $amount,
-                'foreign_amount'          => null,
-                'foreign_currency_id'     => null,
-                'identifier'              => 0,
-            ]
-        );
+        $result = null;
+        $data   = [
+            'reconciled'              => false,
+            'account_id'              => $account->id,
+            'transaction_journal_id'  => $this->journal->id,
+            'description'             => null,
+            'transaction_currency_id' => $currency->id,
+            'amount'                  => $amount,
+            'foreign_amount'          => null,
+            'foreign_currency_id'     => null,
+            'identifier'              => 0,
+        ];
+        try {
+            $result = Transaction::create($data);
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
+        }
         if (null !== $result) {
             Log::debug(
                 sprintf(
@@ -107,10 +110,13 @@ class TransactionFactory
      */
     public function createPair(NullArrayObject $data, TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): Collection
     {
-        $sourceAccount      = $this->getAccount('source', $data['source'], $data['source_id'], $data['source_name']);
-        $destinationAccount = $this->getAccount('destination', $data['destination'], $data['destination_id'], $data['destination_name']);
+        $sourceAccount      = $this->getAccount('source', $data['source'], (int)$data['source_id'], $data['source_name']);
+        $destinationAccount = $this->getAccount('destination', $data['destination'], (int)$data['destination_id'], $data['destination_name']);
         $amount             = $this->getAmount($data['amount']);
         $foreignAmount      = $this->getForeignAmount($data['foreign_amount']);
+
+        $this->makeDramaOverAccountTypes($sourceAccount, $destinationAccount);
+
 
         $one = $this->create($sourceAccount, $currency, app('steam')->negative($amount));
         $two = $this->create($destinationAccount, $currency, app('steam')->positive($amount));
@@ -134,24 +140,6 @@ class TransactionFactory
 
     }
 
-
-    /**
-     * @param TransactionJournal $journal
-     */
-    public function setJournal(TransactionJournal $journal): void
-    {
-        $this->journal = $journal;
-    }
-
-    /**
-     * @param User $user
-     */
-    public function setUser(User $user): void
-    {
-        $this->user = $user;
-        $this->accountRepository->setUser($user);
-    }
-
     /**
      * @param string       $direction
      * @param Account|null $source
@@ -161,7 +149,7 @@ class TransactionFactory
      * @return Account
      * @throws FireflyException
      */
-    private function getAccount(string $direction, ?Account $source, ?int $sourceId, ?string $sourceName): Account
+    public function getAccount(string $direction, ?Account $source, ?int $sourceId, ?string $sourceName): Account
     {
         Log::debug(sprintf('Now in getAccount(%s)', $direction));
         Log::debug(sprintf('Parameters: ((account), %s, %s)', var_export($sourceId, true), var_export($sourceName, true)));
@@ -169,21 +157,21 @@ class TransactionFactory
         $array         = [
             'source'      => [
                 TransactionType::WITHDRAWAL      => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                TransactionType::DEPOSIT         => [AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+                TransactionType::DEPOSIT         => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
+                                                     AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION],
                 TransactionType::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
                 TransactionType::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
                                                      AccountType::MORTGAGE],
-                TransactionType::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                     AccountType::MORTGAGE],
+                TransactionType::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
             ],
             'destination' => [
-                TransactionType::WITHDRAWAL      => [AccountType::EXPENSE, AccountType::ASSET],
+                TransactionType::WITHDRAWAL      => [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT,
+                                                     AccountType::MORTGAGE],
                 TransactionType::DEPOSIT         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
                 TransactionType::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
                 TransactionType::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
                                                      AccountType::MORTGAGE],
-                TransactionType::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                     AccountType::MORTGAGE],
+                TransactionType::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
             ],
         ];
         $expectedTypes = $array[$direction];
@@ -208,12 +196,10 @@ class TransactionFactory
         // second attempt, find by ID.
         if (null !== $sourceId) {
             $source = $this->accountRepository->findNull($sourceId);
-            if (null !== $source) {
-                Log::debug(sprintf('Found account #%d ("%s" of type "%s") based on #%d.', $source->id, $source->name, $source->accountType->type, $sourceId));
-            }
-
             if (null !== $source && \in_array($source->accountType->type, $expectedTypes[$transactionType], true)) {
-                Log::debug(sprintf('Found "account_id" object for %s: #%d, %s', $direction, $source->id, $source->name));
+                Log::debug(
+                    sprintf('Found "account_id" object  for %s: #%d, "%s" of type %s', $direction, $source->id, $source->name, $source->accountType->type)
+                );
 
                 return $source;
             }
@@ -231,6 +217,9 @@ class TransactionFactory
 
                 return $source;
             }
+        }
+        if (null === $sourceName && \in_array(AccountType::CASH, $expectedTypes[$transactionType], true)) {
+            return $this->accountRepository->getCashAccount();
         }
         $sourceName = $sourceName ?? '(no name)';
         // final attempt, create it.
@@ -256,7 +245,7 @@ class TransactionFactory
      * @return string
      * @throws FireflyException
      */
-    private function getAmount(string $amount): string
+    public function getAmount(string $amount): string
     {
         if ('' === $amount) {
             throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
@@ -273,7 +262,7 @@ class TransactionFactory
      *
      * @return string
      */
-    private function getForeignAmount(?string $amount): ?string
+    public function getForeignAmount(?string $amount): ?string
     {
         if (null === $amount) {
             Log::debug('No foreign amount info in array. Return NULL');
@@ -294,29 +283,78 @@ class TransactionFactory
 
         return $amount;
     }
-    //
-    //    /**
-    //     * @param string $sourceType
-    //     * @param string $destinationType
-    //     * @param string $transactionType
-    //     *
-    //     * @throws FireflyException
-    //     */
-    //    private function validateTransaction(string $sourceType, string $destinationType, string $transactionType): void
-    //    {
-    //        // throw big fat error when source type === dest type and it's not a transfer or reconciliation.
-    //        if ($sourceType === $destinationType && $transactionType !== TransactionType::TRANSFER) {
-    //            throw new FireflyException(sprintf('Source and destination account cannot be both of the type "%s"', $destinationType));
-    //        }
-    //        // source must be in this list AND dest must be in this list:
-    //        $list = [AccountType::DEFAULT, AccountType::ASSET, AccountType::CREDITCARD, AccountType::CASH, AccountType::DEBT, AccountType::MORTGAGE,
-    //                 AccountType::LOAN, AccountType::MORTGAGE];
-    //        if (
-    //            !\in_array($sourceType, $list, true)
-    //            && !\in_array($destinationType, $list, true)) {
-    //            throw new FireflyException(sprintf('At least one of the accounts must be an asset account (%s, %s).', $sourceType, $destinationType));
-    //        }
-    //    }
 
+    /**
+     * This method will throw a Firefly III Exception of the source and destination account types are not OK.
+     *
+     * @throws FireflyException
+     *
+     * @param Account $source
+     * @param Account $destination
+     */
+    public function makeDramaOverAccountTypes(Account $source, Account $destination): void
+    {
+        // if the source is X, then Y is allowed as destination.
+        $combinations = [
+            TransactionType::WITHDRAWAL      => [
+                AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],
+                AccountType::LOAN     => [AccountType::EXPENSE],
+                AccountType::DEBT     => [AccountType::EXPENSE],
+                AccountType::MORTGAGE => [AccountType::EXPENSE],
+            ],
+            TransactionType::DEPOSIT         => [
+                AccountType::REVENUE  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+                AccountType::CASH     => [AccountType::ASSET],
+                AccountType::LOAN     => [AccountType::ASSET],
+                AccountType::DEBT     => [AccountType::ASSET],
+                AccountType::MORTGAGE => [AccountType::ASSET],
+            ],
+            TransactionType::TRANSFER        => [
+                AccountType::ASSET    => [AccountType::ASSET],
+                AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+                AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+                AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            ],
+            TransactionType::OPENING_BALANCE => [
+                AccountType::ASSET           => [AccountType::INITIAL_BALANCE],
+                AccountType::LOAN            => [AccountType::INITIAL_BALANCE],
+                AccountType::DEBT            => [AccountType::INITIAL_BALANCE],
+                AccountType::MORTGAGE        => [AccountType::INITIAL_BALANCE],
+                AccountType::INITIAL_BALANCE => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
+            ],
+            TransactionType::RECONCILIATION  => [
+                AccountType::RECONCILIATION => [AccountType::ASSET],
+                AccountType::ASSET          => [AccountType::RECONCILIATION],
+            ],
+        ];
+        $sourceType   = $source->accountType->type;
+        $destType     = $destination->accountType->type;
+        $journalType  = $this->journal->transactionType->type;
+        $allowed      = $combinations[$journalType][$sourceType] ?? [];
+        if (!\in_array($destType, $allowed, true)) {
+            throw new FireflyException(
+                sprintf(
+                    'Journal of type "%s" has a source account of type "%s" and cannot accept a "%s"-account as destination, but only accounts of: %s', $journalType, $sourceType,
+                    $destType, implode(', ', $combinations[$journalType][$sourceType])
+                )
+            );
+        }
+    }
 
+    /**
+     * @param TransactionJournal $journal
+     */
+    public function setJournal(TransactionJournal $journal): void
+    {
+        $this->journal = $journal;
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
+    }
 }

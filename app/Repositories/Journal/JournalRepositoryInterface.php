@@ -150,6 +150,15 @@ interface JournalRepositoryInterface
     public function getJournalBudgetId(TransactionJournal $journal): int;
 
     /**
+     * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalCategoryId(TransactionJournal $journal): int;
+
+    /**
      * Return the name of the category linked to the journal (if any) or to the transactions (if any).
      *
      * @param TransactionJournal $journal
@@ -255,6 +264,14 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getPiggyBankEventsbyTr(Transaction $transaction): Collection;
+
+    /**
+     * Returns all journals with more than 2 transactions. Should only return empty collections
+     * in Firefly III > v4.8.0.
+     *
+     * @return Collection
+     */
+    public function getSplitJournals(): Collection;
 
     /**
      * Return all tags as strings in an array.
