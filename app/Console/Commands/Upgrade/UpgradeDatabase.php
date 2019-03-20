@@ -62,6 +62,12 @@ class UpgradeDatabase extends Command
         $commands = [
             'firefly-iii:transaction-identifiers',
             'firefly-iii:account-currencies',
+            'firefly-iii:journal-currencies',
+            'firefly-iii:migrate-notes',
+            'firefly-iii:migrate-attachments',
+            'firefly-iii:bills-to-rules',
+            'firefly-iii:bl-currency',
+            'firefly-iii:cc-liabilities',
             'firefly-iii:migrate-to-groups',
             'firefly-iii:back-to-journals',
         ];

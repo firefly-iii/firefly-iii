@@ -1,8 +1,7 @@
 <?php
-
 /**
- * UpgradeDatabaseX.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * JournalCurrencies.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,264 +19,61 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** @noinspection MultipleReturnStatementsInspection */
-/** @noinspection PhpStaticAsDynamicMethodCallInspection */
-/** @noinspection PhpDynamicAsStaticMethodCallInspection */
-
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands;
+namespace FireflyIII\Console\Commands\Upgrade;
 
-use Crypt;
-use DB;
-use Exception;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Note;
-use FireflyIII\Models\Preference;
-use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleAction;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\User;
 use Illuminate\Console\Command;
-use Illuminate\Contracts\Encryption\DecryptException;
-use Illuminate\Database\QueryException;
 use Illuminate\Support\Collection;
 use Log;
-use Schema;
-use UnexpectedValueException;
 
 /**
- * Class UpgradeDatabase.
- *
- * Upgrade user database.
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- *
- * @codeCoverageIgnore
+ * Class JournalCurrencies
  */
-class UpgradeDatabaseX extends Command
+class JournalCurrencies extends Command
 {
+
+    public const CONFIG_NAME = '4780_journal_currencies';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Will run various commands to update database records.';
+    protected $description = 'Update all transaction and journal currencies.';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly:upgrade-databaseX';
+    protected $signature = 'firefly-iii:journal-currencies {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
+     *
+     * @return int
      */
     public function handle(): int
     {
-        $this->updateAccountCurrencies();
-        $this->createNewTypes();
-        $this->line('Updating currency information..');
+        if ($this->isExecuted() && true !== $this->option('force')) {
+            $this->warn('This command has already been executed.');
+
+            return 0;
+        }
+
         $this->updateTransferCurrencies();
         $this->updateOtherCurrencies();
-        $this->line('Done updating currency information..');
-        $this->migrateNotes();
-        $this->migrateAttachmentData();
-        $this->migrateBillsToRules();
-        $this->budgetLimitCurrency();
-        $this->removeCCLiabilities();
-
-        $this->info('Firefly III database is up to date.');
+        $this->markAsExecuted();
 
         return 0;
     }
-
-    /**
-     * @param string $value
-     *
-     * @return string
-     */
-    private function tryDecrypt(string $value): string
-    {
-        try {
-            $value = Crypt::decrypt($value);
-        } catch (DecryptException $e) {
-            Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
-        }
-
-        return $value;
-    }
-
-    /**
-     * Since it is one routine these warnings make sense and should be supressed.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     */
-    public function migrateBillsToRules(): void
-    {
-        foreach (User::get() as $user) {
-            /** @var Preference $lang */
-            $lang               = app('preferences')->getForUser($user, 'language', 'en_US');
-            $groupName          = (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data);
-            $ruleGroup          = $user->ruleGroups()->where('title', $groupName)->first();
-            $currencyPreference = app('preferences')->getForUser($user, 'currencyPreference', config('firefly.default_currency', 'EUR'));
-
-            if (null === $currencyPreference) {
-                $this->error('User has no currency preference. Impossible.');
-
-                return;
-            }
-            $currencyCode = $this->tryDecrypt($currencyPreference->data);
-
-            // try json decrypt just in case.
-            if (\strlen($currencyCode) > 3) {
-                $currencyCode = json_decode($currencyCode) ?? 'EUR';
-            }
-
-            $currency = TransactionCurrency::where('code', $currencyCode)->first();
-            if (null === $currency) {
-                $this->line('Fall back to default currency in migrateBillsToRules().');
-                $currency = app('amount')->getDefaultCurrencyByUser($user);
-            }
-
-            if (null === $ruleGroup) {
-                $array     = RuleGroup::get(['order'])->pluck('order')->toArray();
-                $order     = \count($array) > 0 ? max($array) + 1 : 1;
-                $ruleGroup = RuleGroup::create(
-                    [
-                        'user_id'     => $user->id,
-                        'title'       => (string)trans('firefly.rulegroup_for_bills_title', [], $lang->data),
-                        'description' => (string)trans('firefly.rulegroup_for_bills_description', [], $lang->data),
-                        'order'       => $order,
-                        'active'      => 1,
-                    ]
-                );
-            }
-
-            // loop bills.
-            $order = 1;
-            /** @var Collection $collection */
-            $collection = $user->bills()->get();
-            /** @var Bill $bill */
-            foreach ($collection as $bill) {
-                if ('MIGRATED_TO_RULES' !== $bill->match) {
-                    $rule = Rule::create(
-                        [
-                            'user_id'         => $user->id,
-                            'rule_group_id'   => $ruleGroup->id,
-                            'title'           => (string)trans('firefly.rule_for_bill_title', ['name' => $bill->name], $lang->data),
-                            'description'     => (string)trans('firefly.rule_for_bill_description', ['name' => $bill->name], $lang->data),
-                            'order'           => $order,
-                            'active'          => $bill->active,
-                            'stop_processing' => 1,
-                        ]
-                    );
-                    // add default trigger
-                    RuleTrigger::create(
-                        [
-                            'rule_id'         => $rule->id,
-                            'trigger_type'    => 'user_action',
-                            'trigger_value'   => 'store-journal',
-                            'active'          => 1,
-                            'stop_processing' => 0,
-                            'order'           => 1,
-                        ]
-                    );
-                    // add trigger for description
-                    $match = implode(' ', explode(',', $bill->match));
-                    RuleTrigger::create(
-                        [
-                            'rule_id'         => $rule->id,
-                            'trigger_type'    => 'description_contains',
-                            'trigger_value'   => $match,
-                            'active'          => 1,
-                            'stop_processing' => 0,
-                            'order'           => 2,
-                        ]
-                    );
-                    if ($bill->amount_max !== $bill->amount_min) {
-                        // add triggers for amounts:
-                        RuleTrigger::create(
-                            [
-                                'rule_id'         => $rule->id,
-                                'trigger_type'    => 'amount_less',
-                                'trigger_value'   => round($bill->amount_max, $currency->decimal_places),
-                                'active'          => 1,
-                                'stop_processing' => 0,
-                                'order'           => 3,
-                            ]
-                        );
-                        RuleTrigger::create(
-                            [
-                                'rule_id'         => $rule->id,
-                                'trigger_type'    => 'amount_more',
-                                'trigger_value'   => round((float)$bill->amount_min, $currency->decimal_places),
-                                'active'          => 1,
-                                'stop_processing' => 0,
-                                'order'           => 4,
-                            ]
-                        );
-                    }
-                    if ($bill->amount_max === $bill->amount_min) {
-                        RuleTrigger::create(
-                            [
-                                'rule_id'         => $rule->id,
-                                'trigger_type'    => 'amount_exactly',
-                                'trigger_value'   => round((float)$bill->amount_min, $currency->decimal_places),
-                                'active'          => 1,
-                                'stop_processing' => 0,
-                                'order'           => 3,
-                            ]
-                        );
-                    }
-
-                    // create action
-                    RuleAction::create(
-                        [
-                            'rule_id'         => $rule->id,
-                            'action_type'     => 'link_to_bill',
-                            'action_value'    => $bill->name,
-                            'order'           => 1,
-                            'active'          => 1,
-                            'stop_processing' => 0,
-                        ]
-                    );
-
-                    $order++;
-                    $bill->match = 'MIGRATED_TO_RULES';
-                    $bill->save();
-                    $this->line(sprintf('Updated bill #%d ("%s") so it will use rules.', $bill->id, $bill->name));
-                }
-
-                // give bills a currency when they dont have one.
-                if (null === $bill->transaction_currency_id) {
-                    $this->line(sprintf('Gave bill #%d ("%s") a currency (%s).', $bill->id, $bill->name, $currency->name));
-                    $bill->transactionCurrency()->associate($currency);
-                    $bill->save();
-                }
-            }
-        }
-    }
-
-
-
 
     /**
      * This routine verifies that withdrawals, deposits and opening balances have the correct currency settings for
@@ -376,126 +172,24 @@ class UpgradeDatabaseX extends Command
     }
 
     /**
-     *
+     * @return bool
      */
-    private function budgetLimitCurrency(): void
+    private function isExecuted(): bool
     {
-        $budgetLimits = BudgetLimit::get();
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($budgetLimits as $budgetLimit) {
-            if (null === $budgetLimit->transaction_currency_id) {
-                /** @var Budget $budget */
-                $budget = $budgetLimit->budget;
-                if (null !== $budget) {
-                    $user = $budget->user;
-                    if (null !== $user) {
-                        $currency                             = app('amount')->getDefaultCurrencyByUser($user);
-                        $budgetLimit->transaction_currency_id = $currency->id;
-                        $budgetLimit->save();
-                        $this->line(
-                            sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
-                        );
-                    }
-                }
-            }
+        $configVar = app('fireflyconfig')->get(self::CONFIG_NAME, false);
+        if (null !== $configVar) {
+            return (bool)$configVar->data;
         }
+
+        return false; // @codeCoverageIgnore
     }
 
     /**
      *
      */
-    private function createNewTypes(): void
+    private function markAsExecuted(): void
     {
-        // create transaction type "Reconciliation".
-        $type = TransactionType::where('type', TransactionType::RECONCILIATION)->first();
-        if (null === $type) {
-            TransactionType::create(['type' => TransactionType::RECONCILIATION]);
-        }
-        $account = AccountType::where('type', AccountType::RECONCILIATION)->first();
-        if (null === $account) {
-            AccountType::create(['type' => AccountType::RECONCILIATION]);
-        }
-    }
-
-    /**
-     * Move the description of each attachment (when not NULL) to the notes or to a new note object
-     * for all attachments.
-     */
-    private function migrateAttachmentData(): void
-    {
-        $attachments = Attachment::get();
-
-        /** @var Attachment $att */
-        foreach ($attachments as $att) {
-
-            // move description:
-            $description = (string)$att->description;
-            if ('' !== $description) {
-                // find or create note:
-                $note = $att->notes()->first();
-                if (null === $note) {
-                    $note = new Note;
-                    $note->noteable()->associate($att);
-                }
-                $note->text = $description;
-                $note->save();
-
-                // clear description:
-                $att->description = '';
-                $att->save();
-
-                Log::debug(sprintf('Migrated attachment #%s description to note #%d', $att->id, $note->id));
-            }
-        }
-    }
-
-    /**
-     * Move all the journal_meta notes to their note object counter parts.
-     */
-    private function migrateNotes(): void
-    {
-        /** @noinspection PhpUndefinedMethodInspection */
-        $set = TransactionJournalMeta::whereName('notes')->get();
-        /** @var TransactionJournalMeta $meta */
-        foreach ($set as $meta) {
-            $journal = $meta->transactionJournal;
-            $note    = $journal->notes()->first();
-            if (null === $note) {
-                $note = new Note();
-                $note->noteable()->associate($journal);
-            }
-
-            $note->text = $meta->data;
-            $note->save();
-            Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
-            try {
-                $meta->delete();
-            } catch (Exception $e) {
-                Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
-            }
-        }
-    }
-
-    /**
-     *
-     */
-    private function removeCCLiabilities(): void
-    {
-        $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
-        $debtType = AccountType::where('type', AccountType::DEBT)->first();
-        if (null === $ccType || null === $debtType) {
-            return;
-        }
-        /** @var Collection $accounts */
-        $accounts = Account::where('account_type_id', $ccType->id)->get();
-        foreach ($accounts as $account) {
-            $account->account_type_id = $debtType->id;
-            $account->save();
-            $this->line(sprintf('Converted credit card liability account "%s" (#%d) to generic debt liability.', $account->name, $account->id));
-        }
-        if ($accounts->count() > 0) {
-            $this->info('Credit card liability types are no longer supported and have been converted to generic debts. See: http://bit.ly/FF3-credit-cards');
-        }
+        app('fireflyconfig')->set(self::CONFIG_NAME, true);
     }
 
     /**
@@ -532,8 +226,6 @@ class UpgradeDatabaseX extends Command
         }
 
     }
-
-
 
     /**
      * This method makes sure that the tranaction uses the same currency as the source account does.
@@ -677,5 +369,4 @@ class UpgradeDatabaseX extends Command
         }
 
     }
-
 }
