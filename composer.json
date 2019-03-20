@@ -131,7 +131,7 @@
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
     ],
     "post-update-cmd": [
-      "@php artisan firefly:upgrade-database",
+      "@php artisan firefly-iii:upgrade-database",
       "@php artisan firefly:decrypt-all",
       "@php artisan firefly:verify",
       "@php artisan firefly:instructions update",

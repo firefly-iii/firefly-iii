@@ -54,6 +54,7 @@ class UpgradeSkeleton extends Command
 
             return 0;
         }
+        $this->warn('Congrats, you found the skeleton command. Boo!');
 
         //$this->markAsExecuted();
         return 0;

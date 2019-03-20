@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "adldap2/adldap2",
-            "version": "v10.0.4",
+            "version": "v10.0.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Adldap2/Adldap2.git",
-                "reference": "345631260d5aedbd5e196a88b57eb1bf19e68fd1"
+                "reference": "74b6cd016b4e606fd2e2197dae6955cc4bd9e28d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/345631260d5aedbd5e196a88b57eb1bf19e68fd1",
-                "reference": "345631260d5aedbd5e196a88b57eb1bf19e68fd1",
+                "url": "https://api.github.com/repos/Adldap2/Adldap2/zipball/74b6cd016b4e606fd2e2197dae6955cc4bd9e28d",
+                "reference": "74b6cd016b4e606fd2e2197dae6955cc4bd9e28d",
                 "shasum": ""
             },
             "require": {
@@ -61,7 +61,7 @@
                 "ldap",
                 "windows"
             ],
-            "time": "2019-03-15T15:53:20+00:00"
+            "time": "2019-03-18T19:39:15+00:00"
         },
         {
             "name": "adldap2/adldap2-laravel",
@@ -979,16 +979,16 @@
         },
         {
             "name": "erusev/parsedown",
-            "version": "1.7.1",
+            "version": "v1.7.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/erusev/parsedown.git",
-                "reference": "92e9c27ba0e74b8b028b111d1b6f956a15c01fc1"
+                "reference": "d60bcdc46978357759ecb13cb4b078da783f8faf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/erusev/parsedown/zipball/92e9c27ba0e74b8b028b111d1b6f956a15c01fc1",
-                "reference": "92e9c27ba0e74b8b028b111d1b6f956a15c01fc1",
+                "url": "https://api.github.com/repos/erusev/parsedown/zipball/d60bcdc46978357759ecb13cb4b078da783f8faf",
+                "reference": "d60bcdc46978357759ecb13cb4b078da783f8faf",
                 "shasum": ""
             },
             "require": {
@@ -1021,7 +1021,7 @@
                 "markdown",
                 "parser"
             ],
-            "time": "2018-03-08T01:11:30+00:00"
+            "time": "2019-03-17T17:19:46+00:00"
         },
         {
             "name": "fideloper/proxy",
@@ -1308,16 +1308,16 @@
         },
         {
             "name": "laravel/framework",
-            "version": "v5.8.4",
+            "version": "v5.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/framework.git",
-                "reference": "d651f8bd25c6baf7ae4913bc51f02849fad4e925"
+                "reference": "791992e20efdf043ac3c2d989025d48d648821de"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/framework/zipball/d651f8bd25c6baf7ae4913bc51f02849fad4e925",
-                "reference": "d651f8bd25c6baf7ae4913bc51f02849fad4e925",
+                "url": "https://api.github.com/repos/laravel/framework/zipball/791992e20efdf043ac3c2d989025d48d648821de",
+                "reference": "791992e20efdf043ac3c2d989025d48d648821de",
                 "shasum": ""
             },
             "require": {
@@ -1451,20 +1451,20 @@
                 "framework",
                 "laravel"
             ],
-            "time": "2019-03-12T13:33:14+00:00"
+            "time": "2019-03-19T14:20:36+00:00"
         },
         {
             "name": "laravel/passport",
-            "version": "v7.2.1",
+            "version": "v7.2.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laravel/passport.git",
-                "reference": "bd8ae09775778f96b6642d87e2f579fea5bf92b5"
+                "reference": "c0c3fca80d8f5af90dcbf65e62bdd1abee9ac25d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laravel/passport/zipball/bd8ae09775778f96b6642d87e2f579fea5bf92b5",
-                "reference": "bd8ae09775778f96b6642d87e2f579fea5bf92b5",
+                "url": "https://api.github.com/repos/laravel/passport/zipball/c0c3fca80d8f5af90dcbf65e62bdd1abee9ac25d",
+                "reference": "c0c3fca80d8f5af90dcbf65e62bdd1abee9ac25d",
                 "shasum": ""
             },
             "require": {
@@ -1483,7 +1483,7 @@
                 "php": ">=7.1",
                 "phpseclib/phpseclib": "^2.0",
                 "symfony/psr-http-message-bridge": "~1.0",
-                "zendframework/zend-diactoros": "~1.0"
+                "zendframework/zend-diactoros": "~1.0|~2.0"
             },
             "require-dev": {
                 "mockery/mockery": "~1.0",
@@ -1521,7 +1521,7 @@
                 "oauth",
                 "passport"
             ],
-            "time": "2019-03-12T11:42:07+00:00"
+            "time": "2019-03-13T14:21:06+00:00"
         },
         {
             "name": "laravelcollective/html",
@@ -2674,16 +2674,16 @@
         },
         {
             "name": "pragmarx/google2fa",
-            "version": "v3.0.3",
+            "version": "v5.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/google2fa.git",
-                "reference": "6949226739e4424f40031e6f1c96b1fd64047335"
+                "reference": "17c969c82f427dd916afe4be50bafc6299aef1b4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/6949226739e4424f40031e6f1c96b1fd64047335",
-                "reference": "6949226739e4424f40031e6f1c96b1fd64047335",
+                "url": "https://api.github.com/repos/antonioribeiro/google2fa/zipball/17c969c82f427dd916afe4be50bafc6299aef1b4",
+                "reference": "17c969c82f427dd916afe4be50bafc6299aef1b4",
                 "shasum": ""
             },
             "require": {
@@ -2693,11 +2693,7 @@
                 "symfony/polyfill-php56": "~1.2"
             },
             "require-dev": {
-                "bacon/bacon-qr-code": "~1.0",
                 "phpunit/phpunit": "~4|~5|~6"
-            },
-            "suggest": {
-                "bacon/bacon-qr-code": "Required to generate inline QR Codes."
             },
             "type": "library",
             "extra": {
@@ -2728,33 +2724,32 @@
                 "2fa",
                 "Authentication",
                 "Two Factor Authentication",
-                "google2fa",
-                "laravel"
+                "google2fa"
             ],
-            "time": "2018-08-29T13:28:06+00:00"
+            "time": "2019-03-19T22:44:16+00:00"
         },
         {
             "name": "pragmarx/google2fa-laravel",
-            "version": "v0.2.0",
+            "version": "v0.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/antonioribeiro/google2fa-laravel.git",
-                "reference": "54f0c30c9be5497a7bd248844f1099156457e719"
+                "reference": "048026cd55af7d4b019d18f83e5bbf92d4c8b071"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/antonioribeiro/google2fa-laravel/zipball/54f0c30c9be5497a7bd248844f1099156457e719",
-                "reference": "54f0c30c9be5497a7bd248844f1099156457e719",
+                "url": "https://api.github.com/repos/antonioribeiro/google2fa-laravel/zipball/048026cd55af7d4b019d18f83e5bbf92d4c8b071",
+                "reference": "048026cd55af7d4b019d18f83e5bbf92d4c8b071",
                 "shasum": ""
             },
             "require": {
                 "laravel/framework": ">=5.2",
                 "php": ">=5.4",
-                "pragmarx/google2fa": "~3.0"
+                "pragmarx/google2fa": ">=5.0"
             },
             "require-dev": {
-                "orchestra/testbench-browser-kit": "~3.4|~3.5|~3.6",
-                "phpunit/phpunit": "~5|~6|~7"
+                "orchestra/testbench-browser-kit": ">=3.4",
+                "phpunit/phpunit": ">=5.0"
             },
             "suggest": {
                 "bacon/bacon-qr-code": "Required to generate inline QR Codes.",
@@ -2802,7 +2797,7 @@
                 "google2fa",
                 "laravel"
             ],
-            "time": "2018-03-08T04:08:14+00:00"
+            "time": "2019-03-19T23:20:01+00:00"
         },
         {
             "name": "psr/container",
@@ -2852,6 +2847,58 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "psr/http-factory",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "reference": "378bfe27931ecc54ff824a20d6f6bfc303bbd04c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2018-07-30T21:54:04+00:00"
         },
         {
             "name": "psr/http-message",
@@ -4502,16 +4549,16 @@
         },
         {
             "name": "tightenco/collect",
-            "version": "v5.8.4",
+            "version": "v5.8.5",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tightenco/collect.git",
-                "reference": "c77e52021fa9c04c6bf0c0d15aa61c7a4af27a1f"
+                "reference": "96297c72453eaf311dd0ce448ee48168a994ba97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tightenco/collect/zipball/c77e52021fa9c04c6bf0c0d15aa61c7a4af27a1f",
-                "reference": "c77e52021fa9c04c6bf0c0d15aa61c7a4af27a1f",
+                "url": "https://api.github.com/repos/tightenco/collect/zipball/96297c72453eaf311dd0ce448ee48168a994ba97",
+                "reference": "96297c72453eaf311dd0ce448ee48168a994ba97",
                 "shasum": ""
             },
             "require": {
@@ -4548,7 +4595,7 @@
                 "collection",
                 "laravel"
             ],
-            "time": "2019-03-12T16:57:57+00:00"
+            "time": "2019-03-20T13:29:24+00:00"
         },
         {
             "name": "tijsverkoyen/css-to-inline-styles",
@@ -4717,38 +4764,41 @@
         },
         {
             "name": "zendframework/zend-diactoros",
-            "version": "1.8.6",
+            "version": "2.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/zendframework/zend-diactoros.git",
-                "reference": "20da13beba0dde8fb648be3cc19765732790f46e"
+                "reference": "c3c330192bc9cc51b7e9ce968ff721dc32ffa986"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/20da13beba0dde8fb648be3cc19765732790f46e",
-                "reference": "20da13beba0dde8fb648be3cc19765732790f46e",
+                "url": "https://api.github.com/repos/zendframework/zend-diactoros/zipball/c3c330192bc9cc51b7e9ce968ff721dc32ffa986",
+                "reference": "c3c330192bc9cc51b7e9ce968ff721dc32ffa986",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.6 || ^7.0",
+                "php": "^7.1",
+                "psr/http-factory": "^1.0",
                 "psr/http-message": "^1.0"
             },
             "provide": {
+                "psr/http-factory-implementation": "1.0",
                 "psr/http-message-implementation": "1.0"
             },
             "require-dev": {
                 "ext-dom": "*",
                 "ext-libxml": "*",
+                "http-interop/http-factory-tests": "^0.5.0",
                 "php-http/psr7-integration-tests": "dev-master",
-                "phpunit/phpunit": "^5.7.16 || ^6.0.8 || ^7.2.7",
-                "zendframework/zend-coding-standard": "~1.0"
+                "phpunit/phpunit": "^7.0.2",
+                "zendframework/zend-coding-standard": "~1.0.0"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.8.x-dev",
-                    "dev-develop": "1.9.x-dev",
-                    "dev-release-2.0": "2.0.x-dev"
+                    "dev-master": "2.1.x-dev",
+                    "dev-develop": "2.2.x-dev",
+                    "dev-release-1.8": "1.8.x-dev"
                 }
             },
             "autoload": {
@@ -4768,16 +4818,15 @@
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
-                "BSD-2-Clause"
+                "BSD-3-Clause"
             ],
             "description": "PSR HTTP Message implementations",
-            "homepage": "https://github.com/zendframework/zend-diactoros",
             "keywords": [
                 "http",
                 "psr",
                 "psr-7"
             ],
-            "time": "2018-09-05T19:29:37+00:00"
+            "time": "2019-01-05T20:13:32+00:00"
         }
     ],
     "packages-dev": [
@@ -5042,16 +5091,16 @@
         },
         {
             "name": "composer/semver",
-            "version": "1.4.2",
+            "version": "1.5.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/semver.git",
-                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573"
+                "reference": "46d9139568ccb8d9e7cdd4539cab7347568a5e2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/semver/zipball/c7cb9a2095a074d131b65a8a0cd294479d785573",
-                "reference": "c7cb9a2095a074d131b65a8a0cd294479d785573",
+                "url": "https://api.github.com/repos/composer/semver/zipball/46d9139568ccb8d9e7cdd4539cab7347568a5e2e",
+                "reference": "46d9139568ccb8d9e7cdd4539cab7347568a5e2e",
                 "shasum": ""
             },
             "require": {
@@ -5100,7 +5149,7 @@
                 "validation",
                 "versioning"
             ],
-            "time": "2016-08-30T16:08:34+00:00"
+            "time": "2019-03-19T17:25:45+00:00"
         },
         {
             "name": "composer/spdx-licenses",
@@ -6304,12 +6353,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/Roave/SecurityAdvisories.git",
-                "reference": "3521da8036ce31b11490433aaae47f9601774191"
+                "reference": "33bad66e16fa13d87493018fd339eff48d431ad1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/3521da8036ce31b11490433aaae47f9601774191",
-                "reference": "3521da8036ce31b11490433aaae47f9601774191",
+                "url": "https://api.github.com/repos/Roave/SecurityAdvisories/zipball/33bad66e16fa13d87493018fd339eff48d431ad1",
+                "reference": "33bad66e16fa13d87493018fd339eff48d431ad1",
                 "shasum": ""
             },
             "conflict": {
@@ -6442,7 +6491,7 @@
                 "symfony/yaml": ">=2,<2.0.22|>=2.1,<2.1.7",
                 "tecnickcom/tcpdf": "<6.2.22",
                 "thelia/backoffice-default-template": ">=2.1,<2.1.2",
-                "thelia/thelia": ">=2.1.0-beta1,<2.1.3|>=2.1,<2.1.2",
+                "thelia/thelia": ">=2.1,<2.1.2|>=2.1.0-beta1,<2.1.3",
                 "theonedemon/phpwhois": "<=4.2.5",
                 "titon/framework": ">=0,<9.9.99",
                 "truckersmp/phpwhois": "<=4.3.1",
@@ -6500,7 +6549,7 @@
                 }
             ],
             "description": "Prevents installation of composer packages with known security vulnerabilities: no API, simply require it",
-            "time": "2019-03-12T13:04:55+00:00"
+            "time": "2019-03-19T18:31:23+00:00"
         },
         {
             "name": "sebastian/code-unit-reverse-lookup",
