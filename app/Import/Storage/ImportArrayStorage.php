@@ -54,6 +54,8 @@ use Log;
  */
 class ImportArrayStorage
 {
+    /** @var int Number of hits required for a transfer to match. */
+    private const REQUIRED_HITS = 4;
     /** @var bool Check for transfers during import. */
     private $checkForTransfers = false;
     /** @var ImportJob The import job */
@@ -500,20 +502,20 @@ class ImportArrayStorage
      */
     private function transferExists(array $transaction): bool
     {
-        Log::debug('Check if is a double transfer.');
+        Log::debug('Check if array is a double transfer.');
         if (strtolower(TransactionType::TRANSFER) !== strtolower($transaction['type'])) {
             Log::debug(sprintf('Is a %s, not a transfer so no.', $transaction['type']));
 
             return false;
         }
         // how many hits do we need?
-        $requiredHits = \count($transaction['transactions']) * 4;
-        $totalHits    = 0;
-        Log::debug(sprintf('Required hits for transfer comparison is %d', $requiredHits));
         Log::debug(sprintf('Array has %d transactions.', \count($transaction['transactions'])));
         Log::debug(sprintf('System has %d existing transfers', \count($this->transfers)));
         // loop over each split:
-        foreach ($transaction['transactions'] as $current) {
+        Log::debug(sprintf('This transfer has %d split(s)', \count($transaction['transactions'])));
+        foreach ($transaction['transactions'] as $index => $current) {
+            Log::debug(sprintf('Required hits for transfer comparison is %d', self::REQUIRED_HITS));
+            Log::debug(sprintf('Now at transfer split %d of %d', $index + 1, \count($transaction['transactions'])));
 
             // get the amount:
             /** @noinspection UnnecessaryCastingInspection */
@@ -542,6 +544,7 @@ class ImportArrayStorage
                 // compare amount:
                 Log::debug(sprintf('Amount %s compared to %s', $amount, $transfer->transaction_amount));
                 if (0 !== bccomp($amount, $transfer->transaction_amount)) {
+                    Log::debug('Amount is not a match, continue with next transfer.');
                     continue;
                 }
                 ++$hits;
@@ -551,6 +554,7 @@ class ImportArrayStorage
                 $comparison = '(empty description)' === $transfer->description ? '' : $transfer->description;
                 Log::debug(sprintf('Comparing "%s" to "%s" (original: "%s")', $description, $transfer->description, $comparison));
                 if ($description !== $comparison) {
+                    Log::debug('Description is not a match, continue with next transfer.');
                     continue; // @codeCoverageIgnore
                 }
                 ++$hits;
@@ -560,6 +564,7 @@ class ImportArrayStorage
                 $transferDate = $transfer->date->format('Y-m-d H:i:s');
                 Log::debug(sprintf('Comparing dates "%s" to "%s"', $transaction['date'], $transferDate));
                 if ($transaction['date'] !== $transferDate) {
+                    Log::debug('Date is not a match, continue with next transfer.');
                     continue; // @codeCoverageIgnore
                 }
                 ++$hits;
@@ -591,16 +596,17 @@ class ImportArrayStorage
                     // @codeCoverageIgnoreEnd
                 }
                 Log::debug('Source names are not the same.');
-                $totalHits += $hits;
-                Log::debug(sprintf('Total hits is now %d, hits is %d', $totalHits, $hits));
-                if ($totalHits >= $requiredHits) {
+                Log::debug(sprintf('Number of hits is %d', $hits));
+                if ($hits >= self::REQUIRED_HITS) {
+                    Log::debug(sprintf('Is more than %d, return true.', self::REQUIRED_HITS));
+
                     return true;
                 }
             }
         }
-        Log::debug(sprintf('Total hits: %d, required: %d', $totalHits, $requiredHits));
+        Log::debug('Is not an existing transfer, return false.');
 
-        return $totalHits >= $requiredHits;
+        return false;
     }
 
 }
