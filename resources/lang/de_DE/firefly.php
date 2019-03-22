@@ -33,7 +33,7 @@ return [
     'last_seven_days'                            => 'Letzte sieben Tage',
     'last_thirty_days'                           => 'Letzte 30 Tage',
     'welcomeBack'                                => 'Was ist gerade los?',
-    'welcome_back'                                => 'What\'s playing?',
+    'welcome_back'                                => 'Was ist gerade los?',
     'everything'                                 => 'Alle',
     'today'                                      => 'Heute',
     'customRange'                                => 'Individueller Bereich',
