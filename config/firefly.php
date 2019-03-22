@@ -272,9 +272,13 @@ return [
         'nl_NL' => ['name_locale' => 'Nederlands', 'name_english' => 'Dutch'], // 100%
         'pl_PL' => ['name_locale' => 'Polski', 'name_english' => 'Polish '], // 87%
         'pt_BR' => ['name_locale' => 'Português do Brasil', 'name_english' => 'Portuguese (Brazil)'], // 80%
+        'ro_RO' => ['name_locale' => 'Română', 'name_english' => 'Romanian'],
         'ru_RU' => ['name_locale' => 'Русский', 'name_english' => 'Russian'], // 83%
         'zh_TW' => ['name_locale' => 'Chinese Traditional', 'name_english' => 'Chinese Traditional'], // 100%
         'zh_CN' => ['name_locale' => 'Chinese Simplified', 'name_english' => 'Chinese Simplified'], // 99%
+
+
+
         //'tr_TR' => ['name_locale' => 'Türkçe', 'name_english' => 'Turkish'], // 71%
         'nb_NO' => ['name_locale' => 'Norsk', 'name_english' => 'Norwegian'],
         //'ca_ES' => ['name_locale' => 'Catalan', 'name_english' => 'Catalan'], // 0%
