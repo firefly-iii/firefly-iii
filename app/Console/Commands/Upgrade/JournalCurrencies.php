@@ -206,6 +206,7 @@ class JournalCurrencies extends Command
         $accountRepos->setUser($transaction->account->user);
         $currency = $repository->findNull((int)$accountRepos->getMetaValue($transaction->account, 'currency_id'));
         $journal  = $transaction->transactionJournal;
+        $currencyCode = $journal->transactionCurrency->code ?? '(nothing)';
 
         if (null === $currency) {
             return;
@@ -218,7 +219,7 @@ class JournalCurrencies extends Command
                     $journal->id,
                     $journal->description,
                     $currency->code,
-                    $journal->transactionCurrency->code
+                    $currencyCode
                 )
             );
             $journal->transaction_currency_id = $currency->id;

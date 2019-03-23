@@ -26,6 +26,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
@@ -103,11 +104,11 @@ class TransactionGroup extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return BelongsToMany
+     * @return HasMany
      */
-    public function transactionJournals(): BelongsToMany
+    public function transactionJournals(): HasMany
     {
-        return $this->belongsToMany(TransactionJournal::class,'group_journals');
+        return $this->hasMany(TransactionJournal::class);
     }
 
     /**

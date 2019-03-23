@@ -483,6 +483,16 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
+     * Return all journals without a group, used in an upgrade routine.
+     *
+     * @return Collection
+     */
+    public function getJournalsWithoutGroup(): Collection
+    {
+        return TransactionJournal::whereNull('transaction_group_id')->get();
+    }
+
+    /**
      * @param TransactionJournalLink $link
      *
      * @return string

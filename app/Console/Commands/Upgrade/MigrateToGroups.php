@@ -24,6 +24,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use Exception;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
@@ -93,12 +94,26 @@ class MigrateToGroups extends Command
         }
 
         Log::debug('---- start group migration ----');
-        $this->makeGroups();
+        $this->makeGroupsFromSplitJournals();
+        $this->makeGroupsFromAll();
         Log::debug('---- end group migration ----');
 
         $this->markAsMigrated();
 
         return 0;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     */
+    private function giveGroup(TransactionJournal $journal): void
+    {
+        $group          = new TransactionGroup;
+        $group->title   = null;
+        $group->user_id = $journal->user_id;
+        $group->save();
+        $journal->transaction_group_id = $group->id;
+        $journal->save();
     }
 
     /**
@@ -115,11 +130,49 @@ class MigrateToGroups extends Command
     }
 
     /**
+     * Gives all journals without a group a group.
+     */
+    private function makeGroupsFromAll(): void
+    {
+        $orphanedJournals = $this->journalRepository->getJournalsWithoutGroup();
+        if ($orphanedJournals->count() > 0) {
+            Log::debug(sprintf('Going to convert %d transactions. Please hold..', $orphanedJournals->count()));
+            /** @var TransactionJournal $journal */
+            foreach ($orphanedJournals as $journal) {
+                $this->giveGroup($journal);
+            }
+        }
+        if (0 === $orphanedJournals->count()) {
+            $this->info('No need to convert transactions.');
+        }
+    }
+
+    /**
+     *
+     * @throws Exception
+     */
+    private function makeGroupsFromSplitJournals(): void
+    {
+        $splitJournals = $this->journalRepository->getSplitJournals();
+
+        if ($splitJournals->count() > 0) {
+            $this->info(sprintf('Going to convert %d split transaction(s). Please hold..', $splitJournals->count()));
+            /** @var TransactionJournal $journal */
+            foreach ($splitJournals as $journal) {
+                $this->makeMultiGroup($journal);
+            }
+        }
+        if (0 === $splitJournals->count()) {
+            $this->info('Found no split transactions. Nothing to do.');
+        }
+    }
+
+    /**
      * @param TransactionJournal $journal
      *
      * @throws Exception
      */
-    private function makeGroup(TransactionJournal $journal): void
+    private function makeMultiGroup(TransactionJournal $journal): void
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
@@ -204,31 +257,11 @@ class MigrateToGroups extends Command
         Log::debug('Done calling transaction journal factory');
 
         // delete the old transaction journal.
-        //$this->service->destroy($journal);
+        $this->service->destroy($journal);
 
         // report on result:
         Log::debug(sprintf('Migrated journal #%d into these journals: %s', $journal->id, implode(', ', $result->pluck('id')->toArray())));
         $this->line(sprintf('Migrated journal #%d into these journals: %s', $journal->id, implode(', ', $result->pluck('id')->toArray())));
-    }
-
-    /**
-     *
-     * @throws Exception
-     */
-    private function makeGroups(): void
-    {
-        $splitJournals = $this->journalRepository->getSplitJournals();
-
-        if ($splitJournals->count() > 0) {
-            $this->info(sprintf('Going to un-split %d transaction(s). This could take some time.', $splitJournals->count()));
-            /** @var TransactionJournal $journal */
-            foreach ($splitJournals as $journal) {
-                $this->makeGroup($journal);
-            }
-        }
-        if (0 === $splitJournals->count()) {
-            $this->info('Found no split journals. Nothing to do.');
-        }
     }
 
     /**

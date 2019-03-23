@@ -154,26 +154,8 @@ class TransactionFactory
         Log::debug(sprintf('Now in getAccount(%s)', $direction));
         Log::debug(sprintf('Parameters: ((account), %s, %s)', var_export($sourceId, true), var_export($sourceName, true)));
         // expected type of source account, in order of preference
-        $array         = [
-            'source'      => [
-                TransactionType::WITHDRAWAL      => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                TransactionType::DEPOSIT         => [AccountType::REVENUE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,
-                                                     AccountType::INITIAL_BALANCE, AccountType::RECONCILIATION],
-                TransactionType::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                TransactionType::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                     AccountType::MORTGAGE],
-                TransactionType::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
-            ],
-            'destination' => [
-                TransactionType::WITHDRAWAL      => [AccountType::EXPENSE, AccountType::CASH, AccountType::LOAN, AccountType::DEBT,
-                                                     AccountType::MORTGAGE],
-                TransactionType::DEPOSIT         => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                TransactionType::TRANSFER        => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                TransactionType::OPENING_BALANCE => [AccountType::INITIAL_BALANCE, AccountType::ASSET, AccountType::LOAN, AccountType::DEBT,
-                                                     AccountType::MORTGAGE],
-                TransactionType::RECONCILIATION  => [AccountType::RECONCILIATION, AccountType::ASSET],
-            ],
-        ];
+        /** @var array $array */
+        $array         = config('firefly.expected_source_types');
         $expectedTypes = $array[$direction];
         unset($array);
 
@@ -295,38 +277,7 @@ class TransactionFactory
     public function makeDramaOverAccountTypes(Account $source, Account $destination): void
     {
         // if the source is X, then Y is allowed as destination.
-        $combinations = [
-            TransactionType::WITHDRAWAL      => [
-                AccountType::ASSET    => [AccountType::EXPENSE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::CASH],
-                AccountType::LOAN     => [AccountType::EXPENSE],
-                AccountType::DEBT     => [AccountType::EXPENSE],
-                AccountType::MORTGAGE => [AccountType::EXPENSE],
-            ],
-            TransactionType::DEPOSIT         => [
-                AccountType::REVENUE  => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                AccountType::CASH     => [AccountType::ASSET],
-                AccountType::LOAN     => [AccountType::ASSET],
-                AccountType::DEBT     => [AccountType::ASSET],
-                AccountType::MORTGAGE => [AccountType::ASSET],
-            ],
-            TransactionType::TRANSFER        => [
-                AccountType::ASSET    => [AccountType::ASSET],
-                AccountType::LOAN     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                AccountType::DEBT     => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-                AccountType::MORTGAGE => [AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            ],
-            TransactionType::OPENING_BALANCE => [
-                AccountType::ASSET           => [AccountType::INITIAL_BALANCE],
-                AccountType::LOAN            => [AccountType::INITIAL_BALANCE],
-                AccountType::DEBT            => [AccountType::INITIAL_BALANCE],
-                AccountType::MORTGAGE        => [AccountType::INITIAL_BALANCE],
-                AccountType::INITIAL_BALANCE => [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE],
-            ],
-            TransactionType::RECONCILIATION  => [
-                AccountType::RECONCILIATION => [AccountType::ASSET],
-                AccountType::ASSET          => [AccountType::RECONCILIATION],
-            ],
-        ];
+        $combinations = config('firefly.source_dests');
         $sourceType   = $source->accountType->type;
         $destType     = $destination->accountType->type;
         $journalType  = $this->journal->transactionType->type;

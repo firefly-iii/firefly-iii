@@ -129,7 +129,9 @@ class TransactionJournalFactory
             Log::debug(sprintf('Now creating journal %d/%d', $index + 1, \count($transactions)));
             /** Get basic fields */
 
-            $currency        = $this->currencyRepository->findCurrency($transaction['currency'], (int)$transaction['currency_id'], $transaction['currency_code']);
+            $currency        = $this->currencyRepository->findCurrency(
+                $transaction['currency'], (int)$transaction['currency_id'], $transaction['currency_code']
+            );
             $foreignCurrency = $this->findForeignCurrency($transaction);
 
             $bill        = $this->billRepository->findBill($transaction['bill'], (int)$transaction['bill_id'], $transaction['bill_name']);
@@ -189,9 +191,8 @@ class TransactionJournalFactory
 
             $collection->push($journal);
         }
-        if ($collection->count() > 1) {
-            $this->storeGroup($collection, $data['group_title']);
-        }
+
+        $this->storeGroup($collection, $data['group_title']);
 
         return $collection;
 

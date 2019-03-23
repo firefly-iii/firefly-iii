@@ -39,7 +39,6 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -57,9 +56,6 @@ interface JournalRepositoryInterface
      */
     public function countTransactions(TransactionJournal $journal): int;
 
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Deletes a journal.
      *
@@ -68,6 +64,9 @@ interface JournalRepositoryInterface
      * @return bool
      */
     public function destroy(TransactionJournal $journal): bool;
+
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Find a journal by its hash.
@@ -204,6 +203,13 @@ interface JournalRepositoryInterface
      * @return string
      */
     public function getJournalTotal(TransactionJournal $journal): string;
+
+    /**
+     * Return all journals without a group, used in an upgrade routine.
+     *
+     * @return Collection
+     */
+    public function getJournalsWithoutGroup(): Collection;
 
     /**
      * @param TransactionJournalLink $link
