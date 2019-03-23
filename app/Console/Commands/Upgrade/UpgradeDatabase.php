@@ -21,6 +21,8 @@
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+set_time_limit(0);
+
 use Artisan;
 use Illuminate\Console\Command;
 

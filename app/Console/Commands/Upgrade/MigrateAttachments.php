@@ -55,6 +55,7 @@ class MigrateAttachments extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -84,7 +85,8 @@ class MigrateAttachments extends Command
                 Log::debug(sprintf('Migrated attachment #%s description to note #%d', $att->id, $note->id));
             }
         }
-
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Migrated attachment notes in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;

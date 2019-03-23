@@ -50,6 +50,7 @@ class TransferBudgets extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         $set   = TransactionJournal::distinct()
                                    ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
                                    ->leftJoin('budget_transaction_journal', 'transaction_journals.id', '=', 'budget_transaction_journal.transaction_journal_id')
@@ -58,13 +59,15 @@ class TransferBudgets extends Command
         $count = 0;
         /** @var TransactionJournal $entry */
         foreach ($set as $entry) {
-            $this->info(sprintf('Transaction #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type));
+            $this->info(sprintf('Transaction journal #%d is a %s, so has no longer a budget.', $entry->id, $entry->transactionType->type));
             $entry->budgets()->sync([]);
             $count++;
         }
         if (0 === $count) {
             $this->info('No invalid budget/journal entries.');
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified budget/journals in %s seconds.', $end));
 
         return 0;
     }

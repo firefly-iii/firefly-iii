@@ -485,11 +485,11 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * Return all journals without a group, used in an upgrade routine.
      *
-     * @return Collection
+     * @return array
      */
-    public function getJournalsWithoutGroup(): Collection
+    public function getJournalsWithoutGroup(): array
     {
-        return TransactionJournal::whereNull('transaction_group_id')->get();
+        return TransactionJournal::whereNotNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
     }
 
     /**
@@ -656,17 +656,16 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getSplitJournals(): Collection
     {
-        // grab all split transactions:
-        $all = Transaction::groupBy('transaction_journal_id')->get(['transaction_journal_id', DB::raw('COUNT(transaction_journal_id) as result')]);
-        /** @var Collection $filtered */
-        $filtered   = $all->filter(
-            function (Transaction $transaction) {
-                return (int)$transaction->result > 2;
-            }
-        );
-        $journalIds = array_unique($filtered->pluck('transaction_journal_id')->toArray());
+        $query      = TransactionJournal
+            ::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->groupBy('transaction_journals.id')
+            ->having('tid', '>', 2)
+            ->get(['transaction_journals.id as jid', DB::raw('count(transactions.id) as tid')]);
+        $journalIds = array_unique($query->pluck('jid')->toArray());
 
-        return TransactionJournal::whereIn('id', $journalIds)->get();
+        return TransactionJournal
+            ::with(['transactions'])
+            ->whereIn('id', $journalIds)->get();
     }
 
     /**

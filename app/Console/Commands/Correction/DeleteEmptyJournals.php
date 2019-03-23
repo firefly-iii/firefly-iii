@@ -60,7 +60,7 @@ class DeleteEmptyJournals extends Command
 
     private function deleteEmptyJournals(): void
     {
-
+        $start = microtime(true);
         $count = 0;
         $set   = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
                                    ->groupBy('transaction_journals.id')
@@ -69,12 +69,14 @@ class DeleteEmptyJournals extends Command
 
         foreach ($set as $entry) {
             TransactionJournal::find($entry->id)->delete();
-            $this->info(sprintf('Deleted empty transaction #%d', $entry->id));
+            $this->info(sprintf('Deleted empty transaction journal #%d', $entry->id));
             ++$count;
         }
         if (0 === $count) {
-            $this->info('No empty transactions.');
+            $this->info('No empty transaction journals.');
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified empty journals in %s seconds', $end));
     }
 
     /**
@@ -103,12 +105,12 @@ class DeleteEmptyJournals extends Command
                 // uneven number, delete journal and transactions:
                 TransactionJournal::find((int)$row->transaction_journal_id)->delete();
                 Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
-                $this->info(sprintf('Deleted transaction #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
+                $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
                 $total++;
             }
         }
         if (0 === $total) {
-            $this->info('No uneven transactions.');
+            $this->info('No uneven transaction journals.');
         }
     }
 

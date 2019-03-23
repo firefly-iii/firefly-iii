@@ -61,6 +61,7 @@ class TransactionIdentifier extends Command
      */
     public function handle(): int
     {
+        $start            = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -86,7 +87,8 @@ class TransactionIdentifier extends Command
         foreach ($journalIds as $journalId) {
             $this->updateJournalidentifiers((int)$journalId);
         }
-
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified and fixed transaction identifiers in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;

@@ -21,10 +21,10 @@
 
 namespace FireflyIII\Console\Commands\Integrity;
 
+use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Account;
 use Illuminate\Console\Command;
 use stdClass;
 
@@ -53,15 +53,39 @@ class ReportEmptyObjects extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         $this->reportEmptyBudgets();
         $this->reportEmptyCategories();
         $this->reportEmptyTags();
         $this->reportAccounts();
         $this->reportBudgetLimits();
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Report on empty objects finished in %s seconds', $end));
+
         return 0;
     }
 
+    /**
+     * Reports on accounts with no transactions.
+     */
+    private function reportAccounts(): void
+    {
+        $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
+                      ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
+                      ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
+                      ->whereNull('transactions.account_id')
+                      ->get(
+                          ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
+                      );
 
+        /** @var stdClass $entry */
+        foreach ($set as $entry) {
+            $name = $entry->name;
+            $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
+            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $name);
+            $this->line($line);
+        }
+    }
 
     /**
      * Reports on budgets with no budget limits (which makes them pointless).
@@ -88,28 +112,6 @@ class ReportEmptyObjects extends Command
     }
 
     /**
-     * Reports on accounts with no transactions.
-     */
-    private function reportAccounts(): void
-    {
-        $set = Account::leftJoin('transactions', 'transactions.account_id', '=', 'accounts.id')
-                      ->leftJoin('users', 'accounts.user_id', '=', 'users.id')
-                      ->groupBy(['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email'])
-                      ->whereNull('transactions.account_id')
-                      ->get(
-                          ['accounts.id', 'accounts.encrypted', 'accounts.name', 'accounts.user_id', 'users.email']
-                      );
-
-        /** @var stdClass $entry */
-        foreach ($set as $entry) {
-            $name = $entry->name;
-            $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
-            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $name);
-            $this->line($line);
-        }
-    }
-
-    /**
      * Report on budgets with no transactions or journals.
      */
     private function reportEmptyBudgets(): void
@@ -125,7 +127,7 @@ class ReportEmptyObjects extends Command
         foreach ($set as $entry) {
             $objName = $entry->name;
             $line    = sprintf(
-                'User #%d (%s) has budget #%d ("%s") which has no transactions.',
+                'User #%d (%s) has budget #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
@@ -152,7 +154,7 @@ class ReportEmptyObjects extends Command
             $objName = $entry->name;
 
             $line = sprintf(
-                'User #%d (%s) has category #%d ("%s") which has no transactions.',
+                'User #%d (%s) has category #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
@@ -167,19 +169,19 @@ class ReportEmptyObjects extends Command
      */
     private function reportEmptyTags(): void
     {
-        $set = Tag::leftJoin('tag_transaction_journal', 'tags.id', '=',  'tag_transaction_journal.tag_id')
-                     ->leftJoin('users', 'tags.user_id', '=', 'users.id')
-                     ->distinct()
-                     ->whereNull('tag_transaction_journal.tag_id')
-                     ->whereNull('tags.deleted_at')
-                     ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email']);
+        $set = Tag::leftJoin('tag_transaction_journal', 'tags.id', '=', 'tag_transaction_journal.tag_id')
+                  ->leftJoin('users', 'tags.user_id', '=', 'users.id')
+                  ->distinct()
+                  ->whereNull('tag_transaction_journal.tag_id')
+                  ->whereNull('tags.deleted_at')
+                  ->get(['tags.id', 'tags.tag', 'tags.user_id', 'users.email']);
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
             $objName = $entry->tag;
 
             $line = sprintf(
-                'User #%d (%s) has tag #%d ("%s") which has no transactions.',
+                'User #%d (%s) has tag #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,

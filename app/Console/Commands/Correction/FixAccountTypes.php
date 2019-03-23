@@ -21,8 +21,11 @@
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use FireflyIII\Models\Account;
+use FireflyIII\Factory\AccountFactory;
+use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Console\Command;
 
 /**
@@ -44,70 +47,180 @@ class FixAccountTypes extends Command
     protected $signature = 'firefly-iii:fix-account-types';
     /** @var array */
     private $expected;
+    /** @var AccountFactory */
+    private $factory;
+    /** @var array */
+    private $fixable;
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    public function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
+    {
+        // variables:
+        $combination = sprintf('%s%s%s', $type, $source->account->accountType->type, $dest->account->accountType->type);
+
+        switch ($combination) {
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE):
+                // from an asset to a liability should be a withdrawal:
+                $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+                $journal->transactionType()->associate($withdrawal);
+                $journal->save();
+                $this->info(sprintf('Converted transaction #%d from a transfer to a withdrawal', $journal->id));
+                // check it again:
+                $this->inspectJournal($journal);
+                break;
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET):
+                // from a liability to an asset should be a deposit.
+                $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+                $journal->transactionType()->associate($deposit);
+                $journal->save();
+                $this->info(sprintf('Converted transaction #%d from a transfer to a deposit', $journal->id));
+                // check it again:
+                $this->inspectJournal($journal);
+
+                break;
+            case sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE):
+                // withdrawals with a revenue account as destination instead of an expense account.
+                $this->factory->setUser($journal->user);
+                $result = $this->factory->findOrCreate($source->account->name, AccountType::EXPENSE);
+                $dest->account()->associate($result);
+                $dest->save();
+                $this->info(
+                    sprintf(
+                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id,
+                        $source->account->id, $source->account->name,
+                        $result->id, $result->name
+                    )
+                );
+                $this->inspectJournal($journal);
+                break;
+            case sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET):
+                // deposits with an expense account as source instead of a revenue account.
+                // find revenue account.
+                $this->factory->setUser($journal->user);
+                $result = $this->factory->findOrCreate($source->account->name, AccountType::REVENUE);
+                $source->account()->associate($result);
+                $source->save();
+                $this->info(
+                    sprintf(
+                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id,
+                        $source->account->id, $source->account->name,
+                        $result->id, $result->name
+                    )
+                );
+                $this->inspectJournal($journal);
+                break;
+                break;
+            default:
+                $this->info(sprintf('The source account of %s #%d cannot be of type "%s".', $type, $journal->id, $source->account->accountType->type));
+                $this->info(sprintf('The destination account of %s #%d cannot be of type "%s".', $type, $journal->id, $dest->account->accountType->type));
+                break;
+
+        }
+
+    }
 
     /**
      * Execute the console command.
      *
      * @return int
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function handle(): int
     {
+        $start         = microtime(true);
+        $this->factory = app(AccountFactory::class);
+        // some combinations can be fixed by this script:
+        $this->fixable = [
+            // transfers from asset to liability and vice versa
+            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN),
+            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT),
+            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE),
+            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET),
+            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET),
+            sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET),
+
+            // withdrawals with a revenue account as destination instead of an expense account.
+            sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE),
+
+            // deposits with an expense account as source instead of a revenue account.
+            sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET),
+        ];
+
+
         $this->expected = config('firefly.source_dests');
-        $journals       = TransactionJournal::get();
+        $journals       = TransactionJournal::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
         foreach ($journals as $journal) {
             $this->inspectJournal($journal);
         }
 
-        return 0;
-    }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified account types in %s seconds', $end));
 
-    private function getDestinationAccount(TransactionJournal $journal): Account
-    {
-        return $journal->transactions()->where('amount', '>', 0)->first()->account;
+        return 0;
     }
 
     /**
      * @param TransactionJournal $journal
      *
-     * @return Account
+     * @return Transaction
      */
-    private function getSourceAccount(TransactionJournal $journal): Account
+    private function getDestinationTransaction(TransactionJournal $journal): Transaction
     {
-        return $journal->transactions()->where('amount', '<', 0)->first()->account;
+        return $journal->transactions->firstWhere('amount', '>', 0);
     }
 
     /**
      * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    private function getSourceTransaction(TransactionJournal $journal): Transaction
+    {
+        return $journal->transactions->firstWhere('amount', '<', 0);
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
      */
     private function inspectJournal(TransactionJournal $journal): void
     {
         $count = $journal->transactions()->count();
         if (2 !== $count) {
-            $this->info(sprintf('Cannot inspect journal #%d because it does not have 2 transactions, but %d', $journal->id, $count));
+            $this->info(sprintf('Cannot inspect transaction journal #%d because it has %d transactions instead of 2.', $journal->id, $count));
 
             return;
         }
-        $type                   = $journal->transactionType->type;
-        $sourceAccount          = $this->getSourceAccount($journal);
-        $sourceAccountType      = $sourceAccount->accountType->type;
-        $destinationAccount     = $this->getDestinationAccount($journal);
-        $destinationAccountType = $destinationAccount->accountType->type;
+        $type              = $journal->transactionType->type;
+        $sourceTransaction = $this->getSourceTransaction($journal);
+        $sourceAccount     = $sourceTransaction->account;
+        $sourceAccountType = $sourceAccount->accountType->type;
+        $destTransaction   = $this->getDestinationTransaction($journal);
+        $destAccount       = $destTransaction->account;
+        $destAccountType   = $destAccount->accountType->type;
         if (!isset($this->expected[$type])) {
             $this->info(sprintf('No source/destination info for transaction type %s.', $type));
 
             return;
         }
         if (!isset($this->expected[$type][$sourceAccountType])) {
-            $this->info(sprintf('The source of %s #%d cannot be of type "%s".', $type, $journal->id, $sourceAccountType));
-            $this->info(sprintf('The destination of %s #%d probably cannot be of type "%s".', $type, $journal->id, $destinationAccountType));
+            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
 
-            // TODO think of a way to fix the problem.
             return;
         }
         $expectedTypes = $this->expected[$type][$sourceAccountType];
-        if (!\in_array($destinationAccountType, $expectedTypes, true)) {
-            $this->info(sprintf('The destination of %s #%d cannot be of type "%s".', $type, $journal->id, $destinationAccountType));
-            // TODO think of a way to fix the problem.
+        if (!\in_array($destAccountType, $expectedTypes, true)) {
+            $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
         }
     }
+
 }

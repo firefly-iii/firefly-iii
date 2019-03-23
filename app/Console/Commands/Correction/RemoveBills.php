@@ -50,6 +50,7 @@ class RemoveBills extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         /** @var TransactionType $withdrawal */
         $withdrawal = TransactionType::where('type', TransactionType::WITHDRAWAL)->first();
         $journals   = TransactionJournal::whereNotNull('bill_id')->where('transaction_type_id', '!=', $withdrawal->id)->get();
@@ -60,11 +61,13 @@ class RemoveBills extends Command
             $journal->save();
         }
         if (0 === $journals->count()) {
-            $this->info('All transactions have correct bill information.');
+            $this->info('All transaction journals have correct bill information.');
         }
         if ($journals->count() > 0) {
-            $this->info('Fixed all transactions so they have correct bill information.');
+            $this->info('Fixed all transaction journals so they have correct bill information.');
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified bills / journals in %s seconds', $end));
 
         return 0;
     }

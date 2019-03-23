@@ -61,6 +61,7 @@ class ReportSum extends Command
      */
     private function reportSum(): void
     {
+        $start = microtime(true);
         /** @var UserRepositoryInterface $userRepository */
         $userRepository = app(UserRepositoryInterface::class);
 
@@ -68,11 +69,15 @@ class ReportSum extends Command
         foreach ($userRepository->all() as $user) {
             $sum = (string)$user->transactions()->sum('amount');
             if (0 !== bccomp($sum, '0')) {
-                $this->error('Error: Transactions for user #' . $user->id . ' (' . $user->email . ') are off by ' . $sum . '!');
+                $message = sprintf('Error: Transactions for user #%d (%s) are off by %s!', $user->id, $user->email, $sum);
+                $this->error($message);
             }
             if (0 === bccomp($sum, '0')) {
                 $this->info(sprintf('Amount integrity OK for user #%d', $user->id));
             }
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Report on total sum finished in %s seconds', $end));
+
     }
 }

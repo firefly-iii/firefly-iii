@@ -52,7 +52,7 @@ class FixUnevenAmount extends Command
      */
     public function handle(): int
     {
-
+        $start = microtime(true);
         $count = 0;
         // get invalid journals
         $journals = DB::table('transactions')
@@ -69,6 +69,9 @@ class FixUnevenAmount extends Command
         if (0 === $count) {
             $this->info('Amount integrity OK!');
         }
+
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified amount integrity in %s seconds', $end));
 
         return 0;
     }
@@ -93,7 +96,7 @@ class FixUnevenAmount extends Command
         $destination->amount = $amount;
         $destination->save();
 
-        $this->line(sprintf('Corrected amount in transaction #%d', $param));
+        $this->line(sprintf('Corrected amount in transaction journal #%d', $param));
 
     }
 }

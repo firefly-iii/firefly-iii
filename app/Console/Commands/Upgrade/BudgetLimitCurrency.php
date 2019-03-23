@@ -54,12 +54,13 @@ class BudgetLimitCurrency extends Command
      */
     public function handle(): int
     {
+        $start            = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-
+        $count        = 0;
         $budgetLimits = BudgetLimit::get();
         /** @var BudgetLimit $budgetLimit */
         foreach ($budgetLimits as $budgetLimit) {
@@ -75,10 +76,16 @@ class BudgetLimitCurrency extends Command
                         $this->line(
                             sprintf('Budget limit #%d (part of budget "%s") now has a currency setting (%s).', $budgetLimit->id, $budget->name, $currency->name)
                         );
+                        $count++;
                     }
                 }
             }
         }
+        if (0 === $count) {
+            $this->info('All budget limits are correct.');
+        }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified budget limits in %s seconds.', $end));
 
         $this->markAsExecuted();
 

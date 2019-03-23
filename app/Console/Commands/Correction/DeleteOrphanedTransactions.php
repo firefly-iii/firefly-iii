@@ -53,9 +53,11 @@ class DeleteOrphanedTransactions extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         $this->deleteOrphanedTransactions();
         $this->deleteFromOrphanedAccounts();
-
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified orphans in %s seconds', $end));
 
         return 0;
     }
@@ -80,7 +82,7 @@ class DeleteOrphanedTransactions extends Command
             }
             Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
             $this->line(
-                sprintf('Deleted transaction #%d because account #%d was already deleted.', $transaction->transaction_journal_id, $transaction->account_id)
+                sprintf('Deleted transaction journal #%d because account #%d was already deleted.', $transaction->transaction_journal_id, $transaction->account_id)
             );
             $count++;
         }
@@ -112,7 +114,7 @@ class DeleteOrphanedTransactions extends Command
             $transaction->delete();
             $this->info(
                 sprintf(
-                    'Transaction #%d (part of deleted journal #%d) has been deleted as well.',
+                    'Transaction #%d (part of deleted transaction journal #%d) has been deleted as well.',
                     $entry->transaction_id,
                     $entry->journal_id
                 )
@@ -122,5 +124,6 @@ class DeleteOrphanedTransactions extends Command
         if (0 === $count) {
             $this->info('No orphaned transactions.');
         }
+
     }
 }

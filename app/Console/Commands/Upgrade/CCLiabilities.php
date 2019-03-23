@@ -57,6 +57,7 @@ class CCLiabilities extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -77,6 +78,11 @@ class CCLiabilities extends Command
         if ($accounts->count() > 0) {
             $this->info('Credit card liability types are no longer supported and have been converted to generic debts. See: http://bit.ly/FF3-credit-cards');
         }
+        if (0 === $accounts->count()) {
+            $this->info('No incorrectly stored credit card liabilities.');
+        }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified credit card liabilities in %s seconds', $end));
         $this->markAsExecuted();
 
         return 0;

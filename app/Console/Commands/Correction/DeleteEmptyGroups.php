@@ -52,16 +52,18 @@ class DeleteEmptyGroups extends Command
      */
     public function handle(): int
     {
-        //
+        $start = microtime(true);
         $groups = array_unique(TransactionJournal::get(['transaction_group_id'])->pluck('transaction_group_id')->toArray());
         $count  = TransactionGroup::whereNull('deleted_at')->whereNotIn('id', $groups)->count();
         if (0 === $count) {
-            $this->info('No empty groups.');
+            $this->info('No empty transaction groups.');
         }
         if ($count > 0) {
-            $this->info(sprintf('Deleted %d empty groups.', $count));
+            $this->info(sprintf('Deleted %d empty transaction groups.', $count));
             TransactionGroup::whereNull('deleted_at')->whereNotIn('id', $groups)->delete();
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified empty groups in %s seconds', $end));
 
         return 0;
     }

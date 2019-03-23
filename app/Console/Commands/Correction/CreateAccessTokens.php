@@ -51,6 +51,7 @@ class CreateAccessTokens extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         $count = 0;
         $users = User::get();
         /** @var User $user */
@@ -66,6 +67,8 @@ class CreateAccessTokens extends Command
         if (0 === $count) {
             $this->info('All access tokens OK!');
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verify access tokens in %s seconds.', $end));
 
         return 0;
     }

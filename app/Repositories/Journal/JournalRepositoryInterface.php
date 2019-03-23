@@ -207,9 +207,9 @@ interface JournalRepositoryInterface
     /**
      * Return all journals without a group, used in an upgrade routine.
      *
-     * @return Collection
+     * @return array
      */
-    public function getJournalsWithoutGroup(): Collection;
+    public function getJournalsWithoutGroup(): array;
 
     /**
      * @param TransactionJournalLink $link

@@ -136,9 +136,7 @@ This work [is licensed](https://github.com/firefly-iii/firefly-iii/blob/master/L
 ### Donate
 If you like Firefly III and if it helps you save lots of money, why not send me a dime for every dollar saved!
 
-OK that was a joke. You can become a backer or a sponsor of the [Firefly III Open Collective](https://opencollective.com/firefly-iii). On that page, I transparently show you the expenses I make and the donations I receive.
-
-You can also donate using [PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=44UKUT455HUFA).
+OK that was a joke. You could donate using [PayPal](https://docs.firefly-iii.org/en/latest/contact/note-donations.html). Please find the button on the page.
 
 Thank you for considering donating to Firefly III!  
 

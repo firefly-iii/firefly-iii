@@ -53,7 +53,8 @@ class FixPiggies extends Command
      */
     public function handle(): int
     {
-        $set = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
+        $start = microtime(true);
+        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
         $set->each(
             function (PiggyBankEvent $event) {
                 if (null === $event->transaction_journal_id) {
@@ -75,7 +76,8 @@ class FixPiggies extends Command
                 return true;
             }
         );
-        $this->line(sprintf('Verified the content of %d piggy bank events.', $set->count()));
+        $end = round(microtime(true) - $start, 2);
+        $this->line(sprintf('Verified the content of %d piggy bank events in %s seconds.', $set->count(), $end));
 
         return 0;
     }

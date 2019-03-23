@@ -64,6 +64,8 @@ class MigrateToRules extends Command
      */
     public function handle(): int
     {
+        $start            = microtime(true);
+
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -111,11 +113,13 @@ class MigrateToRules extends Command
 
             // loop bills.
             $order = 1;
+            $count = 0;
             /** @var Collection $collection */
             $collection = $user->bills()->get();
             /** @var Bill $bill */
             foreach ($collection as $bill) {
                 if ('MIGRATED_TO_RULES' !== $bill->match) {
+                    $count++;
                     $rule = Rule::create(
                         [
                             'user_id'         => $user->id,
@@ -211,8 +215,15 @@ class MigrateToRules extends Command
                     $bill->save();
                 }
             }
+            if ($count > 0) {
+                $this->info(sprintf('Migrated %d bills for user %s', $count, $user->email));
+            }
+            if (0 === $count) {
+                $this->info(sprintf('Bills are correct for user %s.', $user->email));
+            }
         }
-
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified and fixed bills in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;

@@ -21,14 +21,15 @@
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use DB;
 use Exception;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -84,6 +85,7 @@ class MigrateToGroups extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         if ($this->isMigrated() && true !== $this->option('force')) {
             $this->info('Database already seems to be migrated.');
 
@@ -95,9 +97,14 @@ class MigrateToGroups extends Command
 
         Log::debug('---- start group migration ----');
         $this->makeGroupsFromSplitJournals();
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Migrate split journals to groups in %s seconds.', $end));
+
+        $start = microtime(true);
         $this->makeGroupsFromAll();
         Log::debug('---- end group migration ----');
-
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Migrate all journals to groups in %s seconds.', $end));
         $this->markAsMigrated();
 
         return 0;
@@ -105,15 +112,42 @@ class MigrateToGroups extends Command
 
     /**
      * @param TransactionJournal $journal
+     * @param Transaction        $transaction
+     *
+     * @return Transaction|null
      */
-    private function giveGroup(TransactionJournal $journal): void
+    private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
-        $group          = new TransactionGroup;
-        $group->title   = null;
-        $group->user_id = $journal->user_id;
-        $group->save();
-        $journal->transaction_group_id = $group->id;
-        $journal->save();
+        $set = $journal->transactions->filter(
+            function (Transaction $subject) use ($transaction) {
+                return $transaction->amount * -1 === (float)$subject->amount && $transaction->identifier === $subject->identifier;
+            }
+        );
+
+        return $set->first();
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Collection
+     */
+    private function getDestinationTransactions(TransactionJournal $journal): Collection
+    {
+        return $journal->transactions->filter(
+            function (Transaction $transaction) {
+                return $transaction->amount > 0;
+            }
+        );
+    }
+
+    /**
+     * @param array $array
+     */
+    private function giveGroup(array $array): void
+    {
+        $groupId = DB::table('transaction_groups')->insertGetId(['title' => null, 'user_id' => $array['user_id']]);
+        DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
     }
 
     /**
@@ -135,26 +169,26 @@ class MigrateToGroups extends Command
     private function makeGroupsFromAll(): void
     {
         $orphanedJournals = $this->journalRepository->getJournalsWithoutGroup();
-        if ($orphanedJournals->count() > 0) {
-            Log::debug(sprintf('Going to convert %d transactions. Please hold..', $orphanedJournals->count()));
-            /** @var TransactionJournal $journal */
-            foreach ($orphanedJournals as $journal) {
-                $this->giveGroup($journal);
+        $count            = count($orphanedJournals);
+        if ($count > 0) {
+            Log::debug(sprintf('Going to convert %d transaction journals. Please hold..', $count));
+            $this->line(sprintf('Going to convert %d transaction journals. Please hold..', $count));
+            /** @var array $journal */
+            foreach ($orphanedJournals as $array) {
+                $this->giveGroup($array);
             }
         }
-        if (0 === $orphanedJournals->count()) {
-            $this->info('No need to convert transactions.');
+        if (0 === $count) {
+            $this->info('No need to convert transaction journals.');
         }
     }
 
     /**
-     *
      * @throws Exception
      */
     private function makeGroupsFromSplitJournals(): void
     {
         $splitJournals = $this->journalRepository->getSplitJournals();
-
         if ($splitJournals->count() > 0) {
             $this->info(sprintf('Going to convert %d split transaction(s). Please hold..', $splitJournals->count()));
             /** @var TransactionJournal $journal */
@@ -163,7 +197,7 @@ class MigrateToGroups extends Command
             }
         }
         if (0 === $splitJournals->count()) {
-            $this->info('Found no split transactions. Nothing to do.');
+            $this->info('Found no split transaction journals. Nothing to do.');
         }
     }
 
@@ -185,7 +219,7 @@ class MigrateToGroups extends Command
         $this->journalRepository->setUser($journal->user);
         $this->journalFactory->setUser($journal->user);
 
-        $data = [
+        $data             = [
             // mandatory fields.
             'type'         => strtolower($journal->transactionType->type),
             'date'         => $journal->date,
@@ -193,16 +227,40 @@ class MigrateToGroups extends Command
             'group_title'  => $journal->description,
             'transactions' => [],
         ];
+        $destTransactions = $this->getDestinationTransactions($journal);
+        $budgetId         = $this->journalRepository->getJournalBudgetId($journal);
+        $categoryId       = $this->journalRepository->getJournalCategoryId($journal);
+        $notes            = $this->journalRepository->getNoteText($journal);
+        $tags             = $this->journalRepository->getTags($journal);
+        $internalRef      = $this->journalRepository->getMetaField($journal, 'internal-reference');
+        $sepaCC           = $this->journalRepository->getMetaField($journal, 'sepa-cc');
+        $sepaCtOp         = $this->journalRepository->getMetaField($journal, 'sepa-ct-op');
+        $sepaCtId         = $this->journalRepository->getMetaField($journal, 'sepa-ct-id');
+        $sepaDb           = $this->journalRepository->getMetaField($journal, 'sepa-db');
+        $sepaCountry      = $this->journalRepository->getMetaField($journal, 'sepa-country');
+        $sepaEp           = $this->journalRepository->getMetaField($journal, 'sepa-ep');
+        $sepaCi           = $this->journalRepository->getMetaField($journal, 'sepa-ci');
+        $sepaBatchId      = $this->journalRepository->getMetaField($journal, 'sepa-batch-id');
+        $externalId       = $this->journalRepository->getMetaField($journal, 'external-id');
+        $originalSource   = $this->journalRepository->getMetaField($journal, 'original-source');
+        $recurrenceId     = $this->journalRepository->getMetaField($journal, 'recurrence_id');
+        $bunq             = $this->journalRepository->getMetaField($journal, 'bunq_payment_id');
+        $hash             = $this->journalRepository->getMetaField($journal, 'importHash');
+        $hashTwo          = $this->journalRepository->getMetaField($journal, 'importHashV2');
+        $interestDate     = $this->journalRepository->getMetaDate($journal, 'interest_date');
+        $bookDate         = $this->journalRepository->getMetaDate($journal, 'book_date');
+        $processDate      = $this->journalRepository->getMetaDate($journal, 'process_date');
+        $dueDate          = $this->journalRepository->getMetaDate($journal, 'due_date');
+        $paymentDate      = $this->journalRepository->getMetaDate($journal, 'payment_date');
+        $invoiceDate      = $this->journalRepository->getMetaDate($journal, 'invoice_date');
 
-        $transactions = $journal->transactions()->where('amount', '>', 0)->get();
-        Log::debug(sprintf('Will use %d positive transactions to create a new group.', $transactions->count()));
+
+        Log::debug(sprintf('Will use %d positive transactions to create a new group.', $destTransactions->count()));
 
         /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
+        foreach ($destTransactions as $transaction) {
             Log::debug(sprintf('Now going to add transaction #%d to the array.', $transaction->id));
-            $budgetId   = $this->journalRepository->getJournalBudgetId($journal);
-            $categoryId = $this->journalRepository->getJournalCategoryId($journal);
-            $opposingTr = $this->journalRepository->findOpposingTransaction($transaction);
+            $opposingTr = $this->findOpposingTransaction($journal, $transaction);
 
             if (null === $opposingTr) {
                 $this->error(
@@ -225,29 +283,29 @@ class MigrateToGroups extends Command
                 'budget_id'           => $budgetId,
                 'category_id'         => $categoryId,
                 'bill_id'             => $journal->bill_id,
-                'notes'               => $this->journalRepository->getNoteText($journal),
-                'tags'                => $this->journalRepository->getTags($journal),
-                'internal_reference'  => $this->journalRepository->getMetaField($journal, 'internal-reference'),
-                'sepa-cc'             => $this->journalRepository->getMetaField($journal, 'sepa-cc'),
-                'sepa-ct-op'          => $this->journalRepository->getMetaField($journal, 'sepa-ct-op'),
-                'sepa-ct-id'          => $this->journalRepository->getMetaField($journal, 'sepa-ct-id'),
-                'sepa-db'             => $this->journalRepository->getMetaField($journal, 'sepa-db'),
-                'sepa-country'        => $this->journalRepository->getMetaField($journal, 'sepa-country'),
-                'sepa-ep'             => $this->journalRepository->getMetaField($journal, 'sepa-ep'),
-                'sepa-ci'             => $this->journalRepository->getMetaField($journal, 'sepa-ci'),
-                'sepa-batch-id'       => $this->journalRepository->getMetaField($journal, 'sepa-batch-id'),
-                'external_id'         => $this->journalRepository->getMetaField($journal, 'external-id'),
-                'original-source'     => $this->journalRepository->getMetaField($journal, 'original-source'),
-                'recurrence_id'       => $this->journalRepository->getMetaField($journal, 'recurrence_id'),
-                'bunq_payment_id'     => $this->journalRepository->getMetaField($journal, 'bunq_payment_id'),
-                'importHash'          => $this->journalRepository->getMetaField($journal, 'importHash'),
-                'importHashV2'        => $this->journalRepository->getMetaField($journal, 'importHashV2'),
-                'interest_date'       => $this->journalRepository->getMetaDate($journal, 'interest_date'),
-                'book_date'           => $this->journalRepository->getMetaDate($journal, 'book_date'),
-                'process_date'        => $this->journalRepository->getMetaDate($journal, 'process_date'),
-                'due_date'            => $this->journalRepository->getMetaDate($journal, 'due_date'),
-                'payment_date'        => $this->journalRepository->getMetaDate($journal, 'payment_date'),
-                'invoice_date'        => $this->journalRepository->getMetaDate($journal, 'invoice_date'),
+                'notes'               => $notes,
+                'tags'                => $tags,
+                'internal_reference'  => $internalRef,
+                'sepa-cc'             => $sepaCC,
+                'sepa-ct-op'          => $sepaCtOp,
+                'sepa-ct-id'          => $sepaCtId,
+                'sepa-db'             => $sepaDb,
+                'sepa-country'        => $sepaCountry,
+                'sepa-ep'             => $sepaEp,
+                'sepa-ci'             => $sepaCi,
+                'sepa-batch-id'       => $sepaBatchId,
+                'external_id'         => $externalId,
+                'original-source'     => $originalSource,
+                'recurrence_id'       => $recurrenceId,
+                'bunq_payment_id'     => $bunq,
+                'importHash'          => $hash,
+                'importHashV2'        => $hashTwo,
+                'interest_date'       => $interestDate,
+                'book_date'           => $bookDate,
+                'process_date'        => $processDate,
+                'due_date'            => $dueDate,
+                'payment_date'        => $paymentDate,
+                'invoice_date'        => $invoiceDate,
             ];
 
             $data['transactions'][] = $tArray;
@@ -260,8 +318,8 @@ class MigrateToGroups extends Command
         $this->service->destroy($journal);
 
         // report on result:
-        Log::debug(sprintf('Migrated journal #%d into these journals: %s', $journal->id, implode(', ', $result->pluck('id')->toArray())));
-        $this->line(sprintf('Migrated journal #%d into these journals: %s', $journal->id, implode(', ', $result->pluck('id')->toArray())));
+        Log::debug(sprintf('Migrated journal #%d into these journals: #%s', $journal->id, implode(', #', $result->pluck('id')->toArray())));
+        $this->line(sprintf('Migrated journal #%d into these journals: #%s', $journal->id, implode(', #', $result->pluck('id')->toArray())));
     }
 
     /**

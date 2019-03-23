@@ -54,6 +54,7 @@ class EnableCurrencies extends Command
      */
     public function handle(): int
     {
+        $start = microtime(true);
         $found = [];
         // get all meta entries
         /** @var Collection $meta */
@@ -90,6 +91,9 @@ class EnableCurrencies extends Command
             $this->info(sprintf('%d were still disabled. This has been corrected.', $disabled));
         }
         TransactionCurrency::whereIn('id', $found)->update(['enabled' => true]);
+
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified currencies in %s seconds.', $end));
 
         return 0;
     }

@@ -49,7 +49,7 @@ class CreateLinkTypes extends Command
      */
     public function handle(): int
     {
-        //
+        $start = microtime(true);
         $count = 0;
         $set   = [
             'Related'       => ['relates to', 'relates to'],
@@ -73,6 +73,8 @@ class CreateLinkTypes extends Command
         if (0 === $count) {
             $this->info('All link types OK!');
         }
+        $end = round(microtime(true) - $start, 2);
+        $this->info(sprintf('Verified link types in %s seconds', $end));
 
         return 0;
     }

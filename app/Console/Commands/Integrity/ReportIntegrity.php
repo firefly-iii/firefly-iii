@@ -59,21 +59,6 @@ class ReportIntegrity extends Command
         $commands = [
             'firefly-iii:report-empty-objects',
             'firefly-iii:report-sum',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
-//            'firefly-iii:',
         ];
         foreach ($commands as $command) {
             $this->line(sprintf('Now executing %s', $command));
@@ -81,27 +66,6 @@ class ReportIntegrity extends Command
             $result = Artisan::output();
             echo $result;
         }
-
-//        $this->reportEmptyBudgets();
-//        $this->reportEmptyCategories();
-//        $this->reportObject('tag');
-//        $this->reportAccounts();
-//        $this->reportBudgetLimits();
-//        $this->reportSum();
-//        $this->reportJournals();
-//        $this->reportTransactions();
-//        $this->reportDeletedAccounts();
-//        $this->reportNoTransactions();
-//        $this->reportTransfersBudgets();
-//        $this->reportIncorrectJournals();
-//        $this->repairPiggyBanks();
-//        $this->createLinkTypes();
-//        $this->createAccessTokens();
-//        $this->fixDoubleAmounts(); // is a report function!
-//        $this->fixBadMeta();
-//        $this->removeBills();
-//        $this->enableCurrencies();
-//        $this->reportZeroAmount();
 
         return 0;
     }
