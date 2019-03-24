@@ -24,15 +24,14 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\AccountRequest;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -248,35 +247,43 @@ class AccountController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        if ($this->repository->isAsset($account)) {
-            $collector->setAccounts(new Collection([$account]));
-        }
-        if (!$this->repository->isAsset($account)) {
-            $collector->setOpposingAccounts(new Collection([$account]));
-        }
 
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // set the account to filter on to the current one:
+            ->setAccounts(new Collection([$account]))
+            // include source + destination account name and type.
+            ->withAccountInformation()
+            // include category ID + name (if any)
+            ->withCategoryInformation()
+            // include budget ID + name (if any)
+            ->withBudgetInformation()
+            // include bill ID + name (if any)
+            ->withBillInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
 
+        // set range if necessary:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
-        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
-        $transactions = $paginator->getCollection();
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        $paginator = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
+        $groups = $paginator->getCollection();
+
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource = new FractalCollection($groups, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');

@@ -30,6 +30,7 @@ use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -41,33 +42,50 @@ class GroupCollector implements GroupCollectorInterface
     private $accountIds;
     /** @var array The standard fields to select. */
     private $fields;
+    /** @var bool Will be set to true if query result contains account information. (see function withAccountInformation). */
+    private $hasAccountInformation;
+    /** @var bool Will be true if query result includes bill information. */
+    private $hasBillInformation;
+    /** @var bool Will be true if query result contains budget info. */
+    private $hasBudgetInformation;
+    /** @var bool Will be true if query result contains category info. */
+    private $hasCatInformation;
     /** @var int The maximum number of results. */
     private $limit;
     /** @var int The page to return. */
     private $page;
     /** @var HasMany The query object. */
     private $query;
+    /** @var int Total number of results. */
+    private $total;
     /** @var User The user object. */
     private $user;
 
     /**
      * Group collector constructor.
      */
-
     public function __construct()
     {
         if ('testing' === config('app.env')) {
             app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
+        $this->hasAccountInformation = false;
+        $this->hasCatInformation     = false;
+        $this->hasBudgetInformation  = false;
+        $this->hasBillInformation    = false;
+
+        $this->total  = 0;
         $this->limit  = 50;
         $this->page   = 0;
         $this->fields = [
             'transaction_groups.id as transaction_group_id',
+            'transaction_groups.created_at as created_at',
+            'transaction_groups.updated_at as updated_at',
             'transaction_groups.title as transaction_group_title',
+
             'transaction_journals.id as transaction_journal_id',
             'transaction_journals.transaction_type_id',
             'transaction_types.type as transaction_type_type',
-            'transaction_journals.bill_id',
             'transaction_journals.description',
             'transaction_journals.date',
             'source.id as source_transaction_id',
@@ -101,13 +119,26 @@ class GroupCollector implements GroupCollectorInterface
         $result = $this->query->get($this->fields);
 
         // now to parse this into an array.
-        $array = $this->parseArray($result);
+        $collection  = $this->parseArray($result);
+        $this->total = $collection->count();
 
         // now filter the array according to the page and the
         $offset  = $this->page * $this->limit;
-        $limited = $array->slice($offset, $this->limit);
+        $limited = $collection->slice($offset, $this->limit);
 
         return $limited;
+    }
+
+    /**
+     * Same as getGroups but everything is in a paginator.
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getPaginatedGroups(): LengthAwarePaginator
+    {
+        $set = $this->getGroups();
+
+        return new LengthAwarePaginator($set, $this->total, $this->limit, $this->page);
     }
 
     /**
@@ -189,6 +220,20 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Limit the included transaction types.
+     *
+     * @param array $types
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTypes(array $types): GroupCollectorInterface
+    {
+        $this->query->whereIn('transaction_types.type', $types);
+
+        return $this;
+    }
+
+    /**
      * Set the user object and start the query.
      *
      * @param User $user
@@ -204,9 +249,105 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Will include the source and destination account names and types.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAccountInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasAccountInformation) {
+            // join source account table
+            $this->query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
+            // join source account type table
+            $this->query->leftJoin('account_types as source_account_type', 'source_account_type.id', '=', 'source_account.account_type_id');
+
+            // add source account fields:
+            $this->fields[] = 'source_account.name as source_account_name';
+            $this->fields[] = 'source_account.account_type_id as source_account_type_id';
+            $this->fields[] = 'source_account_type.type as source_account_type_type';
+
+            // same for dest
+            $this->query->leftJoin('accounts as dest_account', 'dest_account.id', '=', 'destination.account_id');
+            $this->query->leftJoin('account_types as dest_account_type', 'dest_account_type.id', '=', 'dest_account.account_type_id');
+
+            // and add fields:
+            $this->fields[] = 'dest_account.name as destination_account_name';
+            $this->fields[] = 'dest_account.account_type_id as destination_account_type_id';
+            $this->fields[] = 'dest_account_type.type as destination_account_type_type';
+
+
+            $this->hasAccountInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Will include bill name + ID, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBillInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasBillInformation) {
+            // join bill table
+            $this->query->leftJoin('bills', 'bills.id', '=', 'transaction_journals.bill_id');
+            // add fields
+            $this->fields[]           = 'bills.id as bill_id';
+            $this->fields[]           = 'bills.name as bill_name';
+            $this->hasBillInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Will include budget ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBudgetInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasBudgetInformation) {
+            // join link table
+            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
+            // add fields
+            $this->fields[]             = 'budgets.id as budget_id';
+            $this->fields[]             = 'budgets.name as budget_name';
+            $this->hasBudgetInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Will include category ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategoryInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasCatInformation) {
+            // join link table
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
+            // add fields
+            $this->fields[]          = 'categories.id as category_id';
+            $this->fields[]          = 'categories.name as category_name';
+            $this->hasCatInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * @param Collection $collection
      *
      * @return Collection
+     * @throws Exception
      */
     private function parseArray(Collection $collection): Collection
     {
@@ -216,21 +357,24 @@ class GroupCollector implements GroupCollectorInterface
             $groupId = $augumentedGroup->transaction_group_id;
             if (!isset($groups[$groupId])) {
                 // make new array
-                $groupArray       = [
+                $groupArray                             = [
                     'id'           => $augumentedGroup->id,
                     'title'        => $augumentedGroup->title,
                     'count'        => 1,
                     'sum'          => $augumentedGroup->amount,
                     'foreign_sum'  => $augumentedGroup->foreign_amount ?? '0',
-                    'transactions' => [$this->parseAugumentedGroup($augumentedGroup)],
+                    'transactions' => [],
                 ];
-                $groups[$groupId] = $groupArray;
+                $journalId                              = (int)$augumentedGroup->transaction_journal_id;
+                $groupArray['transactions'][$journalId] = $this->parseAugumentedGroup($augumentedGroup);
+                $groups[$groupId]                       = $groupArray;
                 continue;
             }
             $groups[$groupId]['count']++;
-            $groups[$groupId]['sum']            = bcadd($augumentedGroup->amount, $groups[$groupId]['sum']);
-            $groups[$groupId]['foreign_sum']    = bcadd($augumentedGroup->foreign_amount ?? '0', $groups[$groupId]['foreign_sum']);
-            $groups[$groupId]['transactions'][] = $this->parseAugumentedGroup($augumentedGroup);
+            $groups[$groupId]['sum']                      = bcadd($augumentedGroup->amount, $groups[$groupId]['sum']);
+            $groups[$groupId]['foreign_sum']              = bcadd($augumentedGroup->foreign_amount ?? '0', $groups[$groupId]['foreign_sum']);
+            $journalId                                    = (int)$augumentedGroup->transaction_journal_id;
+            $groups[$groupId]['transactions'][$journalId] = $this->parseAugumentedGroup($augumentedGroup);
         }
 
         return new Collection($groups);
@@ -244,8 +388,10 @@ class GroupCollector implements GroupCollectorInterface
      */
     private function parseAugumentedGroup(TransactionGroup $augumentedGroup): array
     {
-        $result         = $augumentedGroup->toArray();
-        $result['date'] = new Carbon($result['date']);
+        $result               = $augumentedGroup->toArray();
+        $result['date']       = new Carbon($result['date']);
+        $result['created_at'] = new Carbon($result['created_at']);
+        $result['updated_at'] = new Carbon($result['updated_at']);
 
         return $result;
     }
@@ -275,8 +421,8 @@ class GroupCollector implements GroupCollectorInterface
             )
             // left join transaction type.
             ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin('transaction_currencies as currency','currency.id','=','source.transaction_currency_id')
-            ->leftJoin('transaction_currencies as foreign_currency','foreign_currency.id','=','source.foreign_currency_id')
+            ->leftJoin('transaction_currencies as currency', 'currency.id', '=', 'source.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currency', 'foreign_currency.id', '=', 'source.foreign_currency_id')
             ->whereNull('transaction_groups.deleted_at')
             ->whereNull('transaction_journals.deleted_at')
             ->whereNull('source.deleted_at')

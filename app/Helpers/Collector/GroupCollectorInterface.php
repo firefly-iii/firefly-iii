@@ -25,6 +25,7 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use FireflyIII\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
 /**
@@ -38,6 +39,13 @@ interface GroupCollectorInterface
      * @return Collection
      */
     public function getGroups(): Collection;
+
+    /**
+     * Same as getGroups but everything is in a paginator.
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getPaginatedGroups(): LengthAwarePaginator;
 
     /**
      * Define which accounts can be part of the source and destination transactions.
@@ -77,6 +85,15 @@ interface GroupCollectorInterface
     public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface;
 
     /**
+     * Limit the included transaction types.
+     *
+     * @param array $types
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTypes(array $types): GroupCollectorInterface;
+
+    /**
      * Set the user object and start the query.
      *
      * @param User $user
@@ -84,5 +101,33 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface;
+
+    /**
+     * Will include the source and destination account names and types.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAccountInformation(): GroupCollectorInterface;
+
+    /**
+     * Include bill name + ID.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBillInformation(): GroupCollectorInterface;
+
+    /**
+     * Will include budget ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBudgetInformation(): GroupCollectorInterface;
+
+    /**
+     * Will include category ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategoryInformation(): GroupCollectorInterface;
 
 }

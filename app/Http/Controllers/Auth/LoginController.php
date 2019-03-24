@@ -72,7 +72,7 @@ class LoginController extends Controller
     public function login(Request $request)
     {
         Log::channel('audit')->info(sprintf('User is trying to login using "%s"', $request->get('email')));
-
+        Log::info(sprintf('User is trying to login.'));
         if ('ldap' === config('auth.providers.users.driver')) {
             /**
              * Temporary bug fix for something that doesn't seem to work in
@@ -102,9 +102,14 @@ class LoginController extends Controller
             // user is logged in. Save in session if the user requested session to be remembered:
             $request->session()->put('remember_login', $request->filled('remember'));
 
+            Log::debug(sprintf('Redirect after login is %s.', $this->redirectPath()));
+
             /** @noinspection PhpInconsistentReturnPointsInspection */
             /** @noinspection PhpVoidFunctionResultUsedInspection */
-            return $this->sendLoginResponse($request);
+            $response = $this->sendLoginResponse($request);
+            Log::debug(sprintf('Response Location header: %s', $response->headers->get('location')));
+
+            return $response;
         }
 
         // If the login attempt was unsuccessful we will increment the number of attempts
