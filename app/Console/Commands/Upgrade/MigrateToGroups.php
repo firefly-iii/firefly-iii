@@ -146,7 +146,14 @@ class MigrateToGroups extends Command
      */
     private function giveGroup(array $array): void
     {
-        $groupId = DB::table('transaction_groups')->insertGetId(['title' => null, 'user_id' => $array['user_id']]);
+        $groupId = DB::table('transaction_groups')->insertGetId(
+            [
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+                'title'      => null,
+                'user_id'    => $array['user_id'],
+            ]
+        );
         DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
     }
 
@@ -317,9 +324,16 @@ class MigrateToGroups extends Command
         // delete the old transaction journal.
         $this->service->destroy($journal);
 
+        // first group ID
+        $first = $result->first() ? $result->first()->transaction_group_id : 0;
+
         // report on result:
-        Log::debug(sprintf('Migrated journal #%d into these journals: #%s', $journal->id, implode(', #', $result->pluck('id')->toArray())));
-        $this->line(sprintf('Migrated journal #%d into these journals: #%s', $journal->id, implode(', #', $result->pluck('id')->toArray())));
+        Log::debug(
+            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $first, implode(', #', $result->pluck('id')->toArray()))
+        );
+        $this->line(
+            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $first, implode(', #', $result->pluck('id')->toArray()))
+        );
     }
 
     /**

@@ -51,10 +51,40 @@ echo "Discover packages..."
 php artisan package:discover
 
 echo "Run various artisan commands..."
+php artisan cache:clear
 php artisan migrate --seed
 php artisan firefly:decrypt-all
-php artisan firefly:upgrade-database
-php artisan firefly:verify
+
+# upgrade database commands:
+php artisan firefly-iii:transaction-identifiers
+php artisan firefly-iii:account-currencies
+php artisan firefly-iii:journal-currencies
+php artisan firefly-iii:migrate-notes
+php artisan firefly-iii:migrate-attachments
+php artisan firefly-iii:bills-to-rules
+php artisan firefly-iii:bl-currency
+php artisan firefly-iii:cc-liabilities
+php artisan firefly-iii:migrate-to-groups
+php artisan firefly-iii:back-to-journals
+
+#verify database commands
+php artisan firefly-iii:fix-piggies
+php artisan firefly-iii:create-link-types
+php artisan firefly-iii:create-access-tokens
+php artisan firefly-iii:remove-bills
+php artisan firefly-iii:enable-currencies
+php artisan firefly-iii:fix-transfer-budgets
+php artisan firefly-iii:fix-uneven-amount
+php artisan firefly-iii:delete-zero-amount
+php artisan firefly-iii:delete-orphaned-transactions
+php artisan firefly-iii:delete-empty-journals
+php artisan firefly-iii:delete-empty-groups
+php artisan firefly-iii:fix-account-types
+
+# report commands
+php artisan firefly-iii:report-empty-objects
+php artisan firefly-iii:report-sum
+
 php artisan passport:install
 php artisan cache:clear
 

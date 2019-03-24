@@ -141,7 +141,7 @@ class BackToJournals extends Command
 
         // empty tables
         DB::table('budget_transaction')->delete();
-        DB::table('categories_transaction')->delete();
+        DB::table('category_transaction')->delete();
     }
 
     /**

@@ -156,7 +156,9 @@ class FixAccountTypes extends Command
 
 
         $this->expected = config('firefly.source_dests');
-        $journals       = TransactionJournal::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
+        $journals       = TransactionJournal
+
+            ::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
         foreach ($journals as $journal) {
             $this->inspectJournal($journal);
         }
