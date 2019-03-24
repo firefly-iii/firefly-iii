@@ -6,7 +6,7 @@ LABEL version="1.4" maintainer="thegrumpydictator@gmail.com"
 # Create volumes
 VOLUME $FIREFLY_PATH/storage/export $FIREFLY_PATH/storage/upload
 
-# Install stuffs Firefly run & depends on: php extensions, locales, dev headers and composer
+# Install stuff Firefly III runs with & depends on: php extensions, locales, dev headers and composer
 RUN apt-get update && apt-get install -y libpng-dev \
                                             libicu-dev \
                                             unzip \
