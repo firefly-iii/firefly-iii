@@ -131,7 +131,9 @@
       "Illuminate\\Foundation\\ComposerScripts::postAutoloadDump"
     ],
     "post-update-cmd": [
+      "@php artisan cache:clear",
       "@php artisan firefly:decrypt-all",
+
       "@php artisan firefly-iii:transaction-identifiers",
       "@php artisan firefly-iii:account-currencies",
       "@php artisan firefly-iii:journal-currencies",
