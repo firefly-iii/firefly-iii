@@ -51,6 +51,18 @@ echo "Discover packages..."
 php artisan package:discover
 
 echo "Run various artisan commands..."
+. $FIREFLY_PATH/.env
+if [[ -z "$DB_PORT" ]]; then
+  if [[ $DB_CONNECTION == "pgsql" ]]; then
+    DB_PORT=5432
+  elif [[ $DB_CONNECTION == "mysql" ]]; then
+    DB_PORT=3306
+  fi
+fi
+if [[ ! -z "$DB_PORT" ]]; then
+  $FIREFLY_PATH/.deploy/docker/wait-for-it.sh "${DB_HOST}:${DB_PORT}" -- echo "db is up. Time to execute artisan commands"
+fi
+#env $(grep -v "^\#" .env | xargs) 
 php artisan cache:clear
 php artisan migrate --seed
 php artisan firefly:decrypt-all
