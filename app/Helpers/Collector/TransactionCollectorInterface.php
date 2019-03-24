@@ -35,7 +35,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Interface TransactionCollectorInterface
- *
+ * @deprecated
  */
 interface TransactionCollectorInterface
 {

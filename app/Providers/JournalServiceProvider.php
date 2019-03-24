@@ -22,6 +22,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Providers;
 
+use FireflyIII\Helpers\Collector\GroupCollector;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
@@ -49,6 +51,7 @@ class JournalServiceProvider extends ServiceProvider
     {
         $this->registerRepository();
         $this->registerCollector();
+        $this->registerGroupCollector();
     }
 
     /**
@@ -61,6 +64,25 @@ class JournalServiceProvider extends ServiceProvider
             function (Application $app) {
                 /** @var TransactionCollectorInterface $collector */
                 $collector = app(TransactionCollector::class);
+                if ($app->auth->check()) {
+                    $collector->setUser(auth()->user());
+                }
+
+                return $collector;
+            }
+        );
+    }
+
+    /**
+     *
+     */
+    private function registerGroupCollector(): void
+    {
+        $this->app->bind(
+            GroupCollectorInterface::class,
+            function (Application $app) {
+                /** @var GroupCollectorInterface $collector */
+                $collector = app(GroupCollector::class);
                 if ($app->auth->check()) {
                     $collector->setUser(auth()->user());
                 }

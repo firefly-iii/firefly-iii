@@ -41,7 +41,6 @@ use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Log;
-use function nspl\ds\defaultarray;
 
 /**
  * Class TransactionJournalFactory
@@ -168,6 +167,8 @@ class TransactionJournalFactory
                 return new Collection;
                 // @codeCoverageIgnoreEnd
             }
+            $journal->completed =true;
+            $journal->save();
 
             /** Link all other data to the journal. */
 

@@ -155,6 +155,49 @@ class Amount
     }
 
     /**
+     * This method will properly format the given number, in color or "black and white",
+     * as a currency, given two things: the currency required and the current locale.
+     *
+     * @param string $symbol
+     * @param int    $decimalPlaces
+     * @param string $amount
+     * @param bool   $coloured
+     *
+     * @return string
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @noinspection MoreThanThreeArgumentsInspection
+     */
+    public function formatFlat(string $symbol, int $decimalPlaces, string $amount, bool $coloured = null): string
+    {
+        $coloured = $coloured ?? true;
+        $locale   = explode(',', (string)trans('config.locale'));
+        $locale   = array_map('trim', $locale);
+        setlocale(LC_MONETARY, $locale);
+        $float     = round($amount, 12);
+        $info      = localeconv();
+        $formatted = number_format($float, $decimalPlaces, $info['mon_decimal_point'], $info['mon_thousands_sep']);
+
+        // some complicated switches to format the amount correctly:
+        $precedes  = $amount < 0 ? $info['n_cs_precedes'] : $info['p_cs_precedes'];
+        $separated = $amount < 0 ? $info['n_sep_by_space'] : $info['p_sep_by_space'];
+        $space     = true === $separated ? ' ' : '';
+        $result    = false === $precedes ? $formatted . $space . $symbol : $symbol . $space . $formatted;
+
+        if (true === $coloured) {
+            if ($amount > 0) {
+                return sprintf('<span class="text-success">%s</span>', $result);
+            }
+            if ($amount < 0) {
+                return sprintf('<span class="text-danger">%s</span>', $result);
+            }
+
+            return sprintf('<span style="color:#999">%s</span>', $result);
+        }
+
+        return $result;
+    }
+
+    /**
      * @return Collection
      */
     public function getAllCurrencies(): Collection

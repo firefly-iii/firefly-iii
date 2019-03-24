@@ -24,6 +24,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedVersionCheckStatus;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Middleware\Installer;
 use FireflyIII\Models\AccountType;
@@ -34,7 +35,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-
+use Exception;
 /**
  * Class HomeController.
  */
@@ -55,7 +56,7 @@ class HomeController extends Controller
      * Change index date range.
      *
      * @param Request $request
-     *
+     * @throws Exception
      * @return JsonResponse
      */
     public function dateRange(Request $request): JsonResponse
@@ -96,7 +97,7 @@ class HomeController extends Controller
      * Show index.
      *
      * @param AccountRepositoryInterface $repository
-     *
+     * @throws Exception
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|\Illuminate\View\View
      */
     public function index(AccountRepositoryInterface $repository)
@@ -127,9 +128,10 @@ class HomeController extends Controller
         $billCount      = $billRepository->getBills()->count();
 
         foreach ($accounts as $account) {
-            $collector = app(TransactionCollectorInterface::class);
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
             $collector->setAccounts(new Collection([$account]))->setRange($start, $end)->setLimit(10)->setPage(1);
-            $set            = $collector->getTransactions();
+            $set            = $collector->getGroups();
             $transactions[] = [$set, $account];
         }
 

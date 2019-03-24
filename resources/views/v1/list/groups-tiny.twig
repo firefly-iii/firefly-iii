@@ -1,0 +1,46 @@
+<div class="list-group">
+    {% for group in groups %}
+            <a class="list-group-item">
+            {% for transaction in group.transactions %}
+                {{ transaction.description }}
+                <span class="pull-right small">
+                    {{ transactionAmount(transaction) }}
+                </span>
+                <br />
+            {% endfor %}
+            {% if group.count > 1 %}
+                &nbsp;
+            <span class="pull-right small">
+                {{ groupAmount(group) }}
+            </span>
+            {% endif %}
+
+            </a>
+
+
+        {# if group do something with format #}
+        {#{% if group.count > 1 %}
+        (group)
+        {% endif %}
+#}
+        {# loop each transaction #}
+                {#
+        <a class="list-group-item" title="{{ transaction.date.formatLocalized(trans('config.month_and_day')) }}"
+                {% if transaction.transaction_type_type == 'Opening balance' %}
+                    href="#"
+                {% else %}
+                    href="{{ route('transactions.show',transaction.journal_id) }}"
+                {% endif %}>
+            {{ transaction|transactionIcon }}
+            {{ transaction|transactionDescription }}
+            <span class="pull-right small">
+                {{ transaction|transactionAmount }}
+        </span>
+
+        </a>
+        {% endfor %}
+        #}
+
+    {% endfor %}
+
+</div>

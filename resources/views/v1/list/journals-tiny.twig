@@ -1,4 +1,5 @@
-<div class="list-group">
+<h1 style="color:red;">DO NOT USE ME</h1>
+{#<div class="list-group">
     {% for transaction in transactions %}
         <a class="list-group-item" title="{{ transaction.date.formatLocalized(trans('config.month_and_day')) }}"
                 {% if transaction.transaction_type_type == 'Opening balance' %}
@@ -15,3 +16,4 @@
         </a>
     {% endfor %}
 </div>
+#}

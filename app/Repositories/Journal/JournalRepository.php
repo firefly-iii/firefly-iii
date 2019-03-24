@@ -489,7 +489,7 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function getJournalsWithoutGroup(): array
     {
-        return TransactionJournal::whereNotNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
+        return TransactionJournal::whereNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
     }
 
     /**

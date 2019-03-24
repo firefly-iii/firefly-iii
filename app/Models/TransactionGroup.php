@@ -25,7 +25,6 @@ namespace FireflyIII\Models;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -34,14 +33,14 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class TransactionGroup.
  *
- * @property int $id
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property int $user_id
- * @property string|null $title
+ * @property int                                                                                   $id
+ * @property \Illuminate\Support\Carbon|null                                                       $created_at
+ * @property \Illuminate\Support\Carbon|null                                                       $updated_at
+ * @property \Illuminate\Support\Carbon|null                                                       $deleted_at
+ * @property int                                                                                   $user_id
+ * @property string|null                                                                           $title
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
- * @property-read \FireflyIII\User $user
+ * @property-read \FireflyIII\User                                                                 $user
  * @method static bool|null forceDelete()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newQuery()
@@ -57,6 +56,9 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withTrashed()
  * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withoutTrashed()
  * @mixin \Eloquent
+ * @property string                                                                                amount
+ * @property string                                                                                foreign_amount
+ * @property int                                                                                   transaction_group_id
  */
 class TransactionGroup extends Model
 {
@@ -69,10 +71,12 @@ class TransactionGroup extends Model
      */
     protected $casts
         = [
+            'id'         => 'integer',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
             'title'      => 'string',
+            'date'       => 'datetime',
         ];
 
     /** @var array Fields that can be filled */
