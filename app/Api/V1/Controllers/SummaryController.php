@@ -27,11 +27,10 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -170,36 +169,55 @@ class SummaryController extends Controller
         $sums     = [];
         $return   = [];
 
-        // collect income of user:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId           = (int)$transaction->transaction_currency_id;
-            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
-            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+        // collect income of user using the new group collector.
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setRange($start, $end)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes([TransactionType::DEPOSIT]);
+
+        // TODO possible candidate for getExtractedGroups
+        $set = $collector->getGroups();
+
+        /** @var array $group */
+        foreach ($set as $group) {
+            /** @var array $transaction */
+            foreach ($group['transactions'] as $transaction) {
+
+                $currencyId           = (int)$transaction['currency_id'];
+                $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+                $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transaction['amount'], '-1'));
+                $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+                $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transaction['amount'], '-1'));
+            }
         }
 
-        // collect expenses:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId            = (int)$transaction->transaction_currency_id;
-            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
-            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+        // collect expenses of user using the new group collector.
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setRange($start, $end)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes([TransactionType::WITHDRAWAL]);
+
+        $set = $collector->getGroups();
+
+        /** @var array $group */
+        foreach ($set as $group) {
+            /** @var array $transaction */
+            foreach ($group['transactions'] as $transaction) {
+
+                $currencyId            = (int)$transaction['currency_id'];
+                $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+                $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction['amount']);
+                $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+                $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction['amount']);
+            }
         }
 
         // format amounts:

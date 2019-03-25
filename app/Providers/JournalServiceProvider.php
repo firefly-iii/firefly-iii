@@ -28,6 +28,8 @@ use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepository;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepository;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 
@@ -50,6 +52,7 @@ class JournalServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerRepository();
+        $this->registerGroupRepository();
         $this->registerCollector();
         $this->registerGroupCollector();
     }
@@ -90,6 +93,12 @@ class JournalServiceProvider extends ServiceProvider
                 return $collector;
             }
         );
+    }
+
+    private function registerGroupRepository()
+    {
+        // password verifier thing
+        $this->app->bind(TransactionGroupRepositoryInterface::class, TransactionGroupRepository::class);
     }
 
     /**

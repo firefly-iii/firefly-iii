@@ -24,6 +24,11 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -57,6 +62,51 @@ interface GroupCollectorInterface
     public function setAccounts(Collection $accounts): GroupCollectorInterface;
 
     /**
+     * Limit the search to a specific bill.
+     *
+     * @param Bill $bill
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBill(Bill $bill): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific budget.
+     *
+     * @param Budget $budget
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBudget(Budget $budget): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific set of budgets.
+     *
+     * @param Collection $budgets
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific category.
+     *
+     * @param Category $category
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCategory(Category $category): GroupCollectorInterface;
+
+    /**
+     * Limit results to a specific currency, either foreign or normal one.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface;
+
+    /**
      * Limit the number of returned entries.
      *
      * @param int $limit
@@ -75,6 +125,15 @@ interface GroupCollectorInterface
     public function setPage(int $page): GroupCollectorInterface;
 
     /**
+     * Limit the result to a set of specific journals.
+     *
+     * @param array $journalIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setJournalIds(array $journalIds): GroupCollectorInterface;
+
+    /**
      * Set the start and end time of the results to return.
      *
      * @param Carbon $start
@@ -83,6 +142,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setRange(Carbon $start, Carbon $end): GroupCollectorInterface;
+
+    /**
+     * Limit results to a specific tag.
+     *
+     * @param Tag $tag
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTag(Tag $tag): GroupCollectorInterface;
 
     /**
      * Limit the included transaction types.
@@ -101,6 +169,13 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setUser(User $user): GroupCollectorInterface;
+
+    /**
+     * Automatically include all stuff required to make API calls work.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAPIInformation(): GroupCollectorInterface;
 
     /**
      * Will include the source and destination account names and types.

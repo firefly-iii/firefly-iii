@@ -32,7 +32,6 @@ use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -255,14 +254,8 @@ class AccountController extends Controller
             ->setUser($admin)
             // set the account to filter on to the current one:
             ->setAccounts(new Collection([$account]))
-            // include source + destination account name and type.
-            ->withAccountInformation()
-            // include category ID + name (if any)
-            ->withCategoryInformation()
-            // include budget ID + name (if any)
-            ->withBudgetInformation()
-            // include bill ID + name (if any)
-            ->withBillInformation()
+            // all info needed for the API:
+            ->withAPIInformation()
             // set page size:
             ->setLimit($pageSize)
             // set page to retrieve

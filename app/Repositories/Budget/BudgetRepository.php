@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
@@ -775,44 +776,55 @@ class BudgetRepository implements BudgetRepositoryInterface
      * @param Collection $accounts
      * @param Carbon     $start
      * @param Carbon     $end
+     * TODO refactor me.
      *
      * @return array
      */
     public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
-
-        $set        = $collector->getTransactions();
+        // TODO possible candidate for getExtractedGroups
+        $set        = $collector->getGroups();
         $return     = [];
         $total      = [];
         $currencies = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $code = $transaction->transaction_currency_code;
-            if (!isset($currencies[$code])) {
-                $currencies[$code] = $transaction->transactionCurrency;
+        /** @var array $group */
+        foreach ($set as $group) {
+            /** @var array $transaction */
+            foreach ($group['transactions'] as $transaction) {
+                $code = $transaction['currency_code'];
+                if (!isset($currencies[$code])) {
+                    $currencies[$code] = [
+                        'id'             => $transaction['currency_id'],
+                        'decimal_places' => $transaction['currency_decimal_places'],
+                        'code'           => $transaction['currency_code'],
+                        'symbol'         => $transaction['currency_symbol'],
+                    ];
+                }
+                $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction['amount']) : $transaction['amount'];
             }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
         }
+        /**
+         * @var string $code
+         * @var string $spent
+         */
         foreach ($total as $code => $spent) {
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_id'             => $currency->id,
+                'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'amount'                  => round($spent, $currency->decimal_places),
+                'currency_symbol'         => $currency['symbol'],
+                'currency_decimal_places' => $currency['decimal_places'],
+                'amount'                  => round($spent, $currency['decimal_places']),
             ];
         }
 

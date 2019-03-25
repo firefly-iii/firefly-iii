@@ -25,6 +25,11 @@ namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Models\Bill;
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Tag;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -50,6 +55,8 @@ class GroupCollector implements GroupCollectorInterface
     private $hasBudgetInformation;
     /** @var bool Will be true if query result contains category info. */
     private $hasCatInformation;
+    /** @var bool Will be true of the query has the tag info tables joined. */
+    private $hasJoinedTagTables;
     /** @var int The maximum number of results. */
     private $limit;
     /** @var int The page to return. */
@@ -73,6 +80,7 @@ class GroupCollector implements GroupCollectorInterface
         $this->hasCatInformation     = false;
         $this->hasBudgetInformation  = false;
         $this->hasBillInformation    = false;
+        $this->hasJoinedTagTables    = false;
 
         $this->total  = 0;
         $this->limit  = 50;
@@ -93,15 +101,17 @@ class GroupCollector implements GroupCollectorInterface
 
             # currency info:
             'source.amount as amount',
-            'source.transaction_currency_id as transaction_currency_id',
-            'currency.decimal_places as currency_decimal_places',
+            'source.transaction_currency_id as currency_id',
+            'currency.code as currency_code',
             'currency.symbol as currency_symbol',
+            'currency.decimal_places as currency_decimal_places',
 
             # foreign currency info
             'source.foreign_amount as foreign_amount',
             'source.foreign_currency_id as foreign_currency_id',
-            'foreign_currency.decimal_places as foreign_currency_decimal_places',
+            'foreign_currency.code as foreign_currency_code',
             'foreign_currency.symbol as foreign_currency_symbol',
+            'foreign_currency.decimal_places as foreign_currency_decimal_places',
 
             # destination account info:
             'destination.account_id as destination_account_id',
@@ -166,6 +176,101 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Limit the search to a specific bill.
+     *
+     * @param Bill $bill
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBill(Bill $bill): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+        $this->query->where('transaction_journals.bill_id', '=', $bill->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific budget.
+     *
+     * @param Budget $budget
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBudget(Budget $budget): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+        $this->query->where('budgets.id', $budget->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific set of budgets.
+     *
+     * @param Collection $budgets
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBudgets(Collection $budgets): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+        $this->query->whereIn('budgets.id', $budgets->pluck('id')->toArray());
+
+        return $this;
+    }
+
+    /**
+     * Limit the search to a specific category.
+     *
+     * @param Category $category
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCategory(Category $category): GroupCollectorInterface
+    {
+        $this->withCategoryInformation();
+        $this->query->where('categories.id', $category->id);
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a specific currency, either foreign or normal one.
+     *
+     * @param TransactionCurrency $currency
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface
+    {
+        $this->query->where(
+            function (EloquentBuilder $q) use ($currency) {
+                $q->where('source.transaction_currency_id', $currency->id);
+                $q->orWhere('source.foreign_currency_id', $currency->id);
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Limit the result to a set of specific journals.
+     *
+     * @param array $journalIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setJournalIds(array $journalIds): GroupCollectorInterface
+    {
+        if (\count($journalIds) > 0) {
+            $this->query->whereIn('transaction_journals.id', $journalIds);
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit the number of returned entries.
      *
      * @param int $limit
@@ -220,6 +325,21 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Limit results to a specific tag.
+     *
+     * @param Tag $tag
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTag(Tag $tag): GroupCollectorInterface
+    {
+        $this->joinTagTables();
+        $this->query->where('tag_transaction_journal.tag_id', $tag->id);
+
+        return $this;
+    }
+
+    /**
      * Limit the included transaction types.
      *
      * @param array $types
@@ -249,6 +369,25 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Automatically include all stuff required to make API calls work.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withAPIInformation(): GroupCollectorInterface
+    {
+        // include source + destination account name and type.
+        $this->withAccountInformation()
+            // include category ID + name (if any)
+             ->withCategoryInformation()
+            // include budget ID + name (if any)
+             ->withBudgetInformation()
+            // include bill ID + name (if any)
+             ->withBillInformation();
+
+        return $this;
+    }
+
+    /**
      * Will include the source and destination account names and types.
      *
      * @return GroupCollectorInterface
@@ -263,8 +402,8 @@ class GroupCollector implements GroupCollectorInterface
 
             // add source account fields:
             $this->fields[] = 'source_account.name as source_account_name';
-            $this->fields[] = 'source_account.account_type_id as source_account_type_id';
-            $this->fields[] = 'source_account_type.type as source_account_type_type';
+            $this->fields[] = 'source_account.iban as source_account_iban';
+            $this->fields[] = 'source_account_type.type as source_account_type';
 
             // same for dest
             $this->query->leftJoin('accounts as dest_account', 'dest_account.id', '=', 'destination.account_id');
@@ -272,8 +411,8 @@ class GroupCollector implements GroupCollectorInterface
 
             // and add fields:
             $this->fields[] = 'dest_account.name as destination_account_name';
-            $this->fields[] = 'dest_account.account_type_id as destination_account_type_id';
-            $this->fields[] = 'dest_account_type.type as destination_account_type_type';
+            $this->fields[] = 'dest_account.iban as destination_account_iban';
+            $this->fields[] = 'dest_account_type.type as destination_account_type';
 
 
             $this->hasAccountInformation = true;
@@ -341,6 +480,18 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $this;
+    }
+
+    /**
+     * Join table to get tag information.
+     */
+    private function joinTagTables(): void
+    {
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+        }
     }
 
     /**

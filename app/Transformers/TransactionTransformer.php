@@ -32,6 +32,7 @@ use Log;
 
 /**
  * Class TransactionTransformer
+ * @deprecated
  */
 class TransactionTransformer extends AbstractTransformer
 {

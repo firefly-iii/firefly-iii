@@ -23,13 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\ImportJob;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\ImportJobTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -151,29 +150,33 @@ class ImportController extends Controller
         if (null !== $tag) {
             /** @var User $admin */
             $admin = auth()->user();
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setUser($admin);
-            $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-            $collector->setAllAssetAccounts();
-            $collector->setTag($tag);
 
-            if (\in_array(TransactionType::TRANSFER, $types, true)) {
-                $collector->removeFilter(InternalTransferFilter::class);
-            }
+            // use new group collector:
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector
+                ->setUser($admin)
+                // filter on tag.
+                ->setTag($tag)
+                // all info needed for the API:
+                ->withAPIInformation()
+                // set page size:
+                ->setLimit($pageSize)
+                // set page to retrieve
+                ->setPage($this->parameters->get('page'))
+                // set types of transactions to return.
+                ->setTypes($types);
 
             if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
                 $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
             }
-            $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-            $collector->setTypes($types);
-            $paginator = $collector->getPaginatedTransactions();
+            $paginator = $collector->getPaginatedGroups();
             $paginator->setPath(route('api.v1.transactions.index') . $this->buildParams());
             $transactions = $paginator->getCollection();
         }
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
         $resource = new FractalCollection($transactions, $transformer, 'transactions');
