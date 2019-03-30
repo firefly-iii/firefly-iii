@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -36,6 +37,7 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface JournalRepositoryInterface.
+ * TODO needs cleaning up. Remove unused methods.
  */
 interface JournalRepositoryInterface
 {
@@ -50,20 +52,18 @@ interface JournalRepositoryInterface
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
     /**
-     * @param TransactionJournal $journal
+     * Deletes a transaction group.
      *
-     * @return int
+     * @param TransactionGroup $transactionGroup
      */
-    public function countTransactions(TransactionJournal $journal): int;
+    public function destroyGroup(TransactionGroup $transactionGroup): void;
 
     /**
      * Deletes a journal.
      *
      * @param TransactionJournal $journal
-     *
-     * @return bool
      */
-    public function destroy(TransactionJournal $journal): bool;
+    public function destroyJournal(TransactionJournal $journal): void;
 
 
     /** @noinspection MoreThanThreeArgumentsInspection */
@@ -85,13 +85,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal|null
      */
     public function findNull(int $journalId): ?TransactionJournal;
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return Transaction|null
-     */
-    public function findOpposingTransaction(Transaction $transaction): ?Transaction;
 
     /**
      * @param int $transactionid
@@ -122,13 +115,6 @@ interface JournalRepositoryInterface
      * @return Collection
      */
     public function getAttachments(TransactionJournal $journal): Collection;
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return Collection
-     */
-    public function getAttachmentsByTr(Transaction $transaction): Collection;
 
     /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
@@ -265,13 +251,6 @@ interface JournalRepositoryInterface
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
-     * @param Transaction $transaction
-     *
-     * @return Collection
-     */
-    public function getPiggyBankEventsbyTr(Transaction $transaction): Collection;
-
-    /**
      * Returns all journals with more than 2 transactions. Should only return empty collections
      * in Firefly III > v4.8.0.
      *
@@ -296,11 +275,6 @@ interface JournalRepositoryInterface
      * @return string
      */
     public function getTransactionType(TransactionJournal $journal): string;
-
-    /**
-     * @return Collection
-     */
-    public function getTransactionTypes(): Collection;
 
     /**
      * @param array $transactionIds
@@ -333,17 +307,6 @@ interface JournalRepositoryInterface
     public function reconcileById(int $transactionId): bool;
 
     /**
-     * Set meta field for journal that contains a date.
-     *
-     * @param TransactionJournal $journal
-     * @param string             $name
-     * @param Carbon             $date
-     *
-     * @return void
-     */
-    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void;
-
-    /**
      * @param TransactionJournal $journal
      * @param int                $order
      *
@@ -362,15 +325,15 @@ interface JournalRepositoryInterface
      * @throws FireflyException
      * @return TransactionJournal
      */
-    public function store(array $data): TransactionJournal;
+    public function store(array $data): TransactionGroup;
 
     /**
-     * @param TransactionJournal $journal
-     * @param array              $data
+     * @param TransactionGroup $transactionGroup
+     * @param array            $data
      *
-     * @return TransactionJournal
+     * @return TransactionGroup
      */
-    public function update(TransactionJournal $journal, array $data): TransactionJournal;
+    public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup;
 
     /**
      * Update budget for a journal.

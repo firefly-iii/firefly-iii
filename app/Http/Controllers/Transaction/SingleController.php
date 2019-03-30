@@ -288,11 +288,6 @@ class SingleController extends Controller
             return redirect(route('accounts.reconcile.edit', [$journal->id]));
         }
 
-        // redirect to split edit:
-        if ($this->isSplitJournal($journal)) {
-            return redirect(route('transactions.split.edit', [$journal->id]));
-        }
-
         $what       = strtolower($transactionType);
         $budgetList = app('expandedform')->makeSelectListWithEmpty($this->budgets->getBudgets());
 

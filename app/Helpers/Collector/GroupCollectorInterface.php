@@ -29,6 +29,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -38,6 +39,13 @@ use Illuminate\Support\Collection;
  */
 interface GroupCollectorInterface
 {
+    /**
+     * Return the transaction journals without group information. Is useful in some instances.
+     *
+     * @return array
+     */
+    public function getExtractedJournals(): array;
+
     /**
      * Return the groups.
      *
@@ -107,6 +115,15 @@ interface GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
+     * Limit the result to a set of specific journals.
+     *
+     * @param array $journalIds
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setJournalIds(array $journalIds): GroupCollectorInterface;
+
+    /**
      * Limit the number of returned entries.
      *
      * @param int $limit
@@ -123,15 +140,6 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setPage(int $page): GroupCollectorInterface;
-
-    /**
-     * Limit the result to a set of specific journals.
-     *
-     * @param array $journalIds
-     *
-     * @return GroupCollectorInterface
-     */
-    public function setJournalIds(array $journalIds): GroupCollectorInterface;
 
     /**
      * Set the start and end time of the results to return.
@@ -151,6 +159,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setTag(Tag $tag): GroupCollectorInterface;
+
+    /**
+     * Limit the search to one specific transaction group.
+     *
+     * @param TransactionGroup $transactionGroup
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTransactionGroup(TransactionGroup $transactionGroup): GroupCollectorInterface;
 
     /**
      * Limit the included transaction types.

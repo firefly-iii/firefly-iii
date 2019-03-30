@@ -396,11 +396,12 @@ Route::group(
         // Transaction API routes:
         Route::get('', ['uses' => 'TransactionController@index', 'as' => 'index']);
         Route::post('', ['uses' => 'TransactionController@store', 'as' => 'store']);
-        Route::get('{transaction}', ['uses' => 'TransactionController@show', 'as' => 'show']);
-        Route::get('{transaction}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
-        Route::get('{transaction}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
-        Route::put('{transaction}', ['uses' => 'TransactionController@update', 'as' => 'update']);
-        Route::delete('{transaction}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
+        Route::get('{transactionGroup}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+        Route::get('{transactionJournal}/attachments', ['uses' => 'TransactionController@attachments', 'as' => 'attachments']);
+        Route::get('{transactionJournal}/piggy_bank_events', ['uses' => 'TransactionController@piggyBankEvents', 'as' => 'piggy_bank_events']);
+        Route::put('{transactionGroup}', ['uses' => 'TransactionController@update', 'as' => 'update']);
+        Route::delete('{transactionGroup}/{transactionJournal}', ['uses' => 'TransactionController@deleteJournal', 'as' => 'delete-journal']);
+        Route::delete('{transactionGroup}', ['uses' => 'TransactionController@delete', 'as' => 'delete']);
     }
 );
 

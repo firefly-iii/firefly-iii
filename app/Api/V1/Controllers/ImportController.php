@@ -29,7 +29,6 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\ImportJobTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;

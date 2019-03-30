@@ -1,8 +1,8 @@
 <?php
 
 /**
- * UpdatedTransactionJournal.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * UpdatedTransactionGroup.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -24,30 +24,29 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events;
 
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
- * Class UpdatedTransactionJournal.
- * @deprecated
+ * Class UpdatedTransactionGroup.
  * @codeCoverageIgnore
  *
  */
-class UpdatedTransactionJournal extends Event
+class UpdatedTransactionGroup extends Event
 {
     use SerializesModels;
 
-    /** @var TransactionJournal The journal. */
-    public $journal;
+    /** @var TransactionGroup The group that was stored. */
+    public $transactionGroup;
 
     /**
      * Create a new event instance.
      *
-     * @param TransactionJournal $journal
+     * @param TransactionGroup $transactionGroup
      */
-    public function __construct(TransactionJournal $journal)
+    public function __construct(TransactionGroup $transactionGroup)
     {
-        throw new FireflyException('The UpdatedTransactionJournal event is deprecated.');
-        $this->journal = $journal;
+        $this->transactionGroup = $transactionGroup;
     }
 }

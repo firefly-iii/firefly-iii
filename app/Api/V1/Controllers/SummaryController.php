@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers;
 
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -179,20 +180,15 @@ class SummaryController extends Controller
             // set types of transactions to return.
             ->setTypes([TransactionType::DEPOSIT]);
 
-        // TODO possible candidate for getExtractedGroups
-        $set = $collector->getGroups();
+        $set = $collector->getExtractedJournals();
+        /** @var array $transactionJournal */
+        foreach ($set as $transactionJournal) {
 
-        /** @var array $group */
-        foreach ($set as $group) {
-            /** @var array $transaction */
-            foreach ($group['transactions'] as $transaction) {
-
-                $currencyId           = (int)$transaction['currency_id'];
-                $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-                $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transaction['amount'], '-1'));
-                $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-                $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transaction['amount'], '-1'));
-            }
+            $currencyId           = (int)$transactionJournal['currency_id'];
+            $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transactionJournal['amount'], '-1'));
+            $sums[$currencyId]    = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
         }
 
         // collect expenses of user using the new group collector.
@@ -205,19 +201,16 @@ class SummaryController extends Controller
             // set types of transactions to return.
             ->setTypes([TransactionType::WITHDRAWAL]);
 
-        $set = $collector->getGroups();
 
-        /** @var array $group */
-        foreach ($set as $group) {
-            /** @var array $transaction */
-            foreach ($group['transactions'] as $transaction) {
+        $set = $collector->getExtractedJournals();
 
-                $currencyId            = (int)$transaction['currency_id'];
-                $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-                $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction['amount']);
-                $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-                $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction['amount']);
-            }
+        /** @var array $transactionJournal */
+        foreach ($set as $transactionJournal) {
+            $currencyId            = (int)$transactionJournal['currency_id'];
+            $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
+            $sums[$currencyId]     = $sums[$currencyId] ?? '0';
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $transactionJournal['amount']);
         }
 
         // format amounts:
@@ -333,6 +326,7 @@ class SummaryController extends Controller
      * @param Carbon $end
      *
      * @return array
+     * @throws Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {

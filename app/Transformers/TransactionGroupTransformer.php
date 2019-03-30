@@ -114,6 +114,7 @@ class TransactionGroupTransformer extends AbstractTransformer
             $metaDateData  = $this->groupRepos->getMetaDateFields((int)$row['transaction_journal_id'], $this->metaDateFields);
 
             $result[] = [
+                'transaction_journal_id'          => $row['transaction_journal_id'],
                 'description'                     => $row['description'],
                 'date'                            => $row['date']->toAtomString(),
                 'type'                            => $type,

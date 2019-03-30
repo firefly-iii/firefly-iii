@@ -24,12 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Events;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**
  * Class StoredTransactionJournal.
- *
+ * @deprecated
  * @codeCoverageIgnore
  */
 class StoredTransactionJournal extends Event
@@ -46,6 +47,7 @@ class StoredTransactionJournal extends Event
      */
     public function __construct(TransactionJournal $journal)
     {
+        throw new FireflyException('The StoredTransactionJournal event is deprecated.');
         $this->journal = $journal;
     }
 }

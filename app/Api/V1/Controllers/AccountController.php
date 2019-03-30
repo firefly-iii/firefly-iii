@@ -218,7 +218,7 @@ class AccountController extends Controller
     }
 
     /**
-     * Show all transactions.
+     * Show all transaction groups related to the account.
      *
      * @param Request $request
      * @param Account $account

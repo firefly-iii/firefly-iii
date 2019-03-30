@@ -119,6 +119,25 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Return the transaction journals without group information. Is useful in some instances.
+     *
+     * @return array
+     */
+    public function getExtractedJournals(): array
+    {
+        $selection = $this->getGroups();
+        $return    = new Collection;
+        /** @var array $group */
+        foreach ($selection as $group) {
+            foreach ($group['transactions'] as $journalId => $journal) {
+                $return[$journalId] = $journal;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Return the groups.
      *
      * @return Collection
@@ -337,6 +356,18 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->where('tag_transaction_journal.tag_id', $tag->id);
 
         return $this;
+    }
+
+    /**
+     * Limit the search to one specific transaction group.
+     *
+     * @param TransactionGroup $transactionGroup
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTransactionGroup(TransactionGroup $transactionGroup): GroupCollectorInterface
+    {
+        $this->query->where('transaction_groups.id', $transactionGroup->id);
     }
 
     /**
