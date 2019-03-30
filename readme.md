@@ -29,7 +29,7 @@
 [![Overview of all budgets](https://firefly-iii.org/static/screenshots/4.7.4/tiny/budget.png)](https://firefly-iii.org/static/screenshots/4.7.4/budget.png) [![Overview of a category](https://firefly-iii.org/static/screenshots/4.7.4/tiny/category.png)](https://firefly-iii.org/static/screenshots/4.7.4/category.png)
 
 ### Purpose
-Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards,  others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where you're money is going, you can stop it from going there.
+Personal financial management is pretty difficult, and everybody has their own approach to it. Some people make budgets, other people limit their cashflow by throwing away their credit cards,  others try to increase their current cashflow. There are tons of ways to save and earn money. Firefly III works on the principle that if you know where your money is going, you can stop it from going there.
 
 By keeping track of your expenses and your income you can budget accordingly and save money. Stop living from paycheck to paycheck but give yourself the financial wiggle room you need.
 
