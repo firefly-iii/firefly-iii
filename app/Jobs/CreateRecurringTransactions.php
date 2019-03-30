@@ -47,7 +47,8 @@ namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
 use FireflyIII\Events\RequestedReportOnJournals;
-use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Factory\PiggyBankFactory;
 use FireflyIII\Models\Recurrence;
@@ -317,6 +318,7 @@ class CreateRecurringTransactions implements ShouldQueue
      */
     private function handleOccurrences(Recurrence $recurrence, array $occurrences): Collection
     {
+        throw new FireflyException('Needs refactor');
         $collection = new Collection;
         /** @var Carbon $date */
         foreach ($occurrences as $date) {
@@ -360,7 +362,7 @@ class CreateRecurringTransactions implements ShouldQueue
             Log::debug(sprintf('Piggy bank ID for recurrence #%d is #%d', $recurrence->id, $piggyBankId));
 
             // trigger event:
-            event(new StoredTransactionJournal($journal));
+            event(new StoredTransactionGroup($journal));
 
             // link to piggy bank:
             /** @var PiggyBankFactory $factory */

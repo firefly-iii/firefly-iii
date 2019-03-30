@@ -15,11 +15,8 @@
 {% block scripts %}
     <script type="text/javascript">
         var token = '{{ csrf_token() }}';
-        var migrateUri = '{{ route('installer.migrate') }}';
-        var keysUri = '{{ route('installer.keys') }}';
-        var upgradeUri = '{{ route('installer.upgrade') }}';
-        var verifyUri = '{{ route('installer.verify') }}';
-        var decryptUri = '{{ route('installer.decrypt') }}';
+        var index = 0;
+        var runCommandUri = '{{ route('installer.runCommand') }}';
         var homeUri = '{{ route('flush') }}';
     </script>
     <script type="text/javascript" src="v1/js/ff/install/index.js"></script>

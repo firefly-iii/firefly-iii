@@ -26,9 +26,7 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\TransactionRequest;
 use FireflyIII\Events\StoredTransactionGroup;
-use FireflyIII\Events\StoredTransactionJournal;
 use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Events\UpdatedTransactionJournal;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
@@ -252,7 +250,6 @@ class TransactionController extends Controller
      * @param TransactionRequest         $request
      *
      * @param JournalRepositoryInterface $repository
-     * TODO refactor me.
      *
      * @throws FireflyException
      * @return JsonResponse

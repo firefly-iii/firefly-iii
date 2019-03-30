@@ -776,11 +776,11 @@ class JournalRepository implements JournalRepositoryInterface
     /**
      * @param array $data
      *
-     * @return TransactionJournal
+     * @return TransactionGroup
      *
      * @throws FireflyException
      */
-    public function store(array $data): TransactionJournal
+    public function store(array $data): TransactionGroup
     {
         /** @var TransactionJournalFactory $factory */
         $factory = app(TransactionJournalFactory::class);
@@ -790,15 +790,15 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param TransactionGroup $journal
      * @param array              $data
      *
-     * @return TransactionJournal
+     * @return TransactionGroup
      *
      * @throws FireflyException
      * @throws FireflyException
      */
-    public function update(TransactionJournal $journal, array $data): TransactionJournal
+    public function update(TransactionGroup $journal, array $data): TransactionGroup
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);

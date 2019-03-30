@@ -1,6 +1,6 @@
 <?php
 /**
- * StoredJournalEventHandler.php
+ * StoredGroupEventHandler.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,47 +22,52 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\StoredTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 
 /**
- * Class StoredJournalEventHandler
+ * Class StoredGroupEventHandler
  */
-class StoredJournalEventHandler
+class StoredGroupEventHandler
 {
     /**
      * This method grabs all the users rules and processes them.
      *
-     * @param StoredTransactionJournal $storedJournalEvent
+     * @param StoredTransactionGroup $storedJournalEvent
      *
      * @return bool
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function processRules(StoredTransactionJournal $storedJournalEvent): bool
+    public function processRules(StoredTransactionGroup $storedJournalEvent): bool
     {
-        $journal = $storedJournalEvent->journal;
+        $journals = $storedJournalEvent->transactionGroup->transactionJournals;
 
         // create objects:
         /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
-        $ruleGroupRepos->setUser($journal->user);
-        $groups = $ruleGroupRepos->getActiveGroups($journal->user);
 
-        /** @var RuleGroup $group */
-        foreach ($groups as $group) {
-            $rules = $ruleGroupRepos->getActiveStoreRules($group);
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                /** @var Processor $processor */
-                $processor = app(Processor::class);
-                $processor->make($rule);
-                $processor->handleTransactionJournal($journal);
+        foreach ($journals as $journal) {
+            $ruleGroupRepos->setUser($journal->user);
+            $groups = $ruleGroupRepos->getActiveGroups($journal->user);
 
-                if ($rule->stop_processing) {
-                    break;
+            /** @var RuleGroup $group */
+            foreach ($groups as $group) {
+                $rules = $ruleGroupRepos->getActiveStoreRules($group);
+                /** @var Rule $rule */
+                foreach ($rules as $rule) {
+                    /** @var Processor $processor */
+                    $processor = app(Processor::class);
+                    $processor->make($rule);
+                    $processor->handleTransactionJournal($journal);
+
+                    // TODO refactor the stop_processing logic.
+                    // TODO verify that rule execution happens in one place only, including the journal + rule loop (if any)
+                    if ($rule->stop_processing) {
+                        break;
+                    }
                 }
             }
         }

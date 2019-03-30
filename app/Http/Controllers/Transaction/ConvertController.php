@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionJournal;
@@ -128,6 +128,7 @@ class ConvertController extends Controller
      */
     public function postIndex(Request $request, TransactionType $destinationType, TransactionJournal $journal)
     {
+        throw new FireflyException('Needs refactor');
         // @codeCoverageIgnoreStart
         if ($this->isOpeningBalance($journal)) {
             Log::debug('Journal is opening balance, return to account.');
@@ -166,7 +167,7 @@ class ConvertController extends Controller
         }
 
         // Success? Fire rules!
-        event(new UpdatedTransactionJournal($journal));
+        event(new UpdatedTransactionGroup($group));
 
 
         session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));

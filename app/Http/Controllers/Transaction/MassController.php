@@ -23,7 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\TransactionViewFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
@@ -128,6 +129,7 @@ class MassController extends Controller
      */
     public function edit(Collection $journals): IlluminateView
     {
+        throw new FireflyException('Needs refactor');
         /** @var User $user */
         $user     = auth()->user();
         $subTitle = (string)trans('firefly.mass_edit_journals');
@@ -182,6 +184,7 @@ class MassController extends Controller
      */
     public function update(MassEditJournalRequest $request, JournalRepositoryInterface $repository)
     {
+        throw new FireflyException('Needs refactor');
         $journalIds = $request->get('journals');
         $count      = 0;
         if (\is_array($journalIds)) {
@@ -242,7 +245,7 @@ class MassController extends Controller
                     $repository->update($journal, $data);
 
                     // trigger rules
-                    event(new UpdatedTransactionJournal($journal));
+                    event(new UpdatedTransactionGroup($group));
 
                     ++$count;
                 }

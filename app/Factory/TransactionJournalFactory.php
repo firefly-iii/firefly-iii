@@ -101,10 +101,10 @@ class TransactionJournalFactory
      *
      * @param array $data
      *
-     * @return Collection
+     * @return TransactionGroup
      * @throws Exception
      */
-    public function create(array $data): Collection
+    public function create(array $data): TransactionGroup
     {
         $data = new NullArrayObject($data);
         Log::debug('Start of TransactionJournalFactory::create()');
@@ -193,9 +193,9 @@ class TransactionJournalFactory
             $collection->push($journal);
         }
 
-        $this->storeGroup($collection, $data['group_title']);
+        $group = $this->storeGroup($collection, $data['group_title']);
 
-        return $collection;
+        return $group;
 
     }
 

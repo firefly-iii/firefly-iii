@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
-use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
@@ -373,9 +374,9 @@ class SingleController extends Controller
         $doSplit       = 1 === (int)$request->get('split_journal');
         $createAnother = 1 === (int)$request->get('create_another');
         $data          = $request->getJournalData();
-        $journal       = $repository->store($data);
+        $group       = $repository->store($data);
 
-
+        throw new FireflyException('Needs refactor');
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal.');
@@ -398,7 +399,7 @@ class SingleController extends Controller
             session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        event(new StoredTransactionJournal($journal));
+        event(new StoredTransactionGroup($group));
 
         session()->flash('success_uri', route('transactions.show', [$journal->id]));
         session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
@@ -449,7 +450,7 @@ class SingleController extends Controller
         if (!$request->boolean('keep_bill_id')) {
             $data['bill_id'] = null;
         }
-
+        throw new FireflyException('Needs refactor');
 
         $journal = $repository->update($journal, $data);
         /** @var array $files */
@@ -465,7 +466,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        event(new UpdatedTransactionJournal($journal));
+        event(new UpdatedTransactionGroup($group));
         // update, get events by date and sort DESC
 
         $type = strtolower($this->repository->getTransactionType($journal));

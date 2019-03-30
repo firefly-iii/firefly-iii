@@ -1,6 +1,6 @@
 <?php
 /**
- * UpdatedJournalEventHandler.php
+ * UpdatedGroupEventHandler.php
  * Copyright (c) 2017 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,48 +22,51 @@ declare(strict_types=1);
 
 namespace FireflyIII\Handlers\Events;
 
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Processor;
 
 /**
- * Class UpdatedJournalEventHandler
+ * Class UpdatedGroupEventHandler
  */
-class UpdatedJournalEventHandler
+class UpdatedGroupEventHandler
 {
     /**
      * This method will check all the rules when a journal is updated.
      *
-     * @param UpdatedTransactionJournal $updatedJournalEvent
+     * @param UpdatedTransactionGroup $updatedJournalEvent
      *
      * @return bool
      * @throws \FireflyIII\Exceptions\FireflyException
      */
-    public function processRules(UpdatedTransactionJournal $updatedJournalEvent): bool
+    public function processRules(UpdatedTransactionGroup $updatedJournalEvent): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
-        $journal = $updatedJournalEvent->journal;
+        $journals = $updatedJournalEvent->transactionGroup;
 
         /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
-        $ruleGroupRepos->setUser($journal->user);
 
-        $groups = $ruleGroupRepos->getActiveGroups($journal->user);
+        foreach ($journals as $journal) {
+            $ruleGroupRepos->setUser($journal->user);
 
-        /** @var RuleGroup $group */
-        foreach ($groups as $group) {
-            $rules = $ruleGroupRepos->getActiveUpdateRules($group);
-            /** @var Rule $rule */
-            foreach ($rules as $rule) {
-                /** @var Processor $processor */
-                $processor = app(Processor::class);
-                $processor->make($rule);
-                $processor->handleTransactionJournal($journal);
+            $groups = $ruleGroupRepos->getActiveGroups($journal->user);
 
-                if ($rule->stop_processing) {
-                    break;
+            /** @var RuleGroup $group */
+            foreach ($groups as $group) {
+                $rules = $ruleGroupRepos->getActiveUpdateRules($group);
+                /** @var Rule $rule */
+                foreach ($rules as $rule) {
+                    /** @var Processor $processor */
+                    $processor = app(Processor::class);
+                    $processor->make($rule);
+                    $processor->handleTransactionJournal($journal);
+
+                    if ($rule->stop_processing) {
+                        break;
+                    }
                 }
             }
         }

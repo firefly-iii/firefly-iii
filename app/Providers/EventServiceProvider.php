@@ -28,8 +28,8 @@ use FireflyIII\Events\RegisteredUser;
 use FireflyIII\Events\RequestedNewPassword;
 use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Events\RequestedVersionCheckStatus;
-use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Events\UserChangedEmail;
 use FireflyIII\Mail\OAuthTokenCreatedMail;
 use FireflyIII\Models\PiggyBank;
@@ -89,12 +89,12 @@ class EventServiceProvider extends ServiceProvider
                 'FireflyIII\Handlers\Events\AdminEventHandler@sendTestMessage',
             ],
             // is a Transaction Journal related event.
-            StoredTransactionJournal::class    => [
-                'FireflyIII\Handlers\Events\StoredJournalEventHandler@processRules',
+            StoredTransactionGroup::class    => [
+                'FireflyIII\Handlers\Events\StoredGroupEventHandler@processRules',
             ],
             // is a Transaction Journal related event.
-            UpdatedTransactionJournal::class   => [
-                'FireflyIII\Handlers\Events\UpdatedJournalEventHandler@processRules',
+            UpdatedTransactionGroup::class   => [
+                'FireflyIII\Handlers\Events\UpdatedGroupEventHandler@processRules',
             ],
             // API related events:
             AccessTokenCreated::class          => [
