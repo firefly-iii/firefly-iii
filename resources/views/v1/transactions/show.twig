@@ -214,7 +214,7 @@
                             {% endif %}
                         {% endfor %}
                         {# all other meta values #}
-                        {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa-batch-id','sepa-ct-id','sepa-ct-op','sepa-db','sepa-country','sepa-cc','sepa-ep','sepa-ci'] %}
+                        {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci'] %}
                             {% if journalHasMeta(journal, metaField) %}
                                 <tr>
                                     <td>{{ trans('list.'~metaField) }}</td>

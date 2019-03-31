@@ -21,23 +21,17 @@
 
 declare(strict_types=1);
 
-
 Route::group(
     ['namespace' => 'FireflyIII\Http\Controllers\System',
      'as'        => 'installer.', 'prefix' => 'install'], function () {
     Route::get('', ['uses' => 'InstallController@index', 'as' => 'index']);
     Route::post('runCommand', ['uses' => 'InstallController@runCommand', 'as' => 'runCommand']);
-//    Route::post('migrate', ['uses' => 'InstallController@migrate', 'as' => 'migrate']);
-//    Route::post('keys', ['uses' => 'InstallController@keys', 'as' => 'keys']);
-//    Route::post('upgrade', ['uses' => 'InstallController@upgrade', 'as' => 'upgrade']);
-//    Route::post('verify', ['uses' => 'InstallController@verify', 'as' => 'verify']);
-//    Route::post('decrypt', ['uses' => 'InstallController@decrypt', 'as' => 'decrypt']);
 }
 );
 
 Route::group(
-    ['middleware' => 'binders-only','namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], function () {
-        Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
+    ['middleware' => 'binders-only', 'namespace' => 'FireflyIII\Http\Controllers\System', 'as' => 'cron.', 'prefix' => 'cron'], static function () {
+    Route::get('run/{cliToken}', ['uses' => 'CronController@cron', 'as' => 'cron']);
 }
 );
 
@@ -45,7 +39,7 @@ Route::group(
  * These routes only work when the user is NOT logged in.
  */
 Route::group(
-    ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'], function () {
+    ['middleware' => 'user-not-logged-in', 'namespace' => 'FireflyIII\Http\Controllers'], static function () {
 
     // Authentication Routes...
     Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
@@ -58,7 +52,7 @@ Route::group(
     // Password Reset Routes...
     Route::get('password/reset/{token}', ['uses' => 'Auth\ResetPasswordController@showResetForm', 'as' => 'password.reset']);
     Route::post('password/email', ['uses' => 'Auth\ForgotPasswordController@sendResetLinkEmail', 'as' => 'password.email']);
-    Route::post('password/reset',['uses' => 'Auth\ResetPasswordController@reset']);
+    Route::post('password/reset', ['uses' => 'Auth\ResetPasswordController@reset']);
     Route::get('password/reset', ['uses' => 'Auth\ForgotPasswordController@showLinkRequestForm', 'as' => 'password.reset.request']);
 
     // Change email routes:
@@ -148,9 +142,10 @@ Route::group(
     );
 
     // show reconciliation
-    Route::get('reconcile/show/{tj}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
-    Route::get('reconcile/edit/{tj}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
-    Route::post('reconcile/update/{tj}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
+    // TODO improve me
+    //Route::get('reconcile/show/{transactionGroup}', ['uses' => 'Account\ReconcileController@show', 'as' => 'reconcile.show']);
+    //Route::get('reconcile/edit/{transactionGroup}', ['uses' => 'Account\ReconcileController@edit', 'as' => 'reconcile.edit']);
+    //Route::post('reconcile/update/{transactionGroup}', ['uses' => 'Account\ReconcileController@update', 'as' => 'reconcile.update']);
 
 
 }
@@ -553,10 +548,11 @@ Route::group(
     // for auto complete
 
 
-    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
-    Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
-    Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
-//    Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
+    // TODO improve me.
+    //Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
+    //Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
+    //Route::get('transaction-journals/{what}', ['uses' => 'Json\AutoCompleteController@transactionJournals', 'as' => 'transaction-journals']);
+    //    Route::get('transaction-types', ['uses' => 'Json\AutoCompleteController@transactionTypes', 'as' => 'transaction-types']);
 
     // boxes
     Route::get('box/balance', ['uses' => 'Json\BoxController@balance', 'as' => 'box.balance']);
@@ -875,15 +871,19 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
 
-    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
-    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(
-        ['what' => 'withdrawal|deposit|transfers|transfer']
-    );
+//    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+//    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(
+//        ['what' => 'withdrawal|deposit|transfers|transfer']
+//    );
 
-    Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
-    Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
-    Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
-    Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
+    //Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+
+    //Route::get('show/{tj}', ['uses' => 'TransactionController@show', 'as' => 'show']);
+    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+
+    //Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
+    //Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
 }
 );
 
@@ -893,13 +893,13 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions', 'as' => 'transactions.'],
     function () {
-        Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
-        Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
-        Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
-        Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
-        Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
+//        Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfer']);
+//        Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
+//        Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
+//        Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
+//        Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
+//        Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
+//        Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
     }
 );
 
@@ -933,8 +933,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/split',
      'as'         => 'transactions.split.'], function () {
-    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
-    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
+//    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
+//    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
 
 }
 );
@@ -945,8 +945,8 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/convert',
      'as'         => 'transactions.convert.'], function () {
-    Route::get('{transactionType}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
-    Route::post('{transactionType}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
+//    Route::get('{transactionType}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
+//    Route::post('{transactionType}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
 }
 );
 
@@ -956,8 +956,7 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'],
     function () {
-        Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
-
+        //Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
         Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);
         Route::get('switch/{journalLink}', ['uses' => 'LinkController@switchLink', 'as' => 'switch']);
 

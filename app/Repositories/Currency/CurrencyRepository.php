@@ -195,8 +195,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyCode
      *
-     * @deprecated
      * @return TransactionCurrency|null
+     * @deprecated
      */
     public function findByCodeNull(string $currencyCode): ?TransactionCurrency
     {
@@ -221,8 +221,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @deprecated
      * @return TransactionCurrency
+     * @deprecated
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency
     {
@@ -247,8 +247,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @deprecated
      * @return TransactionCurrency
+     * @deprecated
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency
     {
@@ -258,25 +258,15 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @param TransactionCurrency|null $currency
-     * @param int|null                 $currencyId
-     * @param string|null              $currencyCode
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
      *
      * @return TransactionCurrency|null
      */
-    public function findCurrency(?TransactionCurrency $currency, ?int $currencyId, ?string $currencyCode): TransactionCurrency
+    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
     {
         Log::debug('Now in findCurrency()');
-        $result = null;
-        if (null !== $currency) {
-            Log::debug(sprintf('Parameters contain %s, will return this.', $currency->code));
-            $result = $currency;
-        }
-
-        if (null === $result) {
-            Log::debug(sprintf('Searching for currency with ID #%d...', $currencyId));
-            $result = $this->find((int)$currencyId);
-        }
+        $result = $this->find((int)$currencyId);
         if (null === $result) {
             Log::debug(sprintf('Searching for currency with code %s...', $currencyCode));
             $result = $this->findByCode((string)$currencyCode);
@@ -304,8 +294,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param int $currencyId
      *
-     * @deprecated
      * @return TransactionCurrency|null
+     * @deprecated
      */
     public function findNull(int $currencyId): ?TransactionCurrency
     {

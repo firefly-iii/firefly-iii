@@ -52,13 +52,12 @@ interface BillRepositoryInterface
     /**
      * Find bill by parameters.
      *
-     * @param Bill|null   $bill
      * @param int|null    $billId
      * @param string|null $billName
      *
      * @return Bill|null
      */
-    public function findBill(?Bill $bill, ?int $billId, ?string $billName): ?Bill;
+    public function findBill(?int $billId, ?string $billName): ?Bill;
 
     /**
      * Find a bill by name.

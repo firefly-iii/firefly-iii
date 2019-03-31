@@ -86,18 +86,24 @@ class GroupCollector implements GroupCollectorInterface
         $this->limit  = 50;
         $this->page   = 0;
         $this->fields = [
+            # group
             'transaction_groups.id as transaction_group_id',
+            'transaction_groups.user_id as user_id',
             'transaction_groups.created_at as created_at',
             'transaction_groups.updated_at as updated_at',
             'transaction_groups.title as transaction_group_title',
 
+            # journal
             'transaction_journals.id as transaction_journal_id',
             'transaction_journals.transaction_type_id',
             'transaction_types.type as transaction_type_type',
             'transaction_journals.description',
             'transaction_journals.date',
+
+            # source info (always present)
             'source.id as source_transaction_id',
             'source.account_id as source_account_id',
+            'source.reconciled',
 
             # currency info:
             'source.amount as amount',
@@ -113,7 +119,8 @@ class GroupCollector implements GroupCollectorInterface
             'foreign_currency.symbol as foreign_currency_symbol',
             'foreign_currency.decimal_places as foreign_currency_decimal_places',
 
-            # destination account info:
+            # destination account info (always present)
+            #'destination.id as destination_transaction_id', // not interesting.
             'destination.account_id as destination_account_id',
         ];
     }
@@ -368,6 +375,8 @@ class GroupCollector implements GroupCollectorInterface
     public function setTransactionGroup(TransactionGroup $transactionGroup): GroupCollectorInterface
     {
         $this->query->where('transaction_groups.id', $transactionGroup->id);
+
+        return $this;
     }
 
     /**
@@ -534,46 +543,48 @@ class GroupCollector implements GroupCollectorInterface
     private function parseArray(Collection $collection): Collection
     {
         $groups = [];
-        /** @var TransactionGroup $augumentedGroup */
-        foreach ($collection as $augumentedGroup) {
-            $groupId = $augumentedGroup->transaction_group_id;
+        /** @var TransactionGroup $augmentedGroup */
+        foreach ($collection as $augmentedGroup) {
+            $groupId = $augmentedGroup->transaction_group_id;
             if (!isset($groups[$groupId])) {
                 // make new array
                 $groupArray                             = [
-                    'id'           => $augumentedGroup->id,
-                    'title'        => $augumentedGroup->title,
+                    'id'           => $augmentedGroup->transaction_group_id,
+                    'user_id'      => $augmentedGroup->user_id,
+                    'title'        => $augmentedGroup->title,
                     'count'        => 1,
-                    'sum'          => $augumentedGroup->amount,
-                    'foreign_sum'  => $augumentedGroup->foreign_amount ?? '0',
+                    'sum'          => $augmentedGroup->amount,
+                    'foreign_sum'  => $augmentedGroup->foreign_amount ?? '0',
                     'transactions' => [],
                 ];
-                $journalId                              = (int)$augumentedGroup->transaction_journal_id;
-                $groupArray['transactions'][$journalId] = $this->parseAugumentedGroup($augumentedGroup);
+                $journalId                              = (int)$augmentedGroup->transaction_journal_id;
+                $groupArray['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
                 $groups[$groupId]                       = $groupArray;
                 continue;
             }
             $groups[$groupId]['count']++;
-            $groups[$groupId]['sum']                      = bcadd($augumentedGroup->amount, $groups[$groupId]['sum']);
-            $groups[$groupId]['foreign_sum']              = bcadd($augumentedGroup->foreign_amount ?? '0', $groups[$groupId]['foreign_sum']);
-            $journalId                                    = (int)$augumentedGroup->transaction_journal_id;
-            $groups[$groupId]['transactions'][$journalId] = $this->parseAugumentedGroup($augumentedGroup);
+            $groups[$groupId]['sum']                      = bcadd($augmentedGroup->amount, $groups[$groupId]['sum']);
+            $groups[$groupId]['foreign_sum']              = bcadd($augmentedGroup->foreign_amount ?? '0', $groups[$groupId]['foreign_sum']);
+            $journalId                                    = (int)$augmentedGroup->transaction_journal_id;
+            $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
         }
 
         return new Collection($groups);
     }
 
     /**
-     * @param TransactionGroup $augumentedGroup
+     * @param TransactionGroup $augmentedGroup
      *
-     * @throws Exception
      * @return array
+     * @throws Exception
      */
-    private function parseAugumentedGroup(TransactionGroup $augumentedGroup): array
+    private function parseAugmentedGroup(TransactionGroup $augmentedGroup): array
     {
-        $result               = $augumentedGroup->toArray();
+        $result               = $augmentedGroup->toArray();
         $result['date']       = new Carbon($result['date']);
         $result['created_at'] = new Carbon($result['created_at']);
         $result['updated_at'] = new Carbon($result['updated_at']);
+        $result['reconciled'] = 1 === (int)$result['reconciled'];
 
         return $result;
     }

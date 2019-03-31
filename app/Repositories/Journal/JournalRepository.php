@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Factory\TransactionJournalFactory;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -175,7 +176,7 @@ class JournalRepository implements JournalRepositoryInterface
         $result = TransactionJournalMeta::withTrashed()
                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                         ->where('hash', $hashOfHash)
-                                        ->where('name', 'importHashV2')
+                                        ->where('name', 'import_hash_v2')
                                         ->first(['journal_meta.*']);
         if (null === $result) {
             Log::debug('Result is null');
@@ -782,8 +783,8 @@ class JournalRepository implements JournalRepositoryInterface
      */
     public function store(array $data): TransactionGroup
     {
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
+        /** @var TransactionGroupFactory $factory */
+        $factory = app(TransactionGroupFactory::class);
         $factory->setUser($this->user);
 
         return $factory->create($data);

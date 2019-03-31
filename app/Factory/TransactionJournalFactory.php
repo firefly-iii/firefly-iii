@@ -26,9 +26,9 @@ namespace FireflyIII\Factory;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -77,14 +77,25 @@ class TransactionJournalFactory
      */
     public function __construct()
     {
-        $this->fields = ['sepa-cc', 'sepa-ct-op', 'sepa-ct-id', 'sepa-db', 'sepa-country', 'sepa-ep', 'sepa-ci', 'interest_date', 'book_date', 'process_date',
-                         'due_date', 'recurrence_id', 'payment_date', 'invoice_date', 'internal_reference', 'bunq_payment_id', 'importHash', 'importHashV2',
-                         'external_id', 'sepa-batch-id', 'original-source'];
+        $this->fields = [
+            // sepa
+            'sepa_cc', 'sepa_ct_op', 'sepa_ct_id',
+            'sepa_db', 'sepa_country', 'sepa_ep',
+            'sepa_ci', 'sepa_batch_id',
+
+            // dates
+            'interest_date', 'book_date', 'process_date',
+            'due_date', 'payment_date', 'invoice_date',
+
+            // others
+            'recurrence_id',  'internal_reference', 'bunq_payment_id',
+            'import_hash', 'import_hash_v2', 'external_id', 'original_source'];
 
 
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
+
         $this->currencyRepository = app(CurrencyRepositoryInterface::class);
         $this->typeRepository     = app(TransactionTypeRepositoryInterface::class);
         $this->transactionFactory = app(TransactionFactory::class);
@@ -97,26 +108,22 @@ class TransactionJournalFactory
     }
 
     /**
-     * Store a new transaction journal.
+     * Store a new (set of) transaction journals.
      *
      * @param array $data
      *
-     * @return TransactionGroup
-     * @throws Exception
+     * @return Collection
+     * @throws FireflyException
      */
-    public function create(array $data): TransactionGroup
+    public function create(array $data): Collection
     {
+        // convert to special object.
         $data = new NullArrayObject($data);
+
         Log::debug('Start of TransactionJournalFactory::create()');
         $collection   = new Collection;
         $transactions = $data['transactions'] ?? [];
-        $type         = $this->typeRepository->findTransactionType(null, $data['type']);
-        $carbon       = $data['date'] ?? new Carbon;
-        $carbon->setTimezone(config('app.timezone'));
-
-        Log::debug(sprintf('Going to store a %s.', $type->type));
-
-        if (0 === \count($transactions)) {
+        if (0 === count($transactions)) {
             Log::error('There are no transactions in the array, the TransactionJournalFactory cannot continue.');
 
             return new Collection;
@@ -124,79 +131,15 @@ class TransactionJournalFactory
 
         /** @var array $row */
         foreach ($transactions as $index => $row) {
-            $transaction = new NullArrayObject($row);
-            Log::debug(sprintf('Now creating journal %d/%d', $index + 1, \count($transactions)));
-            /** Get basic fields */
+            Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
 
-            $currency        = $this->currencyRepository->findCurrency(
-                $transaction['currency'], (int)$transaction['currency_id'], $transaction['currency_code']
-            );
-            $foreignCurrency = $this->findForeignCurrency($transaction);
-
-            $bill        = $this->billRepository->findBill($transaction['bill'], (int)$transaction['bill_id'], $transaction['bill_name']);
-            $billId      = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
-            $description = app('steam')->cleanString((string)$transaction['description']);
-
-            /** Create a basic journal. */
-            $journal = TransactionJournal::create(
-                [
-                    'user_id'                 => $this->user->id,
-                    'transaction_type_id'     => $type->id,
-                    'bill_id'                 => $billId,
-                    'transaction_currency_id' => $currency->id,
-                    'description'             => '' === $description ? '(empty description)' : $description,
-                    'date'                    => $carbon->format('Y-m-d H:i:s'),
-                    'order'                   => 0,
-                    'tag_count'               => 0,
-                    'completed'               => 0,
-                ]
-            );
-            Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
-
-            /** Create two transactions. */
-            $this->transactionFactory->setJournal($journal);
-            $this->transactionFactory->createPair($transaction, $currency, $foreignCurrency);
-
-            // verify that journal has two transactions. Otherwise, delete and cancel.
-            $count = $journal->transactions()->count();
-            if (2 !== $count) {
-                // @codeCoverageIgnoreStart
-                Log::error(sprintf('The journal unexpectedly has %d transaction(s). This is not OK. Cancel operation.', $count));
-                $journal->delete();
-
-                return new Collection;
-                // @codeCoverageIgnoreEnd
+            $journal = $this->createJournal(new NullArrayObject($row));
+            if (null !== $journal) {
+                $collection->push($journal);
             }
-            $journal->completed =true;
-            $journal->save();
-
-            /** Link all other data to the journal. */
-
-            /** Link budget */
-            $this->storeBudget($journal, $transaction);
-
-            /** Link category */
-            $this->storeCategory($journal, $transaction);
-
-            /** Set notes */
-            $this->storeNote($journal, $transaction['notes']);
-
-            /** Set piggy bank */
-            $this->storePiggyEvent($journal, $transaction);
-
-            /** Set tags */
-            $this->storeTags($journal, $transaction['tags']);
-
-            /** set all meta fields */
-            $this->storeMetaFields($journal, $transaction);
-
-            $collection->push($journal);
         }
 
-        $group = $this->storeGroup($collection, $data['group_title']);
-
-        return $group;
-
+        return $collection;
     }
 
     /**
@@ -213,31 +156,6 @@ class TransactionJournalFactory
         $this->budgetRepository->setUser($this->user);
         $this->categoryRepository->setUser($this->user);
         $this->piggyRepository->setUser($this->user);
-    }
-
-    /**
-     * Join multiple journals in a group.
-     *
-     * @param Collection  $collection
-     * @param string|null $title
-     *
-     * @return TransactionGroup|null
-     */
-    public function storeGroup(Collection $collection, ?string $title): ?TransactionGroup
-    {
-        if ($collection->count() < 2) {
-            return null; // @codeCoverageIgnore
-        }
-        /** @var TransactionJournal $first */
-        $first = $collection->first();
-        $group = new TransactionGroup;
-        $group->user()->associate($first->user);
-        $group->title = $title ?? $first->description;
-        $group->save();
-
-        $group->transactionJournals()->saveMany($collection);
-
-        return $group;
     }
 
     /**
@@ -333,6 +251,88 @@ class TransactionJournalFactory
     }
 
     /**
+     * @param NullArrayObject $row
+     *
+     * @return TransactionJournal|null
+     * @throws FireflyException
+     */
+    private function createJournal(NullArrayObject $row): ?TransactionJournal
+    {
+        $row['import_hash_v2'] = $this->hashArray($row);
+
+        /** Get basic fields */
+        $type            = $this->typeRepository->findTransactionType(null, $row['type']);
+        $carbon          = $row['date'] ?? new Carbon;
+        $currency        = $this->currencyRepository->findCurrency((int)$row['currency_id'], $row['currency_code']);
+        $foreignCurrency = $this->findForeignCurrency($row);
+        $bill            = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
+        $billId          = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
+        $description     = app('steam')->cleanString((string)$row['description']);
+
+        /** Manipulate basic fields */
+        $carbon->setTimezone(config('app.timezone'));
+
+        /** Create a basic journal. */
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => $this->user->id,
+                'transaction_type_id'     => $type->id,
+                'bill_id'                 => $billId,
+                'transaction_currency_id' => $currency->id,
+                'description'             => '' === $description ? '(empty description)' : $description,
+                'date'                    => $carbon->format('Y-m-d H:i:s'),
+                'order'                   => 0,
+                'tag_count'               => 0,
+                'completed'               => 0,
+            ]
+        );
+        Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
+
+        /** Create two transactions. */
+        $this->transactionFactory->setJournal($journal);
+        $this->transactionFactory->createPair($row, $currency, $foreignCurrency);
+
+        // verify that journal has two transactions. Otherwise, delete and cancel.
+        $count = $journal->transactions()->count();
+        if (2 !== $count) {
+            // @codeCoverageIgnoreStart
+            Log::error(sprintf('The journal unexpectedly has %d transaction(s). This is not OK. Cancel operation.', $count));
+            try {
+                $journal->delete();
+            } catch (Exception $e) {
+                Log::debug(sprintf('Dont care: %s.', $e->getMessage()));
+            }
+
+            return null;
+            // @codeCoverageIgnoreEnd
+        }
+        $journal->completed = true;
+        $journal->save();
+
+        /** Link all other data to the journal. */
+
+        /** Link budget */
+        $this->storeBudget($journal, $row);
+
+        /** Link category */
+        $this->storeCategory($journal, $row);
+
+        /** Set notes */
+        $this->storeNote($journal, $row['notes']);
+
+        /** Set piggy bank */
+        $this->storePiggyEvent($journal, $row);
+
+        /** Set tags */
+        $this->storeTags($journal, $row['tags']);
+
+        /** set all meta fields */
+        $this->storeMetaFields($journal, $row);
+
+        return $journal;
+    }
+
+    /**
      * This is a separate function because "findCurrency" will default to EUR and that may not be what we want.
      *
      * @param NullArrayObject $transaction
@@ -345,10 +345,28 @@ class TransactionJournalFactory
             return null;
         }
 
-        return $this->currencyRepository->findCurrency(
-            $transaction['foreign_currency'], (int)$transaction['foreign_currency_id'], $transaction['foreign_currency_code']
-        );
+        return $this->currencyRepository->findCurrency((int)$transaction['foreign_currency_id'], $transaction['foreign_currency_code']);
     }
+
+    /**
+     * @param NullArrayObject $row
+     *
+     * @return string
+     */
+    private function hashArray(NullArrayObject $row): string
+    {
+        $row['import_hash_v2']    = null;
+        $row['original_source'] = null;
+        $json                   = json_encode($row);
+        if (false === $json) {
+            $json = json_encode((string)microtime());
+        }
+        $hash = hash('sha256', $json);
+        Log::debug(sprintf('The hash is: %s', $hash));
+
+        return $hash;
+    }
+
 
     /**
      * @param TransactionJournal $journal
@@ -356,6 +374,9 @@ class TransactionJournalFactory
      */
     private function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
     {
+        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
+            return;
+        }
         $budget = $this->budgetRepository->findBudget($data['budget'], $data['budget_id'], $data['budget_name']);
         if (null !== $budget) {
             Log::debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));

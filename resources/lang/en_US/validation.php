@@ -33,9 +33,12 @@ return [
     'rule_trigger_value'             => 'This value is invalid for the selected trigger.',
     'rule_action_value'              => 'This value is invalid for the selected action.',
     'file_already_attached'          => 'Uploaded file ":name" is already attached to this object.',
-    'file_attached'                  => 'Succesfully uploaded file ":name".',
+    'file_attached'                  => 'Successfully uploaded file ":name".',
     'must_exist'                     => 'The ID in field :attribute does not exist in the database.',
     'all_accounts_equal'             => 'All accounts in this field must be equal.',
+    'group_title_mandatory'          => 'A group title is mandatory when there is more than one transaction.',
+    'transaction_types_equal'        => 'All splits must be of the same type.',
+    'invalid_transaction_type'       => 'Invalid transaction type.',
     'invalid_selection'              => 'Your selection is invalid.',
     'belongs_user'                   => 'This value is invalid for this field.',
     'at_least_one_transaction'       => 'Need at least one transaction.',
@@ -164,4 +167,19 @@ return [
         'rule-trigger.4'          => 'rule trigger #4',
         'rule-trigger.5'          => 'rule trigger #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+
+    'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'deposit_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'deposit_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+
+    'transfer_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
+    'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'transfer_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

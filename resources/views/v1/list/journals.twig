@@ -1,3 +1,7 @@
+<h1 style="color:red;">DO NOT USE</h1>
+
+
+{#
 {{ transactions.render|raw }}
 
 <table class="table table-hover table-condensed {% if sorting %}sortable-table{% endif %}">
@@ -10,17 +14,14 @@
         <th class="hidden-xs hidden-sm">{{ trans('list.date') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.from') }}</th>
         <th class="hidden-xs hidden-sm hidden-md">{{ trans('list.to') }}</th>
-        {# Hide budgets? #}
         {% if not hideBudgets %}
             <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
         {% endif %}
 
-        {# Hide categories? #}
         {% if not hideCategories %}
             <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
         {% endif %}
 
-        {# Hide bills? #}
         {% if not hideBills %}
             <th class="hidden-xs"><i class="fa fa-fw fa-calendar-o" title="{{ trans('list.bill') }}"></i></th>
         {% endif %}
@@ -75,3 +76,4 @@
     var edit_bulk_selected_txt = "{{ trans('firefly.bulk_edit')|escape('js') }}";
     var delete_selected_txt = "{{ trans('firefly.delete')|escape('js') }}";
 </script>
+#}

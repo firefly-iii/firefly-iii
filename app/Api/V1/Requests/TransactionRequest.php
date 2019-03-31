@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Requests;
 use FireflyIII\Rules\BelongsUser;
 use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
+use FireflyIII\Support\NullArrayObject;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
 
@@ -59,34 +60,8 @@ class TransactionRequest extends Request
     public function getAll(): array
     {
         $data = [
-            'type'               => $this->string('type'),
-            'date'               => $this->dateTime('date'),
-            'description'        => $this->string('description'),
-            'piggy_bank_id'      => $this->integer('piggy_bank_id'),
-            'piggy_bank_name'    => $this->string('piggy_bank_name'),
-            'bill_id'            => $this->integer('bill_id'),
-            'bill_name'          => $this->string('bill_name'),
-            'tags'               => explode(',', $this->string('tags')),
-            'notes'              => $this->string('notes'),
-            'sepa-cc'            => $this->string('sepa_cc'),
-            'sepa-ct-op'         => $this->string('sepa_ct_op'),
-            'sepa-ct-id'         => $this->string('sepa_ct_id'),
-            'sepa-db'            => $this->string('sepa_db'),
-            'sepa-country'       => $this->string('sepa_country'),
-            'sepa-ep'            => $this->string('sepa_ep'),
-            'sepa-ci'            => $this->string('sepa_ci'),
-            'sepa-batch-id'      => $this->string('sepa_batch_id'),
-            'interest_date'      => $this->date('interest_date'),
-            'book_date'          => $this->date('book_date'),
-            'process_date'       => $this->date('process_date'),
-            'due_date'           => $this->date('due_date'),
-            'payment_date'       => $this->date('payment_date'),
-            'invoice_date'       => $this->date('invoice_date'),
-            'internal_reference' => $this->string('internal_reference'),
-            'bunq_payment_id'    => $this->string('bunq_payment_id'),
-            'external_id'        => $this->string('external_id'),
-            'original-source'    => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
-            'transactions'       => $this->getTransactionData(),
+            'group_title'  => $this->string('group_title'),
+            'transactions' => $this->getTransactionData(),
         ];
 
         return $data;
@@ -101,61 +76,76 @@ class TransactionRequest extends Request
     public function rules(): array
     {
         $rules = [
-            // basic fields for journal:
-            'type'                                 => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
-            'description'                          => 'between:1,255',
-            'date'                                 => ['required', new IsDateOrTime],
-            'piggy_bank_id'                        => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
-            'piggy_bank_name'                      => ['between:1,255', 'nullable', new BelongsUser],
-            'bill_id'                              => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
-            'bill_name'                            => ['between:1,255', 'nullable', new BelongsUser],
-            'tags'                                 => 'between:1,255',
-
-            // then, custom fields for journal
-            'notes'                                => 'min:1,max:50000|nullable',
-
-            // SEPA fields:
-            'sepa_cc'                              => 'min:1,max:255|nullable',
-            'sepa_ct_op'                           => 'min:1,max:255|nullable',
-            'sepa_ct_id'                           => 'min:1,max:255|nullable',
-            'sepa_db'                              => 'min:1,max:255|nullable',
-            'sepa_country'                         => 'min:1,max:255|nullable',
-            'sepa_ep'                              => 'min:1,max:255|nullable',
-            'sepa_ci'                              => 'min:1,max:255|nullable',
-            'sepa_batch_id'                        => 'min:1,max:255|nullable',
-
-            // dates
-            'interest_date'                        => 'date|nullable',
-            'book_date'                            => 'date|nullable',
-            'process_date'                         => 'date|nullable',
-            'due_date'                             => 'date|nullable',
-            'payment_date'                         => 'date|nullable',
-            'invoice_date'                         => 'date|nullable',
-            'internal_reference'                   => 'min:1,max:255|nullable',
-            'bunq_payment_id'                      => 'min:1,max:255|nullable',
-            'external_id'                          => 'min:1,max:255|nullable',
+            // basic fields for group:
+            'group_title'                          => 'between:1,255',
 
             // transaction rules (in array for splits):
-            'transactions.*.amount'                => 'required|numeric|more:0',
-            'transactions.*.description'           => 'nullable|between:1,255',
+            'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
+            'transactions.*.date'                  => ['required', new IsDateOrTime],
+
+            // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
             'transactions.*.currency_code'         => 'min:3|max:3|exists:transaction_currencies,code',
-            'transactions.*.foreign_amount'        => 'numeric|more:0',
             'transactions.*.foreign_currency_id'   => 'numeric|exists:transaction_currencies,id',
             'transactions.*.foreign_currency_code' => 'min:3|max:3|exists:transaction_currencies,code',
+
+            // amount
+            'transactions.*.amount'                => 'required|numeric|more:0',
+            'transactions.*.foreign_amount'        => 'numeric|more:0',
+
+            // description
+            'transactions.*.description'           => 'nullable|between:1,255',
+
+            // source of transaction
+            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.source_name'           => 'between:1,255|nullable',
+
+            // destination of transaction
+            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
+            'transactions.*.destination_name'      => 'between:1,255|nullable',
+
+            // budget, category, bill and piggy
             'transactions.*.budget_id'             => ['mustExist:budgets,id', new BelongsUser],
             'transactions.*.budget_name'           => ['between:1,255', 'nullable', new BelongsUser],
             'transactions.*.category_id'           => ['mustExist:categories,id', new BelongsUser],
             'transactions.*.category_name'         => 'between:1,255|nullable',
+            'transactions.*.bill_id'               => ['numeric', 'nullable', 'mustExist:bills,id', new BelongsUser],
+            'transactions.*.bill_name'             => ['between:1,255', 'nullable', new BelongsUser],
+            'transactions.*.piggy_bank_id'         => ['numeric', 'nullable', 'mustExist:piggy_banks,id', new BelongsUser],
+            'transactions.*.piggy_bank_name'       => ['between:1,255', 'nullable', new BelongsUser],
+
+            // other interesting fields
             'transactions.*.reconciled'            => [new IsBoolean],
-            'transactions.*.source_id'             => ['numeric', 'nullable', new BelongsUser],
-            'transactions.*.source_name'           => 'between:1,255|nullable',
-            'transactions.*.destination_id'        => ['numeric', 'nullable', new BelongsUser],
-            'transactions.*.destination_name'      => 'between:1,255|nullable',
+            'transactions.*.notes'                 => 'min:1,max:50000|nullable',
+            'transactions.*.tags'                  => 'between:1,255',
+
+            // meta info fields
+            'transactions.*.internal_reference'    => 'min:1,max:255|nullable',
+            'transactions.*.external_id'           => 'min:1,max:255|nullable',
+            'transactions.*.recurrence_id'         => 'min:1,max:255|nullable',
+            'transactions.*.bunq_payment_id'       => 'min:1,max:255|nullable',
+
+            // SEPA fields:
+            'transactions.*.sepa_cc'               => 'min:1,max:255|nullable',
+            'transactions.*.sepa_ct_op'            => 'min:1,max:255|nullable',
+            'transactions.*.sepa_ct_id'            => 'min:1,max:255|nullable',
+            'transactions.*.sepa_db'               => 'min:1,max:255|nullable',
+            'transactions.*.sepa_country'          => 'min:1,max:255|nullable',
+            'transactions.*.sepa_ep'               => 'min:1,max:255|nullable',
+            'transactions.*.sepa_ci'               => 'min:1,max:255|nullable',
+            'transactions.*.sepa_batch_id'         => 'min:1,max:255|nullable',
+
+            // dates
+            'transactions.*.interest_date'         => 'date|nullable',
+            'transactions.*.book_date'             => 'date|nullable',
+            'transactions.*.process_date'          => 'date|nullable',
+            'transactions.*.due_date'              => 'date|nullable',
+            'transactions.*.payment_date'          => 'date|nullable',
+            'transactions.*.invoice_date'          => 'date|nullable',
         ];
 
         if ('PUT' === $this->method()) {
-            unset($rules['type'], $rules['piggy_bank_id'], $rules['piggy_bank_name']);
+            unset($rules['transactions.*.type'], $rules['transactions.*.piggy_bank_id'], $rules['transactions.*.piggy_bank_name']);
         }
 
         return $rules;
@@ -174,13 +164,28 @@ class TransactionRequest extends Request
     {
         $validator->after(
             function (Validator $validator) {
+                // must submit at least one transaction.
                 $this->validateOneTransaction($validator);
+
+                // all journals must have a description
                 $this->validateDescriptions($validator);
-                $this->validateJournalDescription($validator);
-                $this->validateSplitDescriptions($validator);
+
+                // all transaction types must be equal:
+                $this->validateTransactionTypes($validator);
+
+                // validate foreign currency info
                 $this->validateForeignCurrencyInformation($validator);
+
+
+
+                // validate all account info
                 $this->validateAccountInformation($validator);
+
+                // make sure all splits have valid source + dest info
                 $this->validateSplitAccounts($validator);
+
+                // the group must have a description if > 1 journal.
+                $this->validateGroupDescription($validator);
             }
         );
     }
@@ -195,28 +200,88 @@ class TransactionRequest extends Request
     private function getTransactionData(): array
     {
         $return = [];
+        /**
+         * @var int   $index
+         * @var array $transaction
+         */
         foreach ($this->get('transactions') as $index => $transaction) {
+            $object   = new NullArrayObject($transaction);
             $return[] = [
-                'amount'                => $transaction['amount'],
-                'description'           => $transaction['description'] ?? null,
-                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
-                'currency_code'         => $transaction['currency_code'] ?? null,
-                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
-                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
-                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
-                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
-                'budget_name'           => $transaction['budget_name'] ?? null,
-                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
-                'category_name'         => $transaction['category_name'] ?? null,
-                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
-                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
-                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
-                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
-                'reconciled'            => $this->convertBoolean((string)($transaction['reconciled'] ?? 'false')),
-                'identifier'            => $index,
+                //  $this->dateFromValue($object[''])
+                'type'                  => $this->stringFromValue($object['type']),
+                'date'                  => $this->dateFromValue($object['date']),
+                'currency_id'           => $this->integerFromValue($object['currency_id']),
+                'currency_code'         => $this->stringFromValue($object['currency_code']),
+
+                // foreign currency info:
+                'foreign_currency_id'   => $this->integerFromValue((string)$object['foreign_currency_id']),
+                'foreign_currency_code' => $this->stringFromValue($object['foreign_currency_code']),
+
+                // amount and foreign amount. Cannot be 0.
+                'amount'                => $this->stringFromValue($object['amount']),
+                'foreign_amount'        => $this->stringFromValue($object['foreign_amount']),
+
+                // description.
+                'description'           => $this->stringFromValue($object['description']),
+
+                // source of transaction. If everything is null, assume cash account.
+                'source_id'             => $this->integerFromValue((string)$object['source_id']),
+                'source_name'           => $this->stringFromValue($object['source_name']),
+
+                // destination of transaction. If everything is null, assume cash account.
+                'destination_id'        => $this->integerFromValue((string)$object['destination_id']),
+                'destination_name'      => $this->stringFromValue($object['destination_name']),
+
+                // budget info
+                'budget_id'             => $this->integerFromValue((string)$object['budget_id']),
+                'budget_name'           => $this->stringFromValue($object['budget_name']),
+
+                // category info
+                'category_id'           => $this->integerFromValue((string)$object['category_id']),
+                'category_name'         => $this->stringFromValue($object['category_name']),
+
+                // journal bill reference. Optional. Will only work for withdrawals
+                'bill_id'               => $this->integerFromValue((string)$object['bill_id']),
+                'bill_name'             => $this->stringFromValue($object['bill_name']),
+
+                // piggy bank reference. Optional. Will only work for transfers
+                'piggy_bank_id'         => $this->integerFromValue((string)$object['piggy_bank_id']),
+                'piggy_bank_name'       => $this->stringFromValue($object['piggy_bank_name']),
+
+                // some other interesting properties
+                'reconciled'            => $this->convertBoolean((string)$object['reconciled']),
+                'notes'                 => $this->stringFromValue($object['notes']),
+                'tags'                  => $this->arrayFromValue($object['tags']),
+
+                // all custom fields:
+                'internal_reference'    => $this->stringFromValue($object['internal_reference']),
+                'external_id'           => $this->stringFromValue($object['external_id']),
+                'original_source'       => sprintf('ff3-v%s|api-v%s', config('firefly.version'), config('firefly.api_version')),
+                'recurrence_id'         => $this->integerFromValue($object['recurrence_id']),
+                'bunq_payment_id'       => $this->stringFromValue($object['bunq_payment_id']),
+
+                'sepa_cc'       => $this->stringFromValue($object['sepa_cc']),
+                'sepa_ct_op'    => $this->stringFromValue($object['sepa_ct_op']),
+                'sepa_ct_id'    => $this->stringFromValue($object['sepa_ct_id']),
+                'sepa_db'       => $this->stringFromValue($object['sepa_db']),
+                'sepa_country'  => $this->stringFromValue($object['sepa_country']),
+                'sepa_ep'       => $this->stringFromValue($object['sepa_ep']),
+                'sepa_ci'       => $this->stringFromValue($object['sepa_ci']),
+                'sepa_batch_id' => $this->stringFromValue($object['sepa_batch_id']),
+
+
+                // custom date fields. Must be Carbon objects. Presence is optional.
+                'interest_date' => $this->dateFromValue($object['interest_date']),
+                'book_date'     => $this->dateFromValue($object['book_date']),
+                'process_date'  => $this->dateFromValue($object['process_date']),
+                'due_date'      => $this->dateFromValue($object['due_date']),
+                'payment_date'  => $this->dateFromValue($object['payment_date']),
+                'invoice_date'  => $this->dateFromValue($object['invoice_date']),
+
             ];
         }
 
         return $return;
     }
+
 }

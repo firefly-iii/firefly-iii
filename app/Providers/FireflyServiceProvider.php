@@ -75,6 +75,8 @@ use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\ServiceProvider;
 use Twig;
+use Twig_Extension_Debug;
+use TwigBridge\Extension\Loader\Functions;
 use Validator;
 
 /**
@@ -98,19 +100,18 @@ class FireflyServiceProvider extends ServiceProvider
             }
         );
         $config = app('config');
-        //Twig::addExtension(new Functions($config));
-        //Twig::addRuntimeLoader(new TransactionLoader);
-        //Twig::addRuntimeLoader(new AccountLoader);
-        //Twig::addRuntimeLoader(new TransactionJournalLoader);
-        //Twig::addRuntimeLoader(new TransactionGroupLoader);
+        Twig::addExtension(new Functions($config));
+        Twig::addRuntimeLoader(new TransactionLoader);
+        Twig::addRuntimeLoader(new AccountLoader);
+        Twig::addRuntimeLoader(new TransactionJournalLoader);
         Twig::addExtension(new General);
         Twig::addExtension(new TransactionGroupTwig);
-        //Twig::addExtension(new Journal);
+        Twig::addExtension(new Journal);
         Twig::addExtension(new Translation);
-        //Twig::addExtension(new Transaction);
-        //Twig::addExtension(new Rule);
+        Twig::addExtension(new Transaction);
+        Twig::addExtension(new Rule);
         Twig::addExtension(new AmountFormat);
-        //Twig::addExtension(new Twig_Extension_Debug);
+        Twig::addExtension(new Twig_Extension_Debug);
     }
 
     /**

@@ -220,12 +220,12 @@ class ImportArrayStorage
      */
     private function getHash(array $transaction): string
     {
-        unset($transaction['importHashV2'], $transaction['original-source']);
+        unset($transaction['import_hash_v2'], $transaction['original_source']);
         $json = json_encode($transaction);
         if (false === $json) {
             // @codeCoverageIgnoreStart
             /** @noinspection ForgottenDebugOutputInspection */
-            Log::error('Could not encode import array.', print_r($transaction, true));
+            Log::error('Could not encode import array.', $transaction);
             throw new FireflyException('Could not encode import array. Please see the logs.');
             // @codeCoverageIgnoreEnd
         }
@@ -438,7 +438,7 @@ class ImportArrayStorage
                 Log::warning(sprintf('Row #%d seems to be a duplicate entry and will be ignored.', $index));
                 continue;
             }
-            $transaction['importHashV2'] = $this->getHash($transaction);
+            $transaction['import_hash_v2'] = $this->getHash($transaction);
             $toStore[]                   = $transaction;
         }
         $count = \count($toStore);

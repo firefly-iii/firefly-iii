@@ -1,19 +1,1 @@
 <h1 style="color:red;">DO NOT USE ME</h1>
-{#<div class="list-group">
-    {% for transaction in transactions %}
-        <a class="list-group-item" title="{{ transaction.date.formatLocalized(trans('config.month_and_day')) }}"
-                {% if transaction.transaction_type_type == 'Opening balance' %}
-                    href="#"
-                {% else %}
-                    href="{{ route('transactions.show',transaction.journal_id) }}"
-                {% endif %}
-        >
-            {{ transaction|transactionIcon }}
-            {{ transaction|transactionDescription }}
-            <span class="pull-right small">
-                {{ transaction|transactionAmount }}
-        </span>
-        </a>
-    {% endfor %}
-</div>
-#}
