@@ -207,6 +207,8 @@ return [
     'specific_rabo_descr'             => 'Fixes potential problems with Rabobank files',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Fixes potential problems with PC files',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Import setup (3/4) - Define each column\'s role',
     'job_config_roles_text'           => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
