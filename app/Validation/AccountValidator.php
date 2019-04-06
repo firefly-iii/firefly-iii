@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\User;
 use Log;
 
 /**
@@ -50,6 +51,8 @@ class AccountValidator
     private $combinations;
     /** @var string */
     private $transactionType;
+    /** @var User */
+    private $user;
 
     /**
      * AccountValidator constructor.
@@ -69,7 +72,17 @@ class AccountValidator
      */
     public function setTransactionType(string $transactionType): void
     {
+        Log::debug(sprintf('Transaction type for validator is now %s', ucfirst($transactionType)));
         $this->transactionType = ucfirst($transactionType);
+    }
+
+    /**
+     * @param User $user
+     */
+    public function setUser(User $user): void
+    {
+        $this->user = $user;
+        $this->accountRepository->setUser($user);
     }
 
     /**
@@ -83,7 +96,7 @@ class AccountValidator
 
         Log::debug(sprintf('Now in AccountValidator::validateDestination(%d, "%s")', $destinationId, $destinationName));
         if (null === $this->source) {
-            Log::error('Source is NULL');
+            Log::error('Source is NULL, always FALSE.');
             $this->destError = 'No source account validation has taken place yet. Please do this first or overrule the object.';
 
             return false;
@@ -121,9 +134,10 @@ class AccountValidator
      */
     public function validateSource(?int $accountId, ?string $accountName): bool
     {
+        Log::debug(sprintf('Now in AccountValidator::validateSource(%d, "%s")', $accountId, $accountName));
         switch ($this->transactionType) {
             default:
-                $result = false;
+                $result            = false;
                 $this->sourceError = sprintf('Cannot handle type "%s"', $this->transactionType);
                 Log::error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will always return false.', $this->transactionType));
                 break;
@@ -241,7 +255,6 @@ class AccountValidator
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
             Log::debug('Can create some of these types, so return true.');
-            $this->createDestinationAccount($accountName);
             $result = true;
         }
 
@@ -249,15 +262,18 @@ class AccountValidator
             // otherwise try to find the account:
             $search = $this->findExistingAccount($validTypes, (int)$accountId, (string)$accountName);
             if (null === $search) {
+                Log::debug('findExistingAccount() returned NULL, so the result is false.');
                 $this->destError = (string)trans('validation.deposit_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
                 $result          = false;
             }
             if (null !== $search) {
+                Log::debug(sprintf('findExistingAccount() returned #%d ("%s"), so the result is true.', $search->id, $search->name));
                 $this->destination = $search;
                 $result            = true;
             }
         }
         $result = $result ?? false;
+        Log::debug(sprintf('validateDepositDestination(%d, "%s") will return %s', $accountId, $accountName, var_export($result, true)));
 
         return $result;
     }
@@ -270,6 +286,7 @@ class AccountValidator
      */
     private function validateDepositSource(?int $accountId, ?string $accountName): bool
     {
+        Log::debug(sprintf('Now in validateDepositSource(%d, "%s")', $accountId, $accountName));
         $result = null;
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
@@ -281,10 +298,25 @@ class AccountValidator
             $result            = false;
         }
 
+        // if the user submits an ID only but that ID is not of the correct type,
+        // return false.
+        if (null !== $accountId && null === $accountName) {
+            $search = $this->accountRepository->findNull($accountId);
+            if (null !== $search && !in_array($search->accountType->type, $validTypes, true)) {
+                Log::debug(sprintf('User submitted only an ID (#%d), which is a "%s", so this is not a valid source.', $accountId, $search->accountType->type));
+                $result = false;
+            }
+        }
+
         // if the account can be created anyway we don't need to search.
         if (null === $result && true === $this->canCreateTypes($validTypes)) {
-            // set the source to be a (dummy) revenue account.
             $result = true;
+
+            // set the source to be a (dummy) revenue account.
+            $account              = new Account;
+            $accountType          = AccountType::whereType(AccountType::REVENUE)->first();
+            $account->accountType = $accountType;
+            $this->source         = $account;
         }
         $result = $result ?? false;
 
@@ -332,6 +364,7 @@ class AccountValidator
      */
     private function validateTransferSource(?int $accountId, ?string $accountName): bool
     {
+        Log::debug(sprintf('Now in validateTransferSource(%d, "%s")', $accountId, $accountName));
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -362,6 +395,7 @@ class AccountValidator
      */
     private function validateWithdrawalDestination(?int $accountId, ?string $accountName): bool
     {
+        Log::debug(sprintf('Now in validateWithdrawalDestination(%d, "%s")', $accountId, $accountName));
         // source can be any of the following types.
         $validTypes = $this->combinations[$this->transactionType][$this->source->accountType->type] ?? [];
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {
@@ -377,6 +411,7 @@ class AccountValidator
 
             return true;
         }
+
         // don't expect to end up here:
         return false;
     }
@@ -389,6 +424,7 @@ class AccountValidator
      */
     private function validateWithdrawalSource(?int $accountId, ?string $accountName): bool
     {
+        Log::debug(sprintf('Now in validateWithdrawalSource(%d, "%s")', $accountId, $accountName));
         // source can be any of the following types.
         $validTypes = array_keys($this->combinations[$this->transactionType]);
         if (null === $accountId && null === $accountName && false === $this->canCreateTypes($validTypes)) {

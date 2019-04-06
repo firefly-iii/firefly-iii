@@ -27,11 +27,11 @@ namespace FireflyIII\Factory;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
@@ -44,8 +44,8 @@ use Log;
  */
 class TransactionFactory
 {
-    /** @var AccountRepositoryInterface */
-    private $accountRepository;
+    use JournalServiceTrait;
+
     /** @var AccountValidator */
     private $accountValidator;
     /** @var TransactionJournal */
@@ -113,12 +113,16 @@ class TransactionFactory
      */
     public function createPair(NullArrayObject $data, TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): Collection
     {
+        Log::debug('Going to create a pair of transactions.');
+        Log::debug(sprintf('Source info: ID #%d, name "%s"', $data['source_id'], $data['source_name']));
+        Log::debug(sprintf('Destination info: ID #%d, name "%s"', $data['destination_id'], $data['destination_name']));
         // validate source and destination using a new Validator.
         $this->validateAccounts($data);
 
         // create or get source and destination accounts:
-        $sourceAccount      = $this->getAccount('source', (int)$data['source_id'], $data['source_name']);
-        $destinationAccount = $this->getAccount('destination', (int)$data['destination_id'], $data['destination_name']);
+        $type               = $this->journal->transactionType->type;
+        $sourceAccount      = $this->getAccount($type, 'source', (int)$data['source_id'], $data['source_name']);
+        $destinationAccount = $this->getAccount($type, 'destination', (int)$data['destination_id'], $data['destination_name']);
 
         $amount        = $this->getAmount($data['amount']);
         $foreignAmount = $this->getForeignAmount($data['foreign_amount']);
@@ -129,7 +133,7 @@ class TransactionFactory
         $two->reconciled = $data['reconciled'] ?? false;
 
         // add foreign currency info to $one and $two if necessary.
-        if (null !== $foreignCurrency) {
+        if (null !== $foreignCurrency && null !== $foreignAmount) {
             $one->foreign_currency_id = $foreignCurrency->id;
             $two->foreign_currency_id = $foreignCurrency->id;
             $one->foreign_amount      = app('steam')->negative($foreignAmount);
@@ -142,134 +146,6 @@ class TransactionFactory
 
         return new Collection([$one, $two]);
 
-    }
-
-    /**
-     * @param string      $direction
-     * @param int|null    $accountId
-     * @param string|null $accountName
-     *
-     * @return Account
-     * @throws FireflyException
-     */
-    public function getAccount(string $direction, ?int $accountId, ?string $accountName): Account
-    {
-        // some debug logging:
-        Log::debug(sprintf('Now in getAccount(%s, %d, %s)', $direction, $accountId, $accountName));
-
-        // final result:
-        $result = null;
-
-        // expected type of source account, in order of preference
-        /** @var array $array */
-        $array         = config('firefly.expected_source_types');
-        $expectedTypes = $array[$direction];
-        unset($array);
-
-        // and now try to find it, based on the type of transaction.
-        $transactionType = $this->journal->transactionType->type;
-        $message = 'Based on the fact that the transaction is a %s, the %s account should be in: %s';
-        Log::debug(sprintf($message, $transactionType, $direction, implode(', ', $expectedTypes[$transactionType])));
-
-        // first attempt, find by ID.
-        if (null !== $accountId) {
-            $search = $this->accountRepository->findNull($accountId);
-            if (null !== $search && in_array($search->accountType->type, $expectedTypes[$transactionType], true)) {
-                Log::debug(
-                    sprintf('Found "account_id" object  for %s: #%d, "%s" of type %s', $direction, $search->id, $search->name, $search->accountType->type)
-                );
-                $result = $search;
-            }
-        }
-
-        // second attempt, find by name.
-        if (null === $result && null !== $accountName) {
-            Log::debug('Found nothing by account ID.');
-            // find by preferred type.
-            $source = $this->accountRepository->findByName($accountName, [$expectedTypes[$transactionType][0]]);
-            // or any expected type.
-            $source = $source ?? $this->accountRepository->findByName($accountName, $expectedTypes[$transactionType]);
-
-            if (null !== $source) {
-                Log::debug(sprintf('Found "account_name" object for %s: #%d, %s', $direction, $source->id, $source->name));
-
-                $result = $source;
-            }
-        }
-
-        // return cash account.
-        if (null === $result && null === $accountName
-            && in_array(AccountType::CASH, $expectedTypes[$transactionType], true)) {
-            $result = $this->accountRepository->getCashAccount();
-        }
-
-        // return new account.
-        if (null === $result) {
-            $accountName = $accountName ?? '(no name)';
-            // final attempt, create it.
-            $preferredType = $expectedTypes[$transactionType][0];
-            if (AccountType::ASSET === $preferredType) {
-                throw new FireflyException(sprintf('TransactionFactory: Cannot create asset account with ID #%d or name "%s".', $accountId, $accountName));
-            }
-
-            $result = $this->accountRepository->store(
-                [
-                    'account_type_id' => null,
-                    'accountType'     => $preferredType,
-                    'name'            => $accountName,
-                    'active'          => true,
-                    'iban'            => null,
-                ]
-            );
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param string $amount
-     *
-     * @return string
-     * @throws FireflyException
-     */
-    public function getAmount(string $amount): string
-    {
-        if ('' === $amount) {
-            throw new FireflyException(sprintf('The amount cannot be an empty string: "%s"', $amount));
-        }
-        if (0 === bccomp('0', $amount)) {
-            throw new FireflyException(sprintf('The amount seems to be zero: "%s"', $amount));
-        }
-
-        return $amount;
-    }
-
-    /**
-     * @param string|null $amount
-     *
-     * @return string
-     */
-    public function getForeignAmount(?string $amount): ?string
-    {
-        $result = null;
-        if (null === $amount) {
-            Log::debug('No foreign amount info in array. Return NULL');
-
-            return null;
-        }
-        if ('' === $amount) {
-            Log::debug('Foreign amount is empty string, return NULL.');
-
-            return null;
-        }
-        if (0 === bccomp('0', $amount)) {
-            Log::debug('Foreign amount is 0.0, return NULL.');
-
-            return null;
-        }
-        Log::debug(sprintf('Foreign amount is %s', $amount));
-
-        return $amount;
     }
 
 
@@ -298,6 +174,7 @@ class TransactionFactory
     private function validateAccounts(NullArrayObject $data): void
     {
         $transactionType = $data['type'] ?? 'invalid';
+        $this->accountValidator->setUser($this->journal->user);
         $this->accountValidator->setTransactionType($transactionType);
 
         // validate source account.
@@ -309,6 +186,7 @@ class TransactionFactory
         if (false === $validSource) {
             throw new FireflyException($this->accountValidator->sourceError);
         }
+        Log::debug('Source seems valid.');
         // validate destination account
         $destinationId    = isset($data['destination_id']) ? (int)$data['destination_id'] : null;
         $destinationName  = $data['destination_name'] ?? null;

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * TransactionRequest.php
+ * TransactionStoreRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -33,9 +33,9 @@ use Illuminate\Validation\Validator;
 
 
 /**
- * Class TransactionRequest
+ * Class TransactionStoreRequest
  */
-class TransactionRequest extends Request
+class TransactionStoreRequest extends Request
 {
     use TransactionValidation;
 
@@ -82,6 +82,7 @@ class TransactionRequest extends Request
             // transaction rules (in array for splits):
             'transactions.*.type'                  => 'required|in:withdrawal,deposit,transfer,opening-balance,reconciliation',
             'transactions.*.date'                  => ['required', new IsDateOrTime],
+            'transactions.*.order'                 => 'numeric|min:0',
 
             // currency info
             'transactions.*.currency_id'           => 'numeric|exists:transaction_currencies,id',
@@ -144,10 +145,6 @@ class TransactionRequest extends Request
             'transactions.*.invoice_date'          => 'date|nullable',
         ];
 
-        if ('PUT' === $this->method()) {
-            unset($rules['transactions.*.type'], $rules['transactions.*.piggy_bank_id'], $rules['transactions.*.piggy_bank_name']);
-        }
-
         return $rules;
 
 
@@ -156,7 +153,7 @@ class TransactionRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  Validator $validator
+     * @param Validator $validator
      *
      * @return void
      */
@@ -170,12 +167,11 @@ class TransactionRequest extends Request
                 // all journals must have a description
                 $this->validateDescriptions($validator);
 
-                // all transaction types must be equal:
-                $this->validateTransactionTypes($validator);
+                    // all transaction types must be equal:
+                    $this->validateTransactionTypes($validator);
 
                 // validate foreign currency info
                 $this->validateForeignCurrencyInformation($validator);
-
 
 
                 // validate all account info
@@ -186,6 +182,8 @@ class TransactionRequest extends Request
 
                 // the group must have a description if > 1 journal.
                 $this->validateGroupDescription($validator);
+
+                // TODO validate that the currency fits the source and/or destination account.
             }
         );
     }
@@ -207,9 +205,10 @@ class TransactionRequest extends Request
         foreach ($this->get('transactions') as $index => $transaction) {
             $object   = new NullArrayObject($transaction);
             $return[] = [
-                //  $this->dateFromValue($object[''])
-                'type'                  => $this->stringFromValue($object['type']),
-                'date'                  => $this->dateFromValue($object['date']),
+                'type'  => $this->stringFromValue($object['type']),
+                'date'  => $this->dateFromValue($object['date']),
+                'order' => $this->integerFromValue((string)$object['order']),
+
                 'currency_id'           => $this->integerFromValue($object['currency_id']),
                 'currency_code'         => $this->stringFromValue($object['currency_code']),
 

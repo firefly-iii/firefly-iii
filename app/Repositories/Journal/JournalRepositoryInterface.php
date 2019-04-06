@@ -319,21 +319,7 @@ interface JournalRepositoryInterface
      */
     public function setUser(User $user);
 
-    /**
-     * @param array $data
-     *
-     * @throws FireflyException
-     * @return TransactionJournal
-     */
-    public function store(array $data): TransactionGroup;
 
-    /**
-     * @param TransactionGroup $transactionGroup
-     * @param array            $data
-     *
-     * @return TransactionGroup
-     */
-    public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup;
 
     /**
      * Update budget for a journal.

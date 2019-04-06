@@ -25,6 +25,7 @@ namespace FireflyIII\Repositories\TransactionType;
 
 use FireflyIII\Models\TransactionType;
 use Log;
+
 /**
  * Class TransactionTypeRepository
  */
@@ -57,7 +58,8 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
             return $type;
         }
-        $search = $this->findByType($typeString);
+        $typeString = $typeString ?? TransactionType::WITHDRAWAL;
+        $search     = $this->findByType($typeString);
         if (null === $search) {
             $search = $this->findByType(TransactionType::WITHDRAWAL);
         }

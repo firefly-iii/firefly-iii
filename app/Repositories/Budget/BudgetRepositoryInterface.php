@@ -82,13 +82,12 @@ interface BudgetRepositoryInterface
     public function destroyBudgetLimit(BudgetLimit $budgetLimit): void;
 
     /**
-     * @param Budget|null $budget
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
      * @return Budget|null
      */
-    public function findBudget(?Budget $budget, ?int $budgetId, ?string $budgetName): ?Budget;
+    public function findBudget( ?int $budgetId, ?string $budgetName): ?Budget;
 
     /**
      * Find budget by name.

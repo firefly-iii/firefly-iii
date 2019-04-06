@@ -97,8 +97,18 @@ class JournalServiceProvider extends ServiceProvider
 
     private function registerGroupRepository()
     {
-        // password verifier thing
-        $this->app->bind(TransactionGroupRepositoryInterface::class, TransactionGroupRepository::class);
+        $this->app->bind(
+            TransactionGroupRepositoryInterface::class,
+            function (Application $app) {
+                /** @var TransactionGroupRepositoryInterface $repository */
+                $repository = app(TransactionGroupRepository::class);
+                if ($app->auth->check()) {
+                    $repository->setUser(auth()->user());
+                }
+
+                return $repository;
+            }
+        );
     }
 
     /**

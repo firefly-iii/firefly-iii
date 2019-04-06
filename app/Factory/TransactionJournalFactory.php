@@ -27,7 +27,6 @@ namespace FireflyIII\Factory;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -37,6 +36,7 @@ use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
+use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -47,12 +47,10 @@ use Log;
  */
 class TransactionJournalFactory
 {
+    use JournalServiceTrait;
+
     /** @var BillRepositoryInterface */
     private $billRepository;
-    /** @var BudgetRepositoryInterface */
-    private $budgetRepository;
-    /** @var CategoryRepositoryInterface */
-    private $categoryRepository;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var array */
@@ -61,8 +59,6 @@ class TransactionJournalFactory
     private $piggyEventFactory;
     /** @var PiggyBankRepositoryInterface */
     private $piggyRepository;
-    /** @var TagFactory */
-    private $tagFactory;
     /** @var TransactionFactory */
     private $transactionFactory;
     /** @var TransactionTypeRepositoryInterface */
@@ -88,7 +84,7 @@ class TransactionJournalFactory
             'due_date', 'payment_date', 'invoice_date',
 
             // others
-            'recurrence_id',  'internal_reference', 'bunq_payment_id',
+            'recurrence_id', 'internal_reference', 'bunq_payment_id',
             'import_hash', 'import_hash_v2', 'external_id', 'original_source'];
 
 
@@ -151,6 +147,7 @@ class TransactionJournalFactory
     {
         $this->user = $user;
         $this->currencyRepository->setUser($this->user);
+        $this->tagFactory->setUser($user);
         $this->transactionFactory->setUser($this->user);
         $this->billRepository->setUser($this->user);
         $this->budgetRepository->setUser($this->user);
@@ -185,31 +182,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * Link tags to journal.
-     *
-     * @param TransactionJournal $journal
-     * @param array              $tags
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    public function storeTags(TransactionJournal $journal, ?array $tags): void
-    {
-        $this->tagFactory->setUser($journal->user);
-        $set = [];
-        if (!\is_array($tags)) {
-            return;
-        }
-        foreach ($tags as $string) {
-            if ('' !== $string) {
-                $tag = $this->tagFactory->findOrCreate($string);
-                if (null !== $tag) {
-                    $set[] = $tag->id;
-                }
-            }
-        }
-        $journal->tags()->sync($set);
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param NullArrayObject    $data
      * @param string             $field
@@ -230,27 +202,6 @@ class TransactionJournalFactory
     }
 
     /**
-     * @param TransactionJournal $journal
-     * @param string             $notes
-     */
-    protected function storeNote(TransactionJournal $journal, ?string $notes): void
-    {
-        $notes = (string)$notes;
-        if ('' !== $notes) {
-            $note = $journal->notes()->first();
-            if (null === $note) {
-                $note = new Note;
-                $note->noteable()->associate($journal);
-            }
-            $note->text = $notes;
-            $note->save();
-            Log::debug(sprintf('Stored notes for journal #%d', $journal->id));
-
-            return;
-        }
-    }
-
-    /**
      * @param NullArrayObject $row
      *
      * @return TransactionJournal|null
@@ -263,8 +214,9 @@ class TransactionJournalFactory
         /** Get basic fields */
         $type            = $this->typeRepository->findTransactionType(null, $row['type']);
         $carbon          = $row['date'] ?? new Carbon;
+        $order           = $row['order'] ?? 0;
         $currency        = $this->currencyRepository->findCurrency((int)$row['currency_id'], $row['currency_code']);
-        $foreignCurrency = $this->findForeignCurrency($row);
+        $foreignCurrency = $this->currencyRepository->findCurrencyNull($row['foreign_currency_id'], $row['foreign_currency_code']);
         $bill            = $this->billRepository->findBill((int)$row['bill_id'], $row['bill_name']);
         $billId          = TransactionType::WITHDRAWAL === $type->type && null !== $bill ? $bill->id : null;
         $description     = app('steam')->cleanString((string)$row['description']);
@@ -281,7 +233,7 @@ class TransactionJournalFactory
                 'transaction_currency_id' => $currency->id,
                 'description'             => '' === $description ? '(empty description)' : $description,
                 'date'                    => $carbon->format('Y-m-d H:i:s'),
-                'order'                   => 0,
+                'order'                   => $order,
                 'tag_count'               => 0,
                 'completed'               => 0,
             ]
@@ -318,7 +270,7 @@ class TransactionJournalFactory
         $this->storeCategory($journal, $row);
 
         /** Set notes */
-        $this->storeNote($journal, $row['notes']);
+        $this->storeNotes($journal, $row['notes']);
 
         /** Set piggy bank */
         $this->storePiggyEvent($journal, $row);
@@ -333,29 +285,13 @@ class TransactionJournalFactory
     }
 
     /**
-     * This is a separate function because "findCurrency" will default to EUR and that may not be what we want.
-     *
-     * @param NullArrayObject $transaction
-     *
-     * @return TransactionCurrency|null
-     */
-    private function findForeignCurrency(NullArrayObject $transaction): ?TransactionCurrency
-    {
-        if (null === $transaction['foreign_currency'] && null === $transaction['foreign_currency_id'] && null === $transaction['foreign_currency_code']) {
-            return null;
-        }
-
-        return $this->currencyRepository->findCurrency((int)$transaction['foreign_currency_id'], $transaction['foreign_currency_code']);
-    }
-
-    /**
      * @param NullArrayObject $row
      *
      * @return string
      */
     private function hashArray(NullArrayObject $row): string
     {
-        $row['import_hash_v2']    = null;
+        $row['import_hash_v2']  = null;
         $row['original_source'] = null;
         $json                   = json_encode($row);
         if (false === $json) {
@@ -365,36 +301,6 @@ class TransactionJournalFactory
         Log::debug(sprintf('The hash is: %s', $hash));
 
         return $hash;
-    }
-
-
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     */
-    private function storeBudget(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        if (TransactionType::WITHDRAWAL !== $journal->transactionType->type) {
-            return;
-        }
-        $budget = $this->budgetRepository->findBudget($data['budget'], $data['budget_id'], $data['budget_name']);
-        if (null !== $budget) {
-            Log::debug(sprintf('Link budget #%d to journal #%d', $budget->id, $journal->id));
-            $journal->budgets()->sync([$budget->id]);
-        }
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     */
-    private function storeCategory(TransactionJournal $journal, NullArrayObject $data): void
-    {
-        $category = $this->categoryRepository->findCategory($data['category'], $data['category_id'], $data['category_name']);
-        if (null !== $category) {
-            Log::debug(sprintf('Link category #%d to journal #%d', $category->id, $journal->id));
-            $journal->categories()->sync([$category->id]);
-        }
     }
 
     /**

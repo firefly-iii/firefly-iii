@@ -170,6 +170,9 @@ class Request extends FormRequest
         if (null === $string) {
             return null;
         }
+        if ('' === $string) {
+            return null;
+        }
 
         return (int)$string;
     }

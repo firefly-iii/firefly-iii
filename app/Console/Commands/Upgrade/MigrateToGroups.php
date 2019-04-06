@@ -23,7 +23,7 @@ namespace FireflyIII\Console\Commands\Upgrade;
 
 use DB;
 use Exception;
-use FireflyIII\Factory\TransactionJournalFactory;
+use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -54,13 +54,10 @@ class MigrateToGroups extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:migrate-to-groups {--F|force : Force the migration, even if it fired before.}';
-
-    /** @var TransactionJournalFactory */
-    private $journalFactory;
-
+    /** @var TransactionGroupFactory */
+    private $groupFactory;
     /** @var JournalRepositoryInterface */
     private $journalRepository;
-
     /** @var JournalDestroyService */
     private $service;
 
@@ -72,9 +69,9 @@ class MigrateToGroups extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->journalFactory    = app(TransactionJournalFactory::class);
         $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->service           = app(JournalDestroyService::class);
+        $this->groupFactory      = app(TransactionGroupFactory::class);
     }
 
     /**
@@ -119,7 +116,7 @@ class MigrateToGroups extends Command
     private function findOpposingTransaction(TransactionJournal $journal, Transaction $transaction): ?Transaction
     {
         $set = $journal->transactions->filter(
-            function (Transaction $subject) use ($transaction) {
+            static function (Transaction $subject) use ($transaction) {
                 return $transaction->amount * -1 === (float)$subject->amount && $transaction->identifier === $subject->identifier;
             }
         );
@@ -135,7 +132,7 @@ class MigrateToGroups extends Command
     private function getDestinationTransactions(TransactionJournal $journal): Collection
     {
         return $journal->transactions->filter(
-            function (Transaction $transaction) {
+            static function (Transaction $transaction) {
                 return $transaction->amount > 0;
             }
         );
@@ -224,13 +221,10 @@ class MigrateToGroups extends Command
         Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
 
         $this->journalRepository->setUser($journal->user);
-        $this->journalFactory->setUser($journal->user);
+        $this->groupFactory->setUser($journal->user);
 
         $data             = [
             // mandatory fields.
-            'type'         => strtolower($journal->transactionType->type),
-            'date'         => $journal->date,
-            'user'         => $journal->user_id,
             'group_title'  => $journal->description,
             'transactions' => [],
         ];
@@ -280,6 +274,9 @@ class MigrateToGroups extends Command
             }
 
             $tArray = [
+                'type'                => strtolower($journal->transactionType->type),
+                'date'                => $journal->date,
+                'user'                => $journal->user_id,
                 'currency_id'         => $transaction->transaction_currency_id,
                 'foreign_currency_id' => $transaction->foreign_currency_id,
                 'amount'              => $transaction->amount,
@@ -318,21 +315,18 @@ class MigrateToGroups extends Command
             $data['transactions'][] = $tArray;
         }
         Log::debug(sprintf('Now calling transaction journal factory (%d transactions in array)', count($data['transactions'])));
-        $result = $this->journalFactory->create($data);
+        $group = $this->groupFactory->create($data);
         Log::debug('Done calling transaction journal factory');
 
         // delete the old transaction journal.
         $this->service->destroy($journal);
 
-        // first group ID
-        $first = $result->first() ? $result->first()->transaction_group_id : 0;
-
         // report on result:
         Log::debug(
-            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $first, implode(', #', $result->pluck('id')->toArray()))
+            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
         );
         $this->line(
-            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $first, implode(', #', $result->pluck('id')->toArray()))
+            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
         );
     }
 

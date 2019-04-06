@@ -99,6 +99,7 @@ class GroupCollector implements GroupCollectorInterface
             'transaction_types.type as transaction_type_type',
             'transaction_journals.description',
             'transaction_journals.date',
+            'transaction_journals.order',
 
             # source info (always present)
             'source.id as source_transaction_id',

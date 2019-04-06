@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Repositories\TransactionGroup;
 
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Support\NullArrayObject;
+use FireflyIII\User;
 
 /**
  * Interface TransactionGroupRepositoryInterface
@@ -67,4 +70,32 @@ interface TransactionGroupRepositoryInterface
      * @return array
      */
     public function getTags(int $journalId): array;
+
+    /**
+     * Set the user.
+     *
+     * @param User $user
+     */
+    public function setUser(User $user): void;
+
+    /**
+     * Create a new transaction group.
+     *
+     * @param array $data
+     *
+     * @return TransactionGroup
+     * @throws FireflyException
+     */
+    public function store(array $data): TransactionGroup;
+
+    /**
+     * Update an existing transaction group.
+     *
+     * @param TransactionGroup $transactionGroup
+     * @param array            $data
+     *
+     * @return TransactionGroup
+     */
+    public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup;
+
 }

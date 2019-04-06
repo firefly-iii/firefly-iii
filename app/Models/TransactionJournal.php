@@ -134,9 +134,8 @@ class TransactionJournal extends Model
 
     /** @var array Fields that can be filled */
     protected $fillable
-        = ['user_id', 'transaction_type_id', 'bill_id', 'interest_date', 'book_date', 'process_date',
-           'transaction_currency_id', 'description', 'completed',
-           'date', 'rent_date', 'encrypted', 'tag_count',];
+        = ['user_id', 'transaction_type_id', 'bill_id', 'tag_count','transaction_currency_id', 'description', 'completed', 'order',
+           'date'];
     /** @var array Hidden from view */
     protected $hidden = ['encrypted'];
 

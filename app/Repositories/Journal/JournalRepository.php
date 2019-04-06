@@ -775,40 +775,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return TransactionGroup
-     *
-     * @throws FireflyException
-     */
-    public function store(array $data): TransactionGroup
-    {
-        /** @var TransactionGroupFactory $factory */
-        $factory = app(TransactionGroupFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->create($data);
-    }
-
-    /**
-     * @param TransactionGroup $journal
-     * @param array              $data
-     *
-     * @return TransactionGroup
-     *
-     * @throws FireflyException
-     * @throws FireflyException
-     */
-    public function update(TransactionGroup $journal, array $data): TransactionGroup
-    {
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-        $journal = $service->update($journal, $data);
-
-        return $journal;
-    }
-
-    /**
      * Update budget for a journal.
      *
      * @param TransactionJournal $journal

@@ -34,13 +34,12 @@ interface CategoryRepositoryInterface
 {
 
     /**
-     * @param Category|null $category
      * @param int|null      $categoryId
      * @param string|null   $categoryName
      *
      * @return Category|null
      */
-    public function findCategory(?Category $category, ?int $categoryId, ?string $categoryName): ?Category;
+    public function findCategory( ?int $categoryId, ?string $categoryName): ?Category;
 
     /**
      * @param Category $category

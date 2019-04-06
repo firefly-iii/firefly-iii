@@ -253,25 +253,16 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category|null $category
-     * @param int|null      $categoryId
-     * @param string|null   $categoryName
+     * @param int|null    $categoryId
+     * @param string|null $categoryName
      *
      * @return Category|null
      */
-    public function findCategory(?Category $category, ?int $categoryId, ?string $categoryName): ?Category
+    public function findCategory(?int $categoryId, ?string $categoryName): ?Category
     {
         Log::debug('Now in findCategory()');
-        $result = null;
-        if (null !== $category) {
-            Log::debug(sprintf('Parameters contain category #%d, will return this.', $category->id));
-            $result = $category;
-        }
-
-        if (null === $result) {
-            Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
-            $result = $this->findNull((int)$categoryId);
-        }
+        Log::debug(sprintf('Searching for category with ID #%d...', $categoryId));
+        $result = $this->findNull((int)$categoryId);
         if (null === $result) {
             Log::debug(sprintf('Searching for category with name %s...', $categoryName));
             $result = $this->findByName((string)$categoryName);

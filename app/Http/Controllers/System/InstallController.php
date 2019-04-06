@@ -82,7 +82,7 @@ class InstallController extends Controller
             'firefly-iii:migrate-to-groups'            => [],
             'firefly-iii:back-to-journals'             => [],
 
-            // there are 12 verify commands.
+            // there are 13 verify commands.
             'firefly-iii:fix-piggies'                  => [],
             'firefly-iii:create-link-types'            => [],
             'firefly-iii:create-access-tokens'         => [],
@@ -95,8 +95,10 @@ class InstallController extends Controller
             'firefly-iii:delete-empty-journals'        => [],
             'firefly-iii:delete-empty-groups'          => [],
             'firefly-iii:fix-account-types'            => [],
+            'firefly-iii:rename-meta-fields'           => [],
         ];
     }
+
     /**
      * Show index.
      *

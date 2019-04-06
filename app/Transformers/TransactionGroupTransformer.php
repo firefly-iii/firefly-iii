@@ -119,6 +119,7 @@ class TransactionGroupTransformer extends AbstractTransformer
                 'transaction_journal_id' => $row['transaction_journal_id'],
                 'type'                   => strtolower($type),
                 'date'                   => $row['date']->toAtomString(),
+                'order'                  => $row['order'],
 
                 'currency_id'             => $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
@@ -163,7 +164,7 @@ class TransactionGroupTransformer extends AbstractTransformer
                 'original_source'    => $metaFieldData['original_source'],
                 'recurrence_id'      => $metaFieldData['recurrence_id'],
                 'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
-                'import_hash_v2'       => $metaFieldData['import_hash_v2'],
+                'import_hash_v2'     => $metaFieldData['import_hash_v2'],
 
                 'sepa_cc'       => $metaFieldData['sepa_cc'],
                 'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],

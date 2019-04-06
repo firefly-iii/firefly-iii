@@ -182,4 +182,5 @@ return [
     'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
+    'need_id_in_edit'           => 'When updating a transaction with splits, each split must have a valid transaction journal id (field "transaction_journal_id").',
 ];

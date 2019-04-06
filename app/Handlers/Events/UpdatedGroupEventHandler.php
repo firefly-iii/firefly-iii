@@ -44,7 +44,7 @@ class UpdatedGroupEventHandler
     public function processRules(UpdatedTransactionGroup $updatedJournalEvent): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
-        $journals = $updatedJournalEvent->transactionGroup;
+        $journals = $updatedJournalEvent->transactionGroup->transactionJournals;
 
         /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);

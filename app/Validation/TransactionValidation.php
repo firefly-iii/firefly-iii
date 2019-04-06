@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Validation;
 
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use Illuminate\Validation\Validator;
 
 /**
@@ -31,6 +32,16 @@ use Illuminate\Validation\Validator;
  */
 trait TransactionValidation
 {
+    /**
+     * If type is set, source + destination info is mandatory.
+     *
+     * @param Validator $validator
+     */
+    protected function validateAccountPresence(Validator $validator): void
+    {
+        // TODO
+    }
+
 
     /**
      * Validates the given account information. Switches on given transaction type.
@@ -98,7 +109,9 @@ trait TransactionValidation
 
         // no valid descriptions?
         if (0 === $validDescriptions) {
-            $validator->errors()->add('description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')]));
+            $validator->errors()->add(
+                'transactions.0.description', (string)trans('validation.filled', ['attribute' => (string)trans('validation.attributes.description')])
+            );
         }
     }
 
@@ -148,7 +161,7 @@ trait TransactionValidation
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
         if (0 === \count($transactions)) {
-            $validator->errors()->add('description', (string)trans('validation.at_least_one_transaction'));
+            $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
         }
     }
 
@@ -230,6 +243,47 @@ trait TransactionValidation
         $first = $unique[0] ?? 'invalid';
         if ('invalid' === $first) {
             $validator->errors()->add('transactions.0.type', (string)trans('validation.invalid_transaction_type'));
+        }
+    }
+
+    /**
+     * All types of splits must be equal.
+     *
+     * @param Validator $validator
+     */
+    public function validateTransactionTypesForUpdate(Validator $validator): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        $types        = [];
+        foreach ($transactions as $index => $transaction) {
+            $types[] = $transaction['type'] ?? 'invalid';
+        }
+        $unique = array_unique($types);
+        if (count($unique) > 1) {
+            $validator->errors()->add('transactions.0.type', (string)trans('validation.transaction_types_equal'));
+
+            return;
+        }
+    }
+
+    /**
+     * @param Validator        $validator
+     * @param TransactionGroup $transactionGroup
+     */
+    private function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        if (count($transactions) < 2) {
+            return;
+        }
+        foreach ($transactions as $index => $transaction) {
+            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
+            $count     = $transactionGroup->transactionJournals()->where('id', $journalId)->count();
+            if (0 === $journalId || 0 === $count) {
+                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
+            }
         }
     }
 

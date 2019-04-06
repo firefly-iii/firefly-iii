@@ -220,25 +220,16 @@ class BudgetRepository implements BudgetRepositoryInterface
     }
 
     /**
-     * @param Budget|null $budget
      * @param int|null    $budgetId
      * @param string|null $budgetName
      *
      * @return Budget|null
      */
-    public function findBudget(?Budget $budget, ?int $budgetId, ?string $budgetName): ?Budget
+    public function findBudget(?int $budgetId, ?string $budgetName): ?Budget
     {
         Log::debug('Now in findBudget()');
-        $result = null;
-        if (null !== $budget) {
-            Log::debug(sprintf('Parameters contain budget #%d, will return this.', $budget->id));
-            $result = $budget;
-        }
-
-        if (null === $result) {
-            Log::debug(sprintf('Searching for budget with ID #%d...', $budgetId));
-            $result = $this->findNull((int)$budgetId);
-        }
+        Log::debug(sprintf('Searching for budget with ID #%d...', $budgetId));
+        $result = $this->findNull((int)$budgetId);
         if (null === $result) {
             Log::debug(sprintf('Searching for budget with name %s...', $budgetName));
             $result = $this->findByName((string)$budgetName);

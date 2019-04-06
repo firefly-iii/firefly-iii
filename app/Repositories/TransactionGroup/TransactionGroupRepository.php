@@ -27,8 +27,12 @@ namespace FireflyIII\Repositories\TransactionGroup;
 use Carbon\Carbon;
 use DB;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
 
 /**
@@ -36,6 +40,8 @@ use FireflyIII\Support\NullArrayObject;
  */
 class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 {
+    private $user;
+
     /**
      * Constructor.
      */
@@ -61,6 +67,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             ::table('journal_meta')
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
+            ->whereNull('deleted_at')
             ->get(['name', 'data']);
         $return = [];
 
@@ -85,6 +92,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             ::table('journal_meta')
             ->where('transaction_journal_id', $journalId)
             ->whereIn('name', $fields)
+            ->whereNull('deleted_at')
             ->get(['name', 'data']);
         $return = [];
 
@@ -132,5 +140,46 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             ->get(['tags.tag']);
 
         return $result->pluck('tag')->toArray();
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user): void
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return TransactionGroup
+     *
+     * @throws FireflyException
+     */
+    public function store(array $data): TransactionGroup
+    {
+        /** @var TransactionGroupFactory $factory */
+        $factory = app(TransactionGroupFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->create($data);
+    }
+
+    /**
+     * @param TransactionGroup $transactionGroup
+     * @param array            $data
+     *
+     * @return TransactionGroup
+     *
+     * @throws FireflyException
+     */
+    public function update(TransactionGroup $transactionGroup, array $data): TransactionGroup
+    {
+        /** @var GroupUpdateService $service */
+        $service      = app(GroupUpdateService::class);
+        $updatedGroup = $service->update($transactionGroup, $data);
+
+        return $updatedGroup;
     }
 }

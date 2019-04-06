@@ -195,8 +195,8 @@ class ImportTransaction
             return;
         }
 
-        $modifiers = ['rabo-debit-credit', 'ing-debit-credit'];
-        if (\in_array($role, $modifiers, true)) {
+        $modifiers = ['generic-debit-credit'];
+        if (in_array($role, $modifiers, true)) {
             $this->modifiers[$role] = $columnValue->getValue();
 
             return;

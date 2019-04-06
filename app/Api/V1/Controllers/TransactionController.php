@@ -24,7 +24,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\TransactionRequest;
+use FireflyIII\Api\V1\Requests\TransactionStoreRequest;
+use FireflyIII\Api\V1\Requests\TransactionUpdateRequest;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
@@ -32,6 +33,7 @@ use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\PiggyBankEventTransformer;
@@ -44,16 +46,18 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class TransactionController
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class TransactionController extends Controller
 {
     use TransactionFilter;
 
+    /** @var TransactionGroupRepositoryInterface Group repository. */
+    private $groupRepository;
     /** @var JournalRepositoryInterface The journal repository */
     private $repository;
 
@@ -68,9 +72,10 @@ class TransactionController extends Controller
                 /** @var User $admin */
                 $admin = auth()->user();
 
-                /** @var JournalRepositoryInterface repository */
-                $this->repository = app(JournalRepositoryInterface::class);
+                $this->repository      = app(JournalRepositoryInterface::class);
+                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
                 $this->repository->setUser($admin);
+                $this->groupRepository->setUser($admin);
 
                 return $next($request);
             }
@@ -247,18 +252,16 @@ class TransactionController extends Controller
     /**
      * Store a new transaction.
      *
-     * @param TransactionRequest         $request
+     * @param TransactionStoreRequest    $request
      *
-     * @param JournalRepositoryInterface $repository
-     *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
-    public function store(TransactionRequest $request, JournalRepositoryInterface $repository): JsonResponse
+    public function store(TransactionStoreRequest $request): JsonResponse
     {
         $data             = $request->getAll();
         $data['user']     = auth()->user()->id;
-        $transactionGroup = $repository->store($data);
+        $transactionGroup = $this->groupRepository->store($data);
 
         event(new StoredTransactionGroup($transactionGroup));
 
@@ -294,16 +297,16 @@ class TransactionController extends Controller
     /**
      * Update a transaction.
      *
-     * @param TransactionRequest $request
-     * @param TransactionGroup   $transactionGroup
+     * @param TransactionUpdateRequest $request
+     * @param TransactionGroup         $transactionGroup
      *
      * @return JsonResponse
      */
-    public function update(TransactionRequest $request, TransactionGroup $transactionGroup): JsonResponse
+    public function update(TransactionUpdateRequest $request, TransactionGroup $transactionGroup): JsonResponse
     {
+        Log::debug('Now in update routine.');
         $data             = $request->getAll();
-        $data['user']     = auth()->user()->id;
-        $transactionGroup = $this->repository->update($transactionGroup, $data);
+        $transactionGroup = $this->groupRepository->update($transactionGroup, $data);
         $manager          = new Manager();
         $baseUrl          = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
