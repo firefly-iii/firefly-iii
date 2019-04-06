@@ -240,6 +240,9 @@ class TransactionUpdateRequest extends Request
                 // if type is set, source + destination info is mandatory.
                 $this->validateAccountPresence($validator);
 
+                // validate source/destination is equal, depending on the transaction journal type.
+                $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
+
                 // TODO validate that the currency fits the source and/or destination account.
 
                 // all journals must have a description

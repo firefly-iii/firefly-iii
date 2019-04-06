@@ -167,23 +167,23 @@ class TransactionStoreRequest extends Request
                 // all journals must have a description
                 $this->validateDescriptions($validator);
 
-                    // all transaction types must be equal:
-                    $this->validateTransactionTypes($validator);
+                // all transaction types must be equal:
+                $this->validateTransactionTypes($validator);
 
                 // validate foreign currency info
                 $this->validateForeignCurrencyInformation($validator);
 
-
                 // validate all account info
                 $this->validateAccountInformation($validator);
 
-                // make sure all splits have valid source + dest info
-                $this->validateSplitAccounts($validator);
+                // validate source/destination is equal, depending on the transaction journal type.
+                $this->validateEqualAccounts($validator);
 
                 // the group must have a description if > 1 journal.
                 $this->validateGroupDescription($validator);
 
                 // TODO validate that the currency fits the source and/or destination account.
+
             }
         );
     }
@@ -282,5 +282,4 @@ class TransactionStoreRequest extends Request
 
         return $return;
     }
-
 }

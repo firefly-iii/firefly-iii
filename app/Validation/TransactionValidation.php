@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Validation\Validator;
 
@@ -33,22 +32,9 @@ use Illuminate\Validation\Validator;
 trait TransactionValidation
 {
     /**
-     * If type is set, source + destination info is mandatory.
-     *
-     * @param Validator $validator
-     */
-    protected function validateAccountPresence(Validator $validator): void
-    {
-        // TODO
-    }
-
-
-    /**
      * Validates the given account information. Switches on given transaction type.
      *
      * @param Validator $validator
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
      */
     public function validateAccountInformation(Validator $validator): void
     {
@@ -86,7 +72,6 @@ trait TransactionValidation
 
                 return;
             }
-
         }
     }
 
@@ -166,62 +151,6 @@ trait TransactionValidation
     }
 
     /**
-     * Make sure that all the splits accounts are valid in combination with each other.
-     *
-     * @param Validator $validator
-     */
-    public function validateSplitAccounts(Validator $validator): void
-    {
-        $data  = $validator->getData();
-        $count = isset($data['transactions']) ? \count($data['transactions']) : 0;
-        if ($count < 2) {
-            return;
-        }
-        // this is pretty much impossible:
-        // @codeCoverageIgnoreStart
-        if (!isset($data['type'])) {
-            // the journal may exist in the request:
-            /** @var Transaction $transaction */
-            $transaction = $this->route()->parameter('transaction');
-            if (null === $transaction) {
-                return;
-            }
-            $data['type'] = strtolower($transaction->transactionJournal->transactionType->type);
-        }
-        // @codeCoverageIgnoreEnd
-
-        // collect all source ID's and destination ID's, if present:
-        $sources      = [];
-        $destinations = [];
-
-        foreach ($data['transactions'] as $transaction) {
-            $sources[]      = isset($transaction['source_id']) ? (int)$transaction['source_id'] : 0;
-            $destinations[] = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : 0;
-        }
-        $destinations = array_unique($destinations);
-        $sources      = array_unique($sources);
-        // switch on type:
-        switch ($data['type']) {
-            case 'withdrawal':
-                if (\count($sources) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
-                }
-                break;
-            case 'deposit':
-                if (\count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
-                }
-                break;
-            case 'transfer':
-                if (\count($sources) > 1 || \count($destinations) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
-                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
-                }
-                break;
-        }
-    }
-
-    /**
      * All types of splits must be equal.
      *
      * @param Validator $validator
@@ -264,6 +193,97 @@ trait TransactionValidation
             $validator->errors()->add('transactions.0.type', (string)trans('validation.transaction_types_equal'));
 
             return;
+        }
+    }
+
+    /**
+     * If type is set, source + destination info is mandatory.
+     *
+     * @param Validator $validator
+     */
+    protected function validateAccountPresence(Validator $validator): void
+    {
+        // TODO
+    }
+
+    /**
+     * @param Validator $validator
+     */
+    private function validateEqualAccounts(Validator $validator): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        // needs to be split
+        if (count($transactions) < 2) {
+            return;
+        }
+        $type    = $transactions[0]['type'] ?? 'withdrawal';
+        $sources = [];
+        $dests   = [];
+        foreach ($transactions as $transaction) {
+            $sources[] = sprintf('%d-%s', $transaction['source_id'] ?? 0, $transaction['source_name'] ?? '');
+            $dests[]   = sprintf('%d-%s', $transaction['destination_id'] ?? 0, $transaction['destination_name'] ?? '');
+        }
+        $sources = array_unique($sources);
+        $dests   = array_unique($dests);
+        switch ($type) {
+            case 'withdrawal':
+                if (count($sources) > 1) {
+                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                }
+                break;
+            case 'deposit':
+                if (count($dests) > 1) {
+                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
+                }
+                break;
+            case'transfer':
+                if (count($sources) > 1 || count($dests) > 1) {
+                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
+                }
+                break;
+        }
+    }
+
+    /**
+     * @param Validator        $validator
+     * @param TransactionGroup $transactionGroup
+     */
+    private function validateEqualAccountsForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        // needs to be split
+        if (count($transactions) < 2) {
+            return;
+        }
+        $type    = $transactions[0]['type'] ?? strtolower($transactionGroup->transactionJournals()->first()->transactionType->type);
+        $sources = [];
+        $dests   = [];
+        foreach ($transactions as $transaction) {
+            $sources[] = sprintf('%d-%s', $transaction['source_id'] ?? 0, $transaction['source_name'] ?? '');
+            $dests[]   = sprintf('%d-%s', $transaction['destination_id'] ?? 0, $transaction['destination_name'] ?? '');
+        }
+        $sources = array_unique($sources);
+        $dests   = array_unique($dests);
+        switch ($type) {
+            case 'withdrawal':
+                if (count($sources) > 1) {
+                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                }
+                break;
+            case 'deposit':
+                if (count($dests) > 1) {
+                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
+                }
+                break;
+            case'transfer':
+                if (count($sources) > 1 || count($dests) > 1) {
+                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
+                }
+                break;
         }
     }
 
