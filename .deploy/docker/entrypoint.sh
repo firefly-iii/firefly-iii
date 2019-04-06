@@ -27,12 +27,6 @@ then
     echo "Touched!"
 fi
 
-if [[ $FF_DB_CONNECTION == "sqlite" ]]
-then
-    touch $FIREFLY_PATH/storage/database/database.sqlite
-    echo "Touched!"
-fi
-
 # make sure we own the volumes:
 echo "Run chown on ${FIREFLY_PATH}/storage..."
 chown -R www-data:www-data -R $FIREFLY_PATH/storage
@@ -43,8 +37,8 @@ chmod -R 775 $FIREFLY_PATH/storage
 echo "Remove log file..."
 rm -f $FIREFLY_PATH/storage/logs/laravel.log
 
-echo "Map environment variables on .env file..."
-cat $FIREFLY_PATH/.deploy/docker/.env.docker | envsubst > $FIREFLY_PATH/.env
+#echo "Map environment variables on .env file..."
+#cat $FIREFLY_PATH/.deploy/docker/.env.docker | envsubst > $FIREFLY_PATH/.env
 echo "Dump auto load..."
 composer dump-autoload
 echo "Discover packages..."
@@ -92,6 +86,8 @@ php artisan firefly-iii:delete-orphaned-transactions
 php artisan firefly-iii:delete-empty-journals
 php artisan firefly-iii:delete-empty-groups
 php artisan firefly-iii:fix-account-types
+php artisan firefly-iii:fix-account-types
+php artisan firefly-iii:rename-meta-fields
 
 # report commands
 php artisan firefly-iii:report-empty-objects
