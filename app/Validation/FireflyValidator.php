@@ -341,7 +341,7 @@ class FireflyValidator extends Validator
 
         // check transaction type.
         if ('transaction_type' === $triggerType) {
-            $count = TransactionType::where('type', strtolower($value))->count();
+            $count = TransactionType::where('type', ucfirst($value))->count();
 
             return 1 === $count;
         }
