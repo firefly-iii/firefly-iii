@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Models;
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
@@ -169,9 +170,11 @@ class TransactionJournal extends Model
      *
      * @return TransactionJournal
      * @throws NotFoundHttpException
+     * @throws FireflyException
      */
     public static function routeBinder(string $value): TransactionJournal
     {
+        throw new FireflyException('Journal binder is permanently out of order.');
         if (auth()->check()) {
             $journalId = (int)$value;
             /** @var User $user */

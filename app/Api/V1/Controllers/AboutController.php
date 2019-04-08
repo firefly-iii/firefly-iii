@@ -51,6 +51,8 @@ class AboutController extends Controller
         $phpVersion    = str_replace($search, $replace, PHP_VERSION);
         $phpOs         = str_replace($search, $replace, PHP_OS);
         $currentDriver = DB::getDriverName();
+
+
         $data
                        = [
             'version'     => config('firefly.version'),

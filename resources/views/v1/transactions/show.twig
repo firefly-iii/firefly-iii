@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, journal) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionGroup) }}
 {% endblock %}
 
 {% block content %}
@@ -15,8 +15,8 @@
                             <button id="transaction_menu" class="btn btn-box-tool dropdown-toggle" data-toggle="dropdown"><i class="fa fa-ellipsis-v"></i>
                             </button>
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
-                                <li><a href="{{ route('transactions.delete',journal.id) }}"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
+                                <li><a href="edit"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a></li>
+                                <li><a href="delete"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}</a></li>
                                 {# convert to withdrawal #}
                                 {% if journal.transactionType.type != "Withdrawal" %}
                                     <li>
@@ -48,7 +48,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('transactions.split.edit', journal.id) }}">
+                                    <a href="split">
                                         <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
                                     </a>
                                 </li>
@@ -80,39 +80,23 @@
                         </tr>
                         <tr>
                             <td>{{ 'source_accounts'|_ }}</td>
-                            <td>{{ sourceAccount(journal)|raw }}</td>
+                            <td>sources</td>
                         </tr>
                         <tr>
                             <td>{{ 'destination_accounts'|_ }}</td>
-                            <td>{{ destinationAccount(journal)|raw }}</td>
+                            <td>desitnations</td>
                         </tr>
                         <tr>
                             <td>{{ 'total_amount'|_ }}</td>
                             <td>
-                                {{ journal|journalTotalAmount }}
-
-                                {# if more transactions, list each one: #}
-
-                                {% if transactions|length > 2 %}
-                                    ({% for transaction in transactions %}
-                                    {% if transaction.type == 'Deposit' and transaction.amount > 0 %}
-                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
-                                    {% endif %}
-                                    {% if transaction.type == 'Withdrawal' and transaction.amount < 0 %}
-                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
-                                    {% endif %}
-
-                                    {% if transaction.type == 'Transfer' and transaction.amount > 0 %}
-                                        {{ transaction|transactionArrayAmount }}{% if loop.index != loop.length %}, {% endif %}
-                                    {% endif %}
-
-                                {% endfor %})
-                                {% endif %}
+                                total amount and splits
                             </td>
                         </tr>
                         <tr>
                             <td style="width:30%;">{{ trans('list.date') }}</td>
-                            <td>{{ journal.date.formatLocalized(dateTimeFormat) }}</td>
+                            <td>
+                            date
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -120,7 +104,7 @@
                 <div class="box-footer">
                     <div class="pull-right">
                         <div class="btn-group">
-                            <a class="btn btn-default" href="{{ route('transactions.edit',journal.id) }}"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a>
+                            <a class="btn btn-default" href="#"><i class="fa fa-pencil fa-fw"></i> {{ 'edit'|_ }}</a>
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <i class="fa fa-cog fa-fw"></i> {{ 'options'|_ }} <span class="caret"></span>
                             </button>
@@ -157,7 +141,7 @@
                                     </a>
                                 </li>
                                 <li>
-                                    <a href="{{ route('transactions.split.edit', journal.id) }}">
+                                    <a href="#">
                                         <i class="fa fa-unsorted fa-fw"></i> {{ ('split_this_'~what)|_ }}
                                     </a>
                                 </li>
@@ -168,7 +152,7 @@
                                 </li>
 
                             </ul>
-                            <a href="{{ route('transactions.delete',journal.id) }}" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}
+                            <a href="#" class="btn btn-danger"><i class="fa fa-trash fa-fw"></i> {{ 'delete'|_ }}
                             </a>
                         </div>
                     </div>
@@ -197,30 +181,34 @@
                         <tbody>
                         <tr>
                             <td>{{ 'categories'|_ }}</td>
-                            <td>{{ journalCategories(journal)|raw }}</td>
+                            <td>categoris</td>
                         </tr>
                         <tr>
                             <td>{{ 'budgets'|_ }}</td>
-                            <td>{{ journalBudgets(journal)|raw }}</td>
+                            <td>budgets</td>
                         </tr>
 
                         {# all date meta values #}
                         {% for dateField in ['interest_date','book_date','process_date','due_date','payment_date','invoice_date'] %}
+                            {#
                             {% if journalHasMeta(journal, dateField) %}
                                 <tr>
                                     <td>{{ trans('list.'~dateField) }}</td>
                                     <td>{{ journalGetMetaDate(journal,dateField).formatLocalized(monthAndDayFormat) }}</td>
                                 </tr>
                             {% endif %}
+                            #}
                         {% endfor %}
                         {# all other meta values #}
                         {% for metaField in ['external_id','bunq_payment_id','internal_reference','sepa_batch_id','sepa_ct_id','sepa_ct_op','sepa_db','sepa_country','sepa_cc','sepa_ep','sepa_ci'] %}
+                            {#
                             {% if journalHasMeta(journal, metaField) %}
                                 <tr>
                                     <td>{{ trans('list.'~metaField) }}</td>
                                     <td>{{ journalGetMetaField(journal, metaField) }}</td>
                                 </tr>
                             {% endif %}
+                            #}
                         {% endfor %}
                         {% if journal.notes.count == 1 %}
                             <tr>
