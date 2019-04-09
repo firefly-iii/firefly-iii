@@ -52,7 +52,7 @@ class BinderTest extends TestCase
             return 'OK';
         }
         );
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/1');

@@ -42,7 +42,7 @@ class SandstormTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
         Route::middleware(Sandstorm::class)->any(
             '/_test/sandstorm', function () {
             return view('test.test');
