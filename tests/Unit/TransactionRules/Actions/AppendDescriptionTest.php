@@ -25,8 +25,8 @@ namespace Tests\Unit\TransactionRules\Actions;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AppendDescriptionTest

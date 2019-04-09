@@ -27,8 +27,8 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearNotes;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 
 /**

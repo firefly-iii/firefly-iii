@@ -26,8 +26,8 @@ use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\ClearBudget;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class ClearBudgetTest

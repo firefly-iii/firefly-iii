@@ -27,8 +27,9 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class AccountDestroyServiceTest
  */

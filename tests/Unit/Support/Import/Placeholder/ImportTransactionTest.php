@@ -27,8 +27,9 @@ namespace Tests\Unit\Support\Import\Placeholder;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Import\Placeholder\ColumnValue;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class ImportTransactionTest
  */
@@ -474,38 +475,6 @@ class ImportTransactionTest extends TestCase
             $this->assertTrue(false, $e->getMessage());
         }
     }
-    
-    /**
-     * Basic amount info. Should return something like '1.0'.
-     *
-     * @covers \FireflyIII\Support\Import\Placeholder\ImportTransaction
-     */
-    public function testCalculateAmountNegatedPositive(): void
-    {
-        $importTransaction               = new ImportTransaction;
-        $importTransaction->amountNegated = '1.56';
-        try {
-            $this->assertEquals('-1.56', $importTransaction->calculateAmount());
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-    }
-    
-    /**
-     * Basic amount info. Should return something like '1.0'.
-     *
-     * @covers \FireflyIII\Support\Import\Placeholder\ImportTransaction
-     */
-    public function testCalculateAmountNegatedNegative(): void
-    {
-        $importTransaction               = new ImportTransaction;
-        $importTransaction->amountNegated = '-1.56';
-        try {
-            $this->assertEquals('1.56', $importTransaction->calculateAmount());
-        } catch (FireflyException $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-    }
 
     /**
      * With no amount data, object should return ''
@@ -534,6 +503,38 @@ class ImportTransactionTest extends TestCase
         $importTransaction->modifiers['rabo-debit-credit'] = 'D';
         try {
             $this->assertEquals('-2.99', $importTransaction->calculateAmount());
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * Basic amount info. Should return something like '1.0'.
+     *
+     * @covers \FireflyIII\Support\Import\Placeholder\ImportTransaction
+     */
+    public function testCalculateAmountNegatedNegative(): void
+    {
+        $importTransaction                = new ImportTransaction;
+        $importTransaction->amountNegated = '-1.56';
+        try {
+            $this->assertEquals('1.56', $importTransaction->calculateAmount());
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+    }
+
+    /**
+     * Basic amount info. Should return something like '1.0'.
+     *
+     * @covers \FireflyIII\Support\Import\Placeholder\ImportTransaction
+     */
+    public function testCalculateAmountNegatedPositive(): void
+    {
+        $importTransaction                = new ImportTransaction;
+        $importTransaction->amountNegated = '1.56';
+        try {
+            $this->assertEquals('-1.56', $importTransaction->calculateAmount());
         } catch (FireflyException $e) {
             $this->assertTrue(false, $e->getMessage());
         }

@@ -28,8 +28,8 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\OpposingAccountMapper;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class OpposingAccountMapperTest

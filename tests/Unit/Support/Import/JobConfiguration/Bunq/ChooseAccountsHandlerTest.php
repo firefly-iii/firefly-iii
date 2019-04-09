@@ -35,9 +35,10 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\Bunq\ChooseAccountsHandler;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class ChooseAccountsHandlerTest
  */

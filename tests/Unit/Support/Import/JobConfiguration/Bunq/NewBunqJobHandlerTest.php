@@ -27,8 +27,8 @@ namespace Tests\Unit\Support\Import\JobConfiguration\Bunq;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\Bunq\NewBunqJobHandler;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class NewBunqJobHandlerTest
@@ -43,6 +43,7 @@ class NewBunqJobHandlerTest extends TestCase
         parent::setUp();
         Log::info(sprintf('Now in %s.', \get_class($this)));
     }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\Bunq\NewBunqJobHandler
      */

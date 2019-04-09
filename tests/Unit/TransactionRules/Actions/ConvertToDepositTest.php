@@ -49,18 +49,18 @@ class ConvertToDepositTest extends TestCase
     }
 
     /**
-     * Convert a withdrawal to a deposit.
+     * Convert a transfer to a deposit.
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActWithdrawal()
+    public function testActTransfer()
     {
         $revenue = $this->getRandomRevenue();
         $name    = 'Random revenue #' . random_int(1, 10000);
-        $journal = $this->getRandomWithdrawal();
+        $journal = $this->getRandomTransfer();
 
-        // journal is a withdrawal:
-        $this->assertEquals(TransactionType::WITHDRAWAL, $journal->transactionType->type);
+        // journal is a transfer:
+        $this->assertEquals(TransactionType::TRANSFER, $journal->transactionType->type);
 
         // mock used stuff:
         $factory = $this->mock(AccountFactory::class);
@@ -85,18 +85,18 @@ class ConvertToDepositTest extends TestCase
     }
 
     /**
-     * Convert a transfer to a deposit.
+     * Convert a withdrawal to a deposit.
      *
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToDeposit
      */
-    public function testActTransfer()
+    public function testActWithdrawal()
     {
         $revenue = $this->getRandomRevenue();
         $name    = 'Random revenue #' . random_int(1, 10000);
-        $journal = $this->getRandomTransfer();
+        $journal = $this->getRandomWithdrawal();
 
-        // journal is a transfer:
-        $this->assertEquals(TransactionType::TRANSFER, $journal->transactionType->type);
+        // journal is a withdrawal:
+        $this->assertEquals(TransactionType::WITHDRAWAL, $journal->transactionType->type);
 
         // mock used stuff:
         $factory = $this->mock(AccountFactory::class);

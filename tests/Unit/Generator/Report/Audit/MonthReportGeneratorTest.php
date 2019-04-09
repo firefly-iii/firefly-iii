@@ -102,7 +102,8 @@ class MonthReportGeneratorTest extends TestCase
      * @covers \FireflyIII\Generator\Report\Audit\MonthReportGenerator
      */
     public function testBasicNoCurrency(): void
-    {$this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var Account $account */
@@ -144,7 +145,8 @@ class MonthReportGeneratorTest extends TestCase
      * @covers \FireflyIII\Generator\Report\Audit\MonthReportGenerator
      */
     public function testBasicWithForeign(): void
-    {$this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var Account $account */
@@ -193,7 +195,8 @@ class MonthReportGeneratorTest extends TestCase
      * @covers \FireflyIII\Generator\Report\Audit\MonthReportGenerator
      */
     public function testBasicWithTransactions(): void
-    {$this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var Account $account */

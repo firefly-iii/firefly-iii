@@ -32,9 +32,9 @@ use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Services\Internal\Update\TransactionUpdateService;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class JournalUpdateServiceTest

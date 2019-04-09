@@ -27,8 +27,8 @@ namespace Tests\Unit\Support\Import\Routine\File;
 use FireflyIII\Support\Import\Placeholder\ColumnValue;
 use FireflyIII\Support\Import\Placeholder\ImportTransaction;
 use FireflyIII\Support\Import\Routine\File\ImportableCreator;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class ImportableCreatorTest

@@ -28,9 +28,10 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class ConfigureUploadHandlerTest
  */

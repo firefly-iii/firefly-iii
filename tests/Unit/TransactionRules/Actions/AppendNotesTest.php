@@ -26,8 +26,9 @@ use FireflyIII\Models\Note;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class AppendNotesTest
  */

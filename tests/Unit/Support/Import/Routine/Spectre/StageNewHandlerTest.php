@@ -36,10 +36,10 @@ use FireflyIII\Services\Spectre\Request\ListCustomersRequest;
 use FireflyIII\Services\Spectre\Request\ListLoginsRequest;
 use FireflyIII\Services\Spectre\Request\NewCustomerRequest;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class StageNewHandlerTest

@@ -38,9 +38,9 @@ use FireflyIII\Services\Spectre\Object\Holder;
 use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ChooseAccountsHandlerTest
@@ -55,6 +55,7 @@ class ChooseAccountsHandlerTest extends TestCase
         parent::setUp();
         Log::info(sprintf('Now in %s.', \get_class($this)));
     }
+
     /**
      * @covers \FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseAccountsHandler
      */

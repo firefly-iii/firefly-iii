@@ -31,8 +31,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AccountUpdateServiceTest

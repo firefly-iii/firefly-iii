@@ -40,11 +40,11 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\Bunq\MonetaryAccount;
 use FireflyIII\Support\Import\Routine\Bunq\StageNewHandler;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\Object\FakeApiContext;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class StageNewHandlerTest
@@ -211,7 +211,7 @@ class StageNewHandlerTest extends TestCase
                         'default_avatar_status' => null,
                         'restriction_chat'      => null,
                     ],
-                    'iban' => 'SM72C9584723533916792029340'
+                    'iban'          => 'SM72C9584723533916792029340',
                 ],
             ],
         ];
@@ -298,7 +298,7 @@ class StageNewHandlerTest extends TestCase
                         'default_avatar_status' => null,
                         'restriction_chat'      => null,
                     ],
-                    'iban' => 'SM72C9584723533916792029340'
+                    'iban'          => 'SM72C9584723533916792029340',
                 ],
 
             ],

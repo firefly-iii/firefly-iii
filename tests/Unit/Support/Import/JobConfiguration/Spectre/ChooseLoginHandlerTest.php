@@ -35,10 +35,10 @@ use FireflyIII\Services\Spectre\Object\Login;
 use FireflyIII\Services\Spectre\Object\Token;
 use FireflyIII\Services\Spectre\Request\CreateTokenRequest;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class ChooseLoginHandlerTest

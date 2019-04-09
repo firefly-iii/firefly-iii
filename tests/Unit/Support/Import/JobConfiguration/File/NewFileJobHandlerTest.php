@@ -31,9 +31,10 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class NewFileJobHandlerTest
  */

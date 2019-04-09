@@ -145,7 +145,7 @@ class ImportableConverterTest extends TestCase
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getMetaValue')
-            ->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
+                     ->withArgs([Mockery::any(), 'currency_id'])->atLeast()->once()->andReturn('1');
 
         // get default currency
         $euro = TransactionCurrency::whereCode('EUR')->first();

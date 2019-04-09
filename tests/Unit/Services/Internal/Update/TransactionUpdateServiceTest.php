@@ -29,8 +29,8 @@ use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Update\TransactionUpdateService;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class TransactionUpdateServiceTest
