@@ -95,6 +95,9 @@ class ImportControllerTest extends TestCase
      */
     public function testTransactions(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var ImportJob $job */
         $job         = $this->user()->importJobs()->first();
         $tag         = $this->user()->tags()->first();

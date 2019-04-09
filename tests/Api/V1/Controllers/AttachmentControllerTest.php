@@ -260,13 +260,13 @@ class AttachmentControllerTest extends TestCase
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $journal  = $this->getRandomWithdrawal();
+        $journal = $this->getRandomWithdrawal();
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($attachment);
         $repository->shouldReceive('getNoteText')->andReturn('Hi There');
         $journalRepos->shouldReceive('setUser')->once();
 
-        $journalRepos->shouldReceive('findNull')->once()->andReturn($journal  );
+        $journalRepos->shouldReceive('findNull')->once()->andReturn($journal);
 
         // data to submit
         $data = [

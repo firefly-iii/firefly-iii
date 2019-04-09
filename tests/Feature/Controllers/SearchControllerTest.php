@@ -55,7 +55,7 @@ class SearchControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $search = $this->mock(SearchInterface::class);
+        $search    = $this->mock(SearchInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -75,12 +75,12 @@ class SearchControllerTest extends TestCase
      */
     public function testSearch(): void
     {
-        $search = $this->mock(SearchInterface::class);
+        $search    = $this->mock(SearchInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('setLimit')->withArgs([50])->once();
-        $search->shouldReceive('searchTransactions')->once()->andReturn(new LengthAwarePaginator([],0,10));
+        $search->shouldReceive('searchTransactions')->once()->andReturn(new LengthAwarePaginator([], 0, 10));
         $search->shouldReceive('searchTime')->once()->andReturn(0.2);
 
         $this->be($this->user());

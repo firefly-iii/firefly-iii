@@ -137,8 +137,8 @@ class UserControllerTest extends TestCase
      */
     public function testShow(): void
     {
-        $user       = User::first();
-        $repository = $this->mock(UserRepositoryInterface::class);
+        $user        = User::first();
+        $repository  = $this->mock(UserRepositoryInterface::class);
         $transformer = $this->mock(UserTransformer::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
 
@@ -167,7 +167,7 @@ class UserControllerTest extends TestCase
         ];
 
         // mock
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
         $transformer = $this->mock(UserTransformer::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
         $userRepos->shouldReceive('store')->once()->andReturn($this->user());
@@ -199,8 +199,8 @@ class UserControllerTest extends TestCase
         ];
 
         // mock
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-        $transformer= $this->mock(UserTransformer::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(UserTransformer::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
         $userRepos->shouldReceive('store')->once()->andReturn($this->user());
 
@@ -296,7 +296,7 @@ class UserControllerTest extends TestCase
         ];
 
         // mock
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
         $transformer = $this->mock(UserTransformer::class);
         $userRepos->shouldReceive('update')->once()->andReturn($user);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
@@ -331,7 +331,7 @@ class UserControllerTest extends TestCase
         ];
 
         // mock
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
         $transformer = $this->mock(UserTransformer::class);
         $userRepos->shouldReceive('update')->once()->andReturn($user);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);

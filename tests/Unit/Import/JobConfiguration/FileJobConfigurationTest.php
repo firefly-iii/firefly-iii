@@ -33,9 +33,10 @@ use FireflyIII\Support\Import\JobConfiguration\File\ConfigureRolesHandler;
 use FireflyIII\Support\Import\JobConfiguration\File\ConfigureUploadHandler;
 use FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler;
 use Illuminate\Support\MessageBag;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class FileJobConfigurationTest
  */

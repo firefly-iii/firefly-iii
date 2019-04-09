@@ -25,10 +25,10 @@ namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\IsDemoUser;
 use FireflyIII\Http\Middleware\StartFireflySession;
+use Log;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class IsDemoUserTest

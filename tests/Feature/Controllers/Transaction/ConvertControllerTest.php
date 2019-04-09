@@ -329,9 +329,9 @@ class ConvertControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
@@ -363,9 +363,9 @@ class ConvertControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
@@ -398,9 +398,9 @@ class ConvertControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
         // mock stuff
@@ -434,9 +434,9 @@ class ConvertControllerTest extends TestCase
     {
         Log::info(sprintf('Now in test %s', __METHOD__));
         // mock stuff
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $repository     = $this->mock(JournalRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
 
 

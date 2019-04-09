@@ -112,6 +112,9 @@ class MassControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock things
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
@@ -179,6 +182,9 @@ class MassControllerTest extends TestCase
      */
     public function testEditMultiple(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -204,7 +210,6 @@ class MassControllerTest extends TestCase
         $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection([new Transaction]));
-
 
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);

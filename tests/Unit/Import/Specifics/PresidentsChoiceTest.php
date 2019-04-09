@@ -25,8 +25,8 @@ namespace Tests\Unit\Import\Specifics;
 
 
 use FireflyIII\Import\Specifics\PresidentsChoice;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class PresidentsChoiceTest

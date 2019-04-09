@@ -26,10 +26,11 @@ namespace Tests\Unit\Import\Prerequisites;
 
 use FireflyIII\Import\Prerequisites\SpectrePrerequisites;
 use FireflyIII\Models\Preference;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class SpectrePrerequisitesTest
  */

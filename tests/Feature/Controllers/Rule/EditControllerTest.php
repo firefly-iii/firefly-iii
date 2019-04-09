@@ -58,7 +58,7 @@ class EditControllerTest extends TestCase
         $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -91,7 +91,7 @@ class EditControllerTest extends TestCase
         $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
@@ -113,9 +113,9 @@ class EditControllerTest extends TestCase
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $rule         = Rule::find(1);
+        $rule = Rule::find(1);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('update');
 

@@ -54,11 +54,11 @@ class CategoryControllerTest extends TestCase
      */
     public function testExpenses(): void
     {
-        $first      = [1 => ['entries' => ['1', '1']]];
-        $second     = ['entries' => ['1', '1']];
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $first        = [1 => ['entries' => ['1', '1']]];
+        $second       = ['entries' => ['1', '1']];
+        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
@@ -75,11 +75,11 @@ class CategoryControllerTest extends TestCase
      */
     public function testIncome(): void
     {
-        $first      = [1 => ['entries' => ['1', '1']]];
-        $second     = ['entries' => ['1', '1']];
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $first        = [1 => ['entries' => ['1', '1']]];
+        $second       = ['entries' => ['1', '1']];
+        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection);
@@ -96,10 +96,10 @@ class CategoryControllerTest extends TestCase
      */
     public function testOperations(): void
     {
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-        $category   = factory(Category::class)->make();
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $category     = factory(Category::class)->make();
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getCategories')->andReturn(new Collection([$category]));

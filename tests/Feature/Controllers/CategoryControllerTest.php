@@ -175,7 +175,7 @@ class CategoryControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('findNull')->andReturn(new Category);
@@ -203,7 +203,7 @@ class CategoryControllerTest extends TestCase
         $repository   = $this->mock(CategoryRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('update');

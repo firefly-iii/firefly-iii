@@ -60,6 +60,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testEdit(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $repository    = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -93,6 +96,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testEditRedirect(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
@@ -113,6 +119,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcile(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -144,6 +153,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileInitialBalance(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -167,6 +179,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileNoDates(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -197,6 +212,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileNoEndDate(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -229,6 +247,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcileNotAsset(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
@@ -250,6 +271,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testShow(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $repository    = $this->mock(JournalRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
@@ -285,6 +309,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testShowError(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $repository    = $this->mock(JournalRepositoryInterface::class);
@@ -312,6 +339,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testShowSomethingElse(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
@@ -332,6 +362,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testSubmit(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -368,6 +401,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -396,6 +432,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testUpdateNotReconcile(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
@@ -416,6 +455,9 @@ class ReconcileControllerTest extends TestCase
      */
     public function testUpdateZero(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);

@@ -260,10 +260,10 @@ class IndexControllerTest extends TestCase
      */
     public function testReorder(): void
     {
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $data = [
-            'budgetIds' => [1,2],
-            'page' => 1,
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $data       = [
+            'budgetIds' => [1, 2],
+            'page'      => 1,
         ];
 
         $repository->shouldReceive('cleanupBudgets')->atLeast()->once();

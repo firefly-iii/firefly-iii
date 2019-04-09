@@ -24,10 +24,10 @@ declare(strict_types=1);
 namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\IsSandStormUser;
+use Log;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class IsSandstormUserTest

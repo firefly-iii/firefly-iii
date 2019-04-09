@@ -26,10 +26,10 @@ namespace Tests\Unit\Middleware;
 use FireflyIII\Http\Middleware\Range;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use Log;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class RangeTest

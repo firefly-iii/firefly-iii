@@ -173,6 +173,9 @@ class CategoryControllerTest extends TestCase
      */
     public function testTransactionsBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $category           = $this->user()->categories()->first();
         $transformer        = $this->mock(TransactionTransformer::class);
         $repository         = $this->mock(JournalRepositoryInterface::class);
@@ -219,6 +222,9 @@ class CategoryControllerTest extends TestCase
      */
     public function testTransactionsRange(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $category           = $this->user()->categories()->first();
         $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
         $repository         = $this->mock(JournalRepositoryInterface::class);

@@ -48,6 +48,7 @@ class PiggyBankEventTransformerTest extends TestCase
         parent::setUp();
         Log::info(sprintf('Now in %s.', \get_class($this)));
     }
+
     /**
      * Basic test with no meta data.
      *

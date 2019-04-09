@@ -54,7 +54,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        $userRepos         = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
@@ -88,7 +88,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndexBadState(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
         $job               = new ImportJob;
@@ -115,7 +115,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndexComplete(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
@@ -147,7 +147,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPost(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
@@ -179,7 +179,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostBadState(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
@@ -210,7 +210,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostNoJob(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
@@ -235,7 +235,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostWithMessages(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 

@@ -464,7 +464,8 @@ class PiggyBankControllerTest extends TestCase
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            ['id' => 5,'current_amount' => '5','currency_symbol' => 'x','target_amount' => '5','left_to_save' => '5','save_per_month' => '5']);
+            ['id' => 5, 'current_amount' => '5', 'currency_symbol' => 'x', 'target_amount' => '5', 'left_to_save' => '5', 'save_per_month' => '5']
+        );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $journalRepos->shouldReceive('firstNull')->andReturn($first)->atLeast()->once();

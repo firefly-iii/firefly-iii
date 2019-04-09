@@ -261,7 +261,7 @@ class RuleControllerTest extends TestCase
         $matcher      = $this->mock(TransactionMatcher::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $transformer     = $this->mock(TransactionTransformer::class);
+        $transformer  = $this->mock(TransactionTransformer::class);
 
         $transformer->shouldReceive('setParameters')->atLeast()->once();
 

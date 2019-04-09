@@ -292,6 +292,9 @@ class BillControllerTest extends TestCase
      */
     public function testTransactionsBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $bill               = $this->user()->bills()->first();
         $repository         = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);
@@ -337,6 +340,9 @@ class BillControllerTest extends TestCase
      */
     public function testTransactionsRange(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $bill               = $this->user()->bills()->first();
         $repository         = $this->mock(JournalRepositoryInterface::class);
         $collector          = $this->mock(TransactionCollectorInterface::class);

@@ -25,8 +25,9 @@ namespace Tests\Unit\Import\Specifics;
 
 
 use FireflyIII\Import\Specifics\SnsDescription;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
+
 /**
  * Class SnsDescriptionTest
  */

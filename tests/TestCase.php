@@ -27,17 +27,19 @@ use Carbon\Carbon;
 use Closure;
 use DB;
 use Exception;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Log;
 use Mockery;
-
+use RuntimeException;
 /**
  * Class TestCase
  *
@@ -205,6 +207,13 @@ abstract class TestCase extends BaseTestCase
      */
     protected function mock($class, Closure $closure = null): \Mockery\MockInterface
     {
+        $deprecated = [
+            TransactionTransformer::class,
+            TransactionCollectorInterface::class
+        ];
+        if(in_array($class, $deprecated, true)) {
+            throw new RuntimeException('Should not be mocking the transaction collector.');
+        }
         Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);
         $this->app->instance($class, $object);

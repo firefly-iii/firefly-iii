@@ -48,11 +48,11 @@ class RuleTransformerTest extends TestCase
         /** @var Rule $rule */
         $rule = Rule::first();
 
-        $repository  = $this->mock(RuleRepositoryInterface::class);
+        $repository = $this->mock(RuleRepositoryInterface::class);
         /** @var RuleTrigger $ruleTrigger */
         $ruleTrigger = RuleTrigger::first();
         /** @var RuleAction $ruleAction */
-        $ruleAction  = RuleAction::first();
+        $ruleAction = RuleAction::first();
         // mock stuff
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('getRuleActions')->atLeast()->once()->andReturn(new Collection([$ruleAction]));

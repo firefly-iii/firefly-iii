@@ -55,7 +55,7 @@ class LinkControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
 
@@ -73,7 +73,7 @@ class LinkControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('destroyLink');
@@ -97,9 +97,9 @@ class LinkControllerTest extends TestCase
     {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $data         = [
+        $data = [
             'link_other' => 8,
             'link_type'  => '1_inward',
         ];
@@ -125,9 +125,9 @@ class LinkControllerTest extends TestCase
     {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $data         = [
+        $data = [
             'link_other' => 8,
             'link_type'  => '1_inward',
         ];
@@ -156,7 +156,7 @@ class LinkControllerTest extends TestCase
         ];
 
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->andReturn(null);
@@ -177,13 +177,13 @@ class LinkControllerTest extends TestCase
     {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $data         = [
+        $data    = [
             'link_other' => 8,
             'link_type'  => '1_inward',
         ];
-        $journal      = $this->user()->transactionJournals()->first();
+        $journal = $this->user()->transactionJournals()->first();
 
         $journalRepos->shouldReceive('firstNull')->andReturn($journal);
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
@@ -205,7 +205,7 @@ class LinkControllerTest extends TestCase
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('switchLink')->andReturn(false);

@@ -24,8 +24,8 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\MapperPreProcess;
 
 use FireflyIII\Import\MapperPreProcess\TagsSpace;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class TagsSpaceTest

@@ -209,6 +209,9 @@ class TagControllerTest extends TestCase
      */
     public function testTransactions(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock stuff:
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $tag          = $this->user()->tags()->inRandomOrder()->first();

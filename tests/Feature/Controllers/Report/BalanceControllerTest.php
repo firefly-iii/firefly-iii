@@ -53,9 +53,9 @@ class BalanceControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
-        $balance = $this->mock(BalanceReportHelperInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $balance      = $this->mock(BalanceReportHelperInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $balance->shouldReceive('getBalanceReport')->andReturn(new Balance);

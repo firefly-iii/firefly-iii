@@ -26,10 +26,10 @@ namespace Tests\Unit\Import\Prerequisites;
 
 use FireflyIII\Import\Prerequisites\FakePrerequisites;
 use FireflyIII\Models\Preference;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class FakePrerequisitesTest

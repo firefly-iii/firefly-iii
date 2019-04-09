@@ -25,11 +25,12 @@ namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Models\Preference;
+use Log;
 use Preferences;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class RedirectIf2FAAuthenticatedTest
  */

@@ -31,9 +31,9 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Spectre\StageAuthenticatedHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageImportDataHandler;
 use FireflyIII\Support\Import\Routine\Spectre\StageNewHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class SpectreRoutineTest

@@ -142,7 +142,7 @@ class SelectControllerTest extends TestCase
      */
     public function testTestTriggersByRule(): void
     {
-        $matcher = $this->mock(TransactionMatcher::class);
+        $matcher      = $this->mock(TransactionMatcher::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();

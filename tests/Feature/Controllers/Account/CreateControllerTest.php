@@ -157,10 +157,10 @@ class CreateControllerTest extends TestCase
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'              => 'new liability account ' . random_int(1000, 9999),
-            'what'              => 'liabilities',
-            'liability_type_id' => AccountType::where('type', AccountType::LOAN)->first()->id,
-            'openingBalance'    => '100',
+            'name'               => 'new liability account ' . random_int(1000, 9999),
+            'what'               => 'liabilities',
+            'liability_type_id'  => AccountType::where('type', AccountType::LOAN)->first()->id,
+            'openingBalance'     => '100',
             'openingBalanceDate' => '2018-01-01',
         ];
 

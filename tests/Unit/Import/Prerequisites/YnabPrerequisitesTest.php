@@ -57,44 +57,6 @@ class YnabPrerequisitesTest extends TestCase
     }
 
     /**
-     * First test, user has nothing.
-     *
-     * @covers \FireflyIII\Import\Prerequisites\YnabPrerequisites
-     */
-    public function testGetViewParametersNull(): void
-    {
-
-        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturn(null);
-        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'ynab_client_secret', null])->andReturn(null);
-
-        $object = new YnabPrerequisites();
-        $object->setUser($this->user());
-        $result = $object->getViewParameters();
-
-        $expected = ['client_id' => '', 'client_secret' => '', 'callback_uri' => 'http://localhost/import/ynab-callback', 'is_https' => false];
-
-        $this->assertEquals($expected, $result);
-    }
-
-    /**
-     *
-     */
-    public function testStorePrerequisites(): void {
-
-        Preferences::shouldReceive('setForUser')->once()->withArgs([Mockery::any(), 'ynab_client_id', 'hello']);
-        Preferences::shouldReceive('setForUser')->once()->withArgs([Mockery::any(), 'ynab_client_secret', 'hi there']);
-
-        $data = [
-            'client_id' => 'hello',
-            'client_secret' => 'hi there'
-        ];
-
-        $object = new YnabPrerequisites();
-        $object->setUser($this->user());
-        $object->storePrerequisites($data);
-    }
-
-    /**
      * First test, user has empty.
      *
      * @covers \FireflyIII\Import\Prerequisites\YnabPrerequisites
@@ -109,6 +71,52 @@ class YnabPrerequisitesTest extends TestCase
 
         Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturn($clientId);
         Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'ynab_client_secret', null])->andReturn($clientSecret);
+
+        $object = new YnabPrerequisites();
+        $object->setUser($this->user());
+        $result = $object->getViewParameters();
+
+        $expected = ['client_id' => '', 'client_secret' => '', 'callback_uri' => 'http://localhost/import/ynab-callback', 'is_https' => false];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * First test, user has nothing.
+     *
+     * @covers \FireflyIII\Import\Prerequisites\YnabPrerequisites
+     */
+    public function testGetViewParametersFilled(): void
+    {
+        $clientId       = new Preference;
+        $clientId->data = 'client-id';
+
+        $clientSecret       = new Preference;
+        $clientSecret->data = 'client-secret';
+
+        Preferences::shouldReceive('getForUser')->twice()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturn($clientId);
+        Preferences::shouldReceive('getForUser')->twice()->withArgs([Mockery::any(), 'ynab_client_secret', null])->andReturn($clientSecret);
+
+        $object = new YnabPrerequisites();
+        $object->setUser($this->user());
+        $result = $object->getViewParameters();
+
+        $expected = ['client_id' => 'client-id', 'client_secret' => 'client-secret', 'callback_uri' => 'http://localhost/import/ynab-callback',
+                     'is_https'  => false];
+
+        $this->assertEquals($expected, $result);
+    }
+
+    /**
+     * First test, user has nothing.
+     *
+     * @covers \FireflyIII\Import\Prerequisites\YnabPrerequisites
+     */
+    public function testGetViewParametersNull(): void
+    {
+
+        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturn(null);
+        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'ynab_client_secret', null])->andReturn(null);
 
         $object = new YnabPrerequisites();
         $object->setUser($this->user());
@@ -135,27 +143,21 @@ class YnabPrerequisitesTest extends TestCase
     }
 
     /**
-     * First test, user has nothing.
      *
-     * @covers \FireflyIII\Import\Prerequisites\YnabPrerequisites
      */
-    public function testGetViewParametersFilled(): void
+    public function testStorePrerequisites(): void
     {
-        $clientId       = new Preference;
-        $clientId->data = 'client-id';
 
-        $clientSecret       = new Preference;
-        $clientSecret->data = 'client-secret';
+        Preferences::shouldReceive('setForUser')->once()->withArgs([Mockery::any(), 'ynab_client_id', 'hello']);
+        Preferences::shouldReceive('setForUser')->once()->withArgs([Mockery::any(), 'ynab_client_secret', 'hi there']);
 
-        Preferences::shouldReceive('getForUser')->twice()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturn($clientId);
-        Preferences::shouldReceive('getForUser')->twice()->withArgs([Mockery::any(), 'ynab_client_secret', null])->andReturn($clientSecret);
+        $data = [
+            'client_id'     => 'hello',
+            'client_secret' => 'hi there',
+        ];
 
         $object = new YnabPrerequisites();
         $object->setUser($this->user());
-        $result = $object->getViewParameters();
-
-        $expected = ['client_id' => 'client-id', 'client_secret' => 'client-secret', 'callback_uri' => 'http://localhost/import/ynab-callback', 'is_https' => false];
-
-        $this->assertEquals($expected, $result);
+        $object->storePrerequisites($data);
     }
 }

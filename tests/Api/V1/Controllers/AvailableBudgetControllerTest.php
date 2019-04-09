@@ -234,9 +234,9 @@ class AvailableBudgetControllerTest extends TestCase
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // mock stuff:
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
-        $transformer = $this->mock(AvailableBudgetTransformer::class);
-        $factory     = $this->mock(TransactionCurrencyFactory::class);
+        $repository         = $this->mock(BudgetRepositoryInterface::class);
+        $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $factory            = $this->mock(TransactionCurrencyFactory::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
 
         // mock transformer

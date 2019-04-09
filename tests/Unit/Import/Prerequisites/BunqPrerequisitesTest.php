@@ -28,11 +28,11 @@ use FireflyIII\Import\Prerequisites\BunqPrerequisites;
 use FireflyIII\Models\Preference;
 use FireflyIII\Services\Bunq\ApiContext;
 use FireflyIII\Services\IP\IPRetrievalInterface;
+use Log;
 use Mockery;
 use Preferences;
 use Tests\Object\FakeApiContext;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class BunqPrerequisitesTest

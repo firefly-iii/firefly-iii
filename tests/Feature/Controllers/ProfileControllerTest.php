@@ -57,7 +57,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testChangeEmail(): void
     {
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
@@ -111,8 +111,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testConfirmEmailChangeNoToken(): void
     {
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
 
         Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection());
@@ -426,7 +425,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostCode(): void
     {
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $secret = '0123456789abcde';
         $key    = '123456';

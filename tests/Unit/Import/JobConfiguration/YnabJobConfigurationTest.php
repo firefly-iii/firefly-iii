@@ -24,12 +24,9 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\JobConfiguration;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\JobConfiguration\BunqJobConfiguration;
 use FireflyIII\Import\JobConfiguration\YnabJobConfiguration;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
-use FireflyIII\Support\Import\JobConfiguration\Bunq\ChooseAccountsHandler;
-use FireflyIII\Support\Import\JobConfiguration\Bunq\NewBunqJobHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\NewYnabJobHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectAccountsHandler;
 use FireflyIII\Support\Import\JobConfiguration\Ynab\SelectBudgetHandler;

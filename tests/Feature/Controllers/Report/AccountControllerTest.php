@@ -58,9 +58,9 @@ class AccountControllerTest extends TestCase
             'difference' => '0',
         ];
 
-        $tasker = $this->mock(AccountTaskerInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $tasker->shouldReceive('getAccountReport')->andReturn($return);

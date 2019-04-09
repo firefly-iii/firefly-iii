@@ -45,6 +45,7 @@ class BudgetTransformerTest extends TestCase
         parent::setUp();
         Log::info(sprintf('Now in %s.', \get_class($this)));
     }
+
     /**
      * Basic coverage
      *

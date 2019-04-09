@@ -101,8 +101,6 @@ class JobConfigurationControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
 
-
-
         $this->be($this->user());
         $response = $this->get(route('import.job.configuration.index', [$job->key]));
         $response->assertStatus(302);

@@ -425,7 +425,7 @@ class CurrencyControllerTest extends TestCase
     public function testRecurrences(): void
     {
         // mock stuff:
-        $recurrence     = Recurrence::first();
+        $recurrence    = Recurrence::first();
         $repository    = $this->mock(RecurringRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -600,6 +600,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testTransactionsBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $currency     = TransactionCurrency::first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
@@ -642,6 +645,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testTransactionsRange(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $currency     = TransactionCurrency::first();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);

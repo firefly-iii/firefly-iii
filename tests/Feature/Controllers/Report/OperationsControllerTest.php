@@ -52,7 +52,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testExpenses(): void
     {
-        $return = [
+        $return       = [
             1 => [
                 'id'      => 1,
                 'name'    => 'Some name',
@@ -61,9 +61,9 @@ class OperationsControllerTest extends TestCase
                 'count'   => 1,
             ],
         ];
-        $tasker = $this->mock(AccountTaskerInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $tasker->shouldReceive('getExpenseReport')->andReturn($return);
@@ -78,9 +78,9 @@ class OperationsControllerTest extends TestCase
      */
     public function testIncome(): void
     {
-        $tasker = $this->mock(AccountTaskerInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $tasker->shouldReceive('getIncomeReport')->andReturn([]);
@@ -105,9 +105,9 @@ class OperationsControllerTest extends TestCase
             ],
         ];
 
-        $tasker = $this->mock(AccountTaskerInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $tasker       = $this->mock(AccountTaskerInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $tasker->shouldReceive('getExpenseReport')->andReturn($return);

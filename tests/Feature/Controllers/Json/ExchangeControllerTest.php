@@ -53,9 +53,9 @@ class ExchangeControllerTest extends TestCase
      */
     public function testGetRate(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $rate = factory(CurrencyExchangeRate::class)->make();
@@ -71,10 +71,10 @@ class ExchangeControllerTest extends TestCase
      */
     public function testGetRateAmount(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $rate       = factory(CurrencyExchangeRate::class)->make();
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $rate         = factory(CurrencyExchangeRate::class)->make();
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getExchangeRate')->andReturn($rate);
@@ -89,9 +89,9 @@ class ExchangeControllerTest extends TestCase
      */
     public function testGetRateNull(): void
     {
-        $repository = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $rate = factory(CurrencyExchangeRate::class)->make();
