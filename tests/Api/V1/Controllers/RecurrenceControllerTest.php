@@ -149,6 +149,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreAssetId(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -232,6 +235,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreAssetName(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -317,6 +323,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreDeposit(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -403,6 +412,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreDestinationId(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -493,6 +505,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreDestinationName(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -581,6 +596,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailBothRepetitions(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -674,6 +692,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailForeignCurrency(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -751,6 +772,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidDaily(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -827,6 +851,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidDestinationId(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -916,6 +943,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidMonthly(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -991,6 +1021,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidNdom(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1066,6 +1099,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidNdomCount(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1142,6 +1178,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidNdomHigh(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1217,6 +1256,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidWeekly(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1292,6 +1334,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailNoAsset(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1361,6 +1406,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailNotAsset(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1436,6 +1484,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailNotAssetName(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1518,6 +1569,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailRepetitions(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1585,6 +1639,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailTransactions(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1650,6 +1707,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreTransfer(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1829,6 +1889,9 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 

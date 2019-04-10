@@ -46,6 +46,9 @@ class TransactionTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $repository  = $this->mock(JournalRepositoryInterface::class);
         $transformer = app(TransactionTransformer::class);
         $transformer->setParameters(new ParameterBag());
@@ -135,6 +138,9 @@ class TransactionTransformerTest extends TestCase
      */
     public function testDeposit(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $repository  = $this->mock(JournalRepositoryInterface::class);
         $transformer = app(TransactionTransformer::class);
         $transformer->setParameters(new ParameterBag());
@@ -235,6 +241,9 @@ class TransactionTransformerTest extends TestCase
      */
     public function testForeign(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $repository  = $this->mock(JournalRepositoryInterface::class);
         $transformer = app(TransactionTransformer::class);
         $transformer->setParameters(new ParameterBag());

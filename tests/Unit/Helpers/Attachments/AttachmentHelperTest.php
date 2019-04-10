@@ -102,7 +102,7 @@ class AttachmentHelperTest extends TestCase
 
         $this->assertCount(0, $errors);
         $this->assertCount(1, $messages);
-        $this->assertEquals('Succesfully uploaded file "apple-touch-icon.png".', $messages->first());
+        $this->assertEquals('Successfully uploaded file "apple-touch-icon.png".', $messages->first());
 
         // Assert the file was stored...
         Storage::disk('upload')->assertExists(sprintf('at-%d.data', $attachments->first()->id));

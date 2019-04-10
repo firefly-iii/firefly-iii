@@ -66,6 +66,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock stuff
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -260,6 +263,9 @@ class ImportArrayStorageTest extends TestCase
      */
     public function testBasicStoreNothing(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('findNull')->once()->andReturn($this->user());
 

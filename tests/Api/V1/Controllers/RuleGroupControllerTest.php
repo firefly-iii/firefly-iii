@@ -190,6 +190,9 @@ class RuleGroupControllerTest extends TestCase
      */
     public function testTestGroupBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $group = $this->user()->ruleGroups()->first();
         $rule  = $this->user()->rules()->first();
 

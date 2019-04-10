@@ -58,6 +58,9 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
