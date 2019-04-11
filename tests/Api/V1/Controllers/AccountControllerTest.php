@@ -23,15 +23,15 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use Exception;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -62,6 +62,8 @@ class AccountControllerTest extends TestCase
     {
         // mock stuff:
         $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository->shouldReceive();
+
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('destroy')->atLeast()->once()->andReturn(true);
@@ -189,7 +191,8 @@ class AccountControllerTest extends TestCase
      * Opening balance without date.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @throws Exception
      */
     public function testStoreInvalidBalance(): void
     {
@@ -227,7 +230,8 @@ class AccountControllerTest extends TestCase
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @throws Exception
      */
     public function testStoreLiability(): void
     {
@@ -273,13 +277,12 @@ class AccountControllerTest extends TestCase
      * CC type present when account is a credit card.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
      */
     public function testStoreNoCreditCardData(): void
     {
         // mock repositories
-        $repository = $this->mock(AccountRepositoryInterface::class);
-
+        $repository  = $this->mock(AccountRepositoryInterface::class);
         $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
@@ -313,13 +316,13 @@ class AccountControllerTest extends TestCase
      * No currency information (is allowed).
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @throws Exception
      */
     public function testStoreNoCurrencyInfo(): void
     {
         // mock repositories
-        $repository = $this->mock(AccountRepositoryInterface::class);
-
+        $repository  = $this->mock(AccountRepositoryInterface::class);
         $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls to transformer:
@@ -351,13 +354,12 @@ class AccountControllerTest extends TestCase
      * Name already in use.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
      */
     public function testStoreNotUnique(): void
     {
         // mock repositories
-        $repository = $this->mock(AccountRepositoryInterface::class);
-
+        $repository  = $this->mock(AccountRepositoryInterface::class);
         $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:
@@ -393,13 +395,13 @@ class AccountControllerTest extends TestCase
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @throws Exception
      */
     public function testStoreValid(): void
     {
         // mock repositories
-        $repository = $this->mock(AccountRepositoryInterface::class);
-
+        $repository  = $this->mock(AccountRepositoryInterface::class);
         $transformer = $this->mock(AccountTransformer::class);
         $account     = $this->getRandomAsset();
 
@@ -432,13 +434,13 @@ class AccountControllerTest extends TestCase
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @throws Exception
      */
     public function testStoreWithCurrencyCode(): void
     {
         // mock repositories
-        $repository = $this->mock(AccountRepositoryInterface::class);
-
+        $repository  = $this->mock(AccountRepositoryInterface::class);
         $transformer = $this->mock(AccountTransformer::class);
         $account     = $this->getRandomAsset();
 
@@ -470,36 +472,31 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * Show index.
+     * Show transactions.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
      */
     public function testTransactionsBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
         // default mocks
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $transformer  = $this->mock(TransactionGroupTransformer::class);
+
+        // objects
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+
+        // calls to account repos.
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
 
         // mock collector:
-        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
         $collector->shouldReceive('setUser')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('withAPIInformation')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->withArgs([50])->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+        $collector->shouldReceive('getPaginatedGroups')->andReturn($paginator);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -515,45 +512,38 @@ class AccountControllerTest extends TestCase
     }
 
     /**
-     * Show index.
+     * Show transactions but submit a limit.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
      */
-    public function testTransactionsOpposing(): void
+    public function testTransactionsLimit(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
         // default mocks
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $transformer  = $this->mock(TransactionGroupTransformer::class);
+
+        // objects
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+
+        // calls to account repos.
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnFalse();
 
         // mock collector:
-        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
         $collector->shouldReceive('setUser')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->andReturnSelf();
-        $collector->shouldReceive('setOpposingAccounts')->atLeast()->once()->andReturnSelf();
-
-        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('withAPIInformation')->andReturnSelf();
+        $collector->shouldReceive('setLimit')->withArgs([10])->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
+        $collector->shouldReceive('getPaginatedGroups')->andReturn($paginator);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $revenue = $this->getRandomAsset();
+        $asset = $this->getRandomAsset();
 
         // test API
-        $response = $this->get(route('api.v1.accounts.transactions', [$revenue->id]));
+        $response = $this->get(route('api.v1.accounts.transactions', [$asset->id]) . '?limit=10');
         $response->assertStatus(200);
         $response->assertJson(['data' => [],]);
         $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
@@ -568,31 +558,26 @@ class AccountControllerTest extends TestCase
      */
     public function testTransactionsRange(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
         // default mocks
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $transformer  = $this->mock(TransactionGroupTransformer::class);
+
+        // objects
+        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
+
+        // calls to account repos.
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('isAsset')->atLeast()->once()->andReturnTrue();
 
         // mock collector:
-        $paginator = new LengthAwarePaginator(new Collection, 0, 50);
         $collector->shouldReceive('setUser')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
         $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->andReturnSelf();
+        $collector->shouldReceive('withAPIInformation')->andReturnSelf();
         $collector->shouldReceive('setLimit')->andReturnSelf();
         $collector->shouldReceive('setPage')->andReturnSelf();
         $collector->shouldReceive('setTypes')->andReturnSelf();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn($paginator);
         $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -611,7 +596,7 @@ class AccountControllerTest extends TestCase
      * Update first asset account we find. Name can be the same as it was.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountUpdateRequest
      */
     public function testUpdate(): void
     {
@@ -636,9 +621,11 @@ class AccountControllerTest extends TestCase
         $account = $this->getRandomAsset();
         // data to submit
         $data = [
-            'name'         => $account->name,
-            'type'         => 'asset',
-            'account_role' => 'defaultAsset',
+            'active'            => true,
+            'include_net_worth' => true,
+            'name'              => $account->name,
+            'type'              => 'asset',
+            'account_role'      => 'defaultAsset',
         ];
 
         // test API
@@ -652,7 +639,7 @@ class AccountControllerTest extends TestCase
      * Update first asset account we find. Name can be the same as it was.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
-     * @covers \FireflyIII\Api\V1\Requests\AccountRequest
+     * @covers \FireflyIII\Api\V1\Requests\AccountUpdateRequest
      */
     public function testUpdateCurrencyCode(): void
     {
@@ -688,6 +675,55 @@ class AccountControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * Update a liability
+     *
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountUpdateRequest
+     */
+    public function testUpdateLiability(): void
+    {
+        // mock repositories
+        $repository = $this->mock(AccountRepositoryInterface::class);
+
+        $transformer = $this->mock(AccountTransformer::class);
+
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $repository->shouldReceive('update')->atLeast()->once();
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+
+        $account = $this->getRandomAsset();
+        // data to submit
+        $data = [
+            'active'               => true,
+            'include_net_worth'    => true,
+            'name'                 => $account->name,
+            'type'                 => 'liability',
+            'liability_type'       => 'loan',
+            'liability_amount'     => '100',
+            'interest'             => '1',
+            'interest_period'      => 'yearly',
+            'liability_start_date' => '2019-01-01',
+            'account_role'         => 'defaultAsset',
+        ];
+
+        // test API
+        $response = $this->put(route('api.v1.accounts.update', [$account->id]), $data, ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+        $response->assertJson(['data' => ['type' => 'accounts', 'links' => true],]);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
+
     }
 
 

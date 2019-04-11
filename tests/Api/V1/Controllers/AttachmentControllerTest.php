@@ -80,6 +80,9 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDownload(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -109,6 +112,9 @@ class AttachmentControllerTest extends TestCase
      */
     public function testDownloadNotExisting(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock stuff:
         $repository    = $this->mock(AttachmentRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

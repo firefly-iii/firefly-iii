@@ -1,7 +1,7 @@
 <?php
 
 /**
- * AccountRequest.php
+ * AccountUpdateRequest.php
  * Copyright (c) 2018 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -24,12 +24,13 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Exception;
 use FireflyIII\Rules\IsBoolean;
 
 /**
- * Class AccountRequest
+ * Class AccountUpdateRequest
  */
-class AccountRequest extends Request
+class AccountUpdateRequest extends Request
 {
 
     /**
@@ -47,6 +48,7 @@ class AccountRequest extends Request
      * Get all data from the request.
      *
      * @return array
+     * @throws Exception
      */
     public function getAll(): array
     {
@@ -98,15 +100,16 @@ class AccountRequest extends Request
      */
     public function rules(): array
     {
+        $account        = $this->route()->parameter('account');
         $accountRoles   = implode(',', config('firefly.accountRoles'));
         $types          = implode(',', array_keys(config('firefly.subTitlesByIdentifier')));
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
-            'name'                 => 'required|min:1|uniqueAccountForUser',
-            'type'                 => 'required|in:' . $types,
+            'name'                 => sprintf('required|min:1|uniqueAccountForUser:%d', $account->id),
+            'type'                 => sprintf('in:%s', $types),
             'iban'                 => 'iban|nullable',
             'bic'                  => 'bic|nullable',
-            'account_number'       => 'between:1,255|nullable|uniqueAccountNumberForUser',
+            'account_number'       => sprintf('between:1,255|nullable|uniqueAccountNumberForUser:%d', $account->id),
             'opening_balance'      => 'numeric|required_with:opening_balance_date|nullable',
             'opening_balance_date' => 'date|required_with:opening_balance|nullable',
             'virtual_balance'      => 'numeric|nullable',
@@ -114,8 +117,8 @@ class AccountRequest extends Request
             'currency_code'        => 'min:3|max:3|exists:transaction_currencies,code',
             'active'               => [new IsBoolean],
             'include_net_worth'    => [new IsBoolean],
-            'account_role'         => 'in:' . $accountRoles . '|required_if:type,asset',
-            'credit_card_type'     => 'in:' . $ccPaymentTypes . '|required_if:account_role,ccAsset',
+            'account_role'         => sprintf('in:%s|required_if:type,asset', $accountRoles),
+            'credit_card_type'     => sprintf('in:%s|required_if:account_role,ccAsset', $ccPaymentTypes),
             'monthly_payment_date' => 'date' . '|required_if:account_role,ccAsset|required_if:credit_card_type,monthlyFull',
             'liability_type'       => 'required_if:type,liability|in:loan,debt,mortgage',
             'liability_amount'     => 'required_if:type,liability|min:0|numeric',
@@ -124,17 +127,6 @@ class AccountRequest extends Request
             'interest_period'      => 'required_if:type,liability|in:daily,monthly,yearly',
             'notes'                => 'min:0|max:65536',
         ];
-        switch ($this->method()) {
-            default:
-                break;
-            case 'PUT':
-            case 'PATCH':
-                $account                 = $this->route()->parameter('account');
-                $rules['name']           .= ':' . $account->id;
-                $rules['account_number'] .= ':' . $account->id;
-                $rules['type']           = 'in:' . $types;
-                break;
-        }
 
         return $rules;
     }

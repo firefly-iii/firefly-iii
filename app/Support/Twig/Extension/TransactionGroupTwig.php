@@ -172,7 +172,7 @@ class TransactionGroupTwig extends Twig_Extension
     private function normalGroupAmount(array $array): string
     {
         // take cue from the first entry in the array:
-        $first   = $array['transactions'][0];
+        $first   = reset($array['transactions']);
         $type    = $first['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $array['sum'] ?? '0';
         $colored = true;

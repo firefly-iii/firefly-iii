@@ -23,7 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use Exception;
 use FireflyIII\Api\V1\Requests\AccountRequest;
+use FireflyIII\Api\V1\Requests\AccountStoreRequest;
+use FireflyIII\Api\V1\Requests\AccountUpdateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -76,7 +79,7 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \FireflyIII\Models\Account $account
+     * @param Account $account
      *
      * @return JsonResponse
      */
@@ -132,7 +135,7 @@ class AccountController extends Controller
 
 
     /**
-     * List all of them.
+     * List all piggies.
      *
      * @param Request $request
      * @param Account $account
@@ -177,7 +180,7 @@ class AccountController extends Controller
      * @param Request $request
      * @param Account $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse
     {
@@ -196,11 +199,12 @@ class AccountController extends Controller
     /**
      * Store a new instance.
      *
-     * @param AccountRequest $request
+     * @param AccountStoreRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function store(AccountRequest $request): JsonResponse
+    public function store(AccountStoreRequest $request): JsonResponse
     {
         $data    = $request->getAll();
         $account = $this->repository->store($data);
@@ -285,12 +289,13 @@ class AccountController extends Controller
     /**
      * Update account.
      *
-     * @param AccountRequest $request
-     * @param Account        $account
+     * @param AccountUpdateRequest $request
+     * @param Account              $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function update(AccountRequest $request, Account $account): JsonResponse
+    public function update(AccountUpdateRequest $request, Account $account): JsonResponse
     {
         $data         = $request->getAll();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
