@@ -37,6 +37,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class CurrencyExchangeRateController
+ * @codeCoverageIgnore
  */
 class CurrencyExchangeRateController extends Controller
 {
@@ -45,6 +46,7 @@ class CurrencyExchangeRateController extends Controller
 
     /**
      * CurrencyExchangeRateController constructor.
+     *
      */
     public function __construct()
     {

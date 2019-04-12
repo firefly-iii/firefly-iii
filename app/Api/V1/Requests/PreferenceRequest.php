@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Requests;
 /**
  *
  * Class PreferenceRequest
+ * @codeCoverageIgnore
  */
 class PreferenceRequest extends Request
 {

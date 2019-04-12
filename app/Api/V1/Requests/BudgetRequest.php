@@ -28,6 +28,7 @@ use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class BudgetRequest
+ * @codeCoverageIgnore
  */
 class BudgetRequest extends Request
 {

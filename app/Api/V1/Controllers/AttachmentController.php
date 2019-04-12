@@ -52,6 +52,7 @@ class AttachmentController extends Controller
 
     /**
      * AccountController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -70,7 +71,7 @@ class AttachmentController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
+     * @codeCoverageIgnore
      * @param Attachment $attachment
      *
      * @return JsonResponse
@@ -86,9 +87,9 @@ class AttachmentController extends Controller
      * Download an attachment.
      *
      * @param Attachment $attachment
-     *
+     * @codeCoverageIgnore
      * @return LaravelResponse
-     * @throws FireflyException
+     * @throws   FireflyException
      */
     public function download(Attachment $attachment): LaravelResponse
     {
@@ -121,7 +122,7 @@ class AttachmentController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -160,7 +161,7 @@ class AttachmentController extends Controller
      *
      * @param Request    $request
      * @param Attachment $attachment
-     *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function show(Request $request, Attachment $attachment): JsonResponse
@@ -230,7 +231,7 @@ class AttachmentController extends Controller
 
     /**
      * Upload an attachment.
-     *
+     * @codeCoverageIgnore
      * @param Request    $request
      * @param Attachment $attachment
      *

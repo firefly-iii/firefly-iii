@@ -42,7 +42,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-
+use Exception;
 /**
  * Class BudgetController.
  *
@@ -56,6 +56,8 @@ class BudgetController extends Controller
 
     /**
      * BudgetController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -77,10 +79,12 @@ class BudgetController extends Controller
     /**
      * Display a listing of the resource.
      *
+     *
      * @param Request $request
      * @param Budget  $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function budgetLimits(Request $request, Budget $budget): JsonResponse
     {
@@ -113,6 +117,7 @@ class BudgetController extends Controller
      * @param Budget $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Budget $budget): JsonResponse
     {
@@ -127,6 +132,7 @@ class BudgetController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -166,6 +172,7 @@ class BudgetController extends Controller
      * @param Budget  $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Budget $budget): JsonResponse
     {
@@ -189,6 +196,7 @@ class BudgetController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     *
      */
     public function store(BudgetRequest $request): JsonResponse
     {
@@ -214,7 +222,7 @@ class BudgetController extends Controller
      *
      * @param BudgetLimitRequest $request
      * @param Budget             $budget
-     *
+     * @throws Exception
      * @return JsonResponse
      */
     public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
@@ -243,6 +251,7 @@ class BudgetController extends Controller
      * @param Budget  $budget
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Budget $budget): JsonResponse
     {

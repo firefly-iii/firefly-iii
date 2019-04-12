@@ -63,6 +63,8 @@ class TransactionController extends Controller
 
     /**
      * TransactionController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -87,6 +89,7 @@ class TransactionController extends Controller
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function attachments(Request $request, TransactionJournal $transactionJournal): JsonResponse
     {
@@ -112,6 +115,7 @@ class TransactionController extends Controller
      * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(TransactionGroup $transactionGroup): JsonResponse
     {
@@ -125,6 +129,7 @@ class TransactionController extends Controller
      *
      * @param TransactionJournal $transactionJournal
      *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function deleteJournal(TransactionJournal $transactionJournal): JsonResponse
@@ -140,6 +145,7 @@ class TransactionController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -192,6 +198,7 @@ class TransactionController extends Controller
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function piggyBankEvents(Request $request, TransactionJournal $transactionJournal): JsonResponse
     {
@@ -218,6 +225,7 @@ class TransactionController extends Controller
      * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, TransactionGroup $transactionGroup): JsonResponse
     {
@@ -252,7 +260,7 @@ class TransactionController extends Controller
     /**
      * Store a new transaction.
      *
-     * @param TransactionStoreRequest    $request
+     * @param TransactionStoreRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException

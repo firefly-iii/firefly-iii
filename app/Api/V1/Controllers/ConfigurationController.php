@@ -32,6 +32,7 @@ use Illuminate\Http\JsonResponse;
 
 /**
  * Class ConfigurationController.
+ * @codeCoverageIgnore
  */
 class ConfigurationController extends Controller
 {
@@ -41,7 +42,8 @@ class ConfigurationController extends Controller
     private $repository;
 
     /**
-     * BudgetController constructor.
+     * ConfigurationController constructor.
+     *
      */
     public function __construct()
     {

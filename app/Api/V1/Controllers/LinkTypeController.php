@@ -58,6 +58,8 @@ class LinkTypeController extends Controller
 
     /**
      * LinkTypeController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -82,6 +84,7 @@ class LinkTypeController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @codeCoverageIgnore
      */
     public function delete(LinkType $linkType): JsonResponse
     {
@@ -98,7 +101,8 @@ class LinkTypeController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -137,6 +141,7 @@ class LinkTypeController extends Controller
      * @param LinkType $linkType
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, LinkType $linkType): JsonResponse
     {
@@ -192,6 +197,7 @@ class LinkTypeController extends Controller
      * @param LinkType $linkType
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse
     {

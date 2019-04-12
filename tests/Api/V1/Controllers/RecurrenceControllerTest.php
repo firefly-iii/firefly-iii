@@ -61,91 +61,10 @@ class RecurrenceControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testDelete(): void
-    {
-        // mock stuff:
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('destroy')->once()->andReturn(true);
-
-        // get a recurrence:
-        $recurrence = $this->user()->recurrences()->first();
-
-        // call API
-        $response = $this->delete('/api/v1/recurrences/' . $recurrence->id);
-        $response->assertStatus(204);
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testIndex(): void
-    {
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
-
-
-        // mock calls to transformer:
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('getAll')->once()->andReturn(new Collection);
-
-
-        // call API
-        $response = $this->get('/api/v1/recurrences');
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testShow(): void
-    {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
-        // mock stuff:
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $budgetRepos     = $this->mock(BudgetRepositoryInterface::class);
-        $piggyRepos      = $this->mock(PiggyBankRepositoryInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
-
-        // mock calls to transformer:
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-
-        // call API
-        $response = $this->get('/api/v1/recurrences/' . $recurrence->id);
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreAssetId(): void
     {
@@ -231,7 +150,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source name field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreAssetName(): void
     {
@@ -319,7 +238,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit a deposit. Since most validators have been tested in other methods, dont bother too much.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreDeposit(): void
     {
@@ -408,7 +327,7 @@ class RecurrenceControllerTest extends TestCase
      * Add a recurring with correct reference to a destination (expense).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreDestinationId(): void
     {
@@ -501,7 +420,7 @@ class RecurrenceControllerTest extends TestCase
      * Add a recurring with correct reference to a destination (expense).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreDestinationName(): void
     {
@@ -592,7 +511,7 @@ class RecurrenceControllerTest extends TestCase
      * Includes both repetition count and an end date.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailBothRepetitions(): void
     {
@@ -688,7 +607,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit foreign amount but no currency information.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailForeignCurrency(): void
     {
@@ -768,7 +687,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidDaily(): void
     {
@@ -847,7 +766,7 @@ class RecurrenceControllerTest extends TestCase
      * Add a recurring but refer to an asset as destination.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidDestinationId(): void
     {
@@ -939,7 +858,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidMonthly(): void
     {
@@ -1017,7 +936,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidNdom(): void
     {
@@ -1095,7 +1014,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidNdomCount(): void
     {
@@ -1174,7 +1093,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidNdomHigh(): void
     {
@@ -1252,7 +1171,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit the minimum amount to store a recurring transaction (using source ID field).
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailInvalidWeekly(): void
     {
@@ -1330,7 +1249,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit without a source account.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailNoAsset(): void
     {
@@ -1402,7 +1321,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit with an expense account.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailNotAsset(): void
     {
@@ -1480,7 +1399,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit with an invalid asset account name.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailNotAssetName(): void
     {
@@ -1565,7 +1484,7 @@ class RecurrenceControllerTest extends TestCase
      * Dont include enough repetitions.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailRepetitions(): void
     {
@@ -1635,7 +1554,7 @@ class RecurrenceControllerTest extends TestCase
      * Dont include enough repetitions.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreFailTransactions(): void
     {
@@ -1703,7 +1622,7 @@ class RecurrenceControllerTest extends TestCase
      * Submit a transfer. Since most validators have been tested in other methods, dont bother too much.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
      */
     public function testStoreTransfer(): void
     {
@@ -1791,101 +1710,10 @@ class RecurrenceControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testTransactions(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $recurrence = $this->user()->recurrences()->first();
-        $paginator  = new LengthAwarePaginator(new Collection, 0, 50);
-        // mock repositories:
-        $recurringRepos  = $this->mock(RecurringRepositoryInterface::class);
-        $userRepos       = $this->mock(UserRepositoryInterface::class);
-        $collector       = $this->mock(TransactionCollectorInterface::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(TransactionTransformer::class);
-
-        $transformer->shouldReceive('setParameters')->atLeast()->once();
-
-        $journalIds = $recurringRepos->shouldReceive('getJournalIds')->once()->andReturn([1, 2, 3]);
-        $collector->shouldReceive('setUser')->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->once()->andReturnSelf();
-        $collector->shouldReceive('setAllAssetAccounts')->once()->andReturnSelf();
-        $collector->shouldReceive('setJournalIds')->once()->andReturnSelf();
-        $collector->shouldReceive('setRange')->once()->andReturnSelf();
-        $collector->shouldReceive('setLimit')->once()->andReturnSelf();
-        $collector->shouldReceive('setPage')->once()->andReturnSelf();
-        $collector->shouldReceive('setTypes')->once()->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->once()->andReturn($paginator);
-
-        $collector->shouldReceive('removeFilter')->once()->andReturnSelf();
-        $recurringRepos->shouldReceive('setUser')->once();
-
-        $response = $this->get(
-            route('api.v1.recurrences.transactions', [$recurrence->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31'])
-        );
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testTriggerError(): void
-    {
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $cronjob         = $this->mock(RecurringCronjob::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
-        $cronjob->shouldReceive('fire')->andThrow(FireflyException::class);
-        $repository->shouldReceive('setUser')->atLeast()->once();
-
-
-        $response = $this->post(route('api.v1.recurrences.trigger'));
-        $response->assertStatus(500);
-        $response->assertSee('Could not fire recurring cron job.');
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testTriggerFalse(): void
-    {
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $cronjob         = $this->mock(RecurringCronjob::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
-        $cronjob->shouldReceive('fire')->once()->andReturnFalse();
-        $repository->shouldReceive('setUser')->atLeast()->once();
-
-        $response = $this->post(route('api.v1.recurrences.trigger'));
-        $response->assertStatus(204);
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     */
-    public function testTriggerTrue(): void
-    {
-        $repository      = $this->mock(RecurringRepositoryInterface::class);
-        $cronjob         = $this->mock(RecurringCronjob::class);
-        $categoryFactory = $this->mock(CategoryFactory::class);
-        $transformer     = $this->mock(RecurrenceTransformer::class);
-        $cronjob->shouldReceive('fire')->once()->andReturnTrue();
-        $repository->shouldReceive('setUser')->atLeast()->once();
-
-        $response = $this->post(route('api.v1.recurrences.trigger'));
-        $response->assertStatus(200);
-    }
-
-    /**
      * Just a basic test because the store() tests cover everything.
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
-     * @covers \FireflyIII\Api\V1\Requests\RecurrenceRequest
+     * @covers \FireflyIII\Api\V1\Requests\RecurrenceUpdateRequest
      */
     public function testUpdate(): void
     {

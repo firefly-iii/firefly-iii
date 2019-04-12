@@ -28,6 +28,7 @@ use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class CurrencyRequest
+ * @codeCoverageIgnore
  */
 class CurrencyRequest extends Request
 {

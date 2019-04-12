@@ -56,82 +56,9 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * Delete a category.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     */
-    public function testDelete(): void
-    {
-        // mock stuff:
-        $repository = $this->mock(CategoryRepositoryInterface::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        $repository->shouldReceive('destroy')->once()->andReturn(true);
-
-        // get category:
-        $category = $this->user()->categories()->first();
-
-        // call API
-        $response = $this->delete(route('api.v1.categories.delete', $category->id));
-        $response->assertStatus(204);
-    }
-
-    /**
-     * Show all categories
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     */
-    public function testIndex(): void
-    {
-        $repository  = $this->mock(CategoryRepositoryInterface::class);
-        $transformer = $this->mock(CategoryTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('getCategories')->once()->andReturn(new Collection);
-
-        // call API
-        $response = $this->get(route('api.v1.categories.index'));
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * Show a single category.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     */
-    public function testShow(): void
-    {
-        $category = $this->user()->categories()->first();
-        // mock stuff:
-        $repository  = $this->mock(CategoryRepositoryInterface::class);
-        $transformer = $this->mock(CategoryTransformer::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->once();
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-        // call API
-        $response = $this->get(route('api.v1.categories.show', [$category->id]));
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
      * Store a new category.
      *
      * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     * @covers \FireflyIII\Api\V1\Requests\CategoryRequest
      */
     public function testStore(): void
     {
@@ -167,108 +94,9 @@ class CategoryControllerTest extends TestCase
     }
 
     /**
-     * Show index.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     */
-    public function testTransactionsBasic(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $category           = $this->user()->categories()->first();
-        $transformer        = $this->mock(TransactionTransformer::class);
-        $repository         = $this->mock(JournalRepositoryInterface::class);
-        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
-        $collector          = $this->mock(TransactionCollectorInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos       = $this->mock(AccountRepositoryInterface::class);
-        $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
-
-        $categoryRepos->shouldReceive('setUser')->atLeast()->once();
-        $billRepos->shouldReceive('setUser');
-        $repository->shouldReceive('setUser');
-        $currencyRepository->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setCategory')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
-
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // test API
-        $response = $this->get(route('api.v1.categories.transactions', [$category->id]));
-        $response->assertStatus(200);
-        $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
-        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * Show index.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     */
-    public function testTransactionsRange(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $category           = $this->user()->categories()->first();
-        $categoryRepos      = $this->mock(CategoryRepositoryInterface::class);
-        $repository         = $this->mock(JournalRepositoryInterface::class);
-        $collector          = $this->mock(TransactionCollectorInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
-        $billRepos          = $this->mock(BillRepositoryInterface::class);
-        $paginator          = new LengthAwarePaginator(new Collection, 0, 50);
-        $transformer        = $this->mock(TransactionTransformer::class);
-
-        $categoryRepos->shouldReceive('setUser')->atLeast()->once();
-        $billRepos->shouldReceive('setUser');
-        $repository->shouldReceive('setUser');
-        $currencyRepository->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setCategory')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->andReturnSelf();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn($paginator);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $response = $this->get(
-            route('api.v1.categories.transactions', [$category->id]) . '?' . http_build_query(['start' => '2018-01-01', 'end' => '2018-01-31'])
-        );
-        $response->assertStatus(200);
-        $response->assertJson(['data' => [],]);
-        $response->assertJson(['meta' => ['pagination' => ['total' => 0, 'count' => 0, 'per_page' => 50, 'current_page' => 1, 'total_pages' => 1]],]);
-        $response->assertJson(['links' => ['self' => true, 'first' => true, 'last' => true,],]);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
      * Update a category.
      *
      * @covers \FireflyIII\Api\V1\Controllers\CategoryController
-     * @covers \FireflyIII\Api\V1\Requests\CategoryRequest
      */
     public function testUpdate(): void
     {

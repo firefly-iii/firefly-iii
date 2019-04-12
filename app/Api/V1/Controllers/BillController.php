@@ -57,6 +57,8 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -82,6 +84,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function attachments(Request $request, Bill $bill): JsonResponse
     {
@@ -115,9 +118,10 @@ class BillController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Bill $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Bill $bill): JsonResponse
     {
@@ -132,6 +136,7 @@ class BillController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -161,6 +166,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function rules(Request $request, Bill $bill): JsonResponse
     {
@@ -202,6 +208,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Bill $bill): JsonResponse
     {
@@ -254,6 +261,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {

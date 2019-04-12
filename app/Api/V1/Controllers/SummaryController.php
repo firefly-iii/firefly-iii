@@ -58,7 +58,8 @@ class SummaryController extends Controller
     private $currencyRepos;
 
     /**
-     * AccountController constructor.
+     * SummaryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -88,6 +89,7 @@ class SummaryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws Exception
      */
     public function basic(Request $request): JsonResponse
     {

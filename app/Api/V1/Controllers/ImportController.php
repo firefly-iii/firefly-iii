@@ -50,7 +50,8 @@ class ImportController extends Controller
     private $repository;
 
     /**
-     * LinkTypeController constructor.
+     * ImportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -71,6 +72,7 @@ class ImportController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function listAll(Request $request): JsonResponse
     {
@@ -106,6 +108,7 @@ class ImportController extends Controller
      * @param ImportJob $importJob
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, ImportJob $importJob): JsonResponse
     {
@@ -129,6 +132,7 @@ class ImportController extends Controller
      * @param ImportJob $importJob
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function transactions(Request $request, ImportJob $importJob): JsonResponse
     {

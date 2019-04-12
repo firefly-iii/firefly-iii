@@ -54,6 +54,8 @@ class CategoryController extends Controller
 
     /**
      * CategoryController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -78,6 +80,7 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Category $category): JsonResponse
     {
@@ -92,6 +95,7 @@ class CategoryController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -133,6 +137,7 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Category $category): JsonResponse
     {
@@ -184,6 +189,7 @@ class CategoryController extends Controller
      * @param Category $category
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Category $category): JsonResponse
     {

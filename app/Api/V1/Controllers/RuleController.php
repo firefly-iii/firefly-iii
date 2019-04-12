@@ -45,7 +45,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
-
+use Exception;
 /**
  * Class RuleController
  */
@@ -58,6 +58,7 @@ class RuleController extends Controller
 
     /**
      * RuleController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -84,6 +85,7 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function delete(Rule $rule): JsonResponse
     {
@@ -97,7 +99,8 @@ class RuleController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -138,6 +141,7 @@ class RuleController extends Controller
      * @param Rule    $rule
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, Rule $rule): JsonResponse
     {
@@ -252,6 +256,7 @@ class RuleController extends Controller
      * @param Rule    $rule
      *
      * @return JsonResponse
+     * @throws Exception
      */
     public function triggerRule(Request $request, Rule $rule): JsonResponse
     {

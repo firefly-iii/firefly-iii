@@ -54,6 +54,8 @@ class TagController extends Controller
 
     /**
      * RuleController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -126,6 +128,7 @@ class TagController extends Controller
      * @param Tag $tag
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Tag $tag): JsonResponse
     {
@@ -139,7 +142,8 @@ class TagController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -179,6 +183,7 @@ class TagController extends Controller
      * @param Tag     $tag
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Tag $tag): JsonResponse
     {
@@ -226,6 +231,7 @@ class TagController extends Controller
      * @param Tag     $tag
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Tag $tag): JsonResponse
     {

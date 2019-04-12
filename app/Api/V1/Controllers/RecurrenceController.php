@@ -23,7 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\RecurrenceRequest;
+use FireflyIII\Api\V1\Requests\RecurrenceStoreRequest;
+use FireflyIII\Api\V1\Requests\RecurrenceUpdateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Recurrence;
@@ -54,6 +55,8 @@ class RecurrenceController extends Controller
 
     /**
      * RecurrenceController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -78,6 +81,7 @@ class RecurrenceController extends Controller
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Recurrence $recurrence): JsonResponse
     {
@@ -91,7 +95,8 @@ class RecurrenceController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -132,6 +137,7 @@ class RecurrenceController extends Controller
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Recurrence $recurrence): JsonResponse
     {
@@ -153,11 +159,11 @@ class RecurrenceController extends Controller
     /**
      * Store new object.
      *
-     * @param RecurrenceRequest $request
+     * @param RecurrenceStoreRequest $request
      *
      * @return JsonResponse
      */
-    public function store(RecurrenceRequest $request): JsonResponse
+    public function store(RecurrenceStoreRequest $request): JsonResponse
     {
         $recurrence = $this->repository->store($request->getAll());
         $manager    = new Manager();
@@ -180,6 +186,7 @@ class RecurrenceController extends Controller
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Recurrence $recurrence): JsonResponse
     {
@@ -234,6 +241,7 @@ class RecurrenceController extends Controller
     /**
      * @return JsonResponse
      * @throws FireflyException
+     * @codeCoverageIgnore
      */
     public function trigger(): JsonResponse
     {
@@ -258,12 +266,12 @@ class RecurrenceController extends Controller
     /**
      * Update single recurrence.
      *
-     * @param RecurrenceRequest $request
+     * @param RecurrenceUpdateRequest $request
      * @param Recurrence        $recurrence
      *
      * @return JsonResponse
      */
-    public function update(RecurrenceRequest $request, Recurrence $recurrence): JsonResponse
+    public function update(RecurrenceUpdateRequest $request, Recurrence $recurrence): JsonResponse
     {
         $data     = $request->getAll();
         $category = $this->repository->update($recurrence, $data);

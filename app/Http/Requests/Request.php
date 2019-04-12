@@ -215,11 +215,17 @@ class Request extends FormRequest
      * @param string $field
      *
      * @return Carbon|null
-     * @throws Exception
      */
     protected function date(string $field): ?Carbon
     {
-        return $this->get($field) ? new Carbon($this->get($field)) : null;
+        $result = null;
+        try {
+            $result = $this->get($field) ? new Carbon($this->get($field)) : null;
+        } catch (Exception $e) {
+            Log::debug(sprintf('Exception when parsing date. Not interesting: %s', $e->getMessage()));
+        }
+
+        return $result;
     }
 
     /**

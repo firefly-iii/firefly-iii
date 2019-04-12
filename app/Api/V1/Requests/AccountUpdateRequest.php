@@ -29,6 +29,7 @@ use FireflyIII\Rules\IsBoolean;
 
 /**
  * Class AccountUpdateRequest
+ * @codeCoverageIgnore
  */
 class AccountUpdateRequest extends Request
 {
@@ -48,7 +49,6 @@ class AccountUpdateRequest extends Request
      * Get all data from the request.
      *
      * @return array
-     * @throws Exception
      */
     public function getAll(): array
     {

@@ -1,7 +1,7 @@
 <?php
 /**
- * RecurrenceRequest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * RecurrenceStoreRequest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -31,9 +31,9 @@ use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
 
 /**
- * Class RecurrenceRequest
+ * Class RecurrenceStoreRequest
  */
-class RecurrenceRequest extends Request
+class RecurrenceStoreRequest extends Request
 {
     use RecurrenceValidation, TransactionValidation;
 

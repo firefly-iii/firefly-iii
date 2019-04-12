@@ -43,7 +43,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 
-
 /**
  * Class BudgetLimitController.
  *
@@ -56,7 +55,9 @@ class BudgetLimitController extends Controller
     private $repository;
 
     /**
-     * AccountController constructor.
+     * BudgetLimitController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -79,6 +80,7 @@ class BudgetLimitController extends Controller
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(BudgetLimit $budgetLimit): JsonResponse
     {
@@ -93,6 +95,7 @@ class BudgetLimitController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -135,6 +138,7 @@ class BudgetLimitController extends Controller
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {
@@ -158,6 +162,7 @@ class BudgetLimitController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     *
      */
     public function store(BudgetLimitRequest $request): JsonResponse
     {
@@ -188,6 +193,7 @@ class BudgetLimitController extends Controller
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, BudgetLimit $budgetLimit): JsonResponse
     {

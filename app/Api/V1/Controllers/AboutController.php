@@ -34,7 +34,7 @@ use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Returns basic information about this installation.
- *
+ * @codeCoverageIgnore
  * Class AboutController.
  */
 class AboutController extends Controller
@@ -69,7 +69,6 @@ class AboutController extends Controller
      * Returns information about the user.
      *
      * @param Request $request
-     *
      * @return JsonResponse
      */
     public function user(Request $request): JsonResponse

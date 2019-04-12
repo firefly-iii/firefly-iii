@@ -80,6 +80,7 @@ class CurrencyController extends Controller
 
     /**
      * CurrencyRepository constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -106,6 +107,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -164,6 +166,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function availableBudgets(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -218,6 +221,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function bills(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -266,6 +270,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function budgetLimits(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -308,6 +313,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function cer(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -343,6 +349,7 @@ class CurrencyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     *                         @codeCoverageIgnore
      */
     public function delete(TransactionCurrency $currency): JsonResponse
     {
@@ -368,6 +375,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function disable(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -400,6 +408,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function enable(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -427,6 +436,7 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -462,6 +472,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function makeDefault(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -493,7 +504,8 @@ class CurrencyController extends Controller
      *
      * @param TransactionCurrency $currency
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     *                   @codeCoverageIgnore
      */
     public function recurrences(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -551,7 +563,8 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function rules(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -605,6 +618,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -666,6 +680,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {

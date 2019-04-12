@@ -52,6 +52,8 @@ class PiggyBankController extends Controller
 
     /**
      * PiggyBankController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -76,6 +78,7 @@ class PiggyBankController extends Controller
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(PiggyBank $piggyBank): JsonResponse
     {
@@ -89,7 +92,8 @@ class PiggyBankController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -130,6 +134,7 @@ class PiggyBankController extends Controller
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function piggyBankEvents(Request $request, PiggyBank $piggyBank): JsonResponse
     {
@@ -165,6 +170,7 @@ class PiggyBankController extends Controller
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, PiggyBank $piggyBank): JsonResponse
     {

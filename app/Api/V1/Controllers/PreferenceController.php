@@ -45,6 +45,8 @@ class PreferenceController extends Controller
 {
     /**
      * LinkTypeController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -76,7 +78,8 @@ class PreferenceController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -111,7 +114,6 @@ class PreferenceController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
-
     }
 
     /**
@@ -122,6 +124,7 @@ class PreferenceController extends Controller
      *
      * @return JsonResponse
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Preference $preference): JsonResponse
     {

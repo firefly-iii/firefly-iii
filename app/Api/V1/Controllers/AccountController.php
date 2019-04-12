@@ -23,8 +23,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Exception;
-use FireflyIII\Api\V1\Requests\AccountRequest;
 use FireflyIII\Api\V1\Requests\AccountStoreRequest;
 use FireflyIII\Api\V1\Requests\AccountUpdateRequest;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -59,6 +57,8 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -81,6 +81,7 @@ class AccountController extends Controller
      *
      * @param Account $account
      *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function delete(Account $account): JsonResponse
@@ -95,6 +96,7 @@ class AccountController extends Controller
      *
      * @param Request $request
      *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -140,7 +142,9 @@ class AccountController extends Controller
      * @param Request $request
      * @param Account $account
      *
-     * @return JsonResponse]
+     * @codeCoverageIgnore
+     *
+     * @return JsonResponse
      */
     public function piggyBanks(Request $request, Account $account): JsonResponse
     {
@@ -180,6 +184,7 @@ class AccountController extends Controller
      * @param Request $request
      * @param Account $account
      *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse
@@ -202,7 +207,6 @@ class AccountController extends Controller
      * @param AccountStoreRequest $request
      *
      * @return JsonResponse
-     * @throws Exception
      */
     public function store(AccountStoreRequest $request): JsonResponse
     {
@@ -223,6 +227,8 @@ class AccountController extends Controller
 
     /**
      * Show all transaction groups related to the account.
+     *
+     * @codeCoverageIgnore
      *
      * @param Request $request
      * @param Account $account
@@ -293,7 +299,6 @@ class AccountController extends Controller
      * @param Account              $account
      *
      * @return JsonResponse
-     * @throws Exception
      */
     public function update(AccountUpdateRequest $request, Account $account): JsonResponse
     {
