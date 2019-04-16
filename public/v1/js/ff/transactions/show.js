@@ -22,40 +22,5 @@
 
 $(function () {
     "use strict";
-    var transactions = new Bloodhound({
-                                          datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-                                          queryTokenizer: Bloodhound.tokenizers.whitespace,
-                                          identify: function (obj) {
-                                              return obj.id;
-                                          },
-                                          prefetch: {
-                                              url: autoCompleteUri + '?uid=' + uid,
-                                              // filter: function (list) {
-                                              //     return $.map(list, function (name) {
-                                              //         return {name: name.name};
-                                              //     });
-                                              // }
-                                          },
-                                          remote: {
-                                              url: autoCompleteUri + '?search=%QUERY&uid=' + uid,
-                                              wildcard: '%QUERY'
-                                              // filter: function (list) {
-                                              //     return $.map(list, function (name) {
-                                              //         return {name: name.name};
-                                              //     });
-                                              // }
-                                          }
-                                      });
-    transactions.initialize();
-    var input = $("#link_other");
-    input.typeahead({hint: true, highlight: true,}, {source: transactions, displayKey: 'name', autoSelect: false});
-    input.bind('typeahead:select', function (ev, suggestion) {
-        console.log('Selection: ' + suggestion.name);
-        if (suggestion.name.toLowerCase() === input.val().toLowerCase()) {
-            // This means the exact match is found. Use toLowerCase() if you want case insensitive match.
-            $('input[name="link_journal_id"]').val(suggestion.id);
-        } else {
-            $('input[name="link_journal_id"]').val(0);
-        }
-    });
+
 });

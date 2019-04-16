@@ -124,6 +124,8 @@ class TransactionFactory
         $sourceAccount      = $this->getAccount($type, 'source', (int)$data['source_id'], $data['source_name']);
         $destinationAccount = $this->getAccount($type, 'destination', (int)$data['destination_id'], $data['destination_name']);
 
+        // at this point we know the
+
         $amount        = $this->getAmount($data['amount']);
         $foreignAmount = $this->getForeignAmount($data['foreign_amount']);
         $one           = $this->create($sourceAccount, $currency, app('steam')->negative($amount));

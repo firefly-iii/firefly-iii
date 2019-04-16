@@ -98,7 +98,9 @@ class TransactionGroup extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionGroup $group */
-            $group = $user->transactionGroups()->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
+            $group = $user->transactionGroups()
+                ->with(['transactionJournals','transactionJournals.transactions'])
+                          ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
                 return $group;
             }

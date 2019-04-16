@@ -182,7 +182,7 @@ class TransactionStoreRequest extends Request
                 // the group must have a description if > 1 journal.
                 $this->validateGroupDescription($validator);
 
-                // TODO validate that the currency fits the source and/or destination account.
+                // TODO the currency info must match the accounts involved.
 
             }
         );
@@ -217,8 +217,8 @@ class TransactionStoreRequest extends Request
                 'foreign_currency_code' => $this->stringFromValue($object['foreign_currency_code']),
 
                 // amount and foreign amount. Cannot be 0.
-                'amount'                => $this->stringFromValue($object['amount']),
-                'foreign_amount'        => $this->stringFromValue($object['foreign_amount']),
+                'amount'                => $this->stringFromValue((string)$object['amount']),
+                'foreign_amount'        => $this->stringFromValue((string)$object['foreign_amount']),
 
                 // description.
                 'description'           => $this->stringFromValue($object['description']),

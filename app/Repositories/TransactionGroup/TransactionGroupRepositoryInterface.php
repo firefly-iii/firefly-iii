@@ -33,6 +33,25 @@ use FireflyIII\User;
  */
 interface TransactionGroupRepositoryInterface
 {
+
+    /**
+     * Return all attachments for all journals in the group.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function getAttachments(TransactionGroup $group): array;
+
+    /**
+     * Return all journal links for all journals in the group.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function getLinks(TransactionGroup $group): array;
+
     /**
      * Return object with all found meta field things as Carbon objects.
      *
@@ -61,6 +80,15 @@ interface TransactionGroupRepositoryInterface
      * @return string|null
      */
     public function getNoteText(int $journalId): ?string;
+
+    /**
+     * Return all piggy bank events for all journals in the group.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function getPiggyEvents(TransactionGroup $group): array;
 
     /**
      * Get the tags for a journal (by ID).

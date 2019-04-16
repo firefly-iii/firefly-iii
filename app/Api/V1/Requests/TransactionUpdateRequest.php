@@ -237,13 +237,12 @@ class TransactionUpdateRequest extends Request
                 // all transaction types must be equal:
                 $this->validateTransactionTypesForUpdate($validator);
 
-                // if type is set, source + destination info is mandatory.
-                $this->validateAccountPresence($validator);
-
                 // validate source/destination is equal, depending on the transaction journal type.
                 $this->validateEqualAccountsForUpdate($validator, $transactionGroup);
 
+                // TODO if type is set, source + destination info is mandatory.
                 // TODO validate that the currency fits the source and/or destination account.
+                // TODO the currency info must match the accounts involved.
 
                 // all journals must have a description
                 //$this->validateDescriptions($validator);
@@ -308,7 +307,7 @@ class TransactionUpdateRequest extends Request
 
             foreach ($this->arrayFields as $fieldName) {
                 if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->arrayFromValue((string)$transaction[$fieldName]);
+                    $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
                 }
             }
             $return[] = $current;

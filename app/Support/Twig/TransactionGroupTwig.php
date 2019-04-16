@@ -23,6 +23,8 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Twig\Extension;
 
+use Carbon\Carbon;
+use DB;
 use FireflyIII\Models\TransactionType;
 use Twig_Extension;
 use Twig_SimpleFunction;
@@ -40,6 +42,9 @@ class TransactionGroupTwig extends Twig_Extension
         return [
             $this->transactionAmount(),
             $this->groupAmount(),
+            $this->journalHasMeta(),
+            $this->journalGetMetaDate(),
+            $this->journalGetMetaField()
         ];
     }
 
@@ -61,6 +66,71 @@ class TransactionGroupTwig extends Twig_Extension
                 return $result;
             },
             ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalGetMetaDate(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalGetMetaDate',
+            static function (int $journalId, string $metaField) {
+
+                $entry = DB::table('journal_meta')
+                           ->where('name', $metaField)
+                           ->where('transaction_journal_id', $journalId)
+                           ->whereNull('deleted_at')
+                           ->first();
+                if (null === $entry) {
+                    return new Carbon;
+                }
+
+                return new Carbon(json_decode($entry->data, false));
+            }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalGetMetaField(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalGetMetaField',
+            static function (int $journalId, string $metaField) {
+
+                $entry = DB::table('journal_meta')
+                           ->where('name', $metaField)
+                           ->where('transaction_journal_id', $journalId)
+                           ->whereNull('deleted_at')
+                           ->first();
+                if (null === $entry) {
+                    return '';
+                }
+
+                return json_decode($entry->data, true);
+            }
+        );
+    }
+
+    /**
+     * @return Twig_SimpleFunction
+     */
+    public function journalHasMeta(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalHasMeta',
+            static function (int $journalId, string $metaField) {
+                $count = DB::table('journal_meta')
+                           ->where('name', $metaField)
+                           ->where('transaction_journal_id', $journalId)
+                           ->whereNull('deleted_at')
+                           ->count();
+
+                return 1 === $count;
+            }
         );
     }
 

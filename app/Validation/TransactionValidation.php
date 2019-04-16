@@ -110,13 +110,18 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         foreach ($transactions as $index => $transaction) {
-            // must have currency info.
-            if (isset($transaction['foreign_amount'])
-                && !(isset($transaction['foreign_currency_id'])
-                     || isset($transaction['foreign_currency_code']))) {
+            // if foreign amount is present, then the currency must be as well.
+            if (isset($transaction['foreign_amount']) && !(isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code']))) {
                 $validator->errors()->add(
                     'transactions.' . $index . '.foreign_amount',
                     (string)trans('validation.require_currency_info')
+                );
+            }
+            // if the currency is present, then the amount must be present as well.
+            if ((isset($transaction['foreign_currency_id']) || isset($transaction['foreign_currency_code'])) && !isset($transaction['foreign_amount'])) {
+                $validator->errors()->add(
+                    'transactions.' . $index . '.foreign_amount',
+                    (string)trans('validation.require_currency_amount')
                 );
             }
         }
@@ -194,16 +199,6 @@ trait TransactionValidation
 
             return;
         }
-    }
-
-    /**
-     * If type is set, source + destination info is mandatory.
-     *
-     * @param Validator $validator
-     */
-    protected function validateAccountPresence(Validator $validator): void
-    {
-        // TODO
     }
 
     /**
@@ -299,113 +294,12 @@ trait TransactionValidation
             return;
         }
         foreach ($transactions as $index => $transaction) {
-            $journalId = (int)($transaction['transaction_journal_id'] ?? 0);
+            $journalId = $transaction['transaction_journal_id'] ?? null;
+            $journalId = null === $journalId ? null : (int)$journalId;
             $count     = $transactionGroup->transactionJournals()->where('id', $journalId)->count();
-            if (0 === $journalId || 0 === $count) {
+            if (null === $journalId || (null !== $journalId && 0 !== $journalId && 0 === $count)) {
                 $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
             }
         }
     }
-
-    //    /**
-    //     * Throws an error when this asset account is invalid.
-    //     *
-    //     * @noinspection MoreThanThreeArgumentsInspection
-    //     *
-    //     * @param Validator   $validator
-    //     * @param int|null    $accountId
-    //     * @param null|string $accountName
-    //     * @param string      $idField
-    //     * @param string      $nameField
-    //     *
-    //     * @return null|Account
-    //     */
-    //    protected function assetAccountExists(Validator $validator, ?int $accountId, ?string $accountName, string $idField, string $nameField): ?Account
-    //    {
-    //        /** @var User $admin */
-    //        $admin       = auth()->user();
-    //        $accountId   = (int)$accountId;
-    //        $accountName = (string)$accountName;
-    //        // both empty? hard exit.
-    //        if ($accountId < 1 && '' === $accountName) {
-    //            $validator->errors()->add($idField, (string)trans('validation.filled', ['attribute' => $idField]));
-    //
-    //            return null;
-    //        }
-    //        // ID belongs to user and is asset account:
-    //        /** @var AccountRepositoryInterface $repository */
-    //        $repository = app(AccountRepositoryInterface::class);
-    //        $repository->setUser($admin);
-    //        $set = $repository->getAccountsById([$accountId]);
-    //        Log::debug(sprintf('Count of accounts found by ID %d is: %d', $accountId, $set->count()));
-    //        if (1 === $set->count()) {
-    //            /** @var Account $first */
-    //            $first = $set->first();
-    //            if ($first->accountType->type !== AccountType::ASSET) {
-    //                $validator->errors()->add($idField, (string)trans('validation.belongs_user'));
-    //
-    //                return null;
-    //            }
-    //
-    //            // we ignore the account name at this point.
-    //            return $first;
-    //        }
-    //
-    //        $account = $repository->findByName($accountName, [AccountType::ASSET]);
-    //        if (null === $account) {
-    //            $validator->errors()->add($nameField, (string)trans('validation.belongs_user'));
-    //
-    //            return null;
-    //        }
-    //
-    //        return $account;
-    //    }
-    //
-    //    /**
-    //     * Throws an error when the given opposing account (of type $type) is invalid.
-    //     * Empty data is allowed, system will default to cash.
-    //     *
-    //     * @noinspection MoreThanThreeArgumentsInspection
-    //     *
-    //     * @param Validator   $validator
-    //     * @param string      $type
-    //     * @param int|null    $accountId
-    //     * @param null|string $accountName
-    //     * @param string      $idField
-    //     *
-    //     * @return null|Account
-    //     */
-    //    protected function opposingAccountExists(Validator $validator, string $type, ?int $accountId, ?string $accountName, string $idField): ?Account
-    //    {
-    //        /** @var User $admin */
-    //        $admin       = auth()->user();
-    //        $accountId   = (int)$accountId;
-    //        $accountName = (string)$accountName;
-    //        // both empty? done!
-    //        if ($accountId < 1 && '' === $accountName) {
-    //            return null;
-    //        }
-    //        if (0 !== $accountId) {
-    //            // ID belongs to user and is $type account:
-    //            /** @var AccountRepositoryInterface $repository */
-    //            $repository = app(AccountRepositoryInterface::class);
-    //            $repository->setUser($admin);
-    //            $set = $repository->getAccountsById([$accountId]);
-    //            if (1 === $set->count()) {
-    //                /** @var Account $first */
-    //                $first = $set->first();
-    //                if ($first->accountType->type !== $type) {
-    //                    $validator->errors()->add($idField, (string)trans('validation.belongs_user'));
-    //
-    //                    return null;
-    //                }
-    //
-    //                // we ignore the account name at this point.
-    //                return $first;
-    //            }
-    //        }
-    //
-    //        // not having an opposing account by this name is NOT a problem.
-    //        return null;
-    //    }
 }

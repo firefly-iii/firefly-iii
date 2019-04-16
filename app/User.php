@@ -68,11 +68,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property bool       blocked
  * @property \Illuminate\Support\Carbon|null $created_at
  * @property \Illuminate\Support\Carbon|null $updated_at
- * @property string $password
  * @property string|null $remember_token
  * @property string|null $reset
- * @property bool $blocked
- * @property string|null $blocked_code
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\AvailableBudget[] $availableBudgets
@@ -87,7 +84,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Preference[] $preferences
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Recurrence[] $recurrences
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Role[] $roles
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\RuleGroup[] $ruleGroups
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Rule[] $rules
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Tag[] $tags

@@ -25,17 +25,13 @@ namespace Tests\Api\V1\Controllers;
 
 
 use Exception;
-use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Events\UpdatedTransactionJournal;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Transformers\AttachmentTransformer;
-use FireflyIII\Transformers\PiggyBankEventTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
-use Illuminate\Pagination\LengthAwarePaginator;
+use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Transformers\TransactionGroupTransformer;
+use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -57,200 +53,38 @@ class TransactionControllerTest extends TestCase
     }
 
     /**
-     * Submit with bad currency code
+     * Submit empty description.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testFailCurrencyCode(): void
+    public function testStoreFailDescription(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $source = $this->getRandomAsset();
 
-        return;
-        // mock stuff:
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $validator    = $this->mock(AccountValidator::class);
 
-        // mock calls:
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
 
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
             'transactions' => [
                 [
-                    'amount'        => '10',
-                    'currency_code' => 'FU2',
-                    'source_id'     => $account->id,
-                ],
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.currency_code' => [
-                        'The selected transactions.0.currency_code is invalid.',
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Submit with bad currency ID.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailCurrencyId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-
-        // mock calls:
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1991,
-                    'source_id'   => $account->id,
-                ],
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.currency_id' => [
-                        'The selected transactions.0.currency_id is invalid.',
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Empty descriptions
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailEmptyDescriptions(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-
-        // mock calls:
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $data = [
-            'description'  => '',
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
                     'description' => '',
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'description'                => [
-                        'The description field is required.',
-                        'The description must be between 1 and 255 characters.',
-                    ],
-                    'transactions.0.description' => [
-                        'Transaction description should not equal global description.',
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Submit all empty descriptions for transactions.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailEmptySplitDescriptions(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-
-        // mock calls:
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        $data = [
-            'description'  => 'Split journal #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
                     'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'description' => '',
-                ],
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'description' => '',
+                    'source_id'   => $source->id,
                 ],
             ],
         ];
@@ -260,55 +94,50 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertExactJson(
             [
-                'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.description' => [
-                        'The transaction description field is required.',
-                    ],
-                    'transactions.1.description' => [
-                        'The transaction description field is required.',
-                    ],
-
+                    'transactions.0.description' => ['The description field is required.'],
                 ],
+                'message' => 'The given data was invalid.',
             ]
         );
     }
 
     /**
-     * Submitted expense account instead of asset account.
+     * Fail the valid destination information test.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
      */
-    public function testFailExpenseID(): void
+    public function testStoreFailDestination(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $source = $this->getRandomAsset();
 
-        return;
-        // mock stuff:
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $account      = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $validator    = $this->mock(AccountValidator::class);
 
-        // mock calls:
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        /** fail destination */
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(false)
+                  ->andSet('destError', 'Some error');
 
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
             'transactions' => [
                 [
+                    'description' => 'Fails anyway',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
                     'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
+                    'source_id'   => $source->id,
                 ],
-
-
             ],
         ];
 
@@ -317,49 +146,50 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertExactJson(
             [
-                'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.source_id' => [
-                        'This value is invalid for this field.',
-                    ],
+                    'transactions.0.destination_id'   => ['Some error'],
+                    'transactions.0.destination_name' => ['Some error'],
                 ],
+                'message' => 'The given data was invalid.',
             ]
         );
     }
 
     /**
-     * Submitted expense account name instead of asset account name.
+     * Submit foreign currency info, but no foreign currency amount.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testFailExpenseName(): void
+    public function testStoreFailForeignCurrencyAmount(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $source = $this->getRandomAsset();
 
-        return;
-        // mock stuff:
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
 
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
-        $accountRepos->shouldReceive('findByName')->andReturn(null);
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
 
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
             'transactions' => [
                 [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_name' => 'Expense name',
+                    'description'           => 'Test',
+                    'date'                  => '2018-01-01',
+                    'type'                  => 'withdrawal',
+                    'amount'                => '10',
+                    'foreign_currency_code' => 'USD',
+                    'source_id'             => $source->id,
                 ],
-
-
             ],
         ];
 
@@ -368,2561 +198,848 @@ class TransactionControllerTest extends TestCase
         $response->assertStatus(422);
         $response->assertExactJson(
             [
-                'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.source_name' => [
-                        'This value is invalid for this field.',
-                    ],
+                    'transactions.0.foreign_amount' => ['The content of this field is invalid without foreign amount information.'],
                 ],
+                'message' => 'The given data was invalid.',
             ]
         );
     }
 
     /**
-     * Submit no asset account info at all.
+     * Submit foreign currency, but no foreign currency info.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testFailNoAsset(): void
+    public function testStoreFailForeignCurrencyInfo(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $source = $this->getRandomAsset();
 
-        return;
-        // mock stuff:
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
 
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
 
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
             'transactions' => [
                 [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.source_id' => [
-                        'The transactions.0.source_id field is required.',
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Submit no transactions.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailNoData(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'description' => [
-                        'Need at least one transaction.',
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Submit foreign currency without foreign currency info.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailNoForeignCurrencyInfo(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // mock stuff:
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-
-        $data = [
-            'description'  => 'Split journal #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
+                    'description'    => 'Test',
+                    'date'           => '2018-01-01',
+                    'type'           => 'withdrawal',
                     'amount'         => '10',
-                    'currency_id'    => 1,
-                    'foreign_amount' => 10,
-                    'source_id'      => $account->id,
-                ],
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.foreign_amount' => [
-                        'The content of this field is invalid without currency information.',
-                    ],
-
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Submit revenue ID instead of expense ID.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailOpposingRevenueID(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account  = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $opposing = $this->user()->accounts()->where('account_type_id', 5)->first();
-
-        // mock stuff:
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
-
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'source_id'      => $account->id,
-                    'destination_id' => $opposing->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.destination_id' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Submit journal with a bill ID that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipBillId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        // move account to other user
-        $bill          = $this->user()->bills()->first();
-        $bill->user_id = $this->emptyUser()->id;
-        $bill->save();
-
-        // submit with another account.
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'bill_id'      => $bill->id,
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'bill_id' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put bill back:
-        $bill->user_id = $this->user()->id;
-        $bill->save();
-    }
-
-    /**
-     * Submit journal with a bill name that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipBillName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        // move account to other user
-        $bill          = $this->user()->bills()->first();
-        $bill->user_id = $this->emptyUser()->id;
-        $bill->save();
-
-        // submit with another account.
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'bill_name'    => $bill->name,
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'bill_name' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put bill back:
-        $bill->user_id = $this->user()->id;
-        $bill->save();
-    }
-
-    /**
-     * Submit journal with a budget ID that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipBudgetId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        // move account to other user
-        $budget          = $this->user()->budgets()->first();
-        $budget->user_id = $this->emptyUser()->id;
-        $budget->save();
-
-        // submit with another account.
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'budget_id'   => $budget->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.budget_id' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put budget back:
-        $budget->user_id = $this->user()->id;
-        $budget->save();
-    }
-
-    /**
-     * Submit journal with a budget name that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipBudgetName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        // move account to other user
-        $budget          = $this->user()->budgets()->first();
-        $budget->user_id = $this->emptyUser()->id;
-        $budget->save();
-
-        // submit with another account.
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'budget_name' => $budget->name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.budget_name' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put bill back:
-        $budget->user_id = $this->user()->id;
-        $budget->save();
-    }
-
-    /**
-     * Submit journal with a category ID that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipCategoryId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        // move account to other user
-        $category          = $this->user()->categories()->first();
-        $category->user_id = $this->emptyUser()->id;
-        $category->save();
-
-        // submit with another account.
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'category_id' => $category->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.category_id' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put category back:
-        $category->user_id = $this->user()->id;
-        $category->save();
-    }
-
-    /**
-     * Submit journal with a piggy bank that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipPiggyBankID(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // move account to other user
-        $move                  = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $move->user_id         = $this->emptyUser()->id;
-        $piggyBank             = $this->user()->piggyBanks()->first();
-        $oldId                 = $piggyBank->account_id;
-        $piggyBank->account_id = $move->id;
-        $move->save();
-        $piggyBank->save();
-
-
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-
-        // submit with another account.
-        $data = [
-            'description'   => 'Some transaction #' . random_int(1, 10000),
-            'date'          => '2018-01-01',
-            'type'          => 'withdrawal',
-            'piggy_bank_id' => $piggyBank->id,
-            'transactions'  => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'piggy_bank_id' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put account back:
-        $move->user_id = $this->user()->id;
-        $move->save();
-        $piggyBank->account_id = $oldId;
-        $piggyBank->save();
-    }
-
-    /**
-     * Submit journal with a piggy bank that is not yours.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailOwnershipPiggyBankName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // move account to other user
-        $move                  = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $move->user_id         = $this->emptyUser()->id;
-        $piggyBank             = $this->user()->piggyBanks()->first();
-        $oldId                 = $piggyBank->account_id;
-        $piggyBank->account_id = $move->id;
-        $move->save();
-        $piggyBank->save();
-
-
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-
-        // submit with another account.
-        $data = [
-            'description'     => 'Some transaction #' . random_int(1, 10000),
-            'date'            => '2018-01-01',
-            'type'            => 'withdrawal',
-            'piggy_bank_name' => $piggyBank->name,
-            'transactions'    => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'piggy_bank_name' => [
-                        'This value is invalid for this field.',
-                    ],
-
-                ],
-            ]
-        );
-        // put account back:
-        $move->user_id = $this->user()->id;
-        $move->save();
-        $piggyBank->account_id = $oldId;
-        $piggyBank->save();
-    }
-
-    /**
-     * Submitted revenue account instead of asset account in deposit.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     * @covers \FireflyIII\Rules\BelongsUser
-     */
-    public function testFailRevenueID(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'deposit',
-            'transactions' => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'destination_id' => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.destination_id' => [
-                        'This value is invalid for this field.',
-                    ],
-                ],
-            ]
-        );
-    }
-
-    /**
-     * Try to store a withdrawal with different source accounts.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailSplitDeposit(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $second  = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $account->id)->first();
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$second]));
-
-
-        $data = [
-            'description'  => 'Some deposit #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'deposit',
-            'transactions' => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'destination_id' => $account->id,
-                    'description'    => 'Part 1',
-                ],
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'destination_id' => $second->id,
-                    'description'    => 'Part 2',
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.destination_id' => [
-                        'All accounts in this field must be equal.',
-                    ],
-                ],
-            ]
-        );
-
-    }
-
-    /**
-     * Try to store a withdrawal with different source accounts.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailSplitTransfer(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $second  = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $account->id)->first();
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$second]));
-
-        $data = [
-            'description'  => 'Some transfer #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'transfer',
-            'transactions' => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'source_id'      => $account->id,
-                    'destination_id' => $second->id,
-                    'description'    => 'Part 1',
-                ],
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'source_id'      => $second->id,
-                    'destination_id' => $account->id,
-                    'description'    => 'Part 2',
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.source_id'      => [
-                        'All accounts in this field must be equal.',
-                    ],
-                    'transactions.0.destination_id' => [
-                        'All accounts in this field must be equal.',
-                    ],
-                    'transactions.1.destination_id' => [
-                        'The source account equals the destination account.',
-                    ],
-                ],
-            ]
-        );
-
-    }
-
-    /**
-     * Try to store a withdrawal with different source accounts.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testFailSplitWithdrawal(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $account = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $second  = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $account->id)->first();
-
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$second]));
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'description' => 'Part 1',
-                ],
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $second->id,
-                    'description' => 'Part 2',
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(422);
-        $response->assertExactJson(
-            [
-                'message' => 'The given data was invalid.',
-                'errors'  => [
-                    'transactions.0.source_id' => [
-                        'All accounts in this field must be equal.',
-                    ],
-                ],
-            ]
-        );
-
-    }
-
-
-    /**
-     * Submit a transaction (withdrawal) with attached bill ID
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessBillId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // default journal:
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]))->once();
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $bill = $this->user()->bills()->first();
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'bill_id'      => $bill->id,
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit a transaction (withdrawal) with attached bill ID
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessBillName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // default journal:
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $bill = $this->user()->bills()->first();
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'bill_name'    => $bill->name,
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Add opposing account by a new name.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessNewStoreOpposingName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'           => '10',
-                    'currency_id'      => 1,
-                    'source_id'        => $account->id,
-                    'destination_name' => 'New expense account #' . random_int(1, 10000),
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreAccountName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // default journal:
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_name' => $account->name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreBasic(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // default journal:
-        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreBasicByName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // default journal:
-        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 1)->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
-        $accountRepos->shouldReceive('findByName')->andReturn($account);
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_name' => $account->name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a deposit.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreBasicDeposit(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        // default journal:
-        $journal      = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'deposit',
-            'transactions' => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'destination_id' => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit with existing budget ID, see it reflected in output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreBudgetId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $budget       = $this->user()->budgets()->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'budget_id'   => $budget->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit with existing budget name, see it reflected in output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreBudgetName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $budget       = $this->user()->budgets()->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'budget_name' => $budget->name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit with existing category ID, see it reflected in output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreCategoryID(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $category     = $this->user()->categories()->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'category_id' => $category->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit with existing category name, see it reflected in output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreCategoryName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $category     = $this->user()->categories()->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'        => '10',
-                    'currency_id'   => 1,
-                    'source_id'     => $account->id,
-                    'category_name' => $category->name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Add foreign amount information.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreForeignAmount(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $currency     = TransactionCurrency::first();
-        $foreign      = TransactionCurrency::where('id', '!=', $currency->id)->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'              => '10',
-                    'currency_id'         => $currency->id,
-                    'foreign_currency_id' => $foreign->id,
-                    'foreign_amount'      => 23,
-                    'source_id'           => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Add all available meta data fields.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreMetaData(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'        => 'Some transaction #' . random_int(1, 10000),
-            'date'               => '2018-01-01',
-            'type'               => 'withdrawal',
-            // store date meta fields (if present):
-            'interest_date'      => '2017-08-02',
-            'book_date'          => '2017-08-03',
-            'process_date'       => '2017-08-04',
-            'due_date'           => '2017-08-05',
-            'payment_date'       => '2017-08-06',
-            'invoice_date'       => '2017-08-07',
-            'internal_reference' => 'I are internal ref!',
-            'transactions'       => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions?include=journal_meta', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit with NEW category name, see it reflected in output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreNewCategoryName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $name = 'Some new category #' . random_int(1, 10000);
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'        => '10',
-                    'currency_id'   => 1,
-                    'source_id'     => $account->id,
-                    'category_name' => $name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Add opposing account by name.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreNewOpposingName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $opposing     = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-
-        $name = 'New opposing account #' . random_int(1, 10000);
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'           => '10',
-                    'currency_id'      => 1,
-                    'source_id'        => $account->id,
-                    'destination_name' => $name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreNotes(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'notes'        => 'I am a note',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Add opposing account by ID.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreOpposingID(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $opposing     = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'source_id'      => $account->id,
-                    'destination_id' => $opposing->id,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Add opposing account by name.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreOpposingName(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $opposing     = $this->user()->accounts()->where('account_type_id', 4)->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]), new Collection([$opposing]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'           => '10',
-                    'currency_id'      => 1,
-                    'source_id'        => $account->id,
-                    'destination_name' => $opposing->name,
-                ],
-
-
-            ],
-        ];
-
-        // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     * When sending a piggy bank by name, this must be reflected in the output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStorePiggyDeposit(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $piggy = $this->user()->piggyBanks()->first();
-        $data  = [
-            'description'     => 'Some deposit #' . random_int(1, 10000),
-            'date'            => '2018-01-01',
-            'type'            => 'deposit',
-            'piggy_bank_name' => $piggy->name,
-            'transactions'    => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'destination_id' => $account->id,
-                ],
-            ],
-        ];
-        // test API
-        $response = $this->post('/api/v1/transactions?include=piggy_bank_events', $data, ['Accept' => 'application/json']);
-        $this->assertFalse(isset($response->json()['included']));
-        $response->assertStatus(200);
-
-    }
-
-    /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     * When sending a piggy bank by name, this must be reflected in the output.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStorePiggyId(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-
-        $source       = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $dest         = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $source->id)->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $piggy = $this->user()->piggyBanks()->first();
-        $data  = [
-            'description'   => 'Some transfer #' . random_int(1, 10000),
-            'date'          => '2018-01-01',
-            'type'          => 'transfer',
-            'piggy_bank_id' => $piggy->id,
-            'transactions'  => [
-                [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
+                    'foreign_amount' => '11',
                     'source_id'      => $source->id,
-                    'destination_id' => $dest->id,
                 ],
             ],
         ];
+
         // test API
-        $response = $this->post('/api/v1/transactions?include=piggy_bank_events', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.foreign_amount' => ['The content of this field is invalid without currency information.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
     }
 
     /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     * When sending a piggy bank by name, this must be reflected in the output.
+     * Fail the valid source information test.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testSuccessStorePiggyName(): void
+    public function testStoreFailSource(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $source = $this->getRandomAsset();
 
-        return;
-        $source       = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $dest         = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $source->id)->first();
-        $journal      = $this->user()->transactionJournals()->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$source]), new Collection([$dest]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        /** source info returns FALSE **/
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(false)
+                  ->andSet('sourceError', 'Some error');
 
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $piggy = $this->user()->piggyBanks()->first();
-        $data  = [
-            'description'     => 'Some transfer #' . random_int(1, 10000),
-            'date'            => '2018-01-01',
-            'type'            => 'transfer',
-            'piggy_bank_name' => $piggy->name,
-            'transactions'    => [
+        $data = [
+            'transactions' => [
                 [
+                    'description' => 'Some withdrawal ',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
+                    'amount'      => '10',
+                    'source_id'   => $source->id,
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.source_id'   => ['Some error'],
+                    'transactions.0.source_name' => ['Some error'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+    }
+
+    /**
+     * Submit multiple transactions but no group title.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testStoreFailStoreGroupTitle(): void
+    {
+        // mock data:
+        $source = $this->getRandomAsset();
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+
+        $data = [
+            'transactions' => [
+                [
+                    'description' => 'Some description',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
+                    'amount'      => '10',
+                    'source_id'   => $source->id,
+                ],
+                [
+                    'description' => 'Some description',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
+                    'amount'      => '10',
+                    'source_id'   => $source->id,
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'group_title' => ['A group title is mandatory when there is more than one transaction.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+    }
+
+    /**
+     * Submit multiple transactions but no group title.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testStoreFailStoreNoTransactions(): void
+    {
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $data = [
+            'transactions' => [
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.description' => ['Need at least one transaction.', 'The description field is required.'],
+                    'transactions.0.type'        => ['Invalid transaction type.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+    }
+
+    /**
+     * Try to submit different transaction types for a withdrawal.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testStoreFailTypes(): void
+    {
+        // mock data:
+        $source = $this->getRandomAsset();
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('setTransactionType')->withArgs(['deposit'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+
+        $data = [
+            'group_title'  => 'Hi there',
+            'transactions' => [
+                [
+                    'description' => 'Some description',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
+                    'amount'      => '10',
+                    'source_id'   => $source->id,
+                ],
+                [
+                    'description'    => 'Some description',
+                    'date'           => '2018-01-01',
+                    'type'           => 'deposit',
                     'amount'         => '10',
-                    'currency_id'    => 1,
+                    'destination_id' => $source->id,
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.source_id' => ['All accounts in this field must be equal.'],
+                    'transactions.0.type'      => ['All splits must be of the same type.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+    }
+
+    /**
+     * Try to submit different transaction types for a deposit.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testStoreFailTypesDeposit(): void
+    {
+        // mock data:
+        $source = $this->getRandomAsset();
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('setTransactionType')->withArgs(['deposit'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+
+        $data = [
+            'group_title'  => 'Hi there',
+            'transactions' => [
+                [
+                    'description'    => 'Some description',
+                    'date'           => '2018-01-01',
+                    'type'           => 'deposit',
+                    'amount'         => '10',
+                    'destination_id' => $source->id,
+                ],
+                [
+                    'description' => 'Some description',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
+                    'amount'      => '10',
+                    'source_id'   => $source->id,
+                ],
+
+            ],
+        ];
+
+        // test API
+        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.destination_id' => ['All accounts in this field must be equal.'],
+                    'transactions.0.type'           => ['All splits must be of the same type.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+    }
+
+    /**
+     * Try to submit different transaction types for a transfer.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testStoreFailTypesTransfer(): void
+    {
+        // mock data:
+        $source = $this->getRandomAsset();
+        $dest   = $this->getRandomAsset($source->id);
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['transfer'])->atLeast()->once();
+        $validator->shouldReceive('setTransactionType')->withArgs(['deposit'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+
+        $data = [
+            'group_title'  => 'Hi there',
+            'transactions' => [
+                [
+                    'description'    => 'Some description',
+                    'date'           => '2018-01-01',
+                    'type'           => 'transfer',
+                    'amount'         => '10',
+                    'destination_id' => $source->id,
+                    'source_id'      => $dest->id,
+                ],
+                [
+                    'description'    => 'Some description',
+                    'date'           => '2018-01-01',
+                    'type'           => 'deposit',
+                    'amount'         => '10',
+                    'destination_id' => $dest->id,
                     'source_id'      => $source->id,
-                    'destination_id' => $dest->id,
                 ],
-            ],
-        ];
-        // test API
-        $response = $this->post('/api/v1/transactions?include=piggy_bank_events', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
-    }
-
-    /**
-     * Set a different reconciled var
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
-     */
-    public function testSuccessStoreReconciled(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
-
-        $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'transactions' => [
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'reconciled'  => true,
-                ],
-
 
             ],
         ];
 
         // test API
         $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.destination_id' => ['All accounts in this field must be equal.'],
+                    'transactions.0.source_id'      => ['All accounts in this field must be equal.'],
+                    'transactions.0.type'           => ['All splits must be of the same type.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
     }
 
     /**
-     * Submit the data required for a split withdrawal.
+     * Submit the minimum amount of data required to create a single, unsplit withdrawal.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionStoreRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testSuccessStoreSplit(): void
+    public function testStoreOK(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $source = $this->getRandomAsset();
+        $group  = $this->getRandomWithdrawalGroup();
 
-        return;
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionGroupTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
+        // validator:
+        $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
+        $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
+
+        // transformer is called:
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 1]);
+        $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->atLeast()->once()->andReturn([]);
+
+        // collector is called:
+        $collector->shouldReceive('setTransactionGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAPIInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getGroups')->atLeast()->once()->andReturn(new Collection([[]]));
+
+        // expect to store the group:
+        $repository->shouldReceive('store')->atLeast()->once()->andReturn($group);
+
+        // expect the event:
         try {
-            $this->expectsEvents(StoredTransactionJournal::class);
+            $this->expectsEvents(StoredTransactionGroup::class);
         } catch (Exception $e) {
             $this->assertTrue(false, $e->getMessage());
         }
 
+
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
             'transactions' => [
                 [
+                    'description' => 'Some description',
+                    'date'        => '2018-01-01',
+                    'type'        => 'withdrawal',
                     'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'description' => 'Part 1',
+                    'source_id'   => $source->id,
                 ],
-                [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
-                    'description' => 'Part 2',
-                ],
-
-
             ],
         ];
 
         // test API
         $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
-        $json     = $response->json();
         $response->assertStatus(200);
-
+        $response->assertExactJson(
+            [
+                'data' => [
+                    'attributes' => [],
+                    'id'         => '1',
+                    'links'      => [
+                        'self' => 'http://localhost/api/v1/transactions/1',
+                    ],
+                    'type'       => 'transactions',
+                ],
+            ]
+        );
     }
 
     /**
-     * Submit the minimum amount of data required to create a withdrawal.
-     * Add some tags as well. Expect to see them in the result.
+     * Submit a bad journal ID during update.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionUpdateRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testSuccessStoreTags(): void
+    public function testUpdateFailBadJournal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $group = $this->getRandomWithdrawalGroup();
 
-        return;
-        $tags         = [
-            'TagOne' . random_int(1, 10000),
-            'TagTwoBlarg' . random_int(1, 10000),
-            'SomeThreeTag' . random_int(1, 10000),
-        ];
-        $journal      = $this->user()->transactionJournals()->first();
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class)->makePartial();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(AccountValidator::class);
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $journalRepos->shouldReceive('setUser')->once();
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
-        $journalRepos->shouldReceive('store')->andReturn($journal)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        try {
-            $this->expectsEvents(StoredTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
-            'type'         => 'withdrawal',
-            'tags'         => implode(',', $tags),
+            'group_title'  => 'Empty',
             'transactions' => [
                 [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
+                    'order'                  => 0,
+                    'transaction_journal_id' => -1,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'description'            => 'Some new description',
                 ],
-
-
+                [
+                    'order'                  => 0,
+                    'transaction_journal_id' => -1,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'description'            => 'Some new description',
+                ],
             ],
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions?include=tags', $data, ['Accept' => 'application/json']);
-        $response->assertStatus(200);
+        $response = $this->put(sprintf('/api/v1/transactions/%d', $group->id), $data, ['Accept' => 'application/json']);
+        $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.source_name' => ['When updating a transaction with splits, each split must have a valid transaction journal id (field "transaction_journal_id").'],
+                    'transactions.1.source_name' => ['When updating a transaction with splits, each split must have a valid transaction journal id (field "transaction_journal_id").'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+
     }
 
     /**
-     * Fire enough to trigger an update. Since the create code already fires on the Request, no
-     * need to verify all of that.
+     * Update transaction but fail to submit equal destination accounts for a deposit.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionUpdateRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testUpdateBasicDeposit(): void
+    public function testUpdateFailDepositDestination(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $group = $this->getRandomWithdrawalGroup();
 
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(AccountValidator::class);
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         $data = [
-            'description'  => 'Some deposit #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
+            'group_title'  => 'Empty',
             'transactions' => [
                 [
-                    'amount'         => '10',
-                    'currency_id'    => 1,
-                    'destination_id' => $account->id,
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'deposit',
+                    'destination_name'       => 'A',
+                    'description'            => 'Some new description',
+                ],
+                [
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'deposit',
+                    'destination_name'       => 'B',
+                    'description'            => 'Some new description',
                 ],
             ],
         ];
 
-        try {
-            $this->expectsEvents(UpdatedTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
+        // test API
+        $response = $this->put(sprintf('/api/v1/transactions/%d', $group->id), $data, ['Accept' => 'application/json']);
 
-        $deposit     = $this->getRandomDeposit();
-        $transaction = $deposit->transactions()->first();
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('update')->andReturn($deposit)->once();
-
-        // collector stuff:
-        $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
-
-        // call API
-        $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);
-        $response->assertStatus(200);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.destination_id' => ['All accounts in this field must be equal.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+        $response->assertStatus(422);
     }
 
     /**
-     * Fire enough to trigger an update. Since the create code already fires on the Request, no
-     * need to verify all of that.
+     * Update transaction but fail to submit equal destination accounts for a deposit.
      *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionUpdateRequest
      * @covers \FireflyIII\Api\V1\Controllers\TransactionController
-     *
      */
-    public function testUpdateBasicWithdrawal(): void
+    public function testUpdateFailTransferDestination(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        // mock data:
+        $group = $this->getRandomWithdrawalGroup();
 
-        return;
-        $account      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $repository   = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(AccountValidator::class);
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$account->id]])->andReturn(new Collection([$account]));
-
-        try {
-            $this->expectsEvents(UpdatedTransactionJournal::class);
-        } catch (Exception $e) {
-            $this->assertTrue(false, $e->getMessage());
-        }
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         $data = [
-            'description'  => 'Some transaction #' . random_int(1, 10000),
-            'date'         => '2018-01-01',
+            'group_title'  => 'Empty',
             'transactions' => [
                 [
-                    'amount'      => '10',
-                    'currency_id' => 1,
-                    'source_id'   => $account->id,
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'transfer',
+                    'destination_name'       => 'A',
+                    'description'            => 'Some new description',
+                ],
+                [
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'transfer',
+                    'destination_name'       => 'B',
+                    'description'            => 'Some new description',
                 ],
             ],
         ];
 
-        $withdrawal  = $this->getRandomWithdrawal();
-        $transaction = $withdrawal->transactions()->first();
-        $repository->shouldReceive('setUser');
-        $repository->shouldReceive('update')->andReturn($withdrawal)->once();
+        // test API
+        $response = $this->put(sprintf('/api/v1/transactions/%d', $group->id), $data, ['Accept' => 'application/json']);
 
-        // collector stuff:
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.destination_id' => ['All accounts in this field must be equal.'],
+                    'transactions.0.source_id'      => ['All accounts in this field must be equal.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Update transaction but fail to submit equal transaction types.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionUpdateRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testUpdateFailTypes(): void
+    {
+        // mock data:
+        $group = $this->getRandomWithdrawalGroup();
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $data = [
+            'group_title'  => 'Empty',
+            'transactions' => [
+                [
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'withdrawal',
+                    'description'            => 'Some new description',
+                ],
+                [
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'deposit',
+                    'description'            => 'Some new description',
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->put(sprintf('/api/v1/transactions/%d', $group->id), $data, ['Accept' => 'application/json']);
+
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.type' => ['All splits must be of the same type.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Update transaction but fail to submit equal source accounts for a withdrawal.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionUpdateRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testUpdateFailWithdrawalSource(): void
+    {
+        // mock data:
+        $group = $this->getRandomWithdrawalGroup();
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $this->mock(AccountValidator::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+
+        $data = [
+            'group_title'  => 'Empty',
+            'transactions' => [
+                [
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'withdrawal',
+                    'source_name'            => 'A',
+                    'description'            => 'Some new description',
+                ],
+                [
+                    'transaction_journal_id' => 0,
+                    'order'                  => 0,
+                    'reconciled'             => 'false',
+                    'tags'                   => [],
+                    'interest_date'          => '2019-01-01',
+                    'type'                   => 'withdrawal',
+                    'source_name'            => 'B',
+                    'description'            => 'Some new description',
+                ],
+            ],
+        ];
+
+        // test API
+        $response = $this->put(sprintf('/api/v1/transactions/%d', $group->id), $data, ['Accept' => 'application/json']);
+
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'transactions.0.source_id' => ['All accounts in this field must be equal.'],
+                ],
+                'message' => 'The given data was invalid.',
+            ]
+        );
+        $response->assertStatus(422);
+    }
+
+    /**
+     * Submit the minimum amount of data to update a single withdrawal.
+     *
+     * @covers \FireflyIII\Api\V1\Requests\TransactionUpdateRequest
+     * @covers \FireflyIII\Api\V1\Controllers\TransactionController
+     */
+    public function testUpdateOK(): void
+    {
+        // mock data:
+        $group = $this->getRandomWithdrawalGroup();
+
+        // mock repository
+        $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $transformer  = $this->mock(TransactionGroupTransformer::class);
+        $this->mock(AccountValidator::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
+
+        // some mock calls:
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
         $collector->shouldReceive('setUser')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('setJournals')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('addFilter')->atLeast()->once()->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->atLeast()->once()->andReturn(new Collection);
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
-        // call API
-        $response = $this->put('/api/v1/transactions/' . $transaction->id, $data);
+        // call stuff:
+        $repository->shouldReceive('update')->atLeast()->once()->andReturn($group);
+
+
+        // transformer is called:
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 1]);
+        $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->atLeast()->once()->andReturn([]);
+
+        // collector is called:
+        $collector->shouldReceive('setTransactionGroup')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAPIInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('getGroups')->atLeast()->once()->andReturn(new Collection([[]]));
+
+        $data = [
+            'group_title'  => 'Empty',
+            'transactions' => [
+                [
+                    'order'         => 0,
+                    'reconciled'    => 'false',
+                    'tags'          => [],
+                    'interest_date' => '2019-01-01',
+                    'description'   => 'Some new description',
+                ],
+            ],
+        ];
+
+        // expect the event:
+        try {
+            $this->expectsEvents(UpdatedTransactionGroup::class);
+        } catch (Exception $e) {
+            $this->assertTrue(false, $e->getMessage());
+        }
+
+        // test API
+        $response = $this->put(sprintf('/api/v1/transactions/%d', $group->id), $data, ['Accept' => 'application/json']);
+
+        $response->assertExactJson(
+            [
+                'data' => [
+                    'attributes' => [],
+                    'id'         => '1',
+                    'links'      => [
+                        'self' => 'http://localhost/api/v1/transactions/1',
+                    ],
+                    'type'       => 'transactions',
+                ],
+            ]
+        );
         $response->assertStatus(200);
     }
+
 }

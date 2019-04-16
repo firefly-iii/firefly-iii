@@ -634,6 +634,9 @@ return [
     'converted_to_Transfer'                   => 'The transaction has been converted to a transfer',
     'invalid_convert_selection'               => 'The account you have selected is already used in this transaction or does not exist.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
+    'convert_to_withdrawal'                 => 'Convert to a withdrawal',
+    'convert_to_deposit'                    => 'Convert to a deposit',
+    'convert_to_transfer'                   => 'Convert to a transfer',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Create new withdrawal',
@@ -1156,6 +1159,8 @@ return [
 
     'transaction_journal_information'       => 'Transaction information',
     'transaction_journal_meta'              => 'Meta information',
+    'transaction_journal_more'              => 'More information',
+    'att_part_of_journal' => 'Stored under ":journal"',
     'total_amount'                          => 'Total amount',
     'number_of_decimals'                    => 'Number of decimals',
 

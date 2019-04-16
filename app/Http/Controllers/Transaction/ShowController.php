@@ -1,6 +1,6 @@
 <?php
 /**
- * ShowController.php
+ * ViewController.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -28,6 +28,8 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
+use FireflyIII\Transformers\TransactionGroupTransformer;
+use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Class ShowController
@@ -35,21 +37,22 @@ use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface
 class ShowController extends Controller
 {
     /** @var TransactionGroupRepositoryInterface */
-    private $groupRepository;
+    private $repository;
 
     /**
-     * SingleController constructor.
+     * ConvertController constructor.
      */
     public function __construct()
     {
         parent::__construct();
+
         // some useful repositories:
         $this->middleware(
             function ($request, $next) {
-                $this->groupRepository = app(TransactionGroupRepositoryInterface::class);
+                $this->repository = app(TransactionGroupRepositoryInterface::class);
 
                 app('view')->share('title', (string)trans('firefly.transactions'));
-                app('view')->share('mainTitleIcon', 'fa-repeat');
+                app('view')->share('mainTitleIcon', 'fa-exchange');
 
                 return $next($request);
             }
@@ -64,16 +67,58 @@ class ShowController extends Controller
     public function show(TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
-        $first       = $transactionGroup->transactionJournals->first();
-        $groupType   = $first->transactionType->type;
-        $description = $transactionGroup->title;
-        if ($transactionGroup->transactionJournals()->count() > 1) {
-            $description = $first->description;
+        $first    = $transactionGroup->transactionJournals->first();
+        $splits   = $transactionGroup->transactionJournals->count();
+        $type     = (string)trans(sprintf('firefly.%s', strtolower($first->transactionType->type)));
+        $title    = 1 === $splits ? $first->description : $transactionGroup->title;
+        $subTitle = sprintf('%s: "%s"', $type, $title);
+
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
+        $transformer->setParameters(new ParameterBag);
+        $groupArray = $transformer->transformObject($transactionGroup);
+
+        // do some amount calculations:
+        $amounts = [];
+        foreach ($groupArray['transactions'] as $transaction) {
+            $symbol = $transaction['currency_symbol'];
+            if (!isset($amounts[$symbol])) {
+                $amounts[$symbol] = [
+                    'amount'         => '0',
+                    'symbol'         => $symbol,
+                    'decimal_places' => $transaction['currency_decimal_places'],
+                ];
+            }
+
+            $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
+            if (null !== $transaction['foreign_amount']) {
+                // same for foreign currency:
+                $foreignSymbol = $transaction['foreign_currency_symbol'];
+                if (!isset($amounts[$foreignSymbol])) {
+                    $amounts[$foreignSymbol] = [
+                        'amount'         => '0',
+                        'symbol'         => $foreignSymbol,
+                        'decimal_places' => $transaction['foreign_currency_decimal_places'],
+                    ];
+                }
+
+                $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['foreign_amount']);
+            }
         }
 
-        $subTitle = sprintf('%s: "%s"', $groupType, $description);
+        $events      = $this->repository->getPiggyEvents($transactionGroup);
+        $attachments = $this->repository->getAttachments($transactionGroup);
+        $links       = $this->repository->getLinks($transactionGroup);
 
-        return view('transactions.show', compact('transactionGroup', 'subTitle'));
+        // TODO links to other journals, use the API
+        // TODO links to attachments, use the API.
+        // TODO links to piggy bank events.
+
+        return view(
+            'transactions.show', compact(
+            'transactionGroup', 'amounts', 'first', 'type', 'subTitle', 'splits', 'groupArray',
+            'events', 'attachments', 'links'
+        )
+        );
     }
-
 }

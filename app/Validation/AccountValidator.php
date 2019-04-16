@@ -65,6 +65,9 @@ class AccountValidator
         $this->combinations = config('firefly.source_dests');
         /** @var AccountRepositoryInterface accountRepository */
         $this->accountRepository = app(AccountRepositoryInterface::class);
+        if ('testing' === config('app.env')) {
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
+        }
     }
 
     /**

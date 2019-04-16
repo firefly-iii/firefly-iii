@@ -83,12 +83,13 @@ class TransactionIdentifier extends Command
                         ->where('t_count', '>', 2)
                         ->select(['id', 't_count']);
         $journalIds = array_unique($result->pluck('id')->toArray());
-
+        $count= 0;
         foreach ($journalIds as $journalId) {
             $this->updateJournalidentifiers((int)$journalId);
+            $count++;
         }
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified and fixed transaction identifiers in %s seconds.', $end));
+        $this->info(sprintf('Verified and fixed %d transaction identifiers in %s seconds.', $count, $end));
         $this->markAsExecuted();
 
         return 0;

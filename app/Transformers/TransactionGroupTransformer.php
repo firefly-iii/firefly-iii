@@ -23,9 +23,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Transformers;
 
+use FireflyIII\Models\Budget;
+use FireflyIII\Models\Category;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Support\NullArrayObject;
+use Illuminate\Support\Collection;
 
 /**
  * Class TransactionGroupTransformer
@@ -84,6 +90,172 @@ class TransactionGroupTransformer extends AbstractTransformer
         ];
 
         // do something else.
+
+        return $result;
+    }
+
+    /**
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function transformObject(TransactionGroup $group): array
+    {
+        //$first = $group->transactionJournals->first();
+        $result = [
+            'id'           => (int)$group->id,
+            'created_at'   => $group->created_at->toAtomString(),
+            'updated_at'   => $group->updated_at->toAtomString(),
+            'user'         => (int)$group->user_id,
+            'group_title'  => $group->title,
+            'transactions' => $this->transformJournals($group->transactionJournals),
+            'links'        => [
+                [
+                    'rel' => 'self',
+                    'uri' => '/transactions/' . $group->id,
+                ],
+            ],
+        ];
+
+        // do something else.
+
+        return $result;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    private function getDestinationTransaction(TransactionJournal $journal): Transaction
+    {
+
+        return $journal->transactions->first(
+            static function (Transaction $transaction) {
+                return (float)$transaction->amount > 0;
+            }
+        );
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     *
+     * @return Transaction
+     */
+    private function getSourceTransaction(TransactionJournal $journal): Transaction
+    {
+
+        return $journal->transactions->first(
+            static function (Transaction $transaction) {
+                return (float)$transaction->amount < 0;
+            }
+        );
+    }
+
+    /**
+     * @param Collection $transactionJournals
+     *
+     * @return array
+     */
+    private function transformJournals(Collection $transactionJournals): array
+    {
+        $result = [];
+        /** @var TransactionJournal $journal */
+        foreach ($transactionJournals as $journal) {
+            $source      = $this->getSourceTransaction($journal);
+            $destination = $this->getDestinationTransaction($journal);
+            $type        = $journal->transactionType->type;
+
+            // get amount
+            $amount = app('steam')->positive($source->amount);
+            if (TransactionType::WITHDRAWAL !== $type) {
+                $amount = app('steam')->negative($source->amount);
+            }
+
+            // get foreign amount:
+            $foreignAmount = null;
+            if (null !== $source->foreign_amount) {
+                $foreignAmount = TransactionType::WITHDRAWAL !== $type
+                    ? app('steam')->positive($source->foreign_amount)
+                    : app('steam')->negative($source->foreign_amount);
+            }
+
+            $metaFieldData = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);
+            $metaDateData  = $this->groupRepos->getMetaDateFields($journal->id, $this->metaDateFields);
+            /** @var Budget $budget */
+            $budget = $journal->budgets->first();
+            /** @var Category $category */
+            $category = $journal->categories->first();
+            $currency = $source->transactionCurrency;
+            $result[] = [
+                'user'                   => (int)$journal->user_id,
+                'transaction_journal_id' => $journal->id,
+                'type'                   => strtolower($type),
+                'date'                   => $journal->date->toAtomString(),
+                'order'                  => $journal->order,
+
+                'currency_id'             => $currency->id,
+                'currency_code'           => $currency->code,
+                'currency_symbol'         => $currency->symbol,
+                'currency_decimal_places' => $currency->decimal_places,
+
+                'foreign_currency_id'             => $source->foreignCurrency ? $source->foreignCurrency->id : null,
+                'foreign_currency_code'           => $source->foreignCurrency ? $source->foreignCurrency->code : null,
+                'foreign_currency_symbol'         => $source->foreignCurrency ? $source->foreignCurrency->symbol : null,
+                'foreign_currency_decimal_places' => $source->foreignCurrency ? $source->foreignCurrency->decimal_places : null,
+
+                'amount'         => $amount,
+                'foreign_amount' => $foreignAmount,
+
+                'description' => $journal->description,
+
+                'source_id'   => $source->account_id,
+                'source_name' => $source->account->name,
+                'source_iban' => $source->account->iban,
+                'source_type' => $source->account->accountType->type,
+
+                'destination_id'   => $destination->account_id,
+                'destination_name' => $destination->account->name,
+                'destination_iban' => $destination->account->iban,
+                'destination_type' => $destination->account->accountType->type,
+
+                'budget_id'   => $budget ? $budget->id : null,
+                'budget_name' => $budget ? $budget->name : null,
+
+                'category_id'   => $category ? $category->id : null,
+                'category_name' => $category ? $category->name : null,
+
+                'bill_id'   => $journal->bill_id ?: null,
+                'bill_name' => $journal->bill_id ? $journal->bill->name : null,
+
+                'reconciled' => $source->reconciled,
+                'notes'      => $this->groupRepos->getNoteText($journal->id),
+                'tags'       => $this->groupRepos->getTags($journal->id),
+
+                'internal_reference' => $metaFieldData['internal_reference'],
+                'external_id'        => $metaFieldData['external_id'],
+                'original_source'    => $metaFieldData['original_source'],
+                'recurrence_id'      => $metaFieldData['recurrence_id'],
+                'bunq_payment_id'    => $metaFieldData['bunq_payment_id'],
+                'import_hash_v2'     => $metaFieldData['import_hash_v2'],
+
+                'sepa_cc'       => $metaFieldData['sepa_cc'],
+                'sepa_ct_op'    => $metaFieldData['sepa_ct_op'],
+                'sepa_ct_id'    => $metaFieldData['sepa_ct_id'],
+                'sepa_db'       => $metaFieldData['sepa_ddb'],
+                'sepa_country'  => $metaFieldData['sepa_country'],
+                'sepa_ep'       => $metaFieldData['sepa_ep'],
+                'sepa_ci'       => $metaFieldData['sepa_ci'],
+                'sepa_batch_id' => $metaFieldData['sepa_batch_id'],
+
+                'interest_date' => $metaDateData['interest_date'] ? $metaDateData['interest_date']->toAtomString() : null,
+                'book_date'     => $metaDateData['book_date'] ? $metaDateData['book_date']->toAtomString() : null,
+                'process_date'  => $metaDateData['process_date'] ? $metaDateData['process_date']->toAtomString() : null,
+                'due_date'      => $metaDateData['due_date'] ? $metaDateData['due_date']->toAtomString() : null,
+                'payment_date'  => $metaDateData['payment_date'] ? $metaDateData['payment_date']->toAtomString() : null,
+                'invoice_date'  => $metaDateData['invoice_date'] ? $metaDateData['invoice_date']->toAtomString() : null,
+            ];
+        }
 
         return $result;
     }

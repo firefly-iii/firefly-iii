@@ -29,11 +29,14 @@ use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
+use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Services\Internal\Update\GroupUpdateService;
 use FireflyIII\Support\NullArrayObject;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class TransactionGroupRepository
@@ -50,6 +53,80 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         if ('testing' === config('app.env')) {
             app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
+    }
+
+    /**
+     * Return all attachments for all journals in the group.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function getAttachments(TransactionGroup $group): array
+    {
+        $journals = $group->transactionJournals->pluck('id')->toArray();
+        $set      = Attachment::whereIn('attachable_id', $journals)
+                              ->where('attachable_type', TransactionJournal::class)
+                              ->whereNull('deleted_at')->get();
+
+        $result = [];
+        /** @var Attachment $attachment */
+        foreach ($set as $attachment) {
+            $current                  = $attachment->toArray();
+            $current['file_exists']   = true;
+            $current['journal_title'] = $attachment->attachable->description;
+            $result[]                 = $current;
+
+        }
+
+        //$result   = $set->toArray();
+
+
+        return $result;
+    }
+
+    /**
+     * Return all journal links for all journals in the group.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function getLinks(TransactionGroup $group): array
+    {
+        $return   = [];
+        $journals = $group->transactionJournals->pluck('id')->toArray();
+        $set      = TransactionJournalLink
+            ::where(
+                static function (Builder $q) use ($journals) {
+                    $q->whereIn('source_id', $journals);
+                    $q->orWhereIn('destination_id', $journals);
+                }
+            )
+            ->with(['source', 'destination'])
+            ->leftJoin('link_types', 'link_types.id', '=', 'journal_links.link_type_id')
+            ->get(['journal_links.*', 'link_types.inward', 'link_types.outward']);
+        /** @var TransactionJournalLink $entry */
+        foreach ($set as $entry) {
+            $journalId          = in_array($entry->source_id, $journals, true) ? $entry->source_id : $entry->destination_id;
+            $return[$journalId] = $return[$journalId] ?? [];
+            if ($journalId === $entry->source_id) {
+                $return[$journalId][] = [
+                    'link'        => $entry->outward,
+                    'group'     => $entry->destination->transaction_group_id,
+                    'description' => $entry->destination->description,
+                ];
+            }
+            if ($journalId === $entry->destination_id) {
+                $return[$journalId][] = [
+                    'link'        => $entry->inward,
+                    'group'     => $entry->source->transaction_group_id,
+                    'description' => $entry->source->description,
+                ];
+            }
+        }
+
+        return $return;
     }
 
     /**
@@ -122,6 +199,18 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
         }
 
         return $note->text;
+    }
+
+    /**
+     * Return all piggy bank events for all journals in the group.
+     *
+     * @param TransactionGroup $group
+     *
+     * @return array
+     */
+    public function getPiggyEvents(TransactionGroup $group): array
+    {
+        return [];
     }
 
     /**

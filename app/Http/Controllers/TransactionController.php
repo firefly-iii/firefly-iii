@@ -212,61 +212,6 @@ class TransactionController extends Controller
         return response()->json([true]);
     }
 
-    /**
-     * Show a transaction.
-     *
-     * @param TransactionJournal          $journal
-     * @param LinkTypeRepositoryInterface $linkTypeRepository
-     *
-     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
-     * @throws FireflyException
-     */
-    public function show(TransactionJournal $journal, LinkTypeRepositoryInterface $linkTypeRepository)
-    {
-        if ($this->isOpeningBalance($journal)) {
-            return $this->redirectToAccount($journal);
-        }
-        $transactionType = $journal->transactionType->type;
-        if (TransactionType::RECONCILIATION === $transactionType) {
-            return redirect(route('accounts.reconcile.show', [$journal->id])); // @codeCoverageIgnore
-        }
-        $linkTypes = $linkTypeRepository->get();
-        $links     = $linkTypeRepository->getLinks($journal);
-
-        // get attachments:
-        $attachments = $this->repository->getAttachments($journal);
-        $attachments = $attachments->each(
-            function (Attachment $attachment) {
-                $attachment->file_exists = $this->attachmentRepository->exists($attachment);
-
-                return $attachment;
-            }
-        );
-
-        // get transactions using the collector:
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getTransactions();
-        $transactions = [];
-
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
-        $transformer->setParameters(new ParameterBag);
-
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $transactions[] = $transformer->transform($transaction);
-        }
-
-        $events   = $this->repository->getPiggyBankEvents($journal);
-        $what     = strtolower($transactionType);
-        $subTitle = trans('firefly.' . $what) . ' "' . $journal->description . '"';
-
-        return view('transactions.show', compact('journal', 'attachments', 'events', 'subTitle', 'what', 'transactions', 'linkTypes', 'links'));
-    }
 
 
 }

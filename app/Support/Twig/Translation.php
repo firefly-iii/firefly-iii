@@ -48,36 +48,4 @@ class Translation extends Twig_Extension
 
         return $filters;
     }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getFunctions(): array
-    {
-        return [
-            $this->journalLinkTranslation(),
-        ];
-    }
-
-
-    /**
-     * @return Twig_SimpleFunction
-     */
-    public function journalLinkTranslation(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'journalLinkTranslation',
-            function (string $direction, string $original) {
-                $key         = sprintf('firefly.%s_%s', $original, $direction);
-                $translation = trans($key);
-
-                if ($key === $translation) {
-                    return $original;
-                }
-
-                return $translation;
-            },
-            ['is_safe' => ['html']]
-        );
-    }
 }

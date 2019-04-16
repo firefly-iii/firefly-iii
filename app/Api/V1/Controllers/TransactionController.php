@@ -291,7 +291,7 @@ class TransactionController extends Controller
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException(); // @codeCoverageIgnore
         }
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
@@ -335,7 +335,7 @@ class TransactionController extends Controller
 
         $selectedGroup = $collector->getGroups()->first();
         if (null === $selectedGroup) {
-            throw new NotFoundHttpException();
+            throw new NotFoundHttpException(); // @codeCoverageIgnore
         }
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
