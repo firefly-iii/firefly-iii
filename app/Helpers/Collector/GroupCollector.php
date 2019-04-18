@@ -110,6 +110,7 @@ class GroupCollector implements GroupCollectorInterface
             'source.amount as amount',
             'source.transaction_currency_id as currency_id',
             'currency.code as currency_code',
+            'currency.name as currency_name',
             'currency.symbol as currency_symbol',
             'currency.decimal_places as currency_decimal_places',
 
@@ -134,7 +135,7 @@ class GroupCollector implements GroupCollectorInterface
     public function getExtractedJournals(): array
     {
         $selection = $this->getGroups();
-        $return    = new Collection;
+        $return    = [];
         /** @var array $group */
         foreach ($selection as $group) {
             foreach ($group['transactions'] as $journalId => $journal) {
@@ -161,9 +162,8 @@ class GroupCollector implements GroupCollectorInterface
 
         // now filter the array according to the page and the
         $offset  = $this->page * $this->limit;
-        $limited = $collection->slice($offset, $this->limit);
+        return $collection->slice($offset, $this->limit);
 
-        return $limited;
     }
 
     /**
@@ -552,10 +552,9 @@ class GroupCollector implements GroupCollectorInterface
                 $groupArray                             = [
                     'id'           => $augmentedGroup->transaction_group_id,
                     'user_id'      => $augmentedGroup->user_id,
-                    'title'        => $augmentedGroup->title,
+                    'title'        => $augmentedGroup->transaction_group_title,
                     'count'        => 1,
-                    'sum'          => $augmentedGroup->amount,
-                    'foreign_sum'  => $augmentedGroup->foreign_amount ?? '0',
+                    'sums'         => [],
                     'transactions' => [],
                 ];
                 $journalId                              = (int)$augmentedGroup->transaction_journal_id;
@@ -563,12 +562,12 @@ class GroupCollector implements GroupCollectorInterface
                 $groups[$groupId]                       = $groupArray;
                 continue;
             }
+            // or parse the rest.
+            $journalId = (int)$augmentedGroup->transaction_journal_id;
             $groups[$groupId]['count']++;
-            $groups[$groupId]['sum']                      = bcadd($augmentedGroup->amount, $groups[$groupId]['sum']);
-            $groups[$groupId]['foreign_sum']              = bcadd($augmentedGroup->foreign_amount ?? '0', $groups[$groupId]['foreign_sum']);
-            $journalId                                    = (int)$augmentedGroup->transaction_journal_id;
             $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
         }
+        $groups = $this->parseSums($groups);
 
         return new Collection($groups);
     }
@@ -588,6 +587,51 @@ class GroupCollector implements GroupCollectorInterface
         $result['reconciled'] = 1 === (int)$result['reconciled'];
 
         return $result;
+    }
+
+    /**
+     * @param array $groups
+     *
+     * @return array
+     */
+    private function parseSums(array $groups): array
+    {
+        /**
+         * @var int   $groudId
+         * @var array $group
+         */
+        foreach ($groups as $groudId => $group) {
+            /** @var array $transaction */
+            foreach ($group['transactions'] as $transaction) {
+                $currencyId = (int)$transaction['currency_id'];
+
+                // set default:
+                if (!isset($groups[$groudId]['sums'][$currencyId])) {
+                    $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
+                    $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
+                    $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
+                }
+                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+
+                if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
+                    $currencyId = (int)$transaction['foreign_currency_id'];
+
+                    // set default:
+                    if (!isset($groups[$groudId]['sums'][$currencyId])) {
+                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
+                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
+                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
+                    }
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount']);
+                }
+            }
+        }
+
+        return $groups;
     }
 
     /**

@@ -115,10 +115,11 @@ class ApplyRules extends Command
             return 1;
         }
 
+        return 1;
 
         // get transactions from asset accounts.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var TODO REPLACE $collector */
+        //$collector = app();
         $collector->setUser($this->getUser());
         $collector->setAccounts($this->accounts);
         $collector->setRange($this->startDate, $this->endDate);

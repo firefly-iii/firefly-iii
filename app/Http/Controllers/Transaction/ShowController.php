@@ -89,7 +89,6 @@ class ShowController extends Controller
                     'decimal_places' => $transaction['currency_decimal_places'],
                 ];
             }
-
             $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['amount']);
             if (null !== $transaction['foreign_amount']) {
                 // same for foreign currency:
@@ -101,18 +100,13 @@ class ShowController extends Controller
                         'decimal_places' => $transaction['foreign_currency_decimal_places'],
                     ];
                 }
-
-                $amounts[$symbol]['amount'] = bcadd($amounts[$symbol]['amount'], $transaction['foreign_amount']);
+                $amounts[$foreignSymbol]['amount'] = bcadd($amounts[$foreignSymbol]['amount'], $transaction['foreign_amount']);
             }
         }
 
         $events      = $this->repository->getPiggyEvents($transactionGroup);
         $attachments = $this->repository->getAttachments($transactionGroup);
         $links       = $this->repository->getLinks($transactionGroup);
-
-        // TODO links to other journals, use the API
-        // TODO links to attachments, use the API.
-        // TODO links to piggy bank events.
 
         return view(
             'transactions.show', compact(

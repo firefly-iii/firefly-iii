@@ -34,8 +34,10 @@ use Twig_SimpleFunction;
  */
 class TransactionGroupTwig extends Twig_Extension
 {
+    /** @noinspection PhpMissingParentCallCommonInspection */
     /**
      * @return array
+     *
      */
     public function getFunctions(): array
     {
@@ -44,7 +46,7 @@ class TransactionGroupTwig extends Twig_Extension
             $this->groupAmount(),
             $this->journalHasMeta(),
             $this->journalGetMetaDate(),
-            $this->journalGetMetaField()
+            $this->journalGetMetaField(),
         ];
     }
 
@@ -55,15 +57,30 @@ class TransactionGroupTwig extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'groupAmount',
-            function (array $array): string {
-                $result = $this->normalGroupAmount($array);
-                // now append foreign amount, if any.
-                if (0 !== bccomp('0', $array['foreign_sum'])) {
-                    $foreign = $this->foreignGroupAmount($array);
-                    $result  = sprintf('%s (%s)', $result, $foreign);
+            static function (array $array): string {
+                $sums    = $array['sums'];
+                $return  = [];
+                $first   = reset($array['transactions']);
+                $type    = $first['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
+                $colored = true;
+                if ($type === TransactionType::TRANSFER) {
+                    $colored = false;
                 }
 
-                return $result;
+
+                /** @var array $sum */
+                foreach ($sums as $sum) {
+                    $amount = $sum['amount'];
+
+                    // do multiplication thing.
+                    if ($type !== TransactionType::WITHDRAWAL) {
+                        $amount = bcmul($amount, '-1');
+                    }
+
+                    $return[] = app('amount')->formatFlat($sum['currency_symbol'], (int)$sum['currency_decimal_places'], $amount, $colored);
+                }
+
+                return implode(', ', $return);
             },
             ['is_safe' => ['html']]
         );
@@ -183,32 +200,6 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
-     * @param array $array
-     *
-     * @return string
-     */
-    private function foreignGroupAmount(array $array): string
-    {
-        // take cue from the first entry in the array:
-        $first   = $array['transactions'][0];
-        $type    = $first['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount  = $array['foreign_sum'] ?? '0';
-        $colored = true;
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
-        if ($type === TransactionType::TRANSFER) {
-            $colored = false;
-        }
-        $result = app('amount')->formatFlat($first['foreign_currency_symbol'], (int)$first['foreign_currency_decimal_places'], $amount, $colored);
-        if ($type === TransactionType::TRANSFER) {
-            $result = sprintf('<span class="text-info">%s</span>', $result);
-        }
-
-        return $result;
-    }
-
-    /**
      * Generate normal amount for transaction from a transaction group.
      *
      * @param array $array
@@ -227,32 +218,6 @@ class TransactionGroupTwig extends Twig_Extension
             $colored = false;
         }
         $result = app('amount')->formatFlat($array['currency_symbol'], (int)$array['currency_decimal_places'], $amount, $colored);
-        if ($type === TransactionType::TRANSFER) {
-            $result = sprintf('<span class="text-info">%s</span>', $result);
-        }
-
-        return $result;
-    }
-
-    /**
-     * @param array $array
-     *
-     * @return string
-     */
-    private function normalGroupAmount(array $array): string
-    {
-        // take cue from the first entry in the array:
-        $first   = reset($array['transactions']);
-        $type    = $first['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
-        $amount  = $array['sum'] ?? '0';
-        $colored = true;
-        if ($type !== TransactionType::WITHDRAWAL) {
-            $amount = bcmul($amount, '-1');
-        }
-        if ($type === TransactionType::TRANSFER) {
-            $colored = false;
-        }
-        $result = app('amount')->formatFlat($first['currency_symbol'], (int)$first['currency_decimal_places'], $amount, $colored);
         if ($type === TransactionType::TRANSFER) {
             $result = sprintf('<span class="text-info">%s</span>', $result);
         }

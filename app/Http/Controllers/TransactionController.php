@@ -25,27 +25,19 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
-use FireflyIII\Models\Attachment;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
-use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Log;
-use Symfony\Component\HttpFoundation\ParameterBag;
-use View;
 
 /**
  * Class TransactionController.
@@ -114,18 +106,20 @@ class TransactionController extends Controller
         $subTitle = (string)trans('firefly.title_' . $what . '_between', ['start' => $startStr, 'end' => $endStr]);
         $periods  = $this->getTransactionPeriodOverview($what, $end);
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                  ->withBudgetInformation()->withCategoryInformation();
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->addFilter(SplitIndicatorFilter::class);
-        $collector->addFilter(CountAttachmentsFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath($path);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'periods', 'start', 'end'));
+        $collector->setRange($start, $end)
+                  ->setTypes($types)
+                  ->setLimit($pageSize)
+                  ->setPage($page)
+                  ->withBudgetInformation()
+                  ->withCategoryInformation()
+                  ->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath($path);
+
+        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
     }
 
     /**
@@ -211,7 +205,6 @@ class TransactionController extends Controller
 
         return response()->json([true]);
     }
-
 
 
 }

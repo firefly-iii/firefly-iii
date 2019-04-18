@@ -176,8 +176,8 @@ class TransactionGroupTransformer extends AbstractTransformer
             $foreignAmount = null;
             if (null !== $source->foreign_amount) {
                 $foreignAmount = TransactionType::WITHDRAWAL !== $type
-                    ? app('steam')->positive($source->foreign_amount)
-                    : app('steam')->negative($source->foreign_amount);
+                    ? app('steam')->negative($source->foreign_amount)
+                    : app('steam')->positive($source->foreign_amount);
             }
 
             $metaFieldData = $this->groupRepos->getMetaFields($journal->id, $this->metaFields);

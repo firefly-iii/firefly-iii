@@ -33,7 +33,7 @@ return [
     'last_seven_days'                            => 'Last seven days',
     'last_thirty_days'                           => 'Last thirty days',
     'welcomeBack'                                => 'What\'s playing?',
-    'welcome_back'                                => 'What\'s playing?',
+    'welcome_back'                               => 'What\'s playing?',
     'everything'                                 => 'Everything',
     'today'                                      => 'today',
     'customRange'                                => 'Custom range',
@@ -634,9 +634,9 @@ return [
     'converted_to_Transfer'                   => 'The transaction has been converted to a transfer',
     'invalid_convert_selection'               => 'The account you have selected is already used in this transaction or does not exist.',
     'source_or_dest_invalid'                  => 'Cannot find the correct transaction details. Conversion is not possible.',
-    'convert_to_withdrawal'                 => 'Convert to a withdrawal',
-    'convert_to_deposit'                    => 'Convert to a deposit',
-    'convert_to_transfer'                   => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
+    'convert_to_deposit'                      => 'Convert to a deposit',
+    'convert_to_transfer'                     => 'Convert to a transfer',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Create new withdrawal',
@@ -1148,6 +1148,7 @@ return [
     'deleted_piggy_bank'        => 'Deleted piggy bank ":name"',
     'added_amount_to_piggy'     => 'Added :amount to ":name"',
     'removed_amount_from_piggy' => 'Removed :amount from ":name"',
+    'piggy_events' => 'Related piggy banks',
 
     // tags
     'delete_tag'                => 'Delete tag ":tag"',
@@ -1160,7 +1161,7 @@ return [
     'transaction_journal_information'       => 'Transaction information',
     'transaction_journal_meta'              => 'Meta information',
     'transaction_journal_more'              => 'More information',
-    'att_part_of_journal' => 'Stored under ":journal"',
+    'att_part_of_journal'                   => 'Stored under ":journal"',
     'total_amount'                          => 'Total amount',
     'number_of_decimals'                    => 'Number of decimals',
 

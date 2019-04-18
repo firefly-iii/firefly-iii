@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
@@ -451,13 +452,12 @@ trait PeriodOverview
         foreach ($dates as $currentDate) {
 
             // get all expenses, income or transfers:
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withOpposingAccount()->setTypes($types);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transactions = $collector->getTransactions();
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setRange($currentDate['start'], $currentDate['end'])->withAccountInformation()->setTypes($types);
+            $journals = $collector->getExtractedJournals();
             $title        = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $grouped      = $this->groupByCurrency($transactions);
+            $grouped      = $this->groupByCurrency($journals);
             $spent        = [];
             $earned       = [];
             $transferred  = [];
@@ -472,7 +472,7 @@ trait PeriodOverview
             }
             $entries->push(
                 [
-                    'transactions' => $transactions->count(),
+                    'transactions' => count($journals),
                     'title'        => $title,
                     'spent'        => $spent,
                     'earned'       => $earned,
@@ -525,27 +525,27 @@ trait PeriodOverview
     }
 
     /**
-     * @param Collection $transactions
+     * @param array $journals
      *
      * @return array
      */
-    private function groupByCurrency(Collection $transactions): array
+    private function groupByCurrency(array $journals): array
     {
         $return = [];
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $currencyId = (int)$transaction->transaction_currency_id;
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
             if (!isset($return[$currencyId])) {
                 $currency                 = new TransactionCurrency;
-                $currency->symbol         = $transaction->transaction_currency_symbol;
-                $currency->decimal_places = $transaction->transaction_currency_dp;
-                $currency->name           = $transaction->transaction_currency_name;
+                $currency->symbol         = $journal['currency_symbol'];
+                $currency->decimal_places = $journal['currency_decimal_places'];
+                $currency->name           = $journal['currency_name'];
                 $return[$currencyId]      = [
                     'amount'   => '0',
                     'currency' => $currency,
                 ];
             }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $transaction->transaction_amount);
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount']);
         }
 
         return $return;

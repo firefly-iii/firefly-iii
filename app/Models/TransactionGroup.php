@@ -60,6 +60,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string                                                                                foreign_amount
  * @property int                                                                                   transaction_group_id
  * @property int transaction_journal_id
+ * @property string transaction_group_title
  */
 class TransactionGroup extends Model
 {

@@ -108,9 +108,10 @@ class ExpandedProcessor implements ProcessorInterface
      */
     public function collectJournals(): bool
     {
+        return true;
         // use journal collector thing.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var TODO replace me. $collector */
+        //$collector = app();
         $collector->setUser($this->job->user);
         $collector->setAccounts($this->accounts)->setRange($this->settings['startDate'], $this->settings['endDate'])
                   ->withOpposingAccount()->withBudgetInformation()->withCategoryInformation()

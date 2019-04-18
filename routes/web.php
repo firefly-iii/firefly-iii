@@ -905,6 +905,7 @@ Route::group(
         Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
         Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
         Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
+        Route::get('{tj}/{type}', ['uses' => 'ConvertController@index', 'as' => 'convert']);
         // TODO end of improvement.
     }
 );
@@ -950,15 +951,15 @@ Route::group(
 /**
  * Transaction Convert Controller
  */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/convert',
-     'as'         => 'transactions.convert.'], function () {
-    // TODO improve these routes
-    Route::get('{transactionType}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
-    Route::post('{transactionType}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
-    // TODO end of todo
-}
-);
+//Route::group(
+//    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/convert',
+//     'as'         => 'transactions.convert.'], function () {
+//    // TODO improve these routes
+//    Route::get('{transactionType}/{tj}', ['uses' => 'ConvertController@index', 'as' => 'index']);
+//    Route::post('{transactionType}/{tj}', ['uses' => 'ConvertController@postIndex', 'as' => 'index.post']);
+//    // TODO end of todo
+//}
+//);
 
 /**
  * Transaction Link Controller
