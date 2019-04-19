@@ -873,11 +873,16 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
 
-    // TODO improve these routes
-    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
-    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'TransactionController@index', 'as' => 'index'])->where(
+
+    Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
         ['what' => 'withdrawal|deposit|transfers|transfer']
     );
+
+
+
+    // TODO improve these routes
+    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+
 
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
@@ -901,7 +906,7 @@ Route::group(
         Route::get('create/{what}', ['uses' => 'SingleController@create', 'as' => 'create'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
         Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
-        Route::post('store/{what}', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
+        Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
         Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
         Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);

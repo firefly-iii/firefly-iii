@@ -337,6 +337,14 @@ return [
         'transfer'   => ['Transfer'],
         'transfers'  => ['Transfer'],
     ],
+    'transactionTypesByType'       => [
+        'expenses'   => ['Withdrawal'],
+        'withdrawal' => ['Withdrawal'],
+        'revenue'    => ['Deposit'],
+        'deposit'    => ['Deposit'],
+        'transfer'   => ['Transfer'],
+        'transfers'  => ['Transfer'],
+    ],
     'transactionTypesToShort'      => [
         'Withdrawal'      => 'withdrawal',
         'Deposit'         => 'deposit',

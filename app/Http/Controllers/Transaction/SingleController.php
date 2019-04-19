@@ -49,6 +49,7 @@ use View;
  */
 class SingleController extends Controller
 {
+
     use ModelInformation;
 
     /** @var AttachmentHelperInterface The attachment helper. */
@@ -63,6 +64,7 @@ class SingleController extends Controller
      */
     public function __construct()
     {
+        throw new FireflyException('Do not use me.');
         parent::__construct();
 
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));

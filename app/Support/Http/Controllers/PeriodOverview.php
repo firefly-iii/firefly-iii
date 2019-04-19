@@ -24,7 +24,8 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupSumCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
@@ -74,6 +75,7 @@ trait PeriodOverview
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $date): Collection
     {
+        throw new FireflyException('Is using collector.');
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $range      = app('preferences')->get('viewRange', '1M')->data;
@@ -141,6 +143,7 @@ trait PeriodOverview
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $date): Collection
     {
+        throw new FireflyException('Is using collector.');
         /** @var JournalRepositoryInterface $journalRepository */
         $journalRepository = app(JournalRepositoryInterface::class);
         $range             = app('preferences')->get('viewRange', '1M')->data;
@@ -211,6 +214,7 @@ trait PeriodOverview
      */
     protected function getNoBudgetPeriodOverview(Carbon $date): Collection
     {
+        throw new FireflyException('Is using collector.');
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $first      = $repository->firstNull();
@@ -272,6 +276,7 @@ trait PeriodOverview
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): Collection // period overview method.
     {
+        throw new FireflyException('Is using collector.');
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
@@ -360,6 +365,7 @@ trait PeriodOverview
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $date): Collection // period overview for tags.
     {
+        throw new FireflyException('Is using collector.');
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $range      = app('preferences')->get('viewRange', '1M')->data;
@@ -415,35 +421,25 @@ trait PeriodOverview
     }
 
     /**
-     * This list shows the overview of a type of transaction, for the period blocks on the list of transactions.
-     *
-     * @param string $what
-     * @param Carbon $date
+     * @param string $transactionType
+     * @param Carbon $endDate
      *
      * @return Collection
+     * @throws \Exception
      */
-    protected function getTransactionPeriodOverview(string $what, Carbon $date): Collection // period overview for transactions.
+    protected function getTransactionPeriodOverview(string $transactionType, Carbon $endDate): Collection
     {
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $range      = app('preferences')->get('viewRange', '1M')->data;
         $endJournal = $repository->firstNull();
         $end        = null === $endJournal ? new Carbon : $endJournal->date;
-        $start      = clone $date;
-        $types      = config('firefly.transactionTypesByWhat.' . $what);
-
+        $start      = clone $endDate;
+        $types      = config('firefly.transactionTypesByType.' . $transactionType);
 
         if ($end < $start) {
             [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
-
-        // properties for entries with their amounts.
-        $cache = new CacheProperties;
-        $cache->addProperty($start);
-        $cache->addProperty($end);
-        $cache->addProperty('transactions-period-entries');
-        $cache->addProperty($what);
-
 
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -451,33 +447,37 @@ trait PeriodOverview
 
         foreach ($dates as $currentDate) {
 
-            // get all expenses, income or transfers:
-            /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
-            $collector->setRange($currentDate['start'], $currentDate['end'])->withAccountInformation()->setTypes($types);
-            $journals = $collector->getExtractedJournals();
-            $title        = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $grouped      = $this->groupByCurrency($journals);
-            $spent        = [];
-            $earned       = [];
-            $transferred  = [];
-            if ('expenses' === $what || 'withdrawal' === $what) {
-                $spent = $grouped;
+            /** @var GroupSumCollectorInterface $sumCollector */
+            $sumCollector = app(GroupSumCollectorInterface::class);
+            $sumCollector->setTypes($types)->setRange($currentDate['start'], $currentDate['end']);
+            $amounts     = $sumCollector->getSum();
+            $spent       = [];
+            $earned      = [];
+            $transferred = [];
+
+            // set to correct array
+            if ('expenses' === $transactionType || 'withdrawal' === $transactionType) {
+                $spent = $amounts;
             }
-            if ('revenue' === $what || 'deposit' === $what) {
-                $earned = $grouped;
+            if ('revenue' === $transactionType || 'deposit' === $transactionType) {
+                $earned = $amounts;
             }
-            if ('transfer' === $what || 'transfers' === $what) {
-                $transferred = $grouped;
+            if ('transfer' === $transactionType || 'transfers' === $transactionType) {
+                $transferred = $amounts;
             }
+
+
+            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
             $entries->push(
                 [
-                    'transactions' => count($journals),
+                    'transactions' => $amounts['count'],
                     'title'        => $title,
                     'spent'        => $spent,
                     'earned'       => $earned,
                     'transferred'  => $transferred,
-                    'route'        => route('transactions.index', [$what, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                    'route'        => route(
+                        'transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
+                    ),
                 ]
             );
         }

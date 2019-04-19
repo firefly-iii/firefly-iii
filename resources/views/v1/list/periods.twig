@@ -12,29 +12,31 @@
                     <td style="text-align: right;">{{ period.transactions }}</td>
                 </tr>
                 {% endif %}
-                {% for arr in period.spent %}
-                    {% if arr.amount !=0 %}
+                {# loop all spent amounts #}
+                {% for array in period.spent.sums %}
+                    {# actually spent anything: #}
+                    {% if array.sum !=0 %}
                         <tr>
                             <td style="width:33%;">{{ 'spent'|_ }}</td>
-                            <td style="text-align: right;">{{ formatAmountByCurrency(arr.currency, arr.amount) }}</td>
+                            <td style="text-align: right;">{{ formatAmountBySymbol(array.sum * -1, array.currency_symbol, array.currency_decimal_places) }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
 
-                {% for arr in period.earned %}
-                    {% if arr.amount !=0 %}
+                {% for array in period.earned.sums %}
+                    {% if array.sum !=0 %}
                         <tr>
                             <td style="width:33%;">{{ 'earned'|_ }}</td>
-                            <td style="text-align: right;">{{ formatAmountByCurrency(arr.currency, arr.amount) }}</td>
+                            <td style="text-align: right;">{{ formatAmountBySymbol(array.sum, array.currency_symbol, array.currency_decimal_places) }}</td>
                         </tr>
                     {% endif %}
                 {% endfor %}
 
-                {% for arr in period.transferred %}
-                    {% if arr.amount !=0 %}
+                {% for array in period.transferred.sums %}
+                    {% if array.sum !=0 %}
                         <tr>
                             <td style="width:33%;">{{ 'transferred'|_ }}</td>
-                            <td style="text-align: right;"><span class="text-info">{{ formatAmountByCurrency(arr.currency, arr.amount, false) }}</span></td>
+                            <td style="text-align: right;"><span class="text-info">{{ formatAmountBySymbol(array.sum, array.currency_symbol, array.currency_decimal_places, false) }}</span></td>
                         </tr>
                     {% endif %}
                 {% endfor %}

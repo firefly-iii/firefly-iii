@@ -61,6 +61,7 @@ class SplitController extends Controller
      */
     public function __construct()
     {
+        throw new FireflyException('Do not use me.');
         parent::__construct();
 
         // some useful repositories:
