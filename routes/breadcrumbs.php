@@ -1022,9 +1022,9 @@ try {
 
     Breadcrumbs::register(
         'transactions.create',
-        function (BreadcrumbsGenerator $breadcrumbs, string $what) {
-            $breadcrumbs->parent('transactions.index', $what);
-            $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
+        function (BreadcrumbsGenerator $breadcrumbs, string $objectType) {
+            $breadcrumbs->parent('transactions.index', $objectType);
+            $breadcrumbs->push(trans('breadcrumbs.create_new_transaction'), route('transactions.create', [$objectType]));
         }
     );
 

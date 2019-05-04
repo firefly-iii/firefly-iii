@@ -3,10 +3,26 @@
  * includes Vue and other libraries. It is a great starting point when
  * building robust, powerful web applications using Vue and Laravel.
  */
-/* TODO REMOVE ME */
 
 require('./bootstrap');
 window.Vue = require('vue');
+import * as uiv from 'uiv';
+
+Vue.use(uiv);
+// components for create and edit transactions.
+Vue.component('budget', require('./components/transactions/Budget.vue'));
+Vue.component('custom-transaction-fields', require('./components/transactions/CustomTransactionFields.vue'));
+Vue.component('piggy-bank', require('./components/transactions/PiggyBank.vue'));
+Vue.component('tags', require('./components/transactions/Tags.vue'));
+Vue.component('category', require('./components/transactions/Category.vue'));
+Vue.component('amount', require('./components/transactions/Amount.vue'));
+Vue.component('foreign-amount', require('./components/transactions/ForeignAmountSelect.vue'));
+Vue.component('transaction-type', require('./components/transactions/TransactionType.vue'));
+Vue.component('account-select', require('./components/transactions/AccountSelect.vue'));
+
+
+
+
 
 /**
  * Components for OAuth2 tokens.
@@ -14,6 +30,7 @@ window.Vue = require('vue');
 Vue.component('passport-clients', require('./components/passport/Clients.vue'));
 Vue.component('passport-authorized-clients', require('./components/passport/AuthorizedClients.vue'));
 Vue.component('passport-personal-access-tokens', require('./components/passport/PersonalAccessTokens.vue'));
+Vue.component('create-transaction', require('./components/transactions/CreateTransaction'));
 
 
 const app = new Vue({

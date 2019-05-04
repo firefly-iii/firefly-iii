@@ -45,7 +45,7 @@ echo "Discover packages..."
 php artisan package:discover
 
 echo "Run various artisan commands..."
-. $FIREFLY_PATH/.env
+#. $FIREFLY_PATH/.env
 if [[ -z "$DB_PORT" ]]; then
   if [[ $DB_CONNECTION == "pgsql" ]]; then
     DB_PORT=5432
