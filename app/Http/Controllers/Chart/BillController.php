@@ -114,6 +114,7 @@ class BillController extends Controller
         }
 
         $results = $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->getTransactions();
+        // TODO remove me
         /** @var Collection $results */
         $results   = $results->sortBy(
             function (Transaction $transaction) {

@@ -54,7 +54,7 @@ class SecureHeaders
             sprintf("script-src 'self' 'unsafe-eval' 'unsafe-inline' %s", $google),
             "style-src 'self' 'unsafe-inline'",
             "base-uri 'self'",
-            "font-src 'self'",
+            "font-src 'self' data:",
             "connect-src 'self'",
             "img-src 'self' data: https://api.tiles.mapbox.com",
             "manifest-src 'self'",

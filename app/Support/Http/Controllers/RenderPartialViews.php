@@ -394,11 +394,7 @@ trait RenderPartialViews
     {
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
-        $tags       = $repository->get()->sortBy(
-            function (Tag $tag) {
-                return $tag->tag;
-            }
-        );
+        $tags       = $repository->get();
         try {
             $result = view('reports.options.tag', compact('tags'))->render();
         } catch (Throwable $e) {

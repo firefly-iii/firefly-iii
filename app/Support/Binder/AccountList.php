@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Support\Binder;
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use Illuminate\Routing\Route;
 use Illuminate\Support\Collection;
@@ -52,6 +51,7 @@ class AccountList implements BinderInterface
                 $collection = auth()->user()->accounts()
                                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                     ->where('account_types.type', AccountType::ASSET)
+                                    ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
             }
             if ('allAssetAccounts' !== $value) {
@@ -61,16 +61,11 @@ class AccountList implements BinderInterface
                 $collection = auth()->user()->accounts()
                                     ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
                                     ->whereIn('accounts.id', $list)
+                                    ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
             }
 
             if ($collection->count() > 0) {
-                $collection = $collection->sortBy(
-                    function (Account $account) {
-                        return $account->name;
-                    }
-                );
-
                 return $collection;
             }
         }

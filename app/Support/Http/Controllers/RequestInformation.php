@@ -208,7 +208,7 @@ trait RequestInformation
      */
     protected function getSpecificPageName(): string // get request info
     {
-        return null === RouteFacade::current()->parameter('what') ? '' : '_' . RouteFacade::current()->parameter('what');
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
     }
 
     /**

@@ -77,18 +77,9 @@ class IndexController extends Controller
         $types        = config('firefly.accountTypesByIdentifier.' . $what);
         $collection   = $this->repository->getAccountsByType($types);
         $total        = $collection->count();
-
-        // sort collection:
-        $collection = $collection->sortBy(
-            function (Account $account) {
-                return ($account->active ? '0' : '1') . $account->name;
-            }
-        );
-
-
-        $page     = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
-        $accounts = $collection->slice(($page - 1) * $pageSize, $pageSize);
+        $page         = 0 === (int)$request->get('page') ? 1 : (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $accounts     = $collection->slice(($page - 1) * $pageSize, $pageSize);
         unset($collection);
         /** @var Carbon $start */
         $start = clone session('start', Carbon::now()->startOfMonth());

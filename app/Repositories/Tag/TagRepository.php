@@ -117,15 +117,7 @@ class TagRepository implements TagRepositoryInterface
      */
     public function findByTag(string $tag): ?Tag
     {
-        $tags = $this->user->tags()->get();
-        /** @var Tag $databaseTag */
-        foreach ($tags as $databaseTag) {
-            if ($databaseTag->tag === $tag) {
-                return $databaseTag;
-            }
-        }
-
-        return null;
+        return $this->user->tags()->where('tag', $tag)->first();
     }
 
     /**
@@ -159,12 +151,7 @@ class TagRepository implements TagRepositoryInterface
     public function get(): Collection
     {
         /** @var Collection $tags */
-        $tags = $this->user->tags()->get();
-        $tags = $tags->sortBy(
-            function (Tag $tag) {
-                return strtolower($tag->tag);
-            }
-        );
+        $tags = $this->user->tags()->orderBy('tag', 'ASC')->get();
 
         return $tags;
     }
@@ -217,6 +204,25 @@ class TagRepository implements TagRepositoryInterface
     public function oldestTag(): ?Tag
     {
         return $this->user->tags()->whereNotNull('date')->orderBy('date', 'ASC')->first();
+    }
+
+    /**
+     * Search the users tags.
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchTags(string $query): Collection
+    {
+        /** @var Collection $tags */
+        $tags = $this->user->tags()->orderBy('tag', 'ASC');
+        if ('' !== $query) {
+            $search = sprintf('%%%s%%', $query);
+            $tags->where('tag', 'LIKE', $search);
+        }
+
+        return $tags->get();
     }
 
     /**

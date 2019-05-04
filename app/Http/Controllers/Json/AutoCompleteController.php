@@ -25,12 +25,21 @@ namespace FireflyIII\Http\Controllers\Json;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
+use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
+use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
+use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\Support\Http\Controllers\AutoCompleteCollector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Log;
 
 /**
  * Class AutoCompleteController.
@@ -40,6 +49,51 @@ use Illuminate\Http\Request;
 class AutoCompleteController extends Controller
 {
     use AutoCompleteCollector;
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function accounts(Request $request): JsonResponse
+    {
+        $accountTypes = explode(',', $request->get('types') ?? '');
+        $search       = $request->get('query');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes  = [AccountType::ASSET, AccountType::EXPENSE, AccountType::REVENUE, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE,];
+        $filteredAccountTypes = [];
+        foreach ($accountTypes as $type) {
+            if (in_array($type, $allowedAccountTypes, true)) {
+                $filteredAccountTypes[] = $type;
+            }
+        }
+        Log::debug('Now in accounts(). Filtering results.', $filteredAccountTypes);
+
+        $return          = [];
+        $result          = $repository->searchAccount((string)$search, $filteredAccountTypes);
+        $defaultCurrency = app('amount')->getDefaultCurrency();
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $currency = $repository->getAccountCurrency($account);
+            $currency = $currency ?? $defaultCurrency;
+            $return[] = [
+                'id'                      => $account->id,
+                'name'                    => $account->name,
+                'type'                    => $account->accountType->type,
+                'currency_id'             => $currency->id,
+                'currency_name'           => $currency->name,
+                'currency_code'           => $currency->code,
+                'currency_decimal_places' => $currency->decimal_places,
+            ];
+        }
+
+
+        return response()->json($return);
+    }
 
     /**
      * List of all journals.
@@ -84,8 +138,8 @@ class AutoCompleteController extends Controller
      * @param Request $request
      * @param string  $subject
      *
-     * @throws FireflyException
      * @return JsonResponse
+     * @throws FireflyException
      */
     public function autoComplete(Request $request, string $subject): JsonResponse
     {
@@ -141,6 +195,59 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * @return JsonResponse
+     */
+    public function budgets(): JsonResponse
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+
+        return response()->json($repository->getActiveBudgets()->toArray());
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function categories(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('query');
+        /** @var CategoryRepositoryInterface $repository */
+        $repository = app(CategoryRepositoryInterface::class);
+        $result     = $repository->searchCategory($query);
+
+        return response()->json($result->toArray());
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function currencies(Request $request): JsonResponse
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $return     = [];
+        $collection = $repository->getAll();
+
+        /** @var TransactionCurrency $currency */
+        foreach ($collection as $currency) {
+            $return[] = [
+                'id'             => $currency->id,
+                'name'           => $currency->name,
+                'code'           => $currency->code,
+                'symbol'         => $currency->symbol,
+                'enabled'        => $currency->enabled,
+                'decimal_places' => $currency->decimal_places,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
      * List of journals with their ID.
      *
      * @param Request                       $request
@@ -190,6 +297,31 @@ class AutoCompleteController extends Controller
         $cache->store($return);
 
         return response()->json($return);
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function piggyBanks(): JsonResponse
+    {
+        /** @var PiggyBankRepositoryInterface $repository */
+        $repository = app(PiggyBankRepositoryInterface::class);
+
+        return response()->json($repository->getPiggyBanks()->toArray());
+    }
+
+    /**
+     * @return JsonResponse
+     */
+    public function tags(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('query');
+        /** @var TagRepositoryInterface $repository */
+        $repository = app(TagRepositoryInterface::class);
+        $result     = $repository->searchTags($query);
+
+
+        return response()->json($result->toArray());
     }
 
     /**

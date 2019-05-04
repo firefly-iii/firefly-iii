@@ -123,6 +123,15 @@ interface TagRepositoryInterface
     public function oldestTag(): ?Tag;
 
     /**
+     * Search the users tags.
+     *
+     * @param string $query
+     *
+     * @return Collection
+     */
+    public function searchTags(string $query): Collection;
+
+    /**
      * @param User $user
      */
     public function setUser(User $user);

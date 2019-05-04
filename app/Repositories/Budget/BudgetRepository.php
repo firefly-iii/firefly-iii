@@ -312,15 +312,9 @@ class BudgetRepository implements BudgetRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->budgets()->where('active', 1)
+            ->orderBy('order','DESC')
+            ->orderBy('name', 'ASC')
                           ->get();
-
-        $set = $set->sortBy(
-            function (Budget $budget) {
-                $str = str_pad((string)$budget->order, 4, '0', STR_PAD_LEFT) . strtolower($budget->name);
-
-                return $str;
-            }
-        );
 
         return $set;
     }
@@ -596,15 +590,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->get();
-
-        $set = $set->sortBy(
-            function (Budget $budget) {
-                $str = str_pad((string)$budget->order, 4, '0', STR_PAD_LEFT) . strtolower($budget->name);
-
-                return $str;
-            }
-        );
+        $set = $this->user->budgets()->orderBy('order','DESC')
+                          ->orderBy('name', 'ASC')->get();
 
         return $set;
     }
@@ -629,15 +616,8 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getInactiveBudgets(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->budgets()->where('active', 0)->get();
-
-        $set = $set->sortBy(
-            function (Budget $budget) {
-                $str = str_pad((string)$budget->order, 4, '0', STR_PAD_LEFT) . strtolower($budget->name);
-
-                return $str;
-            }
-        );
+        $set = $this->user->budgets()->orderBy('order','DESC')
+                          ->orderBy('name', 'ASC')->where('active', 0)->get();
 
         return $set;
     }

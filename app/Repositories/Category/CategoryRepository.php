@@ -344,11 +344,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var Collection $set */
         $set = $this->user->categories()->orderBy('name', 'ASC')->get();
-        $set = $set->sortBy(
-            function (Category $category) {
-                return strtolower($category->name);
-            }
-        );
 
         return $set;
     }

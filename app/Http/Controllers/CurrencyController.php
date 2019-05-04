@@ -311,13 +311,6 @@ class CurrencyController extends Controller
         $pageSize   = (int)app('preferences')->get('listPageSize', 50)->data;
         $collection = $this->repository->getAll();
         $total      = $collection->count();
-        $collection = $collection->sortBy(
-            function (TransactionCurrency $currency) {
-                $intEnabled = $currency->enabled ? 0 : 1;
-
-                return $intEnabled . $currency->name;
-            }
-        );
         $collection = $collection->slice(($page - 1) * $pageSize, $pageSize);
         $currencies = new LengthAwarePaginator($collection, $total, $pageSize, $page);
         $currencies->setPath(route('currencies.index'));

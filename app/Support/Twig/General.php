@@ -59,7 +59,7 @@ class General extends Twig_Extension
             $this->phpdate(),
             $this->activeRouteStrict(),
             $this->activeRoutePartial(),
-            $this->activeRoutePartialWhat(),
+            $this->activeRoutePartialObjectType(),
             $this->formatDate(),
             $this->getMetaField(),
             $this->hasRole(),
@@ -77,7 +77,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRoutePartial',
             function (): string {
-                $args  = \func_get_args();
+                $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (!(false === strpos($name, $route))) {
@@ -95,15 +95,15 @@ class General extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function activeRoutePartialWhat(): Twig_SimpleFunction
+    protected function activeRoutePartialObjectType(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartialWhat',
-            function ($context): string {
-                [, $route, $what] = func_get_args();
-                $activeWhat = $context['what'] ?? false;
+            'activeRoutePartialObjectType',
+            static function ($context): string {
+                [, $route, $objectType] = func_get_args();
+                $activeObjectType = $context['objectType'] ?? false;
 
-                if ($what === $activeWhat && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
+                if ($objectType === $activeObjectType && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
                     return 'active';
                 }
 
@@ -347,5 +347,4 @@ class General extends Twig_Extension
             }
         );
     }
-
 }
