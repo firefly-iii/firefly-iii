@@ -885,12 +885,14 @@ Route::group(
     );
 
     // create group:
-    Route::get('create/{objectType}', ['uses' => 'Transaction\CreateController@create', 'as' => 'create'])->where(['objectType' => 'withdrawal|deposit|transfer']);
+    Route::get('create', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
+    Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
+
+
 
 
     // TODO improve these routes
     Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
-
 
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
@@ -914,7 +916,7 @@ Route::group(
 
         Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
         Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
-        Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
+        //Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
         Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
         Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
         Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);

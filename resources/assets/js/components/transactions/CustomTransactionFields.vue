@@ -34,7 +34,8 @@
                 const url = document.getElementsByTagName('base')[0].href + 'api/v1/preferences/transaction_journal_optional_fields';
 
                 axios.get(url).then(response => {
-                    console.log(response.data.data.attributes);
+                    // TODO here we are.
+                    //console.log(response.data.data.attributes);
                 }).catch(() => console.warn('Oh. Something went wrong'));
             },
         }

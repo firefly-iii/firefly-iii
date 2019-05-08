@@ -4,29 +4,11 @@
             <h3 class="control-sidebar-heading">{{ 'create_new_stuff'|_ }}</h3>
             <ul class='control-sidebar-menu'>
                 <li>
-                    <a href="{{ route('transactions.create', 'withdrawal') }}">
+                    <a href="{{ route('transactions.create') }}">
                         <i class="menu-icon fa fa-long-arrow-left bg-red"></i>
 
                         <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">{{ 'new_withdrawal'|_ }}</h4>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('transactions.create', 'deposit') }}">
-                        <i class="menu-icon fa fa-long-arrow-right bg-green"></i>
-
-                        <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">{{ 'new_deposit'|_ }}</h4>
-                        </div>
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ route('transactions.create', 'transfer') }}">
-                        <i class="menu-icon fa fa-exchange bg-blue"></i>
-
-                        <div class="menu-info">
-                            <h4 class="control-sidebar-subheading">{{ 'new_transfer'|_ }}</h4>
+                            <h4 class="control-sidebar-subheading">{{ 'new_transaction'|_ }}</h4>
                         </div>
                     </a>
                 </li>

@@ -58,19 +58,17 @@ class CreateController extends Controller
     /**
      * Create a new transaction group.
      *
-     * @param Request $request
      * @param string|null objectType
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function create(Request $request, string $objectType = null)
+    public function create()
     {
-        $objectType           = strtolower($objectType ?? TransactionType::WITHDRAWAL);
+        $objectType           = TransactionType::WITHDRAWAL;
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle             = (string)trans('breadcrumbs.create_new_transaction');
         $subTitleIcon         = 'fa-plus';
         $optionalFields       = app('preferences')->get('transaction_journal_optional_fields', [])->data;
-        $source               = (int)$request->get('source');
         $allowedOpposingTypes = config('firefly.allowed_opposing_types');
         $accountToTypes       = config('firefly.account_to_transaction');
         $defaultCurrency      = app('amount')->getDefaultCurrency();
@@ -86,6 +84,13 @@ class CreateController extends Controller
             'transactions.create',
             compact('subTitleIcon', 'objectType', 'subTitle', 'defaultCurrency', 'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes')
         );
+    }
+
+    public function store(Request $request)
+    {
+        echo '<pre>';
+        print_r($request->all());
+        exit;
     }
 
 }

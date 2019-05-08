@@ -50047,7 +50047,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -50095,7 +50095,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var url = document.getElementsByTagName('base')[0].href + 'api/v1/preferences/transaction_journal_optional_fields';
 
             axios.get(url).then(function (response) {
-                console.log(response.data.data.attributes);
+                // TODO here we are.
+                //console.log(response.data.data.attributes);
             }).catch(function () {
                 return console.warn('Oh. Something went wrong');
             });
@@ -54104,7 +54105,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -54264,100 +54265,155 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "CreateTransaction",
     components: {},
     mounted: function mounted() {
-        // not sure if something needs to happen here.
+        this.addTransaction();
     },
     ready: function ready() {},
 
     methods: {
         addTransaction: function addTransaction(e) {
-            var latest = this.transactions.transactions[this.transactions.transactions.length - 1];
-            this.transactions.transactions.push(latest);
-            e.preventDefault();
+            this.transactions.push({
+                description: "",
+                date: "",
+                amount: "",
+                foreign_amount: "",
+                source_account: {
+                    id: 0,
+                    name: "",
+                    type: "",
+                    //currency_id: window.defaultCurrency.id,
+                    //currency_name: window.defaultCurrency.name,
+                    //currency_code: window.defaultCurrency.code,
+                    //currency_decimal_places: window.defaultCurrency.decimal_places,
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: []
+                },
+                destination_account: {
+                    id: 0,
+                    name: "",
+                    type: "",
+                    //currency_id: window.defaultCurrency.id,
+                    //currency_name: window.defaultCurrency.name,
+                    //currency_code: window.defaultCurrency.code,
+                    //currency_decimal_places: window.defaultCurrency.decimal_places,
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: []
+                }
+            });
+            if (e) {
+                e.preventDefault();
+            }
         },
         setTransactionType: function setTransactionType(type) {
             this.transactionType = type;
         },
+        deleteTransaction: function deleteTransaction(index, event) {
+            event.preventDefault();
+            for (var key in this.transactions) {
+                if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                    console.log('Transactions[' + key + '] exists: ' + this.transactions[key].description);
+                }
+            }
+
+            this.transactions.splice(index, 1);
+            console.log('Going to remove index ' + index);
+
+            for (var _key in this.transactions) {
+                if (this.transactions.hasOwnProperty(_key) && /^0$|^[1-9]\d*$/.test(_key) && _key <= 4294967294) {
+                    console.log('New: Transactions[' + _key + '] exists: ' + this.transactions[_key].description);
+                }
+            }
+        },
         limitSourceType: function limitSourceType(type) {
             var i = void 0;
-            for (i = 0; i < this.transactions.transactions.length; i++) {
-                this.transactions.transactions[i].source_account.allowed_types = [type];
+            for (i = 0; i < this.transactions.length; i++) {
+                this.transactions[i].source_account.allowed_types = [type];
             }
         },
         limitDestinationType: function limitDestinationType(type) {
             var i = void 0;
-            for (i = 0; i < this.transactions.transactions.length; i++) {
-                this.transactions.transactions[i].destination_account.allowed_types = [type];
+            for (i = 0; i < this.transactions.length; i++) {
+                this.transactions[i].destination_account.allowed_types = [type];
             }
         },
 
         selectedSourceAccount: function selectedSourceAccount(index, model) {
             if (typeof model === 'string') {
                 // cant change types, only name.
-                this.transactions.transactions[index].source_account.name = model;
+                this.transactions[index].source_account.name = model;
             } else {
 
                 // todo maybe replace the entire model?
-                this.transactions.transactions[index].source_account.id = model.id;
-                this.transactions.transactions[index].source_account.name = model.name;
-                this.transactions.transactions[index].source_account.type = model.type;
+                this.transactions[index].source_account.id = model.id;
+                this.transactions[index].source_account.name = model.name;
+                this.transactions[index].source_account.type = model.type;
 
-                this.transactions.transactions[index].source_account.currency_id = model.currency_id;
-                this.transactions.transactions[index].source_account.currency_name = model.currency_name;
-                this.transactions.transactions[index].source_account.currency_code = model.currency_code;
-                this.transactions.transactions[index].source_account.currency_decimal_places = model.currency_decimal_places;
+                this.transactions[index].source_account.currency_id = model.currency_id;
+                this.transactions[index].source_account.currency_name = model.currency_name;
+                this.transactions[index].source_account.currency_code = model.currency_code;
+                this.transactions[index].source_account.currency_decimal_places = model.currency_decimal_places;
                 // force types on destination selector.
-                this.transactions.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
+                this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
             }
         },
         selectedDestinationAccount: function selectedDestinationAccount(index, model) {
             if (typeof model === 'string') {
                 // cant change types, only name.
-                this.transactions.transactions[index].destination_account.name = model;
+                this.transactions[index].destination_account.name = model;
             } else {
 
                 // todo maybe replace the entire model?
-                this.transactions.transactions[index].destination_account.id = model.id;
-                this.transactions.transactions[index].destination_account.name = model.name;
-                this.transactions.transactions[index].destination_account.type = model.type;
+                this.transactions[index].destination_account.id = model.id;
+                this.transactions[index].destination_account.name = model.name;
+                this.transactions[index].destination_account.type = model.type;
 
-                this.transactions.transactions[index].destination_account.currency_id = model.currency_id;
-                this.transactions.transactions[index].destination_account.currency_name = model.currency_name;
-                this.transactions.transactions[index].destination_account.currency_code = model.currency_code;
-                this.transactions.transactions[index].destination_account.currency_decimal_places = model.currency_decimal_places;
+                this.transactions[index].destination_account.currency_id = model.currency_id;
+                this.transactions[index].destination_account.currency_name = model.currency_name;
+                this.transactions[index].destination_account.currency_code = model.currency_code;
+                this.transactions[index].destination_account.currency_decimal_places = model.currency_decimal_places;
 
                 // force types on destination selector.
-                this.transactions.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
+                this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
             }
         },
         clearSource: function clearSource(index) {
-            this.transactions.transactions[index].source_account.id = 0;
-            this.transactions.transactions[index].source_account.name = "";
-            this.transactions.transactions[index].source_account.type = "";
-            this.transactions.transactions[index].destination_account.allowed_types = [];
+            this.transactions[index].source_account.id = 0;
+            this.transactions[index].source_account.name = "";
+            this.transactions[index].source_account.type = "";
+            this.transactions[index].destination_account.allowed_types = [];
 
             // if there is a destination model, reset the types of the source
             // by pretending we selected it again.
-            if (this.transactions.transactions[index].destination_account) {
+            if (this.transactions[index].destination_account) {
                 console.log('There is a destination account.');
-                this.selectedDestinationAccount(index, this.transactions.transactions[index].destination_account);
+                this.selectedDestinationAccount(index, this.transactions[index].destination_account);
             }
         },
         clearDestination: function clearDestination(index) {
-            this.transactions.transactions[index].destination_account.id = 0;
-            this.transactions.transactions[index].destination_account.name = "";
-            this.transactions.transactions[index].destination_account.type = "";
-            this.transactions.transactions[index].source_account.allowed_types = [];
+            this.transactions[index].destination_account.id = 0;
+            this.transactions[index].destination_account.name = "";
+            this.transactions[index].destination_account.type = "";
+            this.transactions[index].source_account.allowed_types = [];
 
             // if there is a source model, reset the types of the destination
             // by pretending we selected it again.
-            if (this.transactions.transactions[index].source_account) {
+            if (this.transactions[index].source_account) {
                 console.log('There is a source account.');
-                this.selectedSourceAccount(index, this.transactions.transactions[index].source_account);
+                this.selectedSourceAccount(index, this.transactions[index].source_account);
             }
         }
     },
@@ -54368,43 +54424,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     data: function data() {
         return {
             transactionType: null,
-            transactions: {
-                group_title: "",
-                transactions: [{
-                    description: "",
-                    date: "",
-                    amount: "",
-                    foreign_amount: "",
-                    source_account: {
-                        id: 0,
-                        name: "",
-                        type: "",
-                        //currency_id: window.defaultCurrency.id,
-                        //currency_name: window.defaultCurrency.name,
-                        //currency_code: window.defaultCurrency.code,
-                        //currency_decimal_places: window.defaultCurrency.decimal_places,
-                        currency_id: 0,
-                        currency_name: '',
-                        currency_code: '',
-                        currency_decimal_places: 2,
-                        allowed_types: []
-                    },
-                    destination_account: {
-                        id: 0,
-                        name: "",
-                        type: "",
-                        //currency_id: window.defaultCurrency.id,
-                        //currency_name: window.defaultCurrency.name,
-                        //currency_code: window.defaultCurrency.code,
-                        //currency_decimal_places: window.defaultCurrency.decimal_places,
-                        currency_id: 0,
-                        currency_name: '',
-                        currency_code: '',
-                        currency_decimal_places: 2,
-                        allowed_types: []
-                    }
-                }]
-            }
+            group_title: "",
+            transactions: []
         };
     }
 });
@@ -54423,7 +54444,7 @@ var render = function() {
       staticClass: "form-horizontal",
       attrs: {
         method: "POST",
-        action: "xxxx",
+        action: "transactions/store",
         "accept-charset": "UTF-8",
         id: "store",
         enctype: "multipart/form-data"
@@ -54432,7 +54453,7 @@ var render = function() {
     [
       _c("input", { attrs: { name: "_token", type: "hidden", value: "xxx" } }),
       _vm._v(" "),
-      _vm.transactions.transactions.length > 1
+      _vm.transactions.length > 1
         ? _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-lg-6" }, [
               _c("div", { staticClass: "box" }, [
@@ -54446,8 +54467,8 @@ var render = function() {
                           {
                             name: "model",
                             rawName: "v-model",
-                            value: _vm.transactions.group_title,
-                            expression: "transactions.group_title"
+                            value: _vm.group_title,
+                            expression: "group_title"
                           }
                         ],
                         staticClass: "form-control",
@@ -54458,17 +54479,13 @@ var render = function() {
                           autocomplete: "off",
                           placeholder: "Description of the split transaction"
                         },
-                        domProps: { value: _vm.transactions.group_title },
+                        domProps: { value: _vm.group_title },
                         on: {
                           input: function($event) {
                             if ($event.target.composing) {
                               return
                             }
-                            _vm.$set(
-                              _vm.transactions,
-                              "group_title",
-                              $event.target.value
-                            )
+                            _vm.group_title = $event.target.value
                           }
                         }
                       }),
@@ -54486,28 +54503,52 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm._l(_vm.transactions.transactions, function(transaction, index) {
+      _vm._l(_vm.transactions, function(transaction, index) {
         return _c("div", [
           _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-lg-12" }, [
               _c("div", { staticClass: "box" }, [
                 _c("div", { staticClass: "box-header with-border" }, [
                   _c("h3", { staticClass: "box-title splitTitle" }, [
-                    _vm.transactions.transactions.length > 1
+                    _vm.transactions.length > 1
                       ? _c("span", [
                           _vm._v(
                             "Split " +
                               _vm._s(index + 1) +
                               " / " +
-                              _vm._s(_vm.transactions.transactions.length)
+                              _vm._s(_vm.transactions.length)
                           )
                         ])
                       : _vm._e(),
                     _vm._v(" "),
-                    _vm.transactions.transactions.length === 1
+                    _vm.transactions.length === 1
                       ? _c("span", [_vm._v("Transaction information")])
                       : _vm._e()
-                  ])
+                  ]),
+                  _vm._v(" "),
+                  _vm.transactions.length > 1
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "box-tools pull-right",
+                          attrs: { x: "" }
+                        },
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-xs btn-danger",
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteTransaction(index, $event)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-trash" })]
+                          )
+                        ]
+                      )
+                    : _vm._e()
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "box-body" }, [
@@ -54562,6 +54603,14 @@ var render = function() {
                         _c("div", { staticClass: "form-group" }, [
                           _c("div", { staticClass: "col-sm-12" }, [
                             _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: transaction.description,
+                                  expression: "transaction.description"
+                                }
+                              ],
                               staticClass: "form-control",
                               attrs: {
                                 type: "text",
@@ -54570,7 +54619,19 @@ var render = function() {
                                 autocomplete: "off",
                                 placeholder: "Description"
                               },
-                              domProps: { value: transaction.description }
+                              domProps: { value: transaction.description },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    transaction,
+                                    "description",
+                                    $event.target.value
+                                  )
+                                }
+                              }
                             })
                           ])
                         ]),
@@ -54578,6 +54639,14 @@ var render = function() {
                         _c("div", { staticClass: "form-group" }, [
                           _c("div", { staticClass: "col-sm-12" }, [
                             _c("input", {
+                              directives: [
+                                {
+                                  name: "model",
+                                  rawName: "v-model",
+                                  value: transaction.date,
+                                  expression: "transaction.date"
+                                }
+                              ],
                               staticClass: "form-control",
                               attrs: {
                                 type: "date",
@@ -54588,7 +54657,19 @@ var render = function() {
                                 disabled: index > 0,
                                 placeholder: "Date"
                               },
-                              domProps: { value: transaction.date }
+                              domProps: { value: transaction.date },
+                              on: {
+                                input: function($event) {
+                                  if ($event.target.composing) {
+                                    return
+                                  }
+                                  _vm.$set(
+                                    transaction,
+                                    "date",
+                                    $event.target.value
+                                  )
+                                }
+                              }
                             })
                           ])
                         ]),
@@ -54688,7 +54769,9 @@ var render = function() {
                 on: { click: _vm.addTransaction }
               },
               [_vm._v("Add another split")]
-            )
+            ),
+            _vm._v(" "),
+            _c("button", { staticClass: "btn btn-success" }, [_vm._v("Submit")])
           ])
         ])
       ])

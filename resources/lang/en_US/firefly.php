@@ -54,6 +54,7 @@ return [
     'create_new_stuff'                           => 'Create new stuff',
     'new_withdrawal'                             => 'New withdrawal',
     'create_new_transaction'                     => 'Create new transaction',
+    'new_transaction'                            => 'New transaction',
     'go_to_asset_accounts'                       => 'View your asset accounts',
     'go_to_budgets'                              => 'Go to your budgets',
     'go_to_categories'                           => 'Go to your categories',
