@@ -42,7 +42,9 @@
         name: "Tags",
         components: {
             VueTagsInput
-        }, data() {
+        },
+        props: ['value'],
+        data() {
             return {
                 tag: '',
                 tags: [],
@@ -57,6 +59,7 @@
             update(newTags) {
                 this.autocompleteItems = [];
                 this.tags = newTags;
+                this.$emit('input', this.tags);
             },
             initItems() {
                 if (this.tag.length < 2) {

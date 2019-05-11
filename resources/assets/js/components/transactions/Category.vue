@@ -24,6 +24,8 @@
             <div class="input-group">
                 <input
                         ref="input"
+                        :value="value"
+                        @input="handleInput"
                         type="text"
                         placeholder="Category"
                         autocomplete="off"
@@ -57,6 +59,7 @@
     export default {
         name: "Category",
         props: {
+            value: String,
             inputName: String,
             accountName: {
                 type: String,
@@ -76,9 +79,16 @@
         mounted() {
             this.target = this.$refs.input;
             this.categoryAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/categories?query=";
-            //this.triggerTransactionType();
         },
         methods: {
+            handleInput(e) {
+                if (typeof this.$refs.input.value === 'string') {
+                    this.$emit('input', this.$refs.input.value);
+                    return;
+                }
+                this.$emit('input', this.$refs.input.value.name);
+
+            },
             clearCategory: function () {
                 //props.value = '';
                 this.name = '';
@@ -92,6 +102,12 @@
                 // emit the fact that the user selected a type of account
                 // (influencing the destination)
                 this.$emit('select:category', this.name);
+
+                if (typeof this.name === 'string') {
+                    this.$emit('input', this.name);
+                    return;
+                }
+                this.$emit('input', this.name.name);
             },
             handleEnter: function (e) {
                 // todo feels sloppy

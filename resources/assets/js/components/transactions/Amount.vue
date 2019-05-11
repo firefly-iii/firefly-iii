@@ -22,7 +22,8 @@
     <div class="form-group">
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
-            <input type="number" step="any" class="form-control" name="amount[]"
+            <input type="number" ref="amount" :value="value" @input="handleInput" step="any" class="form-control"
+                   name="amount[]"
                    title="amount" autocomplete="off" placeholder="Amount">
         </div>
     </div>
@@ -31,15 +32,18 @@
 <script>
     export default {
         name: "Amount",
-        props: ['source', 'destination', 'transactionType'],
+        props: ['source', 'destination', 'transactionType','value'],
         data() {
             return {
                 sourceAccount: this.source,
                 destinationAccount: this.destination,
-                type: this.transactionType,
+                type: this.transactionType
             }
         },
         methods: {
+            handleInput(e) {
+                this.$emit('input', this.$refs.amount.value);
+            },
             changeData: function () {
                 if ('' === this.transactionType) {
                     $(this.$refs.cur).text(this.sourceAccount.currency_name);

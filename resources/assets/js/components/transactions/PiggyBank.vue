@@ -21,8 +21,8 @@
 <template>
     <div class="form-group" v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Transfer'">
         <div class="col-sm-12">
-            <select name="piggy_bank[]" class="form-control" v-if="this.piggies.length > 0">
-                <option v-for="piggy in this.piggies">{{piggy.name}}</option>
+            <select name="piggy_bank[]" ref="piggy" @input="handleInput" class="form-control" v-if="this.piggies.length > 0">
+                <option v-for="piggy in this.piggies" :label="piggy.name" :value="piggy.id">{{piggy.name}}</option>
             </select>
         </div>
     </div>
@@ -31,7 +31,7 @@
 <script>
     export default {
         name: "PiggyBank",
-        props: ['transactionType'],
+        props: ['value','transactionType'],
         mounted() {
             this.loadPiggies();
         },
@@ -41,6 +41,9 @@
             }
         },
         methods: {
+            handleInput(e) {
+                this.$emit('input', this.$refs.piggy.value);
+            },
             loadPiggies: function () {
                 let URI = document.getElementsByTagName('base')[0].href + "json/piggy-banks";
                 axios.get(URI, {}).then((res) => {

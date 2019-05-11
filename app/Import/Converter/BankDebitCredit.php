@@ -46,6 +46,7 @@ class BankDebitCredit implements ConverterInterface
         $negative = [
             'D', // Old style Rabobank (NL). Short for "Debit"
             'A', // New style Rabobank (NL). Short for "Af"
+            'DR', // https://old.reddit.com/r/FireflyIII/comments/bn2edf/generic_debitcredit_indicator/
             'Af', // ING (NL).
             'Debet', // Triodos (NL)
         ];

@@ -21,12 +21,22 @@
 <template>
     <div class="form-group">
         <div class="col-sm-4">
-            <select class="form-control" name="foreign_currency[]" v-if="this.enabledCurrencies.length > 0">
-                <option v-for="currency in this.enabledCurrencies" v-if="currency.enabled">{{ currency.name }}</option>
+            <select class="form-control" ref="currency_select" name="foreign_currency[]"
+                    v-if="this.enabledCurrencies.length > 0" @input="handleInput">
+                <option
+                        v-for="currency in this.enabledCurrencies"
+                        v-if="currency.enabled"
+                        :value="currency.id"
+                        :label="currency.name"
+
+                >
+                    {{ currency.name }}
+                </option>
             </select>
         </div>
         <div class="col-sm-8">
-            <input type="number" step="any" class="form-control" name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
+            <input type="number" @input="handleInput" ref="amount" :value="value.amount" step="any" class="form-control"
+                   name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
                    title="Foreign amount" autocomplete="off" placeholder="Foreign amount">
         </div>
     </div>
@@ -35,7 +45,7 @@
 <script>
     export default {
         name: "ForeignAmountSelect",
-        props: ['source', 'destination', 'transactionType'],
+        props: ['source', 'destination', 'transactionType', 'value'],
         mounted() {
             this.loadCurrencies();
         },
@@ -58,6 +68,13 @@
             }
         },
         methods: {
+            handleInput(e) {
+                this.$emit('input', {
+                    amount: +this.$refs.amount.value,
+                    currency_id: this.$refs.currency_select.value,
+                }
+                );
+            },
             changeData: function () {
                 this.enabledCurrencies = [];
                 if (this.transactionType === 'Transfer') {

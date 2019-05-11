@@ -19,7 +19,8 @@
   -->
 
 <template>
-    <form method="POST" action="transactions/store" accept-charset="UTF-8" class="form-horizontal" id="store" enctype="multipart/form-data">
+    <form method="POST" action="transactions/store" accept-charset="UTF-8" class="form-horizontal" id="store"
+          enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
 
         <div class="row" v-if="transactions.length > 1">
@@ -35,11 +36,13 @@
                             <div class="col-sm-12">
                                 <input type="text" class="form-control" name="group_title"
                                        v-model="group_title"
-                                       title="Description of the split transaction" autocomplete="off" placeholder="Description of the split transaction">
+                                       title="Description of the split transaction" autocomplete="off"
+                                       placeholder="Description of the split transaction">
 
 
                                 <p class="help-block">
-                                    If you create a split transaction, there must be a global description for all splits of the transaction.
+                                    If you create a split transaction, there must be a global description for all splits
+                                    of the transaction.
                                 </p>
                             </div>
                         </div>
@@ -58,7 +61,8 @@
                                 <span v-if="transactions.length === 1">Transaction information</span>
                             </h3>
                             <div class="box-tools pull-right" v-if="transactions.length > 1" x>
-                                <button v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i class="fa fa-trash"></i></button>
+                                <button v-on:click="deleteTransaction(index, $event)" class="btn btn-xs btn-danger"><i
+                                        class="fa fa-trash"></i></button>
                             </div>
                         </div>
                         <div class="box-body">
@@ -114,19 +118,32 @@
                                     <amount
                                             :source="transaction.source_account"
                                             :destination="transaction.destination_account"
+                                            v-model="transaction.amount"
                                             :transactionType="transactionType"
                                     ></amount>
                                     <foreign-amount
                                             :source="transaction.source_account"
                                             :destination="transaction.destination_account"
+                                            v-model="transaction.foreign_amount"
                                             :transactionType="transactionType"
                                     ></foreign-amount>
                                 </div>
                                 <div class="col-lg-4">
-                                    <budget :transactionType="transactionType"></budget>
-                                    <category :transactionType="transactionType"></category>
-                                    <piggy-bank :transactionType="transactionType"></piggy-bank>
-                                    <tags></tags>
+                                    <budget
+                                            :transactionType="transactionType"
+                                            v-model="transaction.budget"
+                                    ></budget>
+                                    <category
+                                            :transactionType="transactionType"
+                                            v-model="transaction.category"
+                                    ></category>
+                                    <piggy-bank
+                                            :transactionType="transactionType"
+                                            v-model="transaction.piggy_bank"
+                                    ></piggy-bank>
+                                    <tags
+                                            v-model="transaction.tags"
+                                    ></tags>
                                     <!-- custom string fields -->
                                     <custom-transaction-fields></custom-transaction-fields>
 
@@ -140,6 +157,7 @@
                 </div>
             </div>
         </div>
+        <pre>{{ $data }}</pre>
         <div class="row">
             <div class="col-lg-12">
                 <p>
@@ -164,39 +182,46 @@
         methods: {
             addTransaction: function (e) {
                 this.transactions.push({
-                                           description: "",
-                                           date: "",
-                                           amount: "",
-                                           foreign_amount: "",
-                                           source_account: {
-                                               id: 0,
-                                               name: "",
-                                               type: "",
-                                               //currency_id: window.defaultCurrency.id,
-                                               //currency_name: window.defaultCurrency.name,
-                                               //currency_code: window.defaultCurrency.code,
-                                               //currency_decimal_places: window.defaultCurrency.decimal_places,
-                                               currency_id: 0,
-                                               currency_name: '',
-                                               currency_code: '',
-                                               currency_decimal_places: 2,
-                                               allowed_types: []
-                                           },
-                                           destination_account: {
-                                               id: 0,
-                                               name: "",
-                                               type: "",
-                                               //currency_id: window.defaultCurrency.id,
-                                               //currency_name: window.defaultCurrency.name,
-                                               //currency_code: window.defaultCurrency.code,
-                                               //currency_decimal_places: window.defaultCurrency.decimal_places,
-                                               currency_id: 0,
-                                               currency_name: '',
-                                               currency_code: '',
-                                               currency_decimal_places: 2,
-                                               allowed_types: []
-                                           }
-                                       });
+                    description: "",
+                    date: "",
+                    amount: "",
+                    category: "",
+                    piggy_bank: 0,
+                    budget: 0,
+                    tags: [],
+                    foreign_amount: {
+                        amount: "",
+                        currency_id: 0
+                    },
+                    source_account: {
+                        id: 0,
+                        name: "",
+                        type: "",
+                        //currency_id: window.defaultCurrency.id,
+                        //currency_name: window.defaultCurrency.name,
+                        //currency_code: window.defaultCurrency.code,
+                        //currency_decimal_places: window.defaultCurrency.decimal_places,
+                        currency_id: 0,
+                        currency_name: '',
+                        currency_code: '',
+                        currency_decimal_places: 2,
+                        allowed_types: []
+                    },
+                    destination_account: {
+                        id: 0,
+                        name: "",
+                        type: "",
+                        //currency_id: window.defaultCurrency.id,
+                        //currency_name: window.defaultCurrency.name,
+                        //currency_code: window.defaultCurrency.code,
+                        //currency_decimal_places: window.defaultCurrency.decimal_places,
+                        currency_id: 0,
+                        currency_name: '',
+                        currency_code: '',
+                        currency_decimal_places: 2,
+                        allowed_types: []
+                    }
+                });
                 if (e) {
                     e.preventDefault();
                 }

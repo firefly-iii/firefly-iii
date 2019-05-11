@@ -21,8 +21,8 @@
 <template>
     <div class="form-group" v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Withdrawal'">
         <div class="col-sm-12">
-            <select name="budget[]" class="form-control" v-if="this.budgets.length > 0">
-                <option v-for="budget in this.budgets">{{budget.name}}</option>
+            <select name="budget[]" ref="budget" @input="handleInput" class="form-control" v-if="this.budgets.length > 0">
+                <option v-for="budget in this.budgets" :label="budget.name" :value="budget.id">{{budget.name}}</option>
             </select>
         </div>
     </div>
@@ -31,7 +31,7 @@
 <script>
     export default {
         name: "Budget",
-        props: ['transactionType'],
+        props: ['transactionType','value'],
         mounted() {
             this.loadBudgets();
         },
@@ -41,6 +41,9 @@
             }
         },
         methods: {
+            handleInput(e) {
+                this.$emit('input', this.$refs.budget.value);
+            },
             loadBudgets: function () {
                 let URI = document.getElementsByTagName('base')[0].href + "json/budgets";
                 axios.get(URI, {}).then((res) => {
