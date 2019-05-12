@@ -11,6 +11,9 @@ import * as uiv from 'uiv';
 Vue.use(uiv);
 // components for create and edit transactions.
 Vue.component('budget', require('./components/transactions/Budget.vue'));
+
+Vue.component('custom-date', require('./components/transactions/CustomDate.vue'));
+
 Vue.component('custom-transaction-fields', require('./components/transactions/CustomTransactionFields.vue'));
 Vue.component('piggy-bank', require('./components/transactions/PiggyBank.vue'));
 Vue.component('tags', require('./components/transactions/Tags.vue'));

@@ -19,7 +19,14 @@
   -->
 
 <template>
-
+    <div>
+        <component v-if="this.fields.interest_date" v-bind:is="componentInstance"></component>
+        <component v-if="this.fields.book_date" v-bind:is="componentInstance"></component>
+        <component v-if="this.fields.process_date" v-bind:is="componentInstance"></component>
+        <component v-if="this.fields.due_date" v-bind:is="componentInstance"></component>
+        <component v-if="this.fields.payment_date" v-bind:is="componentInstance"></component>
+        <component v-if="this.fields.invoice_date" v-bind:is="componentInstance"></component>
+    </div>
 </template>
 
 <script>
@@ -28,14 +35,39 @@
         mounted() {
             this.getPreference();
         },
+        data() {
+            return {
+                customInterestDate: null,
+                fields: [
+                    {
+                        "interest_date": false,
+                        "book_date": false,
+                        "process_date": false,
+                        "due_date": false,
+                        "payment_date": false,
+                        "invoice_date": false,
+                        "internal_reference": false,
+                        "notes": false,
+                        "attachments": false
+                    }
+                ]
+            };
+        },
+        computed: {
+            componentInstance () {
+                return 'custom-date';
+            }
+        },
         methods: {
             getPreference() {
 
-                const url = document.getElementsByTagName('base')[0].href + 'api/v1/preferences/transaction_journal_optional_fields';
+               // Vue.component('custom-date', (resolve) => {
+               //      console.log('loaded');
+               //  });
 
+                const url = document.getElementsByTagName('base')[0].href + 'api/v1/preferences/transaction_journal_optional_fields';
                 axios.get(url).then(response => {
-                    // TODO here we are.
-                    //console.log(response.data.data.attributes);
+                    this.fields = response.data.data.attributes.data;
                 }).catch(() => console.warn('Oh. Something went wrong'));
             },
         }
