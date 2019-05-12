@@ -38,8 +38,6 @@
                                        v-model="group_title"
                                        title="Description of the split transaction" autocomplete="off"
                                        placeholder="Description of the split transaction">
-
-
                                 <p class="help-block">
                                     If you create a split transaction, there must be a global description for all splits
                                     of the transaction.
@@ -144,12 +142,8 @@
                                     <tags
                                             v-model="transaction.tags"
                                     ></tags>
-                                    <!-- custom string fields -->
-                                    <custom-transaction-fields v-model="transaction.custom_fields"></custom-transaction-fields>
-
-                                    <!-- custom date fields -->
-
-                                    <!-- custom other fields -->
+                                    <custom-transaction-fields
+                                            v-model="transaction.custom_fields"></custom-transaction-fields>
                                 </div>
                             </div>
                         </div>
@@ -157,15 +151,16 @@
                 </div>
             </div>
         </div>
-        <pre>{{ $data }}</pre>
+
         <div class="row">
             <div class="col-lg-12">
                 <p>
-                    <button class="btn btn-primary" v-on:click="addTransaction">Add another split</button>
-                    <button class="btn btn-success">Submit</button>
+                    <button class="btn btn-primary" @click="addTransaction">Add another split</button>
+                    <button class="btn btn-success" @click="submit">Submit</button>
                 </p>
             </div>
         </div>
+        <pre>{{ $data }}</pre>
     </form>
 </template>
 
@@ -180,6 +175,101 @@
 
         },
         methods: {
+            convertData: function () {
+                let data = {
+                    'transactions': [],
+                };
+                let tagList = [];
+                let transactionType;
+                let firstSource;
+                let firstDestination;
+                if (this.transactions.length > 1) {
+                    data.group_title = this.group_title;
+                }
+
+                // get transaction type from first transaction
+                transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'invalid';
+
+                // if the transaction type is invalid, might just be that we can deduce it from
+                // the presence of a source or destination account
+                firstSource = this.transactions[0].source_account.type;
+                firstDestination = this.transactions[0].destination_account.type;
+
+
+                if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+                    console.log('Assumed this is a withdrawal.');
+                    transactionType = 'withdrawal';
+                }
+
+                if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
+                    console.log('Assumed this is a deposit.');
+                    transactionType = 'deposit';
+                }
+
+                for (let key in this.transactions) {
+                    if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        tagList = [];
+
+                        // loop tags
+                        for (let tagKey in this.transactions[key].tags) {
+                            if (this.transactions[key].tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && key <= 4294967294) {
+                                tagList.push(this.transactions[key].tags[tagKey].text);
+                            }
+                        }
+
+
+                        data.transactions.push(
+                            {
+                                type: transactionType,
+                                date: this.transactions[key].date,
+
+                                amount: this.transactions[key].amount,
+                                currency_id: this.transactions[key].currency_id,
+
+                                foreign_amount: this.transactions[key].foreign_amount.amount,
+                                foreign_currency_id: this.transactions[key].foreign_amount.currency_id,
+
+                                description: this.transactions[key].description,
+
+                                source_id: this.transactions[key].source_account.id,
+                                source_name: this.transactions[key].source_account.name,
+
+                                destination_id: this.transactions[key].destination_account.id,
+                                destination_name: this.transactions[key].destination_account.name,
+
+                                budget_id: this.transactions[key].budget,
+                                category_name: this.transactions[key].category,
+                                piggy_bank_id: this.transactions[key].piggy_bank,
+                                tags: tagList,
+
+                                interest_date: this.transactions[key].custom_fields.interest_date,
+                                book_date: this.transactions[key].custom_fields.book_date,
+                                process_date: this.transactions[key].custom_fields.process_date,
+                                due_date: this.transactions[key].custom_fields.due_date,
+                                payment_date: this.transactions[key].custom_fields.payment_date,
+                                invoice_date: this.transactions[key].custom_fields.invoice_date,
+                                internal_reference: this.transactions[key].custom_fields.internal_reference,
+                                notes: this.transactions[key].custom_fields.notes
+                            }
+                        );
+                    }
+                }
+                console.log(data);
+
+                return data;
+            },
+            submit(e) {
+                const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+                const data = this.convertData();
+
+                axios.post(uri, data)
+                    .then(response => {
+                        console.log(response);
+                    });
+                if (e) {
+                    e.preventDefault();
+                }
+            },
             addTransaction: function (e) {
                 this.transactions.push({
                     description: "",
