@@ -12509,6 +12509,9 @@ Vue.use(__WEBPACK_IMPORTED_MODULE_0_uiv__);
 Vue.component('budget', __webpack_require__(42));
 
 Vue.component('custom-date', __webpack_require__(48));
+Vue.component('custom-string', __webpack_require__(114));
+Vue.component('custom-attachments', __webpack_require__(119));
+Vue.component('custom-textarea', __webpack_require__(124));
 
 Vue.component('custom-transaction-fields', __webpack_require__(53));
 Vue.component('piggy-bank', __webpack_require__(58));
@@ -48800,7 +48803,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -48828,7 +48831,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-    name: "CustomDate"
+    name: "CustomDate",
+    props: {
+        value: String,
+        title: String,
+        name: String
+    },
+    methods: {
+        handleInput: function handleInput(e) {
+            this.$emit('input', this.$refs.date.value);
+        }
+    }
 });
 
 /***/ }),
@@ -48839,34 +48852,29 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("div", { staticClass: "col-sm-12 text-sm" }, [
-        _vm._v("\n        Custom Date\n    ")
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-12" }, [
-        _c("input", {
-          staticClass: "form-control",
-          attrs: {
-            type: "date",
-            name: "date[]",
-            title: "Custom Date",
-            value: "",
-            autocomplete: "off",
-            placeholder: "Custom Date"
-          }
-        })
-      ])
+  return _c("div", { staticClass: "form-group" }, [
+    _c("div", { staticClass: "col-sm-12 text-sm" }, [
+      _vm._v("\n        " + _vm._s(_vm.title) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-sm-12" }, [
+      _c("input", {
+        ref: "date",
+        staticClass: "form-control",
+        attrs: {
+          type: "date",
+          name: _vm.name,
+          title: _vm.title,
+          autocomplete: "off",
+          placeholder: _vm.title
+        },
+        domProps: { value: _vm.value },
+        on: { input: _vm.handleInput }
+      })
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 module.exports = { render: render, staticRenderFns: staticRenderFns }
 if (false) {
@@ -48962,7 +48970,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -49004,9 +49012,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "CustomTransactionFields",
+    props: ['value'],
     mounted: function mounted() {
         this.getPreference();
     },
@@ -49028,11 +49045,24 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     computed: {
-        componentInstance: function componentInstance() {
+        // TODO this seems a pretty weird way of doing it.
+        dateComponent: function dateComponent() {
             return 'custom-date';
+        },
+        stringComponent: function stringComponent() {
+            return 'custom-string';
+        },
+        attachmentComponent: function attachmentComponent() {
+            return 'custom-attachments';
+        },
+        textareaComponent: function textareaComponent() {
+            return 'custom-textarea';
         }
     },
     methods: {
+        handleInput: function handleInput(e) {
+            this.$emit('input', this.value);
+        },
         getPreference: function getPreference() {
             var _this = this;
 
@@ -49062,27 +49092,132 @@ var render = function() {
     "div",
     [
       this.fields.interest_date
-        ? _c(_vm.componentInstance, { tag: "component" })
+        ? _c(_vm.dateComponent, {
+            tag: "component",
+            attrs: { name: "interest_date[]", title: "Interest date" },
+            model: {
+              value: _vm.value.interest_date,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "interest_date", $$v)
+              },
+              expression: "value.interest_date"
+            }
+          })
         : _vm._e(),
       _vm._v(" "),
       this.fields.book_date
-        ? _c(_vm.componentInstance, { tag: "component" })
+        ? _c(_vm.dateComponent, {
+            tag: "component",
+            attrs: { name: "book_date[]", title: "Book date" },
+            model: {
+              value: _vm.value.book_date,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "book_date", $$v)
+              },
+              expression: "value.book_date"
+            }
+          })
         : _vm._e(),
       _vm._v(" "),
       this.fields.process_date
-        ? _c(_vm.componentInstance, { tag: "component" })
+        ? _c(_vm.dateComponent, {
+            tag: "component",
+            attrs: { name: "process_date[]", title: "Process date" },
+            model: {
+              value: _vm.value.process_date,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "process_date", $$v)
+              },
+              expression: "value.process_date"
+            }
+          })
         : _vm._e(),
       _vm._v(" "),
       this.fields.due_date
-        ? _c(_vm.componentInstance, { tag: "component" })
+        ? _c(_vm.dateComponent, {
+            tag: "component",
+            attrs: { name: "due_date[]", title: "Due date" },
+            model: {
+              value: _vm.value.due_date,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "due_date", $$v)
+              },
+              expression: "value.due_date"
+            }
+          })
         : _vm._e(),
       _vm._v(" "),
       this.fields.payment_date
-        ? _c(_vm.componentInstance, { tag: "component" })
+        ? _c(_vm.dateComponent, {
+            tag: "component",
+            attrs: { name: "payment_date[]", title: "Payment date" },
+            model: {
+              value: _vm.value.payment_date,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "payment_date", $$v)
+              },
+              expression: "value.payment_date"
+            }
+          })
         : _vm._e(),
       _vm._v(" "),
       this.fields.invoice_date
-        ? _c(_vm.componentInstance, { tag: "component" })
+        ? _c(_vm.dateComponent, {
+            tag: "component",
+            attrs: { name: "invoice_date[]", title: "Invoice date" },
+            model: {
+              value: _vm.value.invoice_date,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "invoice_date", $$v)
+              },
+              expression: "value.invoice_date"
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      this.fields.internal_reference
+        ? _c(_vm.stringComponent, {
+            tag: "component",
+            attrs: {
+              name: "internal_reference[]",
+              title: "Internal reference"
+            },
+            model: {
+              value: _vm.value.internal_reference,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "internal_reference", $$v)
+              },
+              expression: "value.internal_reference"
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      this.fields.attachments
+        ? _c(_vm.attachmentComponent, {
+            tag: "component",
+            attrs: { name: "attachments[]", title: "Attachments" },
+            model: {
+              value: _vm.value.attachments,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "attachments", $$v)
+              },
+              expression: "value.attachments"
+            }
+          })
+        : _vm._e(),
+      _vm._v(" "),
+      this.fields.notes
+        ? _c(_vm.textareaComponent, {
+            tag: "component",
+            attrs: { name: "notes[]", title: "Notes" },
+            model: {
+              value: _vm.value.notes,
+              callback: function($$v) {
+                _vm.$set(_vm.value, "notes", $$v)
+              },
+              expression: "value.notes"
+            }
+          })
         : _vm._e()
     ],
     1
@@ -53149,7 +53284,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -53350,6 +53485,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 piggy_bank: 0,
                 budget: 0,
                 tags: [],
+                custom_fields: {
+                    "interest_date": "2010-01-01",
+                    "book_date": "",
+                    "process_date": "",
+                    "due_date": "",
+                    "payment_date": "",
+                    "invoice_date": "",
+                    "internal_reference": "",
+                    "notes": "",
+                    "attachments": []
+                },
                 foreign_amount: {
                     amount: "",
                     currency_id: 0
@@ -53856,7 +54002,15 @@ var render = function() {
                           }
                         }),
                         _vm._v(" "),
-                        _c("custom-transaction-fields")
+                        _c("custom-transaction-fields", {
+                          model: {
+                            value: transaction.custom_fields,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "custom_fields", $$v)
+                            },
+                            expression: "transaction.custom_fields"
+                          }
+                        })
                       ],
                       1
                     )
@@ -53910,6 +54064,498 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-3c64c482", module.exports)
+  }
+}
+
+/***/ }),
+/* 114 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(115)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(117)
+/* template */
+var __vue_template__ = __webpack_require__(118)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-73a9dd75"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/transactions/CustomString.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-73a9dd75", Component.options)
+  } else {
+    hotAPI.reload("data-v-73a9dd75", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 115 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(116);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("7a8e435e", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-73a9dd75\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CustomString.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-73a9dd75\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CustomString.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 116 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 117 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "CustomString",
+    props: {
+        title: String,
+        name: String,
+        value: String
+    },
+    methods: {
+        handleInput: function handleInput(e) {
+            this.$emit('input', this.$refs.str.value);
+        }
+    }
+});
+
+/***/ }),
+/* 118 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "form-group" }, [
+    _c("div", { staticClass: "col-sm-12 text-sm" }, [
+      _vm._v("\n        " + _vm._s(_vm.title) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-sm-12" }, [
+      _c("input", {
+        ref: "str",
+        staticClass: "form-control",
+        attrs: {
+          type: "text",
+          name: _vm.name,
+          title: _vm.title,
+          autocomplete: "off",
+          placeholder: _vm.title
+        },
+        domProps: { value: _vm.value },
+        on: { input: _vm.handleInput }
+      })
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-73a9dd75", module.exports)
+  }
+}
+
+/***/ }),
+/* 119 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(120)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(122)
+/* template */
+var __vue_template__ = __webpack_require__(123)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-75bc1a7c"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/transactions/CustomAttachments.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-75bc1a7c", Component.options)
+  } else {
+    hotAPI.reload("data-v-75bc1a7c", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 120 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(121);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("55496da8", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-75bc1a7c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CustomAttachments.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-75bc1a7c\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CustomAttachments.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 121 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 122 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "CustomAttachments",
+    props: {
+        title: String,
+        name: String
+    }
+});
+
+/***/ }),
+/* 123 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "form-group" }, [
+    _c("div", { staticClass: "col-sm-12 text-sm" }, [
+      _vm._v("\n        " + _vm._s(_vm.title) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-sm-12" }, [
+      _c("input", {
+        staticClass: "form-control",
+        attrs: {
+          multiple: "multiple",
+          autocomplete: "off",
+          placeholder: _vm.title,
+          title: _vm.title,
+          name: _vm.name,
+          type: "file"
+        }
+      })
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-75bc1a7c", module.exports)
+  }
+}
+
+/***/ }),
+/* 124 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(125)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(127)
+/* template */
+var __vue_template__ = __webpack_require__(128)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-11018d84"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/transactions/CustomTextArea.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-11018d84", Component.options)
+  } else {
+    hotAPI.reload("data-v-11018d84", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 125 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(126);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("0b0c8efa", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-11018d84\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CustomTextArea.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-11018d84\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./CustomTextArea.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 126 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 127 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "CustomTextarea",
+    props: {
+        title: String,
+        name: String,
+        value: String
+    },
+    methods: {
+        handleInput: function handleInput(e) {
+            this.$emit('input', this.$refs.str.value);
+        }
+    }
+});
+
+/***/ }),
+/* 128 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", { staticClass: "form-group" }, [
+    _c("div", { staticClass: "col-sm-12 text-sm" }, [
+      _vm._v("\n        " + _vm._s(_vm.title) + "\n    ")
+    ]),
+    _vm._v(" "),
+    _c("div", { staticClass: "col-sm-12" }, [
+      _c("textarea", {
+        ref: "str",
+        staticClass: "form-control",
+        attrs: {
+          name: _vm.name,
+          title: _vm.title,
+          autocomplete: "off",
+          placeholder: _vm.title
+        },
+        domProps: { value: _vm.value },
+        on: { input: _vm.handleInput }
+      })
+    ])
+  ])
+}
+var staticRenderFns = []
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-11018d84", module.exports)
   }
 }
 

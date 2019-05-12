@@ -145,7 +145,7 @@
                                             v-model="transaction.tags"
                                     ></tags>
                                     <!-- custom string fields -->
-                                    <custom-transaction-fields></custom-transaction-fields>
+                                    <custom-transaction-fields v-model="transaction.custom_fields"></custom-transaction-fields>
 
                                     <!-- custom date fields -->
 
@@ -189,6 +189,17 @@
                     piggy_bank: 0,
                     budget: 0,
                     tags: [],
+                    custom_fields: {
+                        "interest_date": "2010-01-01",
+                        "book_date": "",
+                        "process_date": "",
+                        "due_date": "",
+                        "payment_date": "",
+                        "invoice_date": "",
+                        "internal_reference": "",
+                        "notes": "",
+                        "attachments": []
+                    },
                     foreign_amount: {
                         amount: "",
                         currency_id: 0

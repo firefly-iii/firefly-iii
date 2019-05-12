@@ -4,9 +4,9 @@
             {{ title }}
         </div>
         <div class="col-sm-12">
-            <input type="date" class="form-control" :name="name"
+            <input type="text" class="form-control" :name="name"
                    :title="title" autocomplete="off"
-                   ref="date"
+                   ref="str"
                    :value="value" @input="handleInput"
                    :placeholder="title">
         </div>
@@ -15,15 +15,15 @@
 
 <script>
     export default {
-        name: "CustomDate",
+        name: "CustomString",
         props: {
-            value: String,
             title: String,
-            name: String
+            name: String,
+            value: String
         },
         methods: {
             handleInput(e) {
-                this.$emit('input', this.$refs.date.value);
+                this.$emit('input', this.$refs.str.value);
             }
         }
     }

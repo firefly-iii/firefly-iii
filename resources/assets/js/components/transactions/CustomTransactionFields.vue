@@ -20,18 +20,27 @@
 
 <template>
     <div>
-        <component v-if="this.fields.interest_date" v-bind:is="componentInstance"></component>
-        <component v-if="this.fields.book_date" v-bind:is="componentInstance"></component>
-        <component v-if="this.fields.process_date" v-bind:is="componentInstance"></component>
-        <component v-if="this.fields.due_date" v-bind:is="componentInstance"></component>
-        <component v-if="this.fields.payment_date" v-bind:is="componentInstance"></component>
-        <component v-if="this.fields.invoice_date" v-bind:is="componentInstance"></component>
+        <component v-model="value.interest_date" v-if="this.fields.interest_date" name="interest_date[]" title="Interest date" v-bind:is="dateComponent"></component>
+        <component v-model="value.book_date" v-if="this.fields.book_date" name="book_date[]" title="Book date" v-bind:is="dateComponent"></component>
+        <component v-model="value.process_date" v-if="this.fields.process_date" name="process_date[]" title="Process date" v-bind:is="dateComponent"></component>
+        <component v-model="value.due_date" v-if="this.fields.due_date" name="due_date[]" title="Due date" v-bind:is="dateComponent"></component>
+        <component v-model="value.payment_date" v-if="this.fields.payment_date" name="payment_date[]" title="Payment date" v-bind:is="dateComponent"></component>
+        <component v-model="value.invoice_date" v-if="this.fields.invoice_date" name="invoice_date[]" title="Invoice date" v-bind:is="dateComponent"></component>
+
+        <component v-model="value.internal_reference" v-if="this.fields.internal_reference" name="internal_reference[]" title="Internal reference" v-bind:is="stringComponent"></component>
+
+        <component v-model="value.attachments" v-if="this.fields.attachments" name="attachments[]" title="Attachments" v-bind:is="attachmentComponent"></component>
+
+        <component v-model="value.notes" v-if="this.fields.notes" name="notes[]" title="Notes" v-bind:is="textareaComponent"></component>
+
+
     </div>
 </template>
 
 <script>
     export default {
         name: "CustomTransactionFields",
+        props: ['value'],
         mounted() {
             this.getPreference();
         },
@@ -54,11 +63,24 @@
             };
         },
         computed: {
-            componentInstance () {
+            // TODO this seems a pretty weird way of doing it.
+            dateComponent () {
                 return 'custom-date';
+            },
+            stringComponent () {
+                return 'custom-string';
+            },
+            attachmentComponent () {
+                return 'custom-attachments';
+            },
+            textareaComponent () {
+                return 'custom-textarea';
             }
         },
         methods: {
+            handleInput(e) {
+                this.$emit('input', this.value);
+            },
             getPreference() {
 
                // Vue.component('custom-date', (resolve) => {

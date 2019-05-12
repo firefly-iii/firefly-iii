@@ -13,6 +13,10 @@ Vue.use(uiv);
 Vue.component('budget', require('./components/transactions/Budget.vue'));
 
 Vue.component('custom-date', require('./components/transactions/CustomDate.vue'));
+Vue.component('custom-string', require('./components/transactions/CustomString.vue'));
+Vue.component('custom-attachments', require('./components/transactions/CustomAttachments.vue'));
+Vue.component('custom-textarea', require('./components/transactions/CustomTextArea.vue'));
+
 
 Vue.component('custom-transaction-fields', require('./components/transactions/CustomTransactionFields.vue'));
 Vue.component('piggy-bank', require('./components/transactions/PiggyBank.vue'));
