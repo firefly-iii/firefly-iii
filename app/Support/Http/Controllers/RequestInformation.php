@@ -58,7 +58,7 @@ trait RequestInformation
      * Create data-array from a journal.
      *
      * @param SplitJournalFormRequest|Request $request
-     * @param TransactionJournal              $journal
+     * @param TransactionJournal $journal
      *
      * @return array
      * @throws FireflyException
@@ -101,6 +101,88 @@ trait RequestInformation
         // update journal amount and foreign amount:
         $array['journal_amount']         = array_sum(array_column($array['transactions'], 'amount'));
         $array['journal_foreign_amount'] = array_sum(array_column($array['transactions'], 'foreign_amount'));
+
+        return $array;
+    }
+
+    /**
+     * Get transaction overview from journal.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return array
+     * @throws FireflyException
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
+    {
+        // use collector to collect transactions.
+        $collector = app(TransactionCollectorInterface::class);
+        $collector->setUser(auth()->user());
+        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
+        // filter on specific journals.
+        $collector->setJournals(new Collection([$journal]));
+        $set          = $collector->getTransactions();
+        $transactions = [];
+
+        /** @var TransactionTransformer $transformer */
+        $transformer = app(TransactionTransformer::class);
+        $transformer->setParameters(new ParameterBag());
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $res = [];
+            if ((float)$transaction->transaction_amount > 0 && $journal->transactionType->type === TransactionType::DEPOSIT) {
+                $res = $transformer->transform($transaction);
+            }
+            if ((float)$transaction->transaction_amount < 0 && $journal->transactionType->type !== TransactionType::DEPOSIT) {
+                $res = $transformer->transform($transaction);
+            }
+
+            if (\count($res) > 0) {
+                $res['amount']         = app('steam')->positive((string)$res['amount']);
+                $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
+                $transactions[]        = $res;
+            }
+        }
+
+        return $transactions;
+    }
+
+    /**
+     * Get info from old input.
+     *
+     * @param $array
+     * @param $old
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function updateWithPrevious($array, $old): array // update object with new info
+    {
+        if (0 === \count($old) || !isset($old['transactions'])) {
+            return $array;
+        }
+        $old = $old['transactions'];
+
+        foreach ($old as $index => $row) {
+            if (isset($array[$index])) {
+                /** @noinspection SlowArrayOperationsInLoopInspection */
+                $array[$index] = array_merge($array[$index], $row);
+                continue;
+            }
+            // take some info from first transaction, that should at least exist.
+            $array[$index]                            = $row;
+            $array[$index]['currency_id']             = $array[0]['currency_id'];
+            $array[$index]['currency_code']           = $array[0]['currency_code'] ?? '';
+            $array[$index]['currency_symbol']         = $array[0]['currency_symbol'] ?? '';
+            $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
+            $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
+            $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];
+            $array[$index]['foreign_currency_symbol'] = $array[0]['foreign_currency_symbol'];
+        }
 
         return $array;
     }
@@ -194,68 +276,6 @@ trait RequestInformation
     }
 
     /**
-     * @return string
-     */
-    protected function getPageName(): string // get request info
-    {
-        return str_replace('.', '_', RouteFacade::currentRouteName());
-    }
-
-    /**
-     * Get the specific name of a page for intro.
-     *
-     * @return string
-     */
-    protected function getSpecificPageName(): string // get request info
-    {
-        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
-    }
-
-    /**
-     * Get transaction overview from journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
-    {
-        // use collector to collect transactions.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getTransactions();
-        $transactions = [];
-
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
-        $transformer->setParameters(new ParameterBag());
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $res = [];
-            if ((float)$transaction->transaction_amount > 0 && $journal->transactionType->type === TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-            if ((float)$transaction->transaction_amount < 0 && $journal->transactionType->type !== TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-
-            if (\count($res) > 0) {
-                $res['amount']         = app('steam')->positive((string)$res['amount']);
-                $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
-                $transactions[]        = $res;
-            }
-        }
-
-        return $transactions;
-    }
-
-    /**
      * Get a list of triggers.
      *
      * @param TestRuleFormRequest $request
@@ -302,8 +322,29 @@ trait RequestInformation
             $shownDemo = app('preferences')->get($key, false)->data;
             Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
         }
+        if (!is_bool($shownDemo)) {
+            $shownDemo = true;
+        }
 
         return $shownDemo;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getPageName(): string // get request info
+    {
+        return str_replace('.', '_', RouteFacade::currentRouteName());
+    }
+
+    /**
+     * Get the specific name of a page for intro.
+     *
+     * @return string
+     */
+    protected function getSpecificPageName(): string // get request info
+    {
+        return null === RouteFacade::current()->parameter('objectType') ? '' : '_' . RouteFacade::current()->parameter('objectType');
     }
 
     /**
@@ -363,47 +404,9 @@ trait RequestInformation
     }
 
     /**
-     * Get info from old input.
-     *
-     * @param $array
-     * @param $old
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function updateWithPrevious($array, $old): array // update object with new info
-    {
-        if (0 === \count($old) || !isset($old['transactions'])) {
-            return $array;
-        }
-        $old = $old['transactions'];
-
-        foreach ($old as $index => $row) {
-            if (isset($array[$index])) {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $array[$index] = array_merge($array[$index], $row);
-                continue;
-            }
-            // take some info from first transaction, that should at least exist.
-            $array[$index]                            = $row;
-            $array[$index]['currency_id']             = $array[0]['currency_id'];
-            $array[$index]['currency_code']           = $array[0]['currency_code'] ?? '';
-            $array[$index]['currency_symbol']         = $array[0]['currency_symbol'] ?? '';
-            $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
-            $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
-            $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];
-            $array[$index]['foreign_currency_symbol'] = $array[0]['foreign_currency_symbol'];
-        }
-
-        return $array;
-    }
-
-    /**
      * Validate users new password.
      *
-     * @param User   $user
+     * @param User $user
      * @param string $current
      * @param string $new
      *
