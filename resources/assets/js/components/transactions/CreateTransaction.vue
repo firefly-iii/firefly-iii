@@ -197,12 +197,12 @@
 
 
                 if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
-                    console.log('Assumed this is a withdrawal.');
+                    //console.log('Assumed this is a withdrawal.');
                     transactionType = 'withdrawal';
                 }
 
                 if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
-                    console.log('Assumed this is a deposit.');
+                    //console.log('Assumed this is a deposit.');
                     transactionType = 'deposit';
                 }
 
@@ -254,7 +254,7 @@
                         );
                     }
                 }
-                console.log(data);
+                //console.log(data);
 
                 return data;
             },
@@ -264,8 +264,17 @@
 
                 axios.post(uri, data)
                     .then(response => {
-                        console.log(response);
-                    });
+                        console.log('OK!');
+                        //console.log(response);
+                    }).catch(error => {
+                        // give user errors things back.
+                        console.log('error!');
+
+                        // something something render errors.
+
+                        console.log(error.response.data);
+                        // something.
+                });
                 if (e) {
                     e.preventDefault();
                 }
