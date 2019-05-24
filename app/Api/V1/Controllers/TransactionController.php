@@ -85,7 +85,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request            $request
+     * @param Request $request
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
@@ -194,7 +194,7 @@ class TransactionController extends Controller
     }
 
     /**
-     * @param Request            $request
+     * @param Request $request
      * @param TransactionJournal $transactionJournal
      *
      * @return JsonResponse
@@ -221,7 +221,7 @@ class TransactionController extends Controller
     /**
      * Show a single transaction.
      *
-     * @param Request          $request
+     * @param Request $request
      * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
@@ -267,8 +267,12 @@ class TransactionController extends Controller
      */
     public function store(TransactionStoreRequest $request): JsonResponse
     {
-        $data             = $request->getAll();
-        $data['user']     = auth()->user()->id;
+        $data         = $request->getAll();
+        $data['user'] = auth()->user()->id;
+
+        Log::channel('audit')
+           ->info('Store new transaction over API.', $data);
+
         $transactionGroup = $this->groupRepository->store($data);
 
         event(new StoredTransactionGroup($transactionGroup));
@@ -306,7 +310,7 @@ class TransactionController extends Controller
      * Update a transaction.
      *
      * @param TransactionUpdateRequest $request
-     * @param TransactionGroup         $transactionGroup
+     * @param TransactionGroup $transactionGroup
      *
      * @return JsonResponse
      */
