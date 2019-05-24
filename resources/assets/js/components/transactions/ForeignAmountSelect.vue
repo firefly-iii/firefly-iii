@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="form-group">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
         <div class="col-sm-4">
             <select class="form-control" ref="currency_select" name="foreign_currency[]"
                     v-if="this.enabledCurrencies.length > 0" @input="handleInput">
@@ -38,6 +38,10 @@
             <input type="number" @input="handleInput" ref="amount" :value="value.amount" step="any" class="form-control"
                    name="foreign_amount[]" v-if="this.enabledCurrencies.length > 0"
                    title="Foreign amount" autocomplete="off" placeholder="Foreign amount">
+
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -45,7 +49,7 @@
 <script>
     export default {
         name: "ForeignAmountSelect",
-        props: ['source', 'destination', 'transactionType', 'value'],
+        props: ['source', 'destination', 'transactionType', 'value','error'],
         mounted() {
             this.loadCurrencies();
         },
@@ -68,6 +72,9 @@
             }
         },
         methods: {
+            hasError: function () {
+                return this.error.length > 0;
+            },
             handleInput(e) {
                 this.$emit('input', {
                     amount: +this.$refs.amount.value,

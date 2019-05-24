@@ -19,7 +19,9 @@
   -->
 
 <template>
-    <div class="form-group">
+    <div class="form-group"
+         v-bind:class="{ 'has-error': hasError()}"
+    >
         <div class="col-sm-12">
             <vue-tags-input
                     v-model="tag"
@@ -30,6 +32,9 @@
                     @tags-changed="update"
                     placeholder="Tags"
             />
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -43,7 +48,7 @@
         components: {
             VueTagsInput
         },
-        props: ['value'],
+        props: ['value','error'],
         data() {
             return {
                 tag: '',
@@ -60,6 +65,9 @@
                 this.autocompleteItems = [];
                 this.tags = newTags;
                 this.$emit('input', this.tags);
+            },
+            hasError: function () {
+                return this.error.length > 0;
             },
             initItems() {
                 if (this.tag.length < 2) {

@@ -19,11 +19,16 @@
   -->
 
 <template>
-    <div class="form-group" v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Transfer'">
+    <div class="form-group"
+         v-bind:class="{ 'has-error': hasError()}"
+         v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Transfer'">
         <div class="col-sm-12">
             <select name="piggy_bank[]" ref="piggy" @input="handleInput" class="form-control" v-if="this.piggies.length > 0">
                 <option v-for="piggy in this.piggies" :label="piggy.name" :value="piggy.id">{{piggy.name}}</option>
             </select>
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -31,7 +36,7 @@
 <script>
     export default {
         name: "PiggyBank",
-        props: ['value','transactionType'],
+        props: ['value','transactionType','error'],
         mounted() {
             this.loadPiggies();
         },
@@ -43,6 +48,9 @@
         methods: {
             handleInput(e) {
                 this.$emit('input', this.$refs.piggy.value);
+            },
+            hasError: function () {
+                return this.error.length > 0;
             },
             loadPiggies: function () {
                 let URI = document.getElementsByTagName('base')[0].href + "json/piggy-banks";

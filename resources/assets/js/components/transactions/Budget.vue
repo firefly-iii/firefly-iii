@@ -19,11 +19,17 @@
   -->
 
 <template>
-    <div class="form-group" v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Withdrawal'">
+    <div class="form-group"
+         v-bind:class="{ 'has-error': hasError()}"
+         v-if="typeof this.transactionType !== 'undefined' && this.transactionType === 'Withdrawal'">
         <div class="col-sm-12">
-            <select name="budget[]" ref="budget" @input="handleInput" class="form-control" v-if="this.budgets.length > 0">
+            <select name="budget[]" ref="budget" @input="handleInput" class="form-control"
+                    v-if="this.budgets.length > 0">
                 <option v-for="budget in this.budgets" :label="budget.name" :value="budget.id">{{budget.name}}</option>
             </select>
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -31,7 +37,7 @@
 <script>
     export default {
         name: "Budget",
-        props: ['transactionType','value'],
+        props: ['transactionType', 'value', 'error'],
         mounted() {
             this.loadBudgets();
         },
@@ -43,6 +49,9 @@
         methods: {
             handleInput(e) {
                 this.$emit('input', this.$refs.budget.value);
+            },
+            hasError: function () {
+                return this.error.length > 0;
             },
             loadBudgets: function () {
                 let URI = document.getElementsByTagName('base')[0].href + "json/budgets";

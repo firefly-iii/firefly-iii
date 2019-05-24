@@ -23,6 +23,16 @@
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
 
+        <div class="row" v-if="invalid_submission !== ''">
+            <div class="col-lg-12">
+                <div class="alert alert-danger alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <strong>Error!</strong> {{ invalid_submission }}
+                </div>
+            </div>
+        </div>
+
         <div class="row" v-if="transactions.length > 1">
             <div class="col-lg-6">
                 <div class="box">
@@ -32,18 +42,10 @@
                         </h3>
                     </div>
                     <div class="box-body">
-                        <div class="form-group">
-                            <div class="col-sm-12">
-                                <input type="text" class="form-control" name="group_title"
-                                       v-model="group_title"
-                                       title="Description of the split transaction" autocomplete="off"
-                                       placeholder="Description of the split transaction">
-                                <p class="help-block">
-                                    If you create a split transaction, there must be a global description for all splits
-                                    of the transaction.
-                                </p>
-                            </div>
-                        </div>
+                        <group-description
+                                :error="group_title_errors"
+                                v-model="group_title"
+                        ></group-description>
                     </div>
                 </div>
             </div>
@@ -75,6 +77,7 @@
                                             :index="index"
                                             v-on:clear:value="clearSource(index)"
                                             v-on:select:account="selectedSourceAccount(index, $event)"
+                                            :error="transaction.errors.source_account"
                                     ></account-select>
                                     <account-select
                                             inputName="destination[]"
@@ -85,23 +88,20 @@
                                             :index="index"
                                             v-on:clear:value="clearDestination(index)"
                                             v-on:select:account="selectedDestinationAccount(index, $event)"
+                                            :error="transaction.errors.destination_account"
                                     ></account-select>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <input type="text" class="form-control" name="description[]"
-                                                   v-model="transaction.description"
-                                                   title="Description" autocomplete="off" placeholder="Description">
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-12">
-                                            <input type="date" class="form-control" name="date[]"
-                                                   title="Date" value="" autocomplete="off"
-                                                   v-model="transaction.date"
-                                                   :disabled="index > 0"
-                                                   placeholder="Date">
-                                        </div>
-                                    </div>
+                                    <transaction-description
+                                            v-model="transaction.description"
+                                            :index="index"
+                                            :error="transaction.errors.description"
+                                    >
+                                    </transaction-description>
+                                    <standard-date
+                                            v-model="transaction.date"
+                                            :index="index"
+                                            :error="transaction.errors.date"
+                                    >
+                                    </standard-date>
                                     <div v-if="index===0">
                                         <transaction-type
                                                 :source="transaction.source_account.type"
@@ -117,6 +117,7 @@
                                             :source="transaction.source_account"
                                             :destination="transaction.destination_account"
                                             v-model="transaction.amount"
+                                            :error="transaction.errors.amount"
                                             :transactionType="transactionType"
                                     ></amount>
                                     <foreign-amount
@@ -124,26 +125,33 @@
                                             :destination="transaction.destination_account"
                                             v-model="transaction.foreign_amount"
                                             :transactionType="transactionType"
+                                            :error="transaction.errors.foreign_amount"
                                     ></foreign-amount>
                                 </div>
                                 <div class="col-lg-4">
                                     <budget
                                             :transactionType="transactionType"
                                             v-model="transaction.budget"
+                                            :error="transaction.errors.budget_id"
                                     ></budget>
                                     <category
                                             :transactionType="transactionType"
                                             v-model="transaction.category"
+                                            :error="transaction.errors.category"
                                     ></category>
                                     <piggy-bank
                                             :transactionType="transactionType"
                                             v-model="transaction.piggy_bank"
+                                            :error="transaction.errors.piggy_bank"
                                     ></piggy-bank>
                                     <tags
                                             v-model="transaction.tags"
+                                            :error="transaction.errors.tags"
                                     ></tags>
                                     <custom-transaction-fields
-                                            v-model="transaction.custom_fields"></custom-transaction-fields>
+                                            v-model="transaction.custom_fields"
+                                            :error="transaction.errors.custom_errors"
+                                    ></custom-transaction-fields>
                                 </div>
                             </div>
                         </div>
@@ -165,9 +173,11 @@
 </template>
 
 <script>
+    import GroupDescription from "./GroupDescription";
+
     export default {
         name: "CreateTransaction",
-        components: {},
+        components: {GroupDescription},
         mounted() {
             this.addTransaction();
         },
@@ -183,6 +193,10 @@
                 let transactionType;
                 let firstSource;
                 let firstDestination;
+                let foreignAmount = null;
+                let foreignCurrency = null;
+                let currentArray;
+
                 if (this.transactions.length > 1) {
                     data.group_title = this.group_title;
                 }
@@ -209,7 +223,8 @@
                 for (let key in this.transactions) {
                     if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                         tagList = [];
-
+                        foreignAmount = null;
+                        foreignCurrency = null;
                         // loop tags
                         for (let tagKey in this.transactions[key].tags) {
                             if (this.transactions[key].tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && key <= 4294967294) {
@@ -217,17 +232,19 @@
                             }
                         }
 
+                        // set foreign currency info:
+                        if (this.transactions[key].foreign_amount.amount !== '' && parseFloat(this.transactions[key].foreign_amount.amount) !== .00) {
+                            foreignAmount = this.transactions[key].foreign_amount.amount;
+                            foreignCurrency = this.transactions[key].foreign_amount.currency_id;
+                        }
 
-                        data.transactions.push(
+                        currentArray =
                             {
                                 type: transactionType,
                                 date: this.transactions[key].date,
 
                                 amount: this.transactions[key].amount,
                                 currency_id: this.transactions[key].currency_id,
-
-                                foreign_amount: this.transactions[key].foreign_amount.amount,
-                                foreign_currency_id: this.transactions[key].foreign_amount.currency_id,
 
                                 description: this.transactions[key].description,
 
@@ -237,10 +254,11 @@
                                 destination_id: this.transactions[key].destination_account.id,
                                 destination_name: this.transactions[key].destination_account.name,
 
-                                budget_id: this.transactions[key].budget,
+
                                 category_name: this.transactions[key].category,
-                                piggy_bank_id: this.transactions[key].piggy_bank,
-                                tags: tagList,
+                                //budget_id: this.transactions[key].budget,
+                                //piggy_bank_id: this.transactions[key].piggy_bank,
+
 
                                 interest_date: this.transactions[key].custom_fields.interest_date,
                                 book_date: this.transactions[key].custom_fields.book_date,
@@ -250,8 +268,24 @@
                                 invoice_date: this.transactions[key].custom_fields.invoice_date,
                                 internal_reference: this.transactions[key].custom_fields.internal_reference,
                                 notes: this.transactions[key].custom_fields.notes
-                            }
-                        );
+                            };
+
+                        if (tagList.length > 0) {
+                            currentArray.tags = tagList;
+                        }
+                        if (null !== foreignAmount) {
+                            currentArray.foreign_amount = foreignAmount;
+                            currentArray.foreign_currency_id = foreignCurrency;
+                        }
+                        // set budget id and piggy ID.
+                        if(parseInt(this.transactions[key].budget) > 0) {
+                            currentArray.budget_id = parseInt(this.transactions[key].budget);
+                        }
+                        if(parseInt(this.transactions[key].piggy_bank) > 0) {
+                            currentArray.piggy_bank_id = parseInt(this.transactions[key].piggy_bank);
+                        }
+
+                        data.transactions.push(currentArray);
                     }
                 }
                 //console.log(data);
@@ -264,19 +298,94 @@
 
                 axios.post(uri, data)
                     .then(response => {
-                        console.log('OK!');
-                        //console.log(response);
+                        window.location.href = 'transactions/show/'+ response.data.data.id + '?message=OK';
                     }).catch(error => {
-                        // give user errors things back.
-                        console.log('error!');
+                    // give user errors things back.
+                    // something something render errors.
 
-                        // something something render errors.
-
-                        console.log(error.response.data);
-                        // something.
+                    console.log(error.response.data);
+                    this.parseErrors(error.response.data);
+                    // something.
                 });
                 if (e) {
                     e.preventDefault();
+                }
+            },
+            setDefaultErrors: function () {
+                for (const key in this.transactions) {
+                    if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        this.transactions[key].errors = {
+                            source_account: [],
+                            destination_account: [],
+                            description: [],
+                            amount: [],
+                            date: [],
+                            budget_id: [],
+                            foreign_amount: [],
+                            category: [],
+                            piggy_bank: [],
+                            tags: [],
+                            // custom fields:
+                            custom_errors: {
+                                interest_date: [],
+                                book_date: [],
+                                process_date: [],
+                                due_date: [],
+                                payment_date: [],
+                                invoice_date: [],
+                                internal_reference: [],
+                                notes: [],
+                                attachments: [],
+                            },
+                        };
+                    }
+                }
+            },
+            parseErrors: function (errors) {
+                this.setDefaultErrors();
+                this.invalid_submission = "";
+                if (errors.message.length > 0) {
+                    this.invalid_submission = "There was something wrong with your submission. Please check out the errors below.";
+                }
+                let transactionIndex;
+                let fieldName;
+
+                for (const key in errors.errors) {
+                    if (errors.errors.hasOwnProperty(key)) {
+                        if (key === 'group_title') {
+                            this.group_title_errors = errors.errors[key];
+                        }
+                        if (key !== 'group_title') {
+                            // lol dumbest way to explode "transactions.0.something" ever.
+                            transactionIndex = parseInt(key.split('.')[1]);
+                            fieldName = key.split('.')[2];
+                            // set error in this object thing.
+                            switch (fieldName) {
+                                case 'amount':
+                                case 'date':
+                                case 'budget_id':
+                                case 'description':
+                                case 'tags':
+                                    this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
+                                    break;
+                                case 'source_name':
+                                case 'source_id':
+                                    this.transactions[transactionIndex].errors.source_account =
+                                        this.transactions[transactionIndex].errors.source_account.concat(errors.errors[key]);
+                                    break;
+                                case 'destination_name':
+                                case 'destination_id':
+                                    this.transactions[transactionIndex].errors.destination_account =
+                                        this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[key]);
+                                    break;
+                                case 'foreign_amount':
+                                case 'foreign_currency_id':
+                                    this.transactions[transactionIndex].errors.foreign_amount =
+                                        this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[key]);
+                                    break;
+                            }
+                        }
+                    }
                 }
             },
             addTransaction: function (e) {
@@ -286,6 +395,30 @@
                     amount: "",
                     category: "",
                     piggy_bank: 0,
+                    errors: {
+                        source_account: [],
+                        destination_account: [],
+                        description: [],
+                        amount: [],
+                        date: [],
+                        budget_id: [],
+                        foreign_amount: [],
+                        category: [],
+                        piggy_bank: [],
+                        tags: [],
+                        // custom fields:
+                        custom_errors: {
+                            interest_date: [],
+                            book_date: [],
+                            process_date: [],
+                            due_date: [],
+                            payment_date: [],
+                            invoice_date: [],
+                            internal_reference: [],
+                            notes: [],
+                            attachments: [],
+                        },
+                    },
                     budget: 0,
                     tags: [],
                     custom_fields: {
@@ -349,7 +482,6 @@
                 }
 
                 this.transactions.splice(index, 1);
-                console.log('Going to remove index ' + index);
 
                 for (const key in this.transactions) {
                     if (
@@ -445,7 +577,9 @@
             return {
                 transactionType: null,
                 group_title: "",
-                transactions: []
+                transactions: [],
+                group_title_errors: [],
+                invalid_submission: ""
             };
         },
     }

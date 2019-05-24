@@ -19,12 +19,16 @@
   -->
 
 <template>
-    <div class="form-group">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
         <label class="col-sm-4 control-label" ref="cur"></label>
         <div class="col-sm-8">
-            <input type="number" ref="amount" :value="value" @input="handleInput" step="any" class="form-control"
+            <input type="number" ref="amount" :value="value" @input="handleInput" step="any"
+                   class="form-control"
                    name="amount[]"
                    title="amount" autocomplete="off" placeholder="Amount">
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -32,7 +36,7 @@
 <script>
     export default {
         name: "Amount",
-        props: ['source', 'destination', 'transactionType','value'],
+        props: ['source', 'destination', 'transactionType', 'value', 'error'],
         data() {
             return {
                 sourceAccount: this.source,
@@ -43,6 +47,9 @@
         methods: {
             handleInput(e) {
                 this.$emit('input', this.$refs.amount.value);
+            },
+            hasError: function () {
+                return this.error.length > 0;
             },
             changeData: function () {
                 if ('' === this.transactionType) {

@@ -16,7 +16,9 @@ Vue.component('custom-date', require('./components/transactions/CustomDate.vue')
 Vue.component('custom-string', require('./components/transactions/CustomString.vue'));
 Vue.component('custom-attachments', require('./components/transactions/CustomAttachments.vue'));
 Vue.component('custom-textarea', require('./components/transactions/CustomTextArea.vue'));
-
+Vue.component('standard-date', require('./components/transactions/StandardDate.vue'));
+Vue.component('group-description', require('./components/transactions/GroupDescription'));
+Vue.component('transaction-description', require('./components/transactions/TransactionDescription'));
 
 Vue.component('custom-transaction-fields', require('./components/transactions/CustomTransactionFields.vue'));
 Vue.component('piggy-bank', require('./components/transactions/PiggyBank.vue'));

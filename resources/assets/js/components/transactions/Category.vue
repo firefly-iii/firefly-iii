@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <div class="form-group">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
         <div class="col-sm-12">
             <div class="input-group">
                 <input
@@ -51,6 +51,9 @@
                     :target="target"
                     item-key="name"
             ></typeahead>
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 </template>
@@ -61,6 +64,7 @@
         props: {
             value: String,
             inputName: String,
+            error: Array,
             accountName: {
                 type: String,
                 default: ''
@@ -81,6 +85,9 @@
             this.categoryAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/categories?query=";
         },
         methods: {
+            hasError: function () {
+                return this.error.length > 0;
+            },
             handleInput(e) {
                 if (typeof this.$refs.input.value === 'string') {
                     this.$emit('input', this.$refs.input.value);

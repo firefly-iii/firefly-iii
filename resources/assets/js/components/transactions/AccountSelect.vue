@@ -18,7 +18,7 @@
   - along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
   -->
 <template>
-    <div class="form-group">
+    <div class="form-group" v-bind:class="{ 'has-error': hasError()}">
         <div class="col-sm-12">
             <div class="input-group">
                 <input
@@ -50,6 +50,9 @@
                     :target="target"
                     item-key="name"
             ></typeahead>
+            <ul class="list-unstyled" v-for="error in this.error">
+                <li class="text-danger">{{ error }}</li>
+            </ul>
         </div>
     </div>
 
@@ -61,6 +64,7 @@
             title: String,
             index: Number,
             transactionType: String,
+            error: Array,
             accountName: {
                 type: String,
                 default: ''
@@ -106,6 +110,9 @@
         },
         methods:
             {
+                hasError: function () {
+                    return this.error.length > 0;
+                },
                 triggerTransactionType: function () {
                     if (null === this.transactionType) {
                         return;
