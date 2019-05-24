@@ -135,7 +135,9 @@ class TransactionFactory
         $two->reconciled = $data['reconciled'] ?? false;
 
         // add foreign currency info to $one and $two if necessary.
-        if (null !== $foreignCurrency && null !== $foreignAmount) {
+        if (null !== $foreignCurrency && null !== $foreignAmount
+        && $foreignCurrency->id !== $currency->id
+        ) {
             $one->foreign_currency_id = $foreignCurrency->id;
             $two->foreign_currency_id = $foreignCurrency->id;
             $one->foreign_amount      = app('steam')->negative($foreignAmount);

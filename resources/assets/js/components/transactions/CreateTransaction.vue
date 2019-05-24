@@ -159,15 +159,40 @@
                 </div>
             </div>
         </div>
-
         <div class="row">
             <div class="col-lg-12">
                 <p>
                     <button class="btn btn-primary" @click="addTransaction">Add another split</button>
-                    <button class="btn btn-success" @click="submit">Submit</button>
                 </p>
             </div>
         </div>
+
+        <div class="row">
+            <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
+                <div class="box">
+                    <div class="box-header with-border">
+                        <h3 class="box-title splitTitle">
+                            Submission
+                        </h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="checkbox">
+                            <label>
+                                <input id="transaction_return_to_form" name="create_another" type="checkbox" value="1">
+                                After storing, return here to create another one.
+                            </label>
+                        </div>
+                    </div>
+                    <div class="box-footer">
+                        <div class="btn-group">
+
+                            <button class="btn btn-success" @click="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <pre>{{ $data }}</pre>
     </form>
 </template>
@@ -237,6 +262,12 @@
                             foreignAmount = this.transactions[key].foreign_amount.amount;
                             foreignCurrency = this.transactions[key].foreign_amount.currency_id;
                         }
+                        console.log(foreignCurrency);
+                        console.log(this.transactions[key].currency_id);
+                        if (foreignCurrency === this.transactions[key].currency_id) {
+                            foreignAmount = null;
+                            foreignCurrency = null;
+                        }
 
                         currentArray =
                             {
@@ -278,10 +309,10 @@
                             currentArray.foreign_currency_id = foreignCurrency;
                         }
                         // set budget id and piggy ID.
-                        if(parseInt(this.transactions[key].budget) > 0) {
+                        if (parseInt(this.transactions[key].budget) > 0) {
                             currentArray.budget_id = parseInt(this.transactions[key].budget);
                         }
-                        if(parseInt(this.transactions[key].piggy_bank) > 0) {
+                        if (parseInt(this.transactions[key].piggy_bank) > 0) {
                             currentArray.piggy_bank_id = parseInt(this.transactions[key].piggy_bank);
                         }
 
@@ -298,7 +329,7 @@
 
                 axios.post(uri, data)
                     .then(response => {
-                        window.location.href = 'transactions/show/'+ response.data.data.id + '?message=OK';
+                        window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
                     }).catch(error => {
                     // give user errors things back.
                     // something something render errors.

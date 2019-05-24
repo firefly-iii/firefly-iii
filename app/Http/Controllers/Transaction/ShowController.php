@@ -29,6 +29,7 @@ use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Transformers\TransactionGroupTransformer;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
@@ -64,7 +65,7 @@ class ShowController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function show(TransactionGroup $transactionGroup)
+    public function show(Request $request, TransactionGroup $transactionGroup)
     {
         /** @var TransactionJournal $first */
         $first    = $transactionGroup->transactionJournals->first();
@@ -72,6 +73,7 @@ class ShowController extends Controller
         $type     = (string)trans(sprintf('firefly.%s', strtolower($first->transactionType->type)));
         $title    = 1 === $splits ? $first->description : $transactionGroup->title;
         $subTitle = sprintf('%s: "%s"', $type, $title);
+        $message = $request->get('message');
 
         /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
@@ -111,7 +113,7 @@ class ShowController extends Controller
         return view(
             'transactions.show', compact(
             'transactionGroup', 'amounts', 'first', 'type', 'subTitle', 'splits', 'groupArray',
-            'events', 'attachments', 'links'
+            'events', 'attachments', 'links','message'
         )
         );
     }

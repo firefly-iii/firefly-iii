@@ -5,6 +5,20 @@
 {% endblock %}
 
 {% block content %}
+    {% if message == 'created' %}
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span><span class="sr-only">{{ 'close'|_ }}</span>
+                </button>
+                <strong>{{ 'flash_success'|_ }}</strong>
+                {{ trans('firefly.stored_journal_no_descr') }}
+
+            </div>
+        </div>
+    </div>
+    {% endif %}
     <div class="row">
         <div class="col-lg-6">
             <div class="box box-primary">
