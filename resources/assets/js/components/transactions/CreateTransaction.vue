@@ -22,12 +22,12 @@
     <form method="POST" action="transactions/store" accept-charset="UTF-8" class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
-        <div class="row" v-if="invalid_submission !== ''">
+        <div class="row" v-if="error_message !== ''">
             <div class="col-lg-12">
                 <div class="alert alert-danger alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <strong>Error!</strong> {{ invalid_submission }}
+                    <strong>Error!</strong> {{ error_message }}
                 </div>
             </div>
         </div>
@@ -37,7 +37,7 @@
                 <div class="alert alert-success alert-dismissible" role="alert">
                     <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
                             aria-hidden="true">&times;</span></button>
-                    <strong>Success!</strong> {{ success_message }}
+                    <strong>Success!</strong> <span v-html="success_message"></span>
                 </div>
             </div>
         </div>
@@ -195,7 +195,6 @@
                     <div class="box-footer">
                         <div class="btn-group">
                             <button class="btn btn-success" @click="submit">Submit</button>
-                            <button class="btn btn-primary" @click="addTransaction">Add another split</button>
                         </div>
                     </div>
                 </div>
@@ -374,8 +373,8 @@
                     .then(response => {
                         if (this.createAnother) {
                             // do message:
-                            this.success_message = 'The transaction has been stored.';
-                            this.invalid_submission = '';
+                            this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been stored.';
+                            this.error_message = '';
                             if (this.resetFormAfter) {
                                 this.addTransaction();
                             }
@@ -424,11 +423,11 @@
             },
             parseErrors: function (errors) {
                 this.setDefaultErrors();
-                this.invalid_submission = "";
+                this.error_message = "";
                 if (errors.message.length > 0) {
-                    this.invalid_submission = "There was something wrong with your submission. Please check out the errors below.";
+                    this.error_message = "There was something wrong with your submission. Please check out the errors below.";
                 } else {
-                    this.invalid_submission = '';
+                    this.error_message = '';
                 }
                 let transactionIndex;
                 let fieldName;
@@ -543,10 +542,14 @@
                         allowed_types: []
                     }
                 });
+                if (this.transactions.length === 1) {
+                    // set first date.
+                    let today = new Date();
+                    this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
+                }
                 if (e) {
                     e.preventDefault();
                 }
-                console.log(this.transactions);
             },
             setTransactionType: function (type) {
                 this.transactionType = type;
@@ -675,7 +678,7 @@
                 group_title: "",
                 transactions: [],
                 group_title_errors: [],
-                invalid_submission: "",
+                error_message: "",
                 success_message: "",
                 cash_account_id: 0,
                 createAnother: false,
