@@ -22,7 +22,6 @@
     <form method="POST" action="transactions/store" accept-charset="UTF-8" class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
-
         <div class="row" v-if="invalid_submission !== ''">
             <div class="col-lg-12">
                 <div class="alert alert-danger alert-dismissible" role="alert">
@@ -33,6 +32,15 @@
             </div>
         </div>
 
+        <div class="row" v-if="success_message !== ''">
+            <div class="col-lg-12">
+                <div class="alert alert-success alert-dismissible" role="alert">
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <strong>Success!</strong> {{ success_message }}
+                </div>
+            </div>
+        </div>
         <div class="row" v-if="transactions.length > 1">
             <div class="col-lg-6">
                 <div class="box">
@@ -51,8 +59,8 @@
             </div>
         </div>
 
-        <div v-for="(transaction, index) in transactions">
-            <div class="row">
+        <div>
+            <div class="row" v-for="(transaction, index) in transactions">
                 <div class="col-lg-12">
                     <div class="box">
                         <div class="box-header with-border">
@@ -155,54 +163,51 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="box-footer" v-if="transactions.length-1 === index">
+                            <button class="btn btn-primary" @click="addTransaction">Add another split</button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12">
-                <p>
-                    <button class="btn btn-primary" @click="addTransaction">Add another split</button>
-                </p>
-            </div>
-        </div>
-
-        <div class="row">
             <div class="col-lg-3 col-md-4 col-sm-6 col-xs-12">
                 <div class="box">
                     <div class="box-header with-border">
-                        <h3 class="box-title splitTitle">
+                        <h3 class="box-title">
                             Submission
                         </h3>
                     </div>
                     <div class="box-body">
                         <div class="checkbox">
                             <label>
-                                <input id="transaction_return_to_form" name="create_another" type="checkbox" value="1">
+                                <input v-model="createAnother" name="create_another" type="checkbox">
                                 After storing, return here to create another one.
+                            </label>
+                            <label v-bind:class="{ 'text-muted': this.createAnother === false}">
+                                <input v-model="resetFormAfter" :disabled="this.createAnother === false"
+                                       name="reset_form" type="checkbox">
+                                Reset form after submission
+
                             </label>
                         </div>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
-
                             <button class="btn btn-success" @click="submit">Submit</button>
+                            <button class="btn btn-primary" @click="addTransaction">Add another split</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-        <pre>{{ $data }}</pre>
     </form>
 </template>
 
 <script>
-    import GroupDescription from "./GroupDescription";
-
     export default {
         name: "CreateTransaction",
-        components: {GroupDescription},
+        components: {},
         mounted() {
             this.addTransaction();
         },
@@ -221,6 +226,11 @@
                 let foreignAmount = null;
                 let foreignCurrency = null;
                 let currentArray;
+                let sourceId;
+                let sourceName;
+                let destId;
+                let destName;
+                let date;
 
                 if (this.transactions.length > 1) {
                     data.group_title = this.group_title;
@@ -234,7 +244,6 @@
                 firstSource = this.transactions[0].source_account.type;
                 firstDestination = this.transactions[0].destination_account.type;
 
-
                 if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
                     //console.log('Assumed this is a withdrawal.');
                     transactionType = 'withdrawal';
@@ -245,8 +254,42 @@
                     transactionType = 'deposit';
                 }
 
+
                 for (let key in this.transactions) {
                     if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+
+                        sourceId = this.transactions[key].source_account.id;
+                        sourceName = this.transactions[key].source_account.name;
+                        destId = this.transactions[key].destination_account.id;
+                        destName = this.transactions[key].destination_account.name;
+
+                        date = this.transactions[key].date;
+                        if (key > 0) {
+                            date = this.transactions[0].date;
+                        }
+
+                        // if type is 'withdrawal' and destination is empty, cash withdrawal.
+                        if (transactionType === 'withdrawal' && '' === destName) {
+                            destId = window.cashAccountId;
+                        }
+
+                        // if type is 'deposit' and source is empty, cash deposit.
+                        if (transactionType === 'deposit' && '' === sourceName) {
+                            sourceId = window.cashAccountId;
+                        }
+
+                        // if key is over 0 and type is withdrawal or transfer, take source from key 0.
+                        if (key > 0 && (transactionType.toLowerCase() === 'withdrawal' || transactionType.toLowerCase() === 'transfer')) {
+                            sourceId = this.transactions[0].source_account.id;
+                            sourceName = this.transactions[0].source_account.name;
+                        }
+
+                        // if key is over 0 and type is deposit or transfer, take destination from key 0.
+                        if (key > 0 && (transactionType.toLowerCase() === 'deposit' || transactionType.toLowerCase() === 'transfer')) {
+                            destId = this.transactions[0].destination_account.id;
+                            destName = this.transactions[0].destination_account.name;
+                        }
+
                         tagList = [];
                         foreignAmount = null;
                         foreignCurrency = null;
@@ -262,8 +305,6 @@
                             foreignAmount = this.transactions[key].foreign_amount.amount;
                             foreignCurrency = this.transactions[key].foreign_amount.currency_id;
                         }
-                        console.log(foreignCurrency);
-                        console.log(this.transactions[key].currency_id);
                         if (foreignCurrency === this.transactions[key].currency_id) {
                             foreignAmount = null;
                             foreignCurrency = null;
@@ -272,18 +313,18 @@
                         currentArray =
                             {
                                 type: transactionType,
-                                date: this.transactions[key].date,
+                                date: date,
 
                                 amount: this.transactions[key].amount,
                                 currency_id: this.transactions[key].currency_id,
 
                                 description: this.transactions[key].description,
 
-                                source_id: this.transactions[key].source_account.id,
-                                source_name: this.transactions[key].source_account.name,
+                                source_id: sourceId,
+                                source_name: sourceName,
 
-                                destination_id: this.transactions[key].destination_account.id,
-                                destination_name: this.transactions[key].destination_account.name,
+                                destination_id: destId,
+                                destination_name: destName,
 
 
                                 category_name: this.transactions[key].category,
@@ -326,15 +367,24 @@
             submit(e) {
                 const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
-
+                if (this.resetFormAfter) {
+                    this.resetTransactions();
+                }
                 axios.post(uri, data)
                     .then(response => {
-                        window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+                        if (this.createAnother) {
+                            // do message:
+                            this.success_message = 'The transaction has been stored.';
+                            this.invalid_submission = '';
+                            if (this.resetFormAfter) {
+                                this.addTransaction();
+                            }
+                        } else {
+                            window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+                        }
                     }).catch(error => {
                     // give user errors things back.
                     // something something render errors.
-
-                    console.log(error.response.data);
                     this.parseErrors(error.response.data);
                     // something.
                 });
@@ -377,6 +427,8 @@
                 this.invalid_submission = "";
                 if (errors.message.length > 0) {
                     this.invalid_submission = "There was something wrong with your submission. Please check out the errors below.";
+                } else {
+                    this.invalid_submission = '';
                 }
                 let transactionIndex;
                 let fieldName;
@@ -419,6 +471,9 @@
                     }
                 }
             },
+            resetTransactions: function () {
+                this.transactions = [];
+            },
             addTransaction: function (e) {
                 this.transactions.push({
                     description: "",
@@ -453,7 +508,7 @@
                     budget: 0,
                     tags: [],
                     custom_fields: {
-                        "interest_date": "2010-01-01",
+                        "interest_date": "",
                         "book_date": "",
                         "process_date": "",
                         "due_date": "",
@@ -471,10 +526,6 @@
                         id: 0,
                         name: "",
                         type: "",
-                        //currency_id: window.defaultCurrency.id,
-                        //currency_name: window.defaultCurrency.name,
-                        //currency_code: window.defaultCurrency.code,
-                        //currency_decimal_places: window.defaultCurrency.decimal_places,
                         currency_id: 0,
                         currency_name: '',
                         currency_code: '',
@@ -485,10 +536,6 @@
                         id: 0,
                         name: "",
                         type: "",
-                        //currency_id: window.defaultCurrency.id,
-                        //currency_name: window.defaultCurrency.name,
-                        //currency_code: window.defaultCurrency.code,
-                        //currency_decimal_places: window.defaultCurrency.decimal_places,
                         currency_id: 0,
                         currency_name: '',
                         currency_code: '',
@@ -499,6 +546,7 @@
                 if (e) {
                     e.preventDefault();
                 }
+                console.log(this.transactions);
             },
             setTransactionType: function (type) {
                 this.transactionType = type;
@@ -508,7 +556,6 @@
                 for (const key in this.transactions) {
                     if (
                         this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        console.log('Transactions[' + key + '] exists: ' + this.transactions[key].description);
                     }
                 }
 
@@ -517,7 +564,6 @@
                 for (const key in this.transactions) {
                     if (
                         this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        console.log('New: Transactions[' + key + '] exists: ' + this.transactions[key].description);
                     }
                 }
             },
@@ -539,16 +585,17 @@
                     // cant change types, only name.
                     this.transactions[index].source_account.name = model;
                 } else {
+                    this.transactions[index].source_account = {
+                        id: model.id,
+                        name: model.name,
+                        type: model.type,
+                        currency_id: model.currency_id,
+                        currency_name: model.currency_name,
+                        currency_code: model.currency_code,
+                        currency_decimal_places: model.currency_decimal_places,
+                        allowed_types: this.transactions[index].source_account.allowed_types
+                    };
 
-                    // todo maybe replace the entire model?
-                    this.transactions[index].source_account.id = model.id;
-                    this.transactions[index].source_account.name = model.name;
-                    this.transactions[index].source_account.type = model.type;
-
-                    this.transactions[index].source_account.currency_id = model.currency_id;
-                    this.transactions[index].source_account.currency_name = model.currency_name;
-                    this.transactions[index].source_account.currency_code = model.currency_code;
-                    this.transactions[index].source_account.currency_decimal_places = model.currency_decimal_places;
                     // force types on destination selector.
                     this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
                 }
@@ -558,44 +605,62 @@
                     // cant change types, only name.
                     this.transactions[index].destination_account.name = model;
                 } else {
-
-                    // todo maybe replace the entire model?
-                    this.transactions[index].destination_account.id = model.id;
-                    this.transactions[index].destination_account.name = model.name;
-                    this.transactions[index].destination_account.type = model.type;
-
-                    this.transactions[index].destination_account.currency_id = model.currency_id;
-                    this.transactions[index].destination_account.currency_name = model.currency_name;
-                    this.transactions[index].destination_account.currency_code = model.currency_code;
-                    this.transactions[index].destination_account.currency_decimal_places = model.currency_decimal_places;
+                    this.transactions[index].destination_account = {
+                        id: model.id,
+                        name: model.name,
+                        type: model.type,
+                        currency_id: model.currency_id,
+                        currency_name: model.currency_name,
+                        currency_code: model.currency_code,
+                        currency_decimal_places: model.currency_decimal_places,
+                        allowed_types: this.transactions[index].destination_account.allowed_types
+                    };
 
                     // force types on destination selector.
                     this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
                 }
             },
             clearSource: function (index) {
-                this.transactions[index].source_account.id = 0;
-                this.transactions[index].source_account.name = "";
-                this.transactions[index].source_account.type = "";
+                console.log('clearSource(' + index + ')');
+                // reset source account:
+                this.transactions[index].source_account = {
+                    id: 0,
+                    name: '',
+                    type: '',
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: this.transactions[index].source_account.allowed_types
+                };
+                // reset destination allowed account types.
                 this.transactions[index].destination_account.allowed_types = [];
 
                 // if there is a destination model, reset the types of the source
                 // by pretending we selected it again.
                 if (this.transactions[index].destination_account) {
-                    console.log('There is a destination account.');
                     this.selectedDestinationAccount(index, this.transactions[index].destination_account);
                 }
             },
             clearDestination: function (index) {
-                this.transactions[index].destination_account.id = 0;
-                this.transactions[index].destination_account.name = "";
-                this.transactions[index].destination_account.type = "";
+                console.log('clearDestination(' + index + ')');
+                // reset destination account:
+                this.transactions[index].destination_account = {
+                    id: 0,
+                    name: '',
+                    type: '',
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: this.transactions[index].destination_account.allowed_types
+                };
+                // reset destination allowed account types.
                 this.transactions[index].source_account.allowed_types = [];
 
                 // if there is a source model, reset the types of the destination
                 // by pretending we selected it again.
                 if (this.transactions[index].source_account) {
-                    console.log('There is a source account.');
                     this.selectedSourceAccount(index, this.transactions[index].source_account);
                 }
             }
@@ -610,7 +675,12 @@
                 group_title: "",
                 transactions: [],
                 group_title_errors: [],
-                invalid_submission: ""
+                invalid_submission: "",
+                success_message: "",
+                cash_account_id: 0,
+                createAnother: false,
+                resetFormAfter: false,
+                resetButtonDisabled: true,
             };
         },
     }

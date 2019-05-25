@@ -26,6 +26,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use Illuminate\Http\Request;
 
 /**
@@ -64,6 +65,9 @@ class CreateController extends Controller
      */
     public function create()
     {
+        /** @var AccountRepositoryInterface $repository */
+        $repository           = app(AccountRepositoryInterface::class);
+        $cash                 = $repository->getCashAccount();
         $objectType           = TransactionType::WITHDRAWAL;
         $preFilled            = session()->has('preFilled') ? session('preFilled') : [];
         $subTitle             = (string)trans('breadcrumbs.create_new_transaction');
@@ -82,7 +86,9 @@ class CreateController extends Controller
 
         return view(
             'transactions.create',
-            compact('subTitleIcon', 'objectType', 'subTitle', 'defaultCurrency', 'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes')
+            compact('subTitleIcon', 'cash',
+                    'objectType', 'subTitle', 'defaultCurrency',
+                    'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes')
         );
     }
 

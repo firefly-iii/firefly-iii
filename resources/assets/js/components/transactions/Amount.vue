@@ -52,16 +52,29 @@
                 return this.error.length > 0;
             },
             changeData: function () {
-                if ('' === this.transactionType) {
-                    $(this.$refs.cur).text(this.sourceAccount.currency_name);
+                // reset of all are empty:
+                //console.log('Type   "' + this.transactionType + '"');
+                //console.log('Source "' + this.source.name + '"');
+                //console.log('Dest   "' + this.destination.name + '"');
+                if (!this.transactionType && !this.source.name && !this.destination.name) {
+                    $(this.$refs.cur).text('');
+                    return;
+                }
+                if ('' === this.transactionType && '' !== this.source.currency_name) {
+                    $(this.$refs.cur).text(this.source.currency_name);
+                    return;
+                }
+                if ('' === this.transactionType && '' !== this.destination.currency_name) {
+                    $(this.$refs.cur).text(this.destination.currency_name);
                     return;
                 }
                 if (this.transactionType === 'Withdrawal' || this.transactionType === 'Transfer') {
-                    $(this.$refs.cur).text(this.sourceAccount.currency_name);
+                    $(this.$refs.cur).text(this.source.currency_name);
                     return;
                 }
                 if (this.transactionType === 'Deposit') {
-                    $(this.$refs.cur).text(this.destinationAccount.currency_name);
+                    $(this.$refs.cur).text(this.destination.currency_name);
+                    return;
                 }
             }
         },

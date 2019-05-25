@@ -104,8 +104,10 @@
             },
             accountTypeFilters() {
                 let types = this.accountTypeFilters.join(',');
-                //console.log(this.inputName + '[' + this.index + '] is now searching for: ' + types);
                 this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&query=";
+            },
+            name() {
+                console.log('Trigger watch on name.');
             }
         },
         methods:

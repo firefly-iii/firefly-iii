@@ -51352,7 +51352,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -51419,16 +51419,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.error.length > 0;
         },
         changeData: function changeData() {
-            if ('' === this.transactionType) {
-                $(this.$refs.cur).text(this.sourceAccount.currency_name);
+            // reset of all are empty:
+            //console.log('Type   "' + this.transactionType + '"');
+            //console.log('Source "' + this.source.name + '"');
+            //console.log('Dest   "' + this.destination.name + '"');
+            if (!this.transactionType && !this.source.name && !this.destination.name) {
+                $(this.$refs.cur).text('');
+                return;
+            }
+            if ('' === this.transactionType && '' !== this.source.currency_name) {
+                $(this.$refs.cur).text(this.source.currency_name);
+                return;
+            }
+            if ('' === this.transactionType && '' !== this.destination.currency_name) {
+                $(this.$refs.cur).text(this.destination.currency_name);
                 return;
             }
             if (this.transactionType === 'Withdrawal' || this.transactionType === 'Transfer') {
-                $(this.$refs.cur).text(this.sourceAccount.currency_name);
+                $(this.$refs.cur).text(this.source.currency_name);
                 return;
             }
             if (this.transactionType === 'Deposit') {
-                $(this.$refs.cur).text(this.destinationAccount.currency_name);
+                $(this.$refs.cur).text(this.destination.currency_name);
+                return;
             }
         }
     },
@@ -52132,7 +52145,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -52250,8 +52263,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
         accountTypeFilters: function accountTypeFilters() {
             var types = this.accountTypeFilters.join(',');
-            //console.log(this.inputName + '[' + this.index + '] is now searching for: ' + types);
             this.accountAutoCompleteURI = document.getElementsByTagName('base')[0].href + "json/accounts?types=" + types + "&query=";
+        },
+        name: function name() {
+            console.log('Trigger watch on name.');
         }
     },
     methods: {
@@ -54629,7 +54644,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -54640,8 +54655,6 @@ exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GroupDescription__ = __webpack_require__(14);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__GroupDescription___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0__GroupDescription__);
 //
 //
 //
@@ -54841,12 +54854,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-
-
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "CreateTransaction",
-    components: { GroupDescription: __WEBPACK_IMPORTED_MODULE_0__GroupDescription___default.a },
+    components: {},
     mounted: function mounted() {
         this.addTransaction();
     },
@@ -54864,6 +54882,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var foreignAmount = null;
             var foreignCurrency = null;
             var currentArray = void 0;
+            var sourceId = void 0;
+            var sourceName = void 0;
+            var destId = void 0;
+            var destName = void 0;
+            var date = void 0;
 
             if (this.transactions.length > 1) {
                 data.group_title = this.group_title;
@@ -54889,6 +54912,39 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             for (var key in this.transactions) {
                 if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+
+                    sourceId = this.transactions[key].source_account.id;
+                    sourceName = this.transactions[key].source_account.name;
+                    destId = this.transactions[key].destination_account.id;
+                    destName = this.transactions[key].destination_account.name;
+
+                    date = this.transactions[key].date;
+                    if (key > 0) {
+                        date = this.transactions[0].date;
+                    }
+
+                    // if type is 'withdrawal' and destination is empty, cash withdrawal.
+                    if (transactionType === 'withdrawal' && '' === destName) {
+                        destId = window.cashAccountId;
+                    }
+
+                    // if type is 'deposit' and source is empty, cash deposit.
+                    if (transactionType === 'deposit' && '' === sourceName) {
+                        sourceId = window.cashAccountId;
+                    }
+
+                    // if key is over 0 and type is withdrawal or transfer, take source from key 0.
+                    if (key > 0 && (transactionType.toLowerCase() === 'withdrawal' || transactionType.toLowerCase() === 'transfer')) {
+                        sourceId = this.transactions[0].source_account.id;
+                        sourceName = this.transactions[0].source_account.name;
+                    }
+
+                    // if key is over 0 and type is deposit or transfer, take destination from key 0.
+                    if (key > 0 && (transactionType.toLowerCase() === 'deposit' || transactionType.toLowerCase() === 'transfer')) {
+                        destId = this.transactions[0].destination_account.id;
+                        destName = this.transactions[0].destination_account.name;
+                    }
+
                     tagList = [];
                     foreignAmount = null;
                     foreignCurrency = null;
@@ -54904,8 +54960,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                         foreignAmount = this.transactions[key].foreign_amount.amount;
                         foreignCurrency = this.transactions[key].foreign_amount.currency_id;
                     }
-                    console.log(foreignCurrency);
-                    console.log(this.transactions[key].currency_id);
                     if (foreignCurrency === this.transactions[key].currency_id) {
                         foreignAmount = null;
                         foreignCurrency = null;
@@ -54913,18 +54967,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
                     currentArray = {
                         type: transactionType,
-                        date: this.transactions[key].date,
+                        date: date,
 
                         amount: this.transactions[key].amount,
                         currency_id: this.transactions[key].currency_id,
 
                         description: this.transactions[key].description,
 
-                        source_id: this.transactions[key].source_account.id,
-                        source_name: this.transactions[key].source_account.name,
+                        source_id: sourceId,
+                        source_name: sourceName,
 
-                        destination_id: this.transactions[key].destination_account.id,
-                        destination_name: this.transactions[key].destination_account.name,
+                        destination_id: destId,
+                        destination_name: destName,
 
                         category_name: this.transactions[key].category,
                         //budget_id: this.transactions[key].budget,
@@ -54968,14 +55022,23 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             var uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
             var data = this.convertData();
-
+            if (this.resetFormAfter) {
+                this.resetTransactions();
+            }
             axios.post(uri, data).then(function (response) {
-                window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+                if (_this.createAnother) {
+                    // do message:
+                    _this.success_message = 'The transaction has been stored.';
+                    _this.invalid_submission = '';
+                    if (_this.resetFormAfter) {
+                        _this.addTransaction();
+                    }
+                } else {
+                    window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+                }
             }).catch(function (error) {
                 // give user errors things back.
                 // something something render errors.
-
-                console.log(error.response.data);
                 _this.parseErrors(error.response.data);
                 // something.
             });
@@ -55019,6 +55082,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             this.invalid_submission = "";
             if (errors.message.length > 0) {
                 this.invalid_submission = "There was something wrong with your submission. Please check out the errors below.";
+            } else {
+                this.invalid_submission = '';
             }
             var transactionIndex = void 0;
             var fieldName = void 0;
@@ -55058,6 +55123,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             }
         },
+        resetTransactions: function resetTransactions() {
+            this.transactions = [];
+        },
         addTransaction: function addTransaction(e) {
             this.transactions.push({
                 description: "",
@@ -55092,7 +55160,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 budget: 0,
                 tags: [],
                 custom_fields: {
-                    "interest_date": "2010-01-01",
+                    "interest_date": "",
                     "book_date": "",
                     "process_date": "",
                     "due_date": "",
@@ -55110,10 +55178,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     id: 0,
                     name: "",
                     type: "",
-                    //currency_id: window.defaultCurrency.id,
-                    //currency_name: window.defaultCurrency.name,
-                    //currency_code: window.defaultCurrency.code,
-                    //currency_decimal_places: window.defaultCurrency.decimal_places,
                     currency_id: 0,
                     currency_name: '',
                     currency_code: '',
@@ -55124,10 +55188,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     id: 0,
                     name: "",
                     type: "",
-                    //currency_id: window.defaultCurrency.id,
-                    //currency_name: window.defaultCurrency.name,
-                    //currency_code: window.defaultCurrency.code,
-                    //currency_decimal_places: window.defaultCurrency.decimal_places,
                     currency_id: 0,
                     currency_name: '',
                     currency_code: '',
@@ -55138,6 +55198,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (e) {
                 e.preventDefault();
             }
+            console.log(this.transactions);
         },
         setTransactionType: function setTransactionType(type) {
             this.transactionType = type;
@@ -55145,17 +55206,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         deleteTransaction: function deleteTransaction(index, event) {
             event.preventDefault();
             for (var key in this.transactions) {
-                if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                    console.log('Transactions[' + key + '] exists: ' + this.transactions[key].description);
-                }
+                if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {}
             }
 
             this.transactions.splice(index, 1);
 
             for (var _key in this.transactions) {
-                if (this.transactions.hasOwnProperty(_key) && /^0$|^[1-9]\d*$/.test(_key) && _key <= 4294967294) {
-                    console.log('New: Transactions[' + _key + '] exists: ' + this.transactions[_key].description);
-                }
+                if (this.transactions.hasOwnProperty(_key) && /^0$|^[1-9]\d*$/.test(_key) && _key <= 4294967294) {}
             }
         },
         limitSourceType: function limitSourceType(type) {
@@ -55176,16 +55233,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // cant change types, only name.
                 this.transactions[index].source_account.name = model;
             } else {
+                this.transactions[index].source_account = {
+                    id: model.id,
+                    name: model.name,
+                    type: model.type,
+                    currency_id: model.currency_id,
+                    currency_name: model.currency_name,
+                    currency_code: model.currency_code,
+                    currency_decimal_places: model.currency_decimal_places,
+                    allowed_types: this.transactions[index].source_account.allowed_types
+                };
 
-                // todo maybe replace the entire model?
-                this.transactions[index].source_account.id = model.id;
-                this.transactions[index].source_account.name = model.name;
-                this.transactions[index].source_account.type = model.type;
-
-                this.transactions[index].source_account.currency_id = model.currency_id;
-                this.transactions[index].source_account.currency_name = model.currency_name;
-                this.transactions[index].source_account.currency_code = model.currency_code;
-                this.transactions[index].source_account.currency_decimal_places = model.currency_decimal_places;
                 // force types on destination selector.
                 this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
             }
@@ -55195,44 +55253,62 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // cant change types, only name.
                 this.transactions[index].destination_account.name = model;
             } else {
-
-                // todo maybe replace the entire model?
-                this.transactions[index].destination_account.id = model.id;
-                this.transactions[index].destination_account.name = model.name;
-                this.transactions[index].destination_account.type = model.type;
-
-                this.transactions[index].destination_account.currency_id = model.currency_id;
-                this.transactions[index].destination_account.currency_name = model.currency_name;
-                this.transactions[index].destination_account.currency_code = model.currency_code;
-                this.transactions[index].destination_account.currency_decimal_places = model.currency_decimal_places;
+                this.transactions[index].destination_account = {
+                    id: model.id,
+                    name: model.name,
+                    type: model.type,
+                    currency_id: model.currency_id,
+                    currency_name: model.currency_name,
+                    currency_code: model.currency_code,
+                    currency_decimal_places: model.currency_decimal_places,
+                    allowed_types: this.transactions[index].destination_account.allowed_types
+                };
 
                 // force types on destination selector.
                 this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
             }
         },
         clearSource: function clearSource(index) {
-            this.transactions[index].source_account.id = 0;
-            this.transactions[index].source_account.name = "";
-            this.transactions[index].source_account.type = "";
+            console.log('clearSource(' + index + ')');
+            // reset source account:
+            this.transactions[index].source_account = {
+                id: 0,
+                name: '',
+                type: '',
+                currency_id: 0,
+                currency_name: '',
+                currency_code: '',
+                currency_decimal_places: 2,
+                allowed_types: this.transactions[index].source_account.allowed_types
+            };
+            // reset destination allowed account types.
             this.transactions[index].destination_account.allowed_types = [];
 
             // if there is a destination model, reset the types of the source
             // by pretending we selected it again.
             if (this.transactions[index].destination_account) {
-                console.log('There is a destination account.');
                 this.selectedDestinationAccount(index, this.transactions[index].destination_account);
             }
         },
         clearDestination: function clearDestination(index) {
-            this.transactions[index].destination_account.id = 0;
-            this.transactions[index].destination_account.name = "";
-            this.transactions[index].destination_account.type = "";
+            console.log('clearDestination(' + index + ')');
+            // reset destination account:
+            this.transactions[index].destination_account = {
+                id: 0,
+                name: '',
+                type: '',
+                currency_id: 0,
+                currency_name: '',
+                currency_code: '',
+                currency_decimal_places: 2,
+                allowed_types: this.transactions[index].destination_account.allowed_types
+            };
+            // reset destination allowed account types.
             this.transactions[index].source_account.allowed_types = [];
 
             // if there is a source model, reset the types of the destination
             // by pretending we selected it again.
             if (this.transactions[index].source_account) {
-                console.log('There is a source account.');
                 this.selectedSourceAccount(index, this.transactions[index].source_account);
             }
         }
@@ -55247,7 +55323,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             group_title: "",
             transactions: [],
             group_title_errors: [],
-            invalid_submission: ""
+            invalid_submission: "",
+            success_message: "",
+            cash_account_id: 0,
+            createAnother: false,
+            resetFormAfter: false,
+            resetButtonDisabled: true
         };
     }
 });
@@ -55297,11 +55378,31 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
+      _vm.success_message !== ""
+        ? _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-lg-12" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "alert alert-success alert-dismissible",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Success!")]),
+                  _vm._v(" " + _vm._s(_vm.success_message) + "\n            ")
+                ]
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
       _vm.transactions.length > 1
         ? _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-lg-6" }, [
               _c("div", { staticClass: "box" }, [
-                _vm._m(1),
+                _vm._m(2),
                 _vm._v(" "),
                 _c(
                   "div",
@@ -55325,9 +55426,10 @@ var render = function() {
           ])
         : _vm._e(),
       _vm._v(" "),
-      _vm._l(_vm.transactions, function(transaction, index) {
-        return _c("div", [
-          _c("div", { staticClass: "row" }, [
+      _c(
+        "div",
+        _vm._l(_vm.transactions, function(transaction, index) {
+          return _c("div", { staticClass: "row" }, [
             _c("div", { staticClass: "col-lg-12" }, [
               _c("div", { staticClass: "box" }, [
                 _c("div", { staticClass: "box-header with-border" }, [
@@ -55591,34 +55693,130 @@ var render = function() {
                       1
                     )
                   ])
-                ])
+                ]),
+                _vm._v(" "),
+                _vm.transactions.length - 1 === index
+                  ? _c("div", { staticClass: "box-footer" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          on: { click: _vm.addTransaction }
+                        },
+                        [_vm._v("Add another split")]
+                      )
+                    ])
+                  : _vm._e()
               ])
             ])
           ])
-        ])
-      }),
-      _vm._v(" "),
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-lg-12" }, [
-          _c("p", [
-            _c(
-              "button",
-              {
-                staticClass: "btn btn-primary",
-                on: { click: _vm.addTransaction }
-              },
-              [_vm._v("Add another split")]
-            )
-          ])
-        ])
-      ]),
+        }),
+        0
+      ),
       _vm._v(" "),
       _c("div", { staticClass: "row" }, [
         _c("div", { staticClass: "col-lg-3 col-md-4 col-sm-6 col-xs-12" }, [
           _c("div", { staticClass: "box" }, [
-            _vm._m(2),
-            _vm._v(" "),
             _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "box-body" }, [
+              _c("div", { staticClass: "checkbox" }, [
+                _c("label", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.createAnother,
+                        expression: "createAnother"
+                      }
+                    ],
+                    attrs: { name: "create_another", type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.createAnother)
+                        ? _vm._i(_vm.createAnother, null) > -1
+                        : _vm.createAnother
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.createAnother,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 && (_vm.createAnother = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.createAnother = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.createAnother = $$c
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(
+                    "\n                            After storing, return here to create another one.\n                        "
+                  )
+                ]),
+                _vm._v(" "),
+                _c(
+                  "label",
+                  { class: { "text-muted": this.createAnother === false } },
+                  [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.resetFormAfter,
+                          expression: "resetFormAfter"
+                        }
+                      ],
+                      attrs: {
+                        disabled: this.createAnother === false,
+                        name: "reset_form",
+                        type: "checkbox"
+                      },
+                      domProps: {
+                        checked: Array.isArray(_vm.resetFormAfter)
+                          ? _vm._i(_vm.resetFormAfter, null) > -1
+                          : _vm.resetFormAfter
+                      },
+                      on: {
+                        change: function($event) {
+                          var $$a = _vm.resetFormAfter,
+                            $$el = $event.target,
+                            $$c = $$el.checked ? true : false
+                          if (Array.isArray($$a)) {
+                            var $$v = null,
+                              $$i = _vm._i($$a, $$v)
+                            if ($$el.checked) {
+                              $$i < 0 &&
+                                (_vm.resetFormAfter = $$a.concat([$$v]))
+                            } else {
+                              $$i > -1 &&
+                                (_vm.resetFormAfter = $$a
+                                  .slice(0, $$i)
+                                  .concat($$a.slice($$i + 1)))
+                            }
+                          } else {
+                            _vm.resetFormAfter = $$c
+                          }
+                        }
+                      }
+                    }),
+                    _vm._v(
+                      "\n                            Reset form after submission\n\n                        "
+                    )
+                  ]
+                )
+              ])
+            ]),
             _vm._v(" "),
             _c("div", { staticClass: "box-footer" }, [
               _c("div", { staticClass: "btn-group" }, [
@@ -55626,19 +55824,42 @@ var render = function() {
                   "button",
                   { staticClass: "btn btn-success", on: { click: _vm.submit } },
                   [_vm._v("Submit")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-primary",
+                    on: { click: _vm.addTransaction }
+                  },
+                  [_vm._v("Add another split")]
                 )
               ])
             ])
           ])
         ])
-      ]),
-      _vm._v(" "),
-      _c("pre", [_vm._v(_vm._s(_vm.$data))])
-    ],
-    2
+      ])
+    ]
   )
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -55673,30 +55894,8 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "box-header with-border" }, [
-      _c("h3", { staticClass: "box-title splitTitle" }, [
+      _c("h3", { staticClass: "box-title" }, [
         _vm._v("\n                        Submission\n                    ")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "box-body" }, [
-      _c("div", { staticClass: "checkbox" }, [
-        _c("label", [
-          _c("input", {
-            attrs: {
-              id: "transaction_return_to_form",
-              name: "create_another",
-              type: "checkbox",
-              value: "1"
-            }
-          }),
-          _vm._v(
-            "\n                            After storing, return here to create another one.\n                        "
-          )
-        ])
       ])
     ])
   }

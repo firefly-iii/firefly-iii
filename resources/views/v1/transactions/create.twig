@@ -255,6 +255,7 @@
         var allowedOpposingTypes = {{ allowedOpposingTypes|json_encode|raw }};
         var accountToTypes = {{ accountToTypes|json_encode|raw }};
         var defaultCurrency = {{ defaultCurrency.toArray()|json_encode|raw }};
+        var cashAccountId = {{ cash.id }};
     </script>
     <!--
     <script type="text/javascript">
