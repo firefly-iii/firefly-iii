@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\GroupSumCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
@@ -69,13 +70,12 @@ trait PeriodOverview
      * The method has been refactored recently for better performance.
      *
      * @param Account $account The account involved
-     * @param Carbon  $date    The start date.
+     * @param Carbon $date The start date.
      *
      * @return Collection
      */
     protected function getAccountPeriodOverview(Account $account, Carbon $date): Collection
     {
-        throw new FireflyException('Is using collector.');
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
         $range      = app('preferences')->get('viewRange', '1M')->data;
@@ -100,25 +100,30 @@ trait PeriodOverview
         $entries = new Collection;
         // loop dates
         foreach ($dates as $currentDate) {
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::DEPOSIT])
-                      ->withOpposingAccount();
-            $earnedSet = $collector->getTransactions();
-            $earned    = $this->groupByCurrency($earnedSet);
 
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAccounts(new Collection([$account]))->setRange($currentDate['start'], $currentDate['end'])->setTypes([TransactionType::WITHDRAWAL])
-                      ->withOpposingAccount();
-            $spentSet = $collector->getTransactions();
+            // collect from start to end:
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]));
+            $collector->setRange($currentDate['start'], $currentDate['end']);
+            $collector->setTypes([TransactionType::DEPOSIT]);
+            $earnedSet = $collector->getExtractedJournals();
+
+            $earned = $this->groupByCurrency($earnedSet);
+
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setAccounts(new Collection([$account]));
+            $collector->setRange($currentDate['start'], $currentDate['end']);
+            $collector->setTypes([TransactionType::WITHDRAWAL]);
+            $spentSet = $collector->getExtractedJournals();
             $spent    = $this->groupByCurrency($spentSet);
 
             $title = app('navigation')->periodShow($currentDate['start'], $currentDate['period']);
             /** @noinspection PhpUndefinedMethodInspection */
             $entries->push(
                 [
-                    'transactions' => 0,
+                    'transactions' => count($spentSet) + count($earnedSet),
                     'title'        => $title,
                     'spent'        => $spent,
                     'earned'       => $earned,
@@ -127,17 +132,44 @@ trait PeriodOverview
                 ]
             );
         }
-
-        $cache->store($entries);
+        //$cache->store($entries);
 
         return $entries;
+    }
+
+    /**
+     * @param array $journals
+     *
+     * @return array
+     */
+    private function groupByCurrency(array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
+            if (!isset($return[$currencyId])) {
+                $currency                 = new TransactionCurrency;
+                $currency->symbol         = $journal['currency_symbol'];
+                $currency->decimal_places = $journal['currency_decimal_places'];
+                $currency->name           = $journal['currency_name'];
+                $return[$currencyId]      = [
+                    'amount'   => '0',
+                    'currency' => $currency,
+                    //'currency' => 'x',//$currency,
+                ];
+            }
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount']);
+        }
+
+        return $return;
     }
 
     /**
      * Overview for single category. Has been refactored recently.
      *
      * @param Category $category
-     * @param Carbon   $date
+     * @param Carbon $date
      *
      * @return Collection
      */
@@ -357,7 +389,7 @@ trait PeriodOverview
     /**
      * This shows a period overview for a tag. It goes back in time and lists all relevant transactions and sums.
      *
-     * @param Tag    $tag
+     * @param Tag $tag
      *
      * @param Carbon $date
      *
@@ -520,33 +552,6 @@ trait PeriodOverview
             ++$return[$currencyId]['count'];
         }
         asort($return);
-
-        return $return;
-    }
-
-    /**
-     * @param array $journals
-     *
-     * @return array
-     */
-    private function groupByCurrency(array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
-            if (!isset($return[$currencyId])) {
-                $currency                 = new TransactionCurrency;
-                $currency->symbol         = $journal['currency_symbol'];
-                $currency->decimal_places = $journal['currency_decimal_places'];
-                $currency->name           = $journal['currency_name'];
-                $return[$currencyId]      = [
-                    'amount'   => '0',
-                    'currency' => $currency,
-                ];
-            }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount']);
-        }
 
         return $return;
     }

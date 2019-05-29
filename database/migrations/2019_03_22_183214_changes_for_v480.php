@@ -26,6 +26,9 @@ class ChangesForV480 extends Migration
                 $table->dropColumn('transaction_group_id');
             }
         );
+        Schema::table('rule_groups', function (Blueprint $table) {
+            $table->dropColumn('stop_processing');
+        });
     }
 
     /**
@@ -50,5 +53,8 @@ class ChangesForV480 extends Migration
                 $table->foreign('transaction_group_id')->references('id')->on('transaction_groups')->onDelete('cascade');
             }
         );
+        Schema::table('rule_groups', function (Blueprint $table) {
+            $table->boolean('stop_processing')->default(false);
+        });
     }
 }

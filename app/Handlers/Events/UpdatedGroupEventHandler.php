@@ -52,7 +52,7 @@ class UpdatedGroupEventHandler
         foreach ($journals as $journal) {
             $ruleGroupRepos->setUser($journal->user);
 
-            $groups = $ruleGroupRepos->getActiveGroups($journal->user);
+            $groups = $ruleGroupRepos->getActiveGroups();
 
             /** @var RuleGroup $group */
             foreach ($groups as $group) {
