@@ -27,6 +27,7 @@ use FireflyIII\Models\Category;
 
 /**
  * Class CategoryRequest
+ * @codeCoverageIgnore
  */
 class CategoryRequest extends Request
 {

@@ -35,5 +35,5 @@ return [
     'piggy-banks-index'      => 'Gördüğünüz gibi, üç tane banka var. Her domuzcuk bankasındaki para miktarını değiştirmek için artı ve eksi düğmelerini kullanın. Her domuzcuk bankasının yönetimini görmek için domuzcuk\'un üzerine tıklayın.',
     'import-index'           => 'Herhangi bir CSV dosyası Firefly III\'e aktarılabilir. Ayrıca bunq ve Spectre\'den veri almayı da destekliyor. Diğer bankalar ve finansal toplayıcılar gelecekte uygulanacaktır. Ancak bir demo kullanıcısı olarak, yalnızca "fake" -provider etkinlikte görebilirsiniz. Sürecin nasıl çalıştığını göstermek için bazı rasgele işlemler üretecektir.
 ',
-    'profile-index'          => 'Keep in mind that the demo site resets every four hours. Your access may be revoked at any time. This happens automatically and is not a bug.',
+    'profile-index'          => 'Demo sitesinin her dört saatte bir sıfırlandığını unutmayın. Erişiminiz herhangi bir zamanda iptal edilebilir. Bu otomatik olarak gerçekleşir ve bir hata değildir.',
 ];

@@ -226,17 +226,12 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Collection $result */
         $query = $this->user->accounts();
 
-        if (\count($accountIds) > 0) {
+        if (count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
         }
+        $query->orderBy('accounts.name','ASC');
 
         $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
-
         return $result;
     }
 
@@ -252,13 +247,9 @@ class AccountRepository implements AccountRepositoryInterface
         if (\count($types) > 0) {
             $query->accountTypeIn($types);
         }
-
+        $query->orderBy('accounts.name','ASC');
         $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return strtolower($account->name);
-            }
-        );
+
 
         return $result;
     }
@@ -280,12 +271,9 @@ class AccountRepository implements AccountRepositoryInterface
             $query->accountTypeIn($types);
         }
         $query->where('active', 1);
+        $query->orderBy('accounts.account_type_id','ASC');
+        $query->orderBy('accounts.name','ASC');
         $result = $query->get(['accounts.*']);
-        $result = $result->sortBy(
-            function (Account $account) {
-                return sprintf('%02d', $account->account_type_id) . strtolower($account->name);
-            }
-        );
 
         return $result;
     }
@@ -564,13 +552,15 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function searchAccount(string $query, array $types): Collection
     {
-        $dbQuery = $this->user->accounts();
-        $search  = sprintf('%%%s%%', $query);
-        if (\count($types) > 0) {
+        $dbQuery = $this->user->accounts()->with(['accountType']);
+        if ('' !== $query) {
+            $search = sprintf('%%%s%%', $query);
+            $dbQuery->where('name', 'LIKE', $search);
+        }
+        if (count($types) > 0) {
             $dbQuery->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $dbQuery->whereIn('account_types.type', $types);
         }
-        $dbQuery->where('name', 'LIKE', $search);
 
         return $dbQuery->get(['accounts.*']);
     }

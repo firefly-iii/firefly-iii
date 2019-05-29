@@ -249,22 +249,4 @@ trait ModelInformation
     {
         return TransactionType::OPENING_BALANCE === $journal->transactionType->type;
     }
-
-    /**
-     * Checks if journal is split.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return bool
-     */
-    protected function isSplitJournal(TransactionJournal $journal): bool // validate objects
-    {
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $repository->setUser($journal->user);
-        $count = $repository->countTransactions($journal);
-
-        return $count > 2;
-    }
-
 }

@@ -87,6 +87,37 @@ class BillRepository implements BillRepositoryInterface
     }
 
     /**
+     * Find bill by parameters.
+     *
+     * @param int|null    $billId
+     * @param string|null $billName
+     *
+     * @return Bill|null
+     */
+    public function findBill(?int $billId, ?string $billName): ?Bill
+    {
+        if (null !== $billId) {
+            $searchResult = $this->find((int)$billId);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found bill based on #%d, will return it.', $billId));
+
+                return $searchResult;
+            }
+        }
+        if (null !== $billName) {
+            $searchResult = $this->findByName((string)$billName);
+            if (null !== $searchResult) {
+                Log::debug(sprintf('Found bill based on "%s", will return it.', $billName));
+
+                return $searchResult;
+            }
+        }
+        Log::debug('Found nothing');
+
+        return null;
+    }
+
+    /**
      * Find a bill by name.
      *
      * @param string $name
@@ -115,8 +146,8 @@ class BillRepository implements BillRepositoryInterface
         /** @var Collection $set */
         $set = $this->user->bills()
                           ->where('active', 1)
-                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),])
-                          ->sortBy('name');
+                          ->orderBy('bills.name', 'ASC')
+                          ->get(['bills.*', DB::raw('((bills.amount_min + bills.amount_max) / 2) AS expectedAmount'),]);
 
         return $set;
     }
@@ -139,15 +170,7 @@ class BillRepository implements BillRepositoryInterface
     public function getBills(): Collection
     {
         /** @var Collection $set */
-        $set = $this->user->bills()->orderBy('name', 'ASC')->get();
-
-        $set = $set->sortBy(
-            function (Bill $bill) {
-                $int = $bill->active ? 0 : 1;
-
-                return $int . strtolower($bill->name);
-            }
-        );
+        $set = $this->user->bills()->orderBy('active', 'DESC')->orderBy('name', 'ASC')->get();
 
         return $set;
     }
@@ -179,16 +202,10 @@ class BillRepository implements BillRepositoryInterface
                              )
                              ->whereIn('transactions.account_id', $ids)
                              ->whereNull('transaction_journals.deleted_at')
+                             ->orderBy('bills.active', 'DESC')
+                             ->orderBy('bills.name', 'ASC')
                              ->groupBy($fields)
                              ->get($fields);
-
-        $set = $set->sortBy(
-            function (Bill $bill) {
-                $int = $bill->active ? 0 : 1;
-
-                return $int . strtolower($bill->name);
-            }
-        );
 
         return $set;
     }

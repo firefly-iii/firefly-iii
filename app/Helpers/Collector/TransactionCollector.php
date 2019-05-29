@@ -55,6 +55,7 @@ use Log;
 /**
  * Class TransactionCollector
  *
+ * @deprecated
  * @codeCoverageIgnore
  */
 class TransactionCollector implements TransactionCollectorInterface
@@ -137,6 +138,7 @@ class TransactionCollector implements TransactionCollectorInterface
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
         }
+        throw new FireflyException('The transaction collector is deprecated.');
     }
 
     /**

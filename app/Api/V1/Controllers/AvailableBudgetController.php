@@ -50,7 +50,9 @@ class AvailableBudgetController extends Controller
     private $repository;
 
     /**
-     * AccountController constructor.
+     * AvailableBudgetController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -72,6 +74,8 @@ class AvailableBudgetController extends Controller
      *
      * @param AvailableBudget $availableBudget
      *
+     * @codeCoverageIgnore
+     *
      * @return JsonResponse
      */
     public function delete(AvailableBudget $availableBudget): JsonResponse
@@ -87,6 +91,7 @@ class AvailableBudgetController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -135,10 +140,11 @@ class AvailableBudgetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request          $request
-     * @param  AvailableBudget $availableBudget
+     * @param Request         $request
+     * @param AvailableBudget $availableBudget
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, AvailableBudget $availableBudget): JsonResponse
     {

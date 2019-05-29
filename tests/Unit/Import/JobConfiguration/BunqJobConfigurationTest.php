@@ -44,7 +44,7 @@ class BunqJobConfigurationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -113,37 +113,37 @@ class BunqJobConfigurationTest extends TestCase
         $this->assertEquals($return, $config->configureJob($configData));
     }
 
-        /**
-         * @covers \FireflyIII\Import\JobConfiguration\BunqJobConfiguration
-         */
-        public function testGetNextData(): void
-        {
-            $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
-            $jobRepos->shouldReceive('setUser')->once();
-            $job                = new ImportJob;
-            $job->user_id       = $this->user()->id;
-            $job->key           = 'bunq_jc_C' . random_int(1, 10000);
-            $job->status        = 'new';
-            $job->stage         = 'new';
-            $job->provider      = 'bunq';
-            $job->file_type     = '';
-            $job->configuration = [];
-            $job->save();
-            $data = ['ssome' => 'values'];
+    /**
+     * @covers \FireflyIII\Import\JobConfiguration\BunqJobConfiguration
+     */
+    public function testGetNextData(): void
+    {
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos->shouldReceive('setUser')->once();
+        $job                = new ImportJob;
+        $job->user_id       = $this->user()->id;
+        $job->key           = 'bunq_jc_C' . random_int(1, 10000);
+        $job->status        = 'new';
+        $job->stage         = 'new';
+        $job->provider      = 'bunq';
+        $job->file_type     = '';
+        $job->configuration = [];
+        $job->save();
+        $data = ['ssome' => 'values'];
 
-            // Expect "NewBunqJobHandler" because of state.
-            $handler = $this->mock(NewBunqJobHandler::class);
-            $handler->shouldReceive('setImportJob')->once();
-            $handler->shouldReceive('getNextData')->once()->andReturn($data);
+        // Expect "NewBunqJobHandler" because of state.
+        $handler = $this->mock(NewBunqJobHandler::class);
+        $handler->shouldReceive('setImportJob')->once();
+        $handler->shouldReceive('getNextData')->once()->andReturn($data);
 
-            $config = new BunqJobConfiguration;
-            try {
-                $config->setImportJob($job);
-            } catch (FireflyException $e) {
-                $this->assertTrue(false, $e->getMessage());
-            }
-            $this->assertEquals($data, $config->getNextData());
+        $config = new BunqJobConfiguration;
+        try {
+            $config->setImportJob($job);
+        } catch (FireflyException $e) {
+            $this->assertTrue(false, $e->getMessage());
         }
+        $this->assertEquals($data, $config->getNextData());
+    }
 
     /**
      * @covers \FireflyIII\Import\JobConfiguration\BunqJobConfiguration

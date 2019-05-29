@@ -29,6 +29,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
+ * FireflyIII\Models\LinkType
+ *
  * @property int    $journalCount
  * @property string $inward
  * @property string $outward
@@ -38,7 +40,25 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon $updated_at
  * @property int    $id
  * Class LinkType
- *
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournalLink[] $transactionJournalLinks
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LinkType onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereEditable($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereInward($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereOutward($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\LinkType whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LinkType withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\LinkType withoutTrashed()
+ * @mixin \Eloquent
  */
 class LinkType extends Model
 {

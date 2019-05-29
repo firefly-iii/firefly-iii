@@ -59,11 +59,9 @@ interface RuleGroupRepositoryInterface
     public function get(): Collection;
 
     /**
-     * @param User $user
-     *
      * @return Collection
      */
-    public function getActiveGroups(User $user): Collection;
+    public function getActiveGroups(): Collection;
 
     /**
      * @param RuleGroup $group

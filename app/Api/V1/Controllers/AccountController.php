@@ -23,17 +23,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use FireflyIII\Api\V1\Requests\AccountRequest;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Api\V1\Requests\AccountStoreRequest;
+use FireflyIII\Api\V1\Requests\AccountUpdateRequest;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\Http\Api\AccountFilter;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AccountTransformer;
 use FireflyIII\Transformers\PiggyBankTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -58,6 +57,8 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -78,8 +79,9 @@ class AccountController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \FireflyIII\Models\Account $account
+     * @param Account $account
      *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function delete(Account $account): JsonResponse
@@ -94,6 +96,7 @@ class AccountController extends Controller
      *
      * @param Request $request
      *
+     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function index(Request $request): JsonResponse
@@ -134,12 +137,14 @@ class AccountController extends Controller
 
 
     /**
-     * List all of them.
+     * List all piggies.
      *
      * @param Request $request
      * @param Account $account
      *
-     * @return JsonResponse]
+     * @codeCoverageIgnore
+     *
+     * @return JsonResponse
      */
     public function piggyBanks(Request $request, Account $account): JsonResponse
     {
@@ -179,7 +184,8 @@ class AccountController extends Controller
      * @param Request $request
      * @param Account $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @codeCoverageIgnore
+     * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse
     {
@@ -198,11 +204,11 @@ class AccountController extends Controller
     /**
      * Store a new instance.
      *
-     * @param AccountRequest $request
+     * @param AccountStoreRequest $request
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function store(AccountRequest $request): JsonResponse
+    public function store(AccountStoreRequest $request): JsonResponse
     {
         $data    = $request->getAll();
         $account = $this->repository->store($data);
@@ -220,7 +226,9 @@ class AccountController extends Controller
     }
 
     /**
-     * Show all transactions.
+     * Show all transaction groups related to the account.
+     *
+     * @codeCoverageIgnore
      *
      * @param Request $request
      * @param Account $account
@@ -248,35 +256,37 @@ class AccountController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        if ($this->repository->isAsset($account)) {
-            $collector->setAccounts(new Collection([$account]));
-        }
-        if (!$this->repository->isAsset($account)) {
-            $collector->setOpposingAccounts(new Collection([$account]));
-        }
 
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // set the account to filter on to the current one:
+            ->setAccounts(new Collection([$account]))
+            // all info needed for the API:
+            ->withAPIInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
 
+        // set range if necessary:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
-        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
-        $transactions = $paginator->getCollection();
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        $paginator = $collector->getPaginatedGroups();
+        $paginator->setPath(route('api.v1.accounts.transactions', [$account->id]) . $this->buildParams());
+        $groups = $paginator->getCollection();
+
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($transactions, $transformer, 'transactions');
+        $resource = new FractalCollection($groups, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -285,12 +295,12 @@ class AccountController extends Controller
     /**
      * Update account.
      *
-     * @param AccountRequest $request
-     * @param Account        $account
+     * @param AccountUpdateRequest $request
+     * @param Account              $account
      *
-     * @return \Illuminate\Http\JsonResponse
+     * @return JsonResponse
      */
-    public function update(AccountRequest $request, Account $account): JsonResponse
+    public function update(AccountUpdateRequest $request, Account $account): JsonResponse
     {
         $data         = $request->getAll();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);

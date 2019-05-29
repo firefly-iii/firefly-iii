@@ -26,12 +26,12 @@ namespace FireflyIII\Api\V1\Controllers;
 
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -58,7 +58,8 @@ class SummaryController extends Controller
     private $currencyRepos;
 
     /**
-     * AccountController constructor.
+     * SummaryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -88,6 +89,7 @@ class SummaryController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @throws Exception
      */
     public function basic(Request $request): JsonResponse
     {
@@ -170,36 +172,47 @@ class SummaryController extends Controller
         $sums     = [];
         $return   = [];
 
-        // collect income of user:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId           = (int)$transaction->transaction_currency_id;
+        // collect income of user using the new group collector.
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setRange($start, $end)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes([TransactionType::DEPOSIT]);
+
+        $set = $collector->getExtractedJournals();
+        /** @var array $transactionJournal */
+        foreach ($set as $transactionJournal) {
+
+            $currencyId           = (int)$transactionJournal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], bcmul($transactionJournal['amount'], '-1'));
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]    = bcadd($sums[$currencyId], bcmul($transactionJournal['amount'], '-1'));
         }
 
-        // collect expenses:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId            = (int)$transaction->transaction_currency_id;
+        // collect expenses of user using the new group collector.
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setRange($start, $end)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes([TransactionType::WITHDRAWAL]);
+
+
+        $set = $collector->getExtractedJournals();
+
+        /** @var array $transactionJournal */
+        foreach ($set as $transactionJournal) {
+            $currencyId            = (int)$transactionJournal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transactionJournal['amount']);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $transactionJournal['amount']);
         }
 
         // format amounts:
@@ -315,6 +328,7 @@ class SummaryController extends Controller
      * @param Carbon $end
      *
      * @return array
+     * @throws Exception
      */
     private function getLeftToSpendInfo(Carbon $start, Carbon $end): array
     {

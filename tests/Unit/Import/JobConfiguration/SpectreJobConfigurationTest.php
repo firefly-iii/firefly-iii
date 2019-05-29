@@ -33,8 +33,8 @@ use FireflyIII\Support\Import\JobConfiguration\Spectre\ChooseLoginHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\DoAuthenticateHandler;
 use FireflyIII\Support\Import\JobConfiguration\Spectre\NewSpectreJobHandler;
 use Illuminate\Support\MessageBag;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class SpectreJobConfigurationTest
@@ -47,7 +47,7 @@ class SpectreJobConfigurationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 

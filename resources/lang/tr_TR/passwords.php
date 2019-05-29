@@ -25,7 +25,7 @@ declare(strict_types=1);
 return [
     'password' => 'Şifreniz en az altı karakter olmalıdır ve onayla eşleşmelidir.',
     'user'     => 'Bu e-posta adresine sahip bir kullanıcı bulunamadı.',
-    'token'    => 'Şifre sıfırlama kodu geçersiz.',
+    'token'    => 'Bu şifre sıfırlama güvenlik anahtarı geçersiz.',
     'sent'     => 'Şifre sıfırlama linkini e-posta adresinize gönderdik!',
     'reset'    => 'Şifreniz sıfırlandı!',
     'blocked'  => 'Yine de iyi denemeydi.',

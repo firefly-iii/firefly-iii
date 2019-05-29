@@ -51,7 +51,7 @@ class ConfigureMappingHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -59,7 +59,7 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testApplySpecifics(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
@@ -161,7 +161,7 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testDoColumnConfig(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
@@ -226,7 +226,7 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testDoMapOfColumn(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
@@ -339,7 +339,7 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testGetPreProcessorName(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
@@ -487,7 +487,7 @@ class ConfigureMappingHandlerTest extends TestCase
      */
     public function testSanitizeColumnName(): void
     {
-        $importRepos        = $this->mock(ImportJobRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
         $importRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;

@@ -42,7 +42,7 @@ class DeleteControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -51,7 +51,7 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         $recurringRepos->shouldReceive('getTransactions')->andReturn(new Collection())->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -68,7 +68,7 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         $recurringRepos->shouldReceive('destroy')->once();
 

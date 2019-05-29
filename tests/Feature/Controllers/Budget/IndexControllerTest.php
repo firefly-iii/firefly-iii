@@ -49,7 +49,7 @@ class IndexControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -260,10 +260,10 @@ class IndexControllerTest extends TestCase
      */
     public function testReorder(): void
     {
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $data = [
-            'budgetIds' => [1,2],
-            'page' => 1,
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $data       = [
+            'budgetIds' => [1, 2],
+            'page'      => 1,
         ];
 
         $repository->shouldReceive('cleanupBudgets')->atLeast()->once();

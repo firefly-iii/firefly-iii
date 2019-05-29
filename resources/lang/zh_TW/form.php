@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => '來源帳戶',
     'journal_description'         => '說明',
     'note'                        => '備註',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => '分割此交易',
     'split_journal_explanation'   => '分割這個交易為幾個部分',
     'currency'                    => '貨幣',

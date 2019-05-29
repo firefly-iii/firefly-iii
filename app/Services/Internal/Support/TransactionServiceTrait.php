@@ -25,13 +25,9 @@ namespace FireflyIII\Services\Internal\Support;
 
 
 use FireflyIII\Factory\AccountFactory;
-use FireflyIII\Factory\BudgetFactory;
-use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
@@ -86,14 +82,18 @@ trait TransactionServiceTrait
      * @throws \FireflyIII\Exceptions\FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
-    public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account
+    public function findAccount(?string $expectedType, ?Account $account, ?int $accountId, ?string $accountName): ?Account
     {
+        $result = null;
+
+        if (null !== $account && $account->user_id === $this->user->id) {
+            return $account;
+        }
+
         $accountId   = (int)$accountId;
         $accountName = (string)$accountName;
         $repository  = app(AccountRepositoryInterface::class);
         $repository->setUser($this->user);
-
-        Log::debug(sprintf('Going to find account #%d ("%s")', $accountId, $accountName));
 
         if (null === $expectedType) {
             return $repository->findNull($accountId);
@@ -119,37 +119,6 @@ trait TransactionServiceTrait
     }
 
     /**
-     * @param int|null    $budgetId
-     * @param null|string $budgetName
-     *
-     * @return Budget|null
-     */
-    protected function findBudget(?int $budgetId, ?string $budgetName): ?Budget
-    {
-        /** @var BudgetFactory $factory */
-        $factory = app(BudgetFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->find($budgetId, $budgetName);
-    }
-
-    /**
-     * @param int|null    $categoryId
-     * @param null|string $categoryName
-     *
-     * @return Category|null
-     */
-    protected function findCategory(?int $categoryId, ?string $categoryName): ?Category
-    {
-        Log::debug(sprintf('Going to find or create category #%d, with name "%s"', $categoryId, $categoryName));
-        /** @var CategoryFactory $factory */
-        $factory = app(CategoryFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->findOrCreate($categoryId, $categoryName);
-    }
-
-    /**
      * @param int|null    $currencyId
      * @param null|string $currencyCode
      *
@@ -161,38 +130,6 @@ trait TransactionServiceTrait
 
         return $factory->find($currencyId, $currencyCode);
     }
-
-    /**
-     * @param Transaction $transaction
-     * @param Budget|null $budget
-     */
-    protected function setBudget(Transaction $transaction, ?Budget $budget): void
-    {
-        if (null === $budget) {
-            $transaction->budgets()->sync([]);
-
-            return;
-        }
-        $transaction->budgets()->sync([$budget->id]);
-
-    }
-
-
-    /**
-     * @param Transaction   $transaction
-     * @param Category|null $category
-     */
-    protected function setCategory(Transaction $transaction, ?Category $category): void
-    {
-        if (null === $category) {
-            $transaction->categories()->sync([]);
-
-            return;
-        }
-        $transaction->categories()->sync([$category->id]);
-
-    }
-
 
     /**
      * @param Transaction $transaction

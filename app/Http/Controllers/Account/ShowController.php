@@ -25,6 +25,7 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -76,8 +77,8 @@ class ShowController extends Controller
     /**
      * Show an account.
      *
-     * @param Request     $request
-     * @param Account     $account
+     * @param Request $request
+     * @param Account $account
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -119,19 +120,22 @@ class ShowController extends Controller
         $subTitle = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $periods  = $this->getAccountPeriodOverview($account, $end);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        $collector->setRange($start, $end);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
-        $showAll = false;
 
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setAccounts(new Collection([$account]))
+            ->setLimit($pageSize)
+            ->setPage($page)
+            ->setRange($start, $end);
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
+        $showAll = false;
 
         return view(
             'accounts.show',
             compact(
-                'account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end',
+                'account', 'showAll', 'what', 'currency', 'today', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end',
                 'chartUri'
             )
         );

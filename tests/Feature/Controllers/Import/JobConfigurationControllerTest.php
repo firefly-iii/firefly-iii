@@ -44,7 +44,7 @@ class JobConfigurationControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -99,8 +99,6 @@ class JobConfigurationControllerTest extends TestCase
         $repository   = $this->mock(ImportJobRepositoryInterface::class);
         $configurator = $this->mock(FakeJobConfiguration::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-
-
 
 
         $this->be($this->user());

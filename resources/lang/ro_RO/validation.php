@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'Fișierul ":name" a fost încărcat cu succes.',
     'must_exist'                     => 'Câmpul ID :attribute nu există în baza de date.',
     'all_accounts_equal'             => 'Toate conturile din acest câmp trebuie să fie egale.',
+    'group_title_mandatory'          => 'Un titlu de grup este obligatoriu atunci când există mai multe tranzacții.',
+    'transaction_types_equal'        => 'Toate împărțirile trebuie să fie de același tip.',
+    'invalid_transaction_type'       => 'Tip tranzacție nevalidă.',
     'invalid_selection'              => 'Selecția dvs. este nevalidă.',
     'belongs_user'                   => 'Această valoare este nevalidă pentru acest câmp.',
     'at_least_one_transaction'       => 'Aveți nevoie de cel puțin o tranzacție.',
     'at_least_one_repetition'        => 'Aveți nevoie de cel puțin o repetare.',
     'require_repeat_until'           => 'Solicitați fie un număr de repetări, fie o dată de încheiere (repeat_until). Nu amândouă.',
     'require_currency_info'          => 'Conținutul acestui câmp este nevalid fără informații despre monedă.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Descrierea tranzacției nu trebuie să fie egală cu descrierea globală.',
     'file_invalid_mime'              => 'Fișierul ":name" este de tip ":mime" și nu este acceptat ca o încărcare nouă.',
     'file_too_large'                 => 'Fișierul ":name" este prea mare.',
@@ -164,4 +168,20 @@ return [
         'rule-trigger.4'          => 'regulă de declanșare #4',
         'rule-trigger.5'          => 'regulă de declanșare #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
+    'withdrawal_source_bad_data'     => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
+    'withdrawal_dest_need_data'      => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
+
+    'deposit_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
+    'deposit_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
+    'deposit_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
+    'deposit_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+
+    'transfer_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
+    'transfer_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
+    'transfer_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
+    'transfer_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
+    'need_id_in_edit'           => 'Atunci când actualizați o tranzacție cu diviziuni, fiecare divizie trebuie să aibă un id de jurnal de tranzacții valabil (câmpul "transaction_journal_id").',
 ];

@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'Datei „:name” erfolgreich hochgeladen.',
     'must_exist'                     => 'Die ID in Feld :attribute existiert nicht in der Datenbank.',
     'all_accounts_equal'             => 'Alle Konten in diesem Feld müssen identisch sein.',
+    'group_title_mandatory'          => 'Ein Gruppentitel ist zwingend erforderlich, wenn mehr als eine Buchung vorliegt.',
+    'transaction_types_equal'        => 'Alle Aufteilungen müssen vom gleichen Typ sein.',
+    'invalid_transaction_type'       => 'Ungültige Transaktionstyp',
     'invalid_selection'              => 'Ihre Auswahl ist ungültig.',
     'belongs_user'                   => 'Dieser Wert ist für dieses Feld ungültig.',
     'at_least_one_transaction'       => 'Sie brauchen mindestens eine Transaktion.',
     'at_least_one_repetition'        => 'Mindestens eine Wiederholung erforderlich.',
     'require_repeat_until'           => 'Erfordert entweder eine Anzahl von Wiederholungen oder ein Enddatum (repeat_until). Nicht beides.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
     'file_too_large'                 => 'Die Datei „:name” ist zu groß.',
@@ -164,4 +168,20 @@ return [
         'rule-trigger.4'          => 'Regel 4 auslösen',
         'rule-trigger.5'          => 'Regel #5 auslösen',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'withdrawal_source_bad_data'     => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'withdrawal_dest_need_data'      => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+
+    'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'deposit_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'deposit_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
+
+    'transfer_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
+    'transfer_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
+    'transfer_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'transfer_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
+    'need_id_in_edit'           => 'Bei der Aktualisierung einer Buchung mit Aufteilungen muss jede Aufteilung eine gültige Buchungsjournalkennung aufweisen (Feld „transaction_journal_id”).',
 ];

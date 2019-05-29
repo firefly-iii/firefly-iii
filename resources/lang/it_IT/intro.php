@@ -129,7 +129,7 @@ return [
     'preferences_index_tabs'                                  => 'Altre opzioni sono disponibili dietro queste schede.',
 
     // currencies
-    'currencies_index_intro'                                  => 'Firefly III supporta più valute, che è possibile modificare su questa pagina.',
+    'currencies_index_intro'                                  => 'Firefly III supporta più valute, che è possibile modificare in questa pagina.',
     'currencies_index_default'                                => 'Firefly III ha una valuta predefinita.',
     'currencies_index_buttons'                                => 'Utilizza questi pulsanti per cambiare la valuta predefinita o per abilitare altre valute.',
 

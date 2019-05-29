@@ -33,9 +33,9 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\File\MappedValuesValidator;
 use Illuminate\Support\Collection;
+use Log;
 use stdClass;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class MappedValuesValidatorTest
@@ -48,7 +48,7 @@ class MappedValuesValidatorTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**

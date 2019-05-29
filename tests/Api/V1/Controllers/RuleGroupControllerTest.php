@@ -53,103 +53,9 @@ class RuleGroupControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
-     */
-    public function testDelete(): void
-    {
-        /** @var RuleGroup $ruleGroup */
-        $ruleGroup = $this->user()->ruleGroups()->first();
-
-        // mock stuff:
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $transformer    = $this->mock(RuleGroupTransformer::class);
-
-        // mock calls:
-        $accountRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('destroy')->once()->andReturn(true);
-
-        $response = $this->delete('/api/v1/rule_groups/' . $ruleGroup->id);
-        $response->assertStatus(204);
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
-     */
-    public function testIndex(): void
-    {
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $transformer    = $this->mock(RuleGroupTransformer::class);
-
-        $accountRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('get')->once()->andReturn(new Collection);
-
-        $transformer->shouldReceive('setParameters')->atLeast()->once();
-
-
-        // call API
-        $response = $this->get('/api/v1/rule_groups');
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
-     */
-    public function testRules(): void
-    {
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $transformer    = $this->mock(RuleTransformer::class);
-
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-        $accountRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('getRules')->once()->andReturn(new Collection);
-
-        // call API
-        $group    = $this->user()->ruleGroups()->first();
-        $response = $this->get(route('api.v1.rule_groups.rules', [$group->id]));
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
-     */
-    public function testShow(): void
-    {
-        /** @var RuleGroup $ruleGroup */
-        $ruleGroup      = $this->user()->ruleGroups()->first();
-        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $transformer    = $this->mock(RuleGroupTransformer::class);
-
-        $accountRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('setUser')->once();
-
-        // mock calls to transformer:
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-
-        // call API
-        $response = $this->get('/api/v1/rule_groups/' . $ruleGroup->id);
-        $response->assertStatus(200);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
-    }
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
@@ -190,6 +96,9 @@ class RuleGroupControllerTest extends TestCase
      */
     public function testTestGroupBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $group = $this->user()->ruleGroups()->first();
         $rule  = $this->user()->rules()->first();
 

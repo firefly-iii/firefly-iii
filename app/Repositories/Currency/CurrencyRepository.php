@@ -195,8 +195,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyCode
      *
-     * @deprecated
      * @return TransactionCurrency|null
+     * @deprecated
      */
     public function findByCodeNull(string $currencyCode): ?TransactionCurrency
     {
@@ -221,8 +221,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencyName
      *
-     * @deprecated
      * @return TransactionCurrency
+     * @deprecated
      */
     public function findByNameNull(string $currencyName): ?TransactionCurrency
     {
@@ -247,12 +247,66 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param string $currencySymbol
      *
-     * @deprecated
      * @return TransactionCurrency
+     * @deprecated
      */
     public function findBySymbolNull(string $currencySymbol): ?TransactionCurrency
     {
         return TransactionCurrency::whereSymbol($currencySymbol)->first();
+    }
+
+    /**
+     * Find by object, ID or code. Returns user default or system default.
+     *
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrency(?int $currencyId, ?string $currencyCode): TransactionCurrency
+    {
+        $result = $this->findCurrencyNull($currencyId, $currencyCode);
+
+        if (null === $result) {
+            Log::debug('Grabbing default currency for this user...');
+            $result = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
+        if (null === $result) {
+            Log::debug('Grabbing EUR as fallback.');
+            $result = $this->findByCode('EUR');
+        }
+        Log::debug(sprintf('Final result: %s', $result->code));
+        if (false === $result->enabled) {
+            Log::debug(sprintf('Also enabled currency %s', $result->code));
+            $this->enable($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Find by object, ID or code. Returns NULL if nothing found.
+     *
+     * @param int|null    $currencyId
+     * @param string|null $currencyCode
+     *
+     * @return TransactionCurrency|null
+     */
+    public function findCurrencyNull(?int $currencyId, ?string $currencyCode): ?TransactionCurrency
+    {
+        Log::debug('Now in findCurrencyNull()');
+        $result = $this->find((int)$currencyId);
+        if (null === $result) {
+            Log::debug(sprintf('Searching for currency with code %s...', $currencyCode));
+            $result = $this->findByCode((string)$currencyCode);
+        }
+        if (null !== $result && false === $result->enabled) {
+            Log::debug(sprintf('Also enabled currency %s', $result->code));
+            $this->enable($result);
+        }
+
+        return $result;
     }
 
     /**
@@ -261,8 +315,8 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param int $currencyId
      *
-     * @deprecated
      * @return TransactionCurrency|null
+     * @deprecated
      */
     public function findNull(int $currencyId): ?TransactionCurrency
     {

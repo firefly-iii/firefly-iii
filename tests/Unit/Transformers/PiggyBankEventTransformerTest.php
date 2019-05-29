@@ -46,8 +46,9 @@ class PiggyBankEventTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
+
     /**
      * Basic test with no meta data.
      *
@@ -55,6 +56,9 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function testBasic(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // repositories
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
@@ -87,6 +91,9 @@ class PiggyBankEventTransformerTest extends TestCase
      */
     public function testNoCurrency(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // repositories
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);

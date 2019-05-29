@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Transaction;
 
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
@@ -61,6 +61,7 @@ class SplitController extends Controller
      */
     public function __construct()
     {
+        throw new FireflyException('Do not use me.');
         parent::__construct();
 
         // some useful repositories:
@@ -89,6 +90,7 @@ class SplitController extends Controller
      */
     public function edit(Request $request, TransactionJournal $journal)
     {
+        throw new FireflyException('Needs refactoring');
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
@@ -132,6 +134,7 @@ class SplitController extends Controller
      */
     public function update(SplitJournalFormRequest $request, TransactionJournal $journal)
     {
+        throw new FireflyException('Needs refactoring.');
         if ($this->isOpeningBalance($journal)) {
             return $this->redirectToAccount($journal); // @codeCoverageIgnore
         }
@@ -145,7 +148,7 @@ class SplitController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         // save attachments:
         $this->attachments->saveAttachmentsForModel($journal, $files);
-        event(new UpdatedTransactionJournal($journal));
+        event(new UpdatedTransactionGroup($group));
 
         // flash messages
         // @codeCoverageIgnoreStart

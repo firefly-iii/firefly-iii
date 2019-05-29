@@ -28,7 +28,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Services\Internal\Support\BillServiceTrait;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -126,20 +125,9 @@ class BillFactory
      */
     public function findByName(string $name): ?Bill
     {
-        /** @var Collection $collection */
-        $collection = $this->user->bills()->get();
-        $return     = null;
-        /** @var Bill $bill */
-        foreach ($collection as $bill) {
-            Log::debug(sprintf('"%s" vs. "%s"', $bill->name, $name));
-            if ($bill->name === $name) {
-                $return = $bill;
-                break;
-            }
-        }
-        Log::debug(sprintf('Bill::find("%s") by name returns null? %s', $name, var_export($return, true)));
+        $query = sprintf('%%%s%%', $name);
 
-        return $return;
+        return $this->user->bills()->where('name', 'LIKE', $query)->first();
     }
 
     /**

@@ -23,9 +23,10 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-
 /**
  * Class BudgetLimitRequest
+ *
+ * @codeCoverageIgnore
  */
 class BudgetLimitRequest extends Request
 {

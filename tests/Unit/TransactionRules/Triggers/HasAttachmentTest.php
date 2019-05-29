@@ -22,10 +22,11 @@ declare(strict_types=1);
 
 namespace Tests\Unit\TransactionRules\Triggers;
 
+use DB;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Triggers\HasAttachment;
 use Tests\TestCase;
-use DB;
+
 /**
  * Class HasAttachmentTest
  */
@@ -57,8 +58,8 @@ class HasAttachmentTest extends TestCase
         $withdrawal->attachments()->save($attachment);
 
         DB::table('attachments')
-            ->where('attachable_type', TransactionJournal::class)
-            ->where('attachable_id', $withdrawal->id)->delete();
+          ->where('attachable_type', TransactionJournal::class)
+          ->where('attachable_id', $withdrawal->id)->delete();
 
         $withdrawal->attachments()->saveMany([]);
         $this->assertEquals(0, $withdrawal->attachments()->count());

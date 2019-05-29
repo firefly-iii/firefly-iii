@@ -31,7 +31,16 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $type
  * @method whereType(string $type)
  * @property int    $id
- *
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Account[] $accounts
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountType newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountType newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountType query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountType whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountType whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AccountType whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class AccountType extends Model
 {

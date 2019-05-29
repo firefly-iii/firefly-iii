@@ -53,8 +53,39 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property string              $match
  * @property bool                match_encrypted
  * @property bool                name_encrypted
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings (PHPMD.CouplingBetweenObjects)
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @property bool $name_encrypted
+ * @property bool $match_encrypted
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Attachment[] $attachments
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereActive($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereAmountMax($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereAmountMin($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereAutomatch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereMatch($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereMatchEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereNameEncrypted($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereRepeatFreq($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereSkip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Bill whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Bill withoutTrashed()
+ * @mixin \Eloquent
  */
 class Bill extends Model
 {

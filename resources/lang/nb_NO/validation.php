@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'Opplasting av fil ":name" var vellykket.',
     'must_exist'                     => 'IDen i feltet :attribute finnes ikke i databasen.',
     'all_accounts_equal'             => 'Alle kontoer i dette feltet må være like.',
+    'group_title_mandatory'          => 'En gruppetittel er obligatorisk når det er mer enn én transaksjon.',
+    'transaction_types_equal'        => 'Alle deler må være av samme type.',
+    'invalid_transaction_type'       => 'Ugyldig transaksjonstype.',
     'invalid_selection'              => 'Dine valg er ugyldig.',
     'belongs_user'                   => 'Denne verdien er ugyldig for dette feltet.',
     'at_least_one_transaction'       => 'Trenger minst én transaksjon.',
     'at_least_one_repetition'        => 'Trenger minst en gjentagelse.',
     'require_repeat_until'           => 'Krever enten et antall repetisjoner eller en slutt dato (gjentas til). Ikke begge.',
     'require_currency_info'          => 'Innholdet i dette feltet er ugyldig uten valutainformasjon.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'Transaksjonsbeskrivelsen bør ikke være lik global beskrivelse.',
     'file_invalid_mime'              => 'Kan ikke akseptere fil ":name" av typen ":mime" for opplasting.',
     'file_too_large'                 => '":name"-filen er for stor.',
@@ -164,4 +168,20 @@ return [
         'rule-trigger.4'          => 'regel trigger #4',
         'rule-trigger.5'          => 'regel trigger #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'withdrawal_source_bad_data'     => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'withdrawal_dest_need_data'      => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+
+    'deposit_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'deposit_source_bad_data'  => 'Kunne ikke finne en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'deposit_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'deposit_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
+
+    'transfer_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
+    'transfer_source_bad_data'  => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
+    'transfer_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'transfer_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
+    'need_id_in_edit'           => 'Når du oppdaterer en transaksjon med flere deler, må hver del ha en gyldig transaksjons journal-id (feltet "transaction_journal_id").',
 ];

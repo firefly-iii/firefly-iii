@@ -29,6 +29,7 @@ use Illuminate\Validation\Rule;
 /**
  *
  * Class LinkTypeRequest
+ * @codeCoverageIgnore
  */
 class LinkTypeRequest extends Request
 {

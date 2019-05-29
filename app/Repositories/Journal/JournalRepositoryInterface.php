@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
@@ -36,10 +37,10 @@ use Illuminate\Support\MessageBag;
 
 /**
  * Interface JournalRepositoryInterface.
+ * TODO needs cleaning up. Remove unused methods.
  */
 interface JournalRepositoryInterface
 {
-
     /**
      * @param TransactionJournal $journal
      * @param TransactionType    $type
@@ -51,23 +52,21 @@ interface JournalRepositoryInterface
     public function convert(TransactionJournal $journal, TransactionType $type, Account $source, Account $destination): MessageBag;
 
     /**
-     * @param TransactionJournal $journal
+     * Deletes a transaction group.
      *
-     * @return int
+     * @param TransactionGroup $transactionGroup
      */
-    public function countTransactions(TransactionJournal $journal): int;
-
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
+    public function destroyGroup(TransactionGroup $transactionGroup): void;
 
     /**
      * Deletes a journal.
      *
      * @param TransactionJournal $journal
-     *
-     * @return bool
      */
-    public function destroy(TransactionJournal $journal): bool;
+    public function destroyJournal(TransactionJournal $journal): void;
+
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Find a journal by its hash.
@@ -86,13 +85,6 @@ interface JournalRepositoryInterface
      * @return TransactionJournal|null
      */
     public function findNull(int $journalId): ?TransactionJournal;
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return Transaction|null
-     */
-    public function findOpposingTransaction(Transaction $transaction): ?Transaction;
 
     /**
      * @param int $transactionid
@@ -125,13 +117,6 @@ interface JournalRepositoryInterface
     public function getAttachments(TransactionJournal $journal): Collection;
 
     /**
-     * @param Transaction $transaction
-     *
-     * @return Collection
-     */
-    public function getAttachmentsByTr(Transaction $transaction): Collection;
-
-    /**
      * Returns the first positive transaction for the journal. Useful when editing journals.
      *
      * @param TransactionJournal $journal
@@ -148,6 +133,15 @@ interface JournalRepositoryInterface
      * @return int
      */
     public function getJournalBudgetId(TransactionJournal $journal): int;
+
+    /**
+     * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalCategoryId(TransactionJournal $journal): int;
 
     /**
      * Return the name of the category linked to the journal (if any) or to the transactions (if any).
@@ -195,6 +189,13 @@ interface JournalRepositoryInterface
      * @return string
      */
     public function getJournalTotal(TransactionJournal $journal): string;
+
+    /**
+     * Return all journals without a group, used in an upgrade routine.
+     *
+     * @return array
+     */
+    public function getJournalsWithoutGroup(): array;
 
     /**
      * @param TransactionJournalLink $link
@@ -250,11 +251,12 @@ interface JournalRepositoryInterface
     public function getPiggyBankEvents(TransactionJournal $journal): Collection;
 
     /**
-     * @param Transaction $transaction
+     * Returns all journals with more than 2 transactions. Should only return empty collections
+     * in Firefly III > v4.8.0.
      *
      * @return Collection
      */
-    public function getPiggyBankEventsbyTr(Transaction $transaction): Collection;
+    public function getSplitJournals(): Collection;
 
     /**
      * Return all tags as strings in an array.
@@ -273,11 +275,6 @@ interface JournalRepositoryInterface
      * @return string
      */
     public function getTransactionType(TransactionJournal $journal): string;
-
-    /**
-     * @return Collection
-     */
-    public function getTransactionTypes(): Collection;
 
     /**
      * @param array $transactionIds
@@ -310,17 +307,6 @@ interface JournalRepositoryInterface
     public function reconcileById(int $transactionId): bool;
 
     /**
-     * Set meta field for journal that contains a date.
-     *
-     * @param TransactionJournal $journal
-     * @param string             $name
-     * @param Carbon             $date
-     *
-     * @return void
-     */
-    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void;
-
-    /**
      * @param TransactionJournal $journal
      * @param int                $order
      *
@@ -333,21 +319,7 @@ interface JournalRepositoryInterface
      */
     public function setUser(User $user);
 
-    /**
-     * @param array $data
-     *
-     * @throws FireflyException
-     * @return TransactionJournal
-     */
-    public function store(array $data): TransactionJournal;
 
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     */
-    public function update(TransactionJournal $journal, array $data): TransactionJournal;
 
     /**
      * Update budget for a journal.

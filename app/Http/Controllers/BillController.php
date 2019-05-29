@@ -212,11 +212,6 @@ class BillController extends Controller
                 return $return;
             }
         );
-        $bills = $bills->sortBy(
-            function (array $bill) {
-                return (int)!$bill['active'] . strtolower($bill['name']);
-            }
-        );
 
         // add info about rules:
         $rules = $this->billRepository->getRulesForBills($paginator->getCollection());

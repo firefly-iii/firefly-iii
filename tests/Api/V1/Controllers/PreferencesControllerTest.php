@@ -45,40 +45,11 @@ class PreferencesControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\PreferenceController
-     */
-    public function testIndex(): void
-    {
-        $transformer = $this->mock(PreferenceTransformer::class);
-        $available   = ['language', 'customFiscalYear', 'fiscalYearStart', 'currencyPreference', 'transaction_journal_optional_fields', 'frontPageAccounts',
-                        'viewRange', 'listPageSize, twoFactorAuthEnabled',];
-
-        foreach ($available as $pref) {
-            Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), $pref])->once();
-        }
-        // extra call for frontpage preference
-        $pref = new Preference;
-        $pref->data =[1];
-        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'frontPageAccounts',[]])->once()
-            ->andReturn($pref);
-
-        // mock calls to transformer:
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-
-
-
-        // call API
-        $response = $this->get('/api/v1/preferences');
-        $response->assertStatus(200);
-    }
-
-    /**
-     * @covers \FireflyIII\Api\V1\Controllers\PreferenceController
-     * @covers \FireflyIII\Api\V1\Requests\PreferenceRequest
      */
     public function testUpdateArray(): void
     {
@@ -101,7 +72,6 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\PreferenceController
-     * @covers \FireflyIII\Api\V1\Requests\PreferenceRequest
      */
     public function testUpdateBoolean(): void
     {
@@ -124,7 +94,6 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\PreferenceController
-     * @covers \FireflyIII\Api\V1\Requests\PreferenceRequest
      */
     public function testUpdateDefault(): void
     {
@@ -147,7 +116,6 @@ class PreferencesControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\PreferenceController
-     * @covers \FireflyIII\Api\V1\Requests\PreferenceRequest
      */
     public function testUpdateInteger(): void
     {

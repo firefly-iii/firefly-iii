@@ -76,20 +76,20 @@ return [
     'transactions_create_withdrawal_ffInput_budget'           => '将您的提款连结至预算，以利财务管控。',
     'transactions_create_withdrawal_currency_dropdown_amount' => '当您的提款使用另一种货币时, 请使用此下拉清单。',
     'transactions_create_deposit_currency_dropdown_amount'    => '当您的存款使用另一种货币时, 请使用此下拉清单。',
-    'transactions_create_transfer_ffInput_piggy_bank_id'      => '选择一个小猪存钱罐，并将此转帐连结到您的储蓄。',
+    'transactions_create_transfer_ffInput_piggy_bank_id'      => '选择一个存钱罐，并将此转帐连结到您的储蓄。',
 
     // piggy banks index:
-    'piggy-banks_index_saved'                                 => '此栏位显示您在每个小猪存钱罐中保存了多少。',
-    'piggy-banks_index_button'                                => '此进度条旁边有两个按钮 (+ 和-)，用于从每个小猪存钱罐中增加或删除资金。',
-    'piggy-banks_index_accountStatus'                         => '此表中列出了每一个至少有一个小猪存钱罐的资产帐户的状态。',
+    'piggy-banks_index_saved'                                 => '此栏位显示您在每个存钱罐中存了多少。',
+    'piggy-banks_index_button'                                => '此进度条旁边有两个按钮 ( + 和 - )，用于从每个存钱罐中投入或取出资金。',
+    'piggy-banks_index_accountStatus'                         => '此表中列出了所有有存钱罐的资产帐户的状态。',
 
     // create piggy
     'piggy-banks_create_name'                                 => '你的目标是什麽？一个新沙发、一个相机、急难用金？',
-    'piggy-banks_create_date'                                 => '您可以为小猪存钱罐设定目标日期或截止日期。',
+    'piggy-banks_create_date'                                 => '您可以为存钱罐设定目标日期或截止日期。',
 
     // show piggy
-    'piggy-banks_show_piggyChart'                             => '这张图表将显示这个小猪存钱罐的历史。',
-    'piggy-banks_show_piggyDetails'                           => '关于你的小猪存钱罐的一些细节',
+    'piggy-banks_show_piggyChart'                             => '这张图表将显示这个存钱罐的历史。',
+    'piggy-banks_show_piggyDetails'                           => '关于你的存钱罐的一些细节',
     'piggy-banks_show_piggyEvents'                            => '此处还列出了任何增加或删除。',
 
     // bill index

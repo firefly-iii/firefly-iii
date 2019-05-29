@@ -41,6 +41,18 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int                $link_type_id
  * @property int                $source_id
  * @property int                $destination_id
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Note[] $notes
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink newQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink query()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereComment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereDestinationId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereLinkTypeId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereSourceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionJournalLink whereUpdatedAt($value)
+ * @mixin \Eloquent
  */
 class TransactionJournalLink extends Model
 {

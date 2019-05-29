@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Source account',
     'journal_description'         => 'Description',
     'note'                        => 'Notes',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Split this transaction',
     'split_journal_explanation'   => 'Split this transaction in multiple parts',
     'currency'                    => 'Currency',

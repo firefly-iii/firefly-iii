@@ -25,8 +25,8 @@ declare(strict_types=1);
 return [
     'password' => 'Parolele trebuie să aibă cel puțin șase caractere și să corespundă confirmării.',
     'user'     => 'Nu putem găsi un utilizator cu acea adresă de e-mail.',
-    'token'    => 'Acest token pentru resetarea parolei este nevalid.',
-    'sent'     => 'V-am trimis prin e-mail legătura de resetare a parolei!',
+    'token'    => 'Acest token pentru resetarea parolei nu este valid.',
+    'sent'     => 'V-am trimis prin e-mail adresa web de resetare a parolei!',
     'reset'    => 'Parola a fost resetată!',
-    'blocked'  => 'Bună încercare, deși...',
+    'blocked'  => 'Oricum, bună încercare.',
 ];

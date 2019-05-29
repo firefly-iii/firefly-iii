@@ -23,8 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
+use Exception;
+
 /**
  * Class AvailableBudgetRequest
+ *
+ * @codeCoverageIgnore
  */
 class AvailableBudgetRequest extends Request
 {

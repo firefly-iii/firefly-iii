@@ -28,6 +28,7 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\CreateRecurringTransactions;
 use FireflyIII\Models\Configuration;
 use Log;
+use Preferences;
 
 /**
  * Class RecurringCronjob
@@ -67,6 +68,7 @@ class RecurringCronjob extends AbstractCronjob
             Log::error($e->getTraceAsString());
             throw new FireflyException(sprintf('Could not run recurring transaction cron job: %s', $e->getMessage()));
         }
+        Preferences::mark();
 
         return true;
     }

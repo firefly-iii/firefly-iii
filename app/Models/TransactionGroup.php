@@ -25,13 +25,42 @@ namespace FireflyIII\Models;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
 /**
  * Class TransactionGroup.
+ *
+ * @property int                                                                                   $id
+ * @property \Illuminate\Support\Carbon|null                                                       $created_at
+ * @property \Illuminate\Support\Carbon|null                                                       $updated_at
+ * @property \Illuminate\Support\Carbon|null                                                       $deleted_at
+ * @property int                                                                                   $user_id
+ * @property string|null                                                                           $title
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\TransactionJournal[] $transactionJournals
+ * @property-read \FireflyIII\User                                                                 $user
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereTitle($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\TransactionGroup whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\TransactionGroup withoutTrashed()
+ * @mixin \Eloquent
+ * @property string                                                                                amount
+ * @property string                                                                                foreign_amount
+ * @property int                                                                                   transaction_group_id
+ * @property int transaction_journal_id
+ * @property string transaction_group_title
  */
 class TransactionGroup extends Model
 {
@@ -44,15 +73,16 @@ class TransactionGroup extends Model
      */
     protected $casts
         = [
+            'id'         => 'integer',
             'created_at' => 'datetime',
             'updated_at' => 'datetime',
             'deleted_at' => 'datetime',
             'title'      => 'string',
+            'date'       => 'datetime',
         ];
 
     /** @var array Fields that can be filled */
-    protected $fillable
-        = ['user_id', 'title'];
+    protected $fillable = ['user_id', 'title'];
 
     /**
      * Route binder. Converts the key in the URL to the specified object (or throw 404).
@@ -69,8 +99,9 @@ class TransactionGroup extends Model
             /** @var User $user */
             $user = auth()->user();
             /** @var TransactionGroup $group */
-            $group = $user->transactionGroups()->where('transaction_groups.id', $groupId)
-                          ->first(['transaction_groups.*']);
+            $group = $user->transactionGroups()
+                ->with(['transactionJournals','transactionJournals.transactions'])
+                          ->where('transaction_groups.id', $groupId)->first(['transaction_groups.*']);
             if (null !== $group) {
                 return $group;
             }
@@ -81,11 +112,11 @@ class TransactionGroup extends Model
 
     /**
      * @codeCoverageIgnore
-     * @return BelongsToMany
+     * @return HasMany
      */
-    public function transactionJournals(): BelongsToMany
+    public function transactionJournals(): HasMany
     {
-        return $this->belongsToMany(TransactionJournal::class);
+        return $this->hasMany(TransactionJournal::class);
     }
 
     /**

@@ -27,16 +27,20 @@ use Carbon\Carbon;
 use Closure;
 use DB;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Log;
 use Mockery;
+use RuntimeException;
 
 /**
  * Class TestCase
@@ -53,7 +57,7 @@ abstract class TestCase extends BaseTestCase
     public function changeDateRange(User $user, $range): void
     {
         $valid = ['1D', '1W', '1M', '3M', '6M', '1Y', 'custom'];
-        if (\in_array($range, $valid)) {
+        if (in_array($range, $valid, true)) {
             try {
                 Preference::where('user_id', $user->id)->where('name', 'viewRange')->delete();
             } catch (Exception $e) {
@@ -103,6 +107,8 @@ abstract class TestCase extends BaseTestCase
      */
     public function demoUser(): User
     {
+        throw new FireflyException('demoUser()-method is obsolete.');
+
         return User::find(4);
     }
 
@@ -111,15 +117,19 @@ abstract class TestCase extends BaseTestCase
      */
     public function emptyUser(): User
     {
+        throw new FireflyException('emptyUser()-method is obsolete.');
+
         return User::find(2);
     }
 
     /**
+     * @param int|null $except
+     *
      * @return Account
      */
-    public function getRandomAsset(): Account
+    public function getRandomAsset(?int $except = null): Account
     {
-        return $this->getRandomAccount(AccountType::ASSET);
+        return $this->getRandomAccount(AccountType::ASSET, $except);
     }
 
     /**
@@ -127,7 +137,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function getRandomDeposit(): TransactionJournal
     {
-        return $this->getRandomJournal(TransactionType::DEPOSIT);
+        return $this->getRandomJournal(TransactionType::DEPOSIT, null);
     }
 
     /**
@@ -135,7 +145,15 @@ abstract class TestCase extends BaseTestCase
      */
     public function getRandomExpense(): Account
     {
-        return $this->getRandomAccount(AccountType::EXPENSE);
+        return $this->getRandomAccount(AccountType::EXPENSE, null);
+    }
+
+    /**
+     * @return Account
+     */
+    public function getRandomLoan(): Account
+    {
+        return $this->getRandomAccount(AccountType::LOAN, null);
     }
 
     /**
@@ -143,7 +161,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function getRandomRevenue(): Account
     {
-        return $this->getRandomAccount(AccountType::REVENUE);
+        return $this->getRandomAccount(AccountType::REVENUE, null);
     }
 
     /**
@@ -176,8 +194,8 @@ abstract class TestCase extends BaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
+        //        $repository = $this->mock(JournalRepositoryInterface::class);
+        //        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
     }
 
     /**
@@ -189,6 +207,14 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return TransactionGroup
+     */
+    protected function getRandomWithdrawalGroup(): TransactionGroup
+    {
+        return $this->getRandomGroup(TransactionType::WITHDRAWAL);
+    }
+
+    /**
      * @param string       $class
      *
      * @param Closure|null $closure
@@ -197,6 +223,13 @@ abstract class TestCase extends BaseTestCase
      */
     protected function mock($class, Closure $closure = null): \Mockery\MockInterface
     {
+        $deprecated = [
+            TransactionTransformer::class,
+            TransactionCollectorInterface::class,
+        ];
+        if (in_array($class, $deprecated, true)) {
+            throw new RuntimeException('Should not be mocking the transaction collector.');
+        }
         Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);
         $this->app->instance($class, $object);
@@ -216,18 +249,23 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string $type
+     * @param string   $type
+     *
+     * @param int|null $except
      *
      * @return Account
      */
-    private function getRandomAccount(string $type): Account
+    private function getRandomAccount(string $type, ?int $except): Account
     {
-        $query  = Account::
+        $query = Account::
         leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                         ->whereNull('accounts.deleted_at')
-                         ->where('accounts.user_id', $this->user()->id)
-                         ->where('account_types.type', $type)
-                         ->inRandomOrder()->take(1);
+                        ->whereNull('accounts.deleted_at')
+                        ->where('accounts.user_id', $this->user()->id)
+                        ->where('account_types.type', $type)
+                        ->inRandomOrder()->take(1);
+        if (null !== $except) {
+            $query->where('accounts.id', '!=', $except);
+        }
         $result = $query->first(['accounts.*']);
 
         return $result;
@@ -236,7 +274,30 @@ abstract class TestCase extends BaseTestCase
     /**
      * @param string $type
      *
+     * @return TransactionGroup
+     */
+    private function getRandomGroup(string $type): TransactionGroup
+    {
+        $transactionType = TransactionType::where('type', $type)->first();
+
+        // make sure it's a single count group
+        do {
+            $journal = $this->user()->transactionJournals()
+                            ->where('transaction_type_id', $transactionType->id)->inRandomOrder()->first();
+            /** @var TransactionGroup $group */
+            $group = $journal->transactionGroup;
+            $count = $group->transactionJournals()->count();
+            Log::debug(sprintf('Count is %d', $count));
+        } while (1 !== $count);
+
+        return $journal->transactionGroup;
+    }
+
+    /**
+     * @param string $type
+     *
      * @return TransactionJournal
+     * @throws FireflyException
      */
     private function getRandomJournal(string $type): TransactionJournal
     {

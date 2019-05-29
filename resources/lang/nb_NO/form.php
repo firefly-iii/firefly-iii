@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Kildekonto',
     'journal_description'         => 'Beskrivelse',
     'note'                        => 'Notater',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Del opp denne transaksjonen',
     'split_journal_explanation'   => 'Del denne transaksjonen opp i flere deler',
     'currency'                    => 'Valuta',

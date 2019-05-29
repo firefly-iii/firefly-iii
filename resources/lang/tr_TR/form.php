@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Source account',
     'journal_description'         => 'Tanımlama',
     'note'                        => 'Notlar',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Bu işlemi böl / Taksitlendir',
     'split_journal_explanation'   => 'Bu işlemi taksitlendirin',
     'currency'                    => 'Para birimi',

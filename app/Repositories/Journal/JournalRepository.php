@@ -23,10 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
+use DB;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Factory\TransactionJournalFactory;
-use FireflyIII\Factory\TransactionJournalMetaFactory;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Account;
@@ -34,11 +35,13 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionJournalMeta;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
+use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use FireflyIII\Services\Internal\Update\JournalUpdateService;
 use FireflyIII\Support\CacheProperties;
 use FireflyIII\User;
@@ -135,29 +138,25 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param TransactionJournal $journal
+     * @param TransactionGroup $transactionGroup
      *
-     * @return int
      */
-    public function countTransactions(TransactionJournal $journal): int
+    public function destroyGroup(TransactionGroup $transactionGroup): void
     {
-        return $journal->transactions()->count();
+        /** @var TransactionGroupDestroyService $service */
+        $service = app(TransactionGroupDestroyService::class);
+        $service->destroy($transactionGroup);
     }
 
     /**
      * @param TransactionJournal $journal
      *
-     * @return bool
-     *
-
      */
-    public function destroy(TransactionJournal $journal): bool
+    public function destroyJournal(TransactionJournal $journal): void
     {
         /** @var JournalDestroyService $service */
         $service = app(JournalDestroyService::class);
         $service->destroy($journal);
-
-        return true;
     }
 
     /**
@@ -177,7 +176,7 @@ class JournalRepository implements JournalRepositoryInterface
         $result = TransactionJournalMeta::withTrashed()
                                         ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
                                         ->where('hash', $hashOfHash)
-                                        ->where('name', 'importHashV2')
+                                        ->where('name', 'import_hash_v2')
                                         ->first(['journal_meta.*']);
         if (null === $result) {
             Log::debug('Result is null');
@@ -196,23 +195,6 @@ class JournalRepository implements JournalRepositoryInterface
     public function findNull(int $journalId): ?TransactionJournal
     {
         return $this->user->transactionJournals()->where('id', $journalId)->first();
-    }
-
-    /**
-     * @param Transaction $transaction
-     *
-     * @return Transaction|null
-     */
-    public function findOpposingTransaction(Transaction $transaction): ?Transaction
-    {
-        $opposing = Transaction::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                               ->where('transaction_journals.user_id', $this->user->id)
-                               ->where('transactions.transaction_journal_id', $transaction->transaction_journal_id)
-                               ->where('transactions.identifier', $transaction->identifier)
-                               ->where('amount', bcmul($transaction->amount, '-1'))
-                               ->first(['transactions.*']);
-
-        return $opposing;
     }
 
     /**
@@ -277,13 +259,16 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param Transaction $transaction
+     * Get all attachments connected to the transaction group.
+     *
+     * @param TransactionJournal $transactionJournal
      *
      * @return Collection
      */
-    public function getAttachmentsByTr(Transaction $transaction): Collection
+    public function getAttachmentsByJournal(TransactionJournal $transactionJournal): Collection
     {
-        return $transaction->transactionJournal->attachments()->get();
+        // TODO: Implement getAttachmentsByJournal() method.
+        throw new NotImplementedException;
     }
 
     /**
@@ -315,6 +300,28 @@ class JournalRepository implements JournalRepositoryInterface
         $budget = $journal->transactions()->first()->budgets()->first();
         if (null !== $budget) {
             return $budget->id;
+        }
+
+        return 0;
+    }
+
+    /**
+     * Return the ID of the category linked to the journal (if any) or to the transactions (if any).
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return int
+     */
+    public function getJournalCategoryId(TransactionJournal $journal): int
+    {
+        $category = $journal->categories()->first();
+        if (null !== $category) {
+            return $category->id;
+        }
+        /** @noinspection NullPointerExceptionInspection */
+        $category = $journal->transactions()->first()->categories()->first();
+        if (null !== $category) {
+            return $category->id;
         }
 
         return 0;
@@ -457,6 +464,16 @@ class JournalRepository implements JournalRepositoryInterface
         $cache->store($amount);
 
         return $amount;
+    }
+
+    /**
+     * Return all journals without a group, used in an upgrade routine.
+     *
+     * @return array
+     */
+    public function getJournalsWithoutGroup(): array
+    {
+        return TransactionJournal::whereNull('transaction_group_id')->get(['id', 'user_id'])->toArray();
     }
 
     /**
@@ -606,13 +623,23 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * @param Transaction $transaction
+     * Returns all journals with more than 2 transactions. Should only return empty collections
+     * in Firefly III > v4.8.0.
      *
      * @return Collection
      */
-    public function getPiggyBankEventsbyTr(Transaction $transaction): Collection
+    public function getSplitJournals(): Collection
     {
-        return $transaction->transactionJournal->piggyBankEvents()->get();
+        $query      = TransactionJournal
+            ::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+            ->groupBy('transaction_journals.id')
+            ->having('tid', '>', 2)
+            ->get(['transaction_journals.id as jid', DB::raw('count(transactions.id) as tid')]);
+        $journalIds = array_unique($query->pluck('jid')->toArray());
+
+        return TransactionJournal
+            ::with(['transactions'])
+            ->whereIn('id', $journalIds)->get();
     }
 
     /**
@@ -637,14 +664,6 @@ class JournalRepository implements JournalRepositoryInterface
     public function getTransactionType(TransactionJournal $journal): string
     {
         return $journal->transactionType->type;
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getTransactionTypes(): Collection
-    {
-        return TransactionType::orderBy('type', 'ASC')->get();
     }
 
     /**
@@ -734,29 +753,6 @@ class JournalRepository implements JournalRepositoryInterface
     }
 
     /**
-     * Set meta field for journal that contains a date.
-     *
-     * @param TransactionJournal $journal
-     * @param string             $name
-     * @param Carbon             $date
-     *
-     * @return void
-     */
-    public function setMetaDate(TransactionJournal $journal, string $name, Carbon $date): void
-    {
-        /** @var TransactionJournalMetaFactory $factory */
-        $factory = app(TransactionJournalMetaFactory::class);
-        $factory->updateOrCreate(
-            [
-                'data'    => $date,
-                'journal' => $journal,
-                'name'    => $name,
-            ]
-        );
-
-    }
-
-    /**
      * @param TransactionJournal $journal
      * @param int                $order
      *
@@ -776,40 +772,6 @@ class JournalRepository implements JournalRepositoryInterface
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @param array $data
-     *
-     * @return TransactionJournal
-     *
-     * @throws FireflyException
-     */
-    public function store(array $data): TransactionJournal
-    {
-        /** @var TransactionJournalFactory $factory */
-        $factory = app(TransactionJournalFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->create($data);
-    }
-
-    /**
-     * @param TransactionJournal $journal
-     * @param array              $data
-     *
-     * @return TransactionJournal
-     *
-     * @throws FireflyException
-     * @throws FireflyException
-     */
-    public function update(TransactionJournal $journal, array $data): TransactionJournal
-    {
-        /** @var JournalUpdateService $service */
-        $service = app(JournalUpdateService::class);
-        $journal = $service->update($journal, $data);
-
-        return $journal;
     }
 
     /**

@@ -80,6 +80,7 @@ class AccountFactory
         $data['iban'] = $this->filterIban($data['iban']);
 
         // account may exist already:
+        Log::debug('Data array is as follows', $data);
         $return = $this->find($data['name'], $type->type);
 
         if (null === $return) {
@@ -237,6 +238,13 @@ class AccountFactory
                 $result = AccountType::whereType($accountType)->first();
             }
         }
+        if (null === $result) {
+            Log::warning(sprintf('Found NO account type based on %d and "%s"', $accountTypeId, $accountType));
+        }
+        if (null !== $result) {
+            Log::debug(sprintf('Found account type based on %d and "%s": "%s"', $accountTypeId, $accountType, $result->type));
+        }
+
 
         return $result;
 

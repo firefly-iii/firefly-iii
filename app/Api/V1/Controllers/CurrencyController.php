@@ -26,8 +26,7 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\CurrencyRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
@@ -37,7 +36,6 @@ use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -55,7 +53,7 @@ use FireflyIII\Transformers\CurrencyExchangeRateTransformer;
 use FireflyIII\Transformers\CurrencyTransformer;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\Transformers\RuleTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -82,6 +80,7 @@ class CurrencyController extends Controller
 
     /**
      * CurrencyRepository constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -108,6 +107,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function accounts(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -166,6 +166,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function availableBudgets(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -220,6 +221,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function bills(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -268,6 +270,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function budgetLimits(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -310,6 +313,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function cer(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -345,6 +349,7 @@ class CurrencyController extends Controller
      *
      * @return JsonResponse
      * @throws FireflyException
+     *                         @codeCoverageIgnore
      */
     public function delete(TransactionCurrency $currency): JsonResponse
     {
@@ -370,6 +375,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function disable(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -402,6 +408,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function enable(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -429,6 +436,7 @@ class CurrencyController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -464,6 +472,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function makeDefault(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -495,7 +504,8 @@ class CurrencyController extends Controller
      *
      * @param TransactionCurrency $currency
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     *                   @codeCoverageIgnore
      */
     public function recurrences(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -553,7 +563,8 @@ class CurrencyController extends Controller
      * @param Request             $request
      * @param TransactionCurrency $currency
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function rules(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -607,6 +618,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -668,6 +680,7 @@ class CurrencyController extends Controller
      * @param TransactionCurrency $currency
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function transactions(Request $request, TransactionCurrency $currency): JsonResponse
     {
@@ -682,28 +695,33 @@ class CurrencyController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setCurrency($currency);
 
-        if (\in_array(TransactionType::TRANSFER, $types, true)) {
-            $collector->removeFilter(InternalTransferFilter::class);
-        }
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // filter on currency.
+            ->setCurrency($currency)
+            // all info needed for the API:
+            ->withAPIInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
+
 
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
+        $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.currencies.transactions', [$currency->code]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
         $resource = new FractalCollection($transactions, $transformer, 'transactions');

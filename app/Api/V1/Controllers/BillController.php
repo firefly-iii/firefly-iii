@@ -26,13 +26,14 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use FireflyIII\Api\V1\Requests\BillRequest;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Support\Http\Api\TransactionFilter;
 use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
@@ -56,6 +57,8 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -81,6 +84,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function attachments(Request $request, Bill $bill): JsonResponse
     {
@@ -114,9 +118,10 @@ class BillController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  Bill $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function delete(Bill $bill): JsonResponse
     {
@@ -131,6 +136,7 @@ class BillController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -160,6 +166,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function rules(Request $request, Bill $bill): JsonResponse
     {
@@ -201,6 +208,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Bill $bill): JsonResponse
     {
@@ -253,6 +261,7 @@ class BillController extends Controller
      * @param Bill    $bill
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, Bill $bill): JsonResponse
     {
@@ -267,24 +276,35 @@ class BillController extends Controller
 
         /** @var User $admin */
         $admin = auth()->user();
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($admin);
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        $collector->setAllAssetAccounts();
-        $collector->setBills(new Collection([$bill]));
 
+        // use new group collector:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector
+            ->setUser($admin)
+            // include source + destination account name and type.
+            ->setBill($bill)
+            // all info needed for the API:
+            ->withAPIInformation()
+            // set page size:
+            ->setLimit($pageSize)
+            // set page to retrieve
+            ->setPage($this->parameters->get('page'))
+            // set types of transactions to return.
+            ->setTypes($types);
+
+        // do parameter stuff on new group collector.
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {
             $collector->setRange($this->parameters->get('start'), $this->parameters->get('end'));
         }
-        $collector->setLimit($pageSize)->setPage($this->parameters->get('page'));
-        $collector->setTypes($types);
-        $paginator = $collector->getPaginatedTransactions();
+
+        // get paginator.
+        $paginator = $collector->getPaginatedGroups();
         $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
         /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
         $resource = new FractalCollection($transactions, $transformer, 'transactions');

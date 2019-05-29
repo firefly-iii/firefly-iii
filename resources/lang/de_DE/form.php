@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Quellkonto',
     'journal_description'         => 'Beschreibung',
     'note'                        => 'Notizen',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Diese Überweisung aufteilen',
     'split_journal_explanation'   => 'Diese Überweisung in mehrere Teile aufteilen',
     'currency'                    => 'Währung',

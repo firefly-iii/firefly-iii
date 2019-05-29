@@ -41,16 +41,17 @@ class UpdatedJournalEventHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
     /**
-     * @covers \FireflyIII\Handlers\Events\UpdatedJournalEventHandler
-     * @covers \FireflyIII\Events\StoredTransactionJournal
      */
     public function testProcessRules(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $processor      = $this->mock(Processor::class);
 

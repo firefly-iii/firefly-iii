@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
@@ -41,8 +40,6 @@ use Illuminate\Support\Collection;
 /**
  *
  * Class ApplyRules
- *
- * @codeCoverageIgnore
  */
 class ApplyRules extends Command
 {
@@ -115,10 +112,11 @@ class ApplyRules extends Command
             return 1;
         }
 
+        return 1;
 
         // get transactions from asset accounts.
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var TODO REPLACE $collector */
+        //$collector = app();
         $collector->setUser($this->getUser());
         $collector->setAccounts($this->accounts);
         $collector->setRange($this->startDate, $this->endDate);
@@ -173,96 +171,6 @@ class ApplyRules extends Command
         }
 
         return 0;
-    }
-
-    /**
-     * @param Collection $rules
-     * @param Collection $transactions
-     * @param bool       $breakProcessing
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    private function applyRuleSelection(Collection $rules, Collection $transactions, bool $breakProcessing): void
-    {
-        $bar = $this->output->createProgressBar($rules->count() * $transactions->count());
-
-        /** @var Rule $rule */
-        foreach ($rules as $rule) {
-            /** @var Processor $processor */
-            $processor = app(Processor::class);
-            $processor->make($rule, true);
-
-            /** @var Transaction $transaction */
-            foreach ($transactions as $transaction) {
-                /** @noinspection DisconnectedForeachInstructionInspection */
-                $bar->advance();
-                $result = $processor->handleTransaction($transaction);
-                if (true === $result) {
-                    $this->results->push($transaction);
-                }
-            }
-            if (true === $rule->stop_processing && true === $breakProcessing) {
-                $this->line('');
-                $this->line(sprintf('Rule #%d ("%s") says to stop processing.', $rule->id, $rule->title));
-
-                return;
-            }
-        }
-        $this->line('');
-    }
-
-    /**
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    private function grabAllRules(): void
-    {
-        if (true === $this->option('all_rules')) {
-            /** @var RuleRepositoryInterface $ruleRepos */
-            $ruleRepos = app(RuleRepositoryInterface::class);
-            $ruleRepos->setUser($this->getUser());
-            $this->rules = $ruleRepos->getAll();
-
-            // reset rule groups.
-            $this->ruleGroups = new Collection;
-        }
-    }
-
-    /**
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
-     */
-    private function parseDates(): void
-    {
-        // parse start date.
-        $startDate   = Carbon::now()->startOfMonth();
-        $startString = $this->option('start_date');
-        if (null === $startString) {
-            /** @var JournalRepositoryInterface $repository */
-            $repository = app(JournalRepositoryInterface::class);
-            $repository->setUser($this->getUser());
-            $first = $repository->firstNull();
-            if (null !== $first) {
-                $startDate = $first->date;
-            }
-        }
-        if (null !== $startString && '' !== $startString) {
-            $startDate = Carbon::createFromFormat('Y-m-d', $startString);
-        }
-
-        // parse end date
-        $endDate   = Carbon::now();
-        $endString = $this->option('end_date');
-        if (null !== $endString && '' !== $endString) {
-            $endDate = Carbon::createFromFormat('Y-m-d', $endString);
-        }
-
-        if ($startDate > $endDate) {
-            [$endDate, $startDate] = [$startDate, $endDate];
-        }
-
-        $this->startDate = $startDate;
-        $this->endDate   = $endDate;
     }
 
     /**
@@ -414,6 +322,96 @@ class ApplyRules extends Command
         }
 
         return true;
+    }
+
+    /**
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    private function grabAllRules(): void
+    {
+        if (true === $this->option('all_rules')) {
+            /** @var RuleRepositoryInterface $ruleRepos */
+            $ruleRepos = app(RuleRepositoryInterface::class);
+            $ruleRepos->setUser($this->getUser());
+            $this->rules = $ruleRepos->getAll();
+
+            // reset rule groups.
+            $this->ruleGroups = new Collection;
+        }
+    }
+
+    /**
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    private function parseDates(): void
+    {
+        // parse start date.
+        $startDate   = Carbon::now()->startOfMonth();
+        $startString = $this->option('start_date');
+        if (null === $startString) {
+            /** @var JournalRepositoryInterface $repository */
+            $repository = app(JournalRepositoryInterface::class);
+            $repository->setUser($this->getUser());
+            $first = $repository->firstNull();
+            if (null !== $first) {
+                $startDate = $first->date;
+            }
+        }
+        if (null !== $startString && '' !== $startString) {
+            $startDate = Carbon::createFromFormat('Y-m-d', $startString);
+        }
+
+        // parse end date
+        $endDate   = Carbon::now();
+        $endString = $this->option('end_date');
+        if (null !== $endString && '' !== $endString) {
+            $endDate = Carbon::createFromFormat('Y-m-d', $endString);
+        }
+
+        if ($startDate > $endDate) {
+            [$endDate, $startDate] = [$startDate, $endDate];
+        }
+
+        $this->startDate = $startDate;
+        $this->endDate   = $endDate;
+    }
+
+    /**
+     * @param Collection $rules
+     * @param Collection $transactions
+     * @param bool $breakProcessing
+     *
+     * @throws \FireflyIII\Exceptions\FireflyException
+     */
+    private function applyRuleSelection(Collection $rules, Collection $transactions, bool $breakProcessing): void
+    {
+        $bar = $this->output->createProgressBar($rules->count() * $transactions->count());
+
+        /** @var Rule $rule */
+        foreach ($rules as $rule) {
+            /** @var Processor $processor */
+            $processor = app(Processor::class);
+            $processor->make($rule, true);
+
+            /** @var Transaction $transaction */
+            foreach ($transactions as $transaction) {
+                /** @noinspection DisconnectedForeachInstructionInspection */
+                $bar->advance();
+                $result = $processor->handleTransaction($transaction);
+                if (true === $result) {
+                    $this->results->push($transaction);
+                }
+            }
+            if (true === $rule->stop_processing && true === $breakProcessing) {
+                $this->line('');
+                $this->line(sprintf('Rule #%d ("%s") says to stop processing.', $rule->id, $rule->title));
+
+                return;
+            }
+        }
+        $this->line('');
     }
 
 

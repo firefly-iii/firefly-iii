@@ -46,7 +46,7 @@ class IndexControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -64,10 +64,10 @@ class IndexControllerTest extends TestCase
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
             [
-                'id' => 5,
-                'first_date' => '2018-01-01',
-                'repeat_until' =>null,
-                'latest_date' => null,
+                'id'           => 5,
+                'first_date'   => '2018-01-01',
+                'repeat_until' => null,
+                'latest_date'  => null,
             ]
         );
 
@@ -105,10 +105,10 @@ class IndexControllerTest extends TestCase
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
             [
-                'id' => 5,
-                'first_date' => '2018-01-01',
-                'repeat_until' =>null,
-                'latest_date' => null,
+                'id'                     => 5,
+                'first_date'             => '2018-01-01',
+                'repeat_until'           => null,
+                'latest_date'            => null,
                 'recurrence_repetitions' => [],
             ]
         );

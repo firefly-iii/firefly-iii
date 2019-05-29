@@ -166,7 +166,7 @@ class JournalFormRequest extends Request
             'notes'                     => 'min:1|max:50000|nullable',
             // and then transaction rules:
             'description'               => 'required|between:1,255',
-            'amount'                    => 'numeric|required|more:0|less:10000000',//
+            'amount'                    => 'numeric|required|more:0|less:1000000000',
             'budget_id'                 => 'mustExist:budgets,id|belongsToUser:budgets,id|nullable',
             'category'                  => 'between:1,255|nullable',
             'source_id'                 => 'numeric|belongsToUser:accounts,id|nullable',

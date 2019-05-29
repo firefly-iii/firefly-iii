@@ -52,7 +52,7 @@ class BinderTest extends TestCase
             return 'OK';
         }
         );
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
 
         $this->be($this->user());
         $response = $this->get('/_test/binder/1');
@@ -835,7 +835,9 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Support\Binder\JournalList
      */
     public function testJournalList(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', function (Collection $journals) {
             return 'count: ' . $journals->count();
@@ -852,7 +854,9 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Support\Binder\JournalList
      */
     public function testJournalListEmpty(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalList}', function (Collection $journals) {
             return 'count: ' . $journals->count();
@@ -1069,6 +1073,9 @@ class BinderTest extends TestCase
      */
     public function testTJ(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
@@ -1086,6 +1093,9 @@ class BinderTest extends TestCase
      */
     public function testTJNotFound(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
@@ -1103,6 +1113,9 @@ class BinderTest extends TestCase
      */
     public function testTJNotLoggedIn(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{tj}', function () {
             return 'OK';
@@ -1265,6 +1278,9 @@ class BinderTest extends TestCase
      */
     public function testTransactionJournalLink(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalLink}', function () {
             return 'OK';
@@ -1282,6 +1298,9 @@ class BinderTest extends TestCase
      */
     public function testTransactionJournalLinkNotFound(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalLink}', function () {
             return 'OK';
@@ -1299,6 +1318,9 @@ class BinderTest extends TestCase
      */
     public function testTransactionJournalLinkNotLoggedIn(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         Route::middleware(Binder::class)->any(
             '/_test/binder/{journalLink}', function () {
             return 'OK';
@@ -1365,6 +1387,9 @@ class BinderTest extends TestCase
      */
     public function testUnfinishedJournal(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
         Route::middleware(Binder::class)->any(
             '/_test/binder/{unfinishedJournal}', function () {
@@ -1382,6 +1407,9 @@ class BinderTest extends TestCase
      */
     public function testUnfinishedJournalFinished(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $journal = $this->user()->transactionJournals()->where('completed', 1)->first();
         Route::middleware(Binder::class)->any(
             '/_test/binder/{unfinishedJournal}', function () {
@@ -1398,6 +1426,9 @@ class BinderTest extends TestCase
      */
     public function testUnfinishedJournalNotLoggedIn(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $journal = $this->user()->transactionJournals()->where('completed', 0)->first();
         Route::middleware(Binder::class)->any(
             '/_test/binder/{unfinishedJournal}', function () {

@@ -29,6 +29,7 @@ use FireflyIII\Rules\IsAssetAccountId;
 /**
  *
  * Class PiggyBankRequest
+ * @codeCoverageIgnore
  */
 class PiggyBankRequest extends Request
 {

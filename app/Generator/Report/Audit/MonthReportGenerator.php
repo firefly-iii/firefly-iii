@@ -28,9 +28,8 @@ namespace FireflyIII\Generator\Report\Audit;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -72,12 +71,10 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $reportType  = 'audit';
         $accountIds  = implode(',', $this->accounts->pluck('id')->toArray());
         $hideable    = ['buttons', 'icon', 'description', 'balance_before', 'amount', 'balance_after', 'date',
-                        'interest_date', 'book_date', 'process_date',
-                        // three new optional fields.
-                        'due_date', 'payment_date', 'invoice_date',
+
                         'from', 'to', 'budget', 'category', 'bill',
+
                         // more new optional fields
-                        'internal_reference', 'notes',
                         'create_date', 'update_date',
         ];
         try {
@@ -96,7 +93,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      * Get the audit report.
      *
      * @param Account $account
-     * @param Carbon  $date
+     * @param Carbon $date
      *
      * @return array
      *
@@ -112,11 +109,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
         $accountRepository = app(AccountRepositoryInterface::class);
         $accountRepository->setUser($account->user);
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end);
-        $journals         = $collector->getTransactions();
-        $journals         = $journals->reverse();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)
+            ->withAccountInformation();
+        $journals         = $collector->getExtractedJournals();
         $dayBeforeBalance = app('steam')->balance($account, $date);
         $startBalance     = $dayBeforeBalance;
         $currency         = $currencyRepos->findNull((int)$accountRepository->getMetaValue($account, 'currency_id'));
@@ -125,23 +122,23 @@ class MonthReportGenerator implements ReportGeneratorInterface
             throw new FireflyException('Unexpected NULL value in account currency preference.');
         }
 
-        /** @var Transaction $transaction */
-        foreach ($journals as $transaction) {
-            $transaction->before = $startBalance;
-            $transactionAmount   = $transaction->transaction_amount;
+        foreach ($journals as $index => $journal) {
+            $journals[$index]['balance_before'] = $startBalance;
+            $transactionAmount                  = $journal['amount'];
 
-            if ($currency->id === $transaction->foreign_currency_id) {
-                $transactionAmount = $transaction->transaction_foreign_amount;
+            if ($currency->id === $journal['foreign_currency_id']) {
+                $transactionAmount = $journal['foreign_amount'];
             }
 
-            $newBalance         = bcadd($startBalance, $transactionAmount);
-            $transaction->after = $newBalance;
-            $startBalance       = $newBalance;
+            $newBalance                        = bcadd($startBalance, $transactionAmount);
+            $journals[$index]['balance_after'] = $newBalance;
+            $startBalance                      = $newBalance;
+
         }
 
         $return = [
-            'journals'         => $journals->reverse(),
-            'exists'           => $journals->count() > 0,
+            'journals'         => $journals,
+            'exists'           => count($journals) > 0,
             'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
             'endBalance'       => app('steam')->balance($account, $this->end),
             'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),

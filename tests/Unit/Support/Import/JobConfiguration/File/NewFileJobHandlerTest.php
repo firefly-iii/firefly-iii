@@ -31,9 +31,10 @@ use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\JobConfiguration\File\NewFileJobHandler;
 use Illuminate\Support\Collection;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class NewFileJobHandlerTest
  */
@@ -45,7 +46,7 @@ class NewFileJobHandlerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**

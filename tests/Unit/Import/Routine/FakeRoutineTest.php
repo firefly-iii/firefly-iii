@@ -30,9 +30,9 @@ use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Support\Import\Routine\Fake\StageAhoyHandler;
 use FireflyIII\Support\Import\Routine\Fake\StageFinalHandler;
 use FireflyIII\Support\Import\Routine\Fake\StageNewHandler;
+use Log;
 use Mockery;
 use Tests\TestCase;
-use Log;
 
 /**
  * Class FakeRoutineTest
@@ -45,7 +45,7 @@ class FakeRoutineTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**

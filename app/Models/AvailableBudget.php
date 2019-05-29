@@ -41,6 +41,26 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon              $start_date
  * @property Carbon              $end_date
  * @property string              $amount
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property int $user_id
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AvailableBudget onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereEndDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereStartDate($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\AvailableBudget whereUserId($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AvailableBudget withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\AvailableBudget withoutTrashed()
+ * @mixin \Eloquent
  */
 class AvailableBudget extends Model
 {

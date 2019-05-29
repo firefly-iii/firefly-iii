@@ -29,6 +29,8 @@ use Illuminate\Validation\Validator;
 
 /**
  * Class BillRequest
+ *
+ * @codeCoverageIgnore
  */
 class BillRequest extends Request
 {
@@ -108,7 +110,7 @@ class BillRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  Validator $validator
+     * @param Validator $validator
      *
      * @return void
      */

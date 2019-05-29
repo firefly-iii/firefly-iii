@@ -112,11 +112,8 @@
                     {% else %}
                         {% set showReconcile = false %}
                     {% endif %}
-                    {% if periods.count > 0 %}
-                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile} %}
-                    {% else %}
-                        {% include 'list.transactions' with {sorting:true, showReconcile: showReconcile, showCategories: true, showBudgets: true, showBill:true} %}
-                    {% endif %}
+
+                    {% include 'list.groups' %}
                     <p>
                         <i class="fa fa-calendar"></i>
                         {% if periods.count > 0 %}

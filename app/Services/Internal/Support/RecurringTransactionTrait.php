@@ -81,16 +81,16 @@ trait RecurringTransactionTrait
             $destination = null;
             switch ($recurrence->transactionType->type) {
                 case TransactionType::WITHDRAWAL:
-                    $source      = $this->findAccount(AccountType::ASSET, $array['source_id'], $array['source_name']);
-                    $destination = $this->findAccount(AccountType::EXPENSE, $array['destination_id'], $array['destination_name']);
+                    $source      = $this->findAccount(AccountType::ASSET, null, $array['source_id'], $array['source_name']);
+                    $destination = $this->findAccount(AccountType::EXPENSE,null,  $array['destination_id'], $array['destination_name']);
                     break;
                 case TransactionType::DEPOSIT:
-                    $source      = $this->findAccount(AccountType::REVENUE, $array['source_id'], $array['source_name']);
-                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_id'], $array['destination_name']);
+                    $source      = $this->findAccount(AccountType::REVENUE, null, $array['source_id'], $array['source_name']);
+                    $destination = $this->findAccount(AccountType::ASSET, null, $array['destination_id'], $array['destination_name']);
                     break;
                 case TransactionType::TRANSFER:
-                    $source      = $this->findAccount(AccountType::ASSET, $array['source_id'], $array['source_name']);
-                    $destination = $this->findAccount(AccountType::ASSET, $array['destination_id'], $array['destination_name']);
+                    $source      = $this->findAccount(AccountType::ASSET,null,  $array['source_id'], $array['source_name']);
+                    $destination = $this->findAccount(AccountType::ASSET, null, $array['destination_id'], $array['destination_name']);
                     break;
             }
 
@@ -172,13 +172,14 @@ trait RecurringTransactionTrait
     }
 
     /**
-     * @param null|string $expectedType
-     * @param int|null    $accountId
-     * @param null|string $accountName
+     * @param null|string  $expectedType
+     * @param Account|null $account
+     * @param int|null     $accountId
+     * @param null|string  $accountName
      *
      * @return Account|null
      */
-    abstract public function findAccount(?string $expectedType, ?int $accountId, ?string $accountName): ?Account;
+    abstract public function findAccount(?string $expectedType, ?Account $account, ?int $accountId, ?string $accountName): ?Account;
 
     /**
      * Update meta data for recurring transaction.

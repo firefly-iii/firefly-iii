@@ -185,8 +185,8 @@ class ImportTransaction
             return;
         }
 
-        $meta = ['sepa-ct-id', 'sepa-ct-op', 'sepa-db', 'sepa-cc', 'sepa-country', 'sepa-batch-id', 'sepa-ep', 'sepa-ci', 'internal-reference', 'date-interest',
-                 'date-invoice', 'date-book', 'date-payment', 'date-process', 'date-due', 'original-source'];
+        $meta = ['sepa_ct_id', 'sepa_ct_op', 'sepa_db', 'sepa_cc', 'sepa_country', 'sepa_batch_id', 'sepa_ep', 'sepa_ci', 'internal_reference', 'date_interest',
+                 'date_invoice', 'date_book', 'date_payment', 'date_process', 'date_due', 'original_source'];
         Log::debug(sprintf('Now going to check role "%s".', $role));
         if (\in_array($role, $meta, true)) {
             Log::debug(sprintf('Role "%s" is in allowed meta roles, so store its value "%s".', $role, $columnValue->getValue()));
@@ -195,8 +195,8 @@ class ImportTransaction
             return;
         }
 
-        $modifiers = ['rabo-debit-credit', 'ing-debit-credit'];
-        if (\in_array($role, $modifiers, true)) {
+        $modifiers = ['generic-debit-credit'];
+        if (in_array($role, $modifiers, true)) {
             $this->modifiers[$role] = $columnValue->getValue();
 
             return;

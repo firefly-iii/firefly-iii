@@ -39,6 +39,26 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property \Carbon\Carbon $deleted_at
  * @property \Carbon\Carbon $updated_at
  * @property int            $id
+ * @property int $recurrence_id
+ * @property-read \FireflyIII\Models\Recurrence $recurrence
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceRepetition onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereRecurrenceId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereRepetitionMoment($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereRepetitionSkip($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereRepetitionType($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\RecurrenceRepetition whereWeekend($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceRepetition withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\RecurrenceRepetition withoutTrashed()
+ * @mixin \Eloquent
  */
 class RecurrenceRepetition extends Model
 {

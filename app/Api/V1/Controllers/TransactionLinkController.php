@@ -53,7 +53,8 @@ class TransactionLinkController extends Controller
     private $repository;
 
     /**
-     * JournalLinkController constructor.
+     * TransactionLinkController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -80,6 +81,7 @@ class TransactionLinkController extends Controller
      * @param TransactionJournalLink $link
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function delete(TransactionJournalLink $link): JsonResponse
     {
@@ -93,7 +95,8 @@ class TransactionLinkController extends Controller
      *
      * @param Request $request
      *
-     * @return JsonResponse]
+     * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -138,6 +141,7 @@ class TransactionLinkController extends Controller
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
+     *                     @codeCoverageIgnore
      */
     public function show(Request $request, TransactionJournalLink $journalLink): JsonResponse
     {

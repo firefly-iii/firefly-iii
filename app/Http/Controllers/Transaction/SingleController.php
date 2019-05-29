@@ -23,8 +23,9 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Transaction;
 
 use Carbon\Carbon;
-use FireflyIII\Events\StoredTransactionJournal;
-use FireflyIII\Events\UpdatedTransactionJournal;
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\JournalFormRequest;
@@ -48,6 +49,7 @@ use View;
  */
 class SingleController extends Controller
 {
+
     use ModelInformation;
 
     /** @var AttachmentHelperInterface The attachment helper. */
@@ -62,6 +64,7 @@ class SingleController extends Controller
      */
     public function __construct()
     {
+        throw new FireflyException('Do not use me.');
         parent::__construct();
 
         $maxFileSize = app('steam')->phpBytes(ini_get('upload_max_filesize'));
@@ -288,11 +291,6 @@ class SingleController extends Controller
             return redirect(route('accounts.reconcile.edit', [$journal->id]));
         }
 
-        // redirect to split edit:
-        if ($this->isSplitJournal($journal)) {
-            return redirect(route('transactions.split.edit', [$journal->id]));
-        }
-
         $what       = strtolower($transactionType);
         $budgetList = app('expandedform')->makeSelectListWithEmpty($this->budgets->getBudgets());
 
@@ -378,9 +376,9 @@ class SingleController extends Controller
         $doSplit       = 1 === (int)$request->get('split_journal');
         $createAnother = 1 === (int)$request->get('create_another');
         $data          = $request->getJournalData();
-        $journal       = $repository->store($data);
+        $group       = $repository->store($data);
 
-
+        throw new FireflyException('Needs refactor');
         if (null === $journal->id) {
             // error!
             Log::error('Could not store transaction journal.');
@@ -403,7 +401,7 @@ class SingleController extends Controller
             session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
 
-        event(new StoredTransactionJournal($journal));
+        event(new StoredTransactionGroup($group));
 
         session()->flash('success_uri', route('transactions.show', [$journal->id]));
         session()->flash('success', (string)trans('firefly.stored_journal', ['description' => $journal->description]));
@@ -454,7 +452,7 @@ class SingleController extends Controller
         if (!$request->boolean('keep_bill_id')) {
             $data['bill_id'] = null;
         }
-
+        throw new FireflyException('Needs refactor');
 
         $journal = $repository->update($journal, $data);
         /** @var array $files */
@@ -470,7 +468,7 @@ class SingleController extends Controller
         }
         // @codeCoverageIgnoreEnd
 
-        event(new UpdatedTransactionJournal($journal));
+        event(new UpdatedTransactionGroup($group));
         // update, get events by date and sort DESC
 
         $type = strtolower($this->repository->getTransactionType($journal));

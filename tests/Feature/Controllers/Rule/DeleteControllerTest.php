@@ -44,7 +44,7 @@ class DeleteControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -55,8 +55,8 @@ class DeleteControllerTest extends TestCase
     {
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $ruleRepos      = $this->mock(RuleRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 

@@ -101,7 +101,38 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon              created_at
  * @property Carbon              updated_at
  * @property string              foreign_currency_code
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings (PHPMD.TooManyPublicMethods)
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @property bool $reconciled
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
+ * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction after(\Carbon\Carbon $date)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction before(\Carbon\Carbon $date)
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction transactionTypes($types)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereAccountId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereDescription($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereForeignAmount($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereForeignCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereIdentifier($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereReconciled($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereTransactionCurrencyId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereTransactionJournalId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Transaction withoutTrashed()
+ * @mixin \Eloquent
  */
 class Transaction extends Model
 {

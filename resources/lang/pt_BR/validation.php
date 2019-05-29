@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'Arquivo carregado com sucesso ":name".',
     'must_exist'                     => 'O ID no campo :attribute não existe no banco de dados.',
     'all_accounts_equal'             => 'Todas as contas neste campo devem ser iguais.',
+    'group_title_mandatory'          => 'Um título de grupo é obrigatório quando existe mais de uma transação.',
+    'transaction_types_equal'        => 'Todas as divisões devem ser do mesmo tipo.',
+    'invalid_transaction_type'       => 'Tipo de transação inválido.',
     'invalid_selection'              => 'Sua seleção é inválida.',
     'belongs_user'                   => 'Esse valor é inválido para este campo.',
     'at_least_one_transaction'       => 'Precisa de ao menos uma transação.',
     'at_least_one_repetition'        => 'Precisa de ao menos uma repetição.',
     'require_repeat_until'           => 'É necessário ou um número de repetições ou uma data de término (repetir até). Não ambos.',
     'require_currency_info'          => 'O conteúdo deste campo é inválido sem informações de moeda.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'A descrição da transação não pode ser igual à descrição global.',
     'file_invalid_mime'              => 'Arquivo ":name" é do tipo ":mime" que não é aceito como um novo upload.',
     'file_too_large'                 => 'Arquivo ":name" é muito grande.',
@@ -164,4 +168,20 @@ return [
         'rule-trigger.4'          => 'disparador da regra #4',
         'rule-trigger.5'          => 'disparador da regra #5',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
+    'withdrawal_source_bad_data'     => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+    'withdrawal_dest_need_data'      => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
+
+    'deposit_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
+    'deposit_source_bad_data'  => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+    'deposit_dest_need_data'   => 'É necessário obter obter um ID de conta de destino válido e/ou nome de conta de destino válido para continuar.',
+    'deposit_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+
+    'transfer_source_need_data' => 'É necessário obter um ID de uma conta de origem válida e/ou um nome de conta de origem válido para continuar.',
+    'transfer_source_bad_data'  => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+    'transfer_dest_need_data'   => 'É necessário obter obter um ID de conta de destino válido e/ou nome de conta de destino válido para continuar.',
+    'transfer_dest_bad_data'    => 'Não foi possível encontrar uma conta de destino válida ao pesquisar por ID ":id" ou nome ":name".',
+    'need_id_in_edit'           => 'Ao atualizar uma transação com divisões, cada divisão deve conter um identificador de jornal válido (campo "transaction_journal_id").',
 ];

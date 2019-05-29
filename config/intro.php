@@ -89,22 +89,6 @@ return [
         'incomeAndExpensesChart' => ['element' => '#incomeAndExpensesChart', 'position' => 'top'],
     ],
 
-    // transactions: create (also per type!)
-    'transactions_create'            => [
-        'switch_box'       => ['element' => '#switch-box'],
-        'ffInput_category' => ['element' => '#ffInput_category'],
-    ],
-    'transactions_create_withdrawal' => [
-        'ffInput_budget'           => ['element' => '#ffInput_budget_id'],
-        'currency_dropdown_amount' => ['element' => '#currency_dropdown_amount'],
-    ],
-    'transactions_create_deposit'    => [
-        'currency_dropdown_amount' => ['element' => '#currency_dropdown_amount'],
-    ],
-    'transactions_create_transfer'   => [
-        'ffInput_piggy_bank_id' => ['element' => '#ffInput_piggy_bank_id'],
-    ],
-
     // piggies: index, create, show
     'piggy-banks_index'              => [
         'saved'         => ['element' => '.piggySaved'],

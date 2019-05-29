@@ -25,11 +25,12 @@ namespace Tests\Unit\Middleware;
 
 use FireflyIII\Http\Middleware\RedirectIfTwoFactorAuthenticated;
 use FireflyIII\Models\Preference;
+use Log;
 use Preferences;
 use Route;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
-use Log;
+
 /**
  * Class RedirectIf2FAAuthenticatedTest
  */
@@ -41,7 +42,7 @@ class RedirectIf2FAAuthenticatedTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
         Route::middleware(RedirectIfTwoFactorAuthenticated::class)->any(
             '/_test/authenticate', function () {
             return 'OK';

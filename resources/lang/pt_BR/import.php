@@ -50,7 +50,7 @@ return [
 
     // prerequisites box (index)
     'need_prereq_title'                   => 'Pré-requisitos de importação',
-    'need_prereq_intro'                   => 'Alguns metodos de importacao necessitam da tua atencao antes que possam ser usados. Por exemplo, eles podem necessitar de uma chave especial da API. Podes configurar tudo aqui. O icon indica se esses pre-requesitos foram cumpridos.',
+    'need_prereq_intro'                   => 'Alguns métodos de importação precisam da sua atenção antes de serem utilizados. Por exemplo, esses métodos podem necessitar uma chave de API especial ou chaves de aplicação. Você pode configurá-los aqui. O ícone indica se os pré-requisitos foram atendidos.',
     'do_prereq_fake'                      => 'Pre-requesitos para o provedor ficticio',
     'do_prereq_file'                      => 'Pre-requesitos para a importacao de ficheiros',
     'do_prereq_bunq'                      => 'Pre-requesitos para a importacao do bunq',
@@ -76,7 +76,7 @@ return [
     // prerequisites success messages:
     'prerequisites_saved_for_fake'        => 'Fake API key stored successfully!',
     'prerequisites_saved_for_spectre'     => 'App ID and secret stored!',
-    'prerequisites_saved_for_bunq'        => 'API key and IP stored!',
+    'prerequisites_saved_for_bunq'        => 'Chave de API e IP armazenados!',
     'prerequisites_saved_for_ynab'        => 'YNAB client ID and secret stored!',
 
     // job configuration:
@@ -96,7 +96,7 @@ return [
     'job_config_file_upload_help'         => 'Select your file. Please make sure the file is UTF-8 encoded.',
     'job_config_file_upload_config_help'  => 'If you have previously imported data into Firefly III, you may have a configuration file, which will pre-set configuration values for you. For some banks, other users have kindly provided their <a href="https://github.com/firefly-iii/import-configurations/wiki">configuration file</a>',
     'job_config_file_upload_type_help'    => 'Select the type of file you will upload',
-    'job_config_file_upload_submit'       => 'Carregar ficheiros',
+    'job_config_file_upload_submit'       => 'Anexar arquivos',
     'import_file_type_csv'                => 'CSV (valores separados por vírgula)',
     'import_file_type_ofx'                => 'OFX',
     'file_not_utf8'                       => 'The file you have uploaded is not encoded as UTF-8 or ASCII. Firefly III cannot handle such files. Please use Notepad++ or Sublime to convert your file to UTF-8.',
@@ -207,6 +207,8 @@ return [
     'specific_rabo_descr'             => 'Fixes potential problems with Rabobank files',
     'specific_pres_name'              => 'President\'s Choice Financial CA',
     'specific_pres_descr'             => 'Fixes potential problems with PC files',
+    'specific_belfius_name'           => 'Belfius BE',
+    'specific_belfius_descr'          => 'Fixes potential problems with Belfius files',
     // job configuration for file provider (stage: roles)
     'job_config_roles_title'          => 'Import setup (3/4) - Define each column\'s role',
     'job_config_roles_text'           => 'Each column in your CSV file contains certain data. Please indicate what kind of data the importer should expect. The option to "map" data means that you will link each entry found in the column to a value in your database. An often mapped column is the column that contains the IBAN of the opposing account. That can be easily matched to IBAN\'s present in your database already.',
@@ -291,14 +293,14 @@ return [
     'column_rabo-debit-credit'        => 'Indicador de débito/crédito específico do Rabobank',
     'column_ing-debit-credit'         => 'Indicador de débito/crédito específico do ING',
     'column_generic-debit-credit'     => 'Generic bank debit/credit indicator',
-    'column_sepa-ct-id'               => 'SEPA identificador end-to-end',
-    'column_sepa-ct-op'               => 'SEPA Identificador de conta de contrária',
-    'column_sepa-db'                  => 'SEPA Identificador de Mandato',
-    'column_sepa-cc'                  => 'SEPA Código de Compensação',
-    'column_sepa-ci'                  => 'SEPA Identificador Credor',
-    'column_sepa-ep'                  => 'SEPA Finalidade Externa',
-    'column_sepa-country'             => 'SEPA Código do País',
-    'column_sepa-batch-id'            => 'SEPA Batch ID',
+    'column_sepa_ct_id'               => 'SEPA end-to-end Identifier',
+    'column_sepa_ct_op'               => 'SEPA Opposing Account Identifier',
+    'column_sepa_db'                  => 'SEPA Mandate Identifier',
+    'column_sepa_cc'                  => 'SEPA Clearing Code',
+    'column_sepa_ci'                  => 'SEPA Creditor Identifier',
+    'column_sepa_ep'                  => 'SEPA External Purpose',
+    'column_sepa_country'             => 'SEPA Country Code',
+    'column_sepa_batch_id'            => 'SEPA Batch ID',
     'column_tags-comma'               => 'Tags (separadas por vírgula)',
     'column_tags-space'               => 'Tags (separadas por espaço)',
     'column_account-number'           => 'Conta de ativo (número da conta)',

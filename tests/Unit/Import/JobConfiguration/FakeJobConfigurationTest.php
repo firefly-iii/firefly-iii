@@ -41,7 +41,7 @@ class FakeJobConfigurationTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -52,7 +52,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCC(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -64,7 +64,6 @@ class FakeJobConfigurationTest extends TestCase
         $job->file_type     = '';
         $job->configuration = [];
         $job->save();
-
 
 
         // should be false:
@@ -80,7 +79,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCCAlbumFalse(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -106,7 +105,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCCApplyRules(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -134,7 +133,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCCBadAlbum(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -165,7 +164,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCCBadInfo(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -195,7 +194,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCCGoodAlbum(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -226,7 +225,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testCCGoodNewInfo(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -536,7 +535,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testGetNextViewAlbum(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -563,7 +562,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testGetNextViewArtist(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -590,7 +589,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testGetNextViewRules(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;
@@ -617,7 +616,7 @@ class FakeJobConfigurationTest extends TestCase
      */
     public function testGetNextViewSong(): void
     {
-        $jobRepos           = $this->mock(ImportJobRepositoryInterface::class);
+        $jobRepos = $this->mock(ImportJobRepositoryInterface::class);
         $jobRepos->shouldReceive('setUser')->once()->atLeast();
 
         $job                = new ImportJob;

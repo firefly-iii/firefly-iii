@@ -45,7 +45,7 @@ class BudgetControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
 
@@ -54,10 +54,10 @@ class BudgetControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
-        $return = [];
-        $helper = $this->mock(BudgetReportHelperInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $return       = [];
+        $helper       = $this->mock(BudgetReportHelperInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $helper->shouldReceive('getBudgetReport')->andReturn($return);
@@ -72,11 +72,11 @@ class BudgetControllerTest extends TestCase
      */
     public function testPeriod(): void
     {
-        $first      = [1 => ['entries' => ['1', '1']]];
-        $second     = ['entries' => ['1', '1']];
-        $repository = $this->mock(BudgetRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $first        = [1 => ['entries' => ['1', '1']]];
+        $second       = ['entries' => ['1', '1']];
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getBudgets')->andReturn(new Collection);

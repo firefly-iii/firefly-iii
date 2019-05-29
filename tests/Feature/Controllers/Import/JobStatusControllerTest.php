@@ -49,7 +49,7 @@ class JobStatusControllerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -81,8 +81,8 @@ class JobStatusControllerTest extends TestCase
      */
     public function testJson(): void
     {
-        $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $importRepos = $this->mock(ImportJobRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
@@ -110,7 +110,7 @@ class JobStatusControllerTest extends TestCase
     public function testJsonWithTag(): void
     {
         $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos         = $this->mock(UserRepositoryInterface::class);
         $tag               = $this->user()->tags()->first();
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
@@ -139,7 +139,7 @@ class JobStatusControllerTest extends TestCase
     public function testJsonWithTagManyJournals(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
 
         /** @var Tag $tag */
         $tag     = $this->user()->tags()->first();
@@ -174,7 +174,7 @@ class JobStatusControllerTest extends TestCase
     public function testJsonWithTagOneJournal(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
 
         /** @var Tag $tag */
         $tag     = $this->user()->tags()->first();
@@ -270,7 +270,7 @@ class JobStatusControllerTest extends TestCase
      */
     public function testStartFireflyException(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos         = $this->mock(UserRepositoryInterface::class);
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
         $job->key          = 'Hfake_job_' . random_int(1, 10000);
@@ -302,7 +302,7 @@ class JobStatusControllerTest extends TestCase
     public function testStartInvalidState(): void
     {
         $importRepos = $this->mock(ImportJobRepositoryInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
         // mock calls:
         $importRepos->shouldReceive('setStatus')->withArgs([Mockery::any(), 'error'])
                     ->atLeast()->once();
@@ -340,7 +340,7 @@ class JobStatusControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $storage    = $this->mock(ImportArrayStorage::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);
@@ -372,7 +372,7 @@ class JobStatusControllerTest extends TestCase
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
         $storage    = $this->mock(ImportArrayStorage::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setStatus')->once()->withArgs([Mockery::any(), 'storing_data']);

@@ -31,8 +31,8 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use FireflyIII\Services\Internal\Update\AccountUpdateService;
-use Tests\TestCase;
 use Log;
+use Tests\TestCase;
 
 /**
  * Class AccountUpdateServiceTest
@@ -45,7 +45,7 @@ class AccountUpdateServiceTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
@@ -289,6 +289,9 @@ class AccountUpdateServiceTest extends TestCase
      */
     public function testUpdateNewIB(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var Account $account */
         $account = Account::create(
             ['user_id'         => $this->user()->id, 'account_type_id' => 1, 'name' => 'Some name #' . random_int(1, 10000),

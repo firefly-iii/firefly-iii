@@ -361,56 +361,56 @@ return [
         ],
 
         // SEPA end to end ID
-        'sepa-ct-id'           => [
+        'sepa_ct_id'           => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_ct_id',
         ],
         // SEPA opposing account identifier
-        'sepa-ct-op'           => [
+        'sepa_ct_op'           => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_ct_op',
         ],
         // SEPA Direct Debit Mandate Identifier
-        'sepa-db'              => [
+        'sepa_db'              => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_db',
         ],
         // SEPA clearing code
-        'sepa-cc'              => [
+        'sepa_cc'              => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_cc',
         ],
         // SEPA country
-        'sepa-country'         => [
+        'sepa_country'         => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_country',
         ],
         // SEPA external purpose
-        'sepa-ep'              => [
+        'sepa_ep'              => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_ep',
         ],
         // SEPA creditor identifier
-        'sepa-ci'              => [
+        'sepa_ci'              => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',
             'field'           => 'sepa_ci',
         ],
         // SEPA Batch ID
-        'sepa-batch-id'        => [
+        'sepa_batch_id'        => [
             'mappable'        => false,
             'pre-process-map' => false,
             'converter'       => 'Description',

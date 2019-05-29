@@ -48,105 +48,17 @@ class AvailableBudgetControllerTest extends TestCase
     {
         parent::setUp();
         Passport::actingAs($this->user());
-        Log::info(sprintf('Now in %s.', \get_class($this)));
-    }
-
-    /**
-     * Delete an available budget.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     */
-    public function testDelete(): void
-    {
-        // mock stuff:
-        $repository    = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AvailableBudgetTransformer::class);
-        $factory       = $this->mock(TransactionCurrencyFactory::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('destroyAvailableBudget')->once()->andReturn(true);
-
-        // get available budget:
-        $availableBudget = $this->user()->availableBudgets()->first();
-
-        // call API
-        $response = $this->delete(route('api.v1.available_budgets.delete', [$availableBudget->id]));
-        $response->assertStatus(204);
-    }
-
-    /**
-     * Show all available budgets.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     */
-    public function testIndex(): void
-    {
-        $availableBudgets = $this->user()->availableBudgets()->get();
-        // mock stuff:
-        $repository    = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AvailableBudgetTransformer::class);
-        $factory       = $this->mock(TransactionCurrencyFactory::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-        $repository->shouldReceive('getAvailableBudgets')->once()->andReturn($availableBudgets);
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-        // call API
-        $response = $this->get(route('api.v1.available_budgets.index'));
-        $response->assertStatus(200);
-        $response->assertSee($availableBudgets->first()->id);
-    }
-
-    /**
-     * Show one available budget.
-     *
-     * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     */
-    public function testShow(): void
-    {
-        $availableBudget = $this->user()->availableBudgets()->first();
-        // mock stuff:
-        $repository    = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer   = $this->mock(AvailableBudgetTransformer::class);
-        $factory       = $this->mock(TransactionCurrencyFactory::class);
-
-        // mock calls:
-        $repository->shouldReceive('setUser')->atLeast()->once();
-
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
-        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
-        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
-        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
-
-        // call API
-        $response = $this->get(route('api.v1.available_budgets.show', [$availableBudget->id]));
-        $response->assertStatus(200);
-        $response->assertSee($availableBudget->id);
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
      * Store new available budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     * @covers \FireflyIII\Api\V1\Requests\AvailableBudgetRequest
      */
     public function testStore(): void
     {
         $repository         = $this->mock(BudgetRepositoryInterface::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
         $factory            = $this->mock(TransactionCurrencyFactory::class);
         $availableBudget    = new AvailableBudget;
@@ -183,14 +95,12 @@ class AvailableBudgetControllerTest extends TestCase
      * Store new available budget without a valid currency.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     * @covers \FireflyIII\Api\V1\Requests\AvailableBudgetRequest
      */
     public function testStoreNoCurrencyAtAll(): void
     {
         // mock stuff:
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $factory            = $this->mock(TransactionCurrencyFactory::class);
         $availableBudget    = new AvailableBudget;
 
@@ -226,7 +136,6 @@ class AvailableBudgetControllerTest extends TestCase
      * Store new available budget without a valid currency.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     * @covers \FireflyIII\Api\V1\Requests\AvailableBudgetRequest
      */
     public function testStoreNoCurrencyId(): void
     {
@@ -234,10 +143,9 @@ class AvailableBudgetControllerTest extends TestCase
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // mock stuff:
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
-        $transformer = $this->mock(AvailableBudgetTransformer::class);
-        $factory     = $this->mock(TransactionCurrencyFactory::class);
-        $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
+        $repository         = $this->mock(BudgetRepositoryInterface::class);
+        $transformer        = $this->mock(AvailableBudgetTransformer::class);
+        $factory            = $this->mock(TransactionCurrencyFactory::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -273,7 +181,6 @@ class AvailableBudgetControllerTest extends TestCase
      * Update available budget.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AvailableBudgetController
-     * @covers \FireflyIII\Api\V1\Requests\AvailableBudgetRequest
      *
      */
     public function testUpdate(): void

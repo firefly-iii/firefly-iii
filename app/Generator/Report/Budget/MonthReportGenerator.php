@@ -27,11 +27,7 @@ namespace FireflyIII\Generator\Report\Budget;
 use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -50,7 +46,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     private $budgets;
     /** @var Carbon The end date. */
     private $end;
-    /** @var Collection The expenses in the report. */
+    /** @var array The expenses in the report. */
     private $expenses;
     /** @var Carbon The start date. */
     private $start;
@@ -88,6 +84,57 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.account.report: %s', $e->getMessage()));
             $result = 'Could not render report view.';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the expenses.
+     *
+     * @return array
+     */
+    protected function getExpenses(): array
+    {
+        if (count($this->expenses) > 0) {
+            Log::debug('Return previous set of expenses.');
+
+            return $this->expenses;
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::WITHDRAWAL])
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->setBudgets($this->budgets);
+
+        $journals       = $collector->getExtractedJournals();
+        $this->expenses = $journals;
+
+        return $journals;
+    }
+
+    /**
+     * Summarize a collection by its budget.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function summarizeByBudget(array $array): array
+    {
+        $result = [
+            'sum' => '0',
+        ];
+
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $budgetId          = (int)$journal['budget_id'];
+            $result[$budgetId] = $result[$budgetId] ?? '0';
+            $result[$budgetId] = bcadd($journal['amount'], $result[$budgetId]);
+            $result['sum']     = bcadd($result['sum'], $journal['amount']);
         }
 
         return $result;
@@ -183,59 +230,5 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
-    }
-
-    /**
-     * Get the expenses.
-     *
-     * @return Collection
-     */
-    protected function getExpenses(): Collection
-    {
-        if ($this->expenses->count() > 0) {
-            Log::debug('Return previous set of expenses.');
-
-            return $this->expenses;
-        }
-
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setBudgets($this->budgets)->withOpposingAccount();
-        $collector->removeFilter(TransferFilter::class);
-
-        $collector->addFilter(OpposingAccountFilter::class);
-        $collector->addFilter(PositiveAmountFilter::class);
-
-        $transactions   = $collector->getTransactions();
-        $this->expenses = $transactions;
-
-        return $transactions;
-    }
-
-    /**
-     * Summarize a collection by its budget.
-     *
-     * @param Collection $collection
-     *
-     * @return array
-     */
-    private function summarizeByBudget(Collection $collection): array
-    {
-        $result = [
-            'sum' => '0',
-        ];
-        /** @var Transaction $transaction */
-        foreach ($collection as $transaction) {
-            $jrnlBudId         = (int)$transaction->transaction_journal_budget_id;
-            $transBudId        = (int)$transaction->transaction_budget_id;
-            $budgetId          = max($jrnlBudId, $transBudId);
-            $result[$budgetId] = $result[$budgetId] ?? '0';
-            $result[$budgetId] = bcadd($transaction->transaction_amount, $result[$budgetId]);
-            $result['sum']     = bcadd($result['sum'], $transaction->transaction_amount);
-        }
-
-        return $result;
     }
 }

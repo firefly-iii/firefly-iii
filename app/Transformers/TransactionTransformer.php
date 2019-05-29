@@ -32,6 +32,7 @@ use Log;
 
 /**
  * Class TransactionTransformer
+ * @deprecated
  */
 class TransactionTransformer extends AbstractTransformer
 {
@@ -99,14 +100,14 @@ class TransactionTransformer extends AbstractTransformer
             'budget_id'                       => $budget['budget_id'],
             'budget_name'                     => $budget['budget_name'],
             'notes'                           => $notes,
-            'sepa_cc'                         => $this->repository->getMetaField($journal, 'sepa-cc'),
-            'sepa_ct_op'                      => $this->repository->getMetaField($journal, 'sepa-ct-op'),
-            'sepa_ct_id'                      => $this->repository->getMetaField($journal, 'sepa-ct-ud'),
-            'sepa_db'                         => $this->repository->getMetaField($journal, 'sepa-db'),
-            'sepa_country'                    => $this->repository->getMetaField($journal, 'sepa-country'),
-            'sepa_ep'                         => $this->repository->getMetaField($journal, 'sepa-ep'),
-            'sepa_ci'                         => $this->repository->getMetaField($journal, 'sepa-ci'),
-            'sepa_batch_id'                   => $this->repository->getMetaField($journal, 'sepa-batch-id'),
+            'sepa_cc'                         => $this->repository->getMetaField($journal, 'sepa_cc'),
+            'sepa_ct_op'                      => $this->repository->getMetaField($journal, 'sepa_ct_op'),
+            'sepa_ct_id'                      => $this->repository->getMetaField($journal, 'sepa_ct_ud'),
+            'sepa_db'                         => $this->repository->getMetaField($journal, 'sepa_db'),
+            'sepa_country'                    => $this->repository->getMetaField($journal, 'sepa_country'),
+            'sepa_ep'                         => $this->repository->getMetaField($journal, 'sepa_ep'),
+            'sepa_ci'                         => $this->repository->getMetaField($journal, 'sepa_ci'),
+            'sepa_batch_id'                   => $this->repository->getMetaField($journal, 'sepa_batch_id'),
             'interest_date'                   => $this->repository->getMetaDateString($journal, 'interest_date'),
             'book_date'                       => $this->repository->getMetaDateString($journal, 'book_date'),
             'process_date'                    => $this->repository->getMetaDateString($journal, 'process_date'),
@@ -115,7 +116,7 @@ class TransactionTransformer extends AbstractTransformer
             'invoice_date'                    => $this->repository->getMetaDateString($journal, 'invoice_date'),
             'internal_reference'              => $this->repository->getMetaField($journal, 'internal_reference'),
             'bunq_payment_id'                 => $this->repository->getMetaField($journal, 'bunq_payment_id'),
-            'importHashV2'                    => $this->repository->getMetaField($journal, 'importHashV2'),
+            'import_hash_v2'                    => $this->repository->getMetaField($journal, 'import_hash_v2'),
             'recurrence_id'                   => (int)$this->repository->getMetaField($journal, 'recurrence_id'),
             'external_id'                     => $this->repository->getMetaField($journal, 'external_id'),
             'original_source'                 => $this->repository->getMetaField($journal, 'original-source'),

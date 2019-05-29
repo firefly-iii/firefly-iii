@@ -38,6 +38,7 @@ use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
@@ -1021,9 +1022,9 @@ try {
 
     Breadcrumbs::register(
         'transactions.create',
-        function (BreadcrumbsGenerator $breadcrumbs, string $what) {
-            $breadcrumbs->parent('transactions.index', $what);
-            $breadcrumbs->push(trans('breadcrumbs.create_' . e($what)), route('transactions.create', [$what]));
+        function (BreadcrumbsGenerator $breadcrumbs, string $objectType) {
+            $breadcrumbs->parent('transactions.index', $objectType);
+            $breadcrumbs->push(trans('breadcrumbs.create_new_transaction'), route('transactions.create', [$objectType]));
         }
     );
 
@@ -1061,12 +1062,17 @@ try {
 
     Breadcrumbs::register(
         'transactions.show',
-        function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
-            $what  = strtolower($journal->transactionType->type);
-            $title = limitStringLength($journal->description);
+        static function (BreadcrumbsGenerator $breadcrumbs, TransactionGroup $group) {
+            /** @var TransactionJournal $first */
+            $first = $group->transactionJournals()->first();
+            $type  = strtolower($first->transactionType->type);
+            $title = limitStringLength($first->description);
+            if ($group->transactionJournals()->count() > 1) {
+                $title = limitStringLength($group->title);
+            }
 
-            $breadcrumbs->parent('transactions.index', $what);
-            $breadcrumbs->push($title, route('transactions.show', [$journal->id]));
+            $breadcrumbs->parent('transactions.index', $type);
+            $breadcrumbs->push($title, route('transactions.show', [$group->id]));
         }
     );
 

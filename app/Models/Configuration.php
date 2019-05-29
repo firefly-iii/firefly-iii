@@ -30,6 +30,25 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *
  * @property string $data
  * @property string $name
+ * @property int $id
+ * @property \Illuminate\Support\Carbon|null $created_at
+ * @property \Illuminate\Support\Carbon|null $updated_at
+ * @property \Illuminate\Support\Carbon|null $deleted_at
+ * @method static bool|null forceDelete()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration newModelQuery()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration newQuery()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration onlyTrashed()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration query()
+ * @method static bool|null restore()
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereCreatedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereData($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereDeletedAt($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereId($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereName($value)
+ * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Configuration whereUpdatedAt($value)
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration withTrashed()
+ * @method static \Illuminate\Database\Query\Builder|\FireflyIII\Models\Configuration withoutTrashed()
+ * @mixin \Eloquent
  */
 class Configuration extends Model
 {

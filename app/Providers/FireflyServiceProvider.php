@@ -45,6 +45,8 @@ use FireflyIII\Helpers\Report\PopupReport;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Helpers\Report\ReportHelper;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepository;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepository;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
@@ -59,13 +61,9 @@ use FireflyIII\Support\Navigation;
 use FireflyIII\Support\Preferences;
 use FireflyIII\Support\Steam;
 use FireflyIII\Support\Twig\AmountFormat;
+use FireflyIII\Support\Twig\Extension\TransactionGroupTwig;
 use FireflyIII\Support\Twig\General;
-use FireflyIII\Support\Twig\Journal;
-use FireflyIII\Support\Twig\Loader\AccountLoader;
-use FireflyIII\Support\Twig\Loader\TransactionJournalLoader;
-use FireflyIII\Support\Twig\Loader\TransactionLoader;
 use FireflyIII\Support\Twig\Rule;
-use FireflyIII\Support\Twig\Transaction;
 use FireflyIII\Support\Twig\Translation;
 use FireflyIII\Validation\FireflyValidator;
 use Illuminate\Foundation\Application;
@@ -96,17 +94,13 @@ class FireflyServiceProvider extends ServiceProvider
             }
         );
         $config = app('config');
-        //Twig::addExtension(new Functions($config));
-        Twig::addRuntimeLoader(new TransactionLoader);
-        Twig::addRuntimeLoader(new AccountLoader);
-        Twig::addRuntimeLoader(new TransactionJournalLoader);
+        Twig::addExtension(new Functions($config));
         Twig::addExtension(new General);
-        Twig::addExtension(new Journal);
+        Twig::addExtension(new TransactionGroupTwig);
         Twig::addExtension(new Translation);
-        Twig::addExtension(new Transaction);
         Twig::addExtension(new Rule);
         Twig::addExtension(new AmountFormat);
-        //Twig::addExtension(new Twig_Extension_Debug);
+        Twig::addExtension(new Twig_Extension_Debug);
     }
 
     /**
@@ -176,6 +170,7 @@ class FireflyServiceProvider extends ServiceProvider
         // export:
         $this->app->bind(ProcessorInterface::class, ExpandedProcessor::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
+        $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);
 
         // more generators:

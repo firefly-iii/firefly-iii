@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Исходный счёт',
     'journal_description'         => 'Описание',
     'note'                        => 'Заметки',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Разделить эту транзакцию',
     'split_journal_explanation'   => 'Разделить эту транзакцию на несколько частей',
     'currency'                    => 'Валюта',

@@ -42,14 +42,16 @@ class TransactionJournalMetaFactoryTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateBasic(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
         $journal->transactionJournalMeta()->delete();
@@ -70,7 +72,9 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateDate(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
         $journal->transactionJournalMeta()->delete();
@@ -91,7 +95,9 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateDeleteExisting(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
         $meta    = TransactionJournalMeta::create(
@@ -119,7 +125,9 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateEmpty(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
         $journal->transactionJournalMeta()->delete();
@@ -140,7 +148,9 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateExistingEmpty(): void
-    {
+    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         /** @var TransactionJournal $journal */
         $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
         $journal->transactionJournalMeta()->delete();

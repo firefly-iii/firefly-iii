@@ -24,8 +24,8 @@ namespace FireflyIII\Support\Twig;
 
 use Carbon\Carbon;
 use FireflyIII\Models\Account;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Twig\Extension\Account as AccountExtension;
 use League\CommonMark\CommonMarkConverter;
 use Route;
 use Twig_Extension;
@@ -56,14 +56,12 @@ class General extends Twig_Extension
     public function getFunctions(): array
     {
         return [
-            $this->getCurrencyCode(),
-            $this->getCurrencySymbol(),
             $this->phpdate(),
             $this->activeRouteStrict(),
             $this->activeRoutePartial(),
-            $this->activeRoutePartialWhat(),
+            $this->activeRoutePartialObjectType(),
             $this->formatDate(),
-            new Twig_SimpleFunction('accountGetMetaField', [AccountExtension::class, 'getMetaField']),
+            $this->getMetaField(),
             $this->hasRole(),
         ];
     }
@@ -79,7 +77,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRoutePartial',
             function (): string {
-                $args  = \func_get_args();
+                $args  = func_get_args();
                 $route = $args[0]; // name of the route.
                 $name  = Route::getCurrentRoute()->getName() ?? '';
                 if (!(false === strpos($name, $route))) {
@@ -97,15 +95,15 @@ class General extends Twig_Extension
      *
      * @return Twig_SimpleFunction
      */
-    protected function activeRoutePartialWhat(): Twig_SimpleFunction
+    protected function activeRoutePartialObjectType(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'activeRoutePartialWhat',
-            function ($context): string {
-                [, $route, $what] = \func_get_args();
-                $activeWhat = $context['what'] ?? false;
+            'activeRoutePartialObjectType',
+            static function ($context): string {
+                [, $route, $objectType] = func_get_args();
+                $activeObjectType = $context['objectType'] ?? false;
 
-                if ($what === $activeWhat && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
+                if ($objectType === $activeObjectType && !(false === stripos(Route::getCurrentRoute()->getName(), $route))) {
                     return 'active';
                 }
 
@@ -139,6 +137,8 @@ class General extends Twig_Extension
     }
 
     /**
+     * Show account balance. Only used on the front page of Firefly III.
+     *
      * @return Twig_SimpleFilter
      */
     protected function balance(): Twig_SimpleFilter
@@ -158,6 +158,8 @@ class General extends Twig_Extension
     }
 
     /**
+     * Formats a string as a thing by converting it to a Carbon first.
+     *
      * @return Twig_SimpleFunction
      */
     protected function formatDate(): Twig_SimpleFunction
@@ -173,6 +175,8 @@ class General extends Twig_Extension
     }
 
     /**
+     * Used to convert 1024 to 1kb etc.
+     *
      * @return Twig_SimpleFilter
      */
     protected function formatFilesize(): Twig_SimpleFilter
@@ -198,25 +202,19 @@ class General extends Twig_Extension
     /**
      * @return Twig_SimpleFunction
      */
-    protected function getCurrencyCode(): Twig_SimpleFunction
+    protected function getMetaField(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'getCurrencyCode',
-            function (): string {
-                return app('amount')->getCurrencyCode();
-            }
-        );
-    }
+            'accountGetMetaField',
+            static function (Account $account, string $field): string {
+                /** @var AccountRepositoryInterface $repository */
+                $repository = app(AccountRepositoryInterface::class);
+                $result     = $repository->getMetaValue($account, $field);
+                if (null === $result) {
+                    return '';
+                }
 
-    /**
-     * @return Twig_SimpleFunction
-     */
-    protected function getCurrencySymbol(): Twig_SimpleFunction
-    {
-        return new Twig_SimpleFunction(
-            'getCurrencySymbol',
-            function (): string {
-                return app('amount')->getCurrencySymbol();
+                return $result;
             }
         );
     }
@@ -257,6 +255,8 @@ class General extends Twig_Extension
     }
 
     /**
+     * Show icon with attachment.
+     *
      * @return Twig_SimpleFilter
      */
     protected function mimeIcon(): Twig_SimpleFilter
@@ -334,6 +334,8 @@ class General extends Twig_Extension
     }
 
     /**
+     * Basic example thing for some views.
+     *
      * @return Twig_SimpleFunction
      */
     protected function phpdate(): Twig_SimpleFunction
@@ -345,5 +347,4 @@ class General extends Twig_Extension
             }
         );
     }
-
 }

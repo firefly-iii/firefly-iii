@@ -36,12 +36,16 @@ return [
     'file_attached'                  => 'File caricato con successo ":name".',
     'must_exist'                     => 'L\'ID nel campo :attribute non esiste nel database.',
     'all_accounts_equal'             => 'Tutti i conti in questo campo devono essere uguali.',
+    'group_title_mandatory'          => 'Il titolo del gruppo è obbligatorio quando ci sono più di una transazione.',
+    'transaction_types_equal'        => 'Tutte le suddivisioni devono essere dello stesso tipo.',
+    'invalid_transaction_type'       => 'Tipo della transazione non valido.',
     'invalid_selection'              => 'La tua selezione non è valida.',
     'belongs_user'                   => 'Questo valore non è valido per questo campo.',
     'at_least_one_transaction'       => 'Hai bisogno di almeno una transazione.',
     'at_least_one_repetition'        => 'È necessaria almeno una ripetizione.',
     'require_repeat_until'           => 'Richiede un numero di ripetizioni o una data di fine (ripeti fino al), non entrambi.',
     'require_currency_info'          => 'Il contenuto di questo campo non è valido senza informazioni sulla valuta.',
+    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
     'equal_description'              => 'La descrizione della transazione non deve essere uguale alla descrizione globale.',
     'file_invalid_mime'              => 'Il file ":name" è di tipo ":mime" che non è accettato come nuovo caricamento.',
     'file_too_large'                 => 'Il file ":name" è troppo grande.',
@@ -164,4 +168,20 @@ return [
         'rule-trigger.4'          => 'trigger #4 della regola',
         'rule-trigger.5'          => 'trigger #5 della regola',
     ],
+
+    // validation of accounts:
+    'withdrawal_source_need_data'    => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'withdrawal_source_bad_data'     => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'withdrawal_dest_need_data'      => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+
+    'deposit_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'deposit_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'deposit_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'deposit_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+
+    'transfer_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
+    'transfer_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'transfer_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'transfer_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
+    'need_id_in_edit'           => 'Quando si aggiorna una transazione che ha delle suddivisioni, ogni suddivisione deve avere un identificativo del journal delle transazioni valido (campo "transaction_journal_id").',
 ];

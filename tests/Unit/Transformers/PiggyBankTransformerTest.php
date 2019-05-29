@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Transformers;
 
+use Amount;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -33,7 +34,6 @@ use Log;
 use Mockery;
 use Symfony\Component\HttpFoundation\ParameterBag;
 use Tests\TestCase;
-use Amount;
 
 /**
  * Class PiggyBankTransformerTest
@@ -46,7 +46,7 @@ class PiggyBankTransformerTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Log::info(sprintf('Now in %s.', \get_class($this)));
+        Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
     /**

@@ -50,7 +50,7 @@ class PopupReport implements PopupReportInterface
     }
 
     /**
-     * Collect the tranactions for one account and one budget.
+     * Collect the transactions for one account and one budget.
      *
      * @param Budget  $budget
      * @param Account $account
