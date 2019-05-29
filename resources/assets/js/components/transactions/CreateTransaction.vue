@@ -309,6 +309,14 @@
                             foreignCurrency = null;
                         }
 
+                        // correct some id's
+                        if(0 === destId) {
+                            destId = null;
+                        }
+                        if(0 === sourceId) {
+                            sourceId = null;
+                        }
+
                         currentArray =
                             {
                                 type: transactionType,

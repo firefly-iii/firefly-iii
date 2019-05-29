@@ -47,6 +47,7 @@
                             start: start.formatLocalized(monthAndDayFormat),
                             end: end.formatLocalized(monthAndDayFormat),
                         })|raw }}
+
                 </em>
             </div>
             {% else %}
@@ -60,6 +61,7 @@
                             end: auditData[account.id].end,
                             balance: formatAmountByAccount(account,auditData[account.id].endBalance)
                         })|raw }}
+                    <!-- TODO VERIFY THAT STEAM BALANCE ACTUALLY WORKS -->
                 </p>
                 {% include 'reports.partials.journals-audit'  with {'journals': auditData[account.id].journals,'account':account} %}
                 <p style="padding:10px;">

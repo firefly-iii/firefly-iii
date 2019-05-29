@@ -37,6 +37,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use function count;
+use function get_class;
 
 /**
  * Class GroupCollector
@@ -74,7 +76,7 @@ class GroupCollector implements GroupCollectorInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
         $this->hasAccountInformation = false;
         $this->hasCatInformation     = false;
@@ -139,7 +141,8 @@ class GroupCollector implements GroupCollectorInterface
         /** @var array $group */
         foreach ($selection as $group) {
             foreach ($group['transactions'] as $journalId => $journal) {
-                $return[$journalId] = $journal;
+                $journal['group_title'] = $group['title'];
+                $return[$journalId]     = $journal;
             }
         }
 
@@ -161,9 +164,147 @@ class GroupCollector implements GroupCollectorInterface
         $this->total = $collection->count();
 
         // now filter the array according to the page and the
-        $offset  = $this->page * $this->limit;
+        $offset = $this->page * $this->limit;
+
         return $collection->slice($offset, $this->limit);
 
+    }
+
+    /**
+     * @param Collection $collection
+     *
+     * @return Collection
+     * @throws Exception
+     */
+    private function parseArray(Collection $collection): Collection
+    {
+        $groups = [];
+        /** @var TransactionGroup $augmentedGroup */
+        foreach ($collection as $augmentedGroup) {
+            $groupId = $augmentedGroup->transaction_group_id;
+            if (!isset($groups[$groupId])) {
+                // make new array
+                $groupArray                             = [
+                    'id'           => $augmentedGroup->transaction_group_id,
+                    'user_id'      => $augmentedGroup->user_id,
+                    'title'        => $augmentedGroup->transaction_group_title,
+                    'count'        => 1,
+                    'sums'         => [],
+                    'transactions' => [],
+                ];
+                $journalId                              = (int)$augmentedGroup->transaction_journal_id;
+                $groupArray['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
+                $groups[$groupId]                       = $groupArray;
+                continue;
+            }
+            // or parse the rest.
+            $journalId = (int)$augmentedGroup->transaction_journal_id;
+            $groups[$groupId]['count']++;
+
+            if (isset($groups[$groupId]['transactions'][$journalId])) {
+                $groups[$groupId]['transactions'][$journalId] =
+                    $this->mergeTags($groups[$groupId]['transactions'][$journalId], $augmentedGroup);
+            }
+
+            if (!isset($groups[$groupId]['transactions'][$journalId])) {
+                $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
+            }
+
+        }
+        $groups = $this->parseSums($groups);
+
+        return new Collection($groups);
+    }
+
+    /**
+     * @param TransactionGroup $augmentedGroup
+     *
+     * @return array
+     * @throws Exception
+     */
+    private function parseAugmentedGroup(TransactionGroup $augmentedGroup): array
+    {
+        $result               = $augmentedGroup->toArray();
+        $result['tags']       = [];
+        $result['tag_ids']    = [];
+        $result['date']       = new Carbon($result['date']);
+        $result['created_at'] = new Carbon($result['created_at']);
+        $result['updated_at'] = new Carbon($result['updated_at']);
+        $result['reconciled'] = 1 === (int)$result['reconciled'];
+        if (isset($augmentedGroup['tag'])) {
+            $result['tags'][] = $augmentedGroup['tag'];
+        }
+        if (isset($augmentedGroup['tag_id'])) {
+            $result['tag_ids'][] = $augmentedGroup['tag_id'];
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $existingJournal
+     * @param TransactionGroup $newGroup
+     * @return array
+     */
+    private function mergeTags(array $existingJournal, TransactionGroup $newGroup): array
+    {
+        $newArray = $newGroup->toArray();
+        if (isset($newArray['tag_id'])) {
+            $existingJournal['tag_ids'][] = (int)$newArray['tag_id'];
+        }
+        if (isset($newArray['tag'])) {
+            $existingJournal['tags'][] = $newArray['tag'];
+
+        }
+        $existingJournal['tags']    = array_unique($existingJournal['tags']);
+        $existingJournal['tag_ids'] = array_unique($existingJournal['tag_ids']);
+
+        return $existingJournal;
+    }
+
+    /**
+     * @param array $groups
+     *
+     * @return array
+     */
+    private function parseSums(array $groups): array
+    {
+        /**
+         * @var int $groudId
+         * @var array $group
+         */
+        foreach ($groups as $groudId => $group) {
+            /** @var array $transaction */
+            foreach ($group['transactions'] as $transaction) {
+                $currencyId = (int)$transaction['currency_id'];
+
+                // set default:
+                if (!isset($groups[$groudId]['sums'][$currencyId])) {
+                    $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
+                    $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
+                    $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
+                    $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
+                }
+                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
+
+                if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
+                    $currencyId = (int)$transaction['foreign_currency_id'];
+
+                    // set default:
+                    if (!isset($groups[$groudId]['sums'][$currencyId])) {
+                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
+                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
+                        $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
+                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
+                    }
+                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount']);
+                }
+            }
+        }
+
+        return $groups;
     }
 
     /**
@@ -218,6 +359,27 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Will include budget ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withBudgetInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasBudgetInformation) {
+            // join link table
+            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
+            // add fields
+            $this->fields[]             = 'budgets.id as budget_id';
+            $this->fields[]             = 'budgets.name as budget_name';
+            $this->hasBudgetInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -263,6 +425,27 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Will include category ID + name, if any.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withCategoryInformation(): GroupCollectorInterface
+    {
+        if (false === $this->hasCatInformation) {
+            // join link table
+            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            // join cat table
+            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
+            // add fields
+            $this->fields[]          = 'categories.id as category_id';
+            $this->fields[]          = 'categories.name as category_name';
+            $this->hasCatInformation = true;
+        }
+
+        return $this;
+    }
+
+    /**
      * Limit results to a specific currency, either foreign or normal one.
      *
      * @param TransactionCurrency $currency
@@ -290,7 +473,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface
     {
-        if (\count($journalIds) > 0) {
+        if (count($journalIds) > 0) {
             $this->query->whereIn('transaction_journals.id', $journalIds);
         }
 
@@ -367,6 +550,21 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * Join table to get tag information.
+     */
+    private function joinTagTables(): void
+    {
+        if (false === $this->hasJoinedTagTables) {
+            // join some extra tables:
+            $this->hasJoinedTagTables = true;
+            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
+            $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
+            $this->fields[] = 'tags.id as tag_id';
+            $this->fields[] = 'tags.tag as tag';
+        }
+    }
+
+    /**
      * Limit the search to one specific transaction group.
      *
      * @param TransactionGroup $transactionGroup
@@ -407,6 +605,44 @@ class GroupCollector implements GroupCollectorInterface
         $this->startQuery();
 
         return $this;
+    }
+
+    /**
+     * Build the query.
+     */
+    private function startQuery(): void
+    {
+        app('log')->debug('TransactionCollector::startQuery');
+        $this->query = $this->user
+            ->transactionGroups()
+            ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
+            // join source transaction.
+            ->leftJoin(
+                'transactions as source', function (JoinClause $join) {
+                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('source.amount', '<', 0);
+            }
+            )
+            // join destination transaction
+            ->leftJoin(
+                'transactions as destination', function (JoinClause $join) {
+                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
+                     ->where('destination.amount', '>', 0);
+            }
+            )
+            // left join transaction type.
+            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->leftJoin('transaction_currencies as currency', 'currency.id', '=', 'source.transaction_currency_id')
+            ->leftJoin('transaction_currencies as foreign_currency', 'foreign_currency.id', '=', 'source.foreign_currency_id')
+            ->whereNull('transaction_groups.deleted_at')
+            ->whereNull('transaction_journals.deleted_at')
+            ->whereNull('source.deleted_at')
+            ->whereNull('destination.deleted_at')
+            ->orderBy('transaction_journals.date', 'DESC')
+            ->orderBy('transaction_journals.order', 'ASC')
+            ->orderBy('transaction_journals.id', 'DESC')
+            ->orderBy('transaction_journals.description', 'DESC')
+            ->orderBy('source.amount', 'DESC');
     }
 
     /**
@@ -482,193 +718,32 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Will include budget ID + name, if any.
+     * Limit the search to a specific bunch of categories.
+     *
+     * @param Collection $categories
      *
      * @return GroupCollectorInterface
      */
-    public function withBudgetInformation(): GroupCollectorInterface
+    public function setCategories(Collection $categories): GroupCollectorInterface
     {
-        if (false === $this->hasBudgetInformation) {
-            // join link table
-            $this->query->leftJoin('budget_transaction_journal', 'budget_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('budgets', 'budget_transaction_journal.budget_id', '=', 'budgets.id');
-            // add fields
-            $this->fields[]             = 'budgets.id as budget_id';
-            $this->fields[]             = 'budgets.name as budget_name';
-            $this->hasBudgetInformation = true;
-        }
+        $this->withCategoryInformation();
+        $this->query->where('categories.id', $categories->pluck('id')->toArray());
 
         return $this;
     }
 
     /**
-     * Will include category ID + name, if any.
+     * Limit results to a specific set of tags.
+     *
+     * @param Collection $tags
      *
      * @return GroupCollectorInterface
      */
-    public function withCategoryInformation(): GroupCollectorInterface
+    public function setTags(Collection $tags): GroupCollectorInterface
     {
-        if (false === $this->hasCatInformation) {
-            // join link table
-            $this->query->leftJoin('category_transaction_journal', 'category_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-            // join cat table
-            $this->query->leftJoin('categories', 'category_transaction_journal.category_id', '=', 'categories.id');
-            // add fields
-            $this->fields[]          = 'categories.id as category_id';
-            $this->fields[]          = 'categories.name as category_name';
-            $this->hasCatInformation = true;
-        }
+        $this->joinTagTables();
+        $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
 
         return $this;
-    }
-
-    /**
-     * Join table to get tag information.
-     */
-    private function joinTagTables(): void
-    {
-        if (false === $this->hasJoinedTagTables) {
-            // join some extra tables:
-            $this->hasJoinedTagTables = true;
-            $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
-        }
-    }
-
-    /**
-     * @param Collection $collection
-     *
-     * @return Collection
-     * @throws Exception
-     */
-    private function parseArray(Collection $collection): Collection
-    {
-        $groups = [];
-        /** @var TransactionGroup $augmentedGroup */
-        foreach ($collection as $augmentedGroup) {
-            $groupId = $augmentedGroup->transaction_group_id;
-            if (!isset($groups[$groupId])) {
-                // make new array
-                $groupArray                             = [
-                    'id'           => $augmentedGroup->transaction_group_id,
-                    'user_id'      => $augmentedGroup->user_id,
-                    'title'        => $augmentedGroup->transaction_group_title,
-                    'count'        => 1,
-                    'sums'         => [],
-                    'transactions' => [],
-                ];
-                $journalId                              = (int)$augmentedGroup->transaction_journal_id;
-                $groupArray['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
-                $groups[$groupId]                       = $groupArray;
-                continue;
-            }
-            // or parse the rest.
-            $journalId = (int)$augmentedGroup->transaction_journal_id;
-            $groups[$groupId]['count']++;
-            $groups[$groupId]['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
-        }
-        $groups = $this->parseSums($groups);
-
-        return new Collection($groups);
-    }
-
-    /**
-     * @param TransactionGroup $augmentedGroup
-     *
-     * @return array
-     * @throws Exception
-     */
-    private function parseAugmentedGroup(TransactionGroup $augmentedGroup): array
-    {
-        $result               = $augmentedGroup->toArray();
-        $result['date']       = new Carbon($result['date']);
-        $result['created_at'] = new Carbon($result['created_at']);
-        $result['updated_at'] = new Carbon($result['updated_at']);
-        $result['reconciled'] = 1 === (int)$result['reconciled'];
-
-        return $result;
-    }
-
-    /**
-     * @param array $groups
-     *
-     * @return array
-     */
-    private function parseSums(array $groups): array
-    {
-        /**
-         * @var int   $groudId
-         * @var array $group
-         */
-        foreach ($groups as $groudId => $group) {
-            /** @var array $transaction */
-            foreach ($group['transactions'] as $transaction) {
-                $currencyId = (int)$transaction['currency_id'];
-
-                // set default:
-                if (!isset($groups[$groudId]['sums'][$currencyId])) {
-                    $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                    $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['currency_code'];
-                    $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['currency_symbol'];
-                    $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['currency_decimal_places'];
-                    $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                }
-                $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['amount']);
-
-                if (null !== $transaction['foreign_amount'] && null !== $transaction['foreign_currency_id']) {
-                    $currencyId = (int)$transaction['foreign_currency_id'];
-
-                    // set default:
-                    if (!isset($groups[$groudId]['sums'][$currencyId])) {
-                        $groups[$groudId]['sums'][$currencyId]['currency_id']             = $currencyId;
-                        $groups[$groudId]['sums'][$currencyId]['currency_code']           = $transaction['foreign_currency_code'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_symbol']         = $transaction['foreign_currency_symbol'];
-                        $groups[$groudId]['sums'][$currencyId]['currency_decimal_places'] = $transaction['foreign_currency_decimal_places'];
-                        $groups[$groudId]['sums'][$currencyId]['amount']                  = '0';
-                    }
-                    $groups[$groudId]['sums'][$currencyId]['amount'] = bcadd($groups[$groudId]['sums'][$currencyId]['amount'], $transaction['foreign_amount']);
-                }
-            }
-        }
-
-        return $groups;
-    }
-
-    /**
-     * Build the query.
-     */
-    private function startQuery(): void
-    {
-        app('log')->debug('TransactionCollector::startQuery');
-        $this->query = $this->user
-            ->transactionGroups()
-            ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
-            // join source transaction.
-            ->leftJoin(
-                'transactions as source', function (JoinClause $join) {
-                $join->on('source.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->where('source.amount', '<', 0);
-            }
-            )
-            // join destination transaction
-            ->leftJoin(
-                'transactions as destination', function (JoinClause $join) {
-                $join->on('destination.transaction_journal_id', '=', 'transaction_journals.id')
-                     ->where('destination.amount', '>', 0);
-            }
-            )
-            // left join transaction type.
-            ->leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->leftJoin('transaction_currencies as currency', 'currency.id', '=', 'source.transaction_currency_id')
-            ->leftJoin('transaction_currencies as foreign_currency', 'foreign_currency.id', '=', 'source.foreign_currency_id')
-            ->whereNull('transaction_groups.deleted_at')
-            ->whereNull('transaction_journals.deleted_at')
-            ->whereNull('source.deleted_at')
-            ->whereNull('destination.deleted_at')
-            ->orderBy('transaction_journals.date', 'DESC')
-            ->orderBy('transaction_journals.order', 'ASC')
-            ->orderBy('transaction_journals.id', 'DESC')
-            ->orderBy('transaction_journals.description', 'DESC')
-            ->orderBy('source.amount', 'DESC');
     }
 }

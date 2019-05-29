@@ -31,7 +31,6 @@ use FireflyIII\Export\Collector\AttachmentCollector;
 use FireflyIII\Export\Collector\UploadCollector;
 use FireflyIII\Export\Entry\Entry;
 use FireflyIII\Export\Exporter\ExporterInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\ExportJob;
@@ -150,6 +149,109 @@ class ExpandedProcessor implements ProcessorInterface
     }
 
     /**
+     * Returns, if present, for the given journal ID's the notes.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function getNotes(array $array): array
+    {
+        $array  = array_unique($array);
+        $notes  = Note::where('notes.noteable_type', TransactionJournal::class)
+                      ->whereIn('notes.noteable_id', $array)
+                      ->get(['notes.*']);
+        $return = [];
+        /** @var Note $note */
+        foreach ($notes as $note) {
+            if ('' !== trim((string)$note->text)) {
+                $id          = (int)$note->noteable_id;
+                $return[$id] = $note->text;
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns a comma joined list of all the users tags linked to these journals.
+     *
+     * @param array $array
+     *
+     * @return array
+     * @throws \Illuminate\Contracts\Encryption\DecryptException
+     */
+    private function getTags(array $array): array
+    {
+        $set    = DB::table('tag_transaction_journal')
+                    ->whereIn('tag_transaction_journal.transaction_journal_id', $array)
+                    ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'tag_transaction_journal.transaction_journal_id')
+                    ->where('transaction_journals.user_id', $this->job->user_id)
+                    ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
+        $result = [];
+        foreach ($set as $entry) {
+            $id            = (int)$entry->transaction_journal_id;
+            $result[$id]   = $result[$id] ?? [];
+            $result[$id][] = $entry->tag;
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get all IBAN / SWIFT / account numbers.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function getIbans(array $array): array
+    {
+        $array  = array_unique($array);
+        $return = [];
+        $set    = AccountMeta::whereIn('account_id', $array)
+                             ->leftJoin('accounts', 'accounts.id', 'account_meta.account_id')
+                             ->where('accounts.user_id', $this->job->user_id)
+                             ->whereIn('account_meta.name', ['accountNumber', 'BIC', 'currency_id'])
+                             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
+        /** @var AccountMeta $meta */
+        foreach ($set as $meta) {
+            $id                       = (int)$meta->account_id;
+            $return[$id][$meta->name] = $meta->data;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Get currencies.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function getAccountCurrencies(array $array): array
+    {
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $return     = [];
+        $ids        = [];
+        $repository->setUser($this->job->user);
+        foreach ($array as $value) {
+            $ids[] = (int)($value['currency_id'] ?? 0.0);
+        }
+        $ids    = array_unique($ids);
+        $result = $repository->getByIds($ids);
+
+        foreach ($result as $currency) {
+            $return[$currency->id] = $currency->code;
+        }
+
+        return $return;
+    }
+
+    /**
      * Get old oploads.
      *
      * @return bool
@@ -217,6 +319,27 @@ class ExpandedProcessor implements ProcessorInterface
     }
 
     /**
+     * Get files.
+     *
+     * @return Collection
+     */
+    public function getFiles(): Collection
+    {
+        return $this->files;
+    }
+
+    /**
+     * Delete files.
+     */
+    private function deleteFiles(): void
+    {
+        $disk = Storage::disk('export');
+        foreach ($this->getFiles() as $file) {
+            $disk->delete($file);
+        }
+    }
+
+    /**
      * Export the journals.
      *
      * @return bool
@@ -235,16 +358,6 @@ class ExpandedProcessor implements ProcessorInterface
     }
 
     /**
-     * Get files.
-     *
-     * @return Collection
-     */
-    public function getFiles(): Collection
-    {
-        return $this->files;
-    }
-
-    /**
      * Save export job settings to class.
      *
      * @param array $settings
@@ -258,119 +371,5 @@ class ExpandedProcessor implements ProcessorInterface
         $this->includeAttachments = $settings['includeAttachments'];
         $this->includeOldUploads  = $settings['includeOldUploads'];
         $this->job                = $settings['job'];
-    }
-
-    /**
-     * Delete files.
-     */
-    private function deleteFiles(): void
-    {
-        $disk = Storage::disk('export');
-        foreach ($this->getFiles() as $file) {
-            $disk->delete($file);
-        }
-    }
-
-    /**
-     * Get currencies.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function getAccountCurrencies(array $array): array
-    {
-        /** @var CurrencyRepositoryInterface $repository */
-        $repository = app(CurrencyRepositoryInterface::class);
-        $return     = [];
-        $ids        = [];
-        $repository->setUser($this->job->user);
-        foreach ($array as $value) {
-            $ids[] = (int)($value['currency_id'] ?? 0.0);
-        }
-        $ids    = array_unique($ids);
-        $result = $repository->getByIds($ids);
-
-        foreach ($result as $currency) {
-            $return[$currency->id] = $currency->code;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Get all IBAN / SWIFT / account numbers.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function getIbans(array $array): array
-    {
-        $array  = array_unique($array);
-        $return = [];
-        $set    = AccountMeta::whereIn('account_id', $array)
-                             ->leftJoin('accounts', 'accounts.id', 'account_meta.account_id')
-                             ->where('accounts.user_id', $this->job->user_id)
-                             ->whereIn('account_meta.name', ['accountNumber', 'BIC', 'currency_id'])
-                             ->get(['account_meta.id', 'account_meta.account_id', 'account_meta.name', 'account_meta.data']);
-        /** @var AccountMeta $meta */
-        foreach ($set as $meta) {
-            $id                       = (int)$meta->account_id;
-            $return[$id][$meta->name] = $meta->data;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns, if present, for the given journal ID's the notes.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function getNotes(array $array): array
-    {
-        $array  = array_unique($array);
-        $notes  = Note::where('notes.noteable_type', TransactionJournal::class)
-                      ->whereIn('notes.noteable_id', $array)
-                      ->get(['notes.*']);
-        $return = [];
-        /** @var Note $note */
-        foreach ($notes as $note) {
-            if ('' !== trim((string)$note->text)) {
-                $id          = (int)$note->noteable_id;
-                $return[$id] = $note->text;
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns a comma joined list of all the users tags linked to these journals.
-     *
-     * @param array $array
-     *
-     * @return array
-     * @throws \Illuminate\Contracts\Encryption\DecryptException
-     */
-    private function getTags(array $array): array
-    {
-        $set    = DB::table('tag_transaction_journal')
-                    ->whereIn('tag_transaction_journal.transaction_journal_id', $array)
-                    ->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                    ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'tag_transaction_journal.transaction_journal_id')
-                    ->where('transaction_journals.user_id', $this->job->user_id)
-                    ->get(['tag_transaction_journal.transaction_journal_id', 'tags.tag']);
-        $result = [];
-        foreach ($set as $entry) {
-            $id            = (int)$entry->transaction_journal_id;
-            $result[$id]   = $result[$id] ?? [];
-            $result[$id][] = $entry->tag;
-        }
-
-        return $result;
     }
 }

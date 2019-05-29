@@ -152,7 +152,7 @@ class ApplyRules extends Command
         $this->line(sprintf('Will apply %d rules to %d transactions.', $count, count($journals)));
 
         // start looping.
-        $bar = $this->output->createProgressBar(count($journals) * $count);
+        $bar = $this->output->createProgressBar(count($journals));
         Log::debug(sprintf('Now looping %d transactions.', count($journals)));
         /** @var array $journal */
         foreach ($journals as $journal) {
@@ -168,7 +168,7 @@ class ApplyRules extends Command
                         $processor = app(Processor::class);
                         $processor->make($rule, true);
                         $ruleTriggered = $processor->handleJournalArray($journal);
-                        $bar->advance();
+
                         if ($ruleTriggered) {
                             $groupTriggered = true;
                         }
@@ -187,6 +187,7 @@ class ApplyRules extends Command
                 }
             }
             Log::debug('Done with all rules for this group + done with journal.');
+            $bar->advance();
         }
         $this->line('');
         $this->line('Done!');

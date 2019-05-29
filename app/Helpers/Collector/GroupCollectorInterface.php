@@ -105,6 +105,7 @@ interface GroupCollectorInterface
      */
     public function setCategory(Category $category): GroupCollectorInterface;
 
+
     /**
      * Limit results to a specific currency, either foreign or normal one.
      *
@@ -161,6 +162,15 @@ interface GroupCollectorInterface
     public function setTag(Tag $tag): GroupCollectorInterface;
 
     /**
+     * Limit results to a specific set of tags.
+     *
+     * @param Collection $tags
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setTags(Collection $tags): GroupCollectorInterface;
+
+    /**
      * Limit the search to one specific transaction group.
      *
      * @param TransactionGroup $transactionGroup
@@ -200,6 +210,15 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function withAccountInformation(): GroupCollectorInterface;
+
+    /**
+     * Limit the search to a specific bunch of categories.
+     *
+     * @param Collection $categories
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setCategories(Collection $categories): GroupCollectorInterface;
 
     /**
      * Include bill name + ID.

@@ -1,1 +1,114 @@
-<h1 style="color:red;">REPLACE ME</h1>
+<table class="table table-hover table-compressed">
+    <thead>
+    <tr class="ignore">
+        <th class="hide-buttons">&nbsp;</th>
+        <th class="hide-icon">&nbsp;</th>
+
+        <th class="hide-description">{{ trans('list.description') }}</th>
+        <th class="hide-balance_before" style="text-align: right;">{{ trans('list.balance_before') }}</th>
+        <th class="hide-amount" style="text-align: right;">{{ trans('list.amount') }}</th>
+        <th class="hide-balance_after" style="text-align: right;">{{ trans('list.balance_after') }}</th>
+
+        <th class="hide-date">{{ trans('list.date') }}</th>
+        {# new optional fields (3x) #}
+        <th class="hide-from">{{ trans('list.from') }}</th>
+        <th class="hide-to">{{ trans('list.to') }}</th>
+
+        <th class="hide-budget"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        <th class="hide-category"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        <th class="hide-bill">{{ trans('list.bill') }}</th>
+
+        {# more optional fields (2x) #}
+        <th class="hide-create_date">{{ trans('list.create_date') }}</th>
+        <th class="hide-update_date">{{ trans('list.update_date') }}</th>
+
+    </tr>
+    </thead>
+    <tbody>
+    {% for journal in journals %}
+        <tr data-date="{{ journal.date.format('Y-m-d') }}" data-id="{{ journal.id }}">
+
+            <td class="hide-buttons">
+                <div class="btn-group btn-group-xs">
+                    <a href="{{ route('transactions.edit',journal.transaction_group_id) }}" class="btn btn-xs btn-default"><i class="fa fa-fw fa-pencil"></i></a>
+                    <a href="{{ route('transactions.delete',journal.transaction_group_id) }}" class="btn btn-xs btn-danger"><i class="fa fa-fw fa-trash-o"></i></a>
+                </div>
+            </td>
+
+            <td class="hide-icon">
+                {% if journal.transaction_type_type == 'Withdrawal' %}
+                    <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
+                {% endif %}
+
+                {% if journal.transaction_type_type == 'Deposit' %}
+                    <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if journal.transaction_type_type == 'Transfer' %}
+                    <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if journal.transaction_type_type == 'Reconciliation' %}
+                    XX
+                {% endif %}
+
+                {% if journal.transaction_type_type == 'Opening balance' %}
+                    XX
+                {% endif %}
+
+            </td>
+
+            <td class="hide-description">
+                <a href="{{ route('transactions.show',journal.transaction_group_id) }}">
+                    {% if journal.group_title|length > 0 %}
+                        {{ journal.group_title }} ({{ journal.description }})
+                    {% else %}
+                        {{ journal.description }}
+                    {% endif %}
+                </a>
+            </td>
+
+            <td class="hide-balance_before" style="text-align: right;">
+                {{ formatAmountBySymbol(journal.balance_before, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+            </td>
+            <td class="hide-amount" style="text-align: right;">
+                {{ formatAmountBySymbol(journal.amount, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+            </td>
+
+            <td class="hide-balance_after" style="text-align: right;">
+                {{ formatAmountBySymbol(journal.balance_after, journal.currency_symbol, journal.currency_symbol_decimal_places) }}
+            </td>
+
+            <td class="hide-date">{{ journal.date.formatLocalized(monthAndDayFormat) }}</td>
+
+            <td class="hide-from">
+                <a href="{{ route('accounts.show', [journal.source_account_id]) }}" title="{{ journal.source_account_iban|default(journal.source_account_name) }}">{{ journal.source_account_name }}</a>
+            </td>
+
+            <td class="hide-to">
+                <a href="{{ route('accounts.show', [journal.destination_account_id]) }}" title="{{ journal.destination_account_iban|default(journal.destination_account_name) }}">{{ journal.destination_account_name }}</a>
+            </td>
+            <td class="hide-budget">
+                TODO BUDGET
+            </td>
+            <td class="hide-category">
+                TODO CATEGORY
+            </td>
+            <td class="hide-bill">
+                TODO BILL
+            </td>
+
+            <!-- new optional fields (2x) -->
+            <td class="hide-create_date">
+                {{ journal.created_at.formatLocalized(dateTimeFormat) }}
+            </td>
+
+            <td class="hide-update_date">
+                {{ journal.updated_at.formatLocalized(dateTimeFormat) }}
+            </td>
+        </tr>
+
+    {% endfor %}
+
+    </tbody>
+</table>
