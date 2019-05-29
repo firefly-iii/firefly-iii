@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Source account',
     'journal_description'         => 'Deskripsi',
     'note'                        => 'Catatan',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Pisahkan transaksi ini',
     'split_journal_explanation'   => 'Split transaksi ini di banyak bagian',
     'currency'                    => 'Mata uang',

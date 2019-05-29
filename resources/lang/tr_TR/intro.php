@@ -131,7 +131,7 @@ return [
     // currencies
     'currencies_index_intro'                                  => 'Firefly III, bu sayfada değiştirebileceğiniz birden fazla para birimini destekliyor.',
     'currencies_index_default'                                => 'Firefly III has one default currency.',
-    'currencies_index_buttons'                                => 'Use these buttons to change the default currency or enable other currencies.',
+    'currencies_index_buttons'                                => 'Varsayılan para birimini değiştirmek veya diğer para etkinleştirmek için bu düğmeleri kullanın.',
 
     // create currency
     'currencies_create_code'                                  => 'Bu kod ISO uyumlu olmalıdır (Yeni para biriminiz için Google\'da arayın).',

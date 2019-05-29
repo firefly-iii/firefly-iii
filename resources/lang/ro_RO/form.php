@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Contul sursă',
     'journal_description'         => 'Descriere',
     'note'                        => 'Notițe',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Împărțiți această tranzacție',
     'split_journal_explanation'   => 'Împărțiți această tranzacție în mai multe părți',
     'currency'                    => 'Monedă',

@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Conta de origem',
     'journal_description'         => 'Descrição',
     'note'                        => 'Notas',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Dividir essa transação',
     'split_journal_explanation'   => 'Dividir essa transação em várias partes',
     'currency'                    => 'Moeda',

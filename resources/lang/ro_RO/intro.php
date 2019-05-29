@@ -24,26 +24,26 @@ declare(strict_types=1);
 
 return [
     // index
-    'index_intro'                           => 'Bun venit pe pagina index a Firefly III. Vă rugăm să aveți timp pentru a trece prin acest intro pentru a vedea cum funcționează Firefly III.',
+    'index_intro'                           => 'Bun venit pe pagina principală a Firefly III. Vă rugăm să parcurgeţi acest intro pentru a vedea cum funcționează Firefly III.',
     'index_accounts-chart'                  => 'Acest grafic arată soldul curent al conturilor dvs. de active. Puteți selecta conturile vizibile aici în preferințele dvs.',
-    'index_box_out_holder'                  => 'Această cutie mică și casetele de lângă aceasta vă vor oferi o imagine de ansamblu rapidă a situației financiare.',
+    'index_box_out_holder'                  => 'Aceast dreptunghi mic și cele de lângă el vă vor oferi o imagine de ansamblu rapidă a situației financiare.',
     'index_help'                            => 'Dacă aveți nevoie vreodată de ajutor cu o pagină sau un formular, apăsați acest buton.',
     'index_outro'                           => 'Cele mai multe pagini ale Firefly III vor începe cu un mic tur ca acesta. Contactați-mă atunci când aveți întrebări sau comentarii. Bucurați-vă!',
     'index_sidebar-toggle'                  => 'Pentru a crea noi tranzacții, conturi sau alte lucruri, utilizați meniul de sub această pictogramă.',
 
     // create account:
-    'accounts_create_iban'                  => 'Dați conturile dvs. un IBAN valabil. Acest lucru ar putea face ca importul de date să fie foarte ușor în viitor.',
+    'accounts_create_iban'                  => 'Dați conturilor dvs. un IBAN valid. Acest lucru ar putea face ca importul de date să fie foarte ușor în viitor.',
     'accounts_create_asset_opening_balance' => 'Conturile de active pot avea un "sold de deschidere", indicând începutul istoricului acestui cont în Firefly III.',
     'accounts_create_asset_currency'        => 'Firefly III acceptă mai multe valute. Conturile de active au o monedă principală, pe care trebuie să o setați aici.',
-    'accounts_create_asset_virtual'         => 'Acesta poate uneori să vă ajute să vă oferiți un sold virtual: o sumă suplimentară adăugată sau retrasă întotdeauna din soldul real.',
+    'accounts_create_asset_virtual'         => 'Câteodată este de ajutor să adăugaţi contului dvs. un sold virtual: o sumă suplimentară adăugată sau retrasă întotdeauna din soldul real.',
 
     // budgets index
-    'budgets_index_intro'                   => 'Bugetele sunt folosite pentru a vă gestiona finanțele și pentru a forma una dintre funcțiile de bază ale Firefly III.',
+    'budgets_index_intro'                   => 'Bugetele sunt folosite pentru a vă gestiona finanțele; ele sunt una dintre funcțiile de bază ale Firefly III.',
     'budgets_index_set_budget'              => 'Stabiliți bugetul total pentru fiecare perioadă, astfel încât Firefly III vă poate spune dacă ați bugetat toți banii disponibili.',
     'budgets_index_see_expenses_bar'        => 'Banii cheltuiți vor umple încet această linie.',
-    'budgets_index_navigate_periods'        => 'Navigați prin perioade pentru a stabili cu ușurință bugetele înainte.',
+    'budgets_index_navigate_periods'        => 'Navigați prin perioade de timp pentru a stabili cu ușurință bugetele viitoare.',
     'budgets_index_new_budget'              => 'Creați bugete noi după cum doriți.',
-    'budgets_index_list_of_budgets'         => 'Utilizați acest tabel pentru a stabili sumele pentru fiecare buget și pentru a vedea cum faceți acest lucru.',
+    'budgets_index_list_of_budgets'         => 'Utilizați acest tabel pentru a stabili sumele pentru fiecare buget și pentru a vedea cum progresaţi.',
     'budgets_index_outro'                   => 'Pentru a afla mai multe despre bugetare, verificați pictograma de ajutor din colțul din dreapta sus.',
 
     // reports (index)

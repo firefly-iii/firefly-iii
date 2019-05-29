@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => '来源帐户',
     'journal_description'         => '说明',
     'note'                        => '备注',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => '分割此交易',
     'split_journal_explanation'   => '分割这个交易为几个部分',
     'currency'                    => '货币',
@@ -209,7 +210,7 @@ return [
 
     // import
     'import_file'           => '导入文件',
-    'configuration_file'    => '组态档案',
+    'configuration_file'    => '设置档案',
     'import_file_type'      => '导入文件类型',
     'csv_comma'             => '逗号 (,)',
     'csv_semicolon'         => '分号 (;)',

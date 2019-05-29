@@ -57,6 +57,7 @@ return [
     'asset_source_account'        => 'Bronrekening',
     'journal_description'         => 'Omschrijving',
     'note'                        => 'Notities',
+    'store_new_transaction'       => 'Store new transaction',
     'split_journal'               => 'Splits deze transactie',
     'split_journal_explanation'   => 'Splits deze transactie in meerdere stukken',
     'currency'                    => 'Valuta',
