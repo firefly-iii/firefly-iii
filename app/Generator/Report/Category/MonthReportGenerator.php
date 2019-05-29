@@ -28,12 +28,6 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -102,6 +96,75 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.category.month: %s', $e->getMessage()));
             $result = 'Could not render report view.';
+        }
+
+        return $result;
+    }
+
+    /**
+     * Get the expenses for this report.
+     *
+     * @return array
+     */
+    protected function getExpenses(): array
+    {
+        if (count($this->expenses) > 0) {
+            Log::debug('Return previous set of expenses.');
+
+            return $this->expenses;
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
+                  ->setCategories($this->categories)->withAccountInformation();
+
+        $transactions   = $collector->getExtractedJournals();
+        $this->expenses = $transactions;
+
+        return $transactions;
+    }
+
+    /**
+     * Get the income for this report.
+     *
+     * @return array
+     */
+    protected function getIncome(): array
+    {
+        if (count($this->income) > 0) {
+            return $this->income;
+        }
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
+                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
+                  ->setCategories($this->categories)->withAccountInformation();
+
+        $transactions = $collector->getExtractedJournals();
+        $this->income = $transactions;
+
+        return $transactions;
+    }
+
+    /**
+     * Summarize the category.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    private function summarizeByCategory(array $array): array
+    {
+        $result = [];
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $categoryId          = (int)$journal['category_id'];
+            $result[$categoryId] = $result[$categoryId] ?? '0';
+            $result[$categoryId] = bcadd($journal['amount'], $result[$categoryId]);
         }
 
         return $result;
@@ -197,74 +260,5 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
-    }
-
-    /**
-     * Get the expenses for this report.
-     *
-     * @return array
-     */
-    protected function getExpenses(): array
-    {
-        if (count($this->expenses) > 0) {
-            Log::debug('Return previous set of expenses.');
-
-            return $this->expenses;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withAccountInformation();
-
-        $transactions   = $collector->getExtractedJournals();
-        $this->expenses = $transactions;
-
-        return $transactions;
-    }
-
-    /**
-     * Get the income for this report.
-     *
-     * @return array
-     */
-    protected function getIncome(): array
-    {
-        if (count($this->income) > 0) {
-            return $this->income;
-        }
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-
-        $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)
-                  ->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->setCategories($this->categories)->withAccountInformation();
-
-        $transactions = $collector->getExtractedJournals();
-        $this->income = $transactions;
-
-        return $transactions;
-    }
-
-    /**
-     * Summarize the category.
-     *
-     * @param array $array
-     *
-     * @return array
-     */
-    private function summarizeByCategory(array $array): array
-    {
-        $result = [];
-        /** @var array $journal */
-        foreach ($array as $journal) {
-            $categoryId          = (int)$journal['category_id'];
-            $result[$categoryId] = $result[$categoryId] ?? '0';
-            $result[$categoryId] = bcadd($journal['amount'], $result[$categoryId]);
-        }
-
-        return $result;
     }
 }
