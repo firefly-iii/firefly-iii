@@ -34,7 +34,6 @@ use FireflyIII\Transformers\AttachmentTransformer;
 use FireflyIII\Transformers\BillTransformer;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -81,7 +80,7 @@ class BillController extends Controller
      * Display a listing of the resource.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -163,7 +162,7 @@ class BillController extends Controller
      * List all of them.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -205,7 +204,7 @@ class BillController extends Controller
      * Show the specified bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -258,7 +257,7 @@ class BillController extends Controller
      *
      * @param Request $request
      *
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -303,7 +302,7 @@ class BillController extends Controller
         $paginator->setPath(route('api.v1.bills.transactions', [$bill->id]) . $this->buildParams());
         $transactions = $paginator->getCollection();
 
-        /** @var TransactionTransformer $transformer */
+        /** @var TransactionGroupTransformer $transformer */
         $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
@@ -317,7 +316,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillRequest $request
-     * @param Bill        $bill
+     * @param Bill $bill
      *
      * @return JsonResponse
      */

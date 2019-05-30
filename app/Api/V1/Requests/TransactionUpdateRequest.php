@@ -137,6 +137,60 @@ class TransactionUpdateRequest extends Request
     }
 
     /**
+     * Get transaction data.
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @return array
+     */
+    private function getTransactionData(): array
+    {
+        $return = [];
+        /**
+         * @var int $index
+         * @var array $transaction
+         */
+        foreach ($this->get('transactions') as $index => $transaction) {
+            // default response is to update nothing in the transaction:
+            $current = [];
+
+            // for each field, add it to the array if a reference is present in the request:
+            foreach ($this->integerFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
+                }
+            }
+
+            foreach ($this->stringFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
+                }
+            }
+
+            foreach ($this->dateFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
+                }
+            }
+
+            foreach ($this->booleanFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
+                }
+            }
+
+            foreach ($this->arrayFields as $fieldName) {
+                if (array_key_exists($fieldName, $transaction)) {
+                    $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
+                }
+            }
+            $return[] = $current;
+        }
+
+        return $return;
+    }
+
+    /**
      * The rules that the incoming request must be matched against.
      *
      * @return array
@@ -260,59 +314,5 @@ class TransactionUpdateRequest extends Request
                 //                $this->validateGroupDescription($validator);
             }
         );
-    }
-
-    /**
-     * Get transaction data.
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @return array
-     */
-    private function getTransactionData(): array
-    {
-        $return = [];
-        /**
-         * @var int   $index
-         * @var array $transaction
-         */
-        foreach ($this->get('transactions') as $index => $transaction) {
-            // default response is to update nothing in the transaction:
-            $current = [];
-
-            // for each field, add it to the array if a reference is present in the request:
-            foreach ($this->integerFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->integerFromValue((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->stringFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->stringFromValue((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->dateFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->booleanFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->convertBoolean((string)$transaction[$fieldName]);
-                }
-            }
-
-            foreach ($this->arrayFields as $fieldName) {
-                if (array_key_exists($fieldName, $transaction)) {
-                    $current[$fieldName] = $this->arrayFromValue($transaction[$fieldName]);
-                }
-            }
-            $return[] = $current;
-        }
-
-        return $return;
     }
 }

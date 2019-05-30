@@ -90,6 +90,7 @@ class CurrencyExchangeRateController extends Controller
             throw new FireflyException('Unknown destination currency.');
         }
 
+        /** @var Carbon $dateObj */
         $dateObj = Carbon::createFromFormat('Y-m-d', $request->get('date') ?? date('Y-m-d'));
         $this->parameters->set('from', $fromCurrency->code);
         $this->parameters->set('to', $toCurrency->code);

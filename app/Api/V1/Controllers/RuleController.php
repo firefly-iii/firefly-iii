@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Api\V1\Requests\RuleRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
@@ -45,7 +46,7 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
-use Exception;
+
 /**
  * Class RuleController
  */
@@ -85,7 +86,7 @@ class RuleController extends Controller
      * @param Rule $rule
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function delete(Rule $rule): JsonResponse
     {
@@ -100,7 +101,7 @@ class RuleController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -138,10 +139,10 @@ class RuleController extends Controller
      * List single resource.
      *
      * @param Request $request
-     * @param Rule    $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, Rule $rule): JsonResponse
     {
@@ -183,8 +184,9 @@ class RuleController extends Controller
     }
 
     /**
+     * TODO deprecated return values in transformer.
      * @param Request $request
-     * @param Rule    $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -193,7 +195,9 @@ class RuleController extends Controller
     {
         $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         $page         = 0 === (int)$request->query('page') ? 1 : (int)$request->query('page');
+        /** @var Carbon $startDate */
         $startDate    = null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date'));
+        /** @var Carbon $endDate */
         $endDate      = null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date'));
         $searchLimit  = 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit');
         $triggerLimit = 0 === (int)$request->query('triggered_limit') ? (int)config('firefly.test-triggers.range') : (int)$request->query('triggered_limit');
@@ -253,7 +257,7 @@ class RuleController extends Controller
      * Execute the given rule group on a set of existing transactions.
      *
      * @param Request $request
-     * @param Rule    $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
      * @throws Exception
@@ -299,7 +303,7 @@ class RuleController extends Controller
      * Update a rule.
      *
      * @param RuleRequest $request
-     * @param Rule        $rule
+     * @param Rule $rule
      *
      * @return JsonResponse
      */

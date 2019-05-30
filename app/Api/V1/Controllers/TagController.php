@@ -87,7 +87,9 @@ class TagController extends Controller
         if ('' === $start || '' === $end) {
             throw new FireflyException('Start and end are mandatory parameters.');
         }
+        /** @var Carbon $start */
         $start = Carbon::createFromFormat('Y-m-d', $start);
+        /** @var Carbon $end */
         $end   = Carbon::createFromFormat('Y-m-d', $end);
 
         // get all tags:
@@ -180,7 +182,7 @@ class TagController extends Controller
      * List single resource.
      *
      * @param Request $request
-     * @param Tag     $tag
+     * @param Tag $tag
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -228,7 +230,7 @@ class TagController extends Controller
      * Show all transactions.
      *
      * @param Request $request
-     * @param Tag     $tag
+     * @param Tag $tag
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -284,7 +286,7 @@ class TagController extends Controller
      * Update a rule.
      *
      * @param TagRequest $request
-     * @param Tag        $tag
+     * @param Tag $tag
      *
      * @return JsonResponse
      */

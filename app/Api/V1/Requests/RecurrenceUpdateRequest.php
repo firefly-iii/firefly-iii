@@ -87,6 +87,68 @@ class RecurrenceUpdateRequest extends Request
     }
 
     /**
+     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
+     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
+     *
+     * @return array
+     * @SuppressWarnings(PHPMD.NPathComplexity)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    private function getTransactionData(): array
+    {
+        $return = [];
+        // transaction data:
+        /** @var array $transactions */
+        $transactions = $this->get('transactions');
+        /** @var array $transaction */
+        foreach ($transactions as $transaction) {
+            $return[] = [
+                'amount'                => $transaction['amount'],
+                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
+                'currency_code'         => $transaction['currency_code'] ?? null,
+                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
+                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
+                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
+                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
+                'budget_name'           => $transaction['budget_name'] ?? null,
+                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
+                'category_name'         => $transaction['category_name'] ?? null,
+                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
+                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
+                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
+                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
+                'description'           => $transaction['description'],
+            ];
+        }
+
+        return $return;
+    }
+
+    /**
+     * Returns the repetition data as it is found in the submitted data.
+     *
+     * @return array
+     */
+    private function getRepetitionData(): array
+    {
+        $return = [];
+        // repetition data:
+        /** @var array $repetitions */
+        $repetitions = $this->get('repetitions');
+        /** @var array $repetition */
+        foreach ($repetitions as $repetition) {
+            $return[] = [
+                'type'    => $repetition['type'],
+                'moment'  => $repetition['moment'],
+                'skip'    => (int)$repetition['skip'],
+                'weekend' => (int)$repetition['weekend'],
+            ];
+        }
+
+        return $return;
+    }
+
+    /**
      * The rules that the incoming request must be matched against.
      *
      * @return array
@@ -131,7 +193,7 @@ class RecurrenceUpdateRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  Validator $validator
+     * @param Validator $validator
      *
      * @return void
      */
@@ -147,68 +209,5 @@ class RecurrenceUpdateRequest extends Request
                 $this->validateAccountInformation($validator);
             }
         );
-    }
-
-
-    /**
-     * Returns the repetition data as it is found in the submitted data.
-     *
-     * @return array
-     */
-    private function getRepetitionData(): array
-    {
-        $return = [];
-        // repetition data:
-        /** @var array $repetitions */
-        $repetitions = $this->get('repetitions');
-        /** @var array $repetition */
-        foreach ($repetitions as $repetition) {
-            $return[] = [
-                'type'    => $repetition['type'],
-                'moment'  => $repetition['moment'],
-                'skip'    => (int)$repetition['skip'],
-                'weekend' => (int)$repetition['weekend'],
-            ];
-        }
-
-        return $return;
-    }
-
-    /**
-     * Returns the transaction data as it is found in the submitted data. It's a complex method according to code
-     * standards but it just has a lot of ??-statements because of the fields that may or may not exist.
-     *
-     * @return array
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    private function getTransactionData(): array
-    {
-        $return = [];
-        // transaction data:
-        /** @var array $transactions */
-        $transactions = $this->get('transactions');
-        /** @var array $transaction */
-        foreach ($transactions as $transaction) {
-            $return[] = [
-                'amount'                => $transaction['amount'],
-                'currency_id'           => isset($transaction['currency_id']) ? (int)$transaction['currency_id'] : null,
-                'currency_code'         => $transaction['currency_code'] ?? null,
-                'foreign_amount'        => $transaction['foreign_amount'] ?? null,
-                'foreign_currency_id'   => isset($transaction['foreign_currency_id']) ? (int)$transaction['foreign_currency_id'] : null,
-                'foreign_currency_code' => $transaction['foreign_currency_code'] ?? null,
-                'budget_id'             => isset($transaction['budget_id']) ? (int)$transaction['budget_id'] : null,
-                'budget_name'           => $transaction['budget_name'] ?? null,
-                'category_id'           => isset($transaction['category_id']) ? (int)$transaction['category_id'] : null,
-                'category_name'         => $transaction['category_name'] ?? null,
-                'source_id'             => isset($transaction['source_id']) ? (int)$transaction['source_id'] : null,
-                'source_name'           => isset($transaction['source_name']) ? (string)$transaction['source_name'] : null,
-                'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
-                'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
-                'description'           => $transaction['description'],
-            ];
-        }
-
-        return $return;
     }
 }

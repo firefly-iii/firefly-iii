@@ -39,6 +39,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
+use function strlen;
 
 /**
  * Class AttachmentController.
@@ -111,7 +112,7 @@ class AttachmentController extends Controller
                 ->header('Expires', '0')
                 ->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0')
                 ->header('Pragma', 'public')
-                ->header('Content-Length', \strlen($content));
+                ->header('Content-Length', strlen($content));
 
             return $response;
         }
@@ -159,7 +160,7 @@ class AttachmentController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Attachment $attachment
      * @codeCoverageIgnore
      * @return JsonResponse
@@ -208,7 +209,7 @@ class AttachmentController extends Controller
      * Update the specified resource in storage.
      *
      * @param AttachmentRequest $request
-     * @param Attachment        $attachment
+     * @param Attachment $attachment
      *
      * @return JsonResponse
      */
@@ -232,7 +233,7 @@ class AttachmentController extends Controller
     /**
      * Upload an attachment.
      * @codeCoverageIgnore
-     * @param Request    $request
+     * @param Request $request
      * @param Attachment $attachment
      *
      * @return JsonResponse

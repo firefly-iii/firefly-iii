@@ -133,7 +133,7 @@ class CategoryController extends Controller
     /**
      * Show the category.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Category $category
      *
      * @return JsonResponse
@@ -184,7 +184,7 @@ class CategoryController extends Controller
     /**
      * Show all transactions.
      *
-     * @param Request  $request
+     * @param Request $request
      *
      * @param Category $category
      *
@@ -243,7 +243,7 @@ class CategoryController extends Controller
      * Update the category.
      *
      * @param CategoryRequest $request
-     * @param Category        $category
+     * @param Category $category
      *
      * @return JsonResponse
      */

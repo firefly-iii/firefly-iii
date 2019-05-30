@@ -25,6 +25,7 @@ namespace FireflyIII\Api\V1\Requests;
 
 use FireflyIII\Rules\IsBoolean;
 use Illuminate\Validation\Validator;
+use function is_array;
 
 
 /**
@@ -80,6 +81,48 @@ class RuleRequest extends Request
     }
 
     /**
+     * @return array
+     */
+    private function getRuleTriggers(): array
+    {
+        $triggers = $this->get('triggers');
+        $return   = [];
+        if (is_array($triggers)) {
+            foreach ($triggers as $trigger) {
+                $return[] = [
+                    'type'            => $trigger['type'],
+                    'value'           => $trigger['value'],
+                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRuleActions(): array
+    {
+        $actions = $this->get('actions');
+        $return  = [];
+        if (is_array($actions)) {
+            foreach ($actions as $action) {
+                $return[] = [
+                    'type'            => $action['type'],
+                    'value'           => $action['value'],
+                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
+                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
+                ];
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * The rules that the incoming request must be matched against.
      *
      * @return array
@@ -117,7 +160,7 @@ class RuleRequest extends Request
     /**
      * Configure the validator instance.
      *
-     * @param  Validator $validator
+     * @param Validator $validator
      *
      * @return void
      */
@@ -136,13 +179,13 @@ class RuleRequest extends Request
      *
      * @param Validator $validator
      */
-    protected function atLeastOneAction(Validator $validator): void
+    protected function atLeastOneTrigger(Validator $validator): void
     {
-        $data    = $validator->getData();
-        $actions = $data['actions'] ?? [];
+        $data     = $validator->getData();
+        $triggers = $data['triggers'] ?? [];
         // need at least one trigger
-        if (0 === count($actions)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
+        if (0 === count($triggers)) {
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }
 
@@ -151,55 +194,13 @@ class RuleRequest extends Request
      *
      * @param Validator $validator
      */
-    protected function atLeastOneTrigger(Validator $validator): void
+    protected function atLeastOneAction(Validator $validator): void
     {
-        $data     = $validator->getData();
-        $triggers = $data['triggers'] ?? [];
-        // need at least one trugger
-        if (0 === count($triggers)) {
-            $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
+        $data    = $validator->getData();
+        $actions = $data['actions'] ?? [];
+        // need at least one trigger
+        if (0 === count($actions)) {
+            $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleActions(): array
-    {
-        $actions = $this->get('actions');
-        $return  = [];
-        if (\is_array($actions)) {
-            foreach ($actions as $action) {
-                $return[] = [
-                    'type'            => $action['type'],
-                    'value'           => $action['value'],
-                    'active'          => $this->convertBoolean((string)($action['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($action['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @return array
-     */
-    private function getRuleTriggers(): array
-    {
-        $triggers = $this->get('triggers');
-        $return   = [];
-        if (\is_array($triggers)) {
-            foreach ($triggers as $trigger) {
-                $return[] = [
-                    'type'            => $trigger['type'],
-                    'value'           => $trigger['value'],
-                    'active'          => $this->convertBoolean((string)($trigger['active'] ?? 'false')),
-                    'stop_processing' => $this->convertBoolean((string)($trigger['stop_processing'] ?? 'false')),
-                ];
-            }
-        }
-
-        return $return;
     }
 }

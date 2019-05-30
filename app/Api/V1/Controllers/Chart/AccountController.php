@@ -82,7 +82,7 @@ class AccountController extends Controller
         if ('' === $start || '' === $end) {
             throw new FireflyException('Start and end are mandatory parameters.');
         }
-
+        /** @var Carbon $start */
         $start = Carbon::createFromFormat('Y-m-d', $start);
         $end   = Carbon::createFromFormat('Y-m-d', $end);
         $start->subDay();
@@ -128,7 +128,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int                 $currencyId
+         * @var int $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {
@@ -157,6 +157,43 @@ class AccountController extends Controller
     }
 
     /**
+     * Small helper function for the revenue and expense account charts.
+     * TODO should include Trait instead of doing this.
+     *
+     * @param Collection $accounts
+     *
+     * @return array
+     */
+    protected function extractNames(Collection $accounts): array
+    {
+        $return = [];
+        /** @var Account $account */
+        foreach ($accounts as $account) {
+            $return[$account->id] = $account->name;
+        }
+
+        return $return;
+    }
+
+    /**
+     * Small helper function for the revenue and expense account charts.
+     * TODO should include Trait instead of doing this.
+     *
+     * @param array $names
+     *
+     * @return array
+     */
+    protected function expandNames(array $names): array
+    {
+        $result = [];
+        foreach ($names as $entry) {
+            $result[$entry['name']] = 0;
+        }
+
+        return $result;
+    }
+
+    /**
      * @param Request $request
      *
      * @return JsonResponse
@@ -176,8 +213,8 @@ class AccountController extends Controller
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
-        $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $default    = app('amount')->getDefaultCurrency();
+        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
+        $default   = app('amount')->getDefaultCurrency();
         if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
@@ -202,7 +239,7 @@ class AccountController extends Controller
                 'yAxisID'                 => 0, // 0, 1, 2
                 'entries'                 => [],
             ];
-
+            /** @var Carbon $currentStart */
             $currentStart = clone $start;
             $range        = app('steam')->balanceInRange($account, $start, clone $end);
             $previous     = round(array_values($range)[0], 12);
@@ -234,7 +271,7 @@ class AccountController extends Controller
         if ('' === $start || '' === $end) {
             throw new FireflyException('Start and end are mandatory parameters.');
         }
-
+        /** @var Carbon $start */
         $start = Carbon::createFromFormat('Y-m-d', $start);
         $end   = Carbon::createFromFormat('Y-m-d', $end);
         $start->subDay();
@@ -280,7 +317,7 @@ class AccountController extends Controller
 
         // loop all found currencies and build the data array for the chart.
         /**
-         * @var int                 $currencyId
+         * @var int $currencyId
          * @var TransactionCurrency $currency
          */
         foreach ($currencies as $currencyId => $currency) {
@@ -306,43 +343,6 @@ class AccountController extends Controller
         $chartData = array_values($chartData);
 
         return response()->json($chartData);
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO should include Trait instead of doing this.
-     *
-     * @param array $names
-     *
-     * @return array
-     */
-    protected function expandNames(array $names): array
-    {
-        $result = [];
-        foreach ($names as $entry) {
-            $result[$entry['name']] = 0;
-        }
-
-        return $result;
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO should include Trait instead of doing this.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    protected function extractNames(Collection $accounts): array
-    {
-        $return = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $return[$account->id] = $account->name;
-        }
-
-        return $return;
     }
 
 }

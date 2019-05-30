@@ -70,11 +70,11 @@ class UserController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \FireflyIII\User $user
+     * @param User $user
      *
      * @return JsonResponse
      * @throws FireflyException
-     *                         @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function delete(User $user): JsonResponse
     {
@@ -94,7 +94,7 @@ class UserController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -130,10 +130,10 @@ class UserController extends Controller
      * Show a single user.
      *
      * @param Request $request
-     * @param User    $user
+     * @param User $user
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, User $user): JsonResponse
     {
@@ -184,7 +184,7 @@ class UserController extends Controller
      * Update a user.
      *
      * @param UserRequest $request
-     * @param User        $user
+     * @param User $user
      *
      * @return JsonResponse
      */

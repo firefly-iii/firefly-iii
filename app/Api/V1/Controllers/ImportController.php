@@ -72,7 +72,7 @@ class ImportController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function listAll(Request $request): JsonResponse
     {
@@ -104,11 +104,11 @@ class ImportController extends Controller
     }
 
     /**
-     * @param Request   $request
+     * @param Request $request
      * @param ImportJob $importJob
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, ImportJob $importJob): JsonResponse
     {
@@ -128,11 +128,11 @@ class ImportController extends Controller
     /**
      * Show all transactions
      *
-     * @param Request   $request
+     * @param Request $request
      * @param ImportJob $importJob
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, ImportJob $importJob): JsonResponse
     {

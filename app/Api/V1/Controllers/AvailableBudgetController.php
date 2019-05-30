@@ -140,11 +140,11 @@ class AvailableBudgetController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request         $request
+     * @param Request $request
      * @param AvailableBudget $availableBudget
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, AvailableBudget $availableBudget): JsonResponse
     {
@@ -197,7 +197,7 @@ class AvailableBudgetController extends Controller
      * Update the specified resource in storage.
      *
      * @param AvailableBudgetRequest $request
-     * @param AvailableBudget        $availableBudget
+     * @param AvailableBudget $availableBudget
      *
      * @return JsonResponse
      */

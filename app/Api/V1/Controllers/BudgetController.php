@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
+use Exception;
 use FireflyIII\Api\V1\Requests\BudgetLimitRequest;
 use FireflyIII\Api\V1\Requests\BudgetRequest;
 use FireflyIII\Exceptions\FireflyException;
@@ -42,7 +43,7 @@ use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
-use Exception;
+
 /**
  * Class BudgetController.
  *
@@ -81,7 +82,7 @@ class BudgetController extends Controller
      *
      *
      * @param Request $request
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -169,7 +170,7 @@ class BudgetController extends Controller
      * Show a budget.
      *
      * @param Request $request
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -221,9 +222,9 @@ class BudgetController extends Controller
      * Store a newly created resource in storage.
      *
      * @param BudgetLimitRequest $request
-     * @param Budget             $budget
-     * @throws Exception
+     * @param Budget $budget
      * @return JsonResponse
+     * @throws Exception
      */
     public function storeBudgetLimit(BudgetLimitRequest $request, Budget $budget): JsonResponse
     {
@@ -248,7 +249,7 @@ class BudgetController extends Controller
      *
      * @param Request $request
      *
-     * @param Budget  $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      * @codeCoverageIgnore
@@ -313,7 +314,7 @@ class BudgetController extends Controller
      * Update a budget.
      *
      * @param BudgetRequest $request
-     * @param Budget        $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      */

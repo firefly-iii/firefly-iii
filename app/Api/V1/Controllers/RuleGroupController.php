@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Api\V1\Requests\RuleGroupRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
@@ -47,7 +48,6 @@ use League\Fractal\Resource\Collection as FractalCollection;
 use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\JsonApiSerializer;
 use Log;
-use Exception;
 
 /**
  * Class RuleGroupController
@@ -88,7 +88,7 @@ class RuleGroupController extends Controller
      * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function delete(RuleGroup $ruleGroup): JsonResponse
     {
@@ -103,7 +103,7 @@ class RuleGroupController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -137,11 +137,11 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request   $request
+     * @param Request $request
      * @param RuleGroup $group
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function rules(Request $request, RuleGroup $group): JsonResponse
     {
@@ -178,11 +178,11 @@ class RuleGroupController extends Controller
     /**
      * List single resource.
      *
-     * @param Request   $request
+     * @param Request $request
      * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, RuleGroup $ruleGroup): JsonResponse
     {
@@ -225,7 +225,7 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request   $request
+     * @param Request $request
      * @param RuleGroup $group
      *
      * @return JsonResponse
@@ -285,9 +285,54 @@ class RuleGroupController extends Controller
     }
 
     /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getTestParameters(Request $request): array
+    {
+        return [
+            'page_size'     => (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data,
+            'page'          => 0 === (int)$request->query('page') ? 1 : (int)$request->query('page'),
+            'start_date'    => null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date')),
+            'end_date'      => null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date')),
+            'search_limit'  => 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit'),
+            'trigger_limit' => 0 === (int)$request->query('triggered_limit')
+                ? (int)config('firefly.test-triggers.range')
+                : (int)$request->query(
+                    'triggered_limit'
+                ),
+            'account_list'  => '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts')),
+        ];
+    }
+
+    /**
+     * @param array $accounts
+     *
+     * @return Collection
+     */
+    private function getAccountParameter(array $accounts): Collection
+    {
+        $return = new Collection;
+        foreach ($accounts as $accountId) {
+            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
+            $account = $this->accountRepository->findNull((int)$accountId);
+            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
+                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
+                $return->push($account);
+            }
+            if (null === $account) {
+                Log::debug(sprintf('No asset account with id "%s"', $accountId));
+            }
+        }
+
+        return $return;
+    }
+
+    /**
      * Execute the given rule group on a set of existing transactions.
      *
-     * @param Request   $request
+     * @param Request $request
      * @param RuleGroup $group
      *
      * @return JsonResponse
@@ -339,7 +384,7 @@ class RuleGroupController extends Controller
      * TODO update order of rule group
      *
      * @param RuleGroupRequest $request
-     * @param RuleGroup        $ruleGroup
+     * @param RuleGroup $ruleGroup
      *
      * @return JsonResponse
      */
@@ -358,50 +403,5 @@ class RuleGroupController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
-    }
-
-    /**
-     * @param array $accounts
-     *
-     * @return Collection
-     */
-    private function getAccountParameter(array $accounts): Collection
-    {
-        $return = new Collection;
-        foreach ($accounts as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $return->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
-
-        return $return;
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getTestParameters(Request $request): array
-    {
-        return [
-            'page_size'     => (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data,
-            'page'          => 0 === (int)$request->query('page') ? 1 : (int)$request->query('page'),
-            'start_date'    => null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date')),
-            'end_date'      => null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date')),
-            'search_limit'  => 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit'),
-            'trigger_limit' => 0 === (int)$request->query('triggered_limit')
-                ? (int)config('firefly.test-triggers.range')
-                : (int)$request->query(
-                    'triggered_limit'
-                ),
-            'account_list'  => '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts')),
-        ];
     }
 }

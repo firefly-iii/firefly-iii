@@ -24,7 +24,6 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Requests;
 
-use Exception;
 use FireflyIII\Rules\IsBoolean;
 
 /**

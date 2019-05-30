@@ -133,7 +133,7 @@ class RecurrenceController extends Controller
     /**
      * List single resource.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
@@ -182,7 +182,7 @@ class RecurrenceController extends Controller
     /**
      * Show transactions for this recurrence.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Recurrence $recurrence
      *
      * @return JsonResponse
@@ -267,7 +267,7 @@ class RecurrenceController extends Controller
      * Update single recurrence.
      *
      * @param RecurrenceUpdateRequest $request
-     * @param Recurrence        $recurrence
+     * @param Recurrence $recurrence
      *
      * @return JsonResponse
      */

@@ -134,7 +134,7 @@ class BudgetLimitController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param Request     $request
+     * @param Request $request
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
@@ -189,7 +189,7 @@ class BudgetLimitController extends Controller
     /**
      * Show all transactions.
      *
-     * @param Request     $request
+     * @param Request $request
      * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
@@ -245,7 +245,7 @@ class BudgetLimitController extends Controller
      * Update the specified resource in storage.
      *
      * @param BudgetLimitRequest $request
-     * @param BudgetLimit        $budgetLimit
+     * @param BudgetLimit $budgetLimit
      *
      * @return JsonResponse
      */

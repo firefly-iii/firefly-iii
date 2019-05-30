@@ -137,11 +137,11 @@ class LinkTypeController extends Controller
     /**
      * List single resource.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param LinkType $linkType
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, LinkType $linkType): JsonResponse
     {
@@ -193,11 +193,11 @@ class LinkTypeController extends Controller
     /**
      * Delete the resource.
      *
-     * @param Request  $request
+     * @param Request $request
      * @param LinkType $linkType
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function transactions(Request $request, LinkType $linkType): JsonResponse
     {
@@ -255,7 +255,7 @@ class LinkTypeController extends Controller
      * Update object.
      *
      * @param LinkTypeRequest $request
-     * @param LinkType        $linkType
+     * @param LinkType $linkType
      *
      * @return JsonResponse
      * @throws FireflyException

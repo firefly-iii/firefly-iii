@@ -119,7 +119,7 @@ class PreferenceController extends Controller
     /**
      * Return a single preference by name.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Preference $preference
      *
      * @return JsonResponse
@@ -147,7 +147,7 @@ class PreferenceController extends Controller
      * Update a preference.
      *
      * @param PreferenceRequest $request
-     * @param Preference        $preference
+     * @param Preference $preference
      *
      * @return JsonResponse
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

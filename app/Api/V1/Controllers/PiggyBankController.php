@@ -130,7 +130,7 @@ class PiggyBankController extends Controller
     /**
      * List single resource.
      *
-     * @param Request   $request
+     * @param Request $request
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
@@ -166,7 +166,7 @@ class PiggyBankController extends Controller
     /**
      * List single resource.
      *
-     * @param Request   $request
+     * @param Request $request
      * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
@@ -220,7 +220,7 @@ class PiggyBankController extends Controller
      * Update piggy bank.
      *
      * @param PiggyBankRequest $request
-     * @param PiggyBank        $piggyBank
+     * @param PiggyBank $piggyBank
      *
      * @return JsonResponse
      */

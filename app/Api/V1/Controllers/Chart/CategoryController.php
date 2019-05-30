@@ -74,7 +74,9 @@ class CategoryController extends Controller
         if ('' === $start || '' === $end) {
             throw new FireflyException('Start and end are mandatory parameters.');
         }
+        /** @var Carbon $start */
         $start      = Carbon::createFromFormat('Y-m-d', $start);
+        /** @var Carbon $end */
         $end        = Carbon::createFromFormat('Y-m-d', $end);
         $tempData   = [];
         $spent      = $this->categoryRepository->spentInPeriodPerCurrency(new Collection, new Collection, $start, $end);

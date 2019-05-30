@@ -81,7 +81,7 @@ class TransactionLinkController extends Controller
      * @param TransactionJournalLink $link
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function delete(TransactionJournalLink $link): JsonResponse
     {
@@ -96,7 +96,7 @@ class TransactionLinkController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function index(Request $request): JsonResponse
     {
@@ -137,11 +137,11 @@ class TransactionLinkController extends Controller
     /**
      * List single resource.
      *
-     * @param Request                $request
+     * @param Request $request
      * @param TransactionJournalLink $journalLink
      *
      * @return JsonResponse
-     *                     @codeCoverageIgnore
+     * @codeCoverageIgnore
      */
     public function show(Request $request, TransactionJournalLink $journalLink): JsonResponse
     {

@@ -54,7 +54,7 @@ class AboutController extends Controller
 
 
         $data
-                       = [
+            = [
             'version'     => config('firefly.version'),
             'api_version' => config('firefly.api_version'),
             'php_version' => $phpVersion,

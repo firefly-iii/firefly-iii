@@ -296,7 +296,7 @@ class AccountController extends Controller
      * Update account.
      *
      * @param AccountUpdateRequest $request
-     * @param Account              $account
+     * @param Account $account
      *
      * @return JsonResponse
      */

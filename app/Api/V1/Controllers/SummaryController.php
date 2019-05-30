@@ -99,7 +99,9 @@ class SummaryController extends Controller
         if ('' === $start || '' === $end) {
             throw new FireflyException('Start and end are mandatory parameters.');
         }
+        /** @var Carbon $start */
         $start = Carbon::createFromFormat('Y-m-d', $start);
+        /** @var Carbon $end */
         $end   = Carbon::createFromFormat('Y-m-d', $end);
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
@@ -112,50 +114,6 @@ class SummaryController extends Controller
 
         return response()->json($total);
 
-    }
-
-    /**
-     * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
-    }
-
-    /**
-     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
-     *
-     * @param array               $spentInfo
-     * @param TransactionCurrency $currency
-     *
-     * @return float
-     */
-    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): float
-    {
-        foreach ($spentInfo as $array) {
-            if ($array['currency_id'] === $currency->id) {
-                return $array['amount'];
-            }
-        }
-
-        return 0.0;
     }
 
     /**
@@ -369,6 +327,25 @@ class SummaryController extends Controller
     }
 
     /**
+     * This method will scroll through the results of the spentInPeriodMc() array and return the correct info.
+     *
+     * @param array $spentInfo
+     * @param TransactionCurrency $currency
+     *
+     * @return float
+     */
+    private function findInSpentArray(array $spentInfo, TransactionCurrency $currency): float
+    {
+        foreach ($spentInfo as $array) {
+            if ($array['currency_id'] === $currency->id) {
+                return $array['amount'];
+            }
+        }
+
+        return 0.0;
+    }
+
+    /**
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -426,6 +403,31 @@ class SummaryController extends Controller
         }
 
         return $return;
+    }
+
+    /**
+     * Check if date is outside session range.
+     *
+     * @param Carbon $date
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return bool
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
     }
 
 }
