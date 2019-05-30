@@ -230,7 +230,7 @@
                                     <tr>
                                 {% endif %}
                                 <td data-sortable="false">
-                                    <a href="{{ route('transactions.show', 1+row.transaction_group_id) }}">
+                                    <a href="{{ route('transactions.show', row.transaction_group_id) }}">
                                         {% if row.group_title|length > 0 %}
                                             {{ row.group_title }} ({{ row.description }})
                                         {% else %}

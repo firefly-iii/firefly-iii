@@ -74,7 +74,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $reportType      = 'category';
         $expenses        = $this->getExpenses();
         $income          = $this->getIncome();
-        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
+        $accountSummary  = $this->getObjectSummary($this->summarizeByAssetAccount($expenses), $this->summarizeByAssetAccount($income));
         $categorySummary = $this->getObjectSummary($this->summarizeByCategory($expenses), $this->summarizeByCategory($income));
         $averageExpenses = $this->getAverages($expenses, SORT_ASC);
         $averageIncome   = $this->getAverages($income, SORT_DESC);

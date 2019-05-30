@@ -44,8 +44,6 @@ use Illuminate\Support\Collection;
  */
 trait AugumentData
 {
-
-
     /**
      * Searches for the opposing account.
      *
@@ -78,8 +76,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      *
@@ -141,8 +139,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -219,9 +217,9 @@ trait AugumentData
      * Returns the budget limits belonging to the given budget and valid on the given day.
      *
      * @param Collection $budgetLimits
-     * @param Budget     $budget
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return Collection
      */
@@ -352,9 +350,9 @@ trait AugumentData
      * Get the expenses for a budget in a date range.
      *
      * @param Collection $limits
-     * @param Budget     $budget
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Budget $budget
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      *
@@ -384,6 +382,63 @@ trait AugumentData
             }
         }
         unset($rows);
+
+        return $return;
+    }
+
+    /**
+     *
+     * Returns an array with the following values:
+     * 0 =>
+     *   'name' => name of budget + repetition
+     *   'left' => left in budget repetition (always zero)
+     *   'overspent' => spent more than budget repetition? (always zero)
+     *   'spent' => actually spent in period for budget
+     * 1 => (etc)
+     *
+     * @param Budget $budget
+     * @param Collection $limits
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     */
+    protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
+    {
+        /** @var BudgetRepositoryInterface $repository */
+        $repository = app(BudgetRepositoryInterface::class);
+
+        $return = [];
+        $format = (string)trans('config.month_and_day');
+        $name   = $budget->name;
+        /** @var BudgetLimit $budgetLimit */
+        foreach ($limits as $budgetLimit) {
+            $expenses = $repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
+            $expenses = app('steam')->positive($expenses);
+
+            if ($limits->count() > 1) {
+                $name = $budget->name . ' ' . trans(
+                        'firefly.between_dates',
+                        [
+                            'start' => $budgetLimit->start_date->formatLocalized($format),
+                            'end'   => $budgetLimit->end_date->formatLocalized($format),
+                        ]
+                    );
+            }
+            $amount       = $budgetLimit->amount;
+            $leftInLimit  = bcsub($amount, $expenses);
+            $hasOverspent = bccomp($leftInLimit, '0') === -1;
+            $left         = $hasOverspent ? '0' : bcsub($amount, $expenses);
+            $spent        = $hasOverspent ? $amount : $expenses;
+            $overspent    = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
+
+            $return[$name] = [
+                'left'      => $left,
+                'overspent' => $overspent,
+                'spent'     => $spent,
+            ];
+        }
 
         return $return;
     }
@@ -425,25 +480,22 @@ trait AugumentData
         return $set;
     }
 
-
     /**
      * Helper function that groups expenses.
      *
-     * @param Collection $set
+     * @param array $array
      *
      * @return array
      */
-    protected function groupByBudget(Collection $set): array // filter + group data
+    protected function groupByBudget(array $array): array // filter + group data
     {
         // group by category ID:
         $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlBudId          = (int)$transaction->transaction_journal_budget_id;
-            $transBudId         = (int)$transaction->transaction_budget_id;
-            $budgetId           = max($jrnlBudId, $transBudId);
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $budgetId           = (int)$journal['budget_id'];
             $grouped[$budgetId] = $grouped[$budgetId] ?? '0';
-            $grouped[$budgetId] = bcadd($transaction->transaction_amount, $grouped[$budgetId]);
+            $grouped[$budgetId] = bcadd($journal['amount'], $grouped[$budgetId]);
         }
 
         return $grouped;
@@ -452,21 +504,19 @@ trait AugumentData
     /**
      * Group transactions by category.
      *
-     * @param Collection $set
+     * @param array $array
      *
      * @return array
      */
-    protected function groupByCategory(Collection $set): array // filter + group data
+    protected function groupByCategory(array $array): array // filter + group data
     {
         // group by category ID:
         $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlCatId            = (int)$transaction->transaction_journal_category_id;
-            $transCatId           = (int)$transaction->transaction_category_id;
-            $categoryId           = max($jrnlCatId, $transCatId);
+        /** @var array $journal */
+        foreach($array as $journal) {
+            $categoryId           = (int)$journal['category_id'];
             $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
-            $grouped[$categoryId] = bcadd($transaction->transaction_amount, $grouped[$categoryId]);
+            $grouped[$categoryId] = bcadd($journal['amount'], $grouped[$categoryId]);
         }
 
         return $grouped;
@@ -492,6 +542,10 @@ trait AugumentData
 
         return $grouped;
     }
+
+
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Group transactions by tag.
@@ -519,8 +573,6 @@ trait AugumentData
         return $grouped;
     }
 
-
-
     /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
@@ -528,8 +580,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -592,8 +644,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      *
@@ -657,8 +709,8 @@ trait AugumentData
      *
      * @param Collection $assets
      * @param Collection $opposing
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -694,65 +746,6 @@ trait AugumentData
         }
 
         return $sum;
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     *
-     * Returns an array with the following values:
-     * 0 =>
-     *   'name' => name of budget + repetition
-     *   'left' => left in budget repetition (always zero)
-     *   'overspent' => spent more than budget repetition? (always zero)
-     *   'spent' => actually spent in period for budget
-     * 1 => (etc)
-     *
-     * @param Budget     $budget
-     * @param Collection $limits
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
-     */
-    protected function spentInPeriodMulti(Budget $budget, Collection $limits): array // get data + augment with info
-    {
-        /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-
-        $return = [];
-        $format = (string)trans('config.month_and_day');
-        $name   = $budget->name;
-        /** @var BudgetLimit $budgetLimit */
-        foreach ($limits as $budgetLimit) {
-            $expenses = $repository->spentInPeriod(new Collection([$budget]), new Collection, $budgetLimit->start_date, $budgetLimit->end_date);
-            $expenses = app('steam')->positive($expenses);
-
-            if ($limits->count() > 1) {
-                $name = $budget->name . ' ' . trans(
-                        'firefly.between_dates',
-                        [
-                            'start' => $budgetLimit->start_date->formatLocalized($format),
-                            'end'   => $budgetLimit->end_date->formatLocalized($format),
-                        ]
-                    );
-            }
-            $amount       = $budgetLimit->amount;
-            $leftInLimit  = bcsub($amount, $expenses);
-            $hasOverspent = bccomp($leftInLimit, '0') === -1;
-            $left         = $hasOverspent ? '0' : bcsub($amount, $expenses);
-            $spent        = $hasOverspent ? $amount : $expenses;
-            $overspent    = $hasOverspent ? app('steam')->positive($leftInLimit) : '0';
-
-            $return[$name] = [
-                'left'      => $left,
-                'overspent' => $overspent,
-                'spent'     => $spent,
-            ];
-        }
-
-        return $return;
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */

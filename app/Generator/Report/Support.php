@@ -24,7 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Generator\Report;
 
-use Illuminate\Support\Collection;
+use FireflyIII\Models\TransactionType;
 
 /**
  * Class Support.
@@ -146,6 +146,7 @@ class Support
          * @var string $entry
          */
         foreach ($earned as $objectId => $entry) {
+            $entry = bcmul($entry, '-1');
             if (!isset($return[$objectId])) {
                 $return[$objectId] = ['spent' => '0', 'earned' => '0'];
             }
@@ -170,6 +171,38 @@ class Support
         /** @var array $journal */
         foreach ($array as $journal) {
             $accountId          = $journal['source_account_id'] ?? 0;
+            $result[$accountId] = $result[$accountId] ?? '0';
+            $result[$accountId] = bcadd($journal['amount'], $result[$accountId]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * Summarize the data by the asset account or liability, depending on the type.
+     *
+     * In case of transfers, it will choose the source account.
+     *
+     * @param array $array
+     *
+     * @return array
+     */
+    protected function summarizeByAssetAccount(array $array): array
+    {
+        $result = [];
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $accountId = 0;
+            switch ($journal['transaction_type_type']) {
+                case TransactionType::WITHDRAWAL:
+                case TransactionType::TRANSFER:
+                    $accountId = $journal['source_account_id'] ?? 0;
+                    break;
+                case TransactionType::DEPOSIT:
+                    $accountId = $journal['destination_account_id'] ?? 0;
+                    break;
+            }
+
             $result[$accountId] = $result[$accountId] ?? '0';
             $result[$accountId] = bcadd($journal['amount'], $result[$accountId]);
         }

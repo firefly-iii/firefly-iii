@@ -24,7 +24,7 @@ namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\BillFormRequest;
 use FireflyIII\Models\Attachment;
 use FireflyIII\Models\Bill;
@@ -124,7 +124,7 @@ class BillController extends Controller
      * Destroy a bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      */
@@ -143,7 +143,7 @@ class BillController extends Controller
      * Edit a bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -232,7 +232,7 @@ class BillController extends Controller
      * Rescan bills for transactions.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException
@@ -269,7 +269,7 @@ class BillController extends Controller
      * Show a bill.
      *
      * @param Request $request
-     * @param Bill    $bill
+     * @param Bill $bill
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -304,13 +304,12 @@ class BillController extends Controller
         $object                     = $manager->createData($resource)->toArray();
         $object['data']['currency'] = $bill->transactionCurrency;
 
-        // use collector:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setBills(new Collection([$bill]))->setLimit($pageSize)->setPage($page)->withBudgetInformation()
-                  ->withCategoryInformation();
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('bills.show', [$bill->id]));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setBill($bill)->setLimit($pageSize)->setPage($page)->withBudgetInformation()
+                  ->withCategoryInformation()->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('bills.show', [$bill->id]));
 
         // transform any attachments as well.
         $collection  = $this->billRepository->getAttachments($bill);
@@ -326,7 +325,7 @@ class BillController extends Controller
         }
 
 
-        return view('bills.show', compact('attachments', 'transactions', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
+        return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));
     }
 
 
@@ -368,7 +367,7 @@ class BillController extends Controller
      * Update a bill.
      *
      * @param BillFormRequest $request
-     * @param Bill            $bill
+     * @param Bill $bill
      *
      * @return RedirectResponse
      */

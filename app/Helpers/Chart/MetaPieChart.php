@@ -24,11 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Chart;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\NegativeAmountFilter;
-use FireflyIII\Helpers\Filter\OpposingAccountFilter;
-use FireflyIII\Helpers\Filter\PositiveAmountFilter;
-use FireflyIII\Helpers\Filter\TransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
@@ -48,9 +44,9 @@ class MetaPieChart implements MetaPieChartInterface
     /** @var array The ways to group transactions, given the type of chart. */
     static protected $grouping
         = [
-            'account'  => ['opposing_account_id'],
-            'budget'   => ['transaction_journal_budget_id', 'transaction_budget_id'],
-            'category' => ['transaction_journal_category_id', 'transaction_category_id'],
+            'account'  => ['destination_account_id'],
+            'budget'   => ['budget_id'],
+            'category' => ['category_id'],
             'tag'      => [],
         ];
     /** @var Collection Involved accounts. */
@@ -114,30 +110,180 @@ class MetaPieChart implements MetaPieChartInterface
 
         // also collect all other transactions
         if ($this->collectOtherObjects && 'expense' === $direction) {
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
+
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
 
-            $journals        = $collector->getTransactions();
-            $sum             = (string)$journals->sum('transaction_amount');
+            $journals        = $collector->getExtractedJournals();
+            $sum             = $this->sumJournals($journals);
             $sum             = bcmul($sum, '-1');
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
         }
 
         if ($this->collectOtherObjects && 'income' === $direction) {
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
+
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
-            $journals        = $collector->getTransactions();
-            $sum             = (string)$journals->sum('transaction_amount');
+            $journals        = $collector->getExtractedJournals();
+            $sum             = $this->sumJournals($journals);
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
         }
 
         return $chartData;
+    }
+
+    /**
+     * Get all transactions.
+     *
+     * @param string $direction
+     *
+     * @return array
+     */
+    protected function getTransactions(string $direction): array
+    {
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $types = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
+        if ('expense' === $direction) {
+            $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
+        }
+
+        $collector->setUser($this->user);
+        $collector->setAccounts($this->accounts);
+        $collector->setRange($this->start, $this->end);
+        $collector->setTypes($types);
+        $collector->withAccountInformation();
+
+        $collector->setBudgets($this->budgets);
+        $collector->setCategories($this->categories);
+
+        $collector->withCategoryInformation();
+        $collector->withBudgetInformation();
+
+        // @codeCoverageIgnoreStart
+        if ($this->tags->count() > 0) {
+            $collector->setTags($this->tags);
+        }
+
+        // @codeCoverageIgnoreEnd
+
+        return $collector->getExtractedJournals();
+    }
+
+    /**
+     * Group by a specific field.
+     *
+     * @param array $array
+     * @param array $fields
+     *
+     * @return array
+     *
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     *
+     */
+    protected function groupByFields(array $array, array $fields): array
+    {
+        $grouped = [];
+        if (0 === count($fields) && $this->tags->count() > 0) {
+            // do a special group on tags:
+            $grouped = $this->groupByTag($array); // @codeCoverageIgnore
+        }
+
+        if (0 !== count($fields) || $this->tags->count() <= 0) {
+            $grouped = [];
+            /** @var array $journal */
+            foreach ($array as $journal) {
+                $values = [];
+                foreach ($fields as $field) {
+                    $values[] = (int)$journal[$field];
+                }
+                $value           = max($values);
+                $grouped[$value] = $grouped[$value] ?? '0';
+                $grouped[$value] = bcadd($journal['amount'], $grouped[$value]);
+            }
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * Group by tag (slightly different).
+     *
+     * @codeCoverageIgnore
+     *
+     * @param Collection $set
+     *
+     * @return array
+     */
+    private function groupByTag(Collection $set): array
+    {
+        $grouped = [];
+        /** @var Transaction $transaction */
+        foreach ($set as $transaction) {
+            $journal = $transaction->transactionJournal;
+            $tags    = $journal->tags;
+            /** @var Tag $tag */
+            foreach ($tags as $tag) {
+                $tagId           = $tag->id;
+                $grouped[$tagId] = $grouped[$tagId] ?? '0';
+                $grouped[$tagId] = bcadd($transaction->transaction_amount, $grouped[$tagId]);
+            }
+        }
+
+        return $grouped;
+    }
+
+    /**
+     * Organise by certain type.
+     *
+     * @param string $type
+     * @param array $array
+     *
+     * @return array
+     */
+    protected function organizeByType(string $type, array $array): array
+    {
+        $chartData  = [];
+        $names      = [];
+        $repository = app($this->repositories[$type]);
+        $repository->setUser($this->user);
+        foreach ($array as $objectId => $amount) {
+            if (!isset($names[$objectId])) {
+                $object           = $repository->findNull((int)$objectId);
+                $name             = null === $object ? '(no name)' : $object->name;
+                $names[$objectId] = $name ?? $object->tag;
+            }
+            $amount                       = app('steam')->positive($amount);
+            $this->total                  = bcadd($this->total, $amount);
+            $chartData[$names[$objectId]] = $amount;
+        }
+
+        return $chartData;
+    }
+
+    /**
+     * @param array $journals
+     * @return string
+     */
+    private function sumJournals(array $journals): string
+    {
+        $sum = '0';
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = (string)$journal['amount'];
+            $sum    = bcadd($sum, $amount);
+        }
+
+        return $sum;
     }
 
     /**
@@ -266,141 +412,5 @@ class MetaPieChart implements MetaPieChartInterface
         $this->user = $user;
 
         return $this;
-    }
-
-    /**
-     * Get all transactions.
-     *
-     * @param string $direction
-     *
-     * @return Collection
-     */
-    protected function getTransactions(string $direction): Collection
-    {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $types     = [TransactionType::DEPOSIT, TransactionType::TRANSFER];
-        $collector->addFilter(NegativeAmountFilter::class);
-        if ('expense' === $direction) {
-            $types = [TransactionType::WITHDRAWAL, TransactionType::TRANSFER];
-            $collector->addFilter(PositiveAmountFilter::class);
-            $collector->removeFilter(NegativeAmountFilter::class);
-        }
-
-        $collector->setUser($this->user);
-        $collector->setAccounts($this->accounts);
-        $collector->setRange($this->start, $this->end);
-        $collector->setTypes($types);
-        $collector->withOpposingAccount();
-        $collector->addFilter(OpposingAccountFilter::class);
-
-        if ('income' === $direction) {
-            $collector->removeFilter(TransferFilter::class);
-        }
-
-        $collector->setBudgets($this->budgets);
-        $collector->setCategories($this->categories);
-
-        // @codeCoverageIgnoreStart
-        if ($this->tags->count() > 0) {
-            $collector->setTags($this->tags);
-            $collector->withCategoryInformation();
-            $collector->withBudgetInformation();
-        }
-
-        // @codeCoverageIgnoreEnd
-
-        return $collector->getTransactions();
-    }
-
-    /**
-     * Group by a specific field.
-     *
-     * @param Collection $set
-     * @param array      $fields
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     *
-     */
-    protected function groupByFields(Collection $set, array $fields): array
-    {
-        $grouped = [];
-        if (0 === \count($fields) && $this->tags->count() > 0) {
-            // do a special group on tags:
-            $grouped = $this->groupByTag($set); // @codeCoverageIgnore
-        }
-
-        if (0 !== \count($fields) || $this->tags->count() <= 0) {
-            $grouped = [];
-            /** @var Transaction $transaction */
-            foreach ($set as $transaction) {
-                $values = [];
-                foreach ($fields as $field) {
-                    $values[] = (int)$transaction->$field;
-                }
-                $value           = max($values);
-                $grouped[$value] = $grouped[$value] ?? '0';
-                $grouped[$value] = bcadd($transaction->transaction_amount, $grouped[$value]);
-            }
-        }
-
-        return $grouped;
-    }
-
-    /**
-     * Organise by certain type.
-     *
-     * @param string $type
-     * @param array  $array
-     *
-     * @return array
-     */
-    protected function organizeByType(string $type, array $array): array
-    {
-        $chartData  = [];
-        $names      = [];
-        $repository = app($this->repositories[$type]);
-        $repository->setUser($this->user);
-        foreach ($array as $objectId => $amount) {
-            if (!isset($names[$objectId])) {
-                $object           = $repository->findNull((int)$objectId);
-                $name             = null === $object ? '(no name)' : $object->name;
-                $names[$objectId] = $name ?? $object->tag;
-            }
-            $amount                       = app('steam')->positive($amount);
-            $this->total                  = bcadd($this->total, $amount);
-            $chartData[$names[$objectId]] = $amount;
-        }
-
-        return $chartData;
-    }
-
-    /**
-     * Group by tag (slightly different).
-     *
-     * @codeCoverageIgnore
-     *
-     * @param Collection $set
-     *
-     * @return array
-     */
-    private function groupByTag(Collection $set): array
-    {
-        $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $journal = $transaction->transactionJournal;
-            $tags    = $journal->tags;
-            /** @var Tag $tag */
-            foreach ($tags as $tag) {
-                $tagId           = $tag->id;
-                $grouped[$tagId] = $grouped[$tagId] ?? '0';
-                $grouped[$tagId] = bcadd($transaction->transaction_amount, $grouped[$tagId]);
-            }
-        }
-
-        return $grouped;
     }
 }

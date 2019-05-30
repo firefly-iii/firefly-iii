@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Helpers\Collector;
 
 use Carbon\Carbon;
+use Carbon\Exceptions\InvalidDateException;
 use Exception;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
@@ -37,8 +38,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Query\JoinClause;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use function count;
-use function get_class;
+use Log;
 
 /**
  * Class GroupCollector
@@ -226,16 +226,28 @@ class GroupCollector implements GroupCollectorInterface
     {
         $result               = $augmentedGroup->toArray();
         $result['tags']       = [];
-        $result['tag_ids']    = [];
         $result['date']       = new Carbon($result['date']);
         $result['created_at'] = new Carbon($result['created_at']);
         $result['updated_at'] = new Carbon($result['updated_at']);
         $result['reconciled'] = 1 === (int)$result['reconciled'];
-        if (isset($augmentedGroup['tag'])) {
-            $result['tags'][] = $augmentedGroup['tag'];
-        }
-        if (isset($augmentedGroup['tag_id'])) {
-            $result['tag_ids'][] = $augmentedGroup['tag_id'];
+        if (isset($augmentedGroup['tag_id'])) { // assume the other fields are present as well.
+            $tagId   = (int)$augmentedGroup['tag_id'];
+            $tagDate = null;
+            try {
+                $tagDate = Carbon::parse($augmentedGroup['tag_date']);
+            } catch (InvalidDateException $e) {
+                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+            }
+
+            $result['tags'][$tagId] = [
+                'id'          => (int)$result['tag_id'],
+                'name'        => $result['tag_name'],
+                'date'        => $tagDate,
+                'description' => $result['tag_description'],
+                'latitude'    => $result['tag_latitude'],
+                'longitude'   => $result['tag_longitude'],
+                'zoom_level'  => $result['tag_zoom_level'],
+            ];
         }
 
         return $result;
@@ -249,15 +261,26 @@ class GroupCollector implements GroupCollectorInterface
     private function mergeTags(array $existingJournal, TransactionGroup $newGroup): array
     {
         $newArray = $newGroup->toArray();
-        if (isset($newArray['tag_id'])) {
-            $existingJournal['tag_ids'][] = (int)$newArray['tag_id'];
-        }
-        if (isset($newArray['tag'])) {
-            $existingJournal['tags'][] = $newArray['tag'];
+        if (isset($newArray['tag_id'])) { // assume the other fields are present as well.
+            $tagId = (int)$newGroup['tag_id'];
 
+            $tagDate = null;
+            try {
+                $tagDate = Carbon::parse($newArray['tag_date']);
+            } catch (InvalidDateException $e) {
+                Log::debug(sprintf('Could not parse date: %s', $e->getMessage()));
+            }
+
+            $existingJournal['tags'][$tagId] = [
+                'id'          => (int)$newArray['tag_id'],
+                'name'        => $newArray['tag_name'],
+                'date'        => $tagDate,
+                'description' => $newArray['tag_description'],
+                'latitude'    => $newArray['tag_latitude'],
+                'longitude'   => $newArray['tag_longitude'],
+                'zoom_level'  => $newArray['tag_zoom_level'],
+            ];
         }
-        $existingJournal['tags']    = array_unique($existingJournal['tags']);
-        $existingJournal['tag_ids'] = array_unique($existingJournal['tag_ids']);
 
         return $existingJournal;
     }
@@ -403,8 +426,10 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setBudgets(Collection $budgets): GroupCollectorInterface
     {
-        $this->withBudgetInformation();
-        $this->query->whereIn('budgets.id', $budgets->pluck('id')->toArray());
+        if ($budgets->count() > 0) {
+            $this->withBudgetInformation();
+            $this->query->whereIn('budgets.id', $budgets->pluck('id')->toArray());
+        }
 
         return $this;
     }
@@ -560,7 +585,12 @@ class GroupCollector implements GroupCollectorInterface
             $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
             $this->fields[] = 'tags.id as tag_id';
-            $this->fields[] = 'tags.tag as tag';
+            $this->fields[] = 'tags.tag as tag_name';
+            $this->fields[] = 'tags.date as tag_date';
+            $this->fields[] = 'tags.description as tag_description';
+            $this->fields[] = 'tags.latitude as tag_latitude';
+            $this->fields[] = 'tags.longitude as tag_longitude';
+            $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
         }
     }
 
@@ -726,8 +756,10 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setCategories(Collection $categories): GroupCollectorInterface
     {
-        $this->withCategoryInformation();
-        $this->query->where('categories.id', $categories->pluck('id')->toArray());
+        if ($categories->count() > 0) {
+            $this->withCategoryInformation();
+            $this->query->whereIn('categories.id', $categories->pluck('id')->toArray());
+        }
 
         return $this;
     }
