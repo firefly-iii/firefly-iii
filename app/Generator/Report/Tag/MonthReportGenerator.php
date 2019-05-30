@@ -30,7 +30,6 @@ use FireflyIII\Generator\Report\ReportGeneratorInterface;
 use FireflyIII\Generator\Report\Support;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Illuminate\Support\Collection;
 use Log;
@@ -79,7 +78,7 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $reportType      = 'tag';
         $expenses        = $this->getExpenses();
         $income          = $this->getIncome();
-        $accountSummary  = $this->getObjectSummary($this->summarizeByAccount($expenses), $this->summarizeByAccount($income));
+        $accountSummary  = $this->getObjectSummary($this->summarizeByAssetAccount($expenses), $this->summarizeByAssetAccount($income));
         $tagSummary      = $this->getObjectSummary($this->summarizeByTag($expenses), $this->summarizeByTag($income));
         $averageExpenses = $this->getAverages($expenses, SORT_ASC);
         $averageIncome   = $this->getAverages($income, SORT_DESC);
@@ -163,12 +162,14 @@ class MonthReportGenerator extends Support implements ReportGeneratorInterface
         $result = [];
         /** @var array $journal */
         foreach ($array as $journal) {
-            /** @var Tag $journalTag */
-            foreach ($journal['tag_ids'] as $journalTag) {
-                $journalTagId = (int)$journalTag;
-                if (\in_array($journalTagId, $tagIds, true)) {
-                    $result[$journalTagId] = $result[$journalTagId] ?? '0';
-                    $result[$journalTagId] = bcadd($journal['amount'], $result[$journalTagId]);
+            /**
+             * @var int $id
+             * @var array $tag
+             */
+            foreach ($journal['tags'] as $id => $tag) {
+                if (in_array($id, $tagIds, true)) {
+                    $result[$id] = $result[$id] ?? '0';
+                    $result[$id] = bcadd($journal['amount'], $result[$id]);
                 }
             }
         }

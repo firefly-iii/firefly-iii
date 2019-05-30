@@ -201,7 +201,7 @@ class BudgetReportController extends Controller
                 $chartData[$budget->id]['entries'][$label]          = bcmul($currentExpenses, '-1');
                 $chartData[$budget->id . '-sum']['entries'][$label] = bcmul($sumOfExpenses[$budget->id], '-1');
 
-                if (\count($budgetLimits) > 0) {
+                if (count($budgetLimits) > 0) {
                     $budgetLimitId                                       = $budgetLimits->first()->id;
                     $leftOfLimits[$budgetLimitId]                        = $leftOfLimits[$budgetLimitId] ?? (string)$budgetLimits->sum('amount');
                     $leftOfLimits[$budgetLimitId]                        = bcadd($leftOfLimits[$budgetLimitId], $currentExpenses);

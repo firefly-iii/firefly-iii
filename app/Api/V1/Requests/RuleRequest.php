@@ -141,7 +141,7 @@ class RuleRequest extends Request
         $data    = $validator->getData();
         $actions = $data['actions'] ?? [];
         // need at least one trigger
-        if (0 === \count($actions)) {
+        if (0 === count($actions)) {
             $validator->errors()->add('title', (string)trans('validation.at_least_one_action'));
         }
     }
@@ -156,7 +156,7 @@ class RuleRequest extends Request
         $data     = $validator->getData();
         $triggers = $data['triggers'] ?? [];
         // need at least one trugger
-        if (0 === \count($triggers)) {
+        if (0 === count($triggers)) {
             $validator->errors()->add('title', (string)trans('validation.at_least_one_trigger'));
         }
     }

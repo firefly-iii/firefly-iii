@@ -222,7 +222,7 @@ class ApplyRules extends Command
         $finalList   = new Collection;
         $accountList = explode(',', $accountString);
 
-        if (0 === \count($accountList)) {
+        if (0 === count($accountList)) {
             $this->error('Please use the --accounts to indicate the accounts to apply rules to.');
 
             return false;
@@ -267,7 +267,7 @@ class ApplyRules extends Command
         }
         $ruleGroupList = explode(',', $ruleGroupString);
 
-        if (0 === \count($ruleGroupList)) {
+        if (0 === count($ruleGroupList)) {
             // can be empty.
 
             return true;
@@ -299,7 +299,7 @@ class ApplyRules extends Command
         $finalList = new Collection;
         $ruleList  = explode(',', $ruleString);
 
-        if (0 === \count($ruleList)) {
+        if (0 === count($ruleList)) {
             // can be empty.
 
             return true;

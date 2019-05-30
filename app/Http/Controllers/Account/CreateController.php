@@ -136,7 +136,7 @@ class CreateController extends Controller
 
         // update preferences if necessary:
         $frontPage = app('preferences')->get('frontPageAccounts', [])->data;
-        if (AccountType::ASSET === $account->accountType->type && \count($frontPage) > 0) {
+        if (AccountType::ASSET === $account->accountType->type && count($frontPage) > 0) {
             // @codeCoverageIgnoreStart
             $frontPage[] = $account->id;
             app('preferences')->set('frontPageAccounts', $frontPage);

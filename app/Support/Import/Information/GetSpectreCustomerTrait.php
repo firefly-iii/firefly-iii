@@ -88,7 +88,7 @@ trait GetSpectreCustomerTrait
         $request->call();
         $customers = $request->getCustomers();
 
-        Log::debug(sprintf('Found %d customer(s)', \count($customers)));
+        Log::debug(sprintf('Found %d customer(s)', count($customers)));
         /** @var Customer $current */
         foreach ($customers as $current) {
             if ('default_ff3_customer' === $current->getIdentifier()) {

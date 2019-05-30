@@ -23,12 +23,11 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -134,35 +133,33 @@ class BoxController extends Controller
         $sums     = [];
 
         // collect income of user:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::DEPOSIT])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId           = (int)$transaction->transaction_currency_id;
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)
+                  ->setTypes([TransactionType::DEPOSIT]);
+        $set = $collector->getExtractedJournals();
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $currencyId           = (int)$journal['currency_id'];
             $incomes[$currencyId] = $incomes[$currencyId] ?? '0';
-            $incomes[$currencyId] = bcadd($incomes[$currencyId], $transaction->transaction_amount);
+            $incomes[$currencyId] = bcadd($incomes[$currencyId], $journal['amount']);
             $sums[$currencyId]    = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]    = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]    = bcadd($sums[$currencyId], $journal['amount']);
         }
 
         // collect expenses
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->withOpposingAccount();
-        $set = $collector->getTransactions();
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId            = (int)$transaction->transaction_currency_id;
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)
+                  ->setTypes([TransactionType::WITHDRAWAL]);
+        $set = $collector->getExtractedJournals();
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $currencyId            = (int)$journal['currency_id'];
             $expenses[$currencyId] = $expenses[$currencyId] ?? '0';
-            $expenses[$currencyId] = bcadd($expenses[$currencyId], $transaction->transaction_amount);
+            $expenses[$currencyId] = bcadd($expenses[$currencyId], $journal['amount']);
             $sums[$currencyId]     = $sums[$currencyId] ?? '0';
-            $sums[$currencyId]     = bcadd($sums[$currencyId], $transaction->transaction_amount);
+            $sums[$currencyId]     = bcadd($sums[$currencyId], $journal['amount']);
         }
 
         // format amounts:
@@ -173,7 +170,7 @@ class BoxController extends Controller
             $incomes[$currencyId]  = app('amount')->formatAnything($currency, $incomes[$currencyId] ?? '0', false);
             $expenses[$currencyId] = app('amount')->formatAnything($currency, $expenses[$currencyId] ?? '0', false);
         }
-        if (0 === \count($sums)) {
+        if (0 === count($sums)) {
             $currency                = app('amount')->getDefaultCurrency();
             $sums[$currency->id]     = app('amount')->formatAnything($currency, '0', false);
             $incomes[$currency->id]  = app('amount')->formatAnything($currency, '0', false);
@@ -184,7 +181,7 @@ class BoxController extends Controller
             'incomes'  => $incomes,
             'expenses' => $expenses,
             'sums'     => $sums,
-            'size'     => \count($sums),
+            'size'     => count($sums),
         ];
 
 

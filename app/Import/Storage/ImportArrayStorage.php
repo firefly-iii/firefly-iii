@@ -424,7 +424,7 @@ class ImportArrayStorage
     {
         /** @var array $array */
         $array   = $this->repository->getTransactions($this->importJob);
-        $count   = \count($array);
+        $count   = count($array);
         $toStore = [];
 
         Log::notice(sprintf('Will now store the transactions. Count of items is %d.', $count));
@@ -441,7 +441,7 @@ class ImportArrayStorage
             $transaction['import_hash_v2'] = $this->getHash($transaction);
             $toStore[]                   = $transaction;
         }
-        $count = \count($toStore);
+        $count = count($toStore);
         if (0 === $count) {
             Log::info('No transactions to store left!');
 
@@ -509,13 +509,13 @@ class ImportArrayStorage
             return false;
         }
         // how many hits do we need?
-        Log::debug(sprintf('Array has %d transactions.', \count($transaction['transactions'])));
-        Log::debug(sprintf('System has %d existing transfers', \count($this->transfers)));
+        Log::debug(sprintf('Array has %d transactions.', count($transaction['transactions'])));
+        Log::debug(sprintf('System has %d existing transfers', count($this->transfers)));
         // loop over each split:
-        Log::debug(sprintf('This transfer has %d split(s)', \count($transaction['transactions'])));
+        Log::debug(sprintf('This transfer has %d split(s)', count($transaction['transactions'])));
         foreach ($transaction['transactions'] as $index => $current) {
             Log::debug(sprintf('Required hits for transfer comparison is %d', self::REQUIRED_HITS));
-            Log::debug(sprintf('Now at transfer split %d of %d', $index + 1, \count($transaction['transactions'])));
+            Log::debug(sprintf('Now at transfer split %d of %d', $index + 1, count($transaction['transactions'])));
 
             // get the amount:
             /** @noinspection UnnecessaryCastingInspection */

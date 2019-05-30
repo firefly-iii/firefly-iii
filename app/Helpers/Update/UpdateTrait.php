@@ -57,9 +57,9 @@ trait UpdateTrait
         // get releases from array.
         $releases = $request->getReleases();
 
-        Log::debug(sprintf('Found %d releases', \count($releases)));
+        Log::debug(sprintf('Found %d releases', count($releases)));
 
-        if (\count($releases) > 0) {
+        if (count($releases) > 0) {
             // first entry should be the latest entry:
             /** @var Release $first */
             $first  = reset($releases);

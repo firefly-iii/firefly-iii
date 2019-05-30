@@ -76,7 +76,7 @@ input.ti-new-tag-input {
 
 .general-chart-error {
     height: 30px;
-    background: url('/images/error.png') no-repeat center center;
+    background: url('/v1/images/error.png') no-repeat center center;
 }
 
 p.tagcloud .label {

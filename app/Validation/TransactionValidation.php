@@ -135,7 +135,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         $groupTitle   = $data['group_title'] ?? '';
-        if ('' === $groupTitle && \count($transactions) > 1) {
+        if ('' === $groupTitle && count($transactions) > 1) {
             $validator->errors()->add('group_title', (string)trans('validation.group_title_mandatory'));
         }
     }
@@ -150,7 +150,7 @@ trait TransactionValidation
         $data         = $validator->getData();
         $transactions = $data['transactions'] ?? [];
         // need at least one transaction
-        if (0 === \count($transactions)) {
+        if (0 === count($transactions)) {
             $validator->errors()->add('transactions.0.description', (string)trans('validation.at_least_one_transaction'));
         }
     }

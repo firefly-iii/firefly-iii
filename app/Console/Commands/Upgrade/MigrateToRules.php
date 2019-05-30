@@ -99,7 +99,7 @@ class MigrateToRules extends Command
 
             if (null === $ruleGroup) {
                 $array     = RuleGroup::get(['order'])->pluck('order')->toArray();
-                $order     = \count($array) > 0 ? max($array) + 1 : 1;
+                $order     = count($array) > 0 ? max($array) + 1 : 1;
                 $ruleGroup = RuleGroup::create(
                     [
                         'user_id'     => $user->id,

@@ -26,7 +26,6 @@ namespace FireflyIII\Http\Controllers\Account;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -126,7 +125,7 @@ class ShowController extends Controller
         $collector
             ->setAccounts(new Collection([$account]))
             ->setLimit($pageSize)
-            ->setPage($page)
+            ->setPage($page)->withAccountInformation()
             ->setRange($start, $end);
         $groups = $collector->getPaginatedGroups();
         $groups->setPath(route('accounts.show', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]));
@@ -170,17 +169,17 @@ class ShowController extends Controller
         }
         $subTitle = (string)trans('firefly.all_journals_for_account', ['name' => $account->name]);
         $periods  = new Collection;
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('accounts.show.all', [$account->id]));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setLimit($pageSize)->setPage($page)->withAccountInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('accounts.show.all', [$account->id]));
         $chartUri = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $showAll  = true;
 
         return view(
             'accounts.show',
-            compact('account', 'showAll', 'isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'transactions', 'subTitle', 'start', 'end')
+            compact('account', 'showAll', 'isLiability', 'currency', 'today', 'chartUri', 'periods', 'subTitleIcon', 'groups', 'subTitle', 'start', 'end')
         );
     }
 

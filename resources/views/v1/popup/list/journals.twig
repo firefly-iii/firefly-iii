@@ -1,4 +1,127 @@
-{#
-TODO REPLACE ME
-#}
-<h1 style="color:red;">REPLACE ME</h1>
+<table class="table table-hover table-condensed">
+    <thead>
+    <tr>
+        <th>&nbsp;</th>
+        <th>{{ trans('list.description') }}</th>
+        <th>{{ trans('list.amount') }}</th>
+        <th class="hidden-sm hidden-xs">{{ trans('list.date') }}</th>
+        {% if not hideSource %}
+            <th class="hidden-xs">{{ trans('list.from') }}</th>
+        {% endif %}
+        {% if not hideDestination %}
+            <th class="hidden-xs">{{ trans('list.to') }}</th>
+        {% endif %}
+        {# Hide budgets? #}
+        {% if not hideBudget %}
+            <th class="hidden-xs"><i class="fa fa-tasks fa-fw" title="{{ trans('list.budget') }}"></i></th>
+        {% endif %}
+
+        {# Hide categories? #}
+        {% if not hideCategory %}
+            <th class="hidden-xs"><i class="fa fa-bar-chart fa-fw" title="{{ trans('list.category') }}"></i></th>
+        {% endif %}
+    </tr>
+    </thead>
+    <tbody>
+    {# Make sum: #}
+    {% set sum = 0 %}
+    {% for transaction in journals %}
+        {# add to sum #}
+
+        <tr class="drag" data-date="{{ transaction.date.format('Y-m-d') }}" data-id="{{ transaction.journal_id }}">
+            <td class="hidden-xs">
+                {% if transaction.transaction_type_type == 'Withdrawal' %}
+                    <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Deposit' %}
+                    <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Transfer' %}
+                    <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Reconciliation' %}
+                    XX
+                {% endif %}
+
+                {% if transaction.transaction_type_type == 'Opening balance' %}
+                    XX
+                {% endif %}
+            </td>
+
+            <td>
+                <a href="{{ route('transactions.show',transaction.transaction_journal_id) }}">
+                    {% if transaction.group_title|length > 0 %}
+                        {{ transaction.group_title }} ({{ transaction.description }})
+                    {% else %}
+                        {{ transaction.description }}
+                    {% endif %}
+                </a>
+            </td>
+
+            <td>
+                {% if transaction.transaction_type_type == 'Deposit' %}
+                    {{ formatAmountBySymbol(transaction.amount*-1, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% set sum = (sum + (transaction.amount*-1)) %}
+                {% else %}
+                    {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}
+                    {% set sum = (sum + transaction.amount) %}
+                {% endif %}
+            </td>
+
+            <td class="hidden-sm hidden-xs">
+                {{ transaction.date.formatLocalized(monthAndDayFormat) }}
+            </td>
+
+            {% if not hideSource %}
+                <td class="hidden-xs">
+                    <a href="{{ route('accounts.show', transaction.source_account_id) }}">
+                        {{ transaction.source_account_name }}
+                    </a>
+                </td>
+            {% endif %}
+
+            {% if not hideDestination %}
+                <td class="hidden-xs">
+                    <a href="{{ route('accounts.show', transaction.destination_account_id) }}">
+                        {{ transaction.destination_account_name }}
+                    </a>
+                </td>
+            {% endif %}
+
+            <!-- Do NOT hide the budget? -->
+            {% if not hideBudget %}
+                <td class="hidden-xs">
+                    {% if transaction.budget_id %}
+                        <a href="{{ route('budgets.show', [transaction.budget_id]) }}">
+                            {{ transaction.budget_name }}
+                        </a>
+                    {% endif %}
+                </td>
+            {% endif %}
+
+            <!-- Do NOT hide the category? -->
+            {% if not hideCategory %}
+                <td class="hidden-xs">
+                    {% if transaction.category_id %}
+                        <a href="{{ route('categories.show', [transaction.category_id]) }}">
+                            {{ transaction.category_name }}
+                        </a>
+                    {% endif %}
+                </td>
+            {% endif %}
+        </tr>
+    {% endfor %}
+    </tbody>
+    <tfoot>
+    <tr>
+        <td colspan="2" style="text-align: right;"><em>{{ 'sum'|_ }}:</em></td>
+        <td>
+            {# TODO avoid using formatAmount #}
+            {{ sum|formatAmount }}
+        </td>
+    </tr>
+    </tfoot>
+</table>

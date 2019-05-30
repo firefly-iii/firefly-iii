@@ -69,7 +69,7 @@ class ImportableConverter
      */
     public function convert(array $importables): array
     {
-        $total = \count($importables);
+        $total = count($importables);
         Log::debug(sprintf('Going to convert %d import transactions', $total));
         $result = [];
         /** @var ImportTransaction $importable */

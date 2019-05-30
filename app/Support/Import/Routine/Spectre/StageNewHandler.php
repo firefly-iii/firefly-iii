@@ -80,7 +80,7 @@ class StageNewHandler
         $list = $request->getLogins();
 
         // count is zero?
-        $this->countLogins = \count($list);
+        $this->countLogins = count($list);
         Log::debug(sprintf('Number of logins is %d', $this->countLogins));
         if ($this->countLogins > 0) {
             $store = [];

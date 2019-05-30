@@ -145,7 +145,7 @@ class SelectController extends Controller
         // build trigger array from response
         $triggers = $this->getValidTriggerList($request);
 
-        if (0 === \count($triggers)) {
+        if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 
@@ -212,7 +212,7 @@ class SelectController extends Controller
     {
         $triggers = $rule->ruleTriggers;
 
-        if (0 === \count($triggers)) {
+        if (0 === count($triggers)) {
             return response()->json(['html' => '', 'warning' => (string)trans('firefly.warning_no_valid_triggers')]); // @codeCoverageIgnore
         }
 

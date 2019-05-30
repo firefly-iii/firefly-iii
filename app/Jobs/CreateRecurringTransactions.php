@@ -416,7 +416,7 @@ class CreateRecurringTransactions implements ShouldQueue
             Log::debug(
                 sprintf(
                     'Calculated %d occurrences between %s and %s',
-                    \count($occurrences),
+                    count($occurrences),
                     $recurrence->first_date->format('Y-m-d'),
                     $includeWeekend->format('Y-m-d')
                 ), $this->debugArray($occurrences)

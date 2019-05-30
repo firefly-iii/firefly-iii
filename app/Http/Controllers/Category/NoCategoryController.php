@@ -25,8 +25,7 @@ namespace FireflyIII\Http\Controllers\Category;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -66,7 +65,7 @@ class NoCategoryController extends Controller
     /**
      * Show transactions without a category.
      *
-     * @param Request     $request
+     * @param Request $request
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -90,15 +89,15 @@ class NoCategoryController extends Controller
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)
+                  ->setLimit($pageSize)->setPage($page)->withoutCategory()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('categories.no-category'));
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('categories.no-category'));
 
-        return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 
 
@@ -125,14 +124,13 @@ class NoCategoryController extends Controller
         Log::debug(sprintf('Start for noCategory() is %s', $start->format('Y-m-d')));
         Log::debug(sprintf('End for noCategory() is %s', $end->format('Y-m-d')));
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()->withOpposingAccount()
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withoutCategory()
                   ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath(route('categories.no-category.all'));
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath(route('categories.no-category.all'));
 
-        return view('categories.no-category', compact('transactions', 'subTitle', 'periods', 'start', 'end'));
+        return view('categories.no-category', compact('groups', 'subTitle', 'periods', 'start', 'end'));
     }
 }

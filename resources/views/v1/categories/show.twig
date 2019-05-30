@@ -66,7 +66,7 @@
                 </div>
                 <div class="box-body">
                     {% if periods.count > 0 %}
-                        {% include 'list.transactions' %}
+                        {% include 'list.groups' %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.show.all', [category.id]) }}">
@@ -74,7 +74,7 @@
                             </a>
                         </p>
                     {% else %}
-                        {% include 'list.transactions' with {showBudgets:true, showBill:true} %}
+                        {% include 'list.groups'  %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.show', [category.id]) }}">

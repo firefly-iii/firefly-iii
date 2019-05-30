@@ -121,7 +121,7 @@ class ChartJsGenerator implements GeneratorInterface
         $labels = \is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
-            'count'    => \count($data),
+            'count'    => count($data),
             'labels'   => $labels, // take ALL labels from the first set.
             'datasets' => [],
         ];

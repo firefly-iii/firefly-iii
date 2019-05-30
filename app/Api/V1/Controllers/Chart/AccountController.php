@@ -178,7 +178,7 @@ class AccountController extends Controller
         $defaultSet = $this->repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
-        if (0 === \count($frontPage->data)) {
+        if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }

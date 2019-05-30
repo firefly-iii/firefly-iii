@@ -47,7 +47,7 @@ trait RecurrenceValidation
         $data        = $validator->getData();
         $repetitions = $data['repetitions'] ?? [];
         // need at least one transaction
-        if (0 === \count($repetitions)) {
+        if (0 === count($repetitions)) {
             $validator->errors()->add('description', (string)trans('validation.at_least_one_repetition'));
         }
     }
@@ -145,7 +145,7 @@ trait RecurrenceValidation
     protected function validateNdom(Validator $validator, int $index, string $moment): void
     {
         $parameters = explode(',', $moment);
-        if (2 !== \count($parameters)) {
+        if (2 !== count($parameters)) {
             $validator->errors()->add(sprintf('repetitions.%d.moment', $index), (string)trans('validation.valid_recurrence_rep_moment'));
 
             return;

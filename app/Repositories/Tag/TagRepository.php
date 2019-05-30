@@ -25,8 +25,8 @@ namespace FireflyIII\Repositories\Tag;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\TagFactory;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -76,7 +76,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
+     * @param Tag $tag
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -94,20 +94,21 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
+     * @param Tag $tag
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): Collection
+    public function expenseInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return $collector->getTransactions();
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setTag($tag);
+
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -157,20 +158,21 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
+     * @param Tag $tag
      * @param Carbon $start
      * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): Collection
+    public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
+        /** @var GroupCollectorInterface $collector */
+        $collector  =app(GroupCollectorInterface::class);
 
-        return $collector->getTransactions();
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setTag($tag);
+
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -234,7 +236,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
+     * @param Tag $tag
      * @param Carbon $start
      * @param Carbon $end
      *
@@ -266,7 +268,7 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag         $tag
+     * @param Tag $tag
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -275,16 +277,15 @@ class TagRepository implements TagRepositoryInterface
      */
     public function sumsOfTag(Tag $tag, ?Carbon $start, ?Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
         if (null !== $start && null !== $end) {
             $collector->setRange($start, $end);
         }
 
-        $collector->setAllAssetAccounts()->setTag($tag)->withOpposingAccount();
-        $collector->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getTransactions();
+        $collector->setTag($tag)->withAccountInformation();
+        $journals = $collector->getExtractedJournals();
 
         $sums = [
             TransactionType::WITHDRAWAL => '0',
@@ -292,9 +293,10 @@ class TagRepository implements TagRepositoryInterface
             TransactionType::TRANSFER   => '0',
         ];
 
-        foreach ($transactions as $transaction) {
-            $amount = app('steam')->positive((string)$transaction->transaction_amount);
-            $type   = $transaction->transaction_type_type;
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = app('steam')->positive((string)$journal['amount']);
+            $type   = $journal['transaction_type_type'];
             if (TransactionType::WITHDRAWAL === $type) {
                 $amount = bcmul($amount, '-1');
             }
@@ -350,39 +352,37 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param Tag    $tag
-     * @param Carbon $start
-     * @param Carbon $end
+     * @param int|null $year
      *
      * @return Collection
      */
-    public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): Collection
+    private function getTagsInYear(?int $year): Collection
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->setAllAssetAccounts()->setTag($tag);
+        // get all tags in the year (if present):
+        $tagQuery = $this->user->tags()
+                               ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
+                               ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
+                               ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                               ->where(
+                                   function (Builder $query) {
+                                       $query->where('transactions.amount', '>', 0);
+                                       $query->orWhereNull('transactions.amount');
+                                   }
+                               )
+                               ->groupBy(['tags.id', 'tags.tag']);
 
-        return $collector->getTransactions();
-    }
+        // add date range (or not):
+        if (null === $year) {
+            Log::debug('Get tags without a date.');
+            $tagQuery->whereNull('tags.date');
+        }
+        if (null !== $year) {
+            Log::debug(sprintf('Get tags with year %s.', $year));
+            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
+        }
 
-    /**
-     * @param Tag   $tag
-     * @param array $data
-     *
-     * @return Tag
-     */
-    public function update(Tag $tag, array $data): Tag
-    {
-        $tag->tag         = $data['tag'];
-        $tag->date        = $data['date'];
-        $tag->description = $data['description'];
-        $tag->latitude    = $data['latitude'];
-        $tag->longitude   = $data['longitude'];
-        $tag->zoomLevel   = $data['zoom_level'];
-        $tag->save();
+        return $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
 
-        return $tag;
     }
 
     /**
@@ -436,36 +436,38 @@ class TagRepository implements TagRepositoryInterface
     }
 
     /**
-     * @param int|null $year
+     * @param Tag $tag
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    private function getTagsInYear(?int $year): Collection
+    public function transferredInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
-        // get all tags in the year (if present):
-        $tagQuery = $this->user->tags()
-                               ->leftJoin('tag_transaction_journal', 'tag_transaction_journal.tag_id', '=', 'tags.id')
-                               ->leftJoin('transaction_journals', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id')
-                               ->leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                               ->where(
-                                   function (Builder $query) {
-                                       $query->where('transactions.amount', '>', 0);
-                                       $query->orWhereNull('transactions.amount');
-                                   }
-                               )
-                               ->groupBy(['tags.id', 'tags.tag']);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::TRANSFER])->setTag($tag);
 
-        // add date range (or not):
-        if (null === $year) {
-            Log::debug('Get tags without a date.');
-            $tagQuery->whereNull('tags.date');
-        }
-        if (null !== $year) {
-            Log::debug(sprintf('Get tags with year %s.', $year));
-            $tagQuery->where('tags.date', '>=', $year . '-01-01 00:00:00')->where('tags.date', '<=', $year . '-12-31 23:59:59');
-        }
+        return $collector->getExtractedJournals();
+    }
 
-        return $tagQuery->get(['tags.id', 'tags.tag', DB::raw('SUM(transactions.amount) as amount_sum')]);
+    /**
+     * @param Tag $tag
+     * @param array $data
+     *
+     * @return Tag
+     */
+    public function update(Tag $tag, array $data): Tag
+    {
+        $tag->tag         = $data['tag'];
+        $tag->date        = $data['date'];
+        $tag->description = $data['description'];
+        $tag->latitude    = $data['latitude'];
+        $tag->longitude   = $data['longitude'];
+        $tag->zoomLevel   = $data['zoom_level'];
+        $tag->save();
 
+        return $tag;
     }
 }

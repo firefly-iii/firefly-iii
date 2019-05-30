@@ -26,7 +26,6 @@ namespace FireflyIII\Helpers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -117,8 +116,7 @@ class MetaPieChart implements MetaPieChartInterface
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::WITHDRAWAL]);
 
-            $journals        = $collector->getExtractedJournals();
-            $sum             = $this->sumJournals($journals);
+            $sum             = $collector->getSum();
             $sum             = bcmul($sum, '-1');
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
@@ -131,8 +129,7 @@ class MetaPieChart implements MetaPieChartInterface
 
             $collector->setUser($this->user);
             $collector->setAccounts($this->accounts)->setRange($this->start, $this->end)->setTypes([TransactionType::DEPOSIT]);
-            $journals        = $collector->getExtractedJournals();
-            $sum             = $this->sumJournals($journals);
+            $sum             = $collector->getSum();
             $sum             = bcsub($sum, $this->total);
             $chartData[$key] = $sum;
         }
@@ -220,22 +217,20 @@ class MetaPieChart implements MetaPieChartInterface
      *
      * @codeCoverageIgnore
      *
-     * @param Collection $set
+     * @param array $array
      *
      * @return array
      */
-    private function groupByTag(Collection $set): array
+    private function groupByTag(array $array): array
     {
         $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $journal = $transaction->transactionJournal;
-            $tags    = $journal->tags;
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $tags = $journal['tags'] ?? [];
             /** @var Tag $tag */
-            foreach ($tags as $tag) {
-                $tagId           = $tag->id;
-                $grouped[$tagId] = $grouped[$tagId] ?? '0';
-                $grouped[$tagId] = bcadd($transaction->transaction_amount, $grouped[$tagId]);
+            foreach ($tags as $id => $tag) {
+                $grouped[$id] = $grouped[$id] ?? '0';
+                $grouped[$id] = bcadd($journal['amount'], $grouped[$id]);
             }
         }
 
@@ -268,22 +263,6 @@ class MetaPieChart implements MetaPieChartInterface
         }
 
         return $chartData;
-    }
-
-    /**
-     * @param array $journals
-     * @return string
-     */
-    private function sumJournals(array $journals): string
-    {
-        $sum = '0';
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $amount = (string)$journal['amount'];
-            $sum    = bcadd($sum, $amount);
-        }
-
-        return $sum;
     }
 
     /**
@@ -413,4 +392,6 @@ class MetaPieChart implements MetaPieChartInterface
 
         return $this;
     }
+
+
 }

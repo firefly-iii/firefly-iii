@@ -49,7 +49,7 @@ class SimpleJournalList implements BinderInterface
     {
         if (auth()->check()) {
             $list = array_unique(array_map('\intval', explode(',', $value)));
-            if (0 === \count($list)) {
+            if (0 === count($list)) {
                 throw new NotFoundHttpException; // @codeCoverageIgnore
             }
 
@@ -95,7 +95,7 @@ class SimpleJournalList implements BinderInterface
             }
 
             if ($final->count() > 0) {
-                if (\count($messages) > 0) {
+                if (count($messages) > 0) {
                     session()->flash('info', $messages);
                 }
 

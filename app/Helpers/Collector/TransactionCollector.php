@@ -458,7 +458,7 @@ class TransactionCollector implements TransactionCollectorInterface
     public function setBudgets(Collection $budgets): TransactionCollectorInterface
     {
         $budgetIds = $budgets->pluck('id')->toArray();
-        if (0 !== \count($budgetIds)) {
+        if (0 !== count($budgetIds)) {
             $this->joinBudgetTables();
             Log::debug('Journal collector will filter for budgets', $budgetIds);
 
@@ -481,7 +481,7 @@ class TransactionCollector implements TransactionCollectorInterface
     public function setCategories(Collection $categories): TransactionCollectorInterface
     {
         $categoryIds = $categories->pluck('id')->toArray();
-        if (0 !== \count($categoryIds)) {
+        if (0 !== count($categoryIds)) {
             $this->joinCategoryTables();
 
             $this->query->where(
@@ -721,7 +721,7 @@ class TransactionCollector implements TransactionCollectorInterface
      */
     public function setTypes(array $types): TransactionCollectorInterface
     {
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             Log::debug('Set query collector types', $types);
             $this->query->whereIn('transaction_types.type', $types);
         }
@@ -849,7 +849,7 @@ class TransactionCollector implements TransactionCollectorInterface
             TransactionViewFilter::class   => new TransactionViewFilter,
             DoubleTransactionFilter::class => new DoubleTransactionFilter,
         ];
-        Log::debug(sprintf('Will run %d filters on the set.', \count($this->filters)));
+        Log::debug(sprintf('Will run %d filters on the set.', count($this->filters)));
         foreach ($this->filters as $enabled) {
             if (isset($filters[$enabled])) {
                 Log::debug(sprintf('Before filter %s: %d', $enabled, $set->count()));

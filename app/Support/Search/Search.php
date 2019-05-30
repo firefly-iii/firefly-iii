@@ -290,7 +290,7 @@ class Search implements SearchInterface
     private function extractModifier(string $string): void
     {
         $parts = explode(':', $string);
-        if (2 === \count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
+        if (2 === count($parts) && '' !== trim((string)$parts[1]) && '' !== trim((string)$parts[0])) {
             $type  = trim((string)$parts[0]);
             $value = trim((string)$parts[1]);
             if (\in_array($type, $this->validModifiers, true)) {

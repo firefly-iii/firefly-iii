@@ -25,19 +25,12 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\CountAttachmentsFilter;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
-use FireflyIII\Helpers\Filter\SplitIndicatorFilter;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\ModelInformation;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -72,40 +65,6 @@ class TransactionController extends Controller
         );
     }
 
-    /**
-     * Index for ALL transactions.
-     *
-     * @param Request $request
-     * @param string  $what
-     *
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function indexAll(Request $request, string $what)
-    {
-        throw new FireflyException('Do not use me.');
-        $subTitleIcon = config('firefly.transactionIconsByWhat.' . $what);
-        $types        = config('firefly.transactionTypesByWhat.' . $what);
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $path         = route('transactions.index.all', [$what]);
-        $first        = $this->repository->firstNull();
-        $start        = null === $first ? new Carbon : $first->date;
-        $end          = new Carbon;
-        $subTitle     = (string)trans('firefly.all_' . $what);
-
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)
-                  ->setTypes($types)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                  ->withBudgetInformation()->withCategoryInformation();
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->addFilter(SplitIndicatorFilter::class);
-        $collector->addFilter(CountAttachmentsFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath($path);
-
-        return view('transactions.index', compact('subTitle', 'what', 'subTitleIcon', 'transactions', 'start', 'end'));
-    }
 
     /**
      * Do a reconciliation.
@@ -141,7 +100,7 @@ class TransactionController extends Controller
     {
         $ids  = $request->get('items');
         $date = new Carbon($request->get('date'));
-        if (\count($ids) > 0) {
+        if (count($ids) > 0) {
             $order = 0;
             $ids   = array_unique($ids);
             foreach ($ids as $id) {

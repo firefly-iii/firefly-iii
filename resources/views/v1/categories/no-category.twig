@@ -24,13 +24,13 @@
                 <div class="box-body ">
 
                     {% if periods.count > 0 %}
-                        {% include 'list.transactions' %}
+                        {% include 'list.groups' %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.no-category.all') }}">{{ 'show_all_no_filter'|_ }}</a>
                         </p>
                     {% else %}
-                        {% include 'list.transactions' with {showBudgets:true, showBill:true} %}
+                        {% include 'list.groups' %}
                         <p>
                             <i class="fa fa-calendar"></i>
                             <a href="{{ route('categories.no-category') }}">{{ 'show_the_current_period_and_overview'|_ }}</a>

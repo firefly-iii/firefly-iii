@@ -56,8 +56,8 @@ class StageAuthenticatedHandler
         // grab a list of logins.
         $config = $this->importJob->configuration;
         $logins = $config['all-logins'] ?? [];
-        Log::debug(sprintf('%d logins in config', \count($logins)));
-        if (0 === \count($logins)) {
+        Log::debug(sprintf('%d logins in config', count($logins)));
+        if (0 === count($logins)) {
             // get logins from Spectre.
             $logins               = $this->getLogins();
             $config['all-logins'] = $logins;
@@ -115,7 +115,7 @@ class StageAuthenticatedHandler
         $request->setLogin($login);
         $request->call();
         $accounts = $request->getAccounts();
-        Log::debug(sprintf('Found %d accounts using login', \count($accounts)));
+        Log::debug(sprintf('Found %d accounts using login', count($accounts)));
 
         return $accounts;
     }
@@ -137,7 +137,7 @@ class StageAuthenticatedHandler
         $logins = $request->getLogins();
         $return = [];
 
-        Log::debug(sprintf('Found %d logins in users Spectre account.', \count($logins)));
+        Log::debug(sprintf('Found %d logins in users Spectre account.', count($logins)));
 
         /** @var Login $login */
         foreach ($logins as $login) {

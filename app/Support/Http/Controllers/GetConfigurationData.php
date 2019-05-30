@@ -68,7 +68,7 @@ trait GetConfigurationData
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
         $steps    = [];
-        if (\is_array($elements) && \count($elements) > 0) {
+        if (\is_array($elements) && count($elements) > 0) {
             foreach ($elements as $key => $options) {
                 $currentStep = $options;
 
@@ -79,7 +79,7 @@ trait GetConfigurationData
                 $steps[] = $currentStep;
             }
         }
-        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, \count($steps)));
+        Log::debug(sprintf('Total basic steps for %s is %d', $routeKey, count($steps)));
 
         return $steps;
     }
@@ -188,7 +188,7 @@ trait GetConfigurationData
         if ('' !== $specificPage) {
             $routeKey = str_replace('.', '_', $route);
             $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
-            if (\is_array($elements) && \count($elements) > 0) {
+            if (\is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 
@@ -200,7 +200,7 @@ trait GetConfigurationData
                 }
             }
         }
-        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, \count($steps)));
+        Log::debug(sprintf('Total specific steps for route "%s" and page "%s" (routeKey is "%s") is %d', $route, $specificPage, $routeKey, count($steps)));
 
         return $steps;
     }

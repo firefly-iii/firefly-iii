@@ -356,7 +356,7 @@ class BillController extends Controller
         $files = $request->hasFile('attachments') ? $request->file('attachments') : null;
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
 
@@ -384,7 +384,7 @@ class BillController extends Controller
         $this->attachments->saveAttachmentsForModel($bill, $files);
 
         // flash messages
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             $request->session()->flash('info', $this->attachments->getMessages()->get('attachments')); // @codeCoverageIgnore
         }
         $redirect = redirect($this->getPreviousUri('bills.edit.uri'));

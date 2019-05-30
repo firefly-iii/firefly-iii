@@ -26,7 +26,7 @@ namespace FireflyIII\Http\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -44,7 +44,7 @@ use Throwable;
 /**
  *
  * Class ReconcileController
- *
+ * TODO needs a full rewrite
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
@@ -84,8 +84,8 @@ class ReconcileController extends Controller
      *
      * @param Request $request
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return JsonResponse
      *
@@ -189,8 +189,8 @@ class ReconcileController extends Controller
      * Returns a list of transactions in a modal.
      *
      * @param Account $account
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return mixed
      *
@@ -220,14 +220,15 @@ class ReconcileController extends Controller
         $selectionEnd->addDays(3);
 
         // grab transactions:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts(new Collection([$account]))
-                  ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withOpposingAccount()->withCategoryInformation();
-        $transactions = $collector->getTransactions();
+                  ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withCategoryInformation();
+        $groups = $collector->getGroups();
         try {
             $html = view(
-                'accounts.reconcile.transactions', compact('account', 'transactions', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
+                'accounts.reconcile.transactions', compact('account', 'groups', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
             )->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {

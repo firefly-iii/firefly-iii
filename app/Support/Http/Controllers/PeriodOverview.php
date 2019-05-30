@@ -132,6 +132,7 @@ trait PeriodOverview
                 ]
             );
         }
+
         //$cache->store($entries);
 
         return $entries;
@@ -175,7 +176,6 @@ trait PeriodOverview
      */
     protected function getCategoryPeriodOverview(Category $category, Carbon $date): Collection
     {
-        throw new FireflyException('Is using collector.');
         /** @var JournalRepositoryInterface $journalRepository */
         $journalRepository = app(JournalRepositoryInterface::class);
         $range             = app('preferences')->get('viewRange', '1M')->data;
@@ -211,12 +211,12 @@ trait PeriodOverview
             $earned = $this->groupByCurrency($earned);
 
             // amount transferred
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = $this->groupByCurrency($collector->getTransactions());
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+
+            $collector->setRange($currentDate['start'], $currentDate['end'])->setCategory($category)
+                      ->setTypes([TransactionType::TRANSFER]);
+            $transferred = $this->groupByCurrency($collector->getExtractedJournals());
 
             $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
             $entries->push(
@@ -246,7 +246,6 @@ trait PeriodOverview
      */
     protected function getNoBudgetPeriodOverview(Carbon $date): Collection
     {
-        throw new FireflyException('Is using collector.');
         /** @var JournalRepositoryInterface $repository */
         $repository = app(JournalRepositoryInterface::class);
         $first      = $repository->firstNull();
@@ -271,15 +270,15 @@ trait PeriodOverview
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
         $entries = new Collection;
         foreach ($dates as $currentDate) {
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($currentDate['start'], $currentDate['end'])->withoutBudget()->withOpposingAccount()->setTypes(
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setRange($currentDate['start'], $currentDate['end'])->withoutBudget()->withAccountInformation()->setTypes(
                 [TransactionType::WITHDRAWAL]
             );
-            $set   = $collector->getTransactions();
-            $count = $set->count();
-            $spent = $this->groupByCurrency($set);
-            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $journals = $collector->getExtractedJournals();
+            $count    = count($journals);
+            $spent    = $this->groupByCurrency($journals);
+            $title    = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
             $entries->push(
                 [
                     'transactions' => $count,
@@ -308,7 +307,6 @@ trait PeriodOverview
      */
     protected function getNoCategoryPeriodOverview(Carbon $theDate): Collection // period overview method.
     {
-        throw new FireflyException('Is using collector.');
         Log::debug(sprintf('Now in getNoCategoryPeriodOverview(%s)', $theDate->format('Y-m-d')));
         $range = app('preferences')->get('viewRange', '1M')->data;
         $first = $this->journalRepos->firstNull();
@@ -334,36 +332,34 @@ trait PeriodOverview
         foreach ($dates as $date) {
 
             // count journals without category in this period:
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $count = $collector->getTransactions()->count();
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setRange($date['start'], $date['end'])->withoutCategory()
+                      ->setTypes([TransactionType::WITHDRAWAL, TransactionType::DEPOSIT, TransactionType::TRANSFER]);
+            $count = count($collector->getExtractedJournals());
 
             // amount transferred
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()
-                      ->withOpposingAccount()->setTypes([TransactionType::TRANSFER]);
-            $collector->removeFilter(InternalTransferFilter::class);
-            $transferred = app('steam')->positive((string)$collector->getTransactions()->sum('transaction_amount'));
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setRange($date['start'], $date['end'])->withoutCategory()
+                      ->setTypes([TransactionType::TRANSFER]);
+            $transferred = app('steam')->positive((string)$collector->getSum());
 
             // amount spent
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setRange($date['start'], $date['end'])->withoutCategory()->setTypes(
                 [TransactionType::WITHDRAWAL]
             );
-            $spent = $collector->getTransactions()->sum('transaction_amount');
+            $spent = $collector->getSum();
 
             // amount earned
-            /** @var TransactionCollectorInterface $collector */
-            $collector = app(TransactionCollectorInterface::class);
-            $collector->setAllAssetAccounts()->setRange($date['start'], $date['end'])->withoutCategory()->withOpposingAccount()->setTypes(
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setRange($date['start'], $date['end'])->withoutCategory()->setTypes(
                 [TransactionType::DEPOSIT]
             );
-            $earned = $collector->getTransactions()->sum('transaction_amount');
+            $earned = $collector->getSum();
             /** @noinspection PhpUndefinedMethodInspection */
             $dateStr  = $date['end']->format('Y-m-d');
             $dateName = app('navigation')->periodShow($date['end'], $date['period']);
@@ -397,7 +393,6 @@ trait PeriodOverview
      */
     protected function getTagPeriodOverview(Tag $tag, Carbon $date): Collection // period overview for tags.
     {
-        throw new FireflyException('Is using collector.');
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
         $range      = app('preferences')->get('viewRange', '1M')->data;
@@ -437,7 +432,7 @@ trait PeriodOverview
 
             $entries->push(
                 [
-                    'transactions' => $spentSet->count() + $earnedSet->count() + $transferredSet->count(),
+                    'transactions' => count($spentSet) + count($earnedSet) + count($transferredSet),
                     'title'        => $title,
                     'spent'        => $spent,
                     'earned'       => $earned,
@@ -457,7 +452,6 @@ trait PeriodOverview
      * @param Carbon $endDate
      *
      * @return Collection
-     * @throws \Exception
      */
     protected function getTransactionPeriodOverview(string $transactionType, Carbon $endDate): Collection
     {

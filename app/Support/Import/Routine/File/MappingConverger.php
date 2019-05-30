@@ -69,7 +69,7 @@ class MappingConverger
     {
         Log::debug('Start converging process.');
         $collection = [];
-        $total      = \count($lines);
+        $total      = count($lines);
         /** @var array $line */
         foreach ($lines as $lineIndex => $line) {
             Log::debug(sprintf('Now converging line %d out of %d.', $lineIndex + 1, $total));

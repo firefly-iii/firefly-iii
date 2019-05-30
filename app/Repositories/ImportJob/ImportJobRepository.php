@@ -91,9 +91,9 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         Log::debug(sprintf('Now in appendTransactions(%s)', $job->key));
         $existingTransactions = $this->getTransactions($job);
         $new                  = array_merge($existingTransactions, $transactions);
-        Log::debug(sprintf('Old transaction count: %d', \count($existingTransactions)));
-        Log::debug(sprintf('To be added transaction count: %d', \count($transactions)));
-        Log::debug(sprintf('New count: %d', \count($new)));
+        Log::debug(sprintf('Old transaction count: %d', count($existingTransactions)));
+        Log::debug(sprintf('To be added transaction count: %d', count($transactions)));
+        Log::debug(sprintf('New count: %d', count($new)));
         $this->setTransactions($job, $new);
 
         return $job;
@@ -333,7 +333,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $json     = Crypt::encrypt(json_encode($transactions));
 
         // set count for easy access
-        $array             = ['count' => \count($transactions)];
+        $array             = ['count' => count($transactions)];
         $job->transactions = $array;
         $job->save();
         // store file.

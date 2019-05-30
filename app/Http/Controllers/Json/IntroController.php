@@ -47,7 +47,7 @@ class IntroController
         $specificPage  = $specificPage ?? '';
         $steps         = $this->getBasicSteps($route);
         $specificSteps = $this->getSpecificSteps($route, $specificPage);
-        if (0 === \count($specificSteps)) {
+        if (0 === count($specificSteps)) {
             Log::debug(sprintf('No specific steps for route "%s" and page "%s"', $route, $specificPage));
 
             return response()->json($steps);
@@ -55,7 +55,7 @@ class IntroController
         if ($this->hasOutroStep($route)) {
             // @codeCoverageIgnoreStart
             // save last step:
-            $lastStep = $steps[\count($steps) - 1];
+            $lastStep = $steps[count($steps) - 1];
             // remove last step:
             array_pop($steps);
             // merge arrays and add last step again

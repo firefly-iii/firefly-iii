@@ -350,7 +350,6 @@ trait RenderPartialViews
 
         /** @var PopupReportInterface $popupHelper */
         $popupHelper = app(PopupReportInterface::class);
-
         $account = $accountRepository->findNull((int)$attributes['accountId']);
 
         if (null === $account) {

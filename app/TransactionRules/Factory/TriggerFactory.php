@@ -101,7 +101,7 @@ class TriggerFactory
      */
     protected static function getTriggerTypes(): array
     {
-        if (0 === \count(self::$triggerTypes)) {
+        if (0 === count(self::$triggerTypes)) {
             self::$triggerTypes = Domain::getRuleTriggers();
         }
 

@@ -60,7 +60,7 @@ abstract class YnabRequest
                 'Authorization' => 'Bearer ' . $this->token,
             ],
         ];
-        if (\count($params) > 0) {
+        if (count($params) > 0) {
             $uri = $uri . '?' . http_build_query($params);
         }
         Log::debug(sprintf('Going to call YNAB on URI: %s', $uri), $options);

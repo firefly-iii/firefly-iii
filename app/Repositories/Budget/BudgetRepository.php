@@ -155,21 +155,17 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriod(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setBudgets($budgets)->withBudgetInformation();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
+        return $collector->getSum();
 
-        $set = $collector->getTransactions();
-
-        return (string)$set->sum('transaction_amount');
     }
 
     /**
@@ -719,7 +715,6 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriodMc(Collection $budgets, Collection $accounts, Carbon $start, Carbon $end): array
     {
-
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
@@ -777,30 +772,17 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriodWoBudget(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])
+                  ->withoutBudget();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
 
-        $set = $collector->getTransactions();
-        $set = $set->filter(
-            function (Transaction $transaction) {
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
-                    return $transaction;
-                }
-
-                return null;
-            }
-        );
-
-        return (string)$set->sum('transaction_amount');
+        return $collector->getSum();
     }
 
     /**

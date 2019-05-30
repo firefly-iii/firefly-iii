@@ -59,8 +59,8 @@ class StageImportDataHandler
         Log::debug('Now in StageImportDataHandler::run()');
         $config   = $this->importJob->configuration;
         $accounts = $config['accounts'] ?? [];
-        Log::debug(sprintf('Count of accounts in array is %d', \count($accounts)));
-        if (0 === \count($accounts)) {
+        Log::debug(sprintf('Count of accounts in array is %d', count($accounts)));
+        if (0 === count($accounts)) {
             throw new FireflyException('There are no accounts in this import job. Cannot continue.'); // @codeCoverageIgnore
         }
         $toImport = $config['account_mapping'] ?? [];
@@ -73,14 +73,14 @@ class StageImportDataHandler
                 $merge          = $this->getTransactions($spectreAccount, $localAccount);
                 $totalSet[]     = $merge;
                 Log::debug(
-                    sprintf('Found %d transactions in account "%s" (%s)', \count($merge), $spectreAccount->getName(), $spectreAccount->getCurrencyCode())
+                    sprintf('Found %d transactions in account "%s" (%s)', count($merge), $spectreAccount->getName(), $spectreAccount->getCurrencyCode())
                 );
                 continue;
             }
             Log::debug(sprintf('Local account is = zero, will not import from Spectr account with ID #%d', $spectreId));
         }
         $totalSet = array_merge(...$totalSet);
-        Log::debug(sprintf('Found %d transactions in total.', \count($totalSet)));
+        Log::debug(sprintf('Found %d transactions in total.', count($totalSet)));
         $this->repository->setTransactions($this->importJob, $totalSet);
     }
 
@@ -112,8 +112,8 @@ class StageImportDataHandler
     private function convertToArray(array $transactions, SpectreAccount $spectreAccount, LocalAccount $originalSource): array
     {
         $array = [];
-        $total = \count($transactions);
-        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', \count($transactions)));
+        $total = count($transactions);
+        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', count($transactions)));
         /** @var SpectreTransaction $transaction */
         foreach ($transactions as $index => $transaction) {
             Log::debug(sprintf('Now creating array for transaction %d of %d', $index + 1, $total));
@@ -216,7 +216,7 @@ class StageImportDataHandler
             ];
             $array[] = $entry;
         }
-        Log::debug(sprintf('Return %d entries', \count($array)));
+        Log::debug(sprintf('Return %d entries', count($array)));
 
         return $array;
     }

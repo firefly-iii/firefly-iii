@@ -204,7 +204,7 @@ class AttachmentHelper implements AttachmentHelperInterface
             }
             Log::debug('Done processing uploads.');
         }
-        if (!\is_array($files) || (\is_array($files) && 0 === \count($files))) {
+        if (!\is_array($files) || (\is_array($files) && 0 === count($files))) {
             Log::debug('Array of files is not an array. Probably nothing uploaded. Will not store attachments.');
         }
 

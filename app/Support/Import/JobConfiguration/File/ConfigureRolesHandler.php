@@ -194,7 +194,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
         foreach ($records as $line) {
             $line               = array_values($line);
             $line               = $this->processSpecifics($config, $line);
-            $count              = \count($line);
+            $count              = count($line);
             $this->totalColumns = $count > $this->totalColumns ? $count : $this->totalColumns;
             $this->getExampleFromLine($line);
         }

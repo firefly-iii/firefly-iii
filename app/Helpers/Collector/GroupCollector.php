@@ -130,23 +130,15 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
-     * Return the transaction journals without group information. Is useful in some instances.
+     * Same as getGroups but everything is in a paginator.
      *
-     * @return array
+     * @return LengthAwarePaginator
      */
-    public function getExtractedJournals(): array
+    public function getPaginatedGroups(): LengthAwarePaginator
     {
-        $selection = $this->getGroups();
-        $return    = [];
-        /** @var array $group */
-        foreach ($selection as $group) {
-            foreach ($group['transactions'] as $journalId => $journal) {
-                $journal['group_title'] = $group['title'];
-                $return[$journalId]     = $journal;
-            }
-        }
+        $set = $this->getGroups();
 
-        return $return;
+        return new LengthAwarePaginator($set, $this->total, $this->limit, $this->page);
     }
 
     /**
@@ -328,18 +320,6 @@ class GroupCollector implements GroupCollectorInterface
         }
 
         return $groups;
-    }
-
-    /**
-     * Same as getGroups but everything is in a paginator.
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getPaginatedGroups(): LengthAwarePaginator
-    {
-        $set = $this->getGroups();
-
-        return new LengthAwarePaginator($set, $this->total, $this->limit, $this->page);
     }
 
     /**
@@ -554,7 +534,7 @@ class GroupCollector implements GroupCollectorInterface
 
         $this->query->where('transaction_journals.date', '>=', $startStr);
         $this->query->where('transaction_journals.date', '<=', $endStr);
-        app('log')->debug(sprintf('TransactionCollector range is now %s - %s (inclusive)', $startStr, $endStr));
+        app('log')->debug(sprintf('GroupCollector range is now %s - %s (inclusive)', $startStr, $endStr));
 
         return $this;
     }
@@ -642,7 +622,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     private function startQuery(): void
     {
-        app('log')->debug('TransactionCollector::startQuery');
+        app('log')->debug('GroupCollector::startQuery');
         $this->query = $this->user
             ->transactionGroups()
             ->leftJoin('transaction_journals', 'transaction_journals.transaction_group_id', 'transaction_groups.id')
@@ -777,5 +757,77 @@ class GroupCollector implements GroupCollectorInterface
         $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
 
         return $this;
+    }
+
+    /**
+     * Limit results to a transactions without a budget..
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutBudget(): GroupCollectorInterface
+    {
+        $this->withBudgetInformation();
+        $this->query->where(
+            function (EloquentBuilder $q) {
+                $q->whereNull('budget_transaction_journal.budget_id');
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Limit results to a transactions without a category.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutCategory(): GroupCollectorInterface
+    {
+        $this->withCategoryInformation();
+        $this->query->where(
+            function (EloquentBuilder $q) {
+                $q->whereNull('category_transaction_journal.category_id');
+            }
+        );
+
+        return $this;
+    }
+
+    /**
+     * Return the sum of all journals.
+     *
+     * @return string
+     */
+    public function getSum(): string
+    {
+        $journals = $this->getExtractedJournals();
+        $sum      = '0';
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = (string)$journal['amount'];
+            $sum    = bcadd($sum, $amount);
+        }
+
+        return $sum;
+    }
+
+    /**
+     * Return the transaction journals without group information. Is useful in some instances.
+     *
+     * @return array
+     */
+    public function getExtractedJournals(): array
+    {
+        $selection = $this->getGroups();
+        $return    = [];
+        /** @var array $group */
+        foreach ($selection as $group) {
+            foreach ($group['transactions'] as $journalId => $journal) {
+                $journal['group_title'] = $group['title'];
+                $return[$journalId]     = $journal;
+            }
+        }
+
+        return $return;
     }
 }

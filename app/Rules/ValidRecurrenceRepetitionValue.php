@@ -108,7 +108,7 @@ class ValidRecurrenceRepetitionValue implements Rule
     private function validateNdom(string $value): bool
     {
         $parameters = explode(',', substr($value, 5));
-        if (2 !== \count($parameters)) {
+        if (2 !== count($parameters)) {
             return false;
         }
         $nthDay    = (int)($parameters[0] ?? 0.0);

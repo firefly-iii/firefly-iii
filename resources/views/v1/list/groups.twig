@@ -67,7 +67,7 @@ TODO: hide and show columns
 
             </td>
             <td {{ style|raw }}>
-                <a href="{{ route('transactions.edit', [group.id]) }}" title="{{ transaction.description }}">{{ transaction.description }}</a>
+                <a href="{{ route('transactions.show', [group.id]) }}" title="{{ transaction.description }}">{{ transaction.description }}</a>
             </td>
             <td {{ style|raw }}>
                 {{ formatAmountBySymbol(transaction.amount, transaction.currency_symbol, transaction.currency_symbol_decimal_places) }}

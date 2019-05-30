@@ -880,6 +880,9 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'transactions', 'as' => 'transactions.'], function () {
 
     // show groups:
+    // TODO improve these routes
+    Route::get('{what}/all', ['uses' => 'Transaction\IndexController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
+
     Route::get('{what}/{start_date?}/{end_date?}', ['uses' => 'Transaction\IndexController@index', 'as' => 'index'])->where(
         ['what' => 'withdrawal|deposit|transfers|transfer']
     );
@@ -889,10 +892,6 @@ Route::group(
     Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
 
-
-
-    // TODO improve these routes
-    Route::get('{what}/all', ['uses' => 'TransactionController@indexAll', 'as' => 'index.all'])->where(['what' => 'withdrawal|deposit|transfers|transfer']);
 
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);

@@ -311,7 +311,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
             $columnConfig[$columnIndex]['values'] = array_unique($columnConfig[$columnIndex]['values']);
             asort($columnConfig[$columnIndex]['values']);
             // if the count of this array is zero, there is nothing to map.
-            if (0 === \count($columnConfig[$columnIndex]['values'])) {
+            if (0 === count($columnConfig[$columnIndex]['values'])) {
                 unset($columnConfig[$columnIndex]);
             }
         }

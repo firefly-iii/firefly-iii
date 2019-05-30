@@ -83,14 +83,14 @@ class YnabRoutine implements RoutineInterface
                 $budgets       = $configuration['budgets'] ?? [];
 
                 // if more than 1 budget, select budget first.
-                if (\count($budgets) > 1) {
+                if (count($budgets) > 1) {
                     $this->repository->setStage($this->importJob, 'select_budgets');
                     $this->repository->setStatus($this->importJob, 'need_job_config');
 
                     return;
                 }
 
-                if (1 === \count($budgets)) {
+                if (1 === count($budgets)) {
                     $this->repository->setStatus($this->importJob, 'ready_to_run');
                     $this->repository->setStage($this->importJob, 'get_accounts');
                 }

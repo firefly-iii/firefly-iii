@@ -233,7 +233,7 @@ trait RecurringTransactionTrait
      */
     protected function updateTags(Recurrence $recurrence, array $tags): void
     {
-        if (\count($tags) > 0) {
+        if (count($tags) > 0) {
             /** @var RecurrenceMeta $entry */
             $entry = $recurrence->recurrenceMeta()->where('name', 'tags')->first();
             if (null === $entry) {
@@ -242,7 +242,7 @@ trait RecurringTransactionTrait
             $entry->value = implode(',', $tags);
             $entry->save();
         }
-        if (0 === \count($tags)) {
+        if (0 === count($tags)) {
             // delete if present
             $recurrence->recurrenceMeta()->where('name', 'tags')->delete();
         }

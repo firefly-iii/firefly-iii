@@ -84,7 +84,7 @@ class TransactionMatcher
     public function findTransactionsByRule(): Collection
     {
         Log::debug('Now in findTransactionsByRule()');
-        if (0 === \count($this->rule->ruleTriggers)) {
+        if (0 === count($this->rule->ruleTriggers)) {
             Log::error('Rule has no triggers!');
 
             return new Collection;
@@ -113,7 +113,7 @@ class TransactionMatcher
      */
     public function findTransactionsByTriggers(): Collection
     {
-        if (0 === \count($this->triggers)) {
+        if (0 === count($this->triggers)) {
             return new Collection;
         }
 
@@ -328,7 +328,7 @@ class TransactionMatcher
 
             // Update counters
             ++$page;
-            $processed += \count($set);
+            $processed += count($set);
 
             Log::debug(sprintf('Page is now %d, processed is %d', $page, $processed));
 

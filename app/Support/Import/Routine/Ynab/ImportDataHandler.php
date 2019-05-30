@@ -78,7 +78,7 @@ class ImportDataHandler
         }
 
         $totalSet = array_merge(...$total);
-        Log::debug(sprintf('Found %d transactions in total.', \count($totalSet)));
+        Log::debug(sprintf('Found %d transactions in total.', count($totalSet)));
         $this->repository->setTransactions($this->importJob, $totalSet);
 
         // assuming this works, store today's date as a preference
@@ -114,9 +114,9 @@ class ImportDataHandler
     {
         $config = $this->repository->getConfiguration($this->importJob);
         $array  = [];
-        $total  = \count($transactions);
+        $total  = count($transactions);
         $budget = $this->getSelectedBudget();
-        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', \count($transactions)));
+        Log::debug(sprintf('Now in StageImportDataHandler::convertToArray() with count %d', count($transactions)));
         /** @var array $transaction */
         foreach ($transactions as $index => $transaction) {
             $description = $transaction['memo'] ?? '(empty)';

@@ -90,9 +90,9 @@
                 </div>
                 <div class="box-body">
                     {% if budgetLimit %}
-                        {% include 'list.transactions' %}
+                        {% include 'list.groups' %}
                     {% else %}
-                        {% include 'list.transactions'  with {showCategories: true} %}
+                        {% include 'list.groups' %}
                     {% endif %}
                     {% if budgetLimit %}
                         <p>

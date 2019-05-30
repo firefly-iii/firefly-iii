@@ -130,7 +130,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
-        if (2 === \count($parts)) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[1]);
                 // @codeCoverageIgnoreStart
@@ -181,7 +181,7 @@ class ReportFormRequest extends Request
         $date  = new Carbon;
         $range = $this->get('daterange');
         $parts = explode(' - ', (string)$range);
-        if (2 === \count($parts)) {
+        if (2 === count($parts)) {
             try {
                 $date = new Carbon($parts[0]);
                 // @codeCoverageIgnoreStart

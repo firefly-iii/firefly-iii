@@ -24,6 +24,7 @@ namespace FireflyIII\Repositories\Category;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\CategoryFactory;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Transaction;
@@ -77,8 +78,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -86,34 +87,46 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         $set = $this->earnedInPeriodCollection($categories, $accounts, $start, $end);
 
-        return (string)$set->sum('transaction_amount');
+        return $this->sumJournals($set);
     }
 
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection
+    public function earnedInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         if (0 !== $accounts->count()) {
             $collector->setAccounts($accounts);
         }
 
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
-
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setCategories($categories);
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
+    }
+
+    /**
+     * @param array $journals
+     * @return string
+     */
+    private function sumJournals(array $journals): string
+    {
+        $sum = '0';
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = (string)$journal['amount'];
+            $sum    = bcadd($sum, $amount);
+        }
+
+        return $sum;
     }
 
     /**
@@ -122,8 +135,8 @@ class CategoryRepository implements CategoryRepositoryInterface
      * Get me the amount earned in this period, grouped per currency, where no category was set.
      *
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -174,8 +187,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -234,26 +247,20 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * Find a category.
+     * Returns a list of all the categories belonging to a user.
      *
-     * @param string $name
-     *
-     * @return Category|null
+     * @return Collection
      */
-    public function findByName(string $name): ?Category
+    public function getCategories(): Collection
     {
-        $categories = $this->user->categories()->get(['categories.*']);
-        foreach ($categories as $category) {
-            if ($category->name === $name) {
-                return $category;
-            }
-        }
+        /** @var Collection $set */
+        $set = $this->user->categories()->orderBy('name', 'ASC')->get();
 
-        return null;
+        return $set;
     }
 
     /**
-     * @param int|null    $categoryId
+     * @param int|null $categoryId
      * @param string|null $categoryName
      *
      * @return Category|null
@@ -279,6 +286,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * Find a category or return NULL
      *
@@ -291,7 +300,40 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $this->user->categories()->find($categoryId);
     }
 
+    /**
+     * Find a category.
+     *
+     * @param string $name
+     *
+     * @return Category|null
+     */
+    public function findByName(string $name): ?Category
+    {
+        $categories = $this->user->categories()->get(['categories.*']);
+        foreach ($categories as $category) {
+            if ($category->name === $name) {
+                return $category;
+            }
+        }
+
+        return null;
+    }
+
     /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * @param array $data
+     *
+     * @return Category
+     */
+    public function store(array $data): Category
+    {
+        /** @var CategoryFactory $factory */
+        $factory = app(CategoryFactory::class);
+        $factory->setUser($this->user);
+
+        return $factory->findOrCreate(null, $data['name']);
+    }
 
     /**
      * @param Category $category
@@ -322,6 +364,47 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Category $category
+     *
+     * @return Carbon|null
+     */
+    private function getFirstJournalDate(Category $category): ?Carbon
+    {
+        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
+        $result = $query->first(['transaction_journals.*']);
+
+        if (null !== $result) {
+            return $result->date;
+        }
+
+        return null;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
+     * @param Category $category
+     *
+     * @return Carbon|null
+     */
+    private function getFirstTransactionDate(Category $category): ?Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'ASC');
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
+    }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
+    /**
      * Get all categories with ID's.
      *
      * @param array $categoryIds
@@ -336,20 +419,7 @@ class CategoryRepository implements CategoryRepositoryInterface
     /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
-     * Returns a list of all the categories belonging to a user.
-     *
-     * @return Collection
-     */
-    public function getCategories(): Collection
-    {
-        /** @var Collection $set */
-        $set = $this->user->categories()->orderBy('name', 'ASC')->get();
-
-        return $set;
-    }
-
-    /**
-     * @param Category   $category
+     * @param Category $category
      * @param Collection $accounts
      *
      * @return Carbon|null
@@ -379,10 +449,60 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
+     * @param Category $category
+     * @param Collection $accounts
+     *
+     * @return Carbon|null
+     */
+    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
+    {
+        $query = $category->transactionJournals()->orderBy('date', 'DESC');
+
+        if ($accounts->count() > 0) {
+            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $result = $query->first(['transaction_journals.*']);
+
+        if (null !== $result) {
+            return $result->date;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category $category
+     * @param Collection $accounts
+     *
+     * @return Carbon|null
+     * @throws \Exception
+     */
+    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'DESC');
+        if ($accounts->count() > 0) {
+            // filter journals:
+            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
+    }
+
+    /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -423,12 +543,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $data;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -463,13 +581,11 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -510,12 +626,10 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $data;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
@@ -576,42 +690,38 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
     public function spentInPeriod(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): string
     {
-        $set = $this->spentInPeriodCollection($categories, $accounts, $start, $end);
+        $array = $this->spentInPeriodCollection($categories, $accounts, $start, $end);
 
-
-        return (string)$set->sum('transaction_amount');
+        return $this->sumJournals($array);
     }
 
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
-     * @return Collection
+     * @return array
      */
-    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): Collection
+    public function spentInPeriodCollection(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**
@@ -620,50 +730,38 @@ class CategoryRepository implements CategoryRepositoryInterface
      * Get me the amount spent in this period, grouped per currency, where no category was set.
      *
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
     public function spentInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
 
-        $set = $collector->getTransactions();
-        $set = $set->filter(
-            function (Transaction $transaction) {
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
-                    return $transaction;
-                }
-
-                return null;
-            }
-        );
-
+        $set    = $collector->getExtractedJournals();
         $return = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
+        /** @var array $journal */
+        foreach($set as $journal) {
+            $currencyId = (int)$journal['currency_id'];
             if (!isset($return[$currencyId])) {
                 $return[$currencyId] = [
                     'spent'                   => '0',
                     'currency_id'             => $currencyId,
-                    'currency_symbol'         => $transaction->transaction_currency_symbol,
-                    'currency_code'           => $transaction->transaction_currency_code,
-                    'currency_decimal_places' => $transaction->transaction_currency_dp,
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
-            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $transaction->transaction_amount);
+            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $journal['amount']);
         }
 
         return $return;
@@ -672,15 +770,15 @@ class CategoryRepository implements CategoryRepositoryInterface
     /**
      * @param Collection $categories
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array
      */
     public function spentInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL]);
 
@@ -694,20 +792,14 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
 
-        $set    = $collector->getTransactions();
+        $set    = $collector->getExtractedJournals();
         $return = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlCatId  = (int)$transaction->transaction_journal_category_id;
-            $transCatId = (int)$transaction->transaction_category_id;
-            $categoryId = max($jrnlCatId, $transCatId);
-            $currencyId = (int)$transaction->transaction_currency_id;
-            $name       = $transaction->transaction_category_name;
-            $name       = '' === (string)$name ? $transaction->transaction_journal_category_name : $name;
+        /** @var array $journal */
+        foreach ($set as $journal) {
+            $categoryId = (int)$journal['category_id'];
+            $currencyId = (int)$journal['currency_id'];
+            $name       = $journal['category_name'];
 
             // make array for category:
             if (!isset($return[$categoryId])) {
@@ -720,13 +812,13 @@ class CategoryRepository implements CategoryRepositoryInterface
                 $return[$categoryId]['spent'][$currencyId] = [
                     'spent'                   => '0',
                     'currency_id'             => $currencyId,
-                    'currency_symbol'         => $transaction->transaction_currency_symbol,
-                    'currency_code'           => $transaction->transaction_currency_code,
-                    'currency_decimal_places' => $transaction->transaction_currency_dp,
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
             $return[$categoryId]['spent'][$currencyId]['spent']
-                = bcadd($return[$categoryId]['spent'][$currencyId]['spent'], $transaction->transaction_amount);
+                = bcadd($return[$categoryId]['spent'][$currencyId]['spent'], $journal['amount']);
         }
 
         return $return;
@@ -734,8 +826,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
     /**
      * @param Collection $accounts
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -768,22 +860,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param array $data
-     *
-     * @return Category
-     */
-    public function store(array $data): Category
-    {
-        /** @var CategoryFactory $factory */
-        $factory = app(CategoryFactory::class);
-        $factory->setUser($this->user);
-
-        return $factory->findOrCreate(null, $data['name']);
-    }
-
-    /**
      * @param Category $category
-     * @param array    $data
+     * @param array $data
      *
      * @return Category
      */
@@ -793,92 +871,5 @@ class CategoryRepository implements CategoryRepositoryInterface
         $service = app(CategoryUpdateService::class);
 
         return $service->update($category, $data);
-    }
-
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
-    private function getFirstJournalDate(Category $category): ?Carbon
-    {
-        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
-        $result = $query->first(['transaction_journals.*']);
-
-        if (null !== $result) {
-            return $result->date;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
-    private function getFirstTransactionDate(Category $category): ?Carbon
-    {
-        // check transactions:
-        $query = $category->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'ASC');
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
-    }
-
-    /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
-     */
-    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
-    {
-        $query = $category->transactionJournals()->orderBy('date', 'DESC');
-
-        if ($accounts->count() > 0) {
-            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
-            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
-        }
-
-        $result = $query->first(['transaction_journals.*']);
-
-        if (null !== $result) {
-            return $result->date;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param Category   $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
-     * @throws \Exception
-     */
-    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
-    {
-        // check transactions:
-        $query = $category->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'DESC');
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
-        }
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
     }
 }

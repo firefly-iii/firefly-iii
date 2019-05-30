@@ -139,7 +139,7 @@ trait RequestInformation
                 $res = $transformer->transform($transaction);
             }
 
-            if (\count($res) > 0) {
+            if (count($res) > 0) {
                 $res['amount']         = app('steam')->positive((string)$res['amount']);
                 $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
                 $transactions[]        = $res;
@@ -162,7 +162,7 @@ trait RequestInformation
      */
     protected function updateWithPrevious($array, $old): array // update object with new info
     {
-        if (0 === \count($old) || !isset($old['transactions'])) {
+        if (0 === count($old) || !isset($old['transactions'])) {
             return $array;
         }
         $old = $old['transactions'];
@@ -318,7 +318,7 @@ trait RequestInformation
 
         $shownDemo = true;
         // both must be array and either must be > 0
-        if (count($intro) > 0 || \count($specialIntro) > 0) {
+        if (count($intro) > 0 || count($specialIntro) > 0) {
             $shownDemo = app('preferences')->get($key, false)->data;
             Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
         }

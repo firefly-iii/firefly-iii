@@ -325,7 +325,7 @@ class StageImportDataHandler
             /*
              * After the loop, check if Firefly III must loop again.
              */
-            Log::debug(sprintf('Count of result is now %d', \count($return)));
+            Log::debug(sprintf('Count of result is now %d', count($return)));
             $count++;
             if (null === $olderId) {
                 Log::debug('Older ID is NULL, so stop looping cause we are done!');
@@ -351,7 +351,7 @@ class StageImportDataHandler
         // store newest and oldest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-oldest-transaction-%d', $bunqAccountId), $oldestTransaction);
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
-        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', \count($return)));
+        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', count($return)));
 
         return $return;
     }
@@ -428,7 +428,7 @@ class StageImportDataHandler
             /*
              * After the loop, check if Firefly III must loop again.
             */
-            Log::debug(sprintf('Count of result is now %d', \count($return)));
+            Log::debug(sprintf('Count of result is now %d', count($return)));
             $count++;
             if (null === $newerId) {
                 Log::debug('Newer ID is NULL, so stop looping cause we are done!');
@@ -446,7 +446,7 @@ class StageImportDataHandler
 
         // store newest tranasction ID to be used later:
         \Preferences::setForUser($this->importJob->user, sprintf('bunq-newest-transaction-%d', $bunqAccountId), $newestTransaction);
-        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', \count($return)));
+        Log::info(sprintf('Downloaded and parsed %d transactions from bunq.', count($return)));
 
         return $return;
     }

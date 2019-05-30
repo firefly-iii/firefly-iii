@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Budget;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\BudgetIncomeRequest;
 use FireflyIII\Models\Budget;
@@ -71,9 +71,9 @@ class AmountController extends Controller
     /**
      * Set the amount for a single budget in a specific period. Shows a waring when its a lot.
      *
-     * @param Request                   $request
+     * @param Request $request
      * @param BudgetRepositoryInterface $repository
-     * @param Budget                    $budget
+     * @param Budget $budget
      *
      * @return JsonResponse
      *
@@ -147,6 +147,7 @@ class AmountController extends Controller
      *
      * @param Carbon $start
      * @param Carbon $end
+     * TODO remove this feature
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
@@ -164,10 +165,10 @@ class AmountController extends Controller
         Log::debug(sprintf('Average is %s, so total available is %s because days is %d.', $average, $available, $daysInPeriod));
 
         // amount earned in this period:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::DEPOSIT])->withOpposingAccount();
-        $earned = (string)$collector->getTransactions()->sum('transaction_amount');
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::DEPOSIT]);
+        $earned = $collector->getSum();
         // Total amount earned divided by the number of days in the whole search period is the average amount earned per day.
         // This is multiplied by the number of days in the current period, showing you the average.
         $earnedAverage = bcmul(bcdiv($earned, (string)$daysInSearchPeriod), (string)$daysInPeriod);
@@ -175,10 +176,10 @@ class AmountController extends Controller
         Log::debug(sprintf('Earned is %s, earned average is %s', $earned, $earnedAverage));
 
         // amount spent in period
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::WITHDRAWAL])->withOpposingAccount();
-        $spent        = (string)$collector->getTransactions()->sum('transaction_amount');
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($searchBegin, $searchEnd)->setTypes([TransactionType::WITHDRAWAL]);
+        $spent        = $collector->getSum();
         $spentAverage = app('steam')->positive(bcmul(bcdiv($spent, (string)$daysInSearchPeriod), (string)$daysInPeriod));
 
         Log::debug(sprintf('Spent is %s, spent average is %s', $earned, $earnedAverage));
@@ -227,8 +228,8 @@ class AmountController extends Controller
      * Shows the form to update available budget.
      *
      * @param Request $request
-     * @param Carbon  $start
-     * @param Carbon  $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */

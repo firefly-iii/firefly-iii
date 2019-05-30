@@ -27,7 +27,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Support\Http\Controllers\ModelInformation;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\PeriodOverview;
 use Illuminate\Http\Request;
 
@@ -37,20 +37,21 @@ use Illuminate\Http\Request;
 class IndexController extends Controller
 {
     use  PeriodOverview;
+
     /**
      * Index for a range of transactions.
      *
-     * @param Request     $request
-     * @param string      $transactionType
+     * @param Request $request
+     * @param string $objectType
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request, string $transactionType, Carbon $start = null, Carbon $end = null)
+    public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
-        $subTitleIcon = config('firefly.transactionIconsByType.' . $transactionType);
-        $types        = config('firefly.transactionTypesByType.' . $transactionType);
+        $subTitleIcon = config('firefly.transactionIconsByType.' . $objectType);
+        $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
         if (null === $start) {
@@ -65,13 +66,12 @@ class IndexController extends Controller
             [$start, $end] = [$end, $start];
         }
 
-        $path = route('transactions.index', [$transactionType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $path = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle = (string)trans(sprintf('firefly.title_%s_between',$transactionType), ['start' => $startStr, 'end' => $endStr]);
-
-        $periods  = $this->getTransactionPeriodOverview($transactionType, $end);
+        $subTitle = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
+        $periods  = $this->getTransactionPeriodOverview($objectType, $end);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -86,6 +86,42 @@ class IndexController extends Controller
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
-        return view('transactions.index', compact('subTitle', 'transactionType', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
+        return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'periods', 'start', 'end'));
+    }
+
+    /**
+     * Index for ALL transactions.
+     *
+     * @param Request $request
+     * @param string $objectType
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
+     */
+    public function indexAll(Request $request, string $objectType)
+    {
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+
+
+        $subTitleIcon = config('firefly.transactionIconsByWhat.' . $objectType);
+        $types        = config('firefly.transactionTypesByWhat.' . $objectType);
+        $page         = (int)$request->get('page');
+        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $path         = route('transactions.index.all', [$objectType]);
+        $first        = $repository->firstNull();
+        $start        = null === $first ? new Carbon : $first->date;
+        $end          = new Carbon;
+        $subTitle     = (string)trans('firefly.all_' . $objectType);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setRange($start, $end)
+                  ->setTypes($types)->setLimit($pageSize)->setPage($page)->withAccountInformation()
+                  ->withBudgetInformation()->withCategoryInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath($path);
+
+        return view('transactions.index', compact('subTitle', 'objectType', 'subTitleIcon', 'groups', 'start', 'end'));
     }
 }

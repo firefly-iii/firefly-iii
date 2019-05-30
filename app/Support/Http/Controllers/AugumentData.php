@@ -24,12 +24,12 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -513,7 +513,7 @@ trait AugumentData
         // group by category ID:
         $grouped = [];
         /** @var array $journal */
-        foreach($array as $journal) {
+        foreach ($array as $journal) {
             $categoryId           = (int)$journal['category_id'];
             $grouped[$categoryId] = $grouped[$categoryId] ?? '0';
             $grouped[$categoryId] = bcadd($journal['amount'], $grouped[$categoryId]);
@@ -544,29 +544,27 @@ trait AugumentData
     }
 
 
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Group transactions by tag.
      *
-     * @param Collection $set
+     * @param array $array
      *
      * @return array
      */
-    protected function groupByTag(Collection $set): array // filter + group data
+    protected function groupByTag(array $array): array // filter + group data
     {
         // group by category ID:
         $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $journal     = $transaction->transactionJournal;
-            $journalTags = $journal->tags;
-            /** @var Tag $journalTag */
-            foreach ($journalTags as $journalTag) {
-                $journalTagId           = $journalTag->id;
-                $grouped[$journalTagId] = $grouped[$journalTagId] ?? '0';
-                $grouped[$journalTagId] = bcadd($transaction->transaction_amount, $grouped[$journalTagId]);
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $tags = $journal['tags'] ?? [];
+            /**
+             * @var int $id
+             * @var array $tag
+             */
+            foreach ($tags as $id => $tag) {
+                $grouped[$id] = $grouped[$id] ?? '0';
+                $grouped[$id] = bcadd($journal['amount'], $grouped[$id]);
             }
         }
 
@@ -765,17 +763,10 @@ trait AugumentData
     protected function spentInPeriodWithout(Carbon $start, Carbon $end): string // get data + augment with info
     {
         // collector
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $types     = [TransactionType::WITHDRAWAL];
-        $collector->setAllAssetAccounts()->setTypes($types)->setRange($start, $end)->withoutBudget();
-        $transactions = $collector->getTransactions();
-        $sum          = '0';
-        /** @var Transaction $entry */
-        foreach ($transactions as $entry) {
-            $sum = bcadd($entry->transaction_amount, $sum);
-        }
-
-        return $sum;
+        $collector->setTypes($types)->setRange($start, $end)->withoutBudget();
+        return $collector->getSum();
     }
 }

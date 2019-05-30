@@ -99,7 +99,7 @@ class AccountRepository implements AccountRepositoryInterface
                             ->where('account_meta.name', 'accountNumber')
                             ->where('account_meta.data', json_encode($number));
 
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -123,7 +123,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts()->where('iban', '!=', '')->whereNotNull('iban');
 
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -149,7 +149,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         $query = $this->user->accounts();
 
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             $query->leftJoin('account_types', 'accounts.account_type_id', '=', 'account_types.id');
             $query->whereIn('account_types.type', $types);
         }
@@ -244,7 +244,7 @@ class AccountRepository implements AccountRepositoryInterface
     {
         /** @var Collection $result */
         $query = $this->user->accounts();
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
         $query->orderBy('accounts.name','ASC');
@@ -267,7 +267,7 @@ class AccountRepository implements AccountRepositoryInterface
                 $query->where('name', 'accountRole');
             }]
         );
-        if (\count($types) > 0) {
+        if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
         $query->where('active', 1);

@@ -24,8 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Requests\TagFormRequest;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -171,8 +170,8 @@ class TagController extends Controller
     /**
      * Show a single tag.
      *
-     * @param Request     $request
-     * @param Tag         $tag
+     * @param Request $request
+     * @param Tag $tag
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -196,23 +195,23 @@ class TagController extends Controller
         $periods      = $this->getTagPeriodOverview($tag, $start);
         $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath($path);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
+                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end'));
     }
 
     /**
      * Show a single tag over all time.
      *
      * @param Request $request
-     * @param Tag     $tag
+     * @param Tag $tag
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      *
@@ -230,15 +229,15 @@ class TagController extends Controller
         $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
         $end          = new Carbon;
         $path         = route('tags.show', [$tag->id, 'all']);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAllAssetAccounts()->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withOpposingAccount()
-                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation()->removeFilter(InternalTransferFilter::class);
-        $transactions = $collector->getPaginatedTransactions();
-        $transactions->setPath($path);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setRange($start, $end)->setLimit($pageSize)->setPage($page)->withAccountInformation()
+                  ->setTag($tag)->withBudgetInformation()->withCategoryInformation();
+        $groups = $collector->getPaginatedGroups();
+        $groups->setPath($path);
         $sums = $this->repository->sumsOfTag($tag, $start, $end);
 
-        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'transactions', 'start', 'end'));
+        return view('tags.show', compact('tag', 'sums', 'periods', 'subTitle', 'subTitleIcon', 'groups', 'start', 'end'));
     }
 
     /**
@@ -276,7 +275,7 @@ class TagController extends Controller
      * Update a tag.
      *
      * @param TagFormRequest $request
-     * @param Tag            $tag
+     * @param Tag $tag
      *
      * @return RedirectResponse
      */

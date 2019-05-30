@@ -225,8 +225,8 @@ class CreateImport extends Command
             if (null === $importJob->tag) {
                 $this->errorLine('No transactions have been imported :(.');
             }
-            if (\count($importJob->errors) > 0) {
-                $this->infoLine(sprintf('%d error(s) occurred:', \count($importJob->errors)));
+            if (count($importJob->errors) > 0) {
+                $this->infoLine(sprintf('%d error(s) occurred:', count($importJob->errors)));
                 foreach ($importJob->errors as $err) {
                     $this->errorLine('- ' . $err);
                 }

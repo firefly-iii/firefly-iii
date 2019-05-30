@@ -47,6 +47,13 @@ interface GroupCollectorInterface
     public function getExtractedJournals(): array;
 
     /**
+     * Return the sum of all journals.
+     *
+     * @return string
+     */
+    public function getSum(): string;
+
+    /**
      * Return the groups.
      *
      * @return Collection
@@ -169,6 +176,20 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setTags(Collection $tags): GroupCollectorInterface;
+
+    /**
+     * Limit results to a transactions without a budget.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutBudget(): GroupCollectorInterface;
+
+    /**
+     * Limit results to a transactions without a category.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withoutCategory(): GroupCollectorInterface;
 
     /**
      * Limit the search to one specific transaction group.

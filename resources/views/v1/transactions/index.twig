@@ -1,7 +1,7 @@
 {% extends "./layout/default" %}
 
 {% block breadcrumbs %}
-    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, transactionType, start, end) }}
+    {{ Breadcrumbs.render(Route.getCurrentRoute.getName, objectType, start, end) }}
 {% endblock %}
 
 {% block content %}

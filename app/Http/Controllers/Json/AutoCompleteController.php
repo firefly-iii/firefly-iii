@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Json;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -98,12 +98,10 @@ class AutoCompleteController extends Controller
     /**
      * List of all journals.
      *
-     * @param Request                       $request
-     * @param TransactionCollectorInterface $collector
-     *
+     * @param Request $request
      * @return JsonResponse
      */
-    public function allTransactionJournals(Request $request, TransactionCollectorInterface $collector): JsonResponse
+    public function allTransactionJournals(Request $request): JsonResponse
     {
         $search = (string)$request->get('search');
         $cache  = new CacheProperties;
@@ -115,8 +113,22 @@ class AutoCompleteController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // find everything:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setLimit(250)->setPage(1);
-        $return = array_values(array_unique($collector->getTransactions()->pluck('description')->toArray()));
+
+        $journals = $collector->getExtractedJournals();
+        $return   = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            if (strlen($journal['group_title']) > 0) {
+                $return[] = $journal['group_title'];
+            }
+            if (strlen($journal['description']) > 0) {
+                $return[] = $journal['description'];
+            }
+        }
+        $return = array_unique($return);
 
         if ('' !== $search) {
             $return = array_values(
@@ -136,7 +148,7 @@ class AutoCompleteController extends Controller
 
     /**
      * @param Request $request
-     * @param string  $subject
+     * @param string $subject
      *
      * @return JsonResponse
      * @throws FireflyException
@@ -250,13 +262,12 @@ class AutoCompleteController extends Controller
     /**
      * List of journals with their ID.
      *
-     * @param Request                       $request
-     * @param TransactionCollectorInterface $collector
-     * @param TransactionJournal            $except
+     * @param Request $request
+     * @param TransactionJournal $except
      *
      * @return JsonResponse
      */
-    public function journalsWithId(Request $request, TransactionCollectorInterface $collector, TransactionJournal $except): JsonResponse
+    public function journalsWithId(Request $request, TransactionJournal $except): JsonResponse
     {
         $search = (string)$request->get('search');
         $cache  = new CacheProperties;
@@ -268,15 +279,17 @@ class AutoCompleteController extends Controller
             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // find everything:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setLimit(400)->setPage(1);
-        $set    = $collector->getTransactions()->pluck('description', 'journal_id')->toArray();
+        $set    = $collector->getExtractedJournals();
         $return = [];
-        foreach ($set as $id => $description) {
-            $id = (int)$id;
+        foreach ($set as $journal) {
+            $id = (int)$journal['transaction_journal_id'];
             if ($id !== $except->id) {
                 $return[] = [
                     'id'   => $id,
-                    'name' => $id . ': ' . $description,
+                    'name' => $id . ': ' . $journal['description'],
                 ];
             }
         }
@@ -327,13 +340,12 @@ class AutoCompleteController extends Controller
     /**
      * List of journals by type.
      *
-     * @param Request                       $request
-     * @param TransactionCollectorInterface $collector
-     * @param string                        $what
+     * @param Request $request
+     * @param string $what
      *
      * @return JsonResponse
      */
-    public function transactionJournals(Request $request, TransactionCollectorInterface $collector, string $what): JsonResponse
+    public function transactionJournals(Request $request, string $what): JsonResponse
     {
         $search = (string)$request->get('search');
         $cache  = new CacheProperties;
@@ -348,8 +360,15 @@ class AutoCompleteController extends Controller
         $type  = config('firefly.transactionTypesByWhat.' . $what);
         $types = [$type];
 
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setTypes($types)->setLimit(250)->setPage(1);
-        $return = array_unique($collector->getTransactions()->pluck('description')->toArray());
+        $result = $collector->getExtractedJournals();
+        $return = [];
+        foreach ($result as $journal) {
+            $return[] = $journal['description'];
+        }
+        $return = array_unique($return);
         sort($return);
 
         if ('' !== $search) {

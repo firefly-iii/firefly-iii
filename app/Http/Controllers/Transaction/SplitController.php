@@ -152,7 +152,7 @@ class SplitController extends Controller
 
         // flash messages
         // @codeCoverageIgnoreStart
-        if (\count($this->attachments->getMessages()->get('attachments')) > 0) {
+        if (count($this->attachments->getMessages()->get('attachments')) > 0) {
             session()->flash('info', $this->attachments->getMessages()->get('attachments'));
         }
         // @codeCoverageIgnoreEnd

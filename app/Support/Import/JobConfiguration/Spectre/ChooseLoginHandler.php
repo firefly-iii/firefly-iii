@@ -112,7 +112,7 @@ class ChooseLoginHandler implements SpectreJobConfigurationInterface
         $config = $this->importJob->configuration;
         $data   = ['logins' => []];
         $logins = $config['all-logins'] ?? [];
-        Log::debug(sprintf('Count of logins in configuration is %d.', \count($logins)));
+        Log::debug(sprintf('Count of logins in configuration is %d.', count($logins)));
         foreach ($logins as $login) {
             $data['logins'][] = new Login($login);
         }
