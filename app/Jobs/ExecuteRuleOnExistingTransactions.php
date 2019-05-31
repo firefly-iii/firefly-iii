@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Rule;
 use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
@@ -161,7 +161,7 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     public function handle()
     {
         // Lookup all journals that match the parameters specified
-        $transactions = $this->collectJournals();
+        $journals = $this->collectJournals();
         /** @var Processor $processor */
         $processor = app(Processor::class);
         $processor->make($this->rule, true);
@@ -169,9 +169,10 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
         $misses = 0;
         $total  = 0;
         // Execute the rules for each transaction
-        foreach ($transactions as $transaction) {
+        /** @var array $journal */
+        foreach ($journals as $journal) {
             ++$total;
-            $result = $processor->handleTransaction($transaction);
+            $result = $processor->handleJournalArray($journal);
             if ($result) {
                 ++$hits;
             }
@@ -186,15 +187,16 @@ class ExecuteRuleOnExistingTransactions extends Job implements ShouldQueue
     /**
      * Collect all journals that should be processed.
      *
-     * @return Collection
+     * @return array
      */
-    protected function collectJournals(): Collection
+    protected function collectJournals(): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setAccounts($this->accounts)->setRange($this->startDate, $this->endDate);
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 }

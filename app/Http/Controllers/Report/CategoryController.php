@@ -70,7 +70,7 @@ class CategoryController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
 
@@ -112,7 +112,7 @@ class CategoryController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
@@ -167,7 +167,7 @@ class CategoryController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
 
         // @codeCoverageIgnoreEnd

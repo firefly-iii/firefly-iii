@@ -141,9 +141,9 @@ interface RecurringRepositoryInterface
     /**
      * @param Recurrence $recurrence
      *
-     * @return Collection
+     * @return array
      */
-    public function getTransactions(Recurrence $recurrence): Collection;
+    public function getTransactions(Recurrence $recurrence): array;
 
     /**
      * Calculate the next X iterations starting on the date given in $date.

@@ -165,11 +165,12 @@ class RuleGroupController extends Controller
     /**
      * Execute the given rulegroup on a set of existing transactions.
      *
-     * @param SelectTransactionsRequest  $request
+     * @param SelectTransactionsRequest $request
      * @param AccountRepositoryInterface $repository
-     * @param RuleGroup                  $ruleGroup
+     * @param RuleGroup $ruleGroup
      *
      * @return RedirectResponse
+     * @throws \Exception
      */
     public function execute(SelectTransactionsRequest $request, AccountRepositoryInterface $repository, RuleGroup $ruleGroup): RedirectResponse
     {

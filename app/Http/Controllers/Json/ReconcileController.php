@@ -96,6 +96,7 @@ class ReconcileController extends Controller
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
+
         if (AccountType::ASSET !== $account->accountType->type) {
             throw new FireflyException(sprintf('Account %s is not an asset account.', $account->name));
         }
@@ -107,6 +108,7 @@ class ReconcileController extends Controller
         $clearedAmount  = '0';
         $route          = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
         // get sum of transaction amounts:
+        // TODO these methods no longer exist:
         $transactions = $this->repository->getTransactionsById($transactionIds);
         $cleared      = $this->repository->getTransactionsById($clearedIds);
         $countCleared = 0;

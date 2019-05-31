@@ -25,9 +25,7 @@ namespace FireflyIII\Repositories\Category;
 use Carbon\Carbon;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\CategoryDestroyService;
 use FireflyIII\Services\Internal\Update\CategoryUpdateService;
@@ -142,43 +140,30 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function earnedInPeriodPcWoCategory(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->withoutCategory();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
+        $journals = $collector->getExtractedJournals();
+        $return   = [];
 
-        $set = $collector->getTransactions();
-        $set = $set->filter(
-            function (Transaction $transaction) {
-                if (bccomp($transaction->transaction_amount, '0') === 1) {
-                    return $transaction;
-                }
-
-                return null;
-            }
-        );
-
-        $return = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
             if (!isset($return[$currencyId])) {
                 $return[$currencyId] = [
                     'spent'                   => '0',
                     'currency_id'             => $currencyId,
-                    'currency_symbol'         => $transaction->transaction_currency_symbol,
-                    'currency_code'           => $transaction->transaction_currency_code,
-                    'currency_decimal_places' => $transaction->transaction_currency_dp,
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
-            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $transaction->transaction_amount);
+            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $journal['amount']);
         }
 
         return $return;
@@ -194,8 +179,9 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function earnedInPeriodPerCurrency(Collection $categories, Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT]);
 
@@ -209,20 +195,12 @@ class CategoryRepository implements CategoryRepositoryInterface
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
-
-        $set    = $collector->getTransactions();
-        $return = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $jrnlCatId  = (int)$transaction->transaction_journal_category_id;
-            $transCatId = (int)$transaction->transaction_category_id;
-            $categoryId = max($jrnlCatId, $transCatId);
-            $currencyId = (int)$transaction->transaction_currency_id;
-            $name       = $transaction->transaction_category_name;
-            $name       = '' === (string)$name ? $transaction->transaction_journal_category_name : $name;
+        $journals = $collector->getExtractedJournals();
+        $return   = [];
+        foreach ($journals as $journal) {
+            $categoryId = (int)$journal['category_id'];
+            $currencyId = (int)$journal['currency_id'];
+            $name       = $journal['category_name'];
             // make array for category:
             if (!isset($return[$categoryId])) {
                 $return[$categoryId] = [
@@ -234,13 +212,13 @@ class CategoryRepository implements CategoryRepositoryInterface
                 $return[$categoryId]['earned'][$currencyId] = [
                     'earned'                  => '0',
                     'currency_id'             => $currencyId,
-                    'currency_symbol'         => $transaction->transaction_currency_symbol,
-                    'currency_code'           => $transaction->transaction_currency_code,
-                    'currency_decimal_places' => $transaction->transaction_currency_dp,
+                    'currency_symbol'         => $journal['currency_symbol'],
+                    'currency_code'           => $journal['currency_code'],
+                    'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
             $return[$categoryId]['earned'][$currencyId]['earned']
-                = bcadd($return[$categoryId]['earned'][$currencyId]['earned'], $transaction->transaction_amount);
+                = bcadd($return[$categoryId]['earned'][$currencyId]['earned'], $journal['amount']);
         }
 
         return $return;
@@ -521,23 +499,20 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         // get all transactions:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setCategories($categories)->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER])
-                  ->withOpposingAccount();
-        $transactions = $collector->getTransactions();
+                  ->withAccountInformation()->withCategoryInformation();
+        $journals = $collector->getExtractedJournals();
 
         // loop transactions:
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            // if positive, skip:
-            if (1 === bccomp($transaction->transaction_amount, '0')) {
-                continue;
-            }
-            $categoryId                          = max((int)$transaction->transaction_journal_category_id, (int)$transaction->transaction_category_id);
-            $date                                = $transaction->date->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
+
+        foreach ($journals as $journal) {
+            $categoryId                          = (int)$journal['category_id'];
+            $date                                = $journal['date']->format($carbonFormat);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $journal['amount']);
         }
 
         return $data;
@@ -553,29 +528,28 @@ class CategoryRepository implements CategoryRepositoryInterface
     public function periodExpensesNoCategory(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->withOpposingAccount();
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($accounts)->setRange($start, $end)->withAccountInformation();
         $collector->setTypes([TransactionType::WITHDRAWAL, TransactionType::TRANSFER]);
         $collector->withoutCategory();
-        $transactions = $collector->getTransactions();
-        $result       = [
+        $journals = $collector->getExtractedJournals();
+        $result   = [
             'entries' => [],
             'name'    => (string)trans('firefly.no_category'),
             'sum'     => '0',
         ];
 
-        foreach ($transactions as $transaction) {
-            // if positive, skip:
-            if (1 === bccomp($transaction->transaction_amount, '0')) {
-                continue;
-            }
-            $date = $transaction->date->format($carbonFormat);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $date = $journal['date']->format($carbonFormat);
 
             if (!isset($result['entries'][$date])) {
                 $result['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+            $result['entries'][$date] = bcadd($result['entries'][$date], $journal['amount']);
         }
 
         return $result;
@@ -604,23 +578,20 @@ class CategoryRepository implements CategoryRepositoryInterface
         }
 
         // get all transactions:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setCategories($categories)->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
-                  ->withOpposingAccount();
-        $transactions = $collector->getTransactions();
+                  ->withAccountInformation();
+        $journals = $collector->getExtractedJournals();
 
         // loop transactions:
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            // if negative, skip:
-            if (bccomp($transaction->transaction_amount, '0') === -1) {
-                continue;
-            }
-            $categoryId                          = max((int)$transaction->transaction_journal_category_id, (int)$transaction->transaction_category_id);
-            $date                                = $transaction->date->format($carbonFormat);
-            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $transaction->transaction_amount);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $categoryId                          = (int)$journal['category_id'];
+            $date                                = $journal['date']->format($carbonFormat);
+            $data[$categoryId]['entries'][$date] = bcadd($data[$categoryId]['entries'][$date] ?? '0', $journal['amount']);
         }
 
         return $data;
@@ -637,29 +608,28 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         Log::debug('Now in periodIncomeNoCategory()');
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->withOpposingAccount();
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $collector->setAccounts($accounts)->setRange($start, $end)->withAccountInformation();
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER]);
         $collector->withoutCategory();
-        $transactions = $collector->getTransactions();
-        $result       = [
+        $journals = $collector->getExtractedJournals();
+        $result   = [
             'entries' => [],
             'name'    => (string)trans('firefly.no_category'),
             'sum'     => '0',
         ];
         Log::debug('Looping transactions..');
-        foreach ($transactions as $transaction) {
-            // if negative, skip:
-            if (bccomp($transaction->transaction_amount, '0') === -1) {
-                continue;
-            }
-            $date = $transaction->date->format($carbonFormat);
+
+        foreach ($journals as $journal) {
+            $date = $journal['date']->format($carbonFormat);
 
             if (!isset($result['entries'][$date])) {
                 $result['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+            $result['entries'][$date] = bcadd($result['entries'][$date], $journal['amount']);
         }
         Log::debug('Done looping transactions..');
         Log::debug('Finished periodIncomeNoCategory()');
@@ -714,6 +684,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
+
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setCategories($categories);
 
@@ -750,7 +722,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         $set    = $collector->getExtractedJournals();
         $return = [];
         /** @var array $journal */
-        foreach($set as $journal) {
+        foreach ($set as $journal) {
             $currencyId = (int)$journal['currency_id'];
             if (!isset($return[$currencyId])) {
                 $return[$currencyId] = [
@@ -833,30 +805,17 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function spentInPeriodWithoutCategory(Collection $accounts, Carbon $start, Carbon $end): string
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutCategory();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
 
-        $set = $collector->getTransactions();
-        $set = $set->filter(
-            function (Transaction $transaction) {
-                if (bccomp($transaction->transaction_amount, '0') === -1) {
-                    return $transaction;
-                }
-
-                return null;
-            }
-        );
-
-        return (string)$set->sum('transaction_amount');
+        return $collector->getSum();
     }
 
     /**

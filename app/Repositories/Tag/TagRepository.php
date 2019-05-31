@@ -26,7 +26,6 @@ use Carbon\Carbon;
 use DB;
 use FireflyIII\Factory\TagFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
@@ -84,13 +83,13 @@ class TagRepository implements TagRepositoryInterface
      */
     public function earnedInPeriod(Tag $tag, Carbon $start, Carbon $end): string
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAllAssetAccounts()->setTag($tag);
-        $set = $collector->getTransactions();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return (string)$set->sum('transaction_amount');
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setTag($tag);
+
+        return $collector->getSum();
     }
 
     /**
@@ -167,7 +166,7 @@ class TagRepository implements TagRepositoryInterface
     public function incomeInPeriod(Tag $tag, Carbon $start, Carbon $end): array
     {
         /** @var GroupCollectorInterface $collector */
-        $collector  =app(GroupCollectorInterface::class);
+        $collector = app(GroupCollectorInterface::class);
 
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setTag($tag);
@@ -244,13 +243,13 @@ class TagRepository implements TagRepositoryInterface
      */
     public function spentInPeriod(Tag $tag, Carbon $start, Carbon $end): string
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($this->user);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAllAssetAccounts()->setTag($tag);
-        $set = $collector->getTransactions();
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return (string)$set->sum('transaction_amount');
+        $collector->setUser($this->user);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setTag($tag);
+
+        return $collector->getSum();
     }
 
     /**

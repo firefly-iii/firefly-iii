@@ -27,14 +27,12 @@ use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\RuleAction;
 use FireflyIII\Models\RuleTrigger;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -164,6 +162,7 @@ class BudgetRepository implements BudgetRepositoryInterface
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
+
         return $collector->getSum();
 
     }
@@ -556,18 +555,19 @@ class BudgetRepository implements BudgetRepositoryInterface
         }
 
         // get all transactions:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setBudgets($budgets);
-        $transactions = $collector->getTransactions();
+        $journals = $collector->getExtractedJournals();
 
         // loop transactions:
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            $budgetId                          = max((int)$transaction->transaction_journal_budget_id, (int)$transaction->transaction_budget_id);
-            $date                              = $transaction->date->format($carbonFormat);
-            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $transaction->transaction_amount);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $budgetId                          = (int)$journal['budget_id'];
+            $date                              = $journal['date']->format($carbonFormat);
+            $data[$budgetId]['entries'][$date] = bcadd($data[$budgetId]['entries'][$date] ?? '0', $journal['amount']);
         }
 
         return $data;
@@ -623,25 +623,28 @@ class BudgetRepository implements BudgetRepositoryInterface
     public function getNoBudgetPeriodReport(Collection $accounts, Carbon $start, Carbon $end): array
     {
         $carbonFormat = Navigation::preferredCarbonFormat($start, $end);
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::WITHDRAWAL]);
         $collector->withoutBudget();
-        $transactions = $collector->getTransactions();
-        $result       = [
+        $journals = $collector->getExtractedJournals();
+        $result   = [
             'entries' => [],
             'name'    => (string)trans('firefly.no_budget'),
             'sum'     => '0',
         ];
 
-        foreach ($transactions as $transaction) {
-            $date = $transaction->date->format($carbonFormat);
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $date = $journal['date']->format($carbonFormat);
 
             if (!isset($result['entries'][$date])) {
                 $result['entries'][$date] = '0';
             }
-            $result['entries'][$date] = bcadd($result['entries'][$date], $transaction->transaction_amount);
+            $result['entries'][$date] = bcadd($result['entries'][$date], $journal['amount']);
         }
 
         return $result;
@@ -794,39 +797,41 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function spentInPeriodWoBudgetMc(Collection $accounts, Carbon $start, Carbon $end): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setUser($this->user);
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->withoutBudget();
 
         if ($accounts->count() > 0) {
             $collector->setAccounts($accounts);
         }
-        if (0 === $accounts->count()) {
-            $collector->setAllAssetAccounts();
-        }
-
-        $set        = $collector->getTransactions();
+        $journals   = $collector->getExtractedJournals();
         $return     = [];
         $total      = [];
         $currencies = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $code = $transaction->transaction_currency_code;
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $code = $journal['currency_code'];
             if (!isset($currencies[$code])) {
-                $currencies[$code] = $transaction->transactionCurrency;
+                $currencies[$code] = [
+                    'id'             => $journal['currency_id'],
+                    'name'           => $journal['currency_name'],
+                    'symbol'         => $journal['currency_symbol'],
+                    'decimal_places' => $journal['currency_decimal_places'],
+                ];
             }
-            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $transaction->transaction_amount) : $transaction->transaction_amount;
+            $total[$code] = isset($total[$code]) ? bcadd($total[$code], $journal['amount']) : $journal['amount'];
         }
         foreach ($total as $code => $spent) {
             /** @var TransactionCurrency $currency */
             $currency = $currencies[$code];
             $return[] = [
-                'currency_id'             => $currency->id,
+                'currency_id'             => $currency['id'],
                 'currency_code'           => $code,
-                'currency_symbol'         => $currency->symbol,
-                'currency_decimal_places' => $currency->decimal_places,
-                'amount'                  => round($spent, $currency->decimal_places),
+                'currency_symbol'         => $currency['symbol'],
+                'currency_decimal_places' => $currency['decimal_places'],
+                'amount'                  => round($spent, $currency['decimal_places']),
             ];
         }
 

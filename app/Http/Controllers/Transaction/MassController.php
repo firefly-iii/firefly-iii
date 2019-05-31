@@ -25,7 +25,7 @@ namespace FireflyIII\Http\Controllers\Transaction;
 use Carbon\Carbon;
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Filter\TransactionViewFilter;
 use FireflyIII\Helpers\Filter\TransferFilter;
 use FireflyIII\Http\Controllers\Controller;
@@ -126,10 +126,13 @@ class MassController extends Controller
      * @param Collection $journals
      *
      * @return IlluminateView
+     *
+     * TODO rebuild this feature.
+     * @throws FireflyException
      */
     public function edit(Collection $journals): IlluminateView
     {
-        throw new FireflyException('Needs refactor');
+        throw new FireflyException(sprintf('The mass-editor is not available in v%s of Firefly III. Sorry about that. It will be back soon.', config('firefly.version')));
         /** @var User $user */
         $user     = auth()->user();
         $subTitle = (string)trans('firefly.mass_edit_journals');
@@ -148,8 +151,8 @@ class MassController extends Controller
         $transformer = app(TransactionTransformer::class);
         $transformer->setParameters(new ParameterBag);
 
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($user);
         $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
         $collector->setJournals($journals);
@@ -175,7 +178,7 @@ class MassController extends Controller
     /**
      * Mass update of journals.
      *
-     * @param MassEditJournalRequest     $request
+     * @param MassEditJournalRequest $request
      * @param JournalRepositoryInterface $repository
      *
      * @return mixed

@@ -86,6 +86,42 @@ interface GroupCollectorInterface
     public function setBill(Bill $bill): GroupCollectorInterface;
 
     /**
+     * Limit the search to a specific set of bills.
+     *
+     * @param Collection $bills
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBills(Collection $bills): GroupCollectorInterface;
+
+    /**
+     * Get transactions with a specific amount.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function amountIs(string $amount): GroupCollectorInterface;
+
+    /**
+     * Get transactions where the amount is less than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function amountLess(string $amount): GroupCollectorInterface;
+
+    /**
+     * Get transactions where the amount is more than.
+     *
+     * @param string $amount
+     *
+     * @return GroupCollectorInterface
+     */
+    public function amountMore(string $amount): GroupCollectorInterface;
+
+    /**
      * Limit the search to a specific budget.
      *
      * @param Budget $budget
@@ -123,13 +159,31 @@ interface GroupCollectorInterface
     public function setCurrency(TransactionCurrency $currency): GroupCollectorInterface;
 
     /**
-     * Limit the result to a set of specific journals.
+     * Limit the result to a set of specific transaction journals.
      *
      * @param array $journalIds
      *
      * @return GroupCollectorInterface
      */
     public function setJournalIds(array $journalIds): GroupCollectorInterface;
+
+    /**
+     * Limit the result to a specific transaction group.
+     *
+     * @param TransactionGroup $transactionGroup
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setGroup(TransactionGroup $transactionGroup): GroupCollectorInterface;
+
+    /**
+     * Search for words in descriptions.
+     *
+     * @param array $array
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setSearchWords(array $array): GroupCollectorInterface;
 
     /**
      * Limit the number of returned entries.
@@ -240,6 +294,24 @@ interface GroupCollectorInterface
      * @return GroupCollectorInterface
      */
     public function setCategories(Collection $categories): GroupCollectorInterface;
+
+    /**
+     * Collect transactions before a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setBefore(Carbon $date): GroupCollectorInterface;
+
+    /**
+     * Collect transactions after a specific date.
+     *
+     * @param Carbon $date
+     *
+     * @return GroupCollectorInterface
+     */
+    public function setAfter(Carbon $date): GroupCollectorInterface;
 
     /**
      * Include bill name + ID.

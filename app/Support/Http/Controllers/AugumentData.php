@@ -25,12 +25,10 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -86,22 +84,19 @@ trait AugumentData
      */
     protected function earnedByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
-        $collector->setOpposingAccounts($opposing)->withCategoryInformation();
-        $set = $collector->getTransactions();
-        $sum = [];
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $total = $assets->merge($opposing);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($total);
+        $collector->withCategoryInformation();
+        $journals = $collector->getExtractedJournals();
+        $sum      = [];
         // loop to support multi currency
-        foreach ($set as $transaction) {
-            $currencyId   = $transaction->transaction_currency_id;
-            $categoryName = $transaction->transaction_category_name;
-            $categoryId   = (int)$transaction->transaction_category_id;
-            // if null, grab from journal:
-            if (0 === $categoryId) {
-                $categoryName = $transaction->transaction_journal_category_name;
-                $categoryId   = (int)$transaction->transaction_journal_category_id;
-            }
+        foreach ($journals as $journal) {
+            $currencyId   = $journal['currency_id'];
+            $categoryName = $journal['category_name'];
+            $categoryId   = (int)$journal['category_id'];
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
@@ -116,8 +111,8 @@ trait AugumentData
                                 'name' => $categoryName,
                             ],
                             'currency' => [
-                                'symbol' => $transaction->transaction_currency_symbol,
-                                'dp'     => $transaction->transaction_currency_dp,
+                                'symbol' => $journal['currency_symbol'],
+                                'dp'     => $journal['currency_decimal_places'],
                             ],
                         ],
                     ],
@@ -126,9 +121,9 @@ trait AugumentData
 
             // add amount
             $sum[$categoryId]['per_currency'][$currencyId]['sum'] = bcadd(
-                $sum[$categoryId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+                $sum[$categoryId]['per_currency'][$currencyId]['sum'], $journal['amount']
             );
-            $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $transaction->transaction_amount);
+            $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $journal['amount']);
         }
 
         return $sum;
@@ -146,33 +141,34 @@ trait AugumentData
      */
     protected function earnedInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($assets);
-        $collector->setOpposingAccounts($opposing);
-        $set = $collector->getTransactions();
-        $sum = [
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $total = $assets->merge($opposing);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($total);
+        $journals = $collector->getExtractedJournals();
+        $sum      = [
             'grand_sum'    => '0',
             'per_currency' => [],
         ];
         // loop to support multi currency
-        foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
 
             // if not set, set to zero:
             if (!isset($sum['per_currency'][$currencyId])) {
                 $sum['per_currency'][$currencyId] = [
                     'sum'      => '0',
                     'currency' => [
-                        'symbol' => $transaction->transaction_currency_symbol,
-                        'dp'     => $transaction->transaction_currency_dp,
+                        'symbol'         => $journal['currency_symbol'],
+                        'decimal_places' => $journal['currency_decimal_places'],
                     ],
                 ];
             }
 
             // add amount
-            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $transaction->transaction_amount);
-            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $transaction->transaction_amount);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $journal['amount']);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $journal['amount']);
         }
 
         return $sum;
@@ -525,19 +521,27 @@ trait AugumentData
     /**
      * Group set of transactions by name of opposing account.
      *
-     * @param Collection $set
+     * @param array $array
      *
      * @return array
      */
-    protected function groupByName(Collection $set): array // filter + group data
+    protected function groupByName(array $array): array // filter + group data
     {
+
         // group by opposing account name.
         $grouped = [];
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $name           = $transaction->opposing_account_name;
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $name = '(no name)';
+            if (TransactionType::WITHDRAWAL === $journal['transaction_type_type']) {
+                $name = $journal['destination_account_name'];
+            }
+            if (TransactionType::WITHDRAWAL !== $journal['transaction_type_type']) {
+                $name = $journal['source_account_name'];
+            }
+
             $grouped[$name] = $grouped[$name] ?? '0';
-            $grouped[$name] = bcadd($transaction->transaction_amount, $grouped[$name]);
+            $grouped[$name] = bcadd($journal['amount'], $grouped[$name]);
         }
 
         return $grouped;
@@ -587,22 +591,18 @@ trait AugumentData
      */
     protected function spentByBudget(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
-        $collector->setOpposingAccounts($opposing)->withBudgetInformation();
-        $set = $collector->getTransactions();
-        $sum = [];
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $total     = $assets->merge($opposing);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($total);
+        $collector->withBudgetInformation();
+        $journals = $collector->getExtractedJournals();
+        $sum      = [];
         // loop to support multi currency
-        foreach ($set as $transaction) {
-            $currencyId = $transaction->transaction_currency_id;
-            $budgetName = $transaction->transaction_budget_name;
-            $budgetId   = (int)$transaction->transaction_budget_id;
-            // if null, grab from journal:
-            if (0 === $budgetId) {
-                $budgetName = $transaction->transaction_journal_budget_name;
-                $budgetId   = (int)$transaction->transaction_journal_budget_id;
-            }
+        foreach ($journals as $journal) {
+            $currencyId = $journal['currency_id'];
+            $budgetName = $journal['budget_name'];
+            $budgetId   = (int)$journal['budget_id'];
 
             // if not set, set to zero:
             if (!isset($sum[$budgetId][$currencyId])) {
@@ -617,8 +617,8 @@ trait AugumentData
                                 'name' => $budgetName,
                             ],
                             'currency' => [
-                                'symbol' => $transaction->transaction_currency_symbol,
-                                'dp'     => $transaction->transaction_currency_dp,
+                                'symbol' => $journal['currency_symbol'],
+                                'dp'     => $journal['currency_decimal_places'],
                             ],
                         ],
                     ],
@@ -627,9 +627,9 @@ trait AugumentData
 
             // add amount
             $sum[$budgetId]['per_currency'][$currencyId]['sum'] = bcadd(
-                $sum[$budgetId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+                $sum[$budgetId]['per_currency'][$currencyId]['sum'], $journal['amount']
             );
-            $sum[$budgetId]['grand_total']                      = bcadd($sum[$budgetId]['grand_total'], $transaction->transaction_amount);
+            $sum[$budgetId]['grand_total']                      = bcadd($sum[$budgetId]['grand_total'], $journal['amount']);
         }
 
         return $sum;
@@ -652,22 +652,18 @@ trait AugumentData
      */
     protected function spentByCategory(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
-        $collector->setOpposingAccounts($opposing)->withCategoryInformation();
-        $set = $collector->getTransactions();
-        $sum = [];
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $total     = $assets->merge($opposing);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($total);
+        $collector->withCategoryInformation();
+        $journals = $collector->getExtractedJournals();
+        $sum      = [];
         // loop to support multi currency
-        foreach ($set as $transaction) {
-            $currencyId   = $transaction->transaction_currency_id;
-            $categoryName = $transaction->transaction_category_name;
-            $categoryId   = (int)$transaction->transaction_category_id;
-            // if null, grab from journal:
-            if (0 === $categoryId) {
-                $categoryName = $transaction->transaction_journal_category_name;
-                $categoryId   = (int)$transaction->transaction_journal_category_id;
-            }
+        foreach ($journals as $journal) {
+            $currencyId   = (int)$journal['currency_id'];
+            $categoryName = $journal['category_name'];
+            $categoryId   = (int)$journal['category_id'];
 
             // if not set, set to zero:
             if (!isset($sum[$categoryId][$currencyId])) {
@@ -682,8 +678,8 @@ trait AugumentData
                                 'name' => $categoryName,
                             ],
                             'currency' => [
-                                'symbol' => $transaction->transaction_currency_symbol,
-                                'dp'     => $transaction->transaction_currency_dp,
+                                'symbol' => $journal['currency_symbol'],
+                                'dp'     => $journal['currency_decimal_places'],
                             ],
                         ],
                     ],
@@ -692,9 +688,9 @@ trait AugumentData
 
             // add amount
             $sum[$categoryId]['per_currency'][$currencyId]['sum'] = bcadd(
-                $sum[$categoryId]['per_currency'][$currencyId]['sum'], $transaction->transaction_amount
+                $sum[$categoryId]['per_currency'][$currencyId]['sum'], $journal['amount']
             );
-            $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $transaction->transaction_amount);
+            $sum[$categoryId]['grand_total']                      = bcadd($sum[$categoryId]['grand_total'], $journal['amount']);
         }
 
         return $sum;
@@ -714,33 +710,35 @@ trait AugumentData
      */
     protected function spentInPeriod(Collection $assets, Collection $opposing, Carbon $start, Carbon $end): array // get data + augment with info
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($assets);
-        $collector->setOpposingAccounts($opposing);
-        $set = $collector->getTransactions();
-        $sum = [
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $total = $assets->merge($opposing);
+        $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($total);
+        $journals = $collector->getExtractedJournals();
+        $sum      = [
             'grand_sum'    => '0',
             'per_currency' => [],
         ];
         // loop to support multi currency
-        foreach ($set as $transaction) {
-            $currencyId = (int)$transaction->transaction_currency_id;
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
 
             // if not set, set to zero:
             if (!isset($sum['per_currency'][$currencyId])) {
                 $sum['per_currency'][$currencyId] = [
                     'sum'      => '0',
                     'currency' => [
-                        'symbol' => $transaction->transaction_currency_symbol,
-                        'dp'     => $transaction->transaction_currency_dp,
+                        'name'           => $journal['currency_name'],
+                        'symbol'         => $journal['currency_symbol'],
+                        'decimal_places' => $journal['currency_decimal_places'],
                     ],
                 ];
             }
 
             // add amount
-            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $transaction->transaction_amount);
-            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $transaction->transaction_amount);
+            $sum['per_currency'][$currencyId]['sum'] = bcadd($sum['per_currency'][$currencyId]['sum'], $journal['amount']);
+            $sum['grand_sum']                        = bcadd($sum['grand_sum'], $journal['amount']);
         }
 
         return $sum;
@@ -767,6 +765,7 @@ trait AugumentData
         $collector = app(GroupCollectorInterface::class);
         $types     = [TransactionType::WITHDRAWAL];
         $collector->setTypes($types)->setRange($start, $end)->withoutBudget();
+
         return $collector->getSum();
     }
 }

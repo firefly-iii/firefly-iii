@@ -23,9 +23,8 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
@@ -70,8 +69,8 @@ class ExpenseController extends Controller
      *
      * @param Collection $accounts
      * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -110,7 +109,7 @@ class ExpenseController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::budget: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
@@ -125,8 +124,8 @@ class ExpenseController extends Controller
      *
      * @param Collection $accounts
      * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -175,7 +174,7 @@ class ExpenseController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
@@ -189,8 +188,8 @@ class ExpenseController extends Controller
      *
      * @param Collection $accounts
      * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return array|mixed|string
      */
@@ -227,7 +226,7 @@ class ExpenseController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
@@ -242,8 +241,8 @@ class ExpenseController extends Controller
      *
      * @param Collection $accounts
      * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return string
      */
@@ -265,22 +264,23 @@ class ExpenseController extends Controller
             $all = $all->merge($combi);
         }
         // get all expenses in period:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts);
-        $collector->setOpposingAccounts($all);
-        $set    = $collector->getTransactions();
-        $sorted = $set->sortBy(
-            function (Transaction $transaction) {
-                return (float)$transaction->transaction_amount;
-            }
-        );
+        $collector->setAccounts($all);
+        $set = $collector->getExtractedJournals();
+
+        usort($set, function ($a, $b) {
+            return $a['amount'] <=> $b['amount'];
+        });
+
         try {
             $result = view('reports.partials.top-transactions', compact('sorted'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::topExpense: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);
@@ -293,8 +293,8 @@ class ExpenseController extends Controller
      *
      * @param Collection $accounts
      * @param Collection $expense
-     * @param Carbon     $start
-     * @param Carbon     $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      * @return mixed|string
      */
@@ -316,22 +316,24 @@ class ExpenseController extends Controller
             $all = $all->merge($combi);
         }
         // get all expenses in period:
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($accounts);
-        $collector->setOpposingAccounts($all);
-        $set    = $collector->getTransactions();
-        $sorted = $set->sortByDesc(
-            function (Transaction $transaction) {
-                return (float)$transaction->transaction_amount;
-            }
-        );
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+
+        $total = $accounts->merge($all);
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($total);
+        $journals = $collector->getExtractedJournals();
+
+        usort($journals, function ($a, $b) {
+            return $a['amount'] <=> $b['amount'];
+        });
+
         try {
             $result = view('reports.partials.top-transactions', compact('sorted'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::topIncome: %s', $e->getMessage()));
-            $result = 'An error prevented Firefly III from rendering. Apologies.';
+            $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
         $cache->store($result);

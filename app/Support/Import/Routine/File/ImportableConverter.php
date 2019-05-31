@@ -90,78 +90,10 @@ class ImportableConverter
     }
 
     /**
-     * @param ImportJob $importJob
-     */
-    public function setImportJob(ImportJob $importJob): void
-    {
-        $this->importJob = $importJob;
-        $this->config    = $importJob->configuration;
-
-        // repository is used for error messages
-        $this->repository = app(ImportJobRepositoryInterface::class);
-        $this->repository->setUser($importJob->user);
-
-        // asset account mapper can map asset accounts (makes sense right?)
-        $this->assetMapper = app(AssetAccountMapper::class);
-        $this->assetMapper->setUser($importJob->user);
-        $this->assetMapper->setDefaultAccount($this->config['import-account'] ?? 0);
-
-        // asset account repository is used for currency information
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->accountRepository->setUser($importJob->user);
-
-        // opposing account mapper:
-        $this->opposingMapper = app(OpposingAccountMapper::class);
-        $this->opposingMapper->setUser($importJob->user);
-
-        // currency mapper:
-        $this->currencyMapper = app(CurrencyMapper::class);
-        $this->currencyMapper->setUser($importJob->user);
-        $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($importJob->user);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     *
-     * @param array $mappedValues
-     */
-    public function setMappedValues(array $mappedValues): void
-    {
-        $this->mappedValues = $mappedValues;
-    }
-
-    /**
-     * @param string|null $date
-     *
-     * @return string|null
-     */
-    private function convertDateValue(string $date = null): ?string
-    {
-        $result = null;
-        if (null !== $date) {
-            try {
-                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
-                $dateFormat = $this->config['date-format'] ?? 'Ymd';
-                if ('!' !== $dateFormat{0}) {
-                    $dateFormat = '!' . $dateFormat;
-                }
-                $object = Carbon::createFromFormat($dateFormat, $date);
-                $result = $object->format('Y-m-d H:i:s');
-                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
-            } catch (InvalidDateException|InvalidArgumentException $e) {
-                Log::error($e->getMessage());
-                Log::error($e->getTraceAsString());
-            }
-        }
-
-        return $result;
-    }
-
-    /**
      * @param ImportTransaction $importable
      *
-     * @throws FireflyException
      * @return array
+     * @throws FireflyException
      */
     private function convertSingle(ImportTransaction $importable): array
     {
@@ -218,60 +150,98 @@ class ImportableConverter
         }
 
         return [
-            'type'               => $transactionType,
-            'date'               => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
-            'tags'               => $importable->tags,
-            'user'               => $this->importJob->user_id,
-            'notes'              => $importable->note,
 
-            // all custom fields:
-            'internal_reference' => $importable->meta['internal-reference'] ?? null,
-            'sepa_cc'            => $importable->meta['sepa_cc'] ?? null,
-            'sepa_ct_op'         => $importable->meta['sepa_ct_op'] ?? null,
-            'sepa_ct_id'         => $importable->meta['sepa_ct_id'] ?? null,
-            'sepa_db'            => $importable->meta['sepa_db'] ?? null,
-            'sepa_country'       => $importable->meta['sepa_country'] ?? null,
-            'sepa_ep'            => $importable->meta['sepa_ep'] ?? null,
-            'sepa_ci'            => $importable->meta['sepa_ci'] ?? null,
-            'sepa_batch_id'      => $importable->meta['sepa_batch_id'] ?? null,
-            'interest_date'      => $this->convertDateValue($importable->meta['date-interest'] ?? null),
-            'book_date'          => $this->convertDateValue($importable->meta['date-book'] ?? null),
-            'process_date'       => $this->convertDateValue($importable->meta['date-process'] ?? null),
-            'due_date'           => $this->convertDateValue($importable->meta['date-due'] ?? null),
-            'payment_date'       => $this->convertDateValue($importable->meta['date-payment'] ?? null),
-            'invoice_date'       => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
-            'external_id'        => $importable->externalId,
-            'original-source'    => $importable->meta['original-source'] ?? null,
-            // journal data:
-            'description'        => $importable->description,
-            'piggy_bank_id'      => null,
-            'piggy_bank_name'    => null,
-            'bill_id'            => $importable->billId,
-            'bill_name'          => $importable->billName,
-
-            // transaction data:
-            'transactions'       => [
+            'user'         => $this->importJob->user_id,
+            'group_title'  => null,
+            'transactions' => [
                 [
-                    'currency_id'           => $currency->id,
-                    'currency_code'         => null,
-                    'description'           => null,
-                    'amount'                => $amount,
-                    'budget_id'             => $importable->budgetId,
-                    'budget_name'           => $importable->budgetName,
-                    'category_id'           => $importable->categoryId,
-                    'category_name'         => $importable->categoryName,
-                    'source_id'             => $source->id,
-                    'source_name'           => null,
-                    'destination_id'        => $destination->id,
-                    'destination_name'      => null,
+                    'user'  => $this->importJob->user_id,
+                    'type'  => $transactionType,
+                    'date'  => $this->convertDateValue($importable->date) ?? Carbon::now()->format('Y-m-d H:i:s'),
+                    'order' => 0,
+
+                    'currency_id'   => $currency->id,
+                    'currency_code' => null,
+
                     'foreign_currency_id'   => $importable->foreignCurrencyId,
                     'foreign_currency_code' => null === $foreignCurrency ? null : $foreignCurrency->code,
-                    'foreign_amount'        => $foreignAmount,
-                    'reconciled'            => false,
-                    'identifier'            => 0,
+
+                    'amount'         => $amount,
+                    'foreign_amount' => $foreignAmount,
+
+                    'description' => $importable->description,
+
+                    'source_id'        => $source->id,
+                    'source_name'      => null,
+                    'destination_id'   => $destination->id,
+                    'destination_name' => null,
+
+                    'budget_id'   => $importable->budgetId,
+                    'budget_name' => $importable->budgetName,
+
+                    'category_id'   => $importable->categoryId,
+                    'category_name' => $importable->categoryName,
+
+                    'bill_id'   => $importable->billId,
+                    'bill_name' => $importable->billName,
+
+                    'piggy_bank_id'   => null,
+                    'piggy_bank_name' => null,
+
+                    'reconciled' => false,
+
+                    'notes' => $importable->note,
+                    'tags'  => $importable->tags,
+
+                    'internal_reference' => $importable->meta['internal-reference'] ?? null,
+                    'external_id'        => $importable->externalId,
+                    'original_source'    => $importable->meta['original-source'] ?? null,
+
+                    'sepa_cc'       => $importable->meta['sepa_cc'] ?? null,
+                    'sepa_ct_op'    => $importable->meta['sepa_ct_op'] ?? null,
+                    'sepa_ct_id'    => $importable->meta['sepa_ct_id'] ?? null,
+                    'sepa_db'       => $importable->meta['sepa_db'] ?? null,
+                    'sepa_country'  => $importable->meta['sepa_country'] ?? null,
+                    'sepa_ep'       => $importable->meta['sepa_ep'] ?? null,
+                    'sepa_ci'       => $importable->meta['sepa_ci'] ?? null,
+                    'sepa_batch_id' => $importable->meta['sepa_batch_id'] ?? null,
+
+                    'interest_date' => $this->convertDateValue($importable->meta['date-interest'] ?? null),
+                    'book_date'     => $this->convertDateValue($importable->meta['date-book'] ?? null),
+                    'process_date'  => $this->convertDateValue($importable->meta['date-process'] ?? null),
+                    'due_date'      => $this->convertDateValue($importable->meta['date-due'] ?? null),
+                    'payment_date'  => $this->convertDateValue($importable->meta['date-payment'] ?? null),
+                    'invoice_date'  => $this->convertDateValue($importable->meta['date-invoice'] ?? null),
                 ],
             ],
         ];
+
+    }
+
+    /**
+     * @param string $source
+     * @param string $destination
+     *
+     * @return string
+     */
+    private function getTransactionType(string $source, string $destination): string
+    {
+        $type = 'unknown';
+
+        if ($source === AccountType::ASSET && $destination === AccountType::ASSET) {
+            Log::debug('Source and destination are asset accounts. This is a transfer.');
+            $type = 'transfer';
+        }
+        if ($source === AccountType::REVENUE) {
+            Log::debug('Source is a revenue account. This is a deposit.');
+            $type = 'deposit';
+        }
+        if ($destination === AccountType::EXPENSE) {
+            Log::debug('Destination is an expense account. This is a withdrawal.');
+            $type = 'withdrawal';
+        }
+
+        return $type;
     }
 
     /**
@@ -305,28 +275,70 @@ class ImportableConverter
     }
 
     /**
-     * @param string $source
-     * @param string $destination
+     * @param string|null $date
      *
-     * @return string
+     * @return string|null
      */
-    private function getTransactionType(string $source, string $destination): string
+    private function convertDateValue(string $date = null): ?string
     {
-        $type = 'unknown';
+        $result = null;
+        if (null !== $date) {
+            try {
+                // add exclamation mark for better parsing. http://php.net/manual/en/datetime.createfromformat.php
+                $dateFormat = $this->config['date-format'] ?? 'Ymd';
+                if ('!' !== $dateFormat{0}) {
+                    $dateFormat = '!' . $dateFormat;
+                }
+                $object = Carbon::createFromFormat($dateFormat, $date);
+                $result = $object->format('Y-m-d H:i:s');
+                Log::debug(sprintf('createFromFormat: Turning "%s" into "%s" using "%s"', $date, $result, $this->config['date-format'] ?? 'Ymd'));
+            } catch (InvalidDateException|InvalidArgumentException $e) {
+                Log::error($e->getMessage());
+                Log::error($e->getTraceAsString());
+            }
+        }
 
-        if ($source === AccountType::ASSET && $destination === AccountType::ASSET) {
-            Log::debug('Source and destination are asset accounts. This is a transfer.');
-            $type = 'transfer';
-        }
-        if ($source === AccountType::REVENUE) {
-            Log::debug('Source is a revenue account. This is a deposit.');
-            $type = 'deposit';
-        }
-        if ($destination === AccountType::EXPENSE) {
-            Log::debug('Destination is an expense account. This is a withdrawal.');
-            $type = 'withdrawal';
-        }
+        return $result;
+    }
 
-        return $type;
+    /**
+     * @param ImportJob $importJob
+     */
+    public function setImportJob(ImportJob $importJob): void
+    {
+        $this->importJob = $importJob;
+        $this->config    = $importJob->configuration;
+
+        // repository is used for error messages
+        $this->repository = app(ImportJobRepositoryInterface::class);
+        $this->repository->setUser($importJob->user);
+
+        // asset account mapper can map asset accounts (makes sense right?)
+        $this->assetMapper = app(AssetAccountMapper::class);
+        $this->assetMapper->setUser($importJob->user);
+        $this->assetMapper->setDefaultAccount($this->config['import-account'] ?? 0);
+
+        // asset account repository is used for currency information
+        $this->accountRepository = app(AccountRepositoryInterface::class);
+        $this->accountRepository->setUser($importJob->user);
+
+        // opposing account mapper:
+        $this->opposingMapper = app(OpposingAccountMapper::class);
+        $this->opposingMapper->setUser($importJob->user);
+
+        // currency mapper:
+        $this->currencyMapper = app(CurrencyMapper::class);
+        $this->currencyMapper->setUser($importJob->user);
+        $this->defaultCurrency = app('amount')->getDefaultCurrencyByUser($importJob->user);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     *
+     * @param array $mappedValues
+     */
+    public function setMappedValues(array $mappedValues): void
+    {
+        $this->mappedValues = $mappedValues;
     }
 }

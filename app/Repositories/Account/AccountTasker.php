@@ -24,9 +24,7 @@ namespace FireflyIII\Repositories\Account;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
@@ -230,7 +228,7 @@ class AccountTasker implements AccountTaskerInterface
         $collector->setAccounts($accounts)->setRange($start, $end);
         $collector->setTypes([TransactionType::DEPOSIT, TransactionType::TRANSFER])
                   ->withAccountInformation();
-        $income       = $this->groupByDestination($collector->getExtractedJournals());
+        $income = $this->groupByDestination($collector->getExtractedJournals());
 
         // sort the result
         // Obtain a list of columns

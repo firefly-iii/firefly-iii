@@ -277,13 +277,6 @@ interface JournalRepositoryInterface
     public function getTransactionType(TransactionJournal $journal): string;
 
     /**
-     * @param array $transactionIds
-     *
-     * @return Collection
-     */
-    public function getTransactionsById(array $transactionIds): Collection;
-
-    /**
      * Will tell you if journal is reconciled or not.
      *
      * @param TransactionJournal $journal
@@ -318,8 +311,6 @@ interface JournalRepositoryInterface
      * @param User $user
      */
     public function setUser(User $user);
-
-
 
     /**
      * Update budget for a journal.

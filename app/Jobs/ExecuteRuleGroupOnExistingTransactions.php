@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Jobs;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
@@ -34,6 +34,7 @@ use Illuminate\Support\Collection;
 
 /**
  * Class ExecuteRuleGroupOnExistingTransactions.
+ * TODO make sure this job honors the "stop_processing" rules.
  */
 class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
 {
@@ -148,19 +149,20 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     public function handle()
     {
         // Lookup all journals that match the parameters specified
-        $transactions = $this->collectJournals();
+        $journals = $this->collectJournals();
 
         // Find processors for each rule within the current rule group
         $processors = $this->collectProcessors();
 
         // Execute the rules for each transaction
         foreach ($processors as $processor) {
-            foreach ($transactions as $transaction) {
+            /** @var array $journal */
+            foreach ($journals as $journal) {
                 /** @var Processor $processor */
-                $processor->handleTransaction($transaction);
-
+                $processor->handleJournalArray($journal);
             }
             // Stop processing this group if the rule specifies 'stop_processing'
+            // TODO Fix this.
             if ($processor->getRule()->stop_processing) {
                 break;
             }
@@ -170,16 +172,16 @@ class ExecuteRuleGroupOnExistingTransactions extends Job implements ShouldQueue
     /**
      * Collect all journals that should be processed.
      *
-     * @return Collection
+     * @return array
      */
-    protected function collectJournals(): Collection
+    protected function collectJournals(): array
     {
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->user);
         $collector->setAccounts($this->accounts)->setRange($this->startDate, $this->endDate);
 
-        return $collector->getTransactions();
+        return $collector->getExtractedJournals();
     }
 
     /**

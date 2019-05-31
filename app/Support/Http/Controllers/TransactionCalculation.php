@@ -46,14 +46,18 @@ trait TransactionCalculation
      */
     protected function getExpensesForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
+        $total = $accounts->merge($opposing);
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)
+        $collector->setAccounts($total)
                   ->setRange($start, $end)
-                  ->setTypes([TransactionType::WITHDRAWAL])
-                  ->setAccounts($opposing);
+                  ->withAccountInformation()
+                  ->setTypes([TransactionType::WITHDRAWAL]);
 
-        return $collector->getExtractedJournals();
+        $result = $collector->getExtractedJournals();
+
+        return $result;
     }
 
     /**
@@ -156,10 +160,10 @@ trait TransactionCalculation
      */
     protected function getIncomeForOpposing(Collection $accounts, Collection $opposing, Carbon $start, Carbon $end): array
     {
+        $total  =$accounts->merge($opposing);
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts($accounts)->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])
-                  ->setAccounts($opposing);
+        $collector->setAccounts($total)->setRange($start, $end)->withAccountInformation()->setTypes([TransactionType::DEPOSIT]);
 
         return $collector->getExtractedJournals();
     }

@@ -160,6 +160,12 @@ class ImportTransaction
             'opposing-bic'          => 'opposingBic',
             'opposing-number'       => 'opposingNumber',
         ];
+
+        // overrule some old role values.
+        if ('original-source' === $role) {
+            $role = 'original_source';
+        }
+
         if (isset($basics[$role])) {
             $field        = $basics[$role];
             $this->$field = $columnValue->getValue();
@@ -230,6 +236,18 @@ class ImportTransaction
     }
 
     /**
+     * Returns the mapped value if it exists in the ColumnValue object.
+     *
+     * @param ColumnValue $columnValue
+     *
+     * @return int
+     */
+    private function getMappedValue(ColumnValue $columnValue): int
+    {
+        return $columnValue->getMappedValue() > 0 ? $columnValue->getMappedValue() : (int)$columnValue->getValue();
+    }
+
+    /**
      * Calculate the amount of this transaction.
      *
      * @return string
@@ -274,6 +292,40 @@ class ImportTransaction
 
 
         return $result;
+    }
+
+    /**
+     * This methods decides which input value to use for the amount calculation.
+     *
+     * @return array
+     */
+    private function selectAmountInput(): array
+    {
+        $info           = [];
+        $converterClass = '';
+        if (null !== $this->amount) {
+            Log::debug('Amount value is not NULL, assume this is the correct value.');
+            $converterClass = Amount::class;
+            $info['amount'] = $this->amount;
+        }
+        if (null !== $this->amountDebit) {
+            Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
+            $converterClass = AmountDebit::class;
+            $info['amount'] = $this->amountDebit;
+        }
+        if (null !== $this->amountCredit) {
+            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
+            $converterClass = AmountCredit::class;
+            $info['amount'] = $this->amountCredit;
+        }
+        if (null !== $this->amountNegated) {
+            Log::debug('Amount NEGATED value is not NULL, assume this is the correct value (overrules Amount and AmountDebit and AmountCredit).');
+            $converterClass = AmountNegated::class;
+            $info['amount'] = $this->amountNegated;
+        }
+        $info['class'] = $converterClass;
+
+        return $info;
     }
 
     /**
@@ -370,52 +422,6 @@ class ImportTransaction
             'number' => $this->opposingNumber,
             'bic'    => $this->opposingBic,
         ];
-    }
-
-    /**
-     * Returns the mapped value if it exists in the ColumnValue object.
-     *
-     * @param ColumnValue $columnValue
-     *
-     * @return int
-     */
-    private function getMappedValue(ColumnValue $columnValue): int
-    {
-        return $columnValue->getMappedValue() > 0 ? $columnValue->getMappedValue() : (int)$columnValue->getValue();
-    }
-
-    /**
-     * This methods decides which input value to use for the amount calculation.
-     *
-     * @return array
-     */
-    private function selectAmountInput(): array
-    {
-        $info           = [];
-        $converterClass = '';
-        if (null !== $this->amount) {
-            Log::debug('Amount value is not NULL, assume this is the correct value.');
-            $converterClass = Amount::class;
-            $info['amount'] = $this->amount;
-        }
-        if (null !== $this->amountDebit) {
-            Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
-            $converterClass = AmountDebit::class;
-            $info['amount'] = $this->amountDebit;
-        }
-        if (null !== $this->amountCredit) {
-            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
-            $converterClass = AmountCredit::class;
-            $info['amount'] = $this->amountCredit;
-        }
-        if (null !== $this->amountNegated) {
-            Log::debug('Amount NEGATED value is not NULL, assume this is the correct value (overrules Amount and AmountDebit and AmountCredit).');
-            $converterClass = AmountNegated::class;
-            $info['amount'] = $this->amountNegated;
-        }
-        $info['class'] = $converterClass;
-
-        return $info;
     }
 
 }

@@ -24,29 +24,18 @@ declare(strict_types=1);
 namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Exceptions\ValidationException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Help\HelpInterface;
-use FireflyIII\Http\Requests\SplitJournalFormRequest;
 use FireflyIII\Http\Requests\TestRuleFormRequest;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Binder\AccountList;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Hash;
 use Illuminate\Contracts\Validation\Validator as ValidatorContract;
-use Illuminate\Http\Request;
 use Illuminate\Routing\Route;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Validator;
 use InvalidArgumentException;
 use Log;
 use Route as RouteFacade;
-use Symfony\Component\HttpFoundation\ParameterBag;
 
 /**
  * Trait RequestInformation
@@ -54,138 +43,7 @@ use Symfony\Component\HttpFoundation\ParameterBag;
  */
 trait RequestInformation
 {
-    /**
-     * Create data-array from a journal.
-     *
-     * @param SplitJournalFormRequest|Request $request
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     * @throws FireflyException
-     */
-    protected function arrayFromJournal(Request $request, TransactionJournal $journal): array // convert user input.
-    {
-        /** @var JournalRepositoryInterface $repository */
-        $repository          = app(JournalRepositoryInterface::class);
-        $sourceAccounts      = $repository->getJournalSourceAccounts($journal);
-        $destinationAccounts = $repository->getJournalDestinationAccounts($journal);
-        $array               = [
-            'journal_description'    => $request->old('journal_description', $journal->description),
-            'journal_amount'         => '0',
-            'journal_foreign_amount' => '0',
-            'sourceAccounts'         => $sourceAccounts,
-            'journal_source_id'      => $request->old('journal_source_id', $sourceAccounts->first()->id),
-            'journal_source_name'    => $request->old('journal_source_name', $sourceAccounts->first()->name),
-            'journal_destination_id' => $request->old('journal_destination_id', $destinationAccounts->first()->id),
-            'destinationAccounts'    => $destinationAccounts,
-            'what'                   => strtolower($this->repository->getTransactionType($journal)),
-            'date'                   => $request->old('date', $this->repository->getJournalDate($journal, null)),
-            'tags'                   => implode(',', $journal->tags->pluck('tag')->toArray()),
 
-            // all custom fields:
-            'interest_date'          => $request->old('interest_date', $repository->getMetaField($journal, 'interest_date')),
-            'book_date'              => $request->old('book_date', $repository->getMetaField($journal, 'book_date')),
-            'process_date'           => $request->old('process_date', $repository->getMetaField($journal, 'process_date')),
-            'due_date'               => $request->old('due_date', $repository->getMetaField($journal, 'due_date')),
-            'payment_date'           => $request->old('payment_date', $repository->getMetaField($journal, 'payment_date')),
-            'invoice_date'           => $request->old('invoice_date', $repository->getMetaField($journal, 'invoice_date')),
-            'internal_reference'     => $request->old('internal_reference', $repository->getMetaField($journal, 'internal_reference')),
-            'notes'                  => $request->old('notes', $repository->getNoteText($journal)),
-
-            // transactions.
-            'transactions'           => $this->getTransactionDataFromJournal($journal),
-        ];
-        // update transactions array with old request data.
-        $array['transactions'] = $this->updateWithPrevious($array['transactions'], $request->old());
-
-        // update journal amount and foreign amount:
-        $array['journal_amount']         = array_sum(array_column($array['transactions'], 'amount'));
-        $array['journal_foreign_amount'] = array_sum(array_column($array['transactions'], 'foreign_amount'));
-
-        return $array;
-    }
-
-    /**
-     * Get transaction overview from journal.
-     *
-     * @param TransactionJournal $journal
-     *
-     * @return array
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function getTransactionDataFromJournal(TransactionJournal $journal): array // convert object
-    {
-        // use collector to collect transactions.
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser(auth()->user());
-        $collector->withOpposingAccount()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->setJournals(new Collection([$journal]));
-        $set          = $collector->getTransactions();
-        $transactions = [];
-
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
-        $transformer->setParameters(new ParameterBag());
-        /** @var Transaction $transaction */
-        foreach ($set as $transaction) {
-            $res = [];
-            if ((float)$transaction->transaction_amount > 0 && $journal->transactionType->type === TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-            if ((float)$transaction->transaction_amount < 0 && $journal->transactionType->type !== TransactionType::DEPOSIT) {
-                $res = $transformer->transform($transaction);
-            }
-
-            if (count($res) > 0) {
-                $res['amount']         = app('steam')->positive((string)$res['amount']);
-                $res['foreign_amount'] = app('steam')->positive((string)$res['foreign_amount']);
-                $transactions[]        = $res;
-            }
-        }
-
-        return $transactions;
-    }
-
-    /**
-     * Get info from old input.
-     *
-     * @param $array
-     * @param $old
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function updateWithPrevious($array, $old): array // update object with new info
-    {
-        if (0 === count($old) || !isset($old['transactions'])) {
-            return $array;
-        }
-        $old = $old['transactions'];
-
-        foreach ($old as $index => $row) {
-            if (isset($array[$index])) {
-                /** @noinspection SlowArrayOperationsInLoopInspection */
-                $array[$index] = array_merge($array[$index], $row);
-                continue;
-            }
-            // take some info from first transaction, that should at least exist.
-            $array[$index]                            = $row;
-            $array[$index]['currency_id']             = $array[0]['currency_id'];
-            $array[$index]['currency_code']           = $array[0]['currency_code'] ?? '';
-            $array[$index]['currency_symbol']         = $array[0]['currency_symbol'] ?? '';
-            $array[$index]['foreign_amount']          = round($array[0]['foreign_destination_amount'] ?? '0', 12);
-            $array[$index]['foreign_currency_id']     = $array[0]['foreign_currency_id'];
-            $array[$index]['foreign_currency_code']   = $array[0]['foreign_currency_code'];
-            $array[$index]['foreign_currency_symbol'] = $array[0]['foreign_currency_symbol'];
-        }
-
-        return $array;
-    }
 
     /**
      * Get the domain of FF system.

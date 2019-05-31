@@ -26,8 +26,7 @@ namespace FireflyIII\Repositories\Recurring;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\RecurrenceFactory;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\Filter\InternalTransferFilter;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Note;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Recurrence;
@@ -151,7 +150,7 @@ class RecurringRepository implements RecurringRepositoryInterface
     /**
      * Returns the journals created for this recurrence, possibly limited by time.
      *
-     * @param Recurrence  $recurrence
+     * @param Recurrence $recurrence
      * @param Carbon|null $start
      * @param Carbon|null $end
      *
@@ -213,8 +212,8 @@ class RecurringRepository implements RecurringRepositoryInterface
      * Generate events in the date range.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon               $start
-     * @param Carbon               $end
+     * @param Carbon $start
+     * @param Carbon $end
      *
      *
      * @return array
@@ -274,8 +273,8 @@ class RecurringRepository implements RecurringRepositoryInterface
 
     /**
      * @param Recurrence $recurrence
-     * @param int        $page
-     * @param int        $pageSize
+     * @param int $page
+     * @param int $pageSize
      *
      * @return LengthAwarePaginator
      */
@@ -290,25 +289,27 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
         foreach ($journalMeta as $journalId) {
-            $search[] = ['id' => (int)$journalId];
+            $search[] = (int)$journalId;
         }
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($recurrence->user);
-        $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page);
-        // filter on specific journals.
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->setJournals(new Collection($search));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return $collector->getPaginatedTransactions();
+        $collector->setUser($recurrence->user);
+        $collector->withCategoryInformation()->withBudgetInformation()->setLimit($pageSize)->setPage($page)
+                  ->withAccountInformation();
+        $collector->setJournalIds($search);
+
+        return $collector->getPaginatedGroups();
     }
 
     /**
+     * TODO check usage and verify it still works.
+     *
      * @param Recurrence $recurrence
      *
      * @return Collection
      */
-    public function getTransactions(Recurrence $recurrence): Collection
+    public function getTransactions(Recurrence $recurrence): array
     {
         $journalMeta = TransactionJournalMeta
             ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
@@ -319,25 +320,25 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
         foreach ($journalMeta as $journalId) {
-            $search[] = ['id' => (int)$journalId];
+            $search[] = (int)$journalId;
         }
-        /** @var TransactionCollectorInterface $collector */
-        $collector = app(TransactionCollectorInterface::class);
-        $collector->setUser($recurrence->user);
-        $collector->withOpposingAccount()->setAllAssetAccounts()->withCategoryInformation()->withBudgetInformation();
-        // filter on specific journals.
-        $collector->removeFilter(InternalTransferFilter::class);
-        $collector->setJournals(new Collection($search));
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
 
-        return $collector->getTransactions();
+        $collector->setUser($recurrence->user);
+        $collector->withCategoryInformation()->withBudgetInformation()->withAccountInformation();
+        // filter on specific journals.
+        $collector->setJournalIds($search);
+
+        return $collector->getExtractedJournals();
     }
 
     /**
      * Calculate the next X iterations starting on the date given in $date.
      *
      * @param RecurrenceRepetition $repetition
-     * @param Carbon               $date
-     * @param int                  $count
+     * @param Carbon $date
+     * @param int $count
      *
      * @return array
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -441,7 +442,7 @@ class RecurringRepository implements RecurringRepositoryInterface
      * Update a recurring transaction.
      *
      * @param Recurrence $recurrence
-     * @param array      $data
+     * @param array $data
      *
      * @return Recurrence
      * @throws FireflyException
