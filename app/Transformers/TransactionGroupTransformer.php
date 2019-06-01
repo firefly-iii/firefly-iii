@@ -295,6 +295,7 @@ class TransactionGroupTransformer extends AbstractTransformer
 
                 'currency_id'             => $row['currency_id'],
                 'currency_code'           => $row['currency_code'],
+                'currency_name'           => $row['currency_name'],
                 'currency_symbol'         => $row['currency_symbol'],
                 'currency_decimal_places' => $row['currency_decimal_places'],
 

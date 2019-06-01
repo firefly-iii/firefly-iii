@@ -1030,10 +1030,14 @@ try {
 
     Breadcrumbs::register(
         'transactions.edit',
-        function (BreadcrumbsGenerator $breadcrumbs, TransactionJournal $journal) {
-            $breadcrumbs->parent('transactions.show', $journal);
+        function (BreadcrumbsGenerator $breadcrumbs, TransactionGroup $group) {
+            $breadcrumbs->parent('transactions.show', $group);
+
+            /** @var TransactionJournal $first */
+            $first = $group->transactionJournals()->first();
+
             $breadcrumbs->push(
-                trans('breadcrumbs.edit_journal', ['description' => limitStringLength($journal->description)]), route('transactions.edit', [$journal->id])
+                trans('breadcrumbs.edit_journal', ['description' => limitStringLength($first->description)]), route('transactions.edit', [$group->id])
             );
         }
     );

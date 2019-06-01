@@ -52,30 +52,44 @@
                 return this.error.length > 0;
             },
             changeData: function () {
+                let transactionType = this.transactionType;
                 // reset of all are empty:
-                //console.log('Type   "' + this.transactionType + '"');
+                //console.log('Type   "' + transactionType + '"');
                 //console.log('Source "' + this.source.name + '"');
                 //console.log('Dest   "' + this.destination.name + '"');
-                if (!this.transactionType && !this.source.name && !this.destination.name) {
+                if (!transactionType && !this.source.name && !this.destination.name) {
                     $(this.$refs.cur).text('');
+                    console.log('A');
                     return;
                 }
-                if ('' === this.transactionType && '' !== this.source.currency_name) {
+                if(null === transactionType) {
+                    transactionType = '';
+                }
+
+                if ('' === transactionType && '' !== this.source.currency_name) {
                     $(this.$refs.cur).text(this.source.currency_name);
+                    console.log('B');
                     return;
                 }
-                if ('' === this.transactionType && '' !== this.destination.currency_name) {
+                if ('' === transactionType && '' !== this.destination.currency_name) {
                     $(this.$refs.cur).text(this.destination.currency_name);
+                    console.log('C');
                     return;
                 }
-                if (this.transactionType === 'Withdrawal' || this.transactionType === 'Transfer') {
+                if (transactionType === 'Withdrawal' || transactionType === 'Transfer') {
                     $(this.$refs.cur).text(this.source.currency_name);
+                    console.log('D');
                     return;
                 }
-                if (this.transactionType === 'Deposit') {
+                if (transactionType === 'Deposit') {
                     $(this.$refs.cur).text(this.destination.currency_name);
+                    console.log('E');
                     return;
                 }
+                console.log('transactionType: ' + transactionType);
+                console.log('this.source.name: ' + this.source.name);
+                console.log('this.destination.name: ' + this.destination.name);
+                console.log('F');
             }
         },
         watch: {

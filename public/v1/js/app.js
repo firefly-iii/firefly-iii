@@ -12551,7 +12551,9 @@ Vue.component('account-select', __webpack_require__(119));
 Vue.component('passport-clients', __webpack_require__(124));
 Vue.component('passport-authorized-clients', __webpack_require__(129));
 Vue.component('passport-personal-access-tokens', __webpack_require__(134));
+
 Vue.component('create-transaction', __webpack_require__(139));
+Vue.component('edit-transaction', __webpack_require__(144));
 
 var app = new Vue({
   el: '#app'
@@ -51533,7 +51535,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -51600,30 +51602,44 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return this.error.length > 0;
         },
         changeData: function changeData() {
+            var transactionType = this.transactionType;
             // reset of all are empty:
-            //console.log('Type   "' + this.transactionType + '"');
+            //console.log('Type   "' + transactionType + '"');
             //console.log('Source "' + this.source.name + '"');
             //console.log('Dest   "' + this.destination.name + '"');
-            if (!this.transactionType && !this.source.name && !this.destination.name) {
+            if (!transactionType && !this.source.name && !this.destination.name) {
                 $(this.$refs.cur).text('');
+                console.log('A');
                 return;
             }
-            if ('' === this.transactionType && '' !== this.source.currency_name) {
+            if (null === transactionType) {
+                transactionType = '';
+            }
+
+            if ('' === transactionType && '' !== this.source.currency_name) {
                 $(this.$refs.cur).text(this.source.currency_name);
+                console.log('B');
                 return;
             }
-            if ('' === this.transactionType && '' !== this.destination.currency_name) {
+            if ('' === transactionType && '' !== this.destination.currency_name) {
                 $(this.$refs.cur).text(this.destination.currency_name);
+                console.log('C');
                 return;
             }
-            if (this.transactionType === 'Withdrawal' || this.transactionType === 'Transfer') {
+            if (transactionType === 'Withdrawal' || transactionType === 'Transfer') {
                 $(this.$refs.cur).text(this.source.currency_name);
+                console.log('D');
                 return;
             }
-            if (this.transactionType === 'Deposit') {
+            if (transactionType === 'Deposit') {
                 $(this.$refs.cur).text(this.destination.currency_name);
+                console.log('E');
                 return;
             }
+            console.log('transactionType: ' + transactionType);
+            console.log('this.source.name: ' + this.source.name);
+            console.log('this.destination.name: ' + this.destination.name);
+            console.log('F');
         }
     },
     watch: {
@@ -54882,7 +54898,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -55270,6 +55286,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             if (this.resetFormAfter) {
                 this.resetTransactions();
             }
+
+            var button = $(e.currentTarget);
+            button.prop("disabled", true);
+
             axios.post(uri, data).then(function (response) {
                 if (_this.createAnother) {
                     // do message:
@@ -55278,6 +55298,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     if (_this.resetFormAfter) {
                         _this.addTransaction();
                     }
+                    button.prop("disabled", false);
                 } else {
                     window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
                 }
@@ -55286,6 +55307,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 // something something render errors.
                 _this.parseErrors(error.response.data);
                 // something.
+                button.prop("disabled", false);
             });
             if (e) {
                 e.preventDefault();
@@ -56072,7 +56094,11 @@ var render = function() {
               _c("div", { staticClass: "btn-group" }, [
                 _c(
                   "button",
-                  { staticClass: "btn btn-success", on: { click: _vm.submit } },
+                  {
+                    staticClass: "btn btn-success",
+                    attrs: { id: "submitButton" },
+                    on: { click: _vm.submit }
+                  },
                   [_vm._v("Submit")]
                 )
               ])
@@ -56147,6 +56173,1302 @@ if (false) {
   module.hot.accept()
   if (module.hot.data) {
     require("vue-hot-reload-api")      .rerender("data-v-3c64c482", module.exports)
+  }
+}
+
+/***/ }),
+/* 144 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+function injectStyle (ssrContext) {
+  if (disposed) return
+  __webpack_require__(145)
+}
+var normalizeComponent = __webpack_require__(2)
+/* script */
+var __vue_script__ = __webpack_require__(147)
+/* template */
+var __vue_template__ = __webpack_require__(148)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = injectStyle
+/* scopeId */
+var __vue_scopeId__ = "data-v-16510831"
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources/assets/js/components/transactions/EditTransaction.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-16510831", Component.options)
+  } else {
+    hotAPI.reload("data-v-16510831", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 145 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(146);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(1)("b5880834", content, false, {});
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16510831\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditTransaction.vue", function() {
+     var newContent = require("!!../../../../../node_modules/css-loader/index.js!../../../../../node_modules/vue-loader/lib/style-compiler/index.js?{\"vue\":true,\"id\":\"data-v-16510831\",\"scoped\":true,\"hasInlineConfig\":true}!../../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./EditTransaction.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 146 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(0)(false);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 147 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    name: "EditTransaction",
+    props: {
+        groupId: Number
+    },
+    mounted: function mounted() {
+        this.getGroup();
+    },
+    ready: function ready() {
+        console.log('Ready Group ID: ' + this.groupId);
+    },
+
+    methods: {
+        positiveAmount: function positiveAmount(amount) {
+            if (amount < 0) {
+                return amount * -1;
+            }
+            return amount;
+        },
+
+        selectedSourceAccount: function selectedSourceAccount(index, model) {
+            if (typeof model === 'string') {
+                // cant change types, only name.
+                this.transactions[index].source_account.name = model;
+            } else {
+                this.transactions[index].source_account = {
+                    id: model.id,
+                    name: model.name,
+                    type: model.type,
+                    currency_id: model.currency_id,
+                    currency_name: model.currency_name,
+                    currency_code: model.currency_code,
+                    currency_decimal_places: model.currency_decimal_places,
+                    allowed_types: this.transactions[index].source_account.allowed_types
+                };
+
+                // force types on destination selector.
+                //this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
+            }
+        },
+        selectedDestinationAccount: function selectedDestinationAccount(index, model) {
+            if (typeof model === 'string') {
+                // cant change types, only name.
+                this.transactions[index].destination_account.name = model;
+            } else {
+                this.transactions[index].destination_account = {
+                    id: model.id,
+                    name: model.name,
+                    type: model.type,
+                    currency_id: model.currency_id,
+                    currency_name: model.currency_name,
+                    currency_code: model.currency_code,
+                    currency_decimal_places: model.currency_decimal_places,
+                    allowed_types: this.transactions[index].destination_account.allowed_types
+                };
+
+                // force types on destination selector.
+                //this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
+            }
+        },
+        clearSource: function clearSource(index) {
+            console.log('clearSource(' + index + ')');
+            // reset source account:
+            this.transactions[index].source_account = {
+                id: 0,
+                name: '',
+                type: '',
+                currency_id: 0,
+                currency_name: '',
+                currency_code: '',
+                currency_decimal_places: 2,
+                allowed_types: this.transactions[index].source_account.allowed_types
+            };
+            // reset destination allowed account types.
+            // this.transactions[index].destination_account.allowed_types = [];
+
+            // if there is a destination model, reset the types of the source
+            // by pretending we selected it again.
+            if (this.transactions[index].destination_account) {
+                this.selectedDestinationAccount(index, this.transactions[index].destination_account);
+            }
+        },
+        setTransactionType: function setTransactionType(type) {
+            this.transactionType = type;
+        },
+        deleteTransaction: function deleteTransaction(index, event) {
+            event.preventDefault();
+            for (var key in this.transactions) {
+                if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {}
+            }
+
+            this.transactions.splice(index, 1);
+
+            for (var _key in this.transactions) {
+                if (this.transactions.hasOwnProperty(_key) && /^0$|^[1-9]\d*$/.test(_key) && _key <= 4294967294) {}
+            }
+        },
+        clearDestination: function clearDestination(index) {
+            console.log('clearDestination(' + index + ')');
+            // reset destination account:
+            console.log('Destination allowed types first:');
+            console.log(this.transactions[index].destination_account.allowed_types);
+            this.transactions[index].destination_account = {
+                id: 0,
+                name: '',
+                type: '',
+                currency_id: 0,
+                currency_name: '',
+                currency_code: '',
+                currency_decimal_places: 2,
+                allowed_types: this.transactions[index].destination_account.allowed_types
+            };
+            // reset destination allowed account types.
+            //this.transactions[index].source_account.allowed_types = [];
+
+            // if there is a source model, reset the types of the destination
+            // by pretending we selected it again.
+            if (this.transactions[index].source_account) {
+                this.selectedSourceAccount(index, this.transactions[index].source_account);
+            }
+
+            console.log('Destination allowed types after:');
+            console.log(this.transactions[index].destination_account.allowed_types);
+        },
+        getGroup: function getGroup() {
+            var _this = this;
+
+            var page = window.location.href.split('/');
+            var groupId = page[page.length - 1];
+
+            var uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+            console.log(uri);
+
+            // fill in transactions array.
+            axios.get(uri).then(function (response) {
+                console.log(response.data.data);
+                _this.group_title = response.data.data.attributes.group_title;
+                var transactions = response.data.data.attributes.transactions.reverse();
+                for (var key in transactions) {
+                    if (transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        var transaction = transactions[key];
+                        console.log(transactions[key]);
+                        _this.transactions.push({
+                            description: transaction.description,
+                            date: transaction.date.substr(0, 10),
+                            amount: _this.positiveAmount(transaction.amount),
+                            category: transaction.category_name,
+                            errors: {
+                                source_account: [],
+                                destination_account: [],
+                                description: [],
+                                amount: [],
+                                date: [],
+                                budget_id: [],
+                                foreign_amount: [],
+                                category: [],
+                                piggy_bank: [],
+                                tags: [],
+                                // custom fields:
+                                custom_errors: {
+                                    interest_date: [],
+                                    book_date: [],
+                                    process_date: [],
+                                    due_date: [],
+                                    payment_date: [],
+                                    invoice_date: [],
+                                    internal_reference: [],
+                                    notes: [],
+                                    attachments: []
+                                }
+                            },
+                            budget: transaction.budget_id,
+                            tags: transaction.tags,
+                            custom_fields: {
+                                interest_date: transaction.interest_date,
+                                book_date: transaction.book_date,
+                                process_date: transaction.process_date,
+                                due_date: transaction.due_date,
+                                payment_date: transaction.payment_date,
+                                invoice_date: transaction.invoice_date,
+                                internal_reference: transaction.internal_reference,
+                                notes: transaction.notes
+                            },
+                            foreign_amount: {
+                                amount: _this.positiveAmount(transaction.foreign_amount),
+                                currency_id: transaction.foreign_currency_id
+                            },
+                            source_account: {
+                                id: transaction.source_id,
+                                name: transaction.source_name,
+                                type: transaction.source_type,
+                                // i dont know these
+                                currency_id: transaction.currency_id,
+                                currency_name: transaction.currency_name,
+                                currency_code: transaction.currency_code,
+                                currency_decimal_places: transaction.currency_decimal_places,
+                                allowed_types: [transaction.source_type]
+                            },
+                            destination_account: {
+                                id: transaction.destination_id,
+                                name: transaction.destination_name,
+                                type: transaction.destination_type,
+                                currency_id: transaction.currency_id,
+                                currency_name: transaction.currency_name,
+                                currency_code: transaction.currency_code,
+                                currency_decimal_places: transaction.currency_decimal_places,
+                                allowed_types: [transaction.destination_type]
+                            }
+                        });
+                    }
+                }
+            }).catch(function (error) {
+                console.error('Some error.');
+            });
+        },
+        convertData: function convertData() {
+            var data = {
+                'transactions': []
+            };
+            var tagList = [];
+            var transactionType = void 0;
+            var firstSource = void 0;
+            var firstDestination = void 0;
+            var foreignAmount = null;
+            var foreignCurrency = null;
+            var currentArray = void 0;
+            var sourceId = void 0;
+            var sourceName = void 0;
+            var destId = void 0;
+            var destName = void 0;
+            var date = void 0;
+
+            if (this.transactions.length > 1) {
+                data.group_title = this.group_title;
+            }
+
+            // get transaction type from first transaction
+            transactionType = this.transactionType ? this.transactionType.toLowerCase() : 'invalid';
+
+            // if the transaction type is invalid, might just be that we can deduce it from
+            // the presence of a source or destination account
+            firstSource = this.transactions[0].source_account.type;
+            firstDestination = this.transactions[0].destination_account.type;
+
+            if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstSource)) {
+                //console.log('Assumed this is a withdrawal.');
+                transactionType = 'withdrawal';
+            }
+
+            if ('invalid' === transactionType && ['Asset account', 'Loan', 'Debt', 'Mortgage'].includes(firstDestination)) {
+                //console.log('Assumed this is a deposit.');
+                transactionType = 'deposit';
+            }
+
+            for (var key in this.transactions) {
+                if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+
+                    sourceId = this.transactions[key].source_account.id;
+                    sourceName = this.transactions[key].source_account.name;
+                    destId = this.transactions[key].destination_account.id;
+                    destName = this.transactions[key].destination_account.name;
+
+                    date = this.transactions[key].date;
+                    if (key > 0) {
+                        date = this.transactions[0].date;
+                    }
+
+                    // if type is 'withdrawal' and destination is empty, cash withdrawal.
+                    if (transactionType === 'withdrawal' && '' === destName) {
+                        destId = window.cashAccountId;
+                    }
+
+                    // if type is 'deposit' and source is empty, cash deposit.
+                    if (transactionType === 'deposit' && '' === sourceName) {
+                        sourceId = window.cashAccountId;
+                    }
+
+                    // if key is over 0 and type is withdrawal or transfer, take source from key 0.
+                    if (key > 0 && (transactionType.toLowerCase() === 'withdrawal' || transactionType.toLowerCase() === 'transfer')) {
+                        sourceId = this.transactions[0].source_account.id;
+                        sourceName = this.transactions[0].source_account.name;
+                    }
+
+                    // if key is over 0 and type is deposit or transfer, take destination from key 0.
+                    if (key > 0 && (transactionType.toLowerCase() === 'deposit' || transactionType.toLowerCase() === 'transfer')) {
+                        destId = this.transactions[0].destination_account.id;
+                        destName = this.transactions[0].destination_account.name;
+                    }
+
+                    tagList = [];
+                    foreignAmount = null;
+                    foreignCurrency = null;
+                    // loop tags
+                    for (var tagKey in this.transactions[key].tags) {
+                        if (this.transactions[key].tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && key <= 4294967294) {
+                            tagList.push(this.transactions[key].tags[tagKey].text);
+                        }
+                    }
+
+                    // set foreign currency info:
+                    if (this.transactions[key].foreign_amount.amount !== '' && parseFloat(this.transactions[key].foreign_amount.amount) !== .00) {
+                        foreignAmount = this.transactions[key].foreign_amount.amount;
+                        foreignCurrency = this.transactions[key].foreign_amount.currency_id;
+                    }
+                    if (foreignCurrency === this.transactions[key].currency_id) {
+                        foreignAmount = null;
+                        foreignCurrency = null;
+                    }
+
+                    // correct some id's
+                    if (0 === destId) {
+                        destId = null;
+                    }
+                    if (0 === sourceId) {
+                        sourceId = null;
+                    }
+
+                    currentArray = {
+                        type: transactionType,
+                        date: date,
+
+                        amount: this.transactions[key].amount,
+                        currency_id: this.transactions[key].currency_id,
+
+                        description: this.transactions[key].description,
+
+                        source_id: sourceId,
+                        source_name: sourceName,
+
+                        destination_id: destId,
+                        destination_name: destName,
+
+                        category_name: this.transactions[key].category,
+                        //budget_id: this.transactions[key].budget,
+                        //piggy_bank_id: this.transactions[key].piggy_bank,
+
+
+                        interest_date: this.transactions[key].custom_fields.interest_date,
+                        book_date: this.transactions[key].custom_fields.book_date,
+                        process_date: this.transactions[key].custom_fields.process_date,
+                        due_date: this.transactions[key].custom_fields.due_date,
+                        payment_date: this.transactions[key].custom_fields.payment_date,
+                        invoice_date: this.transactions[key].custom_fields.invoice_date,
+                        internal_reference: this.transactions[key].custom_fields.internal_reference,
+                        notes: this.transactions[key].custom_fields.notes
+                    };
+
+                    if (tagList.length > 0) {
+                        currentArray.tags = tagList;
+                    }
+                    if (null !== foreignAmount) {
+                        currentArray.foreign_amount = foreignAmount;
+                        currentArray.foreign_currency_id = foreignCurrency;
+                    }
+                    // set budget id and piggy ID.
+                    if (parseInt(this.transactions[key].budget) > 0) {
+                        currentArray.budget_id = parseInt(this.transactions[key].budget);
+                    }
+                    if (parseInt(this.transactions[key].piggy_bank) > 0) {
+                        currentArray.piggy_bank_id = parseInt(this.transactions[key].piggy_bank);
+                    }
+
+                    data.transactions.push(currentArray);
+                }
+            }
+            //console.log(data);
+
+            return data;
+        },
+        submit: function submit(e) {
+            var _this2 = this;
+
+            console.log('I am submit');
+            var page = window.location.href.split('/');
+            var groupId = page[page.length - 1];
+            var uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+            var data = this.convertData();
+
+            var button = $(e.currentTarget);
+            button.prop("disabled", true);
+
+            axios.put(uri, data).then(function (response) {
+                if (_this2.returnAfter) {
+                    // do message:
+                    _this2.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been updated.';
+                    _this2.error_message = '';
+                    button.prop("disabled", false);
+                    // TODO better
+                    if (_this2.resetFormAfter) {
+                        _this2.getGroup();
+                    }
+                } else {
+                    window.location.href = 'transactions/show/' + response.data.data.id + '?message=updated';
+                }
+            }).catch(function (error) {
+                // give user errors things back.
+                // something something render errors.
+                _this2.parseErrors(error.response.data);
+                // something.
+                button.prop("disabled", false);
+            });
+            if (e) {
+                e.preventDefault();
+            }
+        },
+        addTransaction: function addTransaction(e) {
+            this.transactions.push({
+                description: "",
+                date: "",
+                amount: "",
+                category: "",
+                piggy_bank: 0,
+                errors: {
+                    source_account: [],
+                    destination_account: [],
+                    description: [],
+                    amount: [],
+                    date: [],
+                    budget_id: [],
+                    foreign_amount: [],
+                    category: [],
+                    piggy_bank: [],
+                    tags: [],
+                    // custom fields:
+                    custom_errors: {
+                        interest_date: [],
+                        book_date: [],
+                        process_date: [],
+                        due_date: [],
+                        payment_date: [],
+                        invoice_date: [],
+                        internal_reference: [],
+                        notes: [],
+                        attachments: []
+                    }
+                },
+                budget: 0,
+                tags: [],
+                custom_fields: {
+                    "interest_date": "",
+                    "book_date": "",
+                    "process_date": "",
+                    "due_date": "",
+                    "payment_date": "",
+                    "invoice_date": "",
+                    "internal_reference": "",
+                    "notes": "",
+                    "attachments": []
+                },
+                foreign_amount: {
+                    amount: "",
+                    currency_id: 0
+                },
+                source_account: {
+                    id: 0,
+                    name: "",
+                    type: "",
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: []
+                },
+                destination_account: {
+                    id: 0,
+                    name: "",
+                    type: "",
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: []
+                }
+            });
+            if (e) {
+                e.preventDefault();
+            }
+        }
+    },
+
+    data: function data() {
+        return {
+            group: this.groupId,
+            error_message: "",
+            success_message: "",
+            transactions: [],
+            group_title: "",
+            returnAfter: false,
+            transactionType: null,
+            group_title_errors: [],
+            resetButtonDisabled: true
+        };
+    }
+});
+
+/***/ }),
+/* 148 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c(
+    "form",
+    {
+      staticClass: "form-horizontal",
+      attrs: {
+        method: "POST",
+        action: "transactions/update",
+        "accept-charset": "UTF-8",
+        id: "store",
+        enctype: "multipart/form-data"
+      }
+    },
+    [
+      _c("input", { attrs: { name: "_token", type: "hidden", value: "xxx" } }),
+      _vm._v(" "),
+      _vm.error_message !== ""
+        ? _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-lg-12" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "alert alert-danger alert-dismissible",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Error!")]),
+                  _vm._v(" " + _vm._s(_vm.error_message) + "\n            ")
+                ]
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.success_message !== ""
+        ? _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-lg-12" }, [
+              _c(
+                "div",
+                {
+                  staticClass: "alert alert-success alert-dismissible",
+                  attrs: { role: "alert" }
+                },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c("strong", [_vm._v("Success!")]),
+                  _vm._v(" "),
+                  _c("span", {
+                    domProps: { innerHTML: _vm._s(_vm.success_message) }
+                  })
+                ]
+              )
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _vm.transactions.length > 1
+        ? _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-lg-6" }, [
+              _c("div", { staticClass: "box" }, [
+                _vm._m(2),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "box-body" },
+                  [
+                    _c("group-description", {
+                      attrs: { error: _vm.group_title_errors },
+                      model: {
+                        value: _vm.group_title,
+                        callback: function($$v) {
+                          _vm.group_title = $$v
+                        },
+                        expression: "group_title"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ])
+            ])
+          ])
+        : _vm._e(),
+      _vm._v(" "),
+      _c(
+        "div",
+        _vm._l(_vm.transactions, function(transaction, index) {
+          return _c("div", { staticClass: "row" }, [
+            _c("div", { staticClass: "col-lg-12" }, [
+              _c("div", { staticClass: "box" }, [
+                _c("div", { staticClass: "box-header with-border" }, [
+                  _c("h3", { staticClass: "box-title splitTitle" }, [
+                    _vm.transactions.length > 1
+                      ? _c("span", [
+                          _vm._v(
+                            "Split " +
+                              _vm._s(index + 1) +
+                              " / " +
+                              _vm._s(_vm.transactions.length)
+                          )
+                        ])
+                      : _vm._e(),
+                    _vm._v(" "),
+                    _vm.transactions.length === 1
+                      ? _c("span", [_vm._v("Transaction information")])
+                      : _vm._e()
+                  ]),
+                  _vm._v(" "),
+                  _vm.transactions.length > 1
+                    ? _c(
+                        "div",
+                        {
+                          staticClass: "box-tools pull-right",
+                          attrs: { x: "" }
+                        },
+                        [
+                          _c(
+                            "button",
+                            {
+                              staticClass: "btn btn-xs btn-danger",
+                              on: {
+                                click: function($event) {
+                                  _vm.deleteTransaction(index, $event)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fa fa-trash" })]
+                          )
+                        ]
+                      )
+                    : _vm._e()
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "box-body" }, [
+                  _c("div", { staticClass: "row" }, [
+                    _c(
+                      "div",
+                      { staticClass: "col-lg-4" },
+                      [
+                        _c("account-select", {
+                          attrs: {
+                            inputName: "source[]",
+                            title: "Source account",
+                            accountName: transaction.source_account.name,
+                            accountTypeFilters:
+                              transaction.source_account.allowed_types,
+                            transactionType: _vm.transactionType,
+                            index: index,
+                            error: transaction.errors.source_account
+                          },
+                          on: {
+                            "clear:value": function($event) {
+                              _vm.clearSource(index)
+                            },
+                            "select:account": function($event) {
+                              _vm.selectedSourceAccount(index, $event)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("account-select", {
+                          attrs: {
+                            inputName: "destination[]",
+                            title: "Destination account",
+                            accountName: transaction.destination_account.name,
+                            accountTypeFilters:
+                              transaction.destination_account.allowed_types,
+                            transactionType: _vm.transactionType,
+                            index: index,
+                            error: transaction.errors.destination_account
+                          },
+                          on: {
+                            "clear:value": function($event) {
+                              _vm.clearDestination(index)
+                            },
+                            "select:account": function($event) {
+                              _vm.selectedDestinationAccount(index, $event)
+                            }
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("transaction-description", {
+                          attrs: {
+                            index: index,
+                            error: transaction.errors.description
+                          },
+                          model: {
+                            value: transaction.description,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "description", $$v)
+                            },
+                            expression: "transaction.description"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("standard-date", {
+                          attrs: {
+                            index: index,
+                            error: transaction.errors.date
+                          },
+                          model: {
+                            value: transaction.date,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "date", $$v)
+                            },
+                            expression: "transaction.date"
+                          }
+                        }),
+                        _vm._v(" "),
+                        index === 0
+                          ? _c(
+                              "div",
+                              [
+                                _c("transaction-type", {
+                                  attrs: {
+                                    source: transaction.source_account.type,
+                                    destination:
+                                      transaction.destination_account.type
+                                  },
+                                  on: {
+                                    "set:transactionType": function($event) {
+                                      _vm.setTransactionType($event)
+                                    },
+                                    "act:limitSourceType": function($event) {
+                                      _vm.limitSourceType($event)
+                                    },
+                                    "act:limitDestinationType": function(
+                                      $event
+                                    ) {
+                                      _vm.limitDestinationType($event)
+                                    }
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          : _vm._e()
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-lg-4" },
+                      [
+                        _c("amount", {
+                          attrs: {
+                            source: transaction.source_account,
+                            destination: transaction.destination_account,
+                            error: transaction.errors.amount,
+                            transactionType: _vm.transactionType
+                          },
+                          model: {
+                            value: transaction.amount,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "amount", $$v)
+                            },
+                            expression: "transaction.amount"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("foreign-amount", {
+                          attrs: {
+                            source: transaction.source_account,
+                            destination: transaction.destination_account,
+                            transactionType: _vm.transactionType,
+                            error: transaction.errors.foreign_amount
+                          },
+                          model: {
+                            value: transaction.foreign_amount,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "foreign_amount", $$v)
+                            },
+                            expression: "transaction.foreign_amount"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "col-lg-4" },
+                      [
+                        _c("budget", {
+                          attrs: {
+                            transactionType: _vm.transactionType,
+                            error: transaction.errors.budget_id
+                          },
+                          model: {
+                            value: transaction.budget,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "budget", $$v)
+                            },
+                            expression: "transaction.budget"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("category", {
+                          attrs: {
+                            transactionType: _vm.transactionType,
+                            error: transaction.errors.category
+                          },
+                          model: {
+                            value: transaction.category,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "category", $$v)
+                            },
+                            expression: "transaction.category"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("tags", {
+                          attrs: { error: transaction.errors.tags },
+                          model: {
+                            value: transaction.tags,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "tags", $$v)
+                            },
+                            expression: "transaction.tags"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c("custom-transaction-fields", {
+                          attrs: { error: transaction.errors.custom_errors },
+                          model: {
+                            value: transaction.custom_fields,
+                            callback: function($$v) {
+                              _vm.$set(transaction, "custom_fields", $$v)
+                            },
+                            expression: "transaction.custom_fields"
+                          }
+                        })
+                      ],
+                      1
+                    )
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm.transactions.length - 1 === index
+                  ? _c("div", { staticClass: "box-footer" }, [
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn btn-primary",
+                          on: { click: _vm.addTransaction }
+                        },
+                        [_vm._v("Add another split")]
+                      )
+                    ])
+                  : _vm._e()
+              ])
+            ])
+          ])
+        }),
+        0
+      ),
+      _vm._v(" "),
+      _c("div", { staticClass: "row" }, [
+        _c("div", { staticClass: "col-lg-3 col-md-4 col-sm-6 col-xs-12" }, [
+          _c("div", { staticClass: "box" }, [
+            _vm._m(3),
+            _vm._v(" "),
+            _c("div", { staticClass: "box-body" }, [
+              _c("div", { staticClass: "checkbox" }, [
+                _c("label", [
+                  _c("input", {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.returnAfter,
+                        expression: "returnAfter"
+                      }
+                    ],
+                    attrs: { name: "return_after", type: "checkbox" },
+                    domProps: {
+                      checked: Array.isArray(_vm.returnAfter)
+                        ? _vm._i(_vm.returnAfter, null) > -1
+                        : _vm.returnAfter
+                    },
+                    on: {
+                      change: function($event) {
+                        var $$a = _vm.returnAfter,
+                          $$el = $event.target,
+                          $$c = $$el.checked ? true : false
+                        if (Array.isArray($$a)) {
+                          var $$v = null,
+                            $$i = _vm._i($$a, $$v)
+                          if ($$el.checked) {
+                            $$i < 0 && (_vm.returnAfter = $$a.concat([$$v]))
+                          } else {
+                            $$i > -1 &&
+                              (_vm.returnAfter = $$a
+                                .slice(0, $$i)
+                                .concat($$a.slice($$i + 1)))
+                          }
+                        } else {
+                          _vm.returnAfter = $$c
+                        }
+                      }
+                    }
+                  }),
+                  _vm._v(
+                    "\n                            After updating, return here to create another one.\n                        "
+                  )
+                ])
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "box-footer" }, [
+              _c("div", { staticClass: "btn-group" }, [
+                _c(
+                  "button",
+                  { staticClass: "btn btn-success", on: { click: _vm.submit } },
+                  [_vm._v("Update")]
+                )
+              ])
+            ])
+          ])
+        ])
+      ])
+    ]
+  )
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "alert",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "box-header with-border" }, [
+      _c("h3", { staticClass: "box-title" }, [
+        _vm._v(
+          "\n                        Description of the split transaction\n                    "
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "box-header with-border" }, [
+      _c("h3", { staticClass: "box-title" }, [
+        _vm._v("\n                        Submission\n                    ")
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-16510831", module.exports)
   }
 }
 

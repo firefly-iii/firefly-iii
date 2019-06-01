@@ -1,5 +1,5 @@
 <!--
-  - CreateTransaction.vue
+  - EditTransaction.vue
   - Copyright (c) 2019 thegrumpydictator@gmail.com
   -
   - This file is part of Firefly III.
@@ -19,7 +19,7 @@
   -->
 
 <template>
-    <form method="POST" action="transactions/store" accept-charset="UTF-8" class="form-horizontal" id="store"
+    <form method="POST" action="transactions/update" accept-charset="UTF-8" class="form-horizontal" id="store"
           enctype="multipart/form-data">
         <input name="_token" type="hidden" value="xxx">
         <div class="row" v-if="error_message !== ''">
@@ -147,11 +147,13 @@
                                             v-model="transaction.category"
                                             :error="transaction.errors.category"
                                     ></category>
+                                    <!--
                                     <piggy-bank
                                             :transactionType="transactionType"
                                             v-model="transaction.piggy_bank"
                                             :error="transaction.errors.piggy_bank"
                                     ></piggy-bank>
+                                    -->
                                     <tags
                                             v-model="transaction.tags"
                                             :error="transaction.errors.tags"
@@ -181,20 +183,14 @@
                     <div class="box-body">
                         <div class="checkbox">
                             <label>
-                                <input v-model="createAnother" name="create_another" type="checkbox">
-                                After storing, return here to create another one.
-                            </label>
-                            <label v-bind:class="{ 'text-muted': this.createAnother === false}">
-                                <input v-model="resetFormAfter" :disabled="this.createAnother === false"
-                                       name="reset_form" type="checkbox">
-                                Reset form after submission
-
+                                <input v-model="returnAfter" name="return_after" type="checkbox">
+                                After updating, return here to create another one.
                             </label>
                         </div>
                     </div>
                     <div class="box-footer">
                         <div class="btn-group">
-                            <button class="btn btn-success" id="submitButton" @click="submit">Submit</button>
+                            <button class="btn btn-success" @click="submit">Update</button>
                         </div>
                     </div>
                 </div>
@@ -205,15 +201,226 @@
 
 <script>
     export default {
-        name: "CreateTransaction",
-        components: {},
+        name: "EditTransaction",
+        props: {
+            groupId: Number
+        },
         mounted() {
-            this.addTransaction();
+            this.getGroup();
         },
         ready() {
-
+            console.log('Ready Group ID: ' + this.groupId);
         },
         methods: {
+            positiveAmount: function (amount) {
+                if (amount < 0) {
+                    return amount * -1;
+                }
+                return amount;
+            },
+
+            selectedSourceAccount: function (index, model) {
+                if (typeof model === 'string') {
+                    // cant change types, only name.
+                    this.transactions[index].source_account.name = model;
+                } else {
+                    this.transactions[index].source_account = {
+                        id: model.id,
+                        name: model.name,
+                        type: model.type,
+                        currency_id: model.currency_id,
+                        currency_name: model.currency_name,
+                        currency_code: model.currency_code,
+                        currency_decimal_places: model.currency_decimal_places,
+                        allowed_types: this.transactions[index].source_account.allowed_types
+                    };
+
+                    // force types on destination selector.
+                    //this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
+                }
+            },
+            selectedDestinationAccount: function (index, model) {
+                if (typeof model === 'string') {
+                    // cant change types, only name.
+                    this.transactions[index].destination_account.name = model;
+                } else {
+                    this.transactions[index].destination_account = {
+                        id: model.id,
+                        name: model.name,
+                        type: model.type,
+                        currency_id: model.currency_id,
+                        currency_name: model.currency_name,
+                        currency_code: model.currency_code,
+                        currency_decimal_places: model.currency_decimal_places,
+                        allowed_types: this.transactions[index].destination_account.allowed_types
+                    };
+
+                    // force types on destination selector.
+                    //this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
+                }
+            },
+            clearSource: function (index) {
+                console.log('clearSource(' + index + ')');
+                // reset source account:
+                this.transactions[index].source_account = {
+                    id: 0,
+                    name: '',
+                    type: '',
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: this.transactions[index].source_account.allowed_types
+                };
+                // reset destination allowed account types.
+                // this.transactions[index].destination_account.allowed_types = [];
+
+                // if there is a destination model, reset the types of the source
+                // by pretending we selected it again.
+                if (this.transactions[index].destination_account) {
+                    this.selectedDestinationAccount(index, this.transactions[index].destination_account);
+                }
+            },
+            setTransactionType: function (type) {
+                this.transactionType = type;
+            },
+            deleteTransaction: function (index, event) {
+                event.preventDefault();
+                for (const key in this.transactions) {
+                    if (
+                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                    }
+                }
+
+                this.transactions.splice(index, 1);
+
+                for (const key in this.transactions) {
+                    if (
+                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                    }
+                }
+            },
+            clearDestination: function (index) {
+                console.log('clearDestination(' + index + ')');
+                // reset destination account:
+                console.log('Destination allowed types first:');
+                console.log(this.transactions[index].destination_account.allowed_types);
+                this.transactions[index].destination_account = {
+                    id: 0,
+                    name: '',
+                    type: '',
+                    currency_id: 0,
+                    currency_name: '',
+                    currency_code: '',
+                    currency_decimal_places: 2,
+                    allowed_types: this.transactions[index].destination_account.allowed_types
+                };
+                // reset destination allowed account types.
+                //this.transactions[index].source_account.allowed_types = [];
+
+                // if there is a source model, reset the types of the destination
+                // by pretending we selected it again.
+                if (this.transactions[index].source_account) {
+                    this.selectedSourceAccount(index, this.transactions[index].source_account);
+                }
+
+                console.log('Destination allowed types after:');
+                console.log(this.transactions[index].destination_account.allowed_types);
+            },
+            getGroup: function () {
+
+                const page = window.location.href.split('/');
+                const groupId = page[page.length - 1];
+
+
+                const uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+                console.log(uri);
+
+                // fill in transactions array.
+                axios.get(uri)
+                    .then(response => {
+                        console.log(response.data.data);
+                        this.group_title = response.data.data.attributes.group_title;
+                        let transactions = response.data.data.attributes.transactions.reverse();
+                        for (let key in transactions) {
+                            if (transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                                let transaction = transactions[key];
+                                console.log(transactions[key]);
+                                this.transactions.push({
+                                    description: transaction.description,
+                                    date: transaction.date.substr(0, 10),
+                                    amount: this.positiveAmount(transaction.amount),
+                                    category: transaction.category_name,
+                                    errors: {
+                                        source_account: [],
+                                        destination_account: [],
+                                        description: [],
+                                        amount: [],
+                                        date: [],
+                                        budget_id: [],
+                                        foreign_amount: [],
+                                        category: [],
+                                        piggy_bank: [],
+                                        tags: [],
+                                        // custom fields:
+                                        custom_errors: {
+                                            interest_date: [],
+                                            book_date: [],
+                                            process_date: [],
+                                            due_date: [],
+                                            payment_date: [],
+                                            invoice_date: [],
+                                            internal_reference: [],
+                                            notes: [],
+                                            attachments: [],
+                                        },
+                                    },
+                                    budget: transaction.budget_id,
+                                    tags: transaction.tags,
+                                    custom_fields: {
+                                        interest_date: transaction.interest_date,
+                                        book_date: transaction.book_date,
+                                        process_date: transaction.process_date,
+                                        due_date: transaction.due_date,
+                                        payment_date: transaction.payment_date,
+                                        invoice_date: transaction.invoice_date,
+                                        internal_reference: transaction.internal_reference,
+                                        notes: transaction.notes
+                                    },
+                                    foreign_amount: {
+                                        amount: this.positiveAmount(transaction.foreign_amount),
+                                        currency_id: transaction.foreign_currency_id
+                                    },
+                                    source_account: {
+                                        id: transaction.source_id,
+                                        name: transaction.source_name,
+                                        type: transaction.source_type,
+                                        // i dont know these
+                                        currency_id: transaction.currency_id,
+                                        currency_name: transaction.currency_name,
+                                        currency_code: transaction.currency_code,
+                                        currency_decimal_places: transaction.currency_decimal_places,
+                                        allowed_types: [transaction.source_type]
+                                    },
+                                    destination_account: {
+                                        id: transaction.destination_id,
+                                        name: transaction.destination_name,
+                                        type: transaction.destination_type,
+                                        currency_id: transaction.currency_id,
+                                        currency_name: transaction.currency_name,
+                                        currency_code: transaction.currency_code,
+                                        currency_decimal_places: transaction.currency_decimal_places,
+                                        allowed_types: [transaction.destination_type]
+                                    }
+                                });
+                            }
+
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Some error.');
+                    });
+            },
             convertData: function () {
                 let data = {
                     'transactions': [],
@@ -371,28 +578,30 @@
 
                 return data;
             },
-            submit(e) {
-                const uri = './api/v1/transactions?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
+            submit: function (e) {
+                console.log('I am submit');
+                const page = window.location.href.split('/');
+                const groupId = page[page.length - 1];
+                const uri = './api/v1/transactions/' + groupId + '?_token=' + document.head.querySelector('meta[name="csrf-token"]').content;
                 const data = this.convertData();
-                if (this.resetFormAfter) {
-                    this.resetTransactions();
-                }
 
                 let button = $(e.currentTarget);
                 button.prop("disabled", true);
 
-                axios.post(uri, data)
+                axios.put(uri, data)
                     .then(response => {
-                        if (this.createAnother) {
+                        if (this.returnAfter) {
                             // do message:
-                            this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been stored.';
+                            this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been updated.';
                             this.error_message = '';
-                            if (this.resetFormAfter) {
-                                this.addTransaction();
-                            }
                             button.prop("disabled", false);
+                            // TODO better
+                            if (this.resetFormAfter) {
+                                this.getGroup();
+                            }
+
                         } else {
-                            window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+                            window.location.href = 'transactions/show/' + response.data.data.id + '?message=updated';
                         }
                     }).catch(error => {
                     // give user errors things back.
@@ -404,88 +613,6 @@
                 if (e) {
                     e.preventDefault();
                 }
-            },
-            setDefaultErrors: function () {
-                for (const key in this.transactions) {
-                    if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                        this.transactions[key].errors = {
-                            source_account: [],
-                            destination_account: [],
-                            description: [],
-                            amount: [],
-                            date: [],
-                            budget_id: [],
-                            foreign_amount: [],
-                            category: [],
-                            piggy_bank: [],
-                            tags: [],
-                            // custom fields:
-                            custom_errors: {
-                                interest_date: [],
-                                book_date: [],
-                                process_date: [],
-                                due_date: [],
-                                payment_date: [],
-                                invoice_date: [],
-                                internal_reference: [],
-                                notes: [],
-                                attachments: [],
-                            },
-                        };
-                    }
-                }
-            },
-            parseErrors: function (errors) {
-                this.setDefaultErrors();
-                this.error_message = "";
-                if (errors.message.length > 0) {
-                    this.error_message = "There was something wrong with your submission. Please check out the errors below.";
-                } else {
-                    this.error_message = '';
-                }
-                let transactionIndex;
-                let fieldName;
-
-                for (const key in errors.errors) {
-                    if (errors.errors.hasOwnProperty(key)) {
-                        if (key === 'group_title') {
-                            this.group_title_errors = errors.errors[key];
-                        }
-                        if (key !== 'group_title') {
-                            // lol dumbest way to explode "transactions.0.something" ever.
-                            transactionIndex = parseInt(key.split('.')[1]);
-                            fieldName = key.split('.')[2];
-                            // set error in this object thing.
-                            switch (fieldName) {
-                                case 'amount':
-                                case 'date':
-                                case 'budget_id':
-                                case 'description':
-                                case 'tags':
-                                    this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
-                                    break;
-                                case 'source_name':
-                                case 'source_id':
-                                    this.transactions[transactionIndex].errors.source_account =
-                                        this.transactions[transactionIndex].errors.source_account.concat(errors.errors[key]);
-                                    break;
-                                case 'destination_name':
-                                case 'destination_id':
-                                    this.transactions[transactionIndex].errors.destination_account =
-                                        this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[key]);
-                                    break;
-                                case 'foreign_amount':
-                                case 'foreign_currency_id':
-                                    this.transactions[transactionIndex].errors.foreign_amount =
-                                        this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[key]);
-                                    break;
-                            }
-                        }
-                    }
-                }
-            },
-            resetTransactions: function () {
-                this.transactions = [];
             },
             addTransaction: function (e) {
                 this.transactions.push({
@@ -556,152 +683,29 @@
                         allowed_types: []
                     }
                 });
-                if (this.transactions.length === 1) {
-                    // set first date.
-                    let today = new Date();
-                    this.transactions[0].date = today.getFullYear() + '-' + ("0" + (today.getMonth() + 1)).slice(-2) + '-' + ("0" + today.getDate()).slice(-2);
-                }
                 if (e) {
                     e.preventDefault();
-                }
-            },
-            setTransactionType: function (type) {
-                this.transactionType = type;
-            },
-            deleteTransaction: function (index, event) {
-                event.preventDefault();
-                for (const key in this.transactions) {
-                    if (
-                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                    }
-                }
-
-                this.transactions.splice(index, 1);
-
-                for (const key in this.transactions) {
-                    if (
-                        this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                    }
-                }
-            },
-            limitSourceType: function (type) {
-                let i;
-                for (i = 0; i < this.transactions.length; i++) {
-                    this.transactions[i].source_account.allowed_types = [type];
-                }
-            },
-            limitDestinationType: function (type) {
-                let i;
-                for (i = 0; i < this.transactions.length; i++) {
-                    this.transactions[i].destination_account.allowed_types = [type];
-                }
-            },
-
-            selectedSourceAccount: function (index, model) {
-                if (typeof model === 'string') {
-                    // cant change types, only name.
-                    this.transactions[index].source_account.name = model;
-                } else {
-                    this.transactions[index].source_account = {
-                        id: model.id,
-                        name: model.name,
-                        type: model.type,
-                        currency_id: model.currency_id,
-                        currency_name: model.currency_name,
-                        currency_code: model.currency_code,
-                        currency_decimal_places: model.currency_decimal_places,
-                        allowed_types: this.transactions[index].source_account.allowed_types
-                    };
-
-                    // force types on destination selector.
-                    this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
-                }
-            },
-            selectedDestinationAccount: function (index, model) {
-                if (typeof model === 'string') {
-                    // cant change types, only name.
-                    this.transactions[index].destination_account.name = model;
-                } else {
-                    this.transactions[index].destination_account = {
-                        id: model.id,
-                        name: model.name,
-                        type: model.type,
-                        currency_id: model.currency_id,
-                        currency_name: model.currency_name,
-                        currency_code: model.currency_code,
-                        currency_decimal_places: model.currency_decimal_places,
-                        allowed_types: this.transactions[index].destination_account.allowed_types
-                    };
-
-                    // force types on destination selector.
-                    this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
-                }
-            },
-            clearSource: function (index) {
-                console.log('clearSource(' + index + ')');
-                // reset source account:
-                this.transactions[index].source_account = {
-                    id: 0,
-                    name: '',
-                    type: '',
-                    currency_id: 0,
-                    currency_name: '',
-                    currency_code: '',
-                    currency_decimal_places: 2,
-                    allowed_types: this.transactions[index].source_account.allowed_types
-                };
-                // reset destination allowed account types.
-                this.transactions[index].destination_account.allowed_types = [];
-
-                // if there is a destination model, reset the types of the source
-                // by pretending we selected it again.
-                if (this.transactions[index].destination_account) {
-                    this.selectedDestinationAccount(index, this.transactions[index].destination_account);
-                }
-            },
-            clearDestination: function (index) {
-                console.log('clearDestination(' + index + ')');
-                // reset destination account:
-                this.transactions[index].destination_account = {
-                    id: 0,
-                    name: '',
-                    type: '',
-                    currency_id: 0,
-                    currency_name: '',
-                    currency_code: '',
-                    currency_decimal_places: 2,
-                    allowed_types: this.transactions[index].destination_account.allowed_types
-                };
-                // reset destination allowed account types.
-                this.transactions[index].source_account.allowed_types = [];
-
-                // if there is a source model, reset the types of the destination
-                // by pretending we selected it again.
-                if (this.transactions[index].source_account) {
-                    this.selectedSourceAccount(index, this.transactions[index].source_account);
                 }
             }
         },
 
-        /*
-         * The component's data.
-         */
+
         data() {
             return {
-                transactionType: null,
-                group_title: "",
-                transactions: [],
-                group_title_errors: [],
+                group: this.groupId,
                 error_message: "",
                 success_message: "",
-                cash_account_id: 0,
-                createAnother: false,
-                resetFormAfter: false,
+                transactions: [],
+                group_title: "",
+                returnAfter: false,
+                transactionType: null,
+                group_title_errors: [],
                 resetButtonDisabled: true,
-            };
-        },
+            }
+        }
     }
 </script>
 
 <style scoped>
+
 </style>

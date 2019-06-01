@@ -554,7 +554,6 @@ Route::group(
     Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'autocomplete.tags']);
 
 
-
     // TODO improve 3 routes:
     //Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allTransactionJournals', 'as' => 'all-transaction-journals']);
     //Route::get('transaction-journals/with-id/{tj}', ['uses' => 'Json\AutoCompleteController@journalsWithId', 'as' => 'journals-with-id']);
@@ -891,7 +890,16 @@ Route::group(
     Route::get('create', ['uses' => 'Transaction\CreateController@create', 'as' => 'create']);
     Route::post('store', ['uses' => 'Transaction\CreateController@store', 'as' => 'store']);
 
+    // edit group
+    Route::get('edit/{transactionGroup}', ['uses' => 'Transaction\EditController@edit', 'as' => 'edit']);
+    Route::post('update', ['uses' => 'Transaction\EditController@update', 'as' => 'update']);
 
+    // delete group
+    Route::get('delete/{transactionGroup}', ['uses' => 'Transaction\DeleteController@delete', 'as' => 'delete']);
+    Route::post('destroy/{transactionGroup}', ['uses' => 'Transaction\DeleteController@destroy', 'as' => 'destroy']);
+
+    // clone group:
+    Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
 
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
     Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
@@ -913,13 +921,13 @@ Route::group(
     function () {
         // TODO improve these routes
 
-        Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
-        Route::get('delete/{tj}', ['uses' => 'SingleController@delete', 'as' => 'delete']);
+        //Route::get('edit/{tj}', ['uses' => 'SingleController@edit', 'as' => 'edit']);
+        //
         //Route::post('store', ['uses' => 'SingleController@store', 'as' => 'store'])->where(['what' => 'withdrawal|deposit|transfer']);
-        Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
-        Route::post('destroy/{tj}', ['uses' => 'SingleController@destroy', 'as' => 'destroy']);
-        Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
-        Route::get('{tj}/{type}', ['uses' => 'ConvertController@index', 'as' => 'convert']);
+        //Route::post('update/{tj}', ['uses' => 'SingleController@update', 'as' => 'update']);
+        //
+        //Route::get('clone/{tj}', ['uses' => 'SingleController@cloneTransaction', 'as' => 'clone']);
+        //Route::get('{tj}/{type}', ['uses' => 'ConvertController@index', 'as' => 'convert']);
         // TODO end of improvement.
     }
 );
