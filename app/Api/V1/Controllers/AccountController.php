@@ -210,7 +210,7 @@ class AccountController extends Controller
      */
     public function store(AccountStoreRequest $request): JsonResponse
     {
-        $data    = $request->getAll();
+        $data    = $request->getAllAccountData();
         $account = $this->repository->store($data);
         $manager = new Manager;
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
@@ -302,7 +302,7 @@ class AccountController extends Controller
      */
     public function update(AccountUpdateRequest $request, Account $account): JsonResponse
     {
-        $data         = $request->getAll();
+        $data         = $request->getAllAccountData();
         $data['type'] = config('firefly.shortNamesByFullName.' . $account->accountType->type);
         $this->repository->update($account, $data);
         $manager = new Manager;

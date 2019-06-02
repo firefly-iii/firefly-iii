@@ -45,54 +45,6 @@ class AccountUpdateRequest extends Request
     }
 
     /**
-     * Get all data from the request.
-     *
-     * @return array
-     */
-    public function getAll(): array
-    {
-        $active          = true;
-        $includeNetWorth = true;
-        if (null !== $this->get('active')) {
-            $active = $this->boolean('active');
-        }
-        if (null !== $this->get('include_net_worth')) {
-            $includeNetWorth = $this->boolean('include_net_worth');
-        }
-
-        $data = [
-            'name'                 => $this->string('name'),
-            'active'               => $active,
-            'include_net_worth'    => $includeNetWorth,
-            'accountType'          => $this->string('type'),
-            'account_type_id'      => null,
-            'currency_id'          => $this->integer('currency_id'),
-            'currency_code'        => $this->string('currency_code'),
-            'virtualBalance'       => $this->string('virtual_balance'),
-            'iban'                 => $this->string('iban'),
-            'BIC'                  => $this->string('bic'),
-            'accountNumber'        => $this->string('account_number'),
-            'accountRole'          => $this->string('account_role'),
-            'openingBalance'       => $this->string('opening_balance'),
-            'openingBalanceDate'   => $this->date('opening_balance_date'),
-            'ccType'               => $this->string('credit_card_type'),
-            'ccMonthlyPaymentDate' => $this->string('monthly_payment_date'),
-            'notes'                => $this->string('notes'),
-            'interest'             => $this->string('interest'),
-            'interest_period'      => $this->string('interest_period'),
-        ];
-
-        if ('liability' === $data['accountType']) {
-            $data['openingBalance']     = bcmul($this->string('liability_amount'), '-1');
-            $data['openingBalanceDate'] = $this->date('liability_start_date');
-            $data['accountType']        = $this->string('liability_type');
-            $data['account_type_id']    = null;
-        }
-
-        return $data;
-    }
-
-    /**
      * The rules that the incoming request must be matched against.
      *
      * @return array
