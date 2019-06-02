@@ -141,7 +141,7 @@ class AccountValidator
         switch ($this->transactionType) {
             default:
                 $result            = false;
-                $this->sourceError = sprintf('Cannot handle type "%s"', $this->transactionType);
+                $this->sourceError = sprintf('Cannot handle type "%s" :(', $this->transactionType);
                 Log::error(sprintf('AccountValidator::validateSource cannot handle "%s", so it will always return false.', $this->transactionType));
                 break;
             case TransactionType::WITHDRAWAL:

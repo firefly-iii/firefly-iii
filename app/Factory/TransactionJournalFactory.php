@@ -27,7 +27,6 @@ namespace FireflyIII\Factory;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -129,6 +128,7 @@ class TransactionJournalFactory
         foreach ($transactions as $index => $row) {
             Log::debug(sprintf('Now creating journal %d/%d', $index + 1, count($transactions)));
 
+            Log::debug('Going to call createJournal', $row);
             $journal = $this->createJournal(new NullArrayObject($row));
             if (null !== $journal) {
                 $collection->push($journal);
@@ -159,7 +159,7 @@ class TransactionJournalFactory
      * Link a piggy bank to this journal.
      *
      * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
+     * @param NullArrayObject $data
      */
     public function storePiggyEvent(TransactionJournal $journal, NullArrayObject $data): void
     {
@@ -183,8 +183,8 @@ class TransactionJournalFactory
 
     /**
      * @param TransactionJournal $journal
-     * @param NullArrayObject    $data
-     * @param string             $field
+     * @param NullArrayObject $data
+     * @param string $field
      */
     protected function storeMeta(TransactionJournal $journal, NullArrayObject $data, string $field): void
     {
@@ -305,7 +305,7 @@ class TransactionJournalFactory
 
     /**
      * @param TransactionJournal $journal
-     * @param NullArrayObject    $transaction
+     * @param NullArrayObject $transaction
      */
     private function storeMetaFields(TransactionJournal $journal, NullArrayObject $transaction): void
     {

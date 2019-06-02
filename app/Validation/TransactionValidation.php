@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Validation;
 
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use Illuminate\Validation\Validator;
 
@@ -242,7 +243,7 @@ trait TransactionValidation
     }
 
     /**
-     * @param Validator        $validator
+     * @param Validator $validator
      * @param TransactionGroup $transactionGroup
      */
     private function validateEqualAccountsForUpdate(Validator $validator, TransactionGroup $transactionGroup): void
@@ -253,37 +254,110 @@ trait TransactionValidation
         if (count($transactions) < 2) {
             return;
         }
-        $type    = $transactions[0]['type'] ?? strtolower($transactionGroup->transactionJournals()->first()->transactionType->type);
-        $sources = [];
-        $dests   = [];
-        foreach ($transactions as $transaction) {
-            $sources[] = sprintf('%d-%s', $transaction['source_id'] ?? 0, $transaction['source_name'] ?? '');
-            $dests[]   = sprintf('%d-%s', $transaction['destination_id'] ?? 0, $transaction['destination_name'] ?? '');
+        $type = $transactions[0]['type'] ?? strtolower($transactionGroup->transactionJournals()->first()->transactionType->type);
+
+        // compare source ID's, destination ID's, source names and destination names.
+        // I think I can get away with one combination being equal, as long as the rest
+        // of the code picks up on this as well.
+        // either way all fields must be blank or all equal
+        // but if ID's are equal don't bother with the names.
+
+        $fields     = ['source_id', 'destination_id', 'source_name', 'destination_name'];
+        $comparison = [];
+        foreach ($fields as $field) {
+            $comparison[$field] = [];
+            /** @var array $transaction */
+            foreach ($transactions as $transaction) {
+                // source or destination may be omitted. If this is the case, use the original source / destination name + ID.
+                $originalData = $this->getOriginalData((int)($transaction['transaction_journal_id'] ?? 0));
+
+                // get field.
+                $comparison[$field][] = $transaction[$field] ?? $originalData[$field];
+            }
         }
-        $sources = array_unique($sources);
-        $dests   = array_unique($dests);
+        // TODO not the best way to loop this.
         switch ($type) {
             case 'withdrawal':
-                if (count($sources) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                if ($this->arrayEqual($comparison['source_id'])) {
+                    // source ID's are equal, return void.
+                    return;
                 }
+                if ($this->arrayEqual($comparison['source_name'])) {
+                    // source names are equal, return void.
+                    return;
+                }
+                // add error:
+                $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
                 break;
             case 'deposit':
-                if (count($dests) > 1) {
-                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
+                if ($this->arrayEqual($comparison['destination_id'])) {
+                    // destination ID's are equal, return void.
+                    return;
                 }
+                if ($this->arrayEqual($comparison['destination_name'])) {
+                    // destination names are equal, return void.
+                    return;
+                }
+                // add error:
+                $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
                 break;
-            case'transfer':
-                if (count($sources) > 1 || count($dests) > 1) {
-                    $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
-                    $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
+            case 'transfer':
+                if ($this->arrayEqual($comparison['source_id'])) {
+                    // source ID's are equal, return void.
+                    return;
                 }
+                if ($this->arrayEqual($comparison['source_name'])) {
+                    // source names are equal, return void.
+                    return;
+                }
+                if ($this->arrayEqual($comparison['destination_id'])) {
+                    // destination ID's are equal, return void.
+                    return;
+                }
+                if ($this->arrayEqual($comparison['destination_name'])) {
+                    // destination names are equal, return void.
+                    return;
+                }
+                // add error:
+                $validator->errors()->add('transactions.0.source_id', (string)trans('validation.all_accounts_equal'));
+                $validator->errors()->add('transactions.0.destination_id', (string)trans('validation.all_accounts_equal'));
                 break;
         }
     }
 
     /**
-     * @param Validator        $validator
+     * @param int $journalId
+     * @return array
+     */
+    private function getOriginalData(int $journalId): array
+    {
+        $return = [
+            'source_id'        => 0,
+            'source_name'      => '',
+            'destination_id'   => 0,
+            'destination_name' => '',
+        ];
+        if (0 === $journalId) {
+            return $return;
+        }
+        /** @var Transaction $source */
+        $source = Transaction::where('transaction_journal_id', $journalId)->where('amount', '<', 0)->with(['account'])->first();
+        if (null !== $source) {
+            $return['source_id']   = $source->account_id;
+            $return['source_name'] = $source->account->name;
+        }
+        /** @var Transaction $destination */
+        $destination = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->with(['account'])->first();
+        if (null !== $source) {
+            $return['destination_id']   = $destination->account_id;
+            $return['destination_name'] = $destination->account->name;
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param Validator $validator
      * @param TransactionGroup $transactionGroup
      */
     private function validateJournalIds(Validator $validator, TransactionGroup $transactionGroup): void
@@ -301,5 +375,14 @@ trait TransactionValidation
                 $validator->errors()->add(sprintf('transactions.%d.source_name', $index), (string)trans('validation.need_id_in_edit'));
             }
         }
+    }
+
+    /**
+     * @param array $array
+     * @return bool
+     */
+    private function arrayEqual(array $array): bool
+    {
+        return 1 === count(array_unique($array));
     }
 }
