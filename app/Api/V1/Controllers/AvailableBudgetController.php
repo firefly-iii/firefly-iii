@@ -102,21 +102,11 @@ class AvailableBudgetController extends Controller
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
-        // get list of available budgets. Count it and split it.
-        $collection = $this->repository->getAvailableBudgets();
-
-        // filter list on start and end date, if present.
-        // TODO: put this in the query.
         $start = $this->parameters->get('start');
         $end   = $this->parameters->get('end');
-        if (null !== $start && null !== $end) {
-            $collection = $collection->filter(
-                function (AvailableBudget $availableBudget) use ($start, $end) {
-                    return $availableBudget->start_date->gte($start) && $availableBudget->end_date->lte($end);
-                }
-            );
-        }
 
+        // get list of available budgets. Count it and split it.
+        $collection       = $this->repository->getAvailableBudgetsByDate($start, $end);
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 

@@ -28,7 +28,6 @@ use FireflyIII\Api\V1\Requests\CurrencyRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Recurrence;
@@ -181,18 +180,11 @@ class CurrencyController extends Controller
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
 
         // get list of available budgets. Count it and split it.
+
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
         $repository->setUser($admin);
-        $unfiltered = $repository->getAvailableBudgets();
-
-        // filter list.
-        $collection = $unfiltered->filter(
-            function (AvailableBudget $availableBudget) use ($currency) {
-                return $availableBudget->transaction_currency_id === $currency->id;
-            }
-        );
-
+        $collection       = $repository->getAvailableBudgetsByCurrency($currency);
         $count            = $collection->count();
         $availableBudgets = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
 
@@ -279,16 +271,7 @@ class CurrencyController extends Controller
         $manager    = new Manager;
         $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
         $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $unfiltered = $repository->getAllBudgetLimits($this->parameters->get('start'), $this->parameters->get('end'));
-
-        // TODO replace this
-        // filter budget limits on currency ID
-        $collection = $unfiltered->filter(
-            function (BudgetLimit $budgetLimit) use ($currency) {
-                return $budgetLimit->transaction_currency_id === $currency->id;
-            }
-        );
-
+        $collection = $repository->getAllBudgetLimitsByCurrency($currency, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));

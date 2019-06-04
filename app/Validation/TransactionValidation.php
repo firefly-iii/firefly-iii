@@ -25,6 +25,8 @@ namespace FireflyIII\Validation;
 
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionType;
 use Illuminate\Validation\Validator;
 
 /**
@@ -178,6 +180,7 @@ trait TransactionValidation
         $first = $unique[0] ?? 'invalid';
         if ('invalid' === $first) {
             $validator->errors()->add('transactions.0.type', (string)trans('validation.invalid_transaction_type'));
+
         }
     }
 
@@ -192,13 +195,62 @@ trait TransactionValidation
         $transactions = $data['transactions'] ?? [];
         $types        = [];
         foreach ($transactions as $index => $transaction) {
-            $types[] = $transaction['type'] ?? 'invalid';
+            $originalType = $this->getOriginalType((int)($transaction['transaction_journal_id'] ?? 0));
+            // if type is not set, fall back to the type of the journal, if one is given.
+
+
+            $types[] = $transaction['type'] ?? $originalType;
         }
         $unique = array_unique($types);
         if (count($unique) > 1) {
             $validator->errors()->add('transactions.0.type', (string)trans('validation.transaction_types_equal'));
 
             return;
+        }
+    }
+
+    /**
+     * Validates the given account information. Switches on given transaction type.
+     *
+     * @param Validator $validator
+     */
+    public function validateAccountInformationUpdate(Validator $validator): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+
+        /** @var AccountValidator $accountValidator */
+        $accountValidator = app(AccountValidator::class);
+
+        foreach ($transactions as $index => $transaction) {
+            $originalType    = $this->getOriginalType($transaction['transaction_journal_id'] ?? 0);
+            $originalData = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
+            $transactionType = $transaction['type'] ?? $originalType;
+            $accountValidator->setTransactionType($transactionType);
+
+            // validate source account.
+            $sourceId    = isset($transaction['source_id']) ? (int)$transaction['source_id'] : $originalData['source_id'];
+            $sourceName  = $transaction['source_name'] ?? $originalData['source_name'];
+            $validSource = $accountValidator->validateSource($sourceId, $sourceName);
+
+            // do something with result:
+            if (false === $validSource) {
+                $validator->errors()->add(sprintf('transactions.%d.source_id', $index), $accountValidator->sourceError);
+                $validator->errors()->add(sprintf('transactions.%d.source_name', $index), $accountValidator->sourceError);
+
+                continue;
+            }
+            // validate destination account
+            $destinationId    = isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : $originalData['destination_id'];
+            $destinationName  = $transaction['destination_name'] ?? $originalData['destination_name'];
+            $validDestination = $accountValidator->validateDestination($destinationId, $destinationName);
+            // do something with result:
+            if (false === $validDestination) {
+                $validator->errors()->add(sprintf('transactions.%d.destination_id', $index), $accountValidator->destError);
+                $validator->errors()->add(sprintf('transactions.%d.destination_name', $index), $accountValidator->destError);
+
+                continue;
+            }
         }
     }
 
@@ -354,6 +406,24 @@ trait TransactionValidation
         }
 
         return $return;
+    }
+
+    /**
+     * @param int $journalId
+     * @return string
+     */
+    private function getOriginalType(int $journalId): string
+    {
+        if (0 === $journalId) {
+            return 'invalid';
+        }
+        /** @var TransactionJournal $journal */
+        $journal = TransactionJournal::with(['transactionType'])->find($journalId);
+        if (null !== $journal) {
+            return strtolower($journal->transactionType->type);
+        }
+
+        return 'invalid';
     }
 
     /**

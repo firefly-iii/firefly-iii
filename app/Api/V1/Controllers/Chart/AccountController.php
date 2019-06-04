@@ -32,16 +32,17 @@ use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
 
 /**
  * Class AccountController
  */
 class AccountController extends Controller
 {
+    use ApiSupport;
     /** @var CurrencyRepositoryInterface */
     private $currencyRepository;
     /** @var AccountRepositoryInterface */
@@ -156,42 +157,6 @@ class AccountController extends Controller
         return response()->json($chartData);
     }
 
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO should include Trait instead of doing this.
-     *
-     * @param Collection $accounts
-     *
-     * @return array
-     */
-    protected function extractNames(Collection $accounts): array
-    {
-        $return = [];
-        /** @var Account $account */
-        foreach ($accounts as $account) {
-            $return[$account->id] = $account->name;
-        }
-
-        return $return;
-    }
-
-    /**
-     * Small helper function for the revenue and expense account charts.
-     * TODO should include Trait instead of doing this.
-     *
-     * @param array $names
-     *
-     * @return array
-     */
-    protected function expandNames(array $names): array
-    {
-        $result = [];
-        foreach ($names as $entry) {
-            $result[$entry['name']] = 0;
-        }
-
-        return $result;
-    }
 
     /**
      * @param Request $request
@@ -213,8 +178,8 @@ class AccountController extends Controller
 
         // user's preferences
         $defaultSet = $this->repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
-        $frontPage = app('preferences')->get('frontPageAccounts', $defaultSet);
-        $default   = app('amount')->getDefaultCurrency();
+        $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
+        $default    = app('amount')->getDefaultCurrency();
         if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();

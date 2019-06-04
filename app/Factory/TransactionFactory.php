@@ -25,18 +25,15 @@ declare(strict_types=1);
 namespace FireflyIII\Factory;
 
 
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
-use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
 use FireflyIII\Validation\AccountValidator;
 use Illuminate\Database\QueryException;
-use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -50,8 +47,16 @@ class TransactionFactory
     private $accountValidator;
     /** @var TransactionJournal */
     private $journal;
+    /** @var Account */
+    private $account;
+    /** @var TransactionCurrency */
+    private $currency;
+    /** @var TransactionCurrency */
+    private $foreignCurrency;
     /** @var User */
     private $user;
+    /** @var bool */
+    private $reconciled;
 
     /**
      * Constructor.
@@ -63,93 +68,72 @@ class TransactionFactory
         }
         $this->accountRepository = app(AccountRepositoryInterface::class);
         $this->accountValidator  = app(AccountValidator::class);
+        $this->reconciled        = false;
+        $this->foreignCurrency   = null;
     }
 
     /**
-     * @param Account             $account
+     * @param bool $reconciled
+     */
+    public function setReconciled(bool $reconciled): void
+    {
+        $this->reconciled = $reconciled;
+    }
+
+    /**
+     * @param Account $account
+     */
+    public function setAccount(Account $account): void
+    {
+        $this->account = $account;
+    }
+
+    /**
      * @param TransactionCurrency $currency
-     * @param string              $amount
+     */
+    public function setCurrency(TransactionCurrency $currency): void
+    {
+        $this->currency = $currency;
+    }
+
+    /**
+     * @param TransactionCurrency $foreignCurrency |null
+     */
+    public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
+    {
+        $this->foreignCurrency = $foreignCurrency;
+    }
+
+    /**
+     * Create transaction with negative amount (for source accounts).
      *
+     * @param string $amount
+     * @param string|null $foreignAmount
      * @return Transaction|null
      */
-    public function create(Account $account, TransactionCurrency $currency, string $amount): ?Transaction
+    public function createNegative(string $amount, ?string $foreignAmount): ?Transaction
     {
-        $result = null;
-        $data   = [
-            'reconciled'              => false,
-            'account_id'              => $account->id,
-            'transaction_journal_id'  => $this->journal->id,
-            'description'             => null,
-            'transaction_currency_id' => $currency->id,
-            'amount'                  => $amount,
-            'foreign_amount'          => null,
-            'foreign_currency_id'     => null,
-            'identifier'              => 0,
-        ];
-        try {
-            $result = Transaction::create($data);
-        } catch (QueryException $e) {
-            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
-        }
-        if (null !== $result) {
-            Log::debug(
-                sprintf(
-                    'Created transaction #%d (%s %s), part of journal #%d', $result->id,
-                    $currency->code, $amount, $this->journal->id
-                )
-            );
+        if (null !== $foreignAmount) {
+            $foreignAmount = app('steam')->negative($foreignAmount);
         }
 
-        return $result;
+        return $this->create(app('steam')->negative($amount), $foreignAmount);
     }
 
     /**
-     * @param NullArrayObject          $data
-     * @param TransactionCurrency      $currency
-     * @param TransactionCurrency|null $foreignCurrency
+     * Create transaction with positive amount (for destination accounts).
      *
-     * @return Collection
-     * @throws FireflyException
+     * @param string $amount
+     * @param string|null $foreignAmount
+     * @return Transaction|null
      */
-    public function createPair(NullArrayObject $data, TransactionCurrency $currency, ?TransactionCurrency $foreignCurrency): Collection
+    public function createPositive(string $amount, ?string $foreignAmount): ?Transaction
     {
-        Log::debug('Going to create a pair of transactions.');
-        Log::debug(sprintf('Source info: ID #%d, name "%s"', $data['source_id'], $data['source_name']));
-        Log::debug(sprintf('Destination info: ID #%d, name "%s"', $data['destination_id'], $data['destination_name']));
-        // validate source and destination using a new Validator.
-        $this->validateAccounts($data);
-
-        // create or get source and destination accounts:
-        $type               = $this->journal->transactionType->type;
-        $sourceAccount      = $this->getAccount($type, 'source', (int)$data['source_id'], $data['source_name']);
-        $destinationAccount = $this->getAccount($type, 'destination', (int)$data['destination_id'], $data['destination_name']);
-
-        // at this point we know the
-
-        $amount        = $this->getAmount($data['amount']);
-        $foreignAmount = $this->getForeignAmount($data['foreign_amount']);
-        $one           = $this->create($sourceAccount, $currency, app('steam')->negative($amount));
-        $two           = $this->create($destinationAccount, $currency, app('steam')->positive($amount));
-
-        $one->reconciled = $data['reconciled'] ?? false;
-        $two->reconciled = $data['reconciled'] ?? false;
-
-        // add foreign currency info to $one and $two if necessary.
-        if (null !== $foreignCurrency && null !== $foreignAmount
-        && $foreignCurrency->id !== $currency->id
-        ) {
-            $one->foreign_currency_id = $foreignCurrency->id;
-            $two->foreign_currency_id = $foreignCurrency->id;
-            $one->foreign_amount      = app('steam')->negative($foreignAmount);
-            $two->foreign_amount      = app('steam')->positive($foreignAmount);
+        if (null !== $foreignAmount) {
+            $foreignAmount = app('steam')->positive($foreignAmount);
         }
 
-
-        $one->save();
-        $two->save();
-
-        return new Collection([$one, $two]);
-
+        return $this->create(app('steam')->positive($amount), $foreignAmount);
     }
 
 
@@ -171,33 +155,49 @@ class TransactionFactory
     }
 
     /**
-     * @param NullArrayObject $data
-     *
-     * @throws FireflyException
+     * @param string $amount
+     * @param string|null $foreignAmount
+     * @return Transaction|null
      */
-    private function validateAccounts(NullArrayObject $data): void
+    private function create(string $amount, ?string $foreignAmount): ?Transaction
     {
-        $transactionType = $data['type'] ?? 'invalid';
-        $this->accountValidator->setUser($this->journal->user);
-        $this->accountValidator->setTransactionType($transactionType);
-
-        // validate source account.
-        $sourceId    = isset($data['source_id']) ? (int)$data['source_id'] : null;
-        $sourceName  = $data['source_name'] ?? null;
-        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName);
-
-        // do something with result:
-        if (false === $validSource) {
-            throw new FireflyException($this->accountValidator->sourceError);
+        $result = null;
+        $data   = [
+            'reconciled'              => $this->reconciled,
+            'account_id'              => $this->account->id,
+            'transaction_journal_id'  => $this->journal->id,
+            'description'             => null,
+            'transaction_currency_id' => $this->currency->id,
+            'amount'                  => $amount,
+            'foreign_amount'          => null,
+            'foreign_currency_id'     => null,
+            'identifier'              => 0,
+        ];
+        try {
+            $result = Transaction::create($data);
+        } catch (QueryException $e) {
+            Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
         }
-        Log::debug('Source seems valid.');
-        // validate destination account
-        $destinationId    = isset($data['destination_id']) ? (int)$data['destination_id'] : null;
-        $destinationName  = $data['destination_name'] ?? null;
-        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName);
-        // do something with result:
-        if (false === $validDestination) {
-            throw new FireflyException($this->accountValidator->destError);
+        if (null !== $result) {
+            Log::debug(
+                sprintf(
+                    'Created transaction #%d (%s %s), part of journal #%d', $result->id,
+                    $this->currency->code, $amount, $this->journal->id
+                )
+            );
+
+            // do foreign currency thing.
+            // add foreign currency info to $one and $two if necessary.
+            if (null !== $this->foreignCurrency && null !== $foreignAmount
+                && $this->foreignCurrency->id !== $this->currency->id
+            ) {
+                $result->foreign_currency_id = $this->foreignCurrency->id;
+                $result->foreign_amount      = app('steam')->negative($foreignAmount);
+
+            }
+            $result->save();
         }
+
+        return $result;
     }
 }

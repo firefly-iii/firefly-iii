@@ -27,8 +27,11 @@ namespace FireflyIII\Factory;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Models\Account;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -38,6 +41,7 @@ use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\Support\NullArrayObject;
 use FireflyIII\User;
+use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Log;
 
@@ -48,6 +52,10 @@ class TransactionJournalFactory
 {
     use JournalServiceTrait;
 
+    /** @var AccountValidator */
+    private $accountValidator;
+    /** @var AccountRepositoryInterface */
+    private $accountRepository;
     /** @var BillRepositoryInterface */
     private $billRepository;
     /** @var CurrencyRepositoryInterface */
@@ -100,6 +108,8 @@ class TransactionJournalFactory
         $this->piggyRepository    = app(PiggyBankRepositoryInterface::class);
         $this->piggyEventFactory  = app(PiggyBankEventFactory::class);
         $this->tagFactory         = app(TagFactory::class);
+        $this->accountValidator   = app(AccountValidator::class);
+        $this->accountRepository  = app(AccountRepositoryInterface::class);
     }
 
     /**
@@ -153,6 +163,7 @@ class TransactionJournalFactory
         $this->budgetRepository->setUser($this->user);
         $this->categoryRepository->setUser($this->user);
         $this->piggyRepository->setUser($this->user);
+        $this->accountRepository->setUser($this->user);
     }
 
     /**
@@ -211,7 +222,7 @@ class TransactionJournalFactory
     {
         $row['import_hash_v2'] = $this->hashArray($row);
 
-        /** Get basic fields */
+        /** Some basic fields */
         $type            = $this->typeRepository->findTransactionType(null, $row['type']);
         $carbon          = $row['date'] ?? new Carbon;
         $order           = $row['order'] ?? 0;
@@ -223,6 +234,55 @@ class TransactionJournalFactory
 
         /** Manipulate basic fields */
         $carbon->setTimezone(config('app.timezone'));
+
+        /** Get source + destination account */
+        Log::debug(sprintf('Source info: ID #%d, name "%s"', $row['source_id'], $row['source_name']));
+        Log::debug(sprintf('Destination info: ID #%d, name "%s"', $row['destination_id'], $row['destination_name']));
+        // validate source and destination using a new Validator.
+        $this->validateAccounts($row);
+
+        /** create or get source and destination accounts  */
+        $sourceAccount      = $this->getAccount($type->type, 'source', (int)$row['source_id'], $row['source_name']);
+        $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
+
+        /** double check currencies. */
+
+        if ($type->type === 'Withdrawal') {
+            // make sure currency is correct.
+            $currency = $this->getCurrency($currency, $sourceAccount);
+            // make sure foreign currency != currency.
+            if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
+                $foreignCurrency = null;
+            }
+            $sourceCurrency        = $currency;
+            $destCurrency          = $currency;
+            $sourceForeignCurrency = $foreignCurrency;
+            $destForeignCurrency   = $foreignCurrency;
+        }
+        if ($type->type === 'Deposit') {
+            // make sure currency is correct.
+            $currency = $this->getCurrency($currency, $destinationAccount);
+            // make sure foreign currency != currency.
+            if (null !== $foreignCurrency && $foreignCurrency->id === $currency->id) {
+                $foreignCurrency = null;
+            }
+
+            $sourceCurrency        = $currency;
+            $destCurrency          = $currency;
+            $sourceForeignCurrency = $foreignCurrency;
+            $destForeignCurrency   = $foreignCurrency;
+        }
+
+        if ($type->type === 'Transfer') {
+            // get currencies
+            $currency        = $this->getCurrency($currency, $sourceAccount);
+            $foreignCurrency = $this->getCurrency($foreignCurrency, $destinationAccount);
+
+            $sourceCurrency        = $currency;
+            $destCurrency          = $foreignCurrency;
+            $sourceForeignCurrency = $foreignCurrency;
+            $destForeignCurrency   = $currency;
+        }
 
         /** Create a basic journal. */
         $journal = TransactionJournal::create(
@@ -241,8 +301,26 @@ class TransactionJournalFactory
         Log::debug(sprintf('Created new journal #%d: "%s"', $journal->id, $journal->description));
 
         /** Create two transactions. */
-        $this->transactionFactory->setJournal($journal);
-        $this->transactionFactory->createPair($row, $currency, $foreignCurrency);
+        /** @var TransactionFactory $transactionFactory */
+        $transactionFactory = app(TransactionFactory::class);
+        $transactionFactory->setUser($this->user);
+        $transactionFactory->setJournal($journal);
+        $transactionFactory->setAccount($sourceAccount);
+        $transactionFactory->setCurrency($sourceCurrency);
+        $transactionFactory->setForeignCurrency($sourceForeignCurrency);
+        $transactionFactory->setReconciled($row['reconciled'] ?? false);
+        $transactionFactory->createNegative($row['amount'], $row['foreign_amount']);
+
+        // and the destination one:
+        /** @var TransactionFactory $transactionFactory */
+        $transactionFactory = app(TransactionFactory::class);
+        $transactionFactory->setUser($this->user);
+        $transactionFactory->setJournal($journal);
+        $transactionFactory->setAccount($destinationAccount);
+        $transactionFactory->setCurrency($destCurrency);
+        $transactionFactory->setForeignCurrency($destForeignCurrency);
+        $transactionFactory->setReconciled($row['reconciled'] ?? false);
+        $transactionFactory->createPositive($row['amount'], $row['foreign_amount']);
 
         // verify that journal has two transactions. Otherwise, delete and cancel.
         $count = $journal->transactions()->count();
@@ -315,4 +393,50 @@ class TransactionJournalFactory
     }
 
 
+    /**
+     * @param NullArrayObject $data
+     *
+     * @throws FireflyException
+     */
+    private function validateAccounts(NullArrayObject $data): void
+    {
+        $transactionType = $data['type'] ?? 'invalid';
+        $this->accountValidator->setUser($this->user);
+        $this->accountValidator->setTransactionType($transactionType);
+
+        // validate source account.
+        $sourceId    = isset($data['source_id']) ? (int)$data['source_id'] : null;
+        $sourceName  = $data['source_name'] ?? null;
+        $validSource = $this->accountValidator->validateSource($sourceId, $sourceName);
+
+        // do something with result:
+        if (false === $validSource) {
+            throw new FireflyException($this->accountValidator->sourceError);
+        }
+        Log::debug('Source seems valid.');
+        // validate destination account
+        $destinationId    = isset($data['destination_id']) ? (int)$data['destination_id'] : null;
+        $destinationName  = $data['destination_name'] ?? null;
+        $validDestination = $this->accountValidator->validateDestination($destinationId, $destinationName);
+        // do something with result:
+        if (false === $validDestination) {
+            throw new FireflyException($this->accountValidator->destError);
+        }
+    }
+
+    /**
+     * @param TransactionCurrency $currency
+     * @param Account $account
+     * @return TransactionCurrency
+     */
+    private function getCurrency(TransactionCurrency $currency, Account $account): TransactionCurrency
+    {
+        $preference = $this->accountRepository->getAccountCurrency($account);
+        if (null === $preference && null === $currency) {
+            // return user's default:
+            return app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+
+        return $preference ?? $currency;
+    }
 }

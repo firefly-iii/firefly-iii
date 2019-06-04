@@ -34,7 +34,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -184,7 +184,6 @@ class RuleController extends Controller
     }
 
     /**
-     * TODO deprecated return values in transformer.
      * @param Request $request
      * @param Rule $rule
      *
@@ -193,10 +192,10 @@ class RuleController extends Controller
      */
     public function testRule(Request $request, Rule $rule): JsonResponse
     {
-        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $page         = 0 === (int)$request->query('page') ? 1 : (int)$request->query('page');
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $page     = 0 === (int)$request->query('page') ? 1 : (int)$request->query('page');
         /** @var Carbon $startDate */
-        $startDate    = null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date'));
+        $startDate = null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date'));
         /** @var Carbon $endDate */
         $endDate      = null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date'));
         $searchLimit  = 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit');
@@ -229,11 +228,11 @@ class RuleController extends Controller
         $matcher->setAccounts($accounts);
 
         $matchingTransactions = $matcher->findTransactionsByRule();
-        $matchingTransactions = $matchingTransactions->unique('id');
 
         // make paginator out of results.
-        $count        = $matchingTransactions->count();
-        $transactions = $matchingTransactions->slice(($page - 1) * $pageSize, $pageSize);
+        $count        = count($matchingTransactions);
+        $transactions = array_slice($matchingTransactions, ($page - 1) * $pageSize, $pageSize);
+
         // make paginator:
         $paginator = new LengthAwarePaginator($transactions, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
@@ -243,8 +242,8 @@ class RuleController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
+        /** @var TransactionGroupTransformer $transformer */
+        $transformer = app(TransactionGroupTransformer::class);
         $transformer->setParameters($this->parameters);
 
         $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
@@ -321,6 +320,7 @@ class RuleController extends Controller
         $resource = new Item($rule, $transformer, 'rules');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-
     }
+
+    // TODO move rule up, move rule down.
 }
