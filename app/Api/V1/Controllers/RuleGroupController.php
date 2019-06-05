@@ -285,51 +285,6 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getTestParameters(Request $request): array
-    {
-        return [
-            'page_size'     => (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data,
-            'page'          => 0 === (int)$request->query('page') ? 1 : (int)$request->query('page'),
-            'start_date'    => null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date')),
-            'end_date'      => null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date')),
-            'search_limit'  => 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit'),
-            'trigger_limit' => 0 === (int)$request->query('triggered_limit')
-                ? (int)config('firefly.test-triggers.range')
-                : (int)$request->query(
-                    'triggered_limit'
-                ),
-            'account_list'  => '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts')),
-        ];
-    }
-
-    /**
-     * @param array $accounts
-     *
-     * @return Collection
-     */
-    private function getAccountParameter(array $accounts): Collection
-    {
-        $return = new Collection;
-        foreach ($accounts as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $return->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
-
-        return $return;
-    }
-
-    /**
      * Execute the given rule group on a set of existing transactions.
      *
      * @param Request $request
@@ -381,7 +336,6 @@ class RuleGroupController extends Controller
 
     /**
      * Update a rule group.
-     * TODO update order of rule group
      *
      * @param RuleGroupRequest $request
      * @param RuleGroup $ruleGroup
@@ -402,6 +356,94 @@ class RuleGroupController extends Controller
         $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
 
+    /**
+     * @param Request $request
+     * @param RuleGroup $ruleGroup
+     * @return JsonResponse
+     */
+    public function down(Request $request, RuleGroup $ruleGroup): JsonResponse
+    {
+        $this->ruleGroupRepository->moveDown($ruleGroup);
+        $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @param Request $request
+     * @param RuleGroup $ruleGroup
+     * @return JsonResponse
+     */
+    public function up(Request $request, RuleGroup $ruleGroup): JsonResponse
+    {
+        $this->ruleGroupRepository->moveUp($ruleGroup);
+        $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
+        $manager   = new Manager();
+        $baseUrl   = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var RuleGroupTransformer $transformer */
+        $transformer = app(RuleGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($ruleGroup, $transformer, 'rule_groups');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return array
+     */
+    private function getTestParameters(Request $request): array
+    {
+        return [
+            'page_size'     => (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data,
+            'page'          => 0 === (int)$request->query('page') ? 1 : (int)$request->query('page'),
+            'start_date'    => null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date')),
+            'end_date'      => null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date')),
+            'search_limit'  => 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit'),
+            'trigger_limit' => 0 === (int)$request->query('triggered_limit')
+                ? (int)config('firefly.test-triggers.range')
+                : (int)$request->query(
+                    'triggered_limit'
+                ),
+            'account_list'  => '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts')),
+        ];
+    }
+
+    /**
+     * @param array $accounts
+     *
+     * @return Collection
+     */
+    private function getAccountParameter(array $accounts): Collection
+    {
+        $return = new Collection;
+        foreach ($accounts as $accountId) {
+            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
+            $account = $this->accountRepository->findNull((int)$accountId);
+            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
+                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
+                $return->push($account);
+            }
+            if (null === $account) {
+                Log::debug(sprintf('No asset account with id "%s"', $accountId));
+            }
+        }
+
+        return $return;
     }
 }

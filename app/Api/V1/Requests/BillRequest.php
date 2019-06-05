@@ -90,7 +90,6 @@ class BillRequest extends Request
             'date'          => 'required|date',
             'repeat_freq'   => 'required|in:weekly,monthly,quarterly,half-year,yearly',
             'skip'          => 'between:0,31',
-            'automatch'     => [new IsBoolean], // TODO isn't automatch deprecated?
             'active'        => [new IsBoolean],
             'notes'         => 'between:1,65536',
         ];

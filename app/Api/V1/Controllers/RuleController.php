@@ -308,7 +308,8 @@ class RuleController extends Controller
      */
     public function update(RuleRequest $request, Rule $rule): JsonResponse
     {
-        $rule    = $this->ruleRepository->update($rule, $request->getAll());
+        $rule = $this->ruleRepository->update($rule, $request->getAll());
+
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -322,5 +323,49 @@ class RuleController extends Controller
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
     }
 
-    // TODO move rule up, move rule down.
+    /**
+     * @param Request $request
+     * @param Rule $rule
+     * @return JsonResponse
+     */
+    public function down(Request $request, Rule $rule): JsonResponse
+    {
+        $this->ruleRepository->moveDown($rule);
+        $rule = $this->ruleRepository->find($rule->id);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
+
+    /**
+     * @param Request $request
+     * @param Rule $rule
+     * @return JsonResponse
+     */
+    public function up(Request $request, Rule $rule): JsonResponse
+    {
+        $this->ruleRepository->moveUp($rule);
+        $rule = $this->ruleRepository->find($rule->id);
+        $manager = new Manager();
+        $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
+        $manager->setSerializer(new JsonApiSerializer($baseUrl));
+
+        /** @var RuleTransformer $transformer */
+        $transformer = app(RuleTransformer::class);
+        $transformer->setParameters($this->parameters);
+
+        $resource = new Item($rule, $transformer, 'rules');
+
+        return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
+
+    }
 }

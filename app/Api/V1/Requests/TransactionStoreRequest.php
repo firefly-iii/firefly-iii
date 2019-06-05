@@ -277,8 +277,6 @@ class TransactionStoreRequest extends Request
                 // the group must have a description if > 1 journal.
                 $this->validateGroupDescription($validator);
 
-                // TODO the currency info must match the accounts involved.
-
             }
         );
     }
