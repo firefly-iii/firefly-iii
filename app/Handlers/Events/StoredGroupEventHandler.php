@@ -44,7 +44,10 @@ class StoredGroupEventHandler
     public function processRules(StoredTransactionGroup $storedJournalEvent): bool
     {
         $journals = $storedJournalEvent->transactionGroup->transactionJournals;
-
+        if(false === $storedJournalEvent->applyRules) {
+            return true;
+        }
+        die('cannot apply rules yet');
         // create objects:
         /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);

@@ -87,7 +87,7 @@ class MigrateToRules extends Command
             $currencyCode = $this->tryDecrypt($currencyPreference->data);
 
             // try json decrypt just in case.
-            if (\strlen($currencyCode) > 3) {
+            if (strlen($currencyCode) > 3) {
                 $currencyCode = json_decode($currencyCode) ?? 'EUR';
             }
 

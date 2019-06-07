@@ -21,6 +21,7 @@
 
 namespace FireflyIII\Console\Commands\Correction;
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
@@ -54,8 +55,10 @@ class FixAccountTypes extends Command
 
     /**
      * @param TransactionJournal $journal
-     *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @param string $type
+     * @param Transaction $source
+     * @param Transaction $dest
+     * @throws FireflyException
      */
     public function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
     {
@@ -131,7 +134,7 @@ class FixAccountTypes extends Command
      * Execute the console command.
      *
      * @return int
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function handle(): int
     {
@@ -192,7 +195,7 @@ class FixAccountTypes extends Command
     /**
      * @param TransactionJournal $journal
      *
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     private function inspectJournal(TransactionJournal $journal): void
     {
@@ -220,7 +223,7 @@ class FixAccountTypes extends Command
             return;
         }
         $expectedTypes = $this->expected[$type][$sourceAccountType];
-        if (!\in_array($destAccountType, $expectedTypes, true)) {
+        if (!in_array($destAccountType, $expectedTypes, true)) {
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);
         }
     }

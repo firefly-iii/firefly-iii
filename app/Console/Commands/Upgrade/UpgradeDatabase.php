@@ -57,9 +57,9 @@ class UpgradeDatabase extends Command
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      */
-    public function handle()
+    public function handle(): int
     {
         $commands = [
             'firefly-iii:transaction-identifiers',
@@ -83,5 +83,7 @@ class UpgradeDatabase extends Command
             $result = Artisan::output();
             echo $result;
         }
+
+        return 0;
     }
 }

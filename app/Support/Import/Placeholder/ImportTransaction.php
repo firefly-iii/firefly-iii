@@ -161,9 +161,26 @@ class ImportTransaction
             'opposing-number'       => 'opposingNumber',
         ];
 
-        // overrule some old role values.
-        if ('original-source' === $role) {
-            $role = 'original_source';
+        $replaceOldRoles = [
+            'original-source'    => 'original_source',
+            'sepa-cc'            => 'sepa_cc',
+            'sepa-ct-op'         => 'sepa_ct_op',
+            'sepa-ct-id'         => 'sepa_ct_id',
+            'sepa-db'            => 'sepa_db',
+            'sepa-country'       => 'sepa_country',
+            'sepa-ep'            => 'sepa_ep',
+            'sepa-ci'            => 'sepa_ci',
+            'sepa-batch-id'      => 'sepa_batch_id',
+            'internal-reference' => 'internal_reference',
+            'date-interest'      => 'date_interest',
+            'date-invoice'       => 'date_invoice',
+            'date-book'          => 'date_book',
+            'date-payment'       => 'date_payment',
+            'date-process'       => 'date_process',
+            'date-due'           => 'date_due',
+        ];
+        if (in_array($role, array_keys($replaceOldRoles))) {
+            $role = $replaceOldRoles[$role];
         }
 
         if (isset($basics[$role])) {
@@ -201,7 +218,7 @@ class ImportTransaction
             return;
         }
 
-        $modifiers = ['generic-debit-credit'];
+        $modifiers = ['generic-debit-credit', 'ing-debit-credit', 'rabo-debit-credit'];
         if (in_array($role, $modifiers, true)) {
             $this->modifiers[$role] = $columnValue->getValue();
 
@@ -233,18 +250,6 @@ class ImportTransaction
                 break;
 
         }
-    }
-
-    /**
-     * Returns the mapped value if it exists in the ColumnValue object.
-     *
-     * @param ColumnValue $columnValue
-     *
-     * @return int
-     */
-    private function getMappedValue(ColumnValue $columnValue): int
-    {
-        return $columnValue->getMappedValue() > 0 ? $columnValue->getMappedValue() : (int)$columnValue->getValue();
     }
 
     /**
@@ -292,40 +297,6 @@ class ImportTransaction
 
 
         return $result;
-    }
-
-    /**
-     * This methods decides which input value to use for the amount calculation.
-     *
-     * @return array
-     */
-    private function selectAmountInput(): array
-    {
-        $info           = [];
-        $converterClass = '';
-        if (null !== $this->amount) {
-            Log::debug('Amount value is not NULL, assume this is the correct value.');
-            $converterClass = Amount::class;
-            $info['amount'] = $this->amount;
-        }
-        if (null !== $this->amountDebit) {
-            Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
-            $converterClass = AmountDebit::class;
-            $info['amount'] = $this->amountDebit;
-        }
-        if (null !== $this->amountCredit) {
-            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
-            $converterClass = AmountCredit::class;
-            $info['amount'] = $this->amountCredit;
-        }
-        if (null !== $this->amountNegated) {
-            Log::debug('Amount NEGATED value is not NULL, assume this is the correct value (overrules Amount and AmountDebit and AmountCredit).');
-            $converterClass = AmountNegated::class;
-            $info['amount'] = $this->amountNegated;
-        }
-        $info['class'] = $converterClass;
-
-        return $info;
     }
 
     /**
@@ -422,6 +393,52 @@ class ImportTransaction
             'number' => $this->opposingNumber,
             'bic'    => $this->opposingBic,
         ];
+    }
+
+    /**
+     * Returns the mapped value if it exists in the ColumnValue object.
+     *
+     * @param ColumnValue $columnValue
+     *
+     * @return int
+     */
+    private function getMappedValue(ColumnValue $columnValue): int
+    {
+        return $columnValue->getMappedValue() > 0 ? $columnValue->getMappedValue() : (int)$columnValue->getValue();
+    }
+
+    /**
+     * This methods decides which input value to use for the amount calculation.
+     *
+     * @return array
+     */
+    private function selectAmountInput(): array
+    {
+        $info           = [];
+        $converterClass = '';
+        if (null !== $this->amount) {
+            Log::debug('Amount value is not NULL, assume this is the correct value.');
+            $converterClass = Amount::class;
+            $info['amount'] = $this->amount;
+        }
+        if (null !== $this->amountDebit) {
+            Log::debug('Amount DEBIT value is not NULL, assume this is the correct value (overrules Amount).');
+            $converterClass = AmountDebit::class;
+            $info['amount'] = $this->amountDebit;
+        }
+        if (null !== $this->amountCredit) {
+            Log::debug('Amount CREDIT value is not NULL, assume this is the correct value (overrules Amount and AmountDebit).');
+            $converterClass = AmountCredit::class;
+            $info['amount'] = $this->amountCredit;
+        }
+        if (null !== $this->amountNegated) {
+            Log::debug('Amount NEGATED value is not NULL, assume this is the correct value (overrules Amount and AmountDebit and AmountCredit).');
+            $converterClass = AmountNegated::class;
+            $info['amount'] = $this->amountNegated;
+        }
+        $info['class'] = $converterClass;
+
+        return $info;
     }
 
 }

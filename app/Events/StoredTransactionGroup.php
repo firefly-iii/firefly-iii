@@ -39,13 +39,16 @@ class StoredTransactionGroup extends Event
     /** @var TransactionGroup The group that was stored. */
     public $transactionGroup;
 
+    public $applyRules;
+
     /**
      * Create a new event instance.
      *
      * @param TransactionGroup $transactionGroup
      */
-    public function __construct(TransactionGroup $transactionGroup)
+    public function __construct(TransactionGroup $transactionGroup, bool $applyRules = true)
     {
         $this->transactionGroup = $transactionGroup;
+        $this->applyRules       = $applyRules;
     }
 }

@@ -156,7 +156,7 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
      */
     public function getActiveGroups(): Collection
     {
-        return $this->user->ruleGroups()->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
+        return $this->user->ruleGroups()->with(['rules'])->where('rule_groups.active', 1)->orderBy('order', 'ASC')->get(['rule_groups.*']);
     }
 
     /**

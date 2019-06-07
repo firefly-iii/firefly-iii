@@ -1,7 +1,6 @@
 <?php
 
 
-
 /**
  * ApplyRules.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
@@ -36,6 +35,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 use FireflyIII\TransactionRules\Processor;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
@@ -138,17 +138,25 @@ class ApplyRules extends Command
 
         $this->allRules = $this->option('all_rules');
 
+        // always get all the rules of the user.
         $this->grabAllRules();
 
         // loop all groups and rules and indicate if they're included:
-        $count = 0;
+        $count        = 0;
+        $rulesToApply = [];
         /** @var RuleGroup $group */
         foreach ($this->groups as $group) {
             /** @var Rule $rule */
             foreach ($group->rules as $rule) {
                 // if in rule selection, or group in selection or all rules, it's included.
-                if ($this->includeRule($rule, $group)) {
+                $test = $this->includeRule($rule, $group);
+                if (true === $test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
                     $count++;
+                    $rulesToApply[] = $rule->id;
+                }
+                if (false === $test) {
+                    Log::debug(sprintf('Will not include rule #%d "%s"', $rule->id, $rule->title));
                 }
             }
         }
@@ -159,7 +167,6 @@ class ApplyRules extends Command
             $this->warn('    --rule_groups=1,2,...');
             $this->warn('    --all_rules');
         }
-
 
         // get transactions from asset accounts.
         /** @var GroupCollectorInterface $collector */
@@ -173,40 +180,17 @@ class ApplyRules extends Command
         $this->line(sprintf('Will apply %d rules to %d transactions.', $count, count($journals)));
 
         // start looping.
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser($this->getUser());
+        $ruleEngine->setRulesToApply($rulesToApply);
+
         $bar = $this->output->createProgressBar(count($journals));
         Log::debug(sprintf('Now looping %d transactions.', count($journals)));
         /** @var array $journal */
         foreach ($journals as $journal) {
             Log::debug('Start of new journal.');
-            foreach ($this->groups as $group) {
-                $groupTriggered = false;
-                /** @var Rule $rule */
-                foreach ($group->rules as $rule) {
-                    $ruleTriggered = false;
-                    // if in rule selection, or group in selection or all rules, it's included.
-                    if ($this->includeRule($rule, $group)) {
-                        /** @var Processor $processor */
-                        $processor = app(Processor::class);
-                        $processor->make($rule, true);
-                        $ruleTriggered = $processor->handleJournalArray($journal);
-
-                        if ($ruleTriggered) {
-                            $groupTriggered = true;
-                        }
-                    }
-
-                    // if the rule is triggered and stop processing is true, cancel the entire group.
-                    if ($ruleTriggered && $rule->stop_processing) {
-                        Log::info('Break out group because rule was triggered.');
-                        break;
-                    }
-                }
-                // if group is triggered and stop processing is true, cancel the whole thing.
-                if ($groupTriggered && $group->stop_processing) {
-                    Log::info('Break out ALL because group was triggered.');
-                    break;
-                }
-            }
+            $ruleEngine->processJournalArray($journal);
             Log::debug('Done with all rules for this group + done with journal.');
             $bar->advance();
         }

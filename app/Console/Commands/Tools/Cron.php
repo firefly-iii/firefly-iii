@@ -1,7 +1,8 @@
 <?php
+
 /**
- * EncryptFile.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Cron.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,53 +22,63 @@
 
 declare(strict_types=1);
 
-namespace FireflyIII\Console\Commands;
+namespace FireflyIII\Console\Commands\Tools;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Services\Internal\File\EncryptService;
+use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
 
 /**
- * Class EncryptFile.
+ * Class Cron
  *
  * @codeCoverageIgnore
  */
-class EncryptFile extends Command
+class Cron extends Command
 {
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Encrypts a file and places it in the upload disk.';
-
+    protected $description = 'Runs all Firefly III cron-job related commands. Configure a cron job according to the official Firefly III documentation.';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly:encrypt-file {file} {key}';
+    protected $signature = 'firefly-iii:cron
+        {--F|force : Force the cron job(s) to execute.}
+        {--date= : Set the date in YYYY-MM-DD to make Firefly III think that\'s the current date.}
+        ';
 
     /**
      * Execute the console command.
      *
-     * @throws \Illuminate\Contracts\Encryption\EncryptException
+     * @return mixed
      */
     public function handle(): int
     {
-        $code = 0;
-        $file = (string)$this->argument('file');
-        $key  = (string)$this->argument('key');
-        /** @var EncryptService $service */
-        $service = app(EncryptService::class);
 
+        $recurring = new RecurringCronjob;
+        $recurring->setForce($this->option('force'));
         try {
-            $service->encrypt($file, $key);
+            $result = $recurring->fire();
         } catch (FireflyException $e) {
             $this->error($e->getMessage());
-            $code = 1;
+
+            return 0;
+        }
+        if (false === $result) {
+            $this->line('The recurring transaction cron job did not fire.');
+        }
+        if (true === $result) {
+            $this->line('The recurring transaction cron job fired successfully.');
         }
 
-        return $code;
+        $this->info('More feedback on the cron jobs can be found in the log files.');
+
+        return 0;
     }
+
+
 }
