@@ -281,20 +281,6 @@ Route::group(
 );
 
 /**
- * Export Controller
- */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'export', 'as' => 'export.'], function () {
-    Route::get('', ['uses' => 'ExportController@index', 'as' => 'index']);
-    Route::get('status/{exportJob}', ['uses' => 'ExportController@getStatus', 'as' => 'status']);
-    Route::get('download/{exportJob}', ['uses' => 'ExportController@download', 'as' => 'download']);
-
-    Route::post('submit', ['uses' => 'ExportController@postIndex', 'as' => 'submit']);
-
-}
-);
-
-/**
  * Chart\Account Controller (default report)
  */
 Route::group(

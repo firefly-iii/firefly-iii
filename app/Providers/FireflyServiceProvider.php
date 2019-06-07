@@ -23,8 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Providers;
 
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Export\ExpandedProcessor;
-use FireflyIII\Export\ProcessorInterface;
 use FireflyIII\Generator\Chart\Basic\ChartJsGenerator;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Attachments\AttachmentHelper;
@@ -167,8 +165,6 @@ class FireflyServiceProvider extends ServiceProvider
         );
 
         // other generators
-        // export:
-        $this->app->bind(ProcessorInterface::class, ExpandedProcessor::class);
         $this->app->bind(UserRepositoryInterface::class, UserRepository::class);
         $this->app->bind(TransactionTypeRepositoryInterface::class, TransactionTypeRepository::class);
         $this->app->bind(AttachmentHelperInterface::class, AttachmentHelper::class);

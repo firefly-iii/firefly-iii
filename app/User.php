@@ -32,7 +32,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\CurrencyExchangeRate;
-use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
@@ -78,7 +77,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
  * @property-read \Illuminate\Database\Eloquent\Collection|\Laravel\Passport\Client[] $clients
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\CurrencyExchangeRate[] $currencyExchangeRates
- * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ExportJob[] $exportJobs
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\ImportJob[] $importJobs
  * @property-read \Illuminate\Notifications\DatabaseNotificationCollection|\Illuminate\Notifications\DatabaseNotification[] $notifications
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\PiggyBank[] $piggyBanks
@@ -232,17 +230,6 @@ class User extends Authenticatable
     public function currencyExchangeRates(): HasMany
     {
         return $this->hasMany(CurrencyExchangeRate::class);
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * Link to export jobs
-     *
-     * @return HasMany
-     */
-    public function exportJobs(): HasMany
-    {
-        return $this->hasMany(ExportJob::class);
     }
 
     /**
