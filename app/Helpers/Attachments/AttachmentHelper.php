@@ -67,7 +67,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $this->uploadDisk    = Storage::disk('upload');
 
         if ('testing' === config('app.env')) {
-            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
@@ -193,7 +193,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         if (!($model instanceof Model)) {
             return false; // @codeCoverageIgnore
         }
-        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', \get_class($model)));
+        Log::debug(sprintf('Now in saveAttachmentsForModel for model %s', get_class($model)));
         if (\is_array($files)) {
             Log::debug('$files is an array.');
             /** @var UploadedFile $entry */
@@ -223,7 +223,7 @@ class AttachmentHelper implements AttachmentHelperInterface
     {
         $md5   = md5_file($file->getRealPath());
         $name  = $file->getClientOriginalName();
-        $class = \get_class($model);
+        $class = get_class($model);
         /** @noinspection PhpUndefinedFieldInspection */
         $count  = $model->user->attachments()->where('md5', $md5)->where('attachable_id', $model->id)->where('attachable_type', $class)->count();
         $result = false;

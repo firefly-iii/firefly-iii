@@ -122,18 +122,18 @@ class Processor
         /** @var AbstractTrigger $trigger */
         foreach ($this->triggers as $trigger) {
             ++$foundTriggers;
-            Log::debug(sprintf('Now checking trigger %s with value %s', \get_class($trigger), $trigger->getTriggerValue()));
+            Log::debug(sprintf('Now checking trigger %s with value %s', get_class($trigger), $trigger->getTriggerValue()));
             /** @var AbstractTrigger $trigger */
             if ($trigger->triggered($this->journal)) {
                 Log::debug('Is a match!');
                 ++$hitTriggers;
                 // is non-strict? then return true!
-                if (!$this->strict && UserAction::class !== \get_class($trigger)) {
+                if (!$this->strict && UserAction::class !== get_class($trigger)) {
                     Log::debug('Rule is set as non-strict, return true!');
 
                     return true;
                 }
-                if (!$this->strict && UserAction::class === \get_class($trigger)) {
+                if (!$this->strict && UserAction::class === get_class($trigger)) {
                     Log::debug('Rule is set as non-strict, but action was "user-action". Will not return true.');
                 }
             }
@@ -183,7 +183,7 @@ class Processor
         foreach ($this->actions as $action) {
             /** @var ActionInterface $actionClass */
             $actionClass = ActionFactory::getAction($action);
-            Log::debug(sprintf('Fire action %s on journal #%d', \get_class($actionClass), $this->journal->id));
+            Log::debug(sprintf('Fire action %s on journal #%d', get_class($actionClass), $this->journal->id));
             $actionClass->act($this->journal);
             if ($action->stop_processing) {
                 Log::debug('Stop processing now and break.');

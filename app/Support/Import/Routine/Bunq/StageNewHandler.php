@@ -111,7 +111,7 @@ class StageNewHandler
             // @codeCoverageIgnoreEnd
             if (null !== $object) {
                 $array = null;
-                switch (\get_class($object)) {
+                switch (get_class($object)) {
                     case MonetaryAccountBank::class:
                         Log::debug('Going to convert a MonetaryAccountBank');
                         /** @var MonetaryAccountBank $object */
@@ -135,7 +135,7 @@ class StageNewHandler
                         break;
                     default:
                         // @codeCoverageIgnoreStart
-                        throw new FireflyException(sprintf('Bunq import routine cannot handle account of type "%s".', \get_class($object)));
+                        throw new FireflyException(sprintf('Bunq import routine cannot handle account of type "%s".', get_class($object)));
                     // @codeCoverageIgnoreEnd
                 }
                 if (null !== $array) {

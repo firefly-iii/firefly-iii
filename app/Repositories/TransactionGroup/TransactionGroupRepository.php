@@ -56,7 +56,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     public function __construct()
     {
         if ('testing' === config('app.env')) {
-            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 

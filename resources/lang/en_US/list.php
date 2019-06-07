@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Number of attachments',
     'bills_count'             => 'Number of bills',
     'categories_count'        => 'Number of categories',
-    'export_jobs_count'       => 'Number of export jobs',
     'import_jobs_count'       => 'Number of import jobs',
     'budget_count'            => 'Number of budgets',
     'rule_and_groups_count'   => 'Number of rules and rule groups',

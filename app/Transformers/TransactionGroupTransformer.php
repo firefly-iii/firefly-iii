@@ -61,7 +61,7 @@ class TransactionGroupTransformer extends AbstractTransformer
         $this->metaDateFields = ['interest_date', 'book_date', 'process_date', 'due_date', 'payment_date', 'invoice_date'];
 
         if ('testing' === config('app.env')) {
-            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', \get_class($this)));
+            app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
     }
 
