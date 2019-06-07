@@ -25,6 +25,8 @@ use DB;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
+use Exception;
+use Log;
 
 /**
  * Class DeleteEmptyJournals
@@ -68,7 +70,11 @@ class DeleteEmptyJournals extends Command
                                    ->get(['transaction_journals.id']);
 
         foreach ($set as $entry) {
-            TransactionJournal::find($entry->id)->delete();
+            try {
+                TransactionJournal::find($entry->id)->delete();
+            } catch (Exception $e) {
+                Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
+            }
             $this->info(sprintf('Deleted empty transaction journal #%d', $entry->id));
             ++$count;
         }
@@ -103,7 +109,11 @@ class DeleteEmptyJournals extends Command
             $count = (int)$row->the_count;
             if (1 === $count % 2) {
                 // uneven number, delete journal and transactions:
-                TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                try {
+                    TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                } catch(Exception $e) {
+                    Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
+                }
                 Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
                 $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
                 $total++;

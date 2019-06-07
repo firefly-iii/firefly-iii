@@ -36,7 +36,6 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
-use FireflyIII\TransactionRules\Processor;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
 use Log;

@@ -28,7 +28,6 @@ use Crypt;
 use DB;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Preference;
-use FireflyIII\Support\Facades\FireflyConfig;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Encryption\DecryptException;
 use Log;
@@ -56,6 +55,7 @@ class DecryptDatabase extends Command
      * Execute the console command.
      *
      * @return mixed
+     * @throws FireflyException
      */
     public function handle()
     {
@@ -113,7 +113,7 @@ class DecryptDatabase extends Command
             $this->line(sprintf('Decrypted the data in table "%s".', $table));
             // mark as decrypted:
             $configName = sprintf('is_decrypted_%s', $table);
-            FireflyConfig::set($configName, true);
+            app('fireflyconfig')->set($configName, true);
 
         }
         $this->info('Done!');
@@ -129,7 +129,7 @@ class DecryptDatabase extends Command
     private function isDecrypted(string $table): bool
     {
         $configName = sprintf('is_decrypted_%s', $table);
-        $configVar  = FireflyConfig::get($configName, false);
+        $configVar  = app('fireflyconfig')->get($configName, false);
         if (null !== $configVar) {
             return (bool)$configVar->data;
         }
@@ -139,9 +139,11 @@ class DecryptDatabase extends Command
 
 
     /**
-     * @param $value
+     * Tries to decrypt data. Will only throw an exception when the MAC is invalid.
      *
-     * @return mixed
+     * @param $value
+     * @return string
+     * @throws FireflyException
      */
     private function tryDecrypt($value)
     {

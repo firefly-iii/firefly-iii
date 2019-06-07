@@ -25,7 +25,6 @@ declare(strict_types=1);
 namespace FireflyIII\Events;
 
 use FireflyIII\Models\TransactionGroup;
-use FireflyIII\Models\TransactionJournal;
 use Illuminate\Queue\SerializesModels;
 
 /**

@@ -24,6 +24,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Tools;
 
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
@@ -52,9 +53,8 @@ class Cron extends Command
         ';
 
     /**
-     * Execute the console command.
-     *
-     * @return mixed
+     * @return int
+     * @throws Exception
      */
     public function handle(): int
     {

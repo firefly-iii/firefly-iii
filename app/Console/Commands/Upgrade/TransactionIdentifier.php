@@ -85,7 +85,7 @@ class TransactionIdentifier extends Command
         $journalIds = array_unique($result->pluck('id')->toArray());
         $count= 0;
         foreach ($journalIds as $journalId) {
-            $this->updateJournalidentifiers((int)$journalId);
+            $this->updateJournalIdentifiers((int)$journalId);
             $count++;
         }
         $end = round(microtime(true) - $start, 2);
@@ -117,12 +117,12 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * grab all positive transactiosn from this journal that are not deleted. for each one, grab the negative opposing one
+     * grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
      * which has 0 as an identifier and give it the same identifier.
      *
      * @param int $journalId
      */
-    private function updateJournalidentifiers(int $journalId): void
+    private function updateJournalIdentifiers(int $journalId): void
     {
         $identifier   = 0;
         $processed    = [];

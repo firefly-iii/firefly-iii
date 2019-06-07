@@ -151,7 +151,7 @@ class BackToJournals extends Command
     {
         $journalIds = $this->getIdsForBudgets();
         $journals   = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
-        $this->line(sprintf('Check %d transaction journals for budget info.', $journals->count()));
+        $this->line(sprintf('Check %d transaction journals for budget info.',count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->migrateBudgetsForJournal($journal);
@@ -193,7 +193,7 @@ class BackToJournals extends Command
     {
         $journalIds = $this->getIdsForCategories();
         $journals   = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'categories', 'transactions.categories'])->get();
-        $this->line(sprintf('Check %d transaction journals for category info.', $journals->count()));
+        $this->line(sprintf('Check %d transaction journals for category info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->migrateCategoriesForJournal($journal);

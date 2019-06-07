@@ -26,6 +26,7 @@ use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use stdClass;
+use Log;
 
 /**
  * Deletes transactions where the journal has been deleted.
@@ -78,7 +79,11 @@ class DeleteOrphanedTransactions extends Command
             // delete journals
             $journal = TransactionJournal::find((int)$transaction->transaction_journal_id);
             if ($journal) {
-                $journal->delete();
+                try {
+                    $journal->delete();
+                } catch (Exception $e) {
+                    Log::info(sprintf('Could not delete transaction %s', $e->getMessage()));
+                }
             }
             Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
             $this->line(

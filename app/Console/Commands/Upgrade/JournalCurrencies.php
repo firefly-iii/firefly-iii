@@ -279,7 +279,9 @@ class JournalCurrencies extends Command
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      * @SuppressWarnings(PHPMD.NPathComplexity)
      *
-     * @param Transaction $transaction
+     * @param TransactionJournal $journal
+     * @param Transaction $source
+     * @param Transaction $destination
      */
     private function updateTransactionCurrency(TransactionJournal $journal, Transaction $source, Transaction $destination): void
     {
