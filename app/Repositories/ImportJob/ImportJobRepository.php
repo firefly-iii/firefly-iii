@@ -386,7 +386,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
         $attachment->md5      = md5($content);
         $attachment->filename = $name;
         $attachment->mime     = 'plain/txt';
-        $attachment->size     = \strlen($content);
+        $attachment->size     = strlen($content);
         $attachment->uploaded = false;
         $attachment->save();
         $encrypted = Crypt::encrypt($content);

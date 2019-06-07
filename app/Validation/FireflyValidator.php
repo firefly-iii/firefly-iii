@@ -55,7 +55,7 @@ class FireflyValidator extends Validator
      */
     public function validate2faCode($attribute, $value): bool
     {
-        if (!\is_string($value) || null === $value || 6 !== \strlen($value)) {
+        if (!\is_string($value) || null === $value || 6 !== strlen($value)) {
             return false;
         }
 
@@ -117,7 +117,7 @@ class FireflyValidator extends Validator
      */
     public function validateIban($attribute, $value): bool
     {
-        if (!\is_string($value) || null === $value || \strlen($value) < 6) {
+        if (!\is_string($value) || null === $value || strlen($value) < 6) {
             return false;
         }
         // strip spaces

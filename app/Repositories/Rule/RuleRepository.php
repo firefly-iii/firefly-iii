@@ -325,7 +325,7 @@ class RuleRepository implements RuleRepositoryInterface
         $rule->strict          = $data['strict'];
         $rule->stop_processing = $data['stop_processing'];
         $rule->title           = $data['title'];
-        $rule->description     = \strlen($data['description']) > 0 ? $data['description'] : null;
+        $rule->description     = strlen($data['description']) > 0 ? $data['description'] : null;
 
         $rule->save();
 

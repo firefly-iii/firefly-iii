@@ -78,9 +78,9 @@ final class NotesEnd extends AbstractTrigger implements TriggerInterface
         if (null !== $note) {
             $text = strtolower($note->text);
         }
-        $notesLength  = \strlen($text);
+        $notesLength  = strlen($text);
         $search       = strtolower($this->triggerValue);
-        $searchLength = \strlen($search);
+        $searchLength = strlen($search);
 
         // if the string to search for is longer than the description,
         // return false

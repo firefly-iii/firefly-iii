@@ -241,7 +241,7 @@ class Request extends FormRequest
             return null;
         }
         $value = (string)$this->get($field);
-        if (10 === \strlen($value)) {
+        if (10 === strlen($value)) {
             // probably a date format.
             try {
                 $result = Carbon::createFromFormat('Y-m-d', $value);

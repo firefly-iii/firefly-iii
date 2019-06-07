@@ -172,7 +172,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         // update attachment.
         $attachment->md5      = md5_file($path);
         $attachment->mime     = $mime;
-        $attachment->size     = \strlen($content);
+        $attachment->size     = strlen($content);
         $attachment->uploaded = true;
         $attachment->save();
 
@@ -274,8 +274,8 @@ class AttachmentHelper implements AttachmentHelperInterface
 
             $content   = $fileObject->fread($file->getSize());
             $encrypted = Crypt::encrypt($content);
-            Log::debug(sprintf('Full file length is %d and upload size is %d.', \strlen($content), $file->getSize()));
-            Log::debug(sprintf('Encrypted content is %d', \strlen($encrypted)));
+            Log::debug(sprintf('Full file length is %d and upload size is %d.', strlen($content), $file->getSize()));
+            Log::debug(sprintf('Encrypted content is %d', strlen($encrypted)));
 
             // store it:
             $this->uploadDisk->put($attachment->fileName(), $encrypted);

@@ -97,7 +97,7 @@ class FakePrerequisites implements PrerequisitesInterface
     {
         $apiKey     = $data['api_key'] ?? '';
         $messageBag = new MessageBag();
-        if (32 !== \strlen($apiKey)) {
+        if (32 !== strlen($apiKey)) {
             $messageBag->add('api_key', 'API key must be 32 chars.');
 
             return $messageBag;
@@ -122,7 +122,7 @@ class FakePrerequisites implements PrerequisitesInterface
         if (null === $apiKey->data) {
             return false;
         }
-        if (32 === \strlen((string)$apiKey->data)) {
+        if (32 === strlen((string)$apiKey->data)) {
             return true;
         }
 

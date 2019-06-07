@@ -289,7 +289,7 @@ class Amount
         $currencyCode = $this->tryDecrypt((string)$currencyPreference->data);
 
         // could still be json encoded:
-        if (\strlen($currencyCode) > 3) {
+        if (strlen($currencyCode) > 3) {
             $currencyCode = json_decode($currencyCode) ?? 'EUR';
         }
 

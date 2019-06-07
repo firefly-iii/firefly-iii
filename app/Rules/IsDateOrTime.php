@@ -56,7 +56,7 @@ class IsDateOrTime implements Rule
     public function passes($attribute, $value): bool
     {
         $value = (string)$value;
-        if (10 === \strlen($value)) {
+        if (10 === strlen($value)) {
             // probably a date format.
             try {
                 Carbon::createFromFormat('Y-m-d', $value);

@@ -110,7 +110,7 @@ class Amount implements ConverterInterface
      */
     private function alternativeDecimalSign(string $value): bool
     {
-        $length      = \strlen($value);
+        $length      = strlen($value);
         $altPosition = $length - 2;
 
         return $length > 1 && ('.' === $value[$altPosition] || ',' === $value[$altPosition]);
@@ -125,7 +125,7 @@ class Amount implements ConverterInterface
      */
     private function decimalIsComma(string $value): bool
     {
-        $length          = \strlen($value);
+        $length          = strlen($value);
         $decimalPosition = $length - 3;
 
         return $length > 2 && ',' === $value[$decimalPosition];
@@ -140,7 +140,7 @@ class Amount implements ConverterInterface
      */
     private function decimalIsDot(string $value): bool
     {
-        $length          = \strlen($value);
+        $length          = strlen($value);
         $decimalPosition = $length - 3;
 
         return ($length > 2 && '.' === $value[$decimalPosition]) || ($length > 2 && strpos($value, '.') > $decimalPosition);
@@ -177,7 +177,7 @@ class Amount implements ConverterInterface
      */
     private function getAlternativeDecimalSign(string $value): string
     {
-        $length      = \strlen($value);
+        $length      = strlen($value);
         $altPosition = $length - 2;
 
         return $value[$altPosition];
@@ -222,7 +222,7 @@ class Amount implements ConverterInterface
         // have to strip the € because apparantly the Postbank (DE) thinks "1.000,00 €" is a normal way to format a number.
         $value = trim((string)str_replace(['€'], '', $value));
         $str   = preg_replace('/[^\-\(\)\.\,0-9 ]/', '', $value);
-        $len   = \strlen($str);
+        $len   = strlen($str);
         if ('(' === $str[0] && ')' === $str[$len - 1]) {
             $str = '-' . substr($str, 1, $len - 2);
         }
