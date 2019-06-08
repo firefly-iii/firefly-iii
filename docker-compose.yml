@@ -5,13 +5,13 @@ networks:
 services: 
   firefly_iii_app: 
     environment: 
-      - FF_DB_HOST=firefly_iii_db
-      - FF_DB_NAME=firefly
-      - FF_DB_USER=firefly
-      - FF_DB_PASSWORD=firefly
-      - FF_APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
-      - FF_APP_ENV=local
-      - FF_DB_CONNECTION=pgsql
+      - DB_HOST=firefly_iii_db
+      - DB_NAME=firefly
+      - DB_USER=firefly
+      - DB_PASSWORD=firefly
+      - APP_KEY=S0m3R@nd0mStr1ngOf32Ch@rsEx@ctly
+      - APP_ENV=local
+      - DB_CONNECTION=pgsql
       - TZ=Europe/Amsterdam
       - APP_LOG_LEVEL=debug
     image: jc5x/firefly-iii
