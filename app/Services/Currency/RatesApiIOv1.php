@@ -71,7 +71,7 @@ class RatesApiIOv1 implements ExchangeRateInterface
 
         // build URI
         $uri = sprintf(
-            'https://ratesapi.io/api/%s?base=%s&symbols=%s',
+            'https://api.ratesapi.io/api/%s?base=%s&symbols=%s',
             $date->format('Y-m-d'), $fromCurrency->code, $toCurrency->code
         );
         Log::debug(sprintf('Going to request exchange rate using URI %s', $uri));
