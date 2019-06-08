@@ -41,7 +41,8 @@ class Request extends FireflyIIIRequest
     /**
      * @return array
      */
-    public function getAllAccountData(): array {
+    public function getAllAccountData(): array
+    {
         $active          = true;
         $includeNetWorth = true;
         if (null !== $this->get('active')) {
@@ -194,7 +195,8 @@ class Request extends FireflyIIIRequest
      *
      * @return array
      */
-    protected function getRecurrenceTransactionData(): array {
+    protected function getRecurrenceTransactionData(): array
+    {
         $return = [];
         // transaction data:
         /** @var array $transactions */
@@ -217,6 +219,7 @@ class Request extends FireflyIIIRequest
                 'destination_id'        => isset($transaction['destination_id']) ? (int)$transaction['destination_id'] : null,
                 'destination_name'      => isset($transaction['destination_name']) ? (string)$transaction['destination_name'] : null,
                 'description'           => $transaction['description'],
+                'type'                  => $this->string('type'),
             ];
         }
 

@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',

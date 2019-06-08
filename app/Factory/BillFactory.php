@@ -93,7 +93,7 @@ class BillFactory
     }
 
     /**
-     * @param int|null    $billId
+     * @param int|null $billId
      * @param null|string $billName
      *
      * @return Bill|null
@@ -126,8 +126,10 @@ class BillFactory
     public function findByName(string $name): ?Bill
     {
         $query = sprintf('%%%s%%', $name);
+        /** @var Bill $first */
+        $first = $this->user->bills()->where('name', 'LIKE', $query)->first();
 
-        return $this->user->bills()->where('name', 'LIKE', $query)->first();
+        return $first;
     }
 
     /**

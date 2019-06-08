@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -39,7 +40,7 @@ class StoredGroupEventHandler
      * @param StoredTransactionGroup $storedJournalEvent
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function processRules(StoredTransactionGroup $storedJournalEvent): bool
     {
@@ -47,6 +48,7 @@ class StoredGroupEventHandler
         if(false === $storedJournalEvent->applyRules) {
             return true;
         }
+        // TODO fix this
         die('cannot apply rules yet');
         // create objects:
         /** @var RuleGroupRepositoryInterface $ruleGroupRepos */

@@ -49,6 +49,35 @@ class AttachmentControllerTest extends TestCase
     }
 
     /**
+     * Test show attachment.
+     * @covers \FireflyIII\Api\V1\Controllers\AttachmentController
+     */
+    public function testShow(): void
+    {
+        $transformer = $this->mock(AttachmentTransformer::class);
+        $repository  = $this->mock(AttachmentRepositoryInterface::class);
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'id'         => 1,
+                'attributes' => [
+                    'file' => 'Test.pdf',
+                ],
+            ]);
+        $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
+        $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->atLeast()->once()->andReturn([]);
+
+        $attachment = $this->user()->attachments()->inRandomOrder()->first();
+
+        // test API
+        $response = $this->get(route('api.v1.attachments.show', [$attachment->id]));
+        $response->assertStatus(200);
+    }
+
+    /**
      * Store a new attachment.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AttachmentController

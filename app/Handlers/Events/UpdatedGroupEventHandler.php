@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UpdatedTransactionGroup;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
@@ -39,13 +40,14 @@ class UpdatedGroupEventHandler
      * @param UpdatedTransactionGroup $updatedJournalEvent
      *
      * @return bool
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      */
     public function processRules(UpdatedTransactionGroup $updatedJournalEvent): bool
     {
         // get all the user's rule groups, with the rules, order by 'order'.
         $journals = $updatedJournalEvent->transactionGroup->transactionJournals;
-
+        // TODO fix this
+        die('cannot apply rules yet');
         /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
         $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
 

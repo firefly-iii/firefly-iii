@@ -24,20 +24,15 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\CategoryFactory;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
-use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use FireflyIII\Transformers\RecurrenceTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
-use Illuminate\Pagination\LengthAwarePaginator;
+use FireflyIII\Validation\AccountValidator;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -68,20 +63,12 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreAssetId(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
+        // get a recurrence:
         /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
-        // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $recurrence  = $this->user()->recurrences()->first();
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $transformer = $this->mock(RecurrenceTransformer::class);
+        $validator   = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -90,27 +77,14 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
 
         // data to submit
         $firstDate = new Carbon;
@@ -142,8 +116,8 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-        $response->assertHeader('Content-Type', 'application/vnd.api+json');
         $response->assertStatus(200);
+        $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
     /**
@@ -154,19 +128,13 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreAssetName(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $transformer = $this->mock(RecurrenceTransformer::class);
+        $validator   = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -175,29 +143,14 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, 'Checking Account'])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[0]])->once()->andReturn(new Collection);
-        // used by the validator to find the source_name:
-        $accountRepos->shouldReceive('findByName')->withArgs(['Checking Account', [AccountType::ASSET]])->once()->andReturn($assetAccount);
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
 
         // data to submit
         $firstDate = new Carbon;
@@ -230,7 +183,6 @@ class RecurrenceControllerTest extends TestCase
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
-
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -242,20 +194,13 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreDeposit(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $transformer = $this->mock(RecurrenceTransformer::class);
+        $validator   = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -265,27 +210,13 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
 
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['deposit']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Some expense account'])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([1, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -331,19 +262,14 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreDestinationId(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository     = $this->mock(RecurringRepositoryInterface::class);
+        $transformer    = $this->mock(RecurrenceTransformer::class);
+        $validator      = $this->mock(AccountValidator::class);
+        $expenseAccount = $this->getRandomExpense();
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -352,33 +278,14 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
-
-        $assetAccount   = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
-
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
 
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$expenseAccount->id]])->once()
-                     ->andReturn(new Collection([$expenseAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$expenseAccount->id, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -424,19 +331,13 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreDestinationName(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $transformer = $this->mock(RecurrenceTransformer::class);
+        $validator   = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -445,30 +346,16 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
-        $assetAccount   = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $expenseAccount = $this->getRandomExpense();
+
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, $expenseAccount->name])->andReturn(true);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
 
         // data to submit
         $firstDate = new Carbon;
@@ -501,9 +388,7 @@ class RecurrenceControllerTest extends TestCase
 
         // test API
         $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
-
         $response->assertStatus(200);
-
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
 
@@ -515,42 +400,18 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailBothRepetitions(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
-
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -611,32 +472,17 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailForeignCurrency(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Checking Account'])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[0]])->once()->andReturn(new Collection);
-        // used by the validator to find the source_name:
-        $accountRepos->shouldReceive('findByName')->withArgs(['Checking Account', [AccountType::ASSET]])->once()->andReturn($assetAccount);
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -691,32 +537,18 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidDaily(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -770,43 +602,44 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidDestinationId(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
         $factory      = $this->mock(CategoryFactory::class);
         $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        $assetAccount = $this->getRandomAsset();
+
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$assetAccount->id, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$assetAccount->id, null])->andReturn(false);
+
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        //$factory->shouldReceive('setUser')->atLeast()->once();
+        //$budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        //$accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$assetAccount->id]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
+//        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
+//                     ->andReturn(new Collection([$assetAccount]));
+//        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$assetAccount->id]])->once()
+//                     ->andReturn(new Collection([$assetAccount]));
+//
+//
+//        // entries used by the transformer
+//        $repository->shouldReceive('getNoteText')->andReturn('Note text')->atLeast()->once();
+//        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.')->atLeast()->once();
+//        $repository->shouldReceive('getXOccurrences')->andReturn([])->atLeast()->once();
+//
+//        // entries used by the transformer (the fake entry has a category + a budget):
+//        $factory->shouldReceive('findOrCreate')->andReturn(null)->atLeast()->once();
+//        $budgetRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
 
 
         // data to submit
@@ -823,7 +656,7 @@ class RecurrenceControllerTest extends TestCase
                     'amount'         => '100',
                     'currency_id'    => '1',
                     'description'    => 'Test description',
-                    'source_id'      => '1',
+                    'source_id'      => $assetAccount->id,
                     'destination_id' => $assetAccount->id,
                 ],
             ],
@@ -844,8 +677,11 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.destination_id' => [
-                        'This value is invalid for this field.',
+                    'transactions.0.destination_id'   => [
+                        null
+                    ],
+                    'transactions.0.destination_name' => [
+                        null
                     ],
                 ],
             ]
@@ -862,9 +698,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidMonthly(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -875,14 +708,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
@@ -940,9 +774,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidNdom(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -953,14 +784,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
@@ -1018,9 +850,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidNdomCount(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1031,15 +860,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
-
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
@@ -1097,9 +926,7 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidNdomHigh(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1110,14 +937,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
@@ -1175,9 +1003,7 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailInvalidWeekly(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1188,14 +1014,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
@@ -1253,9 +1080,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailNoAsset(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1266,10 +1090,11 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -1325,9 +1150,7 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailNotAsset(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1341,10 +1164,11 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[$expenseAccount->id]])->once()
@@ -1403,9 +1227,7 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailNotAssetName(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1419,10 +1241,11 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[0]])->once()
@@ -1488,9 +1311,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailRepetitions(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1501,14 +1321,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // used by the validator to find the source_id:
         $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
@@ -1558,9 +1379,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreFailTransactions(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1571,14 +1389,15 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -1626,9 +1445,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testStoreTransfer(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1639,6 +1455,7 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -1651,10 +1468,10 @@ class RecurrenceControllerTest extends TestCase
         $otherAssetAccount = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $assetAccount->id)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
 
 
@@ -1664,13 +1481,13 @@ class RecurrenceControllerTest extends TestCase
 
 
         // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+        $repository->shouldReceive('getNoteText')->andReturn('Note text')->atLeast()->once();
+        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.')->atLeast()->once();
+        $repository->shouldReceive('getXOccurrences')->andReturn([])->atLeast()->once();
 
         // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
+        $factory->shouldReceive('findOrCreate')->andReturn(null)->atLeast()->once();
+        $budgetRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
 
 
         // data to submit
@@ -1717,9 +1534,6 @@ class RecurrenceControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         /** @var Recurrence $recurrence */
         $recurrence = $this->user()->recurrences()->first();
 
@@ -1730,6 +1544,7 @@ class RecurrenceControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -1741,10 +1556,10 @@ class RecurrenceControllerTest extends TestCase
         $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $factory->shouldReceive('setUser');
-        $budgetRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('setUser');
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('update')->once()->andReturn($recurrence);
 
 
@@ -1753,13 +1568,13 @@ class RecurrenceControllerTest extends TestCase
 
 
         // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text');
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.');
-        $repository->shouldReceive('getXOccurrences')->andReturn([]);
+        $repository->shouldReceive('getNoteText')->andReturn('Note text')->atLeast()->once();
+        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.')->atLeast()->once();
+        $repository->shouldReceive('getXOccurrences')->andReturn([])->atLeast()->once();
 
         // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null);
-        $budgetRepos->shouldReceive('findNull')->andReturn(null);
+        $factory->shouldReceive('findOrCreate')->andReturn(null)->atLeast()->once();
+        $budgetRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
 
 
         // data to submit

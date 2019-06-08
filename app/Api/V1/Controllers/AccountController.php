@@ -184,7 +184,6 @@ class AccountController extends Controller
      * @param Request $request
      * @param Account $account
      *
-     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function show(Request $request, Account $account): JsonResponse

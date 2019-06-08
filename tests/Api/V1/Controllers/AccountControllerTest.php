@@ -57,10 +57,8 @@ class AccountControllerTest extends TestCase
         // mock repositories
         $repository = $this->mock(AccountRepositoryInterface::class);
 
-
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-
 
         // data to submit
         $data = [
@@ -82,6 +80,36 @@ class AccountControllerTest extends TestCase
             ]
         );
         $response->assertHeader('Content-Type', 'application/json');
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     */
+    public function testShow(): void
+    {
+        // mock repositories
+        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $transformer = $this->mock(AccountTransformer::class);
+        // mock calls:
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
+            [
+                'id' => 1,
+                'attributes' => [
+                    'name' => 'Account'
+                ]
+            ]);
+        $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
+        $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->atLeast()->once()->andReturn([]);
+
+
+        // getAccountType
+
+        $account  = $this->getRandomAsset();
+        $response = $this->get(route('api.v1.accounts.show', [$account->id]));
+        $response->assertStatus(200);
     }
 
     /**
@@ -214,7 +242,7 @@ class AccountControllerTest extends TestCase
     public function testStoreNotUnique(): void
     {
         // mock repositories
-        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -331,7 +359,7 @@ class AccountControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock repositories
-        $repository = $this->mock(AccountRepositoryInterface::class);
+        $repository  = $this->mock(AccountRepositoryInterface::class);
         $transformer = $this->mock(AccountTransformer::class);
 
         // mock calls:

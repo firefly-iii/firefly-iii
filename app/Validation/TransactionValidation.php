@@ -26,8 +26,8 @@ namespace FireflyIII\Validation;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Models\TransactionType;
 use Illuminate\Validation\Validator;
+use Log;
 
 /**
  * Trait TransactionValidation
@@ -41,15 +41,16 @@ trait TransactionValidation
      */
     public function validateAccountInformation(Validator $validator): void
     {
-        $data         = $validator->getData();
-        $transactions = $data['transactions'] ?? [];
+        Log::debug('Now in validateAccountInformation()');
+        $data            = $validator->getData();
+        $transactionType = $data['type'] ?? 'invalid';
+        $transactions    = $data['transactions'] ?? [];
 
         /** @var AccountValidator $accountValidator */
         $accountValidator = app(AccountValidator::class);
 
-
+        Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
         foreach ($transactions as $index => $transaction) {
-            $transactionType = $transaction['type'] ?? 'invalid';
             $accountValidator->setTransactionType($transactionType);
 
             // validate source account.
@@ -224,7 +225,7 @@ trait TransactionValidation
 
         foreach ($transactions as $index => $transaction) {
             $originalType    = $this->getOriginalType($transaction['transaction_journal_id'] ?? 0);
-            $originalData = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
+            $originalData    = $this->getOriginalData($transaction['transaction_journal_id'] ?? 0);
             $transactionType = $transaction['type'] ?? $originalType;
             $accountValidator->setTransactionType($transactionType);
 

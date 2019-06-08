@@ -246,6 +246,10 @@ class TransactionJournalFactory
         $destinationAccount = $this->getAccount($type->type, 'destination', (int)$row['destination_id'], $row['destination_name']);
 
         /** double check currencies. */
+        $sourceCurrency        = $currency;
+        $destCurrency          = $currency;
+        $sourceForeignCurrency = $foreignCurrency;
+        $destForeignCurrency   = $foreignCurrency;
 
         if ($type->type === 'Withdrawal') {
             // make sure currency is correct.

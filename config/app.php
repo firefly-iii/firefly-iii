@@ -87,7 +87,6 @@ return [
         FireflyIII\Providers\BudgetServiceProvider::class,
         FireflyIII\Providers\CategoryServiceProvider::class,
         FireflyIII\Providers\CurrencyServiceProvider::class,
-        FireflyIII\Providers\ExportJobServiceProvider::class,
         FireflyIII\Providers\FireflyServiceProvider::class,
         FireflyIII\Providers\JournalServiceProvider::class,
         FireflyIII\Providers\PiggyBankServiceProvider::class,

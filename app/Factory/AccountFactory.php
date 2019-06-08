@@ -112,7 +112,7 @@ class AccountFactory
             $data['currency_id'] = $currency->id;
             // remove virtual balance when not an asset account or a liability
             $canHaveVirtual = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
-            if (!\in_array($type->type, $canHaveVirtual, true)) {
+            if (!in_array($type->type, $canHaveVirtual, true)) {
                 $databaseData['virtual_balance'] = '0';
             }
 
@@ -124,7 +124,7 @@ class AccountFactory
             $return = Account::create($databaseData);
             $this->updateMetaData($return, $data);
 
-            if (\in_array($type->type, $canHaveVirtual, true)) {
+            if (in_array($type->type, $canHaveVirtual, true)) {
                 if ($this->validIBData($data)) {
                     $this->updateIB($return, $data);
                 }

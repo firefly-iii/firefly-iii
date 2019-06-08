@@ -162,7 +162,6 @@ class AttachmentController extends Controller
      *
      * @param Request $request
      * @param Attachment $attachment
-     * @codeCoverageIgnore
      * @return JsonResponse
      */
     public function show(Request $request, Attachment $attachment): JsonResponse

@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Services\Internal\Support;
 
 
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
@@ -75,11 +76,12 @@ trait TransactionServiceTrait
 
     /**
      * @param string|null $expectedType
-     * @param int|null    $accountId
+     * @param Account|null $account
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return Account|null
-     * @throws \FireflyIII\Exceptions\FireflyException
+     * @throws FireflyException
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function findAccount(?string $expectedType, ?Account $account, ?int $accountId, ?string $accountName): ?Account

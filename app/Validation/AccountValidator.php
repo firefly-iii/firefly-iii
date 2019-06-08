@@ -130,7 +130,7 @@ class AccountValidator
     }
 
     /**
-     * @param int|null    $accountId
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return bool
@@ -195,19 +195,23 @@ class AccountValidator
      */
     private function canCreateTypes(array $accountTypes): bool
     {
+        Log::debug('Can we create any of these types?', $accountTypes);
         /** @var string $accountType */
         foreach ($accountTypes as $accountType) {
             if ($this->canCreateType($accountType)) {
+                Log::debug(sprintf('YES, we can create a %s', $accountType));
+
                 return true;
             }
         }
+        Log::debug('NO, we cant create any of those.');
 
         return false;
     }
 
     /**
-     * @param array       $validTypes
-     * @param int|null    $accountId
+     * @param array $validTypes
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return Account|null
@@ -282,7 +286,7 @@ class AccountValidator
     }
 
     /**
-     * @param int|null    $accountId
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return bool
@@ -360,7 +364,7 @@ class AccountValidator
     }
 
     /**
-     * @param int|null    $accountId
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return bool
@@ -391,7 +395,7 @@ class AccountValidator
     }
 
     /**
-     * @param int|null    $accountId
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return bool
@@ -409,6 +413,20 @@ class AccountValidator
             return false;
         }
 
+        // if there's an ID it must be of the "validTypes".
+        if (null !== $accountId && 0 !== $accountId) {
+            $found = $this->accountRepository->findNull($accountId);
+            if (null !== $found) {
+                $type = $found->accountType->type;
+                if (in_array($type, $validTypes)) {
+                    return true;
+                }
+                $this->destError = (string)trans('validation.withdrawal_dest_bad_data', ['id' => $accountId, 'name' => $accountName]);
+
+                return false;
+            }
+        }
+
         // if the account can be created anyway don't need to search.
         if (true === $this->canCreateTypes($validTypes)) {
 
@@ -420,7 +438,7 @@ class AccountValidator
     }
 
     /**
-     * @param int|null    $accountId
+     * @param int|null $accountId
      * @param string|null $accountName
      *
      * @return bool

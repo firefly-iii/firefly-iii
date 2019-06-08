@@ -61,7 +61,7 @@ class ChartJsGenerator implements GeneratorInterface
         $amounts  = array_column($data, 'amount');
         $next     = next($amounts);
         $sortFlag = SORT_ASC;
-        if (!\is_bool($next) && 1 === bccomp((string)$next, '0')) {
+        if (!is_bool($next) && 1 === bccomp((string)$next, '0')) {
             $sortFlag = SORT_DESC;
         }
         array_multisort($amounts, $sortFlag, $data);
@@ -118,7 +118,7 @@ class ChartJsGenerator implements GeneratorInterface
     {
         reset($data);
         $first  = current($data);
-        $labels = \is_array($first['entries']) ? array_keys($first['entries']) : [];
+        $labels = is_array($first['entries']) ? array_keys($first['entries']) : [];
 
         $chartData = [
             'count'    => count($data),
@@ -173,7 +173,7 @@ class ChartJsGenerator implements GeneratorInterface
         // different sort when values are positive and when they're negative.
         asort($data);
         $next = next($data);
-        if (!\is_bool($next) && 1 === bccomp((string)$next, '0')) {
+        if (!is_bool($next) && 1 === bccomp((string)$next, '0')) {
             // next is positive, sort other way around.
             arsort($data);
         }
