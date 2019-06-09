@@ -23,12 +23,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Requests\RuleGroupRequest;
+use FireflyIII\Api\V1\Requests\RuleGroupTestRequest;
+use FireflyIII\Api\V1\Requests\RuleGroupTriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -36,6 +36,7 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
 use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -224,24 +225,24 @@ class RuleGroupController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param RuleGroupTestRequest $request
      * @param RuleGroup $group
      *
      * @return JsonResponse
      * @throws FireflyException
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
-    public function testGroup(Request $request, RuleGroup $group): JsonResponse
+    public function testGroup(RuleGroupTestRequest $request, RuleGroup $group): JsonResponse
     {
-        die('I will never work');
+        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
         Log::debug('Now in testGroup()');
         /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
         if (0 === $rules->count()) {
             throw new FireflyException('No rules in this rule group.');
         }
-        $parameters           = $this->getTestParameters($request);
-        $accounts             = $this->getAccountParameter($parameters['account_list']);
-        $matchingTransactions = new Collection;
+        $parameters           = $request->getTestParameters();
+        $matchingTransactions = [];
 
         Log::debug(sprintf('Going to test %d rules', $rules->count()));
         /** @var Rule $rule */
@@ -255,18 +256,18 @@ class RuleGroupController extends Controller
             $matcher->setEndDate($parameters['end_date']);
             $matcher->setSearchLimit($parameters['search_limit']);
             $matcher->setTriggeredLimit($parameters['trigger_limit']);
-            $matcher->setAccounts($accounts);
+            $matcher->setAccounts($parameters['accounts']);
 
             $result               = $matcher->findTransactionsByRule();
-            $matchingTransactions = $result->merge($matchingTransactions);
+            $matchingTransactions = $result + $matchingTransactions;
         }
-        $matchingTransactions = $matchingTransactions->unique('id');
 
         // make paginator out of results.
-        $count        = $matchingTransactions->count();
-        $transactions = $matchingTransactions->slice(($parameters['page'] - 1) * $parameters['page_size'], $parameters['page_size']);
+        $count        = count($matchingTransactions);
+        $transactions = array_slice($matchingTransactions, ($parameters['page'] - 1) * $pageSize, $pageSize);
+
         // make paginator:
-        $paginator = new LengthAwarePaginator($transactions, $count, $parameters['page_size'], $parameters['page']);
+        $paginator = new LengthAwarePaginator($transactions, $count, $pageSize, $parameters['page']);
         $paginator->setPath(route('api.v1.rule_groups.test', [$group->id]) . $this->buildParams());
 
         // resulting list is presented as JSON thing.
@@ -274,10 +275,10 @@ class RuleGroupController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        //$transformer = app(TransactionTransformer::class);
-        //$transformer->setParameters($this->parameters);
+        $transformer = app(TransactionGroupTransformer::class);
+        $transformer->setParameters($this->parameters);
 
-        //$resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
+        $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
@@ -286,33 +287,18 @@ class RuleGroupController extends Controller
     /**
      * Execute the given rule group on a set of existing transactions.
      *
-     * @param Request $request
+     * @param RuleGroupTriggerRequest $request
      * @param RuleGroup $group
      *
      * @return JsonResponse
      * @throws Exception
      */
-    public function triggerGroup(Request $request, RuleGroup $group): JsonResponse
+    public function triggerGroup(RuleGroupTriggerRequest $request, RuleGroup $group): JsonResponse
     {
         // Get parameters specified by the user
         /** @var User $user */
-        $user        = auth()->user();
-        $startDate   = new Carbon($request->get('start_date'));
-        $endDate     = new Carbon($request->get('end_date'));
-        $accountList = '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts'));
-        $accounts    = new Collection;
-
-        foreach ($accountList as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $accounts->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
+        $user       = auth()->user();
+        $parameters = $request->getTriggerParameters();
 
         /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
@@ -322,9 +308,9 @@ class RuleGroupController extends Controller
 
             // Apply parameters to the job
             $job->setUser($user);
-            $job->setAccounts($accounts);
-            $job->setStartDate($startDate);
-            $job->setEndDate($endDate);
+            $job->setAccounts($parameters['accounts']);
+            $job->setStartDate($parameters['start_date']);
+            $job->setEndDate($parameters['end_date']);
 
             // Dispatch a new job to execute it in a queue
             $this->dispatch($job);
@@ -362,7 +348,7 @@ class RuleGroupController extends Controller
      * @param RuleGroup $ruleGroup
      * @return JsonResponse
      */
-    public function down(Request $request, RuleGroup $ruleGroup): JsonResponse
+    public function moveDown(Request $request, RuleGroup $ruleGroup): JsonResponse
     {
         $this->ruleGroupRepository->moveDown($ruleGroup);
         $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
@@ -384,7 +370,7 @@ class RuleGroupController extends Controller
      * @param RuleGroup $ruleGroup
      * @return JsonResponse
      */
-    public function up(Request $request, RuleGroup $ruleGroup): JsonResponse
+    public function moveUp(Request $request, RuleGroup $ruleGroup): JsonResponse
     {
         $this->ruleGroupRepository->moveUp($ruleGroup);
         $ruleGroup = $this->ruleGroupRepository->find($ruleGroup->id);
@@ -399,50 +385,5 @@ class RuleGroupController extends Controller
         $resource = new Item($ruleGroup, $transformer, 'rule_groups');
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
-    }
-
-    /**
-     * @param Request $request
-     *
-     * @return array
-     */
-    private function getTestParameters(Request $request): array
-    {
-        return [
-            'page_size'     => (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data,
-            'page'          => 0 === (int)$request->query('page') ? 1 : (int)$request->query('page'),
-            'start_date'    => null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date')),
-            'end_date'      => null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date')),
-            'search_limit'  => 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit'),
-            'trigger_limit' => 0 === (int)$request->query('triggered_limit')
-                ? (int)config('firefly.test-triggers.range')
-                : (int)$request->query(
-                    'triggered_limit'
-                ),
-            'account_list'  => '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts')),
-        ];
-    }
-
-    /**
-     * @param array $accounts
-     *
-     * @return Collection
-     */
-    private function getAccountParameter(array $accounts): Collection
-    {
-        $return = new Collection;
-        foreach ($accounts as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $return->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
-
-        return $return;
     }
 }

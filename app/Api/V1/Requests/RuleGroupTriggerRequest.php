@@ -1,6 +1,6 @@
 <?php
 /**
- * RuleTriggerRequest.php
+ * RuleGroupTriggerRequest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -30,9 +30,9 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class RuleTriggerRequest
+ * Class RuleGroupTriggerRequest
  */
-class RuleTriggerRequest extends Request
+class RuleGroupTriggerRequest extends Request
 {
     /**
      * Authorize logged in users.

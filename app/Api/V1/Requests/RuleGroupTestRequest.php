@@ -1,6 +1,6 @@
 <?php
 /**
- * RuleTriggerRequest.php
+ * RuleGroupTestRequest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -30,9 +30,9 @@ use Illuminate\Support\Collection;
 use Log;
 
 /**
- * Class RuleTriggerRequest
+ * Class RuleGroupTestRequest
  */
-class RuleTriggerRequest extends Request
+class RuleGroupTestRequest extends Request
 {
     /**
      * Authorize logged in users.
@@ -48,12 +48,15 @@ class RuleTriggerRequest extends Request
     /**
      * @return array
      */
-    public function getTriggerParameters(): array
+    public function getTestParameters(): array
     {
         $return = [
-            'start_date' => $this->getDate('start_date'),
-            'end_date'   => $this->getDate('end_date'),
-            'accounts'   => $this->getAccounts(),
+            'page'          => $this->getPage(),
+            'start_date'    => $this->getDate('start_date'),
+            'end_date'      => $this->getDate('end_date'),
+            'search_limit'  => $this->getSearchLimit(),
+            'trigger_limit' => $this->getTriggerLimit(),
+            'accounts'      => $this->getAccounts(),
         ];
 
 
@@ -65,10 +68,7 @@ class RuleTriggerRequest extends Request
      */
     public function rules(): array
     {
-        return [
-            'start_date' => 'required|date',
-            'end_date'   => 'required|date|after:start_date',
-        ];
+        return [];
     }
 
     /**
@@ -81,6 +81,31 @@ class RuleTriggerRequest extends Request
         $result = null === $this->query($field) ? null : Carbon::createFromFormat('Y-m-d', $this->query($field));
 
         return $result;
+    }
+
+    /**
+     * @return int
+     */
+    private function getPage(): int
+    {
+        return 0 === (int)$this->query('page') ? 1 : (int)$this->query('page');
+
+    }
+
+    /**
+     * @return int
+     */
+    private function getSearchLimit(): int
+    {
+        return 0 === (int)$this->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$this->query('search_limit');
+    }
+
+    /**
+     * @return int
+     */
+    private function getTriggerLimit(): int
+    {
+        return 0 === (int)$this->query('triggered_limit') ? (int)config('firefly.test-triggers.range') : (int)$this->query('triggered_limit');
     }
 
     /**
