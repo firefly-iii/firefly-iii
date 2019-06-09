@@ -67,7 +67,7 @@ class PreferencesControllerTest extends TestCase
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'frontPageAccounts', [1, 2, 3]);
         $data       = ['data' => '4,5,6'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
+        $response   = $this->put(route('api.v1.preferences.update', [$preference->name]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -89,7 +89,8 @@ class PreferencesControllerTest extends TestCase
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'twoFactorAuthEnabled', false);
         $data       = ['data' => '1'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
+        $response   = $this->put(route('api.v1.preferences.update', [$preference->name]), $data, ['Accept' => 'application/json']);
+
         $response->assertStatus(200);
 
     }
@@ -111,7 +112,7 @@ class PreferencesControllerTest extends TestCase
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'currencyPreference', false);
         $data       = ['data' => 'EUR'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
+        $response   = $this->put(route('api.v1.preferences.update', [$preference->name]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -133,7 +134,7 @@ class PreferencesControllerTest extends TestCase
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'listPageSize', 13);
         $data       = ['data' => '434'];
-        $response   = $this->put('/api/v1/preferences/' . $preference->name, $data, ['Accept' => 'application/json']);
+        $response   = $this->put(route('api.v1.preferences.update', [$preference->name]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }

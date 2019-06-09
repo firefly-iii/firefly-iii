@@ -1455,7 +1455,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/recurrences/' . $recurrence->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.recurrences.update', [$recurrence->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }

@@ -171,7 +171,7 @@ class CurrencyControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/currencies/' . $currency->code, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.currencies.update', [$currency->code]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -216,7 +216,7 @@ class CurrencyControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/currencies/' . $currency->code, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.currencies.update', [$currency->code]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

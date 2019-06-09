@@ -207,7 +207,7 @@ class UserControllerTest extends TestCase
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // call API
-        $response = $this->put('/api/v1/users/' . $user->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.users.update', $user->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
     }
 

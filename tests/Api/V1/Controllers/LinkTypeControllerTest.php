@@ -168,7 +168,7 @@ class LinkTypeControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/link_types/' . $linkType->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.link_types.update', [$linkType->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -206,7 +206,7 @@ class LinkTypeControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/link_types/' . $linkType->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.link_types.update', [$linkType->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('You cannot edit this link type ');
     }
@@ -247,7 +247,7 @@ class LinkTypeControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/link_types/' . $linkType->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.link_types.update', [$linkType->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('You need the \"owner\"-role to do this.');
     }

@@ -342,7 +342,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/transaction_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.transaction_links.update', $journalLink->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -381,7 +381,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/transaction_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.transaction_links.update', $journalLink->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('Source or destination is NULL.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
@@ -418,7 +418,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/transaction_links/' . $journalLink->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.transaction_links.update', $journalLink->id), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('Invalid inward ID.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');

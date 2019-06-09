@@ -163,7 +163,7 @@ class PiggyBankControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->put('/api/v1/piggy_banks/' . $piggy->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.piggy_banks.update', [$piggy->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'piggy_banks', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

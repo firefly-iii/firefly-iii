@@ -163,7 +163,7 @@ class BudgetLimitControllerTest extends TestCase
         $repository->shouldReceive('setUser')->once();
 
         // call API
-        $response = $this->put('/api/v1/budgets/limits/' . $budgetLimit->id, $data);
+        $response = $this->put(route('api.v1.budget_limits.update', [$budgetLimit->id]), $data);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
 
