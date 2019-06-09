@@ -33,8 +33,6 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
-use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Queue;
@@ -45,6 +43,7 @@ use Tests\TestCase;
  * Class RuleControllerTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleControllerTest extends TestCase
 {
@@ -131,7 +130,7 @@ class RuleControllerTest extends TestCase
             'active'          => 1,
             'triggers'        => [
                 [
-                    'name'            => 'description_is',
+                    'type'            => 'description_is',
                     'value'           => 'Hello',
                     'stop_processing' => 1,
                 ],
@@ -143,6 +142,15 @@ class RuleControllerTest extends TestCase
         // test API
         $response = $this->post(route('api.v1.rules.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'title' => [
+                        'Rule must have at least one action.',
+                    ],
+                ],
+                'message' => 'The given data was invalid.',
+            ]);
     }
 
     /**
@@ -168,7 +176,7 @@ class RuleControllerTest extends TestCase
             ],
             'actions'         => [
                 [
-                    'name'            => 'add_tag',
+                    'type'            => 'add_tag',
                     'value'           => 'A',
                     'stop_processing' => 1,
                 ],
@@ -178,7 +186,15 @@ class RuleControllerTest extends TestCase
         // test API
         $response = $this->post(route('api.v1.rules.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
-        $response->assertSee('');
+        $response->assertExactJson(
+            [
+                'errors'  => [
+                    'title' => [
+                        'Rule must have at least one trigger.',
+                    ],
+                ],
+                'message' => 'The given data was invalid.',
+            ]);
 
     }
 
@@ -187,16 +203,16 @@ class RuleControllerTest extends TestCase
      */
     public function testTestRule(): void
     {
-        $rule         = $this->user()->rules()->first();
+        $rule = $this->user()->rules()->first();
 
         // mock used classes.
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $matcher      = $this->mock(TransactionMatcher::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $transformer  = $this->mock(TransactionGroupTransformer::class);
+        $repository  = $this->mock(AccountRepositoryInterface::class);
+        $matcher     = $this->mock(TransactionMatcher::class);
+        $ruleRepos   = $this->mock(RuleRepositoryInterface::class);
+        $transformer = $this->mock(TransactionGroupTransformer::class);
 
-        $asset = $this->getRandomAsset();
-        $expense= $this->getRandomExpense();
+        $asset   = $this->getRandomAsset();
+        $expense = $this->getRandomExpense();
 
         $repository->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
@@ -221,8 +237,6 @@ class RuleControllerTest extends TestCase
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
 
-
-
         $response = $this->get(route('api.v1.rules.test', [$rule->id]) . '?accounts=1,2,3');
         $response->assertStatus(200);
     }
@@ -232,28 +246,21 @@ class RuleControllerTest extends TestCase
      */
     public function testTriggerRule(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $rule         = $this->user()->rules()->first();
         $repository   = $this->mock(AccountRepositoryInterface::class);
-        $matcher      = $this->mock(TransactionMatcher::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $transformer  = $this->mock(RuleTransformer::class);
+        $asset   = $this->getRandomAsset();
+        $expense = $this->getRandomExpense();
 
-        $asset = $this->getRandomAsset();
         $repository->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
-        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($expense);
         $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
-        $repository->shouldReceive('isAsset')->andReturn(true, false);
 
         Queue::fake();
 
-
-        $response = $this->post(route('api.v1.rules.trigger', [$rule->id]) . '?accounts=1,2,3');
+        $response = $this->post(route('api.v1.rules.trigger', [$rule->id]) . '?accounts=1,2,3&start_date=2019-01-01&end_date=2019-01-02');
         $response->assertStatus(204);
 
         Queue::assertPushed(
@@ -269,9 +276,6 @@ class RuleControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transformer  = $this->mock(RuleTransformer::class);
@@ -285,6 +289,7 @@ class RuleControllerTest extends TestCase
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
+
         /** @var Rule $rule */
         $rule = $this->user()->rules()->first();
         $data = [

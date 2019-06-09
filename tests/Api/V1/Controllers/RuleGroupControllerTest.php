@@ -26,14 +26,12 @@ namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
-use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
-use FireflyIII\Transformers\RuleTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
@@ -43,6 +41,9 @@ use Tests\TestCase;
 /**
  *
  * Class RuleGroupControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RuleGroupControllerTest extends TestCase
 {
@@ -78,7 +79,7 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $ruleGroup = $this->user()->ruleGroups()->first();
         $data      = [
-            'title'       => 'Store new rule ' . random_int(1, 100000),
+            'title'       => 'Store new rule group ' . random_int(1, 100000),
             'active'      => 1,
             'description' => 'Hello',
         ];
@@ -86,7 +87,7 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('store')->once()->andReturn($ruleGroup);
 
         // test API
-        $response = $this->post('/api/v1/rule_groups', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.rule_groups.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -96,40 +97,37 @@ class RuleGroupControllerTest extends TestCase
      */
     public function testTestGroupBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $group = $this->user()->ruleGroups()->first();
         $rule  = $this->user()->rules()->first();
 
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $repository     = $this->mock(AccountRepositoryInterface::class);
         $matcher        = $this->mock(TransactionMatcher::class);
-        $journalRepos   = $this->mock(JournalRepositoryInterface::class);
-        $transformer    = $this->mock(TransactionTransformer::class);
+        $transformer    = $this->mock(TransactionGroupTransformer::class);
 
-        // mock transformer
-        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+
+        // mock calls
+        $asset   = $this->getRandomAsset();
+        $expense = $this->getRandomExpense();
+
 
         $ruleGroupRepos->shouldReceive('setUser')->once();
-        $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection([$rule]));
-
-        $asset = $this->getRandomAsset();
         $repository->shouldReceive('setUser')->once();
 
-        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
-        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
-        $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
-        $repository->shouldReceive('isAsset')->withArgs([1])->andReturn(true);
-        $repository->shouldReceive('isAsset')->withArgs([2])->andReturn(false);
+        $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection([$rule]));
 
+        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($expense);
+        $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
+
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
         $matcher->shouldReceive('setRule')->once();
         $matcher->shouldReceive('setEndDate')->once();
         $matcher->shouldReceive('setStartDate')->once();
         $matcher->shouldReceive('setSearchLimit')->once();
         $matcher->shouldReceive('setTriggeredLimit')->once();
         $matcher->shouldReceive('setAccounts')->once();
-        $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn(new Collection);
+        $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn([]);
 
         // call API
         $response = $this->get(route('api.v1.rule_groups.test', [$group->id]) . '?accounts=1,2,3');
@@ -141,10 +139,8 @@ class RuleGroupControllerTest extends TestCase
      */
     public function testTestGroupEmpty(): void
     {
-
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleGroupRepos->shouldReceive('setUser')->once();
@@ -152,8 +148,9 @@ class RuleGroupControllerTest extends TestCase
 
         // call API
         $group    = $this->user()->ruleGroups()->first();
-        $response = $this->get(route('api.v1.rule_groups.test', [$group->id]));
+        $response = $this->get(route('api.v1.rule_groups.test', [$group->id]), ['Accept' => 'application/json']);
         $response->assertStatus(500);
+        $response->assertSee('{"message":"No rules in this rule group.","exception":"FireflyIII\\\\Exceptions\\\\FireflyException"');
     }
 
     /**
@@ -164,7 +161,7 @@ class RuleGroupControllerTest extends TestCase
         $group = $this->user()->ruleGroups()->first();
         $rule  = $this->user()->rules()->first();
         $asset = $this->getRandomAsset();
-
+        $expense = $this->getRandomExpense();
 
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
         $repository     = $this->mock(AccountRepositoryInterface::class);
@@ -175,13 +172,13 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('getActiveRules')->once()->andReturn(new Collection([$rule]));
 
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
-        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($expense);
         $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
         $repository->shouldReceive('isAsset')->withArgs([1])->andReturn(true);
         $repository->shouldReceive('isAsset')->withArgs([2])->andReturn(false);
 
         Queue::fake();
-        $response = $this->post(route('api.v1.rule_groups.trigger', [$group->id]) . '?accounts=1,2,3');
+        $response = $this->post(route('api.v1.rule_groups.trigger', [$group->id]) . '?accounts=1,2,3&start_date=2019-01-01&end_date=2019-01-02');
         $response->assertStatus(204);
 
 
