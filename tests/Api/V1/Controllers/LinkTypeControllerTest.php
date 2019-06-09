@@ -35,6 +35,9 @@ use Tests\TestCase;
 /**
  *
  * Class LinkTypeControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkTypeControllerTest extends TestCase
 {
@@ -85,7 +88,7 @@ class LinkTypeControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/link_types', $data);
+        $response = $this->post(route('api.v1.link_types.store'), $data);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -115,7 +118,7 @@ class LinkTypeControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/link_types', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.link_types.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('You need the \"owner\"-role to do this.');
     }

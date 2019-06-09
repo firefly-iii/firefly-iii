@@ -35,6 +35,9 @@ use Tests\TestCase;
 
 /**
  * Class UserControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class UserControllerTest extends TestCase
 {
@@ -76,7 +79,7 @@ class UserControllerTest extends TestCase
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
         // test API
-        $response = $this->post('/api/v1/users', $data, ['Content-Type' => 'application/x-www-form-urlencoded']);
+        $response = $this->post(route('api.v1.users.store'), $data, ['Content-Type' => 'application/x-www-form-urlencoded']);
         $response->assertStatus(200);
     }
 
@@ -129,7 +132,7 @@ class UserControllerTest extends TestCase
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->twice()->andReturn(true);
         // test API
-        $response = $this->post('/api/v1/users', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.users.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [

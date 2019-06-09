@@ -34,6 +34,9 @@ use Tests\TestCase;
 /**
  *
  * Class PreferencesControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PreferencesControllerTest extends TestCase
 {

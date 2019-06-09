@@ -39,6 +39,9 @@ use Tests\TestCase;
 /**
  *
  * Class TransactionLinkControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionLinkControllerTest extends TestCase
 {
@@ -100,7 +103,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transaction_links', $data);
+        $response = $this->post(route('api.v1.transaction_links.store'), $data);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -152,7 +155,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transaction_links.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('Already have a link between inward and outward.');
 
@@ -207,7 +210,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transaction_links.store'), $data, ['Accept' => 'application/json']);
         $response->assertSee('Invalid inward ID.'); // the creation moment.
         $response->assertStatus(422);
         $response->assertHeader('Content-Type', 'application/json');
@@ -260,7 +263,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transaction_links.store'), $data, ['Accept' => 'application/json']);
         $response->assertSee('Invalid outward ID.');
         $response->assertStatus(422);
         $response->assertHeader('Content-Type', 'application/json');
@@ -312,7 +315,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transaction_links.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertSee('Source or destination is NULL.'); // the creation moment.
         $response->assertHeader('Content-Type', 'application/json');
@@ -362,7 +365,7 @@ class TransactionLinkControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transaction_links', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transaction_links.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('Invalid inward ID.'); // error message
         $response->assertHeader('Content-Type', 'application/json');

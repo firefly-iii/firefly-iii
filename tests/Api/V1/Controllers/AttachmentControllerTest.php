@@ -35,6 +35,9 @@ use Tests\TestCase;
 /**
  *
  * Class AttachmentControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AttachmentControllerTest extends TestCase
 {

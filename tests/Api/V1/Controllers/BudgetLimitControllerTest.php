@@ -43,6 +43,9 @@ use Tests\TestCase;
 /**
  *
  * Class BudgetLimitControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class BudgetLimitControllerTest extends TestCase
 {

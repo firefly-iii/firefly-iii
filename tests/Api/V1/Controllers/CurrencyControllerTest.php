@@ -60,6 +60,9 @@ use Tests\TestCase;
 
 /**
  * Class CurrencyControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CurrencyControllerTest extends TestCase
 {
@@ -108,7 +111,7 @@ class CurrencyControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/currencies', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.currencies.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -153,7 +156,7 @@ class CurrencyControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/currencies', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.currencies.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'currencies', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

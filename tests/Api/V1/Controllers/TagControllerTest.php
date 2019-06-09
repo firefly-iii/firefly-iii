@@ -36,6 +36,9 @@ use Tests\TestCase;
 
 /**
  * Class TagControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TagControllerTest extends TestCase
 {

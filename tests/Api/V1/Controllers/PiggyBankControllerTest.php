@@ -37,6 +37,9 @@ use Tests\TestCase;
 /**
  *
  * Class PiggyBankControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class PiggyBankControllerTest extends TestCase
 {
@@ -81,7 +84,7 @@ class PiggyBankControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/piggy_banks/', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.piggy_banks.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertJson(['data' => ['type' => 'piggy_banks', 'links' => true],]);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -109,7 +112,7 @@ class PiggyBankControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/piggy_banks/', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.piggy_banks.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(500);
         $response->assertHeader('Content-Type', 'application/json');
         $response->assertSee('Could not store new piggy bank.');

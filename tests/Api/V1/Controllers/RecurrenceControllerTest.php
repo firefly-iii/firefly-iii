@@ -41,6 +41,9 @@ use Tests\TestCase;
 /**
  *
  * Class RecurrenceControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class RecurrenceControllerTest extends TestCase
 {
@@ -116,7 +119,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -183,7 +186,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -251,7 +254,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -321,7 +324,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
@@ -392,7 +395,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertHeader('Content-Type', 'application/vnd.api+json');
     }
@@ -452,7 +455,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -521,7 +524,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -587,7 +590,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -655,7 +658,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -723,7 +726,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -788,7 +791,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -853,7 +856,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -919,7 +922,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -985,7 +988,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -1050,7 +1053,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -1122,7 +1125,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -1191,7 +1194,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -1253,7 +1256,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -1306,7 +1309,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertExactJson(
             [
                 'message' => 'The given data was invalid.',
@@ -1387,7 +1390,7 @@ class RecurrenceControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/recurrences', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.recurrences.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
         $response->assertHeader('Content-Type', 'application/vnd.api+json');

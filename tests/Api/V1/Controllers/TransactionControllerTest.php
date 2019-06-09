@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class TransactionControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class TransactionControllerTest extends TestCase
 {
@@ -93,7 +96,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -148,7 +151,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -203,7 +206,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -257,7 +260,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -311,7 +314,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -372,7 +375,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -410,7 +413,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -473,7 +476,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -537,7 +540,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -604,7 +607,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertExactJson(
             [
@@ -686,7 +689,7 @@ class TransactionControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/transactions', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.transactions.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
         $response->assertExactJson(
             [
