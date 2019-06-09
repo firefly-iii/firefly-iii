@@ -198,7 +198,8 @@ class RuleControllerTest extends TestCase
     }
 
     /**
-     *
+     * @covers \FireflyIII\Api\V1\Controllers\RuleController
+     * @covers \FireflyIII\Api\V1\Requests\RuleTestRequest
      */
     public function testTestRule(): void
     {
@@ -242,6 +243,7 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
+     * @covers \FireflyIII\Api\V1\Requests\RuleTriggerRequest
      */
     public function testTriggerRule(): void
     {
@@ -275,7 +277,7 @@ class RuleControllerTest extends TestCase
     public function testMoveRuleDown(): void
     {
         /** @var Rule $rule */
-        $rule          = $this->user()->rules()->first();
+        $rule = $this->user()->rules()->first();
 
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
@@ -304,7 +306,7 @@ class RuleControllerTest extends TestCase
     public function testMoveRuleUp(): void
     {
         /** @var Rule $rule */
-        $rule          = $this->user()->rules()->first();
+        $rule = $this->user()->rules()->first();
 
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);

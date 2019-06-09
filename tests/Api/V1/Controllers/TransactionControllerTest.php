@@ -686,7 +686,7 @@ class TransactionControllerTest extends TestCase
         // mock repository
         $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $validator = $this->mock(AccountValidator::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         // some mock calls:
         $journalRepos->shouldReceive('setUser')->atLeast()->once();
@@ -747,7 +747,7 @@ class TransactionControllerTest extends TestCase
         // mock repository
         $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $validator = $this->mock(AccountValidator::class);
+        $validator    = $this->mock(AccountValidator::class);
 
         $validator->shouldReceive('setTransactionType')->withArgs(['withdrawal'])->atLeast()->once();
         $validator->shouldReceive('setTransactionType')->withArgs(['deposit'])->atLeast()->once();
@@ -811,8 +811,8 @@ class TransactionControllerTest extends TestCase
         $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $transformer  = $this->mock(TransactionGroupTransformer::class);
-        $validator = $this->mock(AccountValidator::class);
-        $collector = $this->mock(GroupCollectorInterface::class);
+        $validator    = $this->mock(AccountValidator::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
 
         $validator->shouldReceive('setTransactionType')->withArgs(['invalid'])->atLeast()->once();
         $validator->shouldReceive('validateSource')->withArgs([null, null])->atLeast()->once()->andReturn(true);

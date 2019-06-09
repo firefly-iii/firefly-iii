@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\User;
@@ -43,6 +44,7 @@ class CategoryController extends Controller
 
     /**
      * AccountController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -61,23 +63,21 @@ class CategoryController extends Controller
 
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function overview(Request $request): JsonResponse
+    public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
+        $dates = $request->getAll();
         /** @var Carbon $start */
-        $start = Carbon::createFromFormat('Y-m-d', $start);
+        $start = $dates['start'];
         /** @var Carbon $end */
-        $end        = Carbon::createFromFormat('Y-m-d', $end);
+        $end = $dates['end'];
+
+
         $tempData   = [];
         $spent      = $this->categoryRepository->spentInPeriodPerCurrency(new Collection, new Collection, $start, $end);
         $earned     = $this->categoryRepository->earnedInPeriodPerCurrency(new Collection, new Collection, $start, $end);
@@ -129,7 +129,7 @@ class CategoryController extends Controller
                     'entries'                 => [],
                 ];
             }
-            $amount                    = round($income['spent'], $decimalPlaces);
+            $amount                    = round($income['earned'], $decimalPlaces);
             $categories[$categoryName] = isset($categories[$categoryName]) ? $categories[$categoryName] + $amount : $amount;
             $tempData[$key]['entries'][$categoryName]
                                        = $amount;

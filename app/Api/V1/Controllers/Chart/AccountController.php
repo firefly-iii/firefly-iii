@@ -26,6 +26,7 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
+use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
@@ -35,7 +36,6 @@ use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Support\Http\Api\ApiSupport;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 /**
  * Class AccountController
@@ -50,6 +50,7 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -70,22 +71,20 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function expenseOverview(Request $request): JsonResponse
+    public function expenseOverview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
+        $dates = $request->getAll();
         /** @var Carbon $start */
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
+
         $start->subDay();
 
         // prep some vars:
@@ -159,31 +158,30 @@ class AccountController extends Controller
 
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function overview(Request $request): JsonResponse
+    public function overview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
-
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $dates = $request->getAll();
+        /** @var Carbon $start */
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
 
         // user's preferences
-        $defaultSet = $this->repository->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET])->pluck('id')->toArray();
+        $defaultSet = $this->repository->getAccountsByType([AccountType::ASSET])->pluck('id')->toArray();
         $frontPage  = app('preferences')->get('frontPageAccounts', $defaultSet);
         $default    = app('amount')->getDefaultCurrency();
+        // @codeCoverageIgnoreStart
         if (0 === count($frontPage->data)) {
             $frontPage->data = $defaultSet;
             $frontPage->save();
         }
+        // @codeCoverageIgnoreEnd
 
         // get accounts:
         $accounts  = $this->repository->getAccountsById($frontPage->data);
@@ -192,7 +190,7 @@ class AccountController extends Controller
         foreach ($accounts as $account) {
             $currency = $this->repository->getAccountCurrency($account);
             if (null === $currency) {
-                $currency = $default;
+                $currency = $default; // @codeCoverageIgnore
             }
             $currentSet = [
                 'label'                   => $account->name,
@@ -223,22 +221,20 @@ class AccountController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function revenueOverview(Request $request): JsonResponse
+    public function revenueOverview(DateRequest $request): JsonResponse
     {
         // parameters for chart:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
+        $dates = $request->getAll();
         /** @var Carbon $start */
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $start = $dates['start'];
+        /** @var Carbon $end */
+        $end = $dates['end'];
+
         $start->subDay();
 
         // prep some vars:
@@ -269,7 +265,8 @@ class AccountController extends Controller
                     $tempData[] = [
                         'name'        => $accountNames[$accountId],
                         'difference'  => bcmul($diff, '-1'),
-                        'diff_float'  => (float)$diff * -1,
+                        //  For some reason this line is never covered in code coverage:
+                        'diff_float'  => ((float)$diff) * -1, // @codeCoverageIgnore
                         'currency_id' => $currencyId,
                     ];
                 }

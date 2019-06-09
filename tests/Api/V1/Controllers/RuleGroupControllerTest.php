@@ -26,15 +26,12 @@ namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
-use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
-use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -98,6 +95,7 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
+     * @covers \FireflyIII\Api\V1\Requests\RuleGroupTestRequest
      */
     public function testTestGroupBasic(): void
     {
@@ -140,6 +138,7 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
+     * @covers \FireflyIII\Api\V1\Requests\RuleGroupTestRequest
      */
     public function testTestGroupEmpty(): void
     {
@@ -159,6 +158,7 @@ class RuleGroupControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
+     * @covers \FireflyIII\Api\V1\Requests\RuleGroupTriggerRequest
      */
     public function testTrigger(): void
     {
@@ -228,7 +228,6 @@ class RuleGroupControllerTest extends TestCase
     }
 
 
-
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
      */
@@ -238,8 +237,8 @@ class RuleGroupControllerTest extends TestCase
         $group = $this->user()->ruleGroups()->first();
 
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transformer  = $this->mock(RuleGroupTransformer::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -267,8 +266,8 @@ class RuleGroupControllerTest extends TestCase
         $group = $this->user()->ruleGroups()->first();
 
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transformer  = $this->mock(RuleGroupTransformer::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $transformer    = $this->mock(RuleGroupTransformer::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();

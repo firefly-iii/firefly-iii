@@ -25,7 +25,6 @@ namespace Tests\Api\V1\Controllers;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalLink;

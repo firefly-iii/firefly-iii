@@ -156,14 +156,14 @@ class CategoryRepository implements CategoryRepositoryInterface
             $currencyId = (int)$journal['currency_id'];
             if (!isset($return[$currencyId])) {
                 $return[$currencyId] = [
-                    'spent'                   => '0',
+                    'earned'                   => '0',
                     'currency_id'             => $currencyId,
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_code'           => $journal['currency_code'],
                     'currency_decimal_places' => $journal['currency_decimal_places'],
                 ];
             }
-            $return[$currencyId]['spent'] = bcadd($return[$currencyId]['spent'], $journal['amount']);
+            $return[$currencyId]['earned'] = bcadd($return[$currencyId]['earned'], $journal['amount']);
         }
 
         return $return;

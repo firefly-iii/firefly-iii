@@ -31,7 +31,9 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Budget;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -49,9 +51,8 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
-
     /**
-     * @param User   $user
+     * @param User $user
      * @param string $range
      */
     public function changeDateRange(User $user, $range): void
@@ -100,8 +101,6 @@ abstract class TestCase extends BaseTestCase
         ];
     }
 
-    use CreatesApplication;
-
     /**
      * @return User
      */
@@ -121,6 +120,8 @@ abstract class TestCase extends BaseTestCase
 
         return User::find(2);
     }
+
+    use CreatesApplication;
 
     /**
      * @param int|null $except
@@ -194,8 +195,6 @@ abstract class TestCase extends BaseTestCase
     public function setUp(): void
     {
         parent::setUp();
-        //        $repository = $this->mock(JournalRepositoryInterface::class);
-        //        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
     }
 
     /**
@@ -207,6 +206,22 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return Budget
+     */
+    protected function getBudget(): Budget
+    {
+        return $this->user()->budgets()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return TransactionCurrency
+     */
+    protected function getEuro(): TransactionCurrency
+    {
+        return TransactionCurrency::find(1);
+    }
+
+    /**
      * @return TransactionGroup
      */
     protected function getRandomWithdrawalGroup(): TransactionGroup
@@ -215,7 +230,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string       $class
+     * @param string $class
      *
      * @param Closure|null $closure
      *
@@ -249,7 +264,7 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
-     * @param string   $type
+     * @param string $type
      *
      * @param int|null $except
      *

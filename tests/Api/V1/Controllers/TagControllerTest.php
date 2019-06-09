@@ -23,7 +23,6 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Transformers\TagTransformer;
 use Laravel\Passport\Passport;
@@ -75,6 +74,46 @@ class TagControllerTest extends TestCase
         // call API
         $response = $this->post(route('api.v1.tags.store'), $data);
         $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\TagController
+     */
+    public function testCloud(): void
+    {
+        $tagRepos = $this->mock(TagRepositoryInterface::class);
+        $tags     = $this->user()->tags()->inRandomOrder()->limit(3)->get();
+
+        $tagRepos->shouldReceive('setUser')->times(1);
+        $tagRepos->shouldReceive('get')->atLeast()->once()->andReturn($tags);
+        $tagRepos->shouldReceive('earnedInPeriod')->times(3)->andReturn('0');
+        $tagRepos->shouldReceive('spentInPeriod')->times(3)->andReturn('-10', '-20', '-30');
+
+        // call API
+        $parameters = [
+            'start' => '2019-01-01',
+            'end'   => '2019-01-05',
+        ];
+        $response   = $this->get(route('api.v1.tag-cloud.cloud') . '?' . http_build_query($parameters));
+        $response->assertStatus(200);
+
+        $response->assertJson(
+            [
+                'tags' => [
+                    [
+                        'size'     => 10,
+                        'relative' => 0.3333,
+                    ],
+                    [
+                        'size'     => 20,
+                        'relative' => 0.6667,
+                    ],
+                    [
+                        'size'     => 30,
+                        'relative' => 1,
+                    ],
+                ],
+            ]);
     }
 
     /**

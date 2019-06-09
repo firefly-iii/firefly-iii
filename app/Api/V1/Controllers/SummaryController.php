@@ -27,6 +27,7 @@ namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
@@ -91,18 +92,13 @@ class SummaryController extends Controller
      * @throws FireflyException
      * @throws Exception
      */
-    public function basic(Request $request): JsonResponse
+    public function basic(DateRequest $request): JsonResponse
     {
         // parameters for boxes:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
-        /** @var Carbon $start */
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        /** @var Carbon $end */
-        $end = Carbon::createFromFormat('Y-m-d', $end);
+        $dates = $request->getAll();
+        $start = $dates['start'];
+        $end   = $dates['end'];
+
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
@@ -366,7 +362,7 @@ class SummaryController extends Controller
             }
         }
 
-        return 0.0;
+        return 0.0; // @codeCoverageIgnore
     }
 
     /**
@@ -404,7 +400,7 @@ class SummaryController extends Controller
 
         $netWorthSet = $netWorthHelper->getNetWorthByCurrency($filtered, $date);
         $return      = [];
-        foreach ($netWorthSet as $index => $data) {
+        foreach ($netWorthSet as $data) {
             /** @var TransactionCurrency $currency */
             $currency = $data['currency'];
             $amount   = round($data['balance'], $currency->decimal_places);

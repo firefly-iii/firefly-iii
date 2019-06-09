@@ -32,15 +32,15 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 /**
  * Class AvailableBudget.
  *
- * @property int                 $id
- * @property Carbon              $created_at
- * @property Carbon              $updated_at
- * @property User                $user
+ * @property int $id
+ * @property Carbon $created_at
+ * @property Carbon $updated_at
+ * @property User $user
  * @property TransactionCurrency $transactionCurrency
- * @property int                 $transaction_currency_id
- * @property Carbon              $start_date
- * @property Carbon              $end_date
- * @property string              $amount
+ * @property int $transaction_currency_id
+ * @property Carbon $start_date
+ * @property Carbon $end_date
+ * @property string $amount
  * @property \Illuminate\Support\Carbon|null $deleted_at
  * @property int $user_id
  * @method static bool|null forceDelete()
@@ -72,11 +72,12 @@ class AvailableBudget extends Model
      */
     protected $casts
         = [
-            'created_at' => 'datetime',
-            'updated_at' => 'datetime',
-            'deleted_at' => 'datetime',
-            'start_date' => 'date',
-            'end_date'   => 'date',
+            'created_at'              => 'datetime',
+            'updated_at'              => 'datetime',
+            'deleted_at'              => 'datetime',
+            'start_date'              => 'date',
+            'end_date'                => 'date',
+            'transaction_currency_id' => 'int',
         ];
     /** @var array Fields that can be filled */
     protected $fillable = ['user_id', 'transaction_currency_id', 'amount', 'start_date', 'end_date'];

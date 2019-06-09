@@ -1379,4 +1379,15 @@ return [
     'will_jump_monday'                   => 'Will be created on Monday instead of the weekends.',
     'except_weekends'                    => 'Except weekends',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'                    => 'Balance (:currency)',
+    'box_spent_in_currency'                      => 'Spent (:currency)',
+    'box_earned_in_currency'                     => 'Earned (:currency)',
+    'box_bill_paid_in_currency'                  => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'                => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'              => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'                  => 'Net worth (:currency)',
+    'box_spend_per_day'                          => 'Left to spend per day: :amount',
+
 ];

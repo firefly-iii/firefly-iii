@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Api\V1\Controllers;
 
 use Carbon\Carbon;
+use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\TagRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
@@ -36,6 +37,7 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -53,7 +55,7 @@ class TagController extends Controller
     private $repository;
 
     /**
-     * RuleController constructor.
+     * TagController constructor.
      *
      * @codeCoverageIgnore
      */
@@ -74,54 +76,23 @@ class TagController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function cloud(Request $request): JsonResponse
+    public function cloud(DateRequest $request): JsonResponse
     {
-        // parameters for cloud:
-        $start = (string)$request->get('start');
-        $end   = (string)$request->get('end');
-        if ('' === $start || '' === $end) {
-            throw new FireflyException('Start and end are mandatory parameters.');
-        }
-        /** @var Carbon $start */
-        $start = Carbon::createFromFormat('Y-m-d', $start);
-        /** @var Carbon $end */
-        $end = Carbon::createFromFormat('Y-m-d', $end);
+        // parameters for boxes:
+        $dates = $request->getAll();
+        $start = $dates['start'];
+        $end   = $dates['end'];
 
         // get all tags:
-        $tags   = $this->repository->get();
-        $min    = null;
-        $max    = 0;
-        $return = [
-            'tags' => [],
-        ];
-        /** @var Tag $tag */
-        foreach ($tags as $tag) {
-            $earned = (float)$this->repository->earnedInPeriod($tag, $start, $end);
-            $spent  = (float)$this->repository->spentInPeriod($tag, $start, $end);
-            $size   = ($spent * -1) + $earned;
-            $min    = $min ?? $size;
-            if ($size > 0) {
-                $max              = $size > $max ? $size : $max;
-                $return['tags'][] = [
-                    'tag'  => $tag->tag,
-                    'id'   => $tag->id,
-                    'size' => $size,
-                ];
-            }
-        }
-        foreach ($return['tags'] as $index => $info) {
-            $return['tags'][$index]['relative'] = $return['tags'][$index]['size'] / $max;
-        }
-        $return['min'] = $min;
-        $return['max'] = $max;
+        $tags  = $this->repository->get();
+        $cloud = $this->getTagCloud($tags, $start, $end);
 
-
-        return response()->json($return);
+        return response()->json($cloud);
     }
 
     /**
@@ -304,5 +275,55 @@ class TagController extends Controller
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');
 
+    }
+
+    /**
+     * @param Collection $tags
+     * @param Carbon $start
+     * @param Carbon $end
+     * @return array
+     */
+    private function getTagCloud(Collection $tags, Carbon $start, Carbon $end): array
+    {
+        $min   = null;
+        $max   = 0;
+        $cloud = [
+            'tags' => [],
+        ];
+        /** @var Tag $tag */
+        foreach ($tags as $tag) {
+            $earned = (float)$this->repository->earnedInPeriod($tag, $start, $end);
+            $spent  = (float)$this->repository->spentInPeriod($tag, $start, $end);
+            $size   = ($spent * -1) + $earned;
+            $min    = $min ?? $size;
+            if ($size > 0) {
+                $max             = $size > $max ? $size : $max;
+                $cloud['tags'][] = [
+                    'tag'  => $tag->tag,
+                    'id'   => $tag->id,
+                    'size' => $size,
+                ];
+            }
+        }
+        $cloud = $this->analyseTagCloud($cloud, $min, $max);
+
+        return $cloud;
+    }
+
+    /**
+     * @param array $cloud
+     * @param float $min
+     * @param float $max
+     * @return array
+     */
+    private function analyseTagCloud(array $cloud, float $min, float $max): array
+    {
+        foreach (array_keys($cloud['tags']) as $index) {
+            $cloud['tags'][$index]['relative'] = round($cloud['tags'][$index]['size'] / $max, 4);
+        }
+        $cloud['min'] = $min;
+        $cloud['max'] = $max;
+
+        return $cloud;
     }
 }
