@@ -57,10 +57,34 @@ class Controller extends BaseController
     }
 
     /**
+     * Method to help build URI's.
+     *
+     * @return string
+     *
+     */
+    protected function buildParams(): string
+    {
+        $return = '?';
+        $params = [];
+        foreach ($this->parameters as $key => $value) {
+            if ('page' === $key) {
+                continue;
+            }
+            if ($value instanceof Carbon) {
+                $params[$key] = $value->format('Y-m-d');
+                continue;
+            }
+            $params[$key] = $value;
+        }
+        $return .= http_build_query($params);
+
+        return $return;
+    }
+
+    /**
      * Method to grab all parameters from the URI.
      *
      * @return ParameterBag
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getParameters(): ParameterBag
     {
@@ -98,31 +122,5 @@ class Controller extends BaseController
 
         return $bag;
 
-    }
-
-    /**
-     * Method to help build URI's.
-     *
-     * @return string
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function buildParams(): string
-    {
-        $return = '?';
-        $params = [];
-        foreach ($this->parameters as $key => $value) {
-            if ('page' === $key) {
-                continue;
-            }
-            if ($value instanceof Carbon) {
-                $params[$key] = $value->format('Y-m-d');
-                continue;
-            }
-            $params[$key] = $value;
-        }
-        $return .= http_build_query($params);
-
-        return $return;
     }
 }

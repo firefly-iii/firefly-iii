@@ -75,7 +75,7 @@ class CategoryController extends Controller
             throw new FireflyException('Start and end are mandatory parameters.');
         }
         /** @var Carbon $start */
-        $start      = Carbon::createFromFormat('Y-m-d', $start);
+        $start = Carbon::createFromFormat('Y-m-d', $start);
         /** @var Carbon $end */
         $end        = Carbon::createFromFormat('Y-m-d', $end);
         $tempData   = [];

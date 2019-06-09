@@ -29,7 +29,6 @@ use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Bill;
-use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceTransaction;
 use FireflyIII\Models\Rule;
@@ -267,11 +266,11 @@ class CurrencyController extends Controller
     public function budgetLimits(Request $request, TransactionCurrency $currency): JsonResponse
     {
         /** @var BudgetRepositoryInterface $repository */
-        $repository = app(BudgetRepositoryInterface::class);
-        $manager    = new Manager;
-        $baseUrl    = $request->getSchemeAndHttpHost() . '/api/v1';
-        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $collection = $repository->getAllBudgetLimitsByCurrency($currency, $this->parameters->get('start'), $this->parameters->get('end'));
+        $repository   = app(BudgetRepositoryInterface::class);
+        $manager      = new Manager;
+        $baseUrl      = $request->getSchemeAndHttpHost() . '/api/v1';
+        $pageSize     = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $collection   = $repository->getAllBudgetLimitsByCurrency($currency, $this->parameters->get('start'), $this->parameters->get('end'));
         $count        = $collection->count();
         $budgetLimits = $collection->slice(($this->parameters->get('page') - 1) * $pageSize, $pageSize);
         $paginator    = new LengthAwarePaginator($budgetLimits, $count, $pageSize, $this->parameters->get('page'));

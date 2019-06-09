@@ -36,7 +36,6 @@ use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
 use FireflyIII\Transformers\RuleTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -233,6 +232,7 @@ class RuleGroupController extends Controller
      */
     public function testGroup(Request $request, RuleGroup $group): JsonResponse
     {
+        die('I will never work');
         Log::debug('Now in testGroup()');
         /** @var Collection $rules */
         $rules = $this->ruleGroupRepository->getActiveRules($group);
@@ -274,11 +274,10 @@ class RuleGroupController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
-        /** @var TransactionTransformer $transformer */
-        $transformer = app(TransactionTransformer::class);
-        $transformer->setParameters($this->parameters);
+        //$transformer = app(TransactionTransformer::class);
+        //$transformer->setParameters($this->parameters);
 
-        $resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
+        //$resource = new FractalCollection($matchingTransactions, $transformer, 'transactions');
         $resource->setPaginator(new IlluminatePaginatorAdapter($paginator));
 
         return response()->json($manager->createData($resource)->toArray())->header('Content-Type', 'application/vnd.api+json');

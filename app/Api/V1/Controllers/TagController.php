@@ -90,7 +90,7 @@ class TagController extends Controller
         /** @var Carbon $start */
         $start = Carbon::createFromFormat('Y-m-d', $start);
         /** @var Carbon $end */
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $end = Carbon::createFromFormat('Y-m-d', $end);
 
         // get all tags:
         $tags   = $this->repository->get();

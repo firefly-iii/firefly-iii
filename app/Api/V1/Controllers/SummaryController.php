@@ -102,7 +102,7 @@ class SummaryController extends Controller
         /** @var Carbon $start */
         $start = Carbon::createFromFormat('Y-m-d', $start);
         /** @var Carbon $end */
-        $end   = Carbon::createFromFormat('Y-m-d', $end);
+        $end = Carbon::createFromFormat('Y-m-d', $end);
         // balance information:
         $balanceData  = $this->getBalanceInformation($start, $end);
         $billData     = $this->getBillInformation($start, $end);
@@ -114,6 +114,30 @@ class SummaryController extends Controller
 
         return response()->json($total);
 
+    }
+
+    /**
+     * Check if date is outside session range.
+     *
+     * @param Carbon $date
+     *
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return bool
+     */
+    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
+    {
+        $result = false;
+        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
+            $result = true;
+        }
+        // start and end in the past? use $end
+        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
+            $result = true;
+        }
+
+        return $result;
     }
 
     /**
@@ -403,31 +427,6 @@ class SummaryController extends Controller
         }
 
         return $return;
-    }
-
-    /**
-     * Check if date is outside session range.
-     *
-     * @param Carbon $date
-     *
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return bool
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    protected function notInDateRange(Carbon $date, Carbon $start, Carbon $end): bool // Validate a preference
-    {
-        $result = false;
-        if ($start->greaterThanOrEqualTo($date) && $end->greaterThanOrEqualTo($date)) {
-            $result = true;
-        }
-        // start and end in the past? use $end
-        if ($start->lessThanOrEqualTo($date) && $end->lessThanOrEqualTo($date)) {
-            $result = true;
-        }
-
-        return $result;
     }
 
 }

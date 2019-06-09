@@ -228,7 +228,7 @@ abstract class TestCase extends BaseTestCase
             TransactionCollectorInterface::class,
         ];
         if (in_array($class, $deprecated, true)) {
-            throw new RuntimeException('Should not be mocking the transaction collector.');
+            throw new RuntimeException(strtoupper('Must not be mocking the transaction collector or transformer.'));
         }
         Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);

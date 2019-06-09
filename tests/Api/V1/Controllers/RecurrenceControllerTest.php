@@ -60,6 +60,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreAssetId(): void
     {
@@ -125,6 +126,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreAssetName(): void
     {
@@ -191,6 +193,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreDeposit(): void
     {
@@ -259,6 +262,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreDestinationId(): void
     {
@@ -328,6 +332,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreDestinationName(): void
     {
@@ -397,6 +402,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailBothRepetitions(): void
     {
@@ -469,6 +475,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailForeignCurrency(): void
     {
@@ -534,6 +541,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidDaily(): void
     {
@@ -599,18 +607,13 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidDestinationId(): void
     {
         // mock stuff:
         $repository = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
-
         $assetAccount = $this->getRandomAsset();
 
         // mock calls to validator:
@@ -621,26 +624,6 @@ class RecurrenceControllerTest extends TestCase
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        //$factory->shouldReceive('setUser')->atLeast()->once();
-        //$budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        //$accountRepos->shouldReceive('setUser')->atLeast()->once();
-
-        // used by the validator to find the source_id:
-//        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-//                     ->andReturn(new Collection([$assetAccount]));
-//        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$assetAccount->id]])->once()
-//                     ->andReturn(new Collection([$assetAccount]));
-//
-//
-//        // entries used by the transformer
-//        $repository->shouldReceive('getNoteText')->andReturn('Note text')->atLeast()->once();
-//        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.')->atLeast()->once();
-//        $repository->shouldReceive('getXOccurrences')->andReturn([])->atLeast()->once();
-//
-//        // entries used by the transformer (the fake entry has a category + a budget):
-//        $factory->shouldReceive('findOrCreate')->andReturn(null)->atLeast()->once();
-//        $budgetRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
-
 
         // data to submit
         $firstDate = new Carbon;
@@ -695,32 +678,21 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidMonthly(): void
     {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
-
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -771,32 +743,21 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidNdom(): void
     {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
 
         // data to submit
         $firstDate = new Carbon;
@@ -847,32 +808,21 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidNdomCount(): void
     {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
 
         // data to submit
         $firstDate = new Carbon;
@@ -923,33 +873,22 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidNdomHigh(): void
     {
-
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
-
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
+
 
         // data to submit
         $firstDate = new Carbon;
@@ -1000,33 +939,22 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailInvalidWeekly(): void
     {
-
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
 
         // data to submit
         $firstDate = new Carbon;
@@ -1077,24 +1005,21 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailNoAsset(): void
     {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
+
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, null])->andReturn(false);
+
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -1131,8 +1056,11 @@ class RecurrenceControllerTest extends TestCase
                 'message' => 'The given data was invalid.',
                 'errors'  => [
                     'transactions.0.source_id' => [
+                        null,
                         'This value is invalid for this field.',
-                        'The transactions.0.source_id field is required.',
+                    ],
+                    'transactions.0.source_name' => [
+                        null,
                     ],
                 ],
             ]
@@ -1147,32 +1075,23 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailNotAsset(): void
     {
-
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // expense account:
-        $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
+        $expenseAccount = $this->getRandomExpense();
 
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // used to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$expenseAccount->id]])->once()
-                     ->andReturn(new Collection([$expenseAccount]));
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$expenseAccount->id, null])->andReturn(false);
 
         // data to submit
         $firstDate = new Carbon;
@@ -1209,7 +1128,10 @@ class RecurrenceControllerTest extends TestCase
                 'message' => 'The given data was invalid.',
                 'errors'  => [
                     'transactions.0.source_id' => [
-                        'This value is invalid for this field.',
+                        null
+                    ],
+                    'transactions.0.source_name' => [
+                        null
                     ],
                 ],
             ]
@@ -1224,35 +1146,20 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailNotAssetName(): void
     {
-
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
-        // expense account:
-        $expenseAccount = $this->user()->accounts()->where('account_type_id', 4)->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // used to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[0]])->once()
-                     ->andReturn(new Collection);
-        // used to search by name.
-        $accountRepos->shouldReceive('findByName')->withArgs(['Fake name', [AccountType::ASSET]])->once()
-                     ->andReturn(null);
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([0, 'Fake name'])->andReturn(false);
 
         // data to submit
         $firstDate = new Carbon;
@@ -1289,11 +1196,12 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.source_id'   => [
+                    'transactions.0.source_id' => [
+                        null,
                         'This value is invalid for this field.',
                     ],
                     'transactions.0.source_name' => [
-                        'This value is invalid for this field.',
+                        null
                     ],
                 ],
             ]
@@ -1308,32 +1216,21 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailRepetitions(): void
     {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
-
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()
-                     ->andReturn(new Collection([$assetAccount]));
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([null, null])->andReturn(true);
 
         // data to submit
         $firstDate = new Carbon;
@@ -1376,28 +1273,15 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreFailTransactions(): void
     {
-        /** @var Recurrence $recurrence */
-        $recurrence = $this->user()->recurrences()->first();
-
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
-        $validator    = $this->mock(AccountValidator::class);
-
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
-
+        $this->mock(AccountValidator::class);
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         // data to submit
         $firstDate = new Carbon;
@@ -1442,6 +1326,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreTransfer(): void
     {
@@ -1450,12 +1335,11 @@ class RecurrenceControllerTest extends TestCase
 
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
+
+        $assetAccount      = $this->getRandomAsset();
+        $otherAssetAccount = $this->getRandomAsset($assetAccount->id);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -1464,31 +1348,14 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
-        $assetAccount      = $this->user()->accounts()->where('account_type_id', 3)->first();
-        $otherAssetAccount = $this->user()->accounts()->where('account_type_id', 3)->where('id', '!=', $assetAccount->id)->first();
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['transfer']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([$assetAccount->id, null])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([$otherAssetAccount->id, null])->andReturn(true);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('store')->once()->andReturn($recurrence);
-
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$assetAccount->id]])->once()->andReturn(new Collection([$assetAccount]));
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[$otherAssetAccount->id]])->once()->andReturn(new Collection([$otherAssetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text')->atLeast()->once();
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.')->atLeast()->once();
-        $repository->shouldReceive('getXOccurrences')->andReturn([])->atLeast()->once();
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null)->atLeast()->once();
-        $budgetRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
-
 
         // data to submit
         $firstDate = new Carbon;
@@ -1531,6 +1398,7 @@ class RecurrenceControllerTest extends TestCase
      *
      * @covers \FireflyIII\Api\V1\Controllers\RecurrenceController
      * @covers \FireflyIII\Api\V1\Requests\RecurrenceUpdateRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testUpdate(): void
     {
@@ -1539,10 +1407,6 @@ class RecurrenceControllerTest extends TestCase
 
         // mock stuff:
         $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $factory      = $this->mock(CategoryFactory::class);
-        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $piggyRepos   = $this->mock(PiggyBankRepositoryInterface::class);
         $transformer  = $this->mock(RecurrenceTransformer::class);
         $validator    = $this->mock(AccountValidator::class);
 
@@ -1553,29 +1417,16 @@ class RecurrenceControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
-        $assetAccount = $this->user()->accounts()->where('account_type_id', 3)->first();
+
+        // mock calls to validator:
+        $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['deposit']);
+        $validator->shouldReceive('validateSource')->atLeast()->once()->withArgs([null, 'Some expense account'])->andReturn(true);
+        $validator->shouldReceive('validateDestination')->atLeast()->once()->withArgs([1, null])->andReturn(true);
+
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
-        $factory->shouldReceive('setUser')->atLeast()->once();
-        $budgetRepos->shouldReceive('setUser')->atLeast()->once();
-        $accountRepos->shouldReceive('setUser')->atLeast()->once();
         $repository->shouldReceive('update')->once()->andReturn($recurrence);
-
-
-        // used by the validator to find the source_id:
-        $accountRepos->shouldReceive('getAccountsById')->withArgs([[1]])->once()->andReturn(new Collection([$assetAccount]));
-
-
-        // entries used by the transformer
-        $repository->shouldReceive('getNoteText')->andReturn('Note text')->atLeast()->once();
-        $repository->shouldReceive('repetitionDescription')->andReturn('Some description.')->atLeast()->once();
-        $repository->shouldReceive('getXOccurrences')->andReturn([])->atLeast()->once();
-
-        // entries used by the transformer (the fake entry has a category + a budget):
-        $factory->shouldReceive('findOrCreate')->andReturn(null)->atLeast()->once();
-        $budgetRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
-
 
         // data to submit
         $firstDate = new Carbon;

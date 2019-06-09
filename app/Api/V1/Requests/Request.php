@@ -34,7 +34,6 @@ use FireflyIII\Rules\IsBoolean;
  *
  * Technically speaking this class does not have to be extended like this but who knows what the future brings.
  *
- * @codeCoverageIgnore
  */
 class Request extends FireflyIIIRequest
 {

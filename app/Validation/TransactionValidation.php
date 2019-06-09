@@ -160,6 +160,21 @@ trait TransactionValidation
     }
 
     /**
+     * Adds an error to the validator when there are no transactions in the array of data.
+     *
+     * @param Validator $validator
+     */
+    public function validateOneRecurrenceTransaction(Validator $validator): void
+    {
+        $data         = $validator->getData();
+        $transactions = $data['transactions'] ?? [];
+        // need at least one transaction
+        if (0 === count($transactions)) {
+            $validator->errors()->add('description', (string)trans('validation.at_least_one_transaction'));
+        }
+    }
+
+    /**
      * All types of splits must be equal.
      *
      * @param Validator $validator

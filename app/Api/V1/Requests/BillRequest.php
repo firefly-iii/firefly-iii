@@ -30,6 +30,8 @@ use Illuminate\Validation\Validator;
 /**
  * Class BillRequest
  *
+ * TODO AFTER 4.8.0: split this into two request classes.
+ *
  * @codeCoverageIgnore
  */
 class BillRequest extends Request
@@ -78,6 +80,7 @@ class BillRequest extends Request
      * The rules that the incoming request must be matched against.
      *
      * @return array
+     *
      */
     public function rules(): array
     {

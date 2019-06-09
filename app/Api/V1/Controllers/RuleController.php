@@ -23,12 +23,11 @@ declare(strict_types=1);
 
 namespace FireflyIII\Api\V1\Controllers;
 
-use Carbon\Carbon;
-use Exception;
 use FireflyIII\Api\V1\Requests\RuleRequest;
+use FireflyIII\Api\V1\Requests\RuleTestRequest;
+use FireflyIII\Api\V1\Requests\RuleTriggerRequest;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
@@ -39,7 +38,6 @@ use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection as FractalCollection;
@@ -49,6 +47,7 @@ use Log;
 
 /**
  * Class RuleController
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class RuleController extends Controller
 {
@@ -184,57 +183,32 @@ class RuleController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param RuleTestRequest $request
      * @param Rule $rule
      *
      * @return JsonResponse
      * @throws FireflyException
      */
-    public function testRule(Request $request, Rule $rule): JsonResponse
+    public function testRule(RuleTestRequest $request, Rule $rule): JsonResponse
     {
-        $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
-        $page     = 0 === (int)$request->query('page') ? 1 : (int)$request->query('page');
-        /** @var Carbon $startDate */
-        $startDate = null === $request->query('start_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('start_date'));
-        /** @var Carbon $endDate */
-        $endDate      = null === $request->query('end_date') ? null : Carbon::createFromFormat('Y-m-d', $request->query('end_date'));
-        $searchLimit  = 0 === (int)$request->query('search_limit') ? (int)config('firefly.test-triggers.limit') : (int)$request->query('search_limit');
-        $triggerLimit = 0 === (int)$request->query('triggered_limit') ? (int)config('firefly.test-triggers.range') : (int)$request->query('triggered_limit');
-        $accountList  = '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts'));
-        $accounts     = new Collection;
-
-        foreach ($accountList as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && AccountType::ASSET === $account->accountType->type) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $accounts->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
-
+        $pageSize   = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;
+        $parameters = $request->getTestParameters();
         /** @var Rule $rule */
         Log::debug(sprintf('Now testing rule #%d, "%s"', $rule->id, $rule->title));
         /** @var TransactionMatcher $matcher */
         $matcher = app(TransactionMatcher::class);
         // set all parameters:
         $matcher->setRule($rule);
-        $matcher->setStartDate($startDate);
-        $matcher->setEndDate($endDate);
-        $matcher->setSearchLimit($searchLimit);
-        $matcher->setTriggeredLimit($triggerLimit);
-        $matcher->setAccounts($accounts);
+        $matcher->setStartDate($parameters['start_date']);
+        $matcher->setEndDate($parameters['end_date']);
+        $matcher->setSearchLimit($parameters['search_limit']);
+        $matcher->setTriggeredLimit($parameters['trigger_limit']);
+        $matcher->setAccounts($parameters['accounts']);
 
         $matchingTransactions = $matcher->findTransactionsByRule();
-
-        // make paginator out of results.
-        $count        = count($matchingTransactions);
-        $transactions = array_slice($matchingTransactions, ($page - 1) * $pageSize, $pageSize);
-
-        // make paginator:
-        $paginator = new LengthAwarePaginator($transactions, $count, $pageSize, $this->parameters->get('page'));
+        $count                = count($matchingTransactions);
+        $transactions         = array_slice($matchingTransactions, ($parameters['page'] - 1) * $pageSize, $pageSize);
+        $paginator            = new LengthAwarePaginator($transactions, $count, $pageSize, $this->parameters->get('page'));
         $paginator->setPath(route('api.v1.rules.test', [$rule->id]) . $this->buildParams());
 
         // resulting list is presented as JSON thing.
@@ -255,42 +229,26 @@ class RuleController extends Controller
     /**
      * Execute the given rule group on a set of existing transactions.
      *
-     * @param Request $request
+     * @param RuleTriggerRequest $request
      * @param Rule $rule
      *
      * @return JsonResponse
-     * @throws Exception
      */
-    public function triggerRule(Request $request, Rule $rule): JsonResponse
+    public function triggerRule(RuleTriggerRequest $request, Rule $rule): JsonResponse
     {
         // Get parameters specified by the user
-        /** @var User $user */
-        $user        = auth()->user();
-        $startDate   = new Carbon($request->get('start_date'));
-        $endDate     = new Carbon($request->get('end_date'));
-        $accountList = '' === (string)$request->query('accounts') ? [] : explode(',', $request->query('accounts'));
-        $accounts    = new Collection;
-
-        foreach ($accountList as $accountId) {
-            Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
-            $account = $this->accountRepository->findNull((int)$accountId);
-            if (null !== $account && $this->accountRepository->isAsset($account)) {
-                Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
-                $accounts->push($account);
-            }
-            if (null === $account) {
-                Log::debug(sprintf('No asset account with id "%s"', $accountId));
-            }
-        }
+        $parameters = $request->getTriggerParameters();
 
         // Create a job to do the work asynchronously
         $job = new ExecuteRuleOnExistingTransactions($rule);
 
         // Apply parameters to the job
+        /** @var User $user */
+        $user = auth()->user();
         $job->setUser($user);
-        $job->setAccounts($accounts);
-        $job->setStartDate($startDate);
-        $job->setEndDate($endDate);
+        $job->setAccounts($parameters['accounts']);
+        $job->setStartDate($parameters['start_date']);
+        $job->setEndDate($parameters['end_date']);
 
         // Dispatch a new job to execute it in a queue
         $this->dispatch($job);
@@ -328,10 +286,10 @@ class RuleController extends Controller
      * @param Rule $rule
      * @return JsonResponse
      */
-    public function down(Request $request, Rule $rule): JsonResponse
+    public function moveDown(Request $request, Rule $rule): JsonResponse
     {
         $this->ruleRepository->moveDown($rule);
-        $rule = $this->ruleRepository->find($rule->id);
+        $rule    = $this->ruleRepository->find($rule->id);
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
@@ -351,10 +309,10 @@ class RuleController extends Controller
      * @param Rule $rule
      * @return JsonResponse
      */
-    public function up(Request $request, Rule $rule): JsonResponse
+    public function moveUp(Request $request, Rule $rule): JsonResponse
     {
         $this->ruleRepository->moveUp($rule);
-        $rule = $this->ruleRepository->find($rule->id);
+        $rule    = $this->ruleRepository->find($rule->id);
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
         $manager->setSerializer(new JsonApiSerializer($baseUrl));

@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
+use FireflyIII\Transformers\TransactionGroupTransformer;
 use FireflyIII\Transformers\TransactionTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -42,6 +43,8 @@ use Tests\TestCase;
 /**
  *
  * Class RuleControllerTest
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  */
 class RuleControllerTest extends TestCase
 {
@@ -102,7 +105,7 @@ class RuleControllerTest extends TestCase
         $ruleRepos->shouldReceive('store')->once()->andReturn($rule);
 
         // test API
-        $response = $this->post('/api/v1/rules', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.rules.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
@@ -115,11 +118,10 @@ class RuleControllerTest extends TestCase
     {
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transformer  = $this->mock(RuleTransformer::class);
+        $this->mock(RuleTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
-        $rule = $this->user()->rules()->first();
         $data = [
             'title'           => 'Store new rule',
             'rule_group_id'   => 1,
@@ -139,7 +141,7 @@ class RuleControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/rules', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.rules.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
     }
 
@@ -151,11 +153,10 @@ class RuleControllerTest extends TestCase
     {
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $transformer  = $this->mock(RuleTransformer::class);
+        $this->mock(RuleTransformer::class);
 
         $accountRepos->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
-        $rule = $this->user()->rules()->first();
         $data = [
             'title'           => 'Store new rule',
             'rule_group_id'   => 1,
@@ -175,7 +176,7 @@ class RuleControllerTest extends TestCase
         ];
 
         // test API
-        $response = $this->post('/api/v1/rules', $data, ['Accept' => 'application/json']);
+        $response = $this->post(route('api.v1.rules.store'), $data, ['Accept' => 'application/json']);
         $response->assertStatus(422);
         $response->assertSee('');
 
@@ -186,27 +187,23 @@ class RuleControllerTest extends TestCase
      */
     public function testTestRule(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $rule         = $this->user()->rules()->first();
+
+        // mock used classes.
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $matcher      = $this->mock(TransactionMatcher::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $transformer  = $this->mock(TransactionTransformer::class);
-
-        $transformer->shouldReceive('setParameters')->atLeast()->once();
+        $transformer  = $this->mock(TransactionGroupTransformer::class);
 
         $asset = $this->getRandomAsset();
+        $expense= $this->getRandomExpense();
+
         $repository->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();
 
         $repository->shouldReceive('findNull')->withArgs([1])->andReturn($asset);
-        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($asset);
+        $repository->shouldReceive('findNull')->withArgs([2])->andReturn($expense);
         $repository->shouldReceive('findNull')->withArgs([3])->andReturn(null);
-        $repository->shouldReceive('isAsset')->withArgs([1])->andReturn(true);
-        $repository->shouldReceive('isAsset')->withArgs([2])->andReturn(false);
 
         $matcher->shouldReceive('setRule')->once();
         $matcher->shouldReceive('setEndDate')->once();
@@ -214,7 +211,16 @@ class RuleControllerTest extends TestCase
         $matcher->shouldReceive('setSearchLimit')->once();
         $matcher->shouldReceive('setTriggeredLimit')->once();
         $matcher->shouldReceive('setAccounts')->once();
-        $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn(new Collection);
+        $matcher->shouldReceive('findTransactionsByRule')->once()->andReturn([[1]]);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+
 
 
         $response = $this->get(route('api.v1.rules.test', [$rule->id]) . '?accounts=1,2,3');
@@ -226,7 +232,9 @@ class RuleControllerTest extends TestCase
      */
     public function testTriggerRule(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
+        return;
         $rule         = $this->user()->rules()->first();
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $matcher      = $this->mock(TransactionMatcher::class);
@@ -261,6 +269,9 @@ class RuleControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $transformer  = $this->mock(RuleTransformer::class);

@@ -60,6 +60,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailDescription(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -110,6 +113,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailDestination(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -163,6 +169,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailForeignCurrencyAmount(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -214,6 +223,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailForeignCurrencyInfo(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -265,6 +277,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailSource(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -317,6 +332,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailStoreGroupTitle(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -374,6 +392,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailStoreNoTransactions(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock repository
         $repository   = $this->mock(TransactionGroupRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
@@ -410,6 +431,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailTypes(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -470,6 +494,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailTypesDeposit(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
 
@@ -531,6 +558,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreFailTypesTransfer(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
         $dest   = $this->getRandomAsset($source->id);
@@ -596,6 +626,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testStoreOK(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $source = $this->getRandomAsset();
         $group  = $this->getRandomWithdrawalGroup();
@@ -677,6 +710,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateFailBadJournal(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $group = $this->getRandomWithdrawalGroup();
 
@@ -734,6 +770,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateFailDepositDestination(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $group = $this->getRandomWithdrawalGroup();
 
@@ -794,6 +833,9 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateFailTransferDestination(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+
+        return;
         // mock data:
         $group = $this->getRandomWithdrawalGroup();
 
@@ -855,6 +897,8 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateFailTypes(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        return;
         // mock data:
         $group = $this->getRandomWithdrawalGroup();
 
@@ -913,6 +957,8 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateFailWithdrawalSource(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        return;
         // mock data:
         $group = $this->getRandomWithdrawalGroup();
 
@@ -973,6 +1019,8 @@ class TransactionControllerTest extends TestCase
      */
     public function testUpdateOK(): void
     {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        return;
         // mock data:
         $group = $this->getRandomWithdrawalGroup();
 

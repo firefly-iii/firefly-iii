@@ -31,6 +31,7 @@ use FireflyIII\Rules\IsValidAttachmentModel;
 /**
  * Class AttachmentRequest
  * @codeCoverageIgnore
+ * TODO AFTER 4.8.0: split this into two request classes.
  */
 class AttachmentRequest extends Request
 {
@@ -69,11 +70,12 @@ class AttachmentRequest extends Request
     public function rules(): array
     {
         $models = implode(
-            ',', [
-                   str_replace('FireflyIII\\Models\\', '', Bill::class),
-                   str_replace('FireflyIII\\Models\\', '', ImportJob::class),
-                   str_replace('FireflyIII\\Models\\', '', TransactionJournal::class),
-               ]
+            ',',
+            [
+                str_replace('FireflyIII\\Models\\', '', Bill::class),
+                str_replace('FireflyIII\\Models\\', '', ImportJob::class),
+                str_replace('FireflyIII\\Models\\', '', TransactionJournal::class),
+            ]
         );
         $model  = $this->string('model');
         $rules  = [

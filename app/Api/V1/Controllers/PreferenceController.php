@@ -123,7 +123,6 @@ class PreferenceController extends Controller
      * @param Preference $preference
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      * @codeCoverageIgnore
      */
     public function show(Request $request, Preference $preference): JsonResponse
@@ -150,7 +149,6 @@ class PreferenceController extends Controller
      * @param Preference $preference
      *
      * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function update(PreferenceRequest $request, Preference $preference): JsonResponse
     {

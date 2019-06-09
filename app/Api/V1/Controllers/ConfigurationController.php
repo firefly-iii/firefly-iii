@@ -77,10 +77,26 @@ class ConfigurationController extends Controller
     }
 
     /**
+     * Update the configuration.
+     *
+     * @param ConfigurationRequest $request
+     * @param string $name
+     *
+     * @return JsonResponse
+     */
+    public function update(ConfigurationRequest $request, string $name): JsonResponse
+    {
+        $data = $request->getAll();
+        app('fireflyconfig')->set($name, $data['value']);
+        $configData = $this->getConfigData();
+
+        return response()->json(['data' => $configData])->header('Content-Type', 'application/vnd.api+json');
+    }
+
+    /**
      * Get all config values.
      *
      * @return array
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     private function getConfigData(): array
     {
@@ -100,23 +116,5 @@ class ConfigurationController extends Controller
         ];
 
         return $data;
-    }
-
-    /**
-     * Update the configuration.
-     *
-     * @param ConfigurationRequest $request
-     * @param string $name
-     *
-     * @return JsonResponse
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     */
-    public function update(ConfigurationRequest $request, string $name): JsonResponse
-    {
-        $data = $request->getAll();
-        app('fireflyconfig')->set($name, $data['value']);
-        $configData = $this->getConfigData();
-
-        return response()->json(['data' => $configData])->header('Content-Type', 'application/vnd.api+json');
     }
 }

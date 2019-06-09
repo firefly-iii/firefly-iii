@@ -50,6 +50,8 @@ class AccountControllerTest extends TestCase
      * Opening balance without date.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      * @throws Exception
      */
     public function testStoreInvalidBalance(): void
@@ -95,10 +97,10 @@ class AccountControllerTest extends TestCase
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
             [
-                'id' => 1,
+                'id'         => 1,
                 'attributes' => [
-                    'name' => 'Account'
-                ]
+                    'name' => 'Account',
+                ],
             ]);
         $transformer->shouldReceive('setCurrentScope')->atLeast()->once();
         $transformer->shouldReceive('getDefaultIncludes')->atLeast()->once()->andReturn([]);
@@ -116,6 +118,8 @@ class AccountControllerTest extends TestCase
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      * @throws Exception
      */
     public function testStoreLiability(): void
@@ -162,13 +166,15 @@ class AccountControllerTest extends TestCase
      * CC type present when account is a credit card.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      * @throws Exception
      */
     public function testStoreNoCreditCardData(): void
     {
         // mock repositories
-        $repository  = $this->mock(AccountRepositoryInterface::class);
-        $transformer = $this->mock(AccountTransformer::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(AccountTransformer::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -201,6 +207,8 @@ class AccountControllerTest extends TestCase
      * No currency information (is allowed).
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      * @throws Exception
      */
     public function testStoreNoCurrencyInfo(): void
@@ -238,6 +246,8 @@ class AccountControllerTest extends TestCase
      * Name already in use.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testStoreNotUnique(): void
     {
@@ -277,6 +287,8 @@ class AccountControllerTest extends TestCase
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      * @throws Exception
      */
     public function testStoreValid(): void
@@ -315,6 +327,8 @@ class AccountControllerTest extends TestCase
      * Send correct data. Should call account repository store method.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountStoreRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      * @throws Exception
      */
     public function testStoreWithCurrencyCode(): void
@@ -355,6 +369,8 @@ class AccountControllerTest extends TestCase
      * Update first asset account we find. Name can be the same as it was.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountUpdateRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testUpdate(): void
     {
@@ -396,6 +412,8 @@ class AccountControllerTest extends TestCase
      * Update first asset account we find. Name can be the same as it was.
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountUpdateRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testUpdateCurrencyCode(): void
     {
@@ -437,6 +455,8 @@ class AccountControllerTest extends TestCase
      * Update a liability
      *
      * @covers \FireflyIII\Api\V1\Controllers\AccountController
+     * @covers \FireflyIII\Api\V1\Requests\AccountUpdateRequest
+     * @covers \FireflyIII\Api\V1\Requests\Request
      */
     public function testUpdateLiability(): void
     {

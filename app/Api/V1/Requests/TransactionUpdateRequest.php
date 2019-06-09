@@ -64,8 +64,6 @@ class TransactionUpdateRequest extends Request
     /**
      * Get all data. Is pretty complex because of all the ??-statements.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @return array
      */
     public function getAll(): array
@@ -141,7 +139,6 @@ class TransactionUpdateRequest extends Request
      * The rules that the incoming request must be matched against.
      *
      * @return array
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function rules(): array
     {
@@ -274,8 +271,6 @@ class TransactionUpdateRequest extends Request
     /**
      * Get transaction data.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
      * @return array
      */
     private function getTransactionData(): array
