@@ -27,7 +27,6 @@ namespace Tests\Api\V1\Controllers;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\UserTransformer;
 use FireflyIII\User;
-use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Mockery;

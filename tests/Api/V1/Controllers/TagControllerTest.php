@@ -24,12 +24,8 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Transformers\TagTransformer;
-use FireflyIII\Transformers\TransactionTransformer;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;

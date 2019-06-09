@@ -158,9 +158,9 @@ class RuleGroupControllerTest extends TestCase
      */
     public function testTrigger(): void
     {
-        $group = $this->user()->ruleGroups()->first();
-        $rule  = $this->user()->rules()->first();
-        $asset = $this->getRandomAsset();
+        $group   = $this->user()->ruleGroups()->first();
+        $rule    = $this->user()->rules()->first();
+        $asset   = $this->getRandomAsset();
         $expense = $this->getRandomExpense();
 
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);

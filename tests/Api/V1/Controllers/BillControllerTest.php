@@ -59,8 +59,8 @@ class BillControllerTest extends TestCase
     public function testStoreMinOverMax(): void
     {
         // create stuff
-        $bill        = $this->user()->bills()->first();
-        $repository  = $this->mock(BillRepositoryInterface::class);
+        $bill       = $this->user()->bills()->first();
+        $repository = $this->mock(BillRepositoryInterface::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();

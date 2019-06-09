@@ -28,7 +28,6 @@ use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
 use FireflyIII\Models\Rule;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleTransformer;
@@ -246,11 +245,11 @@ class RuleControllerTest extends TestCase
      */
     public function testTriggerRule(): void
     {
-        $rule         = $this->user()->rules()->first();
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $asset   = $this->getRandomAsset();
-        $expense = $this->getRandomExpense();
+        $rule       = $this->user()->rules()->first();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $ruleRepos  = $this->mock(RuleRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
+        $expense    = $this->getRandomExpense();
 
         $repository->shouldReceive('setUser')->once();
         $ruleRepos->shouldReceive('setUser')->once();

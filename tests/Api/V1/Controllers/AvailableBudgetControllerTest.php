@@ -61,10 +61,10 @@ class AvailableBudgetControllerTest extends TestCase
      */
     public function testStore(): void
     {
-        $repository         = $this->mock(BudgetRepositoryInterface::class);
-        $transformer        = $this->mock(AvailableBudgetTransformer::class);
-        $factory            = $this->mock(TransactionCurrencyFactory::class);
-        $availableBudget    = new AvailableBudget;
+        $repository      = $this->mock(BudgetRepositoryInterface::class);
+        $transformer     = $this->mock(AvailableBudgetTransformer::class);
+        $factory         = $this->mock(TransactionCurrencyFactory::class);
+        $availableBudget = new AvailableBudget;
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -102,10 +102,10 @@ class AvailableBudgetControllerTest extends TestCase
     public function testStoreNoCurrencyAtAll(): void
     {
         // mock stuff:
-        $repository         = $this->mock(BudgetRepositoryInterface::class);
-        $transformer        = $this->mock(AvailableBudgetTransformer::class);
-        $factory            = $this->mock(TransactionCurrencyFactory::class);
-        $availableBudget    = new AvailableBudget;
+        $repository      = $this->mock(BudgetRepositoryInterface::class);
+        $transformer     = $this->mock(AvailableBudgetTransformer::class);
+        $factory         = $this->mock(TransactionCurrencyFactory::class);
+        $availableBudget = new AvailableBudget;
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -146,9 +146,9 @@ class AvailableBudgetControllerTest extends TestCase
         $availableBudget = $this->user()->availableBudgets()->first();
 
         // mock stuff:
-        $repository         = $this->mock(BudgetRepositoryInterface::class);
-        $transformer        = $this->mock(AvailableBudgetTransformer::class);
-        $factory            = $this->mock(TransactionCurrencyFactory::class);
+        $repository  = $this->mock(BudgetRepositoryInterface::class);
+        $transformer = $this->mock(AvailableBudgetTransformer::class);
+        $factory     = $this->mock(TransactionCurrencyFactory::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();

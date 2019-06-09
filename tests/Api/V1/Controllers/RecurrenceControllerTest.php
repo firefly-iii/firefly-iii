@@ -24,16 +24,10 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use Carbon\Carbon;
-use FireflyIII\Factory\CategoryFactory;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Recurrence;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Transformers\RecurrenceTransformer;
 use FireflyIII\Validation\AccountValidator;
-use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -615,7 +609,7 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailInvalidDestinationId(): void
     {
         // mock stuff:
-        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $repository   = $this->mock(RecurringRepositoryInterface::class);
         $validator    = $this->mock(AccountValidator::class);
         $assetAccount = $this->getRandomAsset();
 
@@ -664,10 +658,10 @@ class RecurrenceControllerTest extends TestCase
                 'message' => 'The given data was invalid.',
                 'errors'  => [
                     'transactions.0.destination_id'   => [
-                        null
+                        null,
                     ],
                     'transactions.0.destination_name' => [
-                        null
+                        null,
                     ],
                 ],
             ]
@@ -686,8 +680,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailInvalidMonthly(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -751,8 +745,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailInvalidNdom(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
@@ -816,8 +810,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailInvalidNdomCount(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
@@ -881,8 +875,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailInvalidNdomHigh(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -947,8 +941,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailInvalidWeekly(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
@@ -1013,8 +1007,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailNoAsset(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls to validator:
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['withdrawal']);
@@ -1058,7 +1052,7 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.source_id' => [
+                    'transactions.0.source_id'   => [
                         null,
                         'This value is invalid for this field.',
                     ],
@@ -1086,8 +1080,8 @@ class RecurrenceControllerTest extends TestCase
         $expenseAccount = $this->getRandomExpense();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -1130,11 +1124,11 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.source_id' => [
-                        null
+                    'transactions.0.source_id'   => [
+                        null,
                     ],
                     'transactions.0.source_name' => [
-                        null
+                        null,
                     ],
                 ],
             ]
@@ -1154,8 +1148,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailNotAssetName(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -1199,12 +1193,12 @@ class RecurrenceControllerTest extends TestCase
             [
                 'message' => 'The given data was invalid.',
                 'errors'  => [
-                    'transactions.0.source_id' => [
+                    'transactions.0.source_id'   => [
                         null,
                         'This value is invalid for this field.',
                     ],
                     'transactions.0.source_name' => [
-                        null
+                        null,
                     ],
                 ],
             ]
@@ -1224,8 +1218,8 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailRepetitions(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
+        $validator  = $this->mock(AccountValidator::class);
 
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -1281,7 +1275,7 @@ class RecurrenceControllerTest extends TestCase
     public function testStoreFailTransactions(): void
     {
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
+        $repository = $this->mock(RecurringRepositoryInterface::class);
         $this->mock(AccountValidator::class);
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
@@ -1337,9 +1331,9 @@ class RecurrenceControllerTest extends TestCase
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $transformer = $this->mock(RecurrenceTransformer::class);
+        $validator   = $this->mock(AccountValidator::class);
 
         $assetAccount      = $this->getRandomAsset();
         $otherAssetAccount = $this->getRandomAsset($assetAccount->id);
@@ -1409,9 +1403,9 @@ class RecurrenceControllerTest extends TestCase
         $recurrence = $this->user()->recurrences()->first();
 
         // mock stuff:
-        $repository   = $this->mock(RecurringRepositoryInterface::class);
-        $transformer  = $this->mock(RecurrenceTransformer::class);
-        $validator    = $this->mock(AccountValidator::class);
+        $repository  = $this->mock(RecurringRepositoryInterface::class);
+        $transformer = $this->mock(RecurrenceTransformer::class);
+        $validator   = $this->mock(AccountValidator::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();

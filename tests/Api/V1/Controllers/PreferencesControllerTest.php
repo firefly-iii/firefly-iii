@@ -27,7 +27,6 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Transformers\PreferenceTransformer;
 use Laravel\Passport\Passport;
 use Log;
-use Mockery;
 use Preferences;
 use Tests\TestCase;
 
