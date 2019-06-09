@@ -330,8 +330,8 @@ Route::group(
         Route::get('{ruleGroup}/rules', ['uses' => 'RuleGroupController@rules', 'as' => 'rules']);
         Route::post('{ruleGroup}/trigger', ['uses' => 'RuleGroupController@triggerGroup', 'as' => 'trigger']);
 
-        Route::post('{ruleGroup}/up', ['uses' => 'RuleGroupController@up', 'as' => 'up']);
-        Route::post('{ruleGroup}/down', ['uses' => 'RuleGroupController@down', 'as' => 'down']);
+        Route::post('{ruleGroup}/up', ['uses' => 'RuleGroupController@moveUp', 'as' => 'up']);
+        Route::post('{ruleGroup}/down', ['uses' => 'RuleGroupController@moveDown', 'as' => 'down']);
     }
 );
 
