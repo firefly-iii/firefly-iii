@@ -25,13 +25,13 @@ namespace Tests\Api\V1\Controllers;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Transformers\TransactionLinkTransformer;
-use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
 use Log;
 use Tests\TestCase;
@@ -62,9 +62,6 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testStore(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
@@ -74,13 +71,11 @@ class TransactionLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
         $transformer  = $this->mock(TransactionLinkTransformer::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -89,7 +84,7 @@ class TransactionLinkControllerTest extends TestCase
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
 
-        $journalRepos->shouldReceive('findNull')->andReturn($journal);
+        $journalRepos->shouldReceive('findNull')->andReturn($journal)->atLeast()->once();
         $repository->shouldReceive('storeLink')->once()->andReturn($journalLink);
         $repository->shouldReceive('findLink')->once()->andReturn(false);
 
@@ -116,10 +111,6 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testStoreExistingLink(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
         $transaction->date                  = new Carbon;
@@ -128,19 +119,11 @@ class TransactionLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
 
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
         $repository->shouldReceive('findLink')->once()->andReturn(true);
@@ -171,11 +154,6 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testStoreInvalidInward(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journalLink                        = TransactionJournalLink::first();
-        $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
         $transaction->date                  = new Carbon;
         $transaction->transaction_type_type = 'Withdrawal';
@@ -183,19 +161,10 @@ class TransactionLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->once()->withArgs([1])->andReturn(null);
         $journalRepos->shouldReceive('findNull')->once()->withArgs([2])->andReturn(null);
@@ -224,10 +193,6 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testStoreInvalidOutward(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
         $transaction->date                  = new Carbon;
@@ -236,19 +201,10 @@ class TransactionLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->once()->withArgs([1])->andReturn($journal);
         $journalRepos->shouldReceive('findNull')->once()->withArgs([2])->andReturn(null);
@@ -275,10 +231,6 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testStoreNoJournal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
         $transaction->date                  = new Carbon;
@@ -287,19 +239,10 @@ class TransactionLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->twice()->withArgs([1])->andReturn($journal, null);
         $journalRepos->shouldReceive('findNull')->twice()->withArgs([2])->andReturn($journal, null);
@@ -327,11 +270,6 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testStoreWithNull(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journalLink                        = TransactionJournalLink::first();
-        $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
         $transaction->date                  = new Carbon;
         $transaction->transaction_type_type = 'Withdrawal';
@@ -339,19 +277,10 @@ class TransactionLinkControllerTest extends TestCase
         // mock stuff:
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->andReturn(null);
 
@@ -377,13 +306,9 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // mock repositories
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
         $transformer  = $this->mock(TransactionLinkTransformer::class);
 
         $journalLink                        = TransactionJournalLink::first();
@@ -401,16 +326,8 @@ class TransactionLinkControllerTest extends TestCase
 
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->andReturn($journal);
         $repository->shouldReceive('updateLink')->once()->andReturn($journalLink);
@@ -436,13 +353,9 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testUpdateNoJournal(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // mock repositories
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalLink                        = TransactionJournalLink::first();
         $journal                            = $this->user()->transactionJournals()->find(1);
@@ -452,16 +365,8 @@ class TransactionLinkControllerTest extends TestCase
 
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->twice()->withArgs([1])->andReturn($journal, null);
         $journalRepos->shouldReceive('findNull')->twice()->withArgs([2])->andReturn($journal, null);
@@ -488,32 +393,19 @@ class TransactionLinkControllerTest extends TestCase
      */
     public function testUpdateWithNull(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         // mock repositories
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
 
         $journalLink                        = TransactionJournalLink::first();
-        $journal                            = $this->user()->transactionJournals()->find(1);
         $transaction                        = Transaction::first();
         $transaction->date                  = new Carbon;
         $transaction->transaction_type_type = 'Withdrawal';
 
 
         // mock calls:
-        $repository->shouldReceive('setUser');
-        $journalRepos->shouldReceive('setUser');
-        $collector->shouldReceive('setUser')->withAnyArgs();
-
-        $collector->shouldReceive('setUser')->withAnyArgs();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setJournals')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $repository->shouldReceive('setUser')->atLeast()->once();
+        $journalRepos->shouldReceive('setUser')->atLeast()->once();
 
         $journalRepos->shouldReceive('findNull')->andReturn(null);
 

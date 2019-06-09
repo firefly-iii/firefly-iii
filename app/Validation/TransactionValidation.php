@@ -42,7 +42,8 @@ trait TransactionValidation
     public function validateAccountInformation(Validator $validator): void
     {
         Log::debug('Now in validateAccountInformation()');
-        $data            = $validator->getData();
+        $data = $validator->getData();
+
         $transactionType = $data['type'] ?? 'invalid';
         $transactions    = $data['transactions'] ?? [];
 
@@ -51,6 +52,7 @@ trait TransactionValidation
 
         Log::debug(sprintf('Going to loop %d transaction(s)', count($transactions)));
         foreach ($transactions as $index => $transaction) {
+            $transactionType = $transaction['type'] ?? $transactionType;
             $accountValidator->setTransactionType($transactionType);
 
             // validate source account.
