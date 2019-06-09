@@ -26,11 +26,15 @@ namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\RuleGroup;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\RuleGroupTransformer;
+use FireflyIII\Transformers\RuleTransformer;
 use FireflyIII\Transformers\TransactionGroupTransformer;
 use Illuminate\Support\Collection;
 use Laravel\Passport\Passport;
@@ -218,9 +222,69 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('update')->once()->andReturn($ruleGroup);
 
         // test API
-        $response = $this->put('/api/v1/rule_groups/' . $ruleGroup->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.rule_groups.update', [$ruleGroup->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
+    }
+
+
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
+     */
+    public function testMoveRuleGroupDown(): void
+    {
+        /** @var RuleGroup $group */
+        $group = $this->user()->ruleGroups()->first();
+
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleGroupTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        $accountRepos->shouldReceive('setUser')->once();
+        $ruleGroupRepos->shouldReceive('setUser')->once();
+        $ruleGroupRepos->shouldReceive('find')->once()->andReturn($group);
+        $ruleGroupRepos->shouldReceive('moveDown')->once();
+
+        // test API
+        $response = $this->post(route('api.v1.rule_groups.down', [$group->id]), ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RuleGroupController
+     */
+    public function testMoveRuleGroupUp(): void
+    {
+        /** @var RuleGroup $group */
+        $group = $this->user()->ruleGroups()->first();
+
+        $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleGroupTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        $accountRepos->shouldReceive('setUser')->once();
+        $ruleGroupRepos->shouldReceive('setUser')->once();
+        $ruleGroupRepos->shouldReceive('find')->once()->andReturn($group);
+        $ruleGroupRepos->shouldReceive('moveUp')->once();
+
+        // test API
+        $response = $this->post(route('api.v1.rule_groups.up', [$group->id]), ['Accept' => 'application/json']);
+        $response->assertStatus(200);
     }
 
 }

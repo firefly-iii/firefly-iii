@@ -271,6 +271,64 @@ class RuleControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Api\V1\Controllers\RuleController
+     */
+    public function testMoveRuleDown(): void
+    {
+        /** @var Rule $rule */
+        $rule          = $this->user()->rules()->first();
+
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        $accountRepos->shouldReceive('setUser')->once();
+        $ruleRepos->shouldReceive('setUser')->once();
+        $ruleRepos->shouldReceive('find')->once()->andReturn($rule);
+        $ruleRepos->shouldReceive('moveDown')->once();
+
+        // test API
+        $response = $this->post(route('api.v1.rules.down', [$rule->id]), ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RuleController
+     */
+    public function testMoveRuleUp(): void
+    {
+        /** @var Rule $rule */
+        $rule          = $this->user()->rules()->first();
+
+        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $transformer  = $this->mock(RuleTransformer::class);
+
+        // mock calls to transformer:
+        $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
+        $transformer->shouldReceive('setCurrentScope')->withAnyArgs()->atLeast()->once()->andReturnSelf();
+        $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
+        $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        $accountRepos->shouldReceive('setUser')->once();
+        $ruleRepos->shouldReceive('setUser')->once();
+        $ruleRepos->shouldReceive('find')->once()->andReturn($rule);
+        $ruleRepos->shouldReceive('moveUp')->once();
+
+        // test API
+        $response = $this->post(route('api.v1.rules.up', [$rule->id]), ['Accept' => 'application/json']);
+        $response->assertStatus(200);
+    }
+
+    /**
+     * @covers \FireflyIII\Api\V1\Controllers\RuleController
      * @covers \FireflyIII\Api\V1\Requests\RuleRequest
      */
     public function testUpdate(): void
@@ -317,7 +375,7 @@ class RuleControllerTest extends TestCase
         $ruleRepos->shouldReceive('update')->once()->andReturn($rule);
 
         // test API
-        $response = $this->put('/api/v1/rules/' . $rule->id, $data, ['Accept' => 'application/json']);
+        $response = $this->put(route('api.v1.rules.update', [$rule->id]), $data, ['Accept' => 'application/json']);
         $response->assertStatus(200);
 
     }
