@@ -80,9 +80,8 @@ class ReportEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $name = $entry->name;
             $line = 'User #%d (%s) has account #%d ("%s") which has no transactions.';
-            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $name);
+            $line = sprintf($line, $entry->user_id, $entry->email, $entry->id, $entry->name);
             $this->line($line);
         }
     }
@@ -125,13 +124,12 @@ class ReportEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $objName = $entry->name;
             $line    = sprintf(
                 'User #%d (%s) has budget #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
-                $objName
+                $entry->name
             );
             $this->line($line);
         }
@@ -151,14 +149,12 @@ class ReportEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $objName = $entry->name;
-
             $line = sprintf(
                 'User #%d (%s) has category #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
-                $objName
+                $entry->name
             );
             $this->line($line);
         }
@@ -178,14 +174,13 @@ class ReportEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $objName = $entry->tag;
 
             $line = sprintf(
                 'User #%d (%s) has tag #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,
                 $entry->id,
-                $objName
+                $entry->tag
             );
             $this->line($line);
         }

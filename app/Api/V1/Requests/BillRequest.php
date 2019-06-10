@@ -119,7 +119,7 @@ class BillRequest extends Request
     public function withValidator(Validator $validator): void
     {
         $validator->after(
-            function (Validator $validator) {
+            static function (Validator $validator) {
                 $data = $validator->getData();
                 $min  = (float)($data['amount_min'] ?? 0);
                 $max  = (float)($data['amount_max'] ?? 0);

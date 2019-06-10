@@ -24,8 +24,10 @@ namespace FireflyIII\Console\Commands\Upgrade;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountMeta;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 use Log;
@@ -48,9 +50,23 @@ class AccountCurrencies extends Command
      * @var string
      */
     protected $signature = 'firefly-iii:account-currencies {--F|force : Force the execution of this command.}';
-
     /** @var AccountRepositoryInterface */
-    private $repository;
+    private $accountRepos;
+    /** @var UserRepositoryInterface */
+    private $userRepos;
+    /** @var int */
+    private $count;
+
+    /**
+     * AccountCurrencies constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->userRepos    = app(UserRepositoryInterface::class);
+        $this->count        = 0;
+    }
 
     /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
@@ -59,8 +75,7 @@ class AccountCurrencies extends Command
      */
     public function handle(): int
     {
-        $this->repository = app(AccountRepositoryInterface::class);
-        $start            = microtime(true);
+        $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -69,10 +84,16 @@ class AccountCurrencies extends Command
         Log::debug('Now in updateAccountCurrencies()');
         $this->updateAccountCurrencies();
 
+        if (0 === $this->count) {
+            $this->line('All accounts are OK.');
+        }
+        if (0 !== $this->count) {
+            $this->line(sprintf('Corrected %d account(s).', $this->count));
+        }
+
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed account currencies in %s seconds.', $end));
         $this->markAsExecuted();
-
 
         return 0;
     }
@@ -100,41 +121,53 @@ class AccountCurrencies extends Command
     }
 
     /**
-     * @param Account             $account
+     * @param Account $account
      * @param TransactionCurrency $currency
      */
     private function updateAccount(Account $account, TransactionCurrency $currency): void
     {
-        $this->repository->setUser($account->user);
+        $this->accountRepos->setUser($account->user);
 
-        $accountCurrency = (int)$this->repository->getMetaValue($account, 'currency_id');
-        $openingBalance  = $account->getOpeningBalance();
-        $obCurrency      = (int)$openingBalance->transaction_currency_id;
-
+        $accountCurrency = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
+        $openingBalance  = $this->accountRepos->getOpeningBalance($account);
+        $obCurrency      = 0;
+        if (null !== $openingBalance) {
+            $obCurrency = (int)$openingBalance->transaction_currency_id;
+        }
 
         // both 0? set to default currency:
         if (0 === $accountCurrency && 0 === $obCurrency) {
             AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
             $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
-
+            $this->count++;
             return;
         }
 
         // account is set to 0, opening balance is not?
         if (0 === $accountCurrency && $obCurrency > 0) {
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $obCurrency]);
-            $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
+            $this->line(sprintf('Account #%d ("%s") now has a currency setting (#%d).', $account->id, $account->name, $obCurrency));
+            $this->count++;
 
             return;
         }
 
+
         // do not match and opening balance id is not null.
-        if ($accountCurrency !== $obCurrency && $openingBalance->id > 0) {
+        if ($accountCurrency !== $obCurrency && null !== $openingBalance) {
             // update opening balance:
             $openingBalance->transaction_currency_id = $accountCurrency;
             $openingBalance->save();
+            $openingBalance->transactions->each(
+                static function (Transaction $transaction) use ($accountCurrency) {
+                    $transaction->transaction_currency_id = $accountCurrency;
+                    $transaction->save();
+                });
             $this->line(sprintf('Account #%d ("%s") now has a correct currency for opening balance.', $account->id, $account->name));
+            $this->count++;
+
+            return;
         }
     }
 
@@ -143,24 +176,21 @@ class AccountCurrencies extends Command
      */
     private function updateAccountCurrencies(): void
     {
-
+        $users               = $this->userRepos->all();
         $defaultCurrencyCode = (string)config('firefly.default_currency', 'EUR');
-        $users               = User::get();
         foreach ($users as $user) {
             $this->updateCurrenciesForUser($user, $defaultCurrencyCode);
         }
     }
 
     /**
-     * @param User   $user
+     * @param User $user
      * @param string $systemCurrencyCode
      */
     private function updateCurrenciesForUser(User $user, string $systemCurrencyCode): void
     {
-        $accounts = $user->accounts()
-                         ->leftJoin('account_types', 'account_types.id', '=', 'accounts.account_type_id')
-                         ->whereIn('account_types.type', [AccountType::DEFAULT, AccountType::ASSET])
-                         ->get(['accounts.*']);
+        $this->accountRepos->setUser($user);
+        $accounts = $this->accountRepos->getAccountsByType([AccountType::DEFAULT, AccountType::ASSET]);
 
         // get user's currency preference:
         $defaultCurrencyCode = app('preferences')->getForUser($user, 'currencyPreference', $systemCurrencyCode)->data;

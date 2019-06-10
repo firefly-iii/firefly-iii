@@ -128,7 +128,7 @@ class CurrencyController extends Controller
 
         // filter list on currency preference:
         $collection = $unfiltered->filter(
-            function (Account $account) use ($currency, $accountRepository) {
+            static function (Account $account) use ($currency, $accountRepository) {
                 $currencyId = (int)$accountRepository->getMetaValue($account, 'currency_id');
 
                 return $currencyId === $currency->id;
@@ -229,7 +229,7 @@ class CurrencyController extends Controller
 
         // filter and paginate list:
         $collection = $unfiltered->filter(
-            function (Bill $bill) use ($currency) {
+            static function (Bill $bill) use ($currency) {
                 return $bill->transaction_currency_id === $currency->id;
             }
         );
@@ -505,7 +505,7 @@ class CurrencyController extends Controller
 
         // filter selection
         $collection = $unfiltered->filter(
-            function (Recurrence $recurrence) use ($currency) {
+            static function (Recurrence $recurrence) use ($currency) {
                 /** @var RecurrenceTransaction $transaction */
                 foreach ($recurrence->recurrenceTransactions as $transaction) {
                     if ($transaction->transaction_currency_id === $currency->id || $transaction->foreign_currency_id === $currency->id) {
@@ -560,7 +560,7 @@ class CurrencyController extends Controller
         $unfiltered = $repository->getAll();
 
         $collection = $unfiltered->filter(
-            function (Rule $rule) use ($currency) {
+            static function (Rule $rule) use ($currency) {
                 /** @var RuleTrigger $trigger */
                 foreach ($rule->ruleTriggers as $trigger) {
                     if ('currency_is' === $trigger->trigger_type && $currency->name === $trigger->trigger_value) {

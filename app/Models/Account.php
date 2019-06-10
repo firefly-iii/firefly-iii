@@ -166,24 +166,6 @@ class Account extends Model
     }
 
     /**
-     * Returns the opening balance.
-     *
-     * @return TransactionJournal
-     */
-    public function getOpeningBalance(): TransactionJournal
-    {
-        $journal = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                     ->where('transactions.account_id', $this->id)
-                                     ->transactionTypes([TransactionType::OPENING_BALANCE])
-                                     ->first(['transaction_journals.*']);
-        if (null === $journal) {
-            return new TransactionJournal;
-        }
-
-        return $journal;
-    }
-
-    /**
      * @codeCoverageIgnore
      * Get all of the notes.
      */

@@ -23,7 +23,6 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\Journal;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionGroup;
@@ -41,11 +40,20 @@ use Illuminate\Support\MessageBag;
  */
 interface JournalRepositoryInterface
 {
+
+    /**
+     * Get all transaction journals with a specific type, regardless of user.
+     *
+     * @param array $types
+     * @return Collection
+     */
+    public function getAllJournals(array $types): Collection;
+
     /**
      * @param TransactionJournal $journal
-     * @param TransactionType    $type
-     * @param Account            $source
-     * @param Account            $destination
+     * @param TransactionType $type
+     * @param Account $source
+     * @param Account $destination
      *
      * @return MessageBag
      */
@@ -157,7 +165,7 @@ interface JournalRepositoryInterface
      * otherwise look for meta field and return that one.
      *
      * @param TransactionJournal $journal
-     * @param null|string        $field
+     * @param null|string $field
      *
      * @return string
      */
@@ -208,7 +216,7 @@ interface JournalRepositoryInterface
      * Return Carbon value of a meta field (or NULL).
      *
      * @param TransactionJournal $journal
-     * @param string             $field
+     * @param string $field
      *
      * @return null|Carbon
      */
@@ -218,7 +226,7 @@ interface JournalRepositoryInterface
      * Return string value of a meta date (or NULL).
      *
      * @param TransactionJournal $journal
-     * @param string             $field
+     * @param string $field
      *
      * @return null|string
      */
@@ -228,7 +236,7 @@ interface JournalRepositoryInterface
      * Return value of a meta field (or NULL).
      *
      * @param TransactionJournal $journal
-     * @param string             $field
+     * @param string $field
      *
      * @return null|string
      */
@@ -301,7 +309,7 @@ interface JournalRepositoryInterface
 
     /**
      * @param TransactionJournal $journal
-     * @param int                $order
+     * @param int $order
      *
      * @return bool
      */
@@ -316,7 +324,7 @@ interface JournalRepositoryInterface
      * Update budget for a journal.
      *
      * @param TransactionJournal $journal
-     * @param int                $budgetId
+     * @param int $budgetId
      *
      * @return TransactionJournal
      */
@@ -326,7 +334,7 @@ interface JournalRepositoryInterface
      * Update category for a journal.
      *
      * @param TransactionJournal $journal
-     * @param string             $category
+     * @param string $category
      *
      * @return TransactionJournal
      */
@@ -336,7 +344,7 @@ interface JournalRepositoryInterface
      * Update tag(s) for a journal.
      *
      * @param TransactionJournal $journal
-     * @param array              $tags
+     * @param array $tags
      *
      * @return TransactionJournal
      */

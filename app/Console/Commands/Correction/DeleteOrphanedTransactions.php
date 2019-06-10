@@ -25,8 +25,8 @@ use Exception;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use stdClass;
 use Log;
+use stdClass;
 
 /**
  * Deletes transactions where the journal has been deleted.
@@ -81,17 +81,20 @@ class DeleteOrphanedTransactions extends Command
             if ($journal) {
                 try {
                     $journal->delete();
+                    // @codeCoverageIgnoreStart
                 } catch (Exception $e) {
-                    Log::info(sprintf('Could not delete transaction %s', $e->getMessage()));
+                    Log::info(sprintf('Could not delete journal %s', $e->getMessage()));
                 }
+                // @codeCoverageIgnoreEnd
             }
             Transaction::where('transaction_journal_id', (int)$transaction->transaction_journal_id)->delete();
             $this->line(
-                sprintf('Deleted transaction journal #%d because account #%d was already deleted.', $transaction->transaction_journal_id, $transaction->account_id)
+                sprintf('Deleted transaction journal #%d because account #%d was already deleted.',
+                        $transaction->transaction_journal_id, $transaction->account_id)
             );
             $count++;
         }
-        if(0===$count) {
+        if (0 === $count) {
             $this->info('No orphaned accounts.');
         }
     }

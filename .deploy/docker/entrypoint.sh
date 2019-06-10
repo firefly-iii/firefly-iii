@@ -59,7 +59,7 @@ fi
 #env $(grep -v "^\#" .env | xargs) 
 php artisan cache:clear
 php artisan migrate --seed
-php artisan firefly:decrypt-all
+php artisan firefly-iii:decrypt-all
 
 # upgrade database commands:
 php artisan firefly-iii:transaction-identifiers

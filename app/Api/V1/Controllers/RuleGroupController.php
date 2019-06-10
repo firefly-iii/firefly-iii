@@ -258,7 +258,8 @@ class RuleGroupController extends Controller
             $matcher->setTriggeredLimit($parameters['trigger_limit']);
             $matcher->setAccounts($parameters['accounts']);
 
-            $result               = $matcher->findTransactionsByRule();
+            $result = $matcher->findTransactionsByRule();
+            /** @noinspection AdditionOperationOnArraysInspection */
             $matchingTransactions = $result + $matchingTransactions;
         }
 

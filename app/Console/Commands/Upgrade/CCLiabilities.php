@@ -58,14 +58,19 @@ class CCLiabilities extends Command
     public function handle(): int
     {
         $start = microtime(true);
+
+        // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
+        // @codeCoverageIgnoreEnd
+
         $ccType   = AccountType::where('type', AccountType::CREDITCARD)->first();
         $debtType = AccountType::where('type', AccountType::DEBT)->first();
         if (null === $ccType || null === $debtType) {
+            $this->info('No incorrectly stored credit card liabilities.');
             return 0;
         }
         /** @var Collection $accounts */

@@ -32,16 +32,24 @@
         <listener class="JohnKary\PHPUnit\Listener\SpeedTrapListener" />
     </listeners>
     <testsuites>
-        <testsuite name="Feature">
-            <directory suffix="Test.php">./tests/Feature</directory>
-        </testsuite>
-
-        <testsuite name="Unit">
-            <directory suffix="Test.php">./tests/Unit</directory>
-        </testsuite>
+        <!-- test suites -->
         <testsuite name="Api">
             <directory suffix="Test.php">./tests/Api</directory>
         </testsuite>
+        <!-- unit tests, splitted: -->
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit/Console</directory>
+        </testsuite>
+
+
+        <!--
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature</directory>
+        </testsuite>
+        <testsuite name="Unit">
+            <directory suffix="Test.php">./tests/Unit</directory>
+        </testsuite>
+        -->
     </testsuites>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">

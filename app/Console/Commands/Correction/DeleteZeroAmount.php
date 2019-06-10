@@ -47,7 +47,6 @@ class DeleteZeroAmount extends Command
 
     /**
      * Execute the console command.
-     * @throws Exception
      * @return int
      */
     public function handle(): int
@@ -60,7 +59,13 @@ class DeleteZeroAmount extends Command
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->info(sprintf('Deleted transaction journal #%d because the amount is zero (0.00).', $journal->id));
-            $journal->delete();
+            try {
+                $journal->delete();
+                // @codeCoverageIgnoreStart
+            } catch (Exception $e) {
+                $this->line($e->getMessage());
+            }
+            // @codeCoverageIgnoreEnd
             Transaction::where('transaction_journal_id', $journal->id)->delete();
         }
         if (0 === $journals->count()) {

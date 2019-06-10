@@ -52,82 +52,16 @@ class FixAccountTypes extends Command
     private $factory;
     /** @var array */
     private $fixable;
+    /** @var int */
+    private $count;
 
     /**
-     * @param TransactionJournal $journal
-     * @param string $type
-     * @param Transaction $source
-     * @param Transaction $dest
-     * @throws FireflyException
+     * FixAccountTypes constructor.
      */
-    public function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
+    public function __construct()
     {
-        // variables:
-        $combination = sprintf('%s%s%s', $type, $source->account->accountType->type, $dest->account->accountType->type);
-
-        switch ($combination) {
-            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN):
-            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT):
-            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE):
-                // from an asset to a liability should be a withdrawal:
-                $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
-                $journal->transactionType()->associate($withdrawal);
-                $journal->save();
-                $this->info(sprintf('Converted transaction #%d from a transfer to a withdrawal', $journal->id));
-                // check it again:
-                $this->inspectJournal($journal);
-                break;
-            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET):
-            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET):
-            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET):
-                // from a liability to an asset should be a deposit.
-                $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
-                $journal->transactionType()->associate($deposit);
-                $journal->save();
-                $this->info(sprintf('Converted transaction #%d from a transfer to a deposit', $journal->id));
-                // check it again:
-                $this->inspectJournal($journal);
-
-                break;
-            case sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE):
-                // withdrawals with a revenue account as destination instead of an expense account.
-                $this->factory->setUser($journal->user);
-                $result = $this->factory->findOrCreate($source->account->name, AccountType::EXPENSE);
-                $dest->account()->associate($result);
-                $dest->save();
-                $this->info(
-                    sprintf(
-                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id,
-                        $source->account->id, $source->account->name,
-                        $result->id, $result->name
-                    )
-                );
-                $this->inspectJournal($journal);
-                break;
-            case sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET):
-                // deposits with an expense account as source instead of a revenue account.
-                // find revenue account.
-                $this->factory->setUser($journal->user);
-                $result = $this->factory->findOrCreate($source->account->name, AccountType::REVENUE);
-                $source->account()->associate($result);
-                $source->save();
-                $this->info(
-                    sprintf(
-                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id,
-                        $source->account->id, $source->account->name,
-                        $result->id, $result->name
-                    )
-                );
-                $this->inspectJournal($journal);
-                break;
-                break;
-            default:
-                $this->info(sprintf('The source account of %s #%d cannot be of type "%s".', $type, $journal->id, $source->account->accountType->type));
-                $this->info(sprintf('The destination account of %s #%d cannot be of type "%s".', $type, $journal->id, $dest->account->accountType->type));
-                break;
-
-        }
-
+        parent::__construct();
+        $this->count = 0;
     }
 
     /**
@@ -159,17 +93,101 @@ class FixAccountTypes extends Command
 
 
         $this->expected = config('firefly.source_dests');
-        $journals       = TransactionJournal
-
-            ::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
+        $journals       = TransactionJournal::with(['TransactionType', 'transactions', 'transactions.account', 'transactions.account.accounttype'])->get();
         foreach ($journals as $journal) {
             $this->inspectJournal($journal);
         }
+        if (0 === $this->count) {
+            $this->info('All account types are OK!');
+        }
+        if (0 !== $this->count) {
+            $this->info(sprintf('Acted on %d transaction(s)!', $this->count));
+        }
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified account types in %s seconds', $end));
+        $this->info(sprintf('Verifying account types took %s seconds', $end));
 
         return 0;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @param string $type
+     * @param Transaction $source
+     * @param Transaction $dest
+     * @throws FireflyException
+     */
+    private function fixJournal(TransactionJournal $journal, string $type, Transaction $source, Transaction $dest): void
+    {
+        $this->count++;
+        // variables:
+        $combination = sprintf('%s%s%s', $type, $source->account->accountType->type, $dest->account->accountType->type);
+
+        switch ($combination) {
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::LOAN):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::DEBT):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::ASSET, AccountType::MORTGAGE):
+                // from an asset to a liability should be a withdrawal:
+                $withdrawal = TransactionType::whereType(TransactionType::WITHDRAWAL)->first();
+                $journal->transactionType()->associate($withdrawal);
+                $journal->save();
+                $this->info(sprintf('Converted transaction #%d from a transfer to a withdrawal.', $journal->id));
+                // check it again:
+                $this->inspectJournal($journal);
+                break;
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::LOAN, AccountType::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::DEBT, AccountType::ASSET):
+            case sprintf('%s%s%s', TransactionType::TRANSFER, AccountType::MORTGAGE, AccountType::ASSET):
+                // from a liability to an asset should be a deposit.
+                $deposit = TransactionType::whereType(TransactionType::DEPOSIT)->first();
+                $journal->transactionType()->associate($deposit);
+                $journal->save();
+                $this->info(sprintf('Converted transaction #%d from a transfer to a deposit.', $journal->id));
+                // check it again:
+                $this->inspectJournal($journal);
+
+                break;
+            case sprintf('%s%s%s', TransactionType::WITHDRAWAL, AccountType::ASSET, AccountType::REVENUE):
+                // withdrawals with a revenue account as destination instead of an expense account.
+                $this->factory->setUser($journal->user);
+                $oldDest = $dest->account;
+                $result  = $this->factory->findOrCreate($dest->account->name, AccountType::EXPENSE);
+                $dest->account()->associate($result);
+                $dest->save();
+                $this->info(
+                    sprintf(
+                        'Transaction journal #%d, destination account changed from #%d ("%s") to #%d ("%s").', $journal->id,
+                        $oldDest->id, $oldDest->name,
+                        $result->id, $result->name
+                    )
+                );
+                $this->inspectJournal($journal);
+                break;
+            case sprintf('%s%s%s', TransactionType::DEPOSIT, AccountType::EXPENSE, AccountType::ASSET):
+                // deposits with an expense account as source instead of a revenue account.
+                // find revenue account.
+                $this->factory->setUser($journal->user);
+                $result    = $this->factory->findOrCreate($source->account->name, AccountType::REVENUE);
+                $oldSource = $dest->account;
+                $source->account()->associate($result);
+                $source->save();
+                $this->info(
+                    sprintf(
+                        'Transaction journal #%d, source account changed from #%d ("%s") to #%d ("%s").', $journal->id,
+                        $oldSource->id, $oldSource->name,
+                        $result->id, $result->name
+                    )
+                );
+                $this->inspectJournal($journal);
+                break;
+            default:
+                $this->info(sprintf('The source account of %s #%d cannot be of type "%s".', $type, $journal->id, $source->account->accountType->type));
+                $this->info(sprintf('The destination account of %s #%d cannot be of type "%s".', $type, $journal->id, $dest->account->accountType->type));
+
+                break;
+
+        }
+
     }
 
     /**
@@ -201,7 +219,7 @@ class FixAccountTypes extends Command
     {
         $count = $journal->transactions()->count();
         if (2 !== $count) {
-            $this->info(sprintf('Cannot inspect transaction journal #%d because it has %d transactions instead of 2.', $journal->id, $count));
+            $this->info(sprintf('Cannot inspect transaction journal #%d because it has %d transaction(s) instead of 2.', $journal->id, $count));
 
             return;
         }
@@ -213,9 +231,11 @@ class FixAccountTypes extends Command
         $destAccount       = $destTransaction->account;
         $destAccountType   = $destAccount->accountType->type;
         if (!isset($this->expected[$type])) {
+            // @codeCoverageIgnoreStart
             $this->info(sprintf('No source/destination info for transaction type %s.', $type));
 
             return;
+            // @codeCoverageIgnoreEnd
         }
         if (!isset($this->expected[$type][$sourceAccountType])) {
             $this->fixJournal($journal, $type, $sourceTransaction, $destTransaction);

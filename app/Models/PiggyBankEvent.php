@@ -38,10 +38,6 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property string             $amount
  * @property Carbon             created_at
  * @property Carbon             updated_at
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
- * @property \Illuminate\Support\Carbon $date
- * @property-read \FireflyIII\Models\TransactionJournal|null $transactionJournal
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\PiggyBankEvent query()

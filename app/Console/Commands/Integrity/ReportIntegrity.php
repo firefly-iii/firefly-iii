@@ -30,6 +30,7 @@ use Artisan;
 
 /**
  * Class ReportIntegrity
+ * @codeCoverageIgnore
  */
 class ReportIntegrity extends Command
 {

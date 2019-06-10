@@ -86,9 +86,13 @@ class EnableCurrencies extends Command
 
         $found = array_unique($found);
         $this->info(sprintf('%d different currencies are currently in use.', count($found)));
+
         $disabled = TransactionCurrency::whereIn('id', $found)->where('enabled', false)->count();
         if ($disabled > 0) {
-            $this->info(sprintf('%d were still disabled. This has been corrected.', $disabled));
+            $this->info(sprintf('%d were (was) still disabled. This has been corrected.', $disabled));
+        }
+        if (0 === $disabled) {
+            $this->info('All currencies are correctly enabled or disabled.');
         }
         TransactionCurrency::whereIn('id', $found)->update(['enabled' => true]);
 

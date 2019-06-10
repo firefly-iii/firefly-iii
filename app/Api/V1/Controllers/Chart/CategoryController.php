@@ -27,11 +27,9 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**
@@ -66,7 +64,6 @@ class CategoryController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function overview(DateRequest $request): JsonResponse
     {

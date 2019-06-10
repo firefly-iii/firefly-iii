@@ -55,11 +55,14 @@ class BudgetLimitCurrency extends Command
     public function handle(): int
     {
         $start            = microtime(true);
+        // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
+        // @codeCoverageIgnoreEnd
+
         $count        = 0;
         $budgetLimits = BudgetLimit::get();
         /** @var BudgetLimit $budgetLimit */

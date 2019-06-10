@@ -105,7 +105,7 @@ class TransactionLinkController extends Controller
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
 
         // read type from URI
-        $name = $request->get('name') ?? null;
+        $name = $request->get('name');
 
         // types to get, page size:
         $pageSize = (int)app('preferences')->getForUser(auth()->user(), 'listPageSize', 50)->data;

@@ -27,7 +27,6 @@ namespace FireflyIII\Api\V1\Controllers\Chart;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Controllers\Controller;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
@@ -74,7 +73,6 @@ class AccountController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function expenseOverview(DateRequest $request): JsonResponse
     {
@@ -161,7 +159,6 @@ class AccountController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function overview(DateRequest $request): JsonResponse
     {
@@ -224,7 +221,6 @@ class AccountController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function revenueOverview(DateRequest $request): JsonResponse
     {

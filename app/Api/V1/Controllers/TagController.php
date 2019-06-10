@@ -26,7 +26,6 @@ namespace FireflyIII\Api\V1\Controllers;
 use Carbon\Carbon;
 use FireflyIII\Api\V1\Requests\DateRequest;
 use FireflyIII\Api\V1\Requests\TagRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Tag;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -79,7 +78,6 @@ class TagController extends Controller
      * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      */
     public function cloud(DateRequest $request): JsonResponse
     {

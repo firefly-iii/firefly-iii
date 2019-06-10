@@ -58,12 +58,13 @@ class CreateLinkTypes extends Command
             'Reimbursement' => ['(partially) reimburses', 'is (partially) reimbursed by'],
         ];
         foreach ($set as $name => $values) {
-            $link = LinkType::where('name', $name)->where('outward', $values[0])->where('inward', $values[1])->first();
+            $link = LinkType::where('name', $name)
+                            ->first();
             if (null === $link) {
                 $link          = new LinkType;
                 $link->name    = $name;
-                $link->outward = $values[0];
                 $link->inward  = $values[1];
+                $link->outward = $values[0];
                 ++$count;
                 $this->line(sprintf('Created missing link type "%s"', $name));
             }

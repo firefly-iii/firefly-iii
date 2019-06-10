@@ -72,9 +72,12 @@ class DeleteEmptyJournals extends Command
         foreach ($set as $entry) {
             try {
                 TransactionJournal::find($entry->id)->delete();
+                // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::info(sprintf('Could not delete entry: %s', $e->getMessage()));
             }
+            // @codeCoverageIgnoreEnd
+
             $this->info(sprintf('Deleted empty transaction journal #%d', $entry->id));
             ++$count;
         }
@@ -90,15 +93,6 @@ class DeleteEmptyJournals extends Command
      */
     private function deleteUnevenJournals(): void
     {
-        /**
-         * select count(transactions.transaction_journal_id) as the_count, transactions.transaction_journal_id from transactions
-         *
-         * where transactions.deleted_at is null
-         *
-         * group by transactions.transaction_journal_id
-         * having the_count in ()
-         */
-
         $set   = Transaction
             ::whereNull('deleted_at')
             ->having('the_count', '!=', '2')
@@ -111,9 +105,12 @@ class DeleteEmptyJournals extends Command
                 // uneven number, delete journal and transactions:
                 try {
                     TransactionJournal::find((int)$row->transaction_journal_id)->delete();
+                    // @codeCoverageIgnoreStart
                 } catch(Exception $e) {
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
+                // @codeCoverageIgnoreEnd
+
                 Transaction::where('transaction_journal_id', (int)$row->transaction_journal_id)->delete();
                 $this->info(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $row->transaction_journal_id));
                 $total++;

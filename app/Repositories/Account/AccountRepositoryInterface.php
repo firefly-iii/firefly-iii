@@ -38,6 +38,12 @@ interface AccountRepositoryInterface
 {
 
     /**
+     * @param Account $account
+     * @return TransactionJournal|null
+     */
+    public function getOpeningBalance(Account $account): ?TransactionJournal;
+
+    /**
      * Moved here from account CRUD.
      *
      * @param array $types
@@ -49,7 +55,7 @@ interface AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account      $account
+     * @param Account $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -60,7 +66,7 @@ interface AccountRepositoryInterface
      * Find by account number. Is used.
      *
      * @param string $number
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -68,7 +74,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -76,7 +82,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -149,7 +155,7 @@ interface AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string  $field
+     * @param string $field
      *
      * @return null|string
      */
@@ -250,7 +256,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array  $types
+     * @param array $types
      *
      * @return Collection
      */
@@ -270,7 +276,7 @@ interface AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
+     * @param array $data
      *
      * @return Account
      */

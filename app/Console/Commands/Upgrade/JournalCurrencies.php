@@ -62,6 +62,20 @@ class JournalCurrencies extends Command
     private $currencyRepos;
     /** @var JournalRepositoryInterface */
     private $journalRepos;
+    /** @var int */
+    private $count;
+
+    /**
+     * JournalCurrencies constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->count         = 0;
+        $this->accountRepos  = app(AccountRepositoryInterface::class);
+        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
+        $this->journalRepos  = app(JournalRepositoryInterface::class);
+    }
 
     /**
      * Execute the console command.
@@ -71,20 +85,27 @@ class JournalCurrencies extends Command
     public function handle(): int
     {
         $this->accountCurrencies = [];
-        $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->journalRepos      = app(JournalRepositoryInterface::class);
+
 
         $start = microtime(true);
+        // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
+        // @codeCoverageIgnoreEnd
 
         $this->updateTransferCurrencies();
         $this->updateOtherJournalsCurrencies();
         $this->markAsExecuted();
+
+        if (0 === $this->count) {
+            $this->line('All transactions are correct.');
+        }
+        if (0 !== $this->count) {
+            $this->line(sprintf('Verified %d transaction(s) and journal(s).', $this->count));
+        }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed transaction currencies in %s seconds.', $end));
 
@@ -137,7 +158,8 @@ class JournalCurrencies extends Command
     private function getFirstAssetTransaction(TransactionJournal $journal): ?Transaction
     {
         $result = $journal->transactions->first(
-            function (Transaction $transaction) {
+            static function (Transaction $transaction) {
+                // type can also be liability.
                 return AccountType::ASSET === $transaction->account->accountType->type;
             }
         );
@@ -180,7 +202,7 @@ class JournalCurrencies extends Command
      * This method makes sure that the transaction journal uses the currency given in the transaction.
      *
      * @param TransactionJournal $journal
-     * @param Transaction        $transaction
+     * @param Transaction $transaction
      */
     private function updateJournalCurrency(TransactionJournal $journal, Transaction $transaction): void
     {
@@ -192,6 +214,7 @@ class JournalCurrencies extends Command
         }
 
         if (!((int)$currency->id === (int)$journal->transaction_currency_id)) {
+            $this->count++;
             $this->line(
                 sprintf(
                     'Transfer #%d ("%s") has been updated to use %s instead of %s.',
@@ -223,10 +246,11 @@ class JournalCurrencies extends Command
         }
 
         $journal->transactions->each(
-            function (Transaction $transaction) use ($currency) {
+            static function (Transaction $transaction) use ($currency) {
                 if (null === $transaction->transaction_currency_id) {
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
+                    $this->count++;
                 }
 
                 // when mismatch in transaction:
@@ -235,11 +259,13 @@ class JournalCurrencies extends Command
                     $transaction->foreign_amount          = $transaction->amount;
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
+                    $this->count++;
                 }
             }
         );
         // also update the journal, of course:
         $journal->transaction_currency_id = $currency->id;
+        $this->count++;
         $journal->save();
     }
 
@@ -255,11 +281,15 @@ class JournalCurrencies extends Command
      */
     private function updateOtherJournalsCurrencies(): void
     {
-        $set = TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->whereNotIn('transaction_types.type', [TransactionType::TRANSFER])
-            ->with(['transactions', 'transactions.account', 'transactions.account.accountType'])
-            ->get(['transaction_journals.*']);
+        $set =
+            $this->journalRepos->getAllJournals(
+                [
+                    TransactionType::WITHDRAWAL,
+                    TransactionType::DEPOSIT,
+                    TransactionType::OPENING_BALANCE,
+                    TransactionType::RECONCILIATION,
+                ]
+            );
 
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
@@ -292,46 +322,54 @@ class JournalCurrencies extends Command
         $this->journalRepos->setUser($user);
         $this->currencyRepos->setUser($user);
 
-        $sourceAccountCurrency = $this->getCurrency($sourceAccount);
-        $destAccountCurrency   = $this->getCurrency($destAccount);
-        if (null === $sourceAccountCurrency) {
-            Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $sourceAccount->id, $sourceAccount->name));
+        $sourceCurrency = $this->getCurrency($sourceAccount);
+        $destCurrency   = $this->getCurrency($destAccount);
+        if (null === $sourceCurrency) {
+            $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $sourceAccount->id, $sourceAccount->name);
+            Log::error($message);
+            $this->error($message);
 
             return;
         }
 
         // has no currency ID? Must have, so fill in using account preference:
         if (null === $source->transaction_currency_id) {
-            $source->transaction_currency_id = (int)$sourceAccountCurrency->id;
-            Log::debug(sprintf('Transaction #%d has no currency setting, now set to %s', $source->id, $sourceAccountCurrency->code));
+            $source->transaction_currency_id = (int)$sourceCurrency->id;
+            $message                         = sprintf('Transaction #%d has no currency setting, now set to %s.', $source->id, $sourceCurrency->code);
+            Log::debug($message);
+            $this->line($message);
+            $this->count++;
             $source->save();
         }
 
         // does not match the source account (see above)? Can be fixed
         // when mismatch in transaction and NO foreign amount is set:
-        if (!((int)$source->transaction_currency_id === (int)$sourceAccountCurrency->id) && null === $source->foreign_amount) {
-            Log::debug(
-                sprintf(
-                    'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
-                    $source->id,
-                    $source->transaction_currency_id,
-                    $sourceAccountCurrency->id,
-                    $source->amount
-                )
+        if (!((int)$source->transaction_currency_id === (int)$sourceCurrency->id) && null === $source->foreign_amount) {
+            $message = sprintf(
+                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
+                $source->id,
+                $source->transaction_currency_id,
+                $sourceCurrency->id,
+                $source->amount
             );
-            $source->transaction_currency_id = (int)$sourceAccountCurrency->id;
+            Log::debug($message);
+            $this->line($message);
+            $this->count++;
+            $source->transaction_currency_id = (int)$sourceCurrency->id;
             $source->save();
         }
 
 
-        if (null === $destAccountCurrency) {
-            Log::error(sprintf('Account #%d ("%s") must have currency preference but has none.', $destAccount->id, $destAccount->name));
+        if (null === $destCurrency) {
+            $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $destAccount->id, $destAccount->name);
+            Log::error($message);
+            $this->line($message);
 
             return;
         }
 
         // if the destination account currency is the same, both foreign_amount and foreign_currency_id must be NULL for both transactions:
-        if ((int)$destAccountCurrency->id === (int)$sourceAccountCurrency->id) {
+        if ((int)$destCurrency->id === (int)$sourceCurrency->id) {
             // update both transactions to match:
             $source->foreign_amount           = null;
             $source->foreign_currency_id      = null;
@@ -343,22 +381,24 @@ class JournalCurrencies extends Command
                 sprintf(
                     'Currency for account "%s" is %s, and currency for account "%s" is also
              %s, so %s #%d (#%d and #%d) has been verified to be to %s exclusively.',
-                    $destAccount->name, $destAccountCurrency->code,
-                    $sourceAccount->name, $sourceAccountCurrency->code,
+                    $destAccount->name, $destCurrency->code,
+                    $sourceAccount->name, $sourceCurrency->code,
                     $journal->transactionType->type, $journal->id,
-                    $source->id, $destination->id, $sourceAccountCurrency->code
+                    $source->id, $destination->id, $sourceCurrency->code
                 )
             );
+            $this->count++;
 
             return;
         }
 
         // if destination account currency is different, both transactions must have this currency as foreign currency id.
-        if (!((int)$destAccountCurrency->id === (int)$sourceAccountCurrency->id)) {
-            $source->foreign_currency_id      = $destAccountCurrency->id;
-            $destination->foreign_currency_id = $destAccountCurrency->id;
+        if (!((int)$destCurrency->id === (int)$sourceCurrency->id)) {
+            $source->foreign_currency_id      = $destCurrency->id;
+            $destination->foreign_currency_id = $destCurrency->id;
             $source->save();
             $destination->save();
+            $this->count++;
             Log::debug(sprintf('Verified foreign currency ID of transaction #%d and #%d', $source->id, $destination->id));
         }
 
@@ -366,6 +406,7 @@ class JournalCurrencies extends Command
         if (null === $source->foreign_amount && null !== $destination->foreign_amount) {
             $source->foreign_amount = bcmul((string)$destination->foreign_amount, '-1');
             $source->save();
+            $this->count++;
             Log::debug(sprintf('Restored foreign amount of source transaction (1) #%d to %s', $source->id, $source->foreign_amount));
         }
 
@@ -373,6 +414,7 @@ class JournalCurrencies extends Command
         if (null === $destination->foreign_amount && null !== $destination->foreign_amount) {
             $destination->foreign_amount = bcmul((string)$destination->foreign_amount, '-1');
             $destination->save();
+            $this->count++;
             Log::debug(sprintf('Restored foreign amount of destination transaction (2) #%d to %s', $destination->id, $destination->foreign_amount));
         }
 
@@ -385,6 +427,7 @@ class JournalCurrencies extends Command
                 $destination->foreign_amount = $destination->amount;
                 $source->save();
                 $destination->save();
+                $this->count++;
 
                 return;
             }
@@ -396,6 +439,7 @@ class JournalCurrencies extends Command
                     $foreignAmount
                 )
             );
+            $this->count++;
             $source->foreign_amount      = bcmul($foreignPositive, '-1');
             $destination->foreign_amount = $foreignPositive;
             $source->save();
@@ -415,12 +459,7 @@ class JournalCurrencies extends Command
      */
     private function updateTransferCurrencies(): void
     {
-        $set = TransactionJournal
-            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
-            ->where('transaction_types.type', TransactionType::TRANSFER)
-            ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
-            ->get(['transaction_journals.*']);
-
+        $set = $this->journalRepos->getAllJournals([TransactionType::TRANSFER]);
         /** @var TransactionJournal $journal */
         foreach ($set as $journal) {
             $this->updateTransferCurrency($journal);
@@ -435,6 +474,7 @@ class JournalCurrencies extends Command
         $sourceTransaction = $this->getSourceTransaction($transfer);
         $destTransaction   = $this->getDestinationTransaction($transfer);
 
+        // @codeCoverageIgnoreStart
         if (null === $sourceTransaction) {
             $this->info(sprintf('Source transaction for journal #%d is null.', $transfer->id));
 
@@ -445,6 +485,7 @@ class JournalCurrencies extends Command
 
             return;
         }
+        // @codeCoverageIgnoreEnd
 
         $this->updateTransactionCurrency($transfer, $sourceTransaction, $destTransaction);
         $this->updateJournalCurrency($transfer, $sourceTransaction);

@@ -49,15 +49,15 @@ class DecryptDatabase extends Command
      *
      * @var string
      */
-    protected $signature = 'firefly:decrypt-all';
+    protected $signature = 'firefly-iii:decrypt-all';
 
     /**
      * Execute the console command.
      *
-     * @return mixed
+     * @return int
      * @throws FireflyException
      */
-    public function handle()
+    public function handle(): int
     {
         $this->line('Going to decrypt the database.');
         $tables = [
@@ -151,7 +151,7 @@ class DecryptDatabase extends Command
             $value = Crypt::decrypt($value);
         } catch (DecryptException $e) {
             if ('The MAC is invalid.' === $e->getMessage()) {
-                throw new FireflyException($e->getMessage());
+                throw new FireflyException($e->getMessage()); // @codeCoverageIgnore
             }
             Log::debug(sprintf('Could not decrypt. %s', $e->getMessage()));
         }

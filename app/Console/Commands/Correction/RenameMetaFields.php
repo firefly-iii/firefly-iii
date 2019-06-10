@@ -42,6 +42,9 @@ class RenameMetaFields extends Command
      */
     protected $signature = 'firefly-iii:rename-meta-fields';
 
+    /** @var int */
+    private $count;
+
     /**
      * Execute the console command.
      *
@@ -49,7 +52,8 @@ class RenameMetaFields extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
+        $this->count = 0;
+        $start       = microtime(true);
 
         $changes = [
             'original-source' => 'original_source',
@@ -67,6 +71,12 @@ class RenameMetaFields extends Command
         foreach ($changes as $original => $update) {
             $this->rename($original, $update);
         }
+        if (0 === $this->count) {
+            $this->line('All meta fields are correct.');
+        }
+        if (0 !== $this->count) {
+            $this->line(sprintf('Renamed %d meta field(s).', $this->count));
+        }
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Renamed meta fields in %s seconds', $end));
@@ -80,8 +90,9 @@ class RenameMetaFields extends Command
      */
     private function rename(string $original, string $update): void
     {
-        DB::table('journal_meta')
-          ->where('name', '=', $original)
-          ->update(['name' => $update]);
+        $count       = DB::table('journal_meta')
+                         ->where('name', '=', $original)
+                         ->update(['name' => $update]);
+        $this->count += $count;
     }
 }

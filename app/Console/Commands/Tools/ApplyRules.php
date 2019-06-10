@@ -75,8 +75,6 @@ class ApplyRules extends Command
     private $acceptedAccounts;
     /** @var Carbon */
     private $endDate;
-    /** @var Collection */
-    private $results;
     /** @var array */
     private $ruleGroupSelection;
     /** @var array */
@@ -106,7 +104,6 @@ class ApplyRules extends Command
         $this->accounts            = new Collection;
         $this->ruleSelection       = [];
         $this->ruleGroupSelection  = [];
-        $this->results             = new Collection;
         $this->ruleRepository      = app(RuleRepositoryInterface::class);
         $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
         $this->acceptedAccounts    = [AccountType::DEFAULT, AccountType::DEBT, AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE];
@@ -121,11 +118,14 @@ class ApplyRules extends Command
      */
     public function handle(): int
     {
+        // @codeCoverageIgnoreStart
         if (!$this->verifyAccessToken()) {
             $this->error('Invalid access token.');
 
             return 1;
         }
+        // @codeCoverageIgnoreEnd
+
         // set user:
         $this->ruleRepository->setUser($this->getUser());
         $this->ruleGroupRepository->setUser($this->getUser());
@@ -141,24 +141,8 @@ class ApplyRules extends Command
         $this->grabAllRules();
 
         // loop all groups and rules and indicate if they're included:
-        $count        = 0;
-        $rulesToApply = [];
-        /** @var RuleGroup $group */
-        foreach ($this->groups as $group) {
-            /** @var Rule $rule */
-            foreach ($group->rules as $rule) {
-                // if in rule selection, or group in selection or all rules, it's included.
-                $test = $this->includeRule($rule, $group);
-                if (true === $test) {
-                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
-                    $count++;
-                    $rulesToApply[] = $rule->id;
-                }
-                if (false === $test) {
-                    Log::debug(sprintf('Will not include rule #%d "%s"', $rule->id, $rule->title));
-                }
-            }
-        }
+        $rulesToApply = $this->getRulesToApply();
+        $count        = count($rulesToApply);
         if (0 === $count) {
             $this->error('No rules or rule groups have been included.');
             $this->warn('Make a selection using:');
@@ -167,7 +151,6 @@ class ApplyRules extends Command
             $this->warn('    --all_rules');
         }
 
-        // get transactions from asset accounts.
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
         $collector->setUser($this->getUser());
@@ -176,7 +159,7 @@ class ApplyRules extends Command
         $journals = $collector->getExtractedJournals();
 
         // start running rules.
-        $this->line(sprintf('Will apply %d rules to %d transactions.', $count, count($journals)));
+        $this->line(sprintf('Will apply %d rule(s) to %d transaction(s).', $count, count($journals)));
 
         // start looping.
         /** @var RuleEngine $ruleEngine */
@@ -191,6 +174,7 @@ class ApplyRules extends Command
             Log::debug('Start of new journal.');
             $ruleEngine->processJournalArray($journal);
             Log::debug('Done with all rules for this group + done with journal.');
+            /** @noinspection DisconnectedForeachInstructionInspection */
             $bar->advance();
         }
         $this->line('');
@@ -212,16 +196,10 @@ class ApplyRules extends Command
         }
 
         // verify rule groups.
-        $result = $this->verifyInputRuleGroups();
-        if (false === $result) {
-            return $result;
-        }
+        $this->verifyInputRuleGroups();
 
         // verify rules.
-        $result = $this->verifyInputRules();
-        if (false === $result) {
-            return $result;
-        }
+        $this->verifyInputRules();
 
         $this->verifyInputDates();
 
@@ -243,11 +221,13 @@ class ApplyRules extends Command
         $finalList   = new Collection;
         $accountList = explode(',', $accountString);
 
+        // @codeCoverageIgnoreStart
         if (0 === count($accountList)) {
             $this->error('Please use the --accounts option to indicate the accounts to apply rules to.');
 
             return false;
         }
+        // @codeCoverageIgnoreEnd
 
         /** @var AccountRepositoryInterface $accountRepository */
         $accountRepository = app(AccountRepositoryInterface::class);
@@ -284,11 +264,12 @@ class ApplyRules extends Command
             return true;
         }
         $ruleGroupList = explode(',', $ruleGroupString);
-
+        // @codeCoverageIgnoreStart
         if (0 === count($ruleGroupList)) {
             // can be empty.
             return true;
         }
+        // @codeCoverageIgnoreEnd
         foreach ($ruleGroupList as $ruleGroupId) {
             $ruleGroup = $this->ruleGroupRepository->find((int)$ruleGroupId);
             if ($ruleGroup->active) {
@@ -314,11 +295,14 @@ class ApplyRules extends Command
         }
         $ruleList = explode(',', $ruleString);
 
+        // @codeCoverageIgnoreStart
         if (0 === count($ruleList)) {
             // can be empty.
 
             return true;
         }
+        // @codeCoverageIgnoreEnd
+
         foreach ($ruleList as $ruleId) {
             $rule = $this->ruleRepository->find((int)$ruleId);
             if (null !== $rule && $rule->active) {
@@ -382,5 +366,28 @@ class ApplyRules extends Command
         return in_array($group->id, $this->ruleGroupSelection, true) ||
                in_array($rule->id, $this->ruleSelection, true) ||
                $this->allRules;
+    }
+
+    /**
+     * @return array
+     */
+    private function getRulesToApply(): array
+    {
+        $rulesToApply = [];
+        /** @var RuleGroup $group */
+        foreach ($this->groups as $group) {
+            $rules = $this->ruleGroupRepository->getActiveStoreRules($group);
+            /** @var Rule $rule */
+            foreach ($rules as $rule) {
+                // if in rule selection, or group in selection or all rules, it's included.
+                $test = $this->includeRule($rule, $group);
+                if (true === $test) {
+                    Log::debug(sprintf('Will include rule #%d "%s"', $rule->id, $rule->title));
+                    $rulesToApply[] = $rule->id;
+                }
+            }
+        }
+
+        return $rulesToApply;
     }
 }

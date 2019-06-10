@@ -56,7 +56,7 @@ class AccountStoreRequest extends Request
         $ccPaymentTypes = implode(',', array_keys(config('firefly.ccTypes')));
         $rules          = [
             'name'                 => 'required|min:1|uniqueAccountForUser',
-            'type'                 => sprintf('in:%s', $types),
+            'type'                 => 'required|' . sprintf('in:%s', $types),
             'iban'                 => 'iban|nullable',
             'bic'                  => 'bic|nullable',
             'account_number'       => 'between:1,255|nullable|uniqueAccountNumberForUser',

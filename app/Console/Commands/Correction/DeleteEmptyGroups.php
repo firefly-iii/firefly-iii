@@ -59,7 +59,7 @@ class DeleteEmptyGroups extends Command
             $this->info('No empty transaction groups.');
         }
         if ($count > 0) {
-            $this->info(sprintf('Deleted %d empty transaction groups.', $count));
+            $this->info(sprintf('Deleted %d empty transaction group(s).', $count));
             TransactionGroup::whereNull('deleted_at')->whereNotIn('id', $groups)->delete();
         }
         $end = round(microtime(true) - $start, 2);

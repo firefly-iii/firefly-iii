@@ -54,6 +54,7 @@ class BackToJournals extends Command
      */
     public function handle(): int
     {
+        // @codeCoverageIgnoreStart
         $start = microtime(true);
         if (!$this->isMigrated()) {
             $this->error('Please run firefly-iii:migrate-to-groups first.');
@@ -66,6 +67,7 @@ class BackToJournals extends Command
         if (true === $this->option('force')) {
             $this->warn('Forcing the command.');
         }
+        // @codeCoverageIgnoreEnd
 
         $this->migrateAll();
         $end = round(microtime(true) - $start, 2);
@@ -82,8 +84,9 @@ class BackToJournals extends Command
     {
         $transactions = DB::table('budget_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
 
-        return DB::table('transactions')->whereIn('transactions.id', $transactions)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray(
-        );
+        return DB::table('transactions')
+                 ->whereIn('transactions.id', $transactions)
+                 ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
     }
 
     /**
@@ -93,8 +96,9 @@ class BackToJournals extends Command
     {
         $transactions = DB::table('category_transaction')->distinct()->get(['transaction_id'])->pluck('transaction_id')->toArray();
 
-        return DB::table('transactions')->whereIn('transactions.id', $transactions)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray(
-        );
+        return DB::table('transactions')
+                 ->whereIn('transactions.id', $transactions)
+                 ->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
     }
 
     /**
@@ -149,9 +153,10 @@ class BackToJournals extends Command
      */
     private function migrateBudgets(): void
     {
+
         $journalIds = $this->getIdsForBudgets();
         $journals   = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'budgets', 'transactions.budgets'])->get();
-        $this->line(sprintf('Check %d transaction journals for budget info.',count($journals)));
+        $this->line(sprintf('Check %d transaction journal(s) for budget info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->migrateBudgetsForJournal($journal);
@@ -163,26 +168,34 @@ class BackToJournals extends Command
      */
     private function migrateBudgetsForJournal(TransactionJournal $journal): void
     {
+
         // grab category from first transaction
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
+            // @codeCoverageIgnoreStart
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
+            // @codeCoverageIgnoreEnd
         }
         /** @var Budget $budget */
         $budget = $transaction->budgets->first();
         /** @var Budget $journalBudget */
         $journalBudget = $journal->budgets->first();
+
+        // both have a budget, but they don't match.
         if (null !== $budget && null !== $journalBudget && $budget->id !== $journalBudget->id) {
             // sync to journal:
             $journal->budgets()->sync([(int)$budget->id]);
+
+            return;
         }
 
-        // budget in transaction overrules journal.
-        if (null === $budget && null !== $journalBudget) {
-            $journal->budgets()->sync([]);
+        // transaction has a budget, but the journal doesn't.
+        if (null !== $budget && null === $journalBudget) {
+            // sync to journal:
+            $journal->budgets()->sync([(int)$budget->id]);
         }
     }
 
@@ -193,7 +206,7 @@ class BackToJournals extends Command
     {
         $journalIds = $this->getIdsForCategories();
         $journals   = TransactionJournal::whereIn('id', $journalIds)->with(['transactions', 'categories', 'transactions.categories'])->get();
-        $this->line(sprintf('Check %d transaction journals for category info.', count($journals)));
+        $this->line(sprintf('Check %d transaction journal(s) for category info.', count($journals)));
         /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
             $this->migrateCategoriesForJournal($journal);
@@ -209,22 +222,26 @@ class BackToJournals extends Command
         /** @var Transaction $transaction */
         $transaction = $journal->transactions->first();
         if (null === $transaction) {
+            // @codeCoverageIgnoreStart
             $this->info(sprintf('Transaction journal #%d has no transactions. Will be fixed later.', $journal->id));
 
             return;
+            // @codeCoverageIgnoreEnd
         }
         /** @var Category $category */
         $category = $transaction->categories->first();
         /** @var Category $journalCategory */
         $journalCategory = $journal->categories->first();
+
+        // both have a category, but they don't match.
         if (null !== $category && null !== $journalCategory && $category->id !== $journalCategory->id) {
             // sync to journal:
             $journal->categories()->sync([(int)$category->id]);
         }
 
-        // category in transaction overrules journal.
-        if (null === $category && null !== $journalCategory) {
-            $journal->categories()->sync([]);
+        // transaction has a category, but the journal doesn't.
+        if (null !== $category && null === $journalCategory) {
+            $journal->categories()->sync([(int)$category->id]);
         }
     }
 }

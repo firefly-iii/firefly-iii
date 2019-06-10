@@ -28,7 +28,6 @@ namespace FireflyIII\Api\V1\Controllers;
 use Carbon\Carbon;
 use Exception;
 use FireflyIII\Api\V1\Requests\DateRequest;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Report\NetWorthInterface;
 use FireflyIII\Models\Account;
@@ -41,7 +40,6 @@ use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 
 /**
@@ -86,10 +84,9 @@ class SummaryController extends Controller
     }
 
     /**
-     * @param Request $request
+     * @param DateRequest $request
      *
      * @return JsonResponse
-     * @throws FireflyException
      * @throws Exception
      */
     public function basic(DateRequest $request): JsonResponse

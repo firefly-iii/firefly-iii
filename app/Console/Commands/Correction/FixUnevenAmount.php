@@ -22,6 +22,7 @@
 namespace FireflyIII\Console\Commands\Correction;
 
 use DB;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
@@ -84,7 +85,7 @@ class FixUnevenAmount extends Command
         // one of the transactions is bad.
         $journal = TransactionJournal::find($param);
         if (!$journal) {
-            return;
+            return; // @codeCoverageIgnore
         }
         /** @var Transaction $source */
         $source = $journal->transactions()->where('amount', '<', 0)->first();
@@ -92,11 +93,11 @@ class FixUnevenAmount extends Command
 
         // fix amount of destination:
         /** @var Transaction $destination */
-        $destination         = $journal->transactions()->where('amount', '>', 0)->first();
+        $destination = $journal->transactions()->where('amount', '>', 0)->first();
         $destination->amount = $amount;
         $destination->save();
 
-        $this->line(sprintf('Corrected amount in transaction journal #%d', $param));
-
+        $message = sprintf('Corrected amount in transaction journal #%d', $param);
+        $this->line($message);
     }
 }

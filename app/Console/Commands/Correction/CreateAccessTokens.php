@@ -22,6 +22,7 @@
 namespace FireflyIII\Console\Commands\Correction;
 
 use Exception;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Illuminate\Console\Command;
 
@@ -35,7 +36,7 @@ class CreateAccessTokens extends Command
      *
      * @var string
      */
-    protected $description = 'Creates user access tokens.';
+    protected $description = 'Creates user access tokens which are used for command line access to personal data.';
     /**
      * The name and signature of the console command.
      *
@@ -51,9 +52,13 @@ class CreateAccessTokens extends Command
      */
     public function handle(): int
     {
+        // make repository:
+        /** @var UserRepositoryInterface $repository */
+        $repository = app(UserRepositoryInterface::class);
+
         $start = microtime(true);
         $count = 0;
-        $users = User::get();
+        $users= $repository->all();
         /** @var User $user */
         foreach ($users as $user) {
             $pref = app('preferences')->getForUser($user, 'access_token', null);

@@ -52,7 +52,7 @@ class PreferenceController extends Controller
     {
         parent::__construct();
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 /** @var User $user */
                 $user       = auth()->user();
                 $repository = app(AccountRepositoryInterface::class);

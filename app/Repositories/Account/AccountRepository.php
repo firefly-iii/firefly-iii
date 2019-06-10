@@ -70,7 +70,7 @@ class AccountRepository implements AccountRepositoryInterface
     /**
      * Moved here from account CRUD.
      *
-     * @param Account      $account
+     * @param Account $account
      * @param Account|null $moveTo
      *
      * @return bool
@@ -88,7 +88,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $number
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -115,7 +115,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $iban
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -141,7 +141,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $name
-     * @param array  $types
+     * @param array $types
      *
      * @return Account|null
      */
@@ -229,9 +229,10 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
         }
-        $query->orderBy('accounts.name','ASC');
+        $query->orderBy('accounts.name', 'ASC');
 
         $result = $query->get(['accounts.*']);
+
         return $result;
     }
 
@@ -247,7 +248,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
-        $query->orderBy('accounts.name','ASC');
+        $query->orderBy('accounts.name', 'ASC');
         $result = $query->get(['accounts.*']);
 
 
@@ -271,8 +272,8 @@ class AccountRepository implements AccountRepositoryInterface
             $query->accountTypeIn($types);
         }
         $query->where('active', 1);
-        $query->orderBy('accounts.account_type_id','ASC');
-        $query->orderBy('accounts.name','ASC');
+        $query->orderBy('accounts.account_type_id', 'ASC');
+        $query->orderBy('accounts.name', 'ASC');
         $result = $query->get(['accounts.*']);
 
         return $result;
@@ -322,7 +323,7 @@ class AccountRepository implements AccountRepositoryInterface
      * Return meta value for account. Null if not found.
      *
      * @param Account $account
-     * @param string  $field
+     * @param string $field
      *
      * @return null|string
      */
@@ -546,7 +547,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param string $query
-     * @param array  $types
+     * @param array $types
      *
      * @return Collection
      */
@@ -590,7 +591,7 @@ class AccountRepository implements AccountRepositoryInterface
 
     /**
      * @param Account $account
-     * @param array   $data
+     * @param array $data
      *
      * @return Account
      * @throws \FireflyIII\Exceptions\FireflyException
@@ -604,5 +605,18 @@ class AccountRepository implements AccountRepositoryInterface
         $account = $service->update($account, $data);
 
         return $account;
+    }
+
+    /**
+     * @param Account $account
+     * @return TransactionJournal|null
+     */
+    public function getOpeningBalance(Account $account): ?TransactionJournal
+    {
+        return TransactionJournal
+            ::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
+            ->where('transactions.account_id', $account->id)
+            ->transactionTypes([TransactionType::OPENING_BALANCE])
+            ->first(['transaction_journals.*']);
     }
 }

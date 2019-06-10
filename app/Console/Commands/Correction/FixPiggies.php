@@ -46,6 +46,9 @@ class FixPiggies extends Command
      */
     protected $signature = 'firefly-iii:fix-piggies';
 
+    /** @var int */
+    private $count;
+
     /**
      * Execute the console command.
      *
@@ -53,29 +56,43 @@ class FixPiggies extends Command
      */
     public function handle(): int
     {
-        $start = microtime(true);
-        $set   = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
-        $set->each(
-            function (PiggyBankEvent $event) {
-                if (null === $event->transaction_journal_id) {
-                    return true;
-                }
-                /** @var TransactionJournal $journal */
-                $journal = $event->transactionJournal()->first();
-                if (null === $journal) {
-                    return true;
-                }
+        $this->count = 0;
+        $start       = microtime(true);
+        $set         = PiggyBankEvent::with(['PiggyBank', 'TransactionJournal', 'TransactionJournal.TransactionType'])->get();
 
-                $type = $journal->transactionType->type;
-                if (TransactionType::TRANSFER !== $type) {
-                    $event->transaction_journal_id = null;
-                    $event->save();
-                    $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
-                }
+        /** @var PiggyBankEvent $event */
+        foreach ($set as $event) {
 
-                return true;
+            if (null === $event->transaction_journal_id) {
+                continue;
             }
-        );
+            /** @var TransactionJournal $journal */
+            $journal = $event->transactionJournal;
+            // @codeCoverageIgnoreStart
+            if (null === $journal) {
+                $event->transaction_journal_id = null;
+                $event->save();
+                $this->count++;
+                continue;
+            }
+            // @codeCoverageIgnoreEnd
+
+            $type = $journal->transactionType->type;
+            if (TransactionType::TRANSFER !== $type) {
+                $event->transaction_journal_id = null;
+                $event->save();
+                $this->line(sprintf('Piggy bank #%d was referenced by an invalid event. This has been fixed.', $event->piggy_bank_id));
+                $this->count++;
+                continue;
+            }
+        }
+        if (0 === $this->count) {
+            $this->line('All piggy bank events are correct.');
+        }
+        if (0 !== $this->count) {
+            $this->line(sprintf('Fixed %d piggy bank event(s).', $this->count));
+        }
+
         $end = round(microtime(true) - $start, 2);
         $this->line(sprintf('Verified the content of %d piggy bank events in %s seconds.', $set->count(), $end));
 

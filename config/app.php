@@ -19,7 +19,9 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
+
 declare(strict_types=1);
+use FireflyIII\Providers\ImportServiceProvider;
 
 
 return [
@@ -96,6 +98,7 @@ return [
         FireflyIII\Providers\TagServiceProvider::class,
         FireflyIII\Providers\AdminServiceProvider::class,
         FireflyIII\Providers\RecurringServiceProvider::class,
+        ImportServiceProvider::class,
 
 
     ],

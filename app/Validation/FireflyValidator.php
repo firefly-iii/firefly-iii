@@ -391,10 +391,10 @@ class FireflyValidator extends Validator
     public function validateUniqueAccountForUser($attribute, $value, $parameters): bool
     {
         // because a user does not have to be logged in (tests and what-not).
+
         if (!auth()->check()) {
             return $this->validateAccountAnonymously();
         }
-
         if (isset($this->data['what'])) {
             return $this->validateByAccountTypeString($value, $parameters, $this->data['what']);
         }
@@ -409,7 +409,8 @@ class FireflyValidator extends Validator
             return $this->validateByAccountId($value);
         }
 
-        return false;
+        // without type, just try to validate the name.
+        return $this->validateByAccountName($value);
     }
 
     /**
@@ -588,6 +589,7 @@ class FireflyValidator extends Validator
         $set = auth()->user()->accounts()->where('account_type_id', $type->id)->where('id', '!=', $ignore)->get();
         /** @var Account $entry */
         foreach ($set as $entry) {
+            // TODO no longer need to loop like this.
             if ($entry->name === $value) {
                 return false;
             }
@@ -598,7 +600,7 @@ class FireflyValidator extends Validator
 
     /**
      * @param string $value
-     * @param array  $parameters
+     * @param array $parameters
      * @param string $type
      *
      * @return bool
@@ -626,5 +628,14 @@ class FireflyValidator extends Validator
         }
 
         return true;
+    }
+
+    /**
+     * @param string $value
+     * @return bool
+     */
+    private function validateByAccountName(string $value): bool
+    {
+        return auth()->user()->accounts()->where('name', $value)->count() === 0;
     }
 }

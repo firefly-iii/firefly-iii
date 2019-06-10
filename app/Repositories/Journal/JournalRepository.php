@@ -791,4 +791,19 @@ class JournalRepository implements JournalRepositoryInterface
         return $journal;
 
     }
+
+    /**
+     * Get all transaction journals with a specific type, regardless of user.
+     *
+     * @param array $types
+     * @return Collection
+     */
+    public function getAllJournals(array $types): Collection
+    {
+        return TransactionJournal
+            ::leftJoin('transaction_types', 'transaction_types.id', '=', 'transaction_journals.transaction_type_id')
+            ->whereIn('transaction_types.type', $types)
+            ->with(['user', 'transactionType', 'transactionCurrency', 'transactions', 'transactions.account'])
+            ->get(['transaction_journals.*']);
+    }
 }

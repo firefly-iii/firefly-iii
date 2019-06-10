@@ -66,6 +66,9 @@ class TransferBudgets extends Command
         if (0 === $count) {
             $this->info('No invalid budget/journal entries.');
         }
+        if(0 !== $count) {
+            $this->line(sprintf('Corrected %d invalid budget/journal entries (entry).', $count));
+        }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified budget/journals in %s seconds.', $end));
 

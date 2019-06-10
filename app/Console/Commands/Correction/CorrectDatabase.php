@@ -30,6 +30,7 @@ use Schema;
 
 /**
  * Class CorrectDatabase
+ * @codeCoverageIgnore
  */
 class CorrectDatabase extends Command
 {
@@ -38,7 +39,7 @@ class CorrectDatabase extends Command
      *
      * @var string
      */
-    protected $description = 'Will correct the integrity of your database, of necessary.';
+    protected $description = 'Will correct the integrity of your database, if necessary.';
     /**
      * The name and signature of the console command.
      *

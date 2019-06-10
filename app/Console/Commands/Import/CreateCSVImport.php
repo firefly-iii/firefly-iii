@@ -28,18 +28,17 @@ namespace FireflyIII\Console\Commands\Import;
 use Exception;
 use FireflyIII\Console\Commands\VerifiesAccessToken;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Import\Prerequisites\PrerequisitesInterface;
 use FireflyIII\Import\Routine\RoutineInterface;
 use FireflyIII\Import\Storage\ImportArrayStorage;
+use FireflyIII\Models\ImportJob;
 use FireflyIII\Repositories\ImportJob\ImportJobRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use FireflyIII\User;
 use Illuminate\Console\Command;
 use Log;
 
 /**
  * Class CreateCSVImport.
- *
- * @codeCoverageIgnore
  */
 class CreateCSVImport extends Command
 {
@@ -50,7 +49,6 @@ class CreateCSVImport extends Command
      * @var string
      */
     protected $description = 'Use this command to create a new CSV file import.';
-
     /**
      * The name and signature of the console command.
      *
@@ -62,29 +60,32 @@ class CreateCSVImport extends Command
                             {configuration? : The configuration file to use for the import.}
                             {--user=1 : The user ID that the import should import for.}
                             {--token= : The user\'s access token.}';
+    /** @var UserRepositoryInterface */
+    private $userRepository;
+    /** @var ImportJobRepositoryInterface */
+    private $importRepository;
+    /** @var ImportJob */
+    private $importJob;
+
+    /**
+     * CreateCSVImport constructor.
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->userRepository   = app(UserRepositoryInterface::class);
+        $this->importRepository = app(ImportJobRepositoryInterface::class);
+
+    }
 
     /**
      * Run the command.
-     *
-     * @throws FireflyException
      */
     public function handle(): int
     {
+        // @codeCoverageIgnoreStart
         if (!$this->verifyAccessToken()) {
             $this->errorLine('Invalid access token.');
-
-            return 1;
-        }
-        /** @var UserRepositoryInterface $userRepository */
-        $userRepository    = app(UserRepositoryInterface::class);
-        $file              = (string)$this->argument('file');
-        $configuration     = (string)$this->argument('configuration');
-        $user              = $userRepository->findNull((int)$this->option('user'));
-        $cwd               = getcwd();
-        $configurationData = [];
-
-        if (null === $user) {
-            $this->errorLine('User is NULL.');
 
             return 1;
         }
@@ -94,137 +95,61 @@ class CreateCSVImport extends Command
 
             return 1;
         }
-        if ('' !== $configuration) {
-            $configurationData = json_decode(file_get_contents($configuration), true);
-            if (null === $configurationData) {
-                $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
+        // @codeCoverageIgnoreEnd
+        /** @var User $user */
+        $user          = $this->userRepository->findNull((int)$this->option('user'));
+        $file          = (string)$this->argument('file');
+        $configuration = (string)$this->argument('configuration');
 
-                return 1;
-            }
+        $this->importRepository->setUser($user);
+
+        $configurationData = json_decode(file_get_contents($configuration), true);
+        $this->importJob   = $this->importRepository->create('file');
+
+
+        // inform user (and log it)
+        $this->infoLine(sprintf('Import file        : %s', $file));
+        $this->infoLine(sprintf('Configuration file : %s', $configuration));
+        $this->infoLine(sprintf('User               : #%d (%s)', $user->id, $user->email));
+        $this->infoLine(sprintf('Job                : %s', $this->importJob->key));
+
+        try {
+            $this->storeFile($file);
+        } catch (FireflyException $e) {
+            $this->errorLine($e->getMessage());
+
+            return 1;
         }
 
-
-        $this->infoLine(sprintf('Going to create a job to import file: %s', $file));
-        $this->infoLine(sprintf('Using configuration file: %s', $configuration));
-        $this->infoLine(sprintf('Import into user: #%d (%s)', $user->id, $user->email));
-
-        /** @var ImportJobRepositoryInterface $jobRepository */
-        $jobRepository = app(ImportJobRepositoryInterface::class);
-        $jobRepository->setUser($user);
-        $importJob = $jobRepository->create('file');
-        $this->infoLine(sprintf('Created job "%s"', $importJob->key));
-
-        // make sure that job has no prerequisites.
-        if ((bool)config('import.has_prereq.csv')) {
-            // make prerequisites thing.
-            $class = (string)config('import.prerequisites.csv');
-            if (!class_exists($class)) {
-                throw new FireflyException('No class to handle prerequisites for CSV.'); // @codeCoverageIgnore
-            }
-            /** @var PrerequisitesInterface $object */
-            $object = app($class);
-            $object->setUser($user);
-            if (!$object->isComplete()) {
-                $this->errorLine('CSV Import provider has prerequisites that can only be filled in using the browser.');
-
-                return 1;
-            }
-        }
-
-        // store file as attachment.
-        if ('' !== $file) {
-            $messages = $jobRepository->storeCLIUpload($importJob, 'import_file', $file);
-            if ($messages->count() > 0) {
-                $this->errorLine($messages->first());
-
-                return 1;
-            }
-            $this->infoLine('File content saved.');
-        }
-
-        $this->infoLine('Job configuration saved.');
-        $jobRepository->setConfiguration($importJob, $configurationData);
-        $jobRepository->setStatus($importJob, 'ready_to_run');
-
+        // job is ready to go
+        $this->importRepository->setConfiguration($this->importJob, $configurationData);
+        $this->importRepository->setStatus($this->importJob, 'ready_to_run');
 
         $this->infoLine('The import routine has started. The process is not visible. Please wait.');
         Log::debug('Go for import!');
 
-        // run it!
-        $className = config('import.routine.file');
-        if (null === $className || !class_exists($className)) {
-            // @codeCoverageIgnoreStart
-            $this->errorLine('No routine for file provider.');
-
-            return 1;
-            // @codeCoverageIgnoreEnd
-        }
 
         // keep repeating this call until job lands on "provider_finished"
-        $valid = ['provider_finished'];
-        $count = 0;
-        while (!in_array($importJob->status, $valid, true) && $count < 6) {
-            Log::debug(sprintf('Now in loop #%d.', $count + 1));
-            /** @var RoutineInterface $routine */
-            $routine = app($className);
-            $routine->setImportJob($importJob);
-            try {
-                $routine->run();
-            } catch (FireflyException|Exception $e) {
-                $message = 'The import routine crashed: ' . $e->getMessage();
-                Log::error($message);
-                Log::error($e->getTraceAsString());
+        try {
+            $this->processFile();
+        } catch (FireflyException $e) {
+            $this->errorLine($e->getMessage());
 
-                // set job errored out:
-                $jobRepository->setStatus($importJob, 'error');
-                $this->errorLine($message);
-
-                return 1;
-            }
-            $count++;
+            return 1;
         }
-        if ('provider_finished' === $importJob->status) {
-            $this->infoLine('Import has finished. Please wait for storage of data.');
-            // set job to be storing data:
-            $jobRepository->setStatus($importJob, 'storing_data');
 
-            /** @var ImportArrayStorage $storage */
-            $storage = app(ImportArrayStorage::class);
-            $storage->setImportJob($importJob);
+        // then store data:
+        try {
+            $this->storeData();
+        } catch (FireflyException $e) {
+            $this->errorLine($e->getMessage());
 
-            try {
-                $storage->store();
-            } catch (FireflyException|Exception $e) {
-                $message = 'The import routine crashed: ' . $e->getMessage();
-                Log::error($message);
-                Log::error($e->getTraceAsString());
-
-                // set job errored out:
-                $jobRepository->setStatus($importJob, 'error');
-                $this->errorLine($message);
-
-                return 1;
-            }
-            // set storage to be finished:
-            $jobRepository->setStatus($importJob, 'storage_finished');
+            return 1;
         }
 
         // give feedback:
-        $this->infoLine('Job has finished.');
-        if (null !== $importJob->tag) {
-            $this->infoLine(sprintf('%d transaction(s) have been imported.', $importJob->tag->transactionJournals->count()));
-            $this->infoLine(sprintf('You can find your transactions under tag "%s"', $importJob->tag->tag));
-        }
+        $this->giveFeedback();
 
-        if (null === $importJob->tag) {
-            $this->errorLine('No transactions have been imported :(.');
-        }
-        if (count($importJob->errors) > 0) {
-            $this->infoLine(sprintf('%d error(s) occurred:', count($importJob->errors)));
-            foreach ($importJob->errors as $err) {
-                $this->errorLine('- ' . $err);
-            }
-        }
         // clear cache for user:
         app('preferences')->setForUser($user, 'lastActivity', microtime());
 
@@ -234,6 +159,7 @@ class CreateCSVImport extends Command
     /**
      * @param string $message
      * @param array|null $data
+     * @codeCoverageIgnore
      */
     private function errorLine(string $message, array $data = null): void
     {
@@ -245,6 +171,7 @@ class CreateCSVImport extends Command
     /**
      * @param string $message
      * @param array $data
+     * @codeCoverageIgnore
      */
     private function infoLine(string $message, array $data = null): void
     {
@@ -257,6 +184,7 @@ class CreateCSVImport extends Command
      *
      * @noinspection MultipleReturnStatementsInspection
      * @return bool
+     * @codeCoverageIgnore
      */
     private function validArguments(): bool
     {
@@ -283,6 +211,119 @@ class CreateCSVImport extends Command
             return false;
         }
 
+        $configurationData = json_decode(file_get_contents($configuration), true);
+        if (null === $configurationData) {
+            $this->errorLine(sprintf('Firefly III cannot read the contents of configuration file "%s" (working directory: "%s").', $configuration, $cwd));
+
+            return false;
+        }
+
         return true;
+    }
+
+    /**
+     * Store the supplied file as an attachment to this job.
+     *
+     * @param string $file
+     * @throws FireflyException
+     */
+    private function storeFile(string $file): void
+    {
+        // store file as attachment.
+        if ('' !== $file) {
+            $messages = $this->importRepository->storeCLIUpload($this->importJob, 'import_file', $file);
+            if ($messages->count() > 0) {
+                throw new FireflyException($messages->first());
+            }
+        }
+    }
+
+    /**
+     * Keep repeating import call until job lands on "provider_finished".
+     *
+     * @throws FireflyException
+     */
+    private function processFile(): void
+    {
+        $className = config('import.routine.file');
+        $valid     = ['provider_finished'];
+        $count     = 0;
+
+        while (!in_array($this->importJob->status, $valid, true) && $count < 6) {
+            Log::debug(sprintf('Now in loop #%d.', $count + 1));
+            /** @var RoutineInterface $routine */
+            $routine = app($className);
+            $routine->setImportJob($this->importJob);
+            try {
+                $routine->run();
+            } catch (FireflyException|Exception $e) {
+                $message = 'The import routine crashed: ' . $e->getMessage();
+                Log::error($message);
+                Log::error($e->getTraceAsString());
+
+                // set job errored out:
+                $this->importRepository->setStatus($this->importJob, 'error');
+                throw new FireflyException($message);
+            }
+            $count++;
+        }
+        $this->importRepository->setStatus($this->importJob, 'provider_finished');
+        $this->importJob->status = 'provider_finished';
+    }
+
+    /**
+     *
+     * @throws FireflyException
+     */
+    private function storeData(): void
+    {
+        if ('provider_finished' === $this->importJob->status) {
+            $this->infoLine('Import has finished. Please wait for storage of data.');
+            // set job to be storing data:
+            $this->importRepository->setStatus($this->importJob, 'storing_data');
+
+            /** @var ImportArrayStorage $storage */
+            $storage = app(ImportArrayStorage::class);
+            $storage->setImportJob($this->importJob);
+
+            try {
+                $storage->store();
+            } catch (FireflyException|Exception $e) {
+                $message = 'The import routine crashed: ' . $e->getMessage();
+                Log::error($message);
+                Log::error($e->getTraceAsString());
+
+                // set job errored out:
+                $this->importRepository->setStatus($this->importJob, 'error');
+                throw new FireflyException($message);
+
+            }
+            // set storage to be finished:
+            $this->importRepository->setStatus($this->importJob, 'storage_finished');
+        }
+    }
+
+    /**
+     *
+     */
+    private function giveFeedback(): void
+    {
+        $this->infoLine('Job has finished.');
+
+
+        if (null !== $this->importJob->tag) {
+            $this->infoLine(sprintf('%d transaction(s) have been imported.', $this->importJob->tag->transactionJournals->count()));
+            $this->infoLine(sprintf('You can find your transactions under tag "%s"', $this->importJob->tag->tag));
+        }
+
+        if (null === $this->importJob->tag) {
+            $this->errorLine('No transactions have been imported :(.');
+        }
+        if (count($this->importJob->errors) > 0) {
+            $this->infoLine(sprintf('%d error(s) occurred:', count($this->importJob->errors)));
+            foreach ($this->importJob->errors as $err) {
+                $this->errorLine('- ' . $err);
+            }
+        }
     }
 }

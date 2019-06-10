@@ -333,6 +333,9 @@ abstract class TestCase extends BaseTestCase
                 DB::raw('COUNT(transaction_journal_id) as ct'),
             ]
         )->first();
+        if(null === $result) {
+            throw new FireflyException(sprintf('Cannot find suitable %s to use.', $type));
+        }
 
         return TransactionJournal::find((int)$result->transaction_journal_id);
     }
