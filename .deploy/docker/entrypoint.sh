@@ -64,7 +64,8 @@ php artisan firefly-iii:decrypt-all
 # upgrade database commands:
 php artisan firefly-iii:transaction-identifiers
 php artisan firefly-iii:account-currencies
-php artisan firefly-iii:journal-currencies
+php artisan firefly-iii:transfer-currencies
+php artisan firefly-iii:other-currencies
 php artisan firefly-iii:migrate-notes
 php artisan firefly-iii:migrate-attachments
 php artisan firefly-iii:bills-to-rules

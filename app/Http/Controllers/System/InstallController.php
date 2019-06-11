@@ -67,13 +67,14 @@ class InstallController extends Controller
         $this->upgradeCommands = [
             // there are x initial commands
             'migrate'                                  => ['--seed' => true, '--force' => true],
-            'firefly-iii:decrypt-all'                      => [],
+            'firefly-iii:decrypt-all'                  => [],
             'generate-keys'                            => [], // an exception :(
 
             // there are 10 upgrade commands.
             'firefly-iii:transaction-identifiers'      => [],
             'firefly-iii:account-currencies'           => [],
-            'firefly-iii:journal-currencies'           => [],
+            'firefly-iii:transfer-currencies'          => [],
+            'firefly-iii:other-currencies'             => [],
             'firefly-iii:migrate-notes'                => [],
             'firefly-iii:migrate-attachments'          => [],
             'firefly-iii:bills-to-rules'               => [],
