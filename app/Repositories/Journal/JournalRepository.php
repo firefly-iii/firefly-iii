@@ -43,6 +43,7 @@ use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\MessageBag;
 use Log;
+use stdClass;
 
 /**
  * Class JournalRepository.
@@ -627,10 +628,16 @@ class JournalRepository implements JournalRepositoryInterface
     {
         $query      = TransactionJournal
             ::leftJoin('transactions', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-            ->groupBy('transaction_journals.id')
-            ->having('tid', '>', 2)
-            ->get(['transaction_journals.id as jid', DB::raw('count(transactions.id) as tid')]);
-        $journalIds = array_unique($query->pluck('jid')->toArray());
+            ->groupBy('transaction_journals.id');
+        $result     = $query->get(['transaction_journals.id as id', DB::raw('count(transactions.id) as transaction_count')]);
+        $journalIds = [];
+        /** @var stdClass $row */
+        foreach ($result as $row) {
+            if ((int)$row->transaction_count > 2) {
+                $journalIds[] = (int)$row->id;
+            }
+        }
+        $journalIds = array_unique($journalIds);
 
         return TransactionJournal
             ::with(['transactions'])
