@@ -205,7 +205,7 @@ class OtherCurrenciesCorrections extends Command
                 if (null === $transaction->transaction_currency_id) {
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
-                    $this->count++;
+                    //$this->count++;
                 }
 
                 // when mismatch in transaction:
@@ -214,7 +214,7 @@ class OtherCurrenciesCorrections extends Command
                     $transaction->foreign_amount          = $transaction->amount;
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
-                    $this->count++;
+                    //$this->count++;
                 }
             }
         );
