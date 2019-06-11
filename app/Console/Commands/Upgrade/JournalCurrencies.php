@@ -332,41 +332,9 @@ class JournalCurrencies extends Command
             return;
         }
 
-        // has no currency ID? Must have, so fill in using account preference:
-        if (null === $source->transaction_currency_id) {
-            $source->transaction_currency_id = (int)$sourceCurrency->id;
-            $message                         = sprintf('Transaction #%d has no currency setting, now set to %s.', $source->id, $sourceCurrency->code);
-            Log::debug($message);
-            $this->line($message);
-            $this->count++;
-            $source->save();
-        }
-
-        // does not match the source account (see above)? Can be fixed
-        // when mismatch in transaction and NO foreign amount is set:
-        if (!((int)$source->transaction_currency_id === (int)$sourceCurrency->id) && null === $source->foreign_amount) {
-            $message = sprintf(
-                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
-                $source->id,
-                $source->transaction_currency_id,
-                $sourceCurrency->id,
-                $source->amount
-            );
-            Log::debug($message);
-            $this->line($message);
-            $this->count++;
-            $source->transaction_currency_id = (int)$sourceCurrency->id;
-            $source->save();
-        }
-
-
-        if (null === $destCurrency) {
-            $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $destAccount->id, $destAccount->name);
-            Log::error($message);
-            $this->line($message);
-
-            return;
-        }
+        $this->noSourceAccountCurrency($source, $sourceCurrency);
+        $this->unmatchedSourceTransaction($source, $sourceCurrency);
+        $this->noDestAccountCurrency($destAccount, $destCurrency);
 
         // if the destination account currency is the same, both foreign_amount and foreign_currency_id must be NULL for both transactions:
         if ((int)$destCurrency->id === (int)$sourceCurrency->id) {
@@ -489,5 +457,63 @@ class JournalCurrencies extends Command
 
         $this->updateTransactionCurrency($transfer, $sourceTransaction, $destTransaction);
         $this->updateJournalCurrency($transfer, $sourceTransaction);
+    }
+
+    /**
+     * Has no currency ID? Must have, so fill in using account preference.
+     *
+     * @param Transaction $source
+     * @param TransactionCurrency $sourceCurrency
+     */
+    private function noSourceAccountCurrency(Transaction $source, ?TransactionCurrency $sourceCurrency): void
+    {
+        if (null === $source->transaction_currency_id && null !== $sourceCurrency) {
+            $source->transaction_currency_id = (int)$sourceCurrency->id;
+            $message                         = sprintf('Transaction #%d has no currency setting, now set to %s.', $source->id, $sourceCurrency->code);
+            Log::debug($message);
+            $this->line($message);
+            $this->count++;
+            $source->save();
+        }
+    }
+
+    /**
+     * Does not match the source account (see above)? Can be fixed
+     * when mismatch in transaction and NO foreign amount is set.
+     *
+     * @param Transaction $source
+     * @param TransactionCurrency $sourceCurrency|null
+     */
+    private function unmatchedSourceTransaction(Transaction $source, ?TransactionCurrency $sourceCurrency): void
+    {
+        if (null !== $sourceCurrency && !((int)$source->transaction_currency_id === (int)$sourceCurrency->id) && null === $source->foreign_amount) {
+            $message = sprintf(
+                'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
+                $source->id,
+                $source->transaction_currency_id,
+                $sourceCurrency->id,
+                $source->amount
+            );
+            Log::debug($message);
+            $this->line($message);
+            $this->count++;
+            $source->transaction_currency_id = (int)$sourceCurrency->id;
+            $source->save();
+        }
+    }
+
+    /**
+     * @param Account $destAccount
+     * @param TransactionCurrency|null $destCurrency
+     */
+    private function noDestAccountCurrency(Account $destAccount, ?TransactionCurrency $destCurrency): void
+    {
+        if (null === $destCurrency) {
+            $message = sprintf('Account #%d ("%s") must have currency preference but has none.', $destAccount->id, $destAccount->name);
+            Log::error($message);
+            $this->line($message);
+
+            return;
+        }
     }
 }
