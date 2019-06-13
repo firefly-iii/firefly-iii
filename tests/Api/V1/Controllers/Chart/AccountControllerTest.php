@@ -96,8 +96,8 @@ class AccountControllerTest extends TestCase
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $revenue = $this->getRandomRevenue();
-        $euro    = $this->getEuro();
+        $revenue       = $this->getRandomRevenue();
+        $euro          = $this->getEuro();
         // mock calls:
         $repository->shouldReceive('setUser')->atLeast()->once();
         $currencyRepos->shouldReceive('setUser')->atLeast()->once();

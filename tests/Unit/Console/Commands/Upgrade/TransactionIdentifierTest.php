@@ -140,7 +140,7 @@ class TransactionIdentifierTest extends TestCase
 
         // assume all is well.
         $this->artisan('firefly-iii:transaction-identifiers')
-            ->expectsOutput('Fixed 2 split journal transaction identifier(s).')
+             ->expectsOutput('Fixed 2 split journal transaction identifier(s).')
              ->assertExitCode(0);
 
         // see results:

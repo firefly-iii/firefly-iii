@@ -61,7 +61,6 @@ class DecryptDatabaseTest extends TestCase
             ]);
 
 
-
         FireflyConfig::shouldReceive('get')->withArgs([Mockery::any(), false])->atLeast()->once()->andReturn(null);
         FireflyConfig::shouldReceive('set')->withArgs([Mockery::any(), true])->atLeast()->once();
 
@@ -113,9 +112,9 @@ class DecryptDatabaseTest extends TestCase
     public function testHandleNotEncrypted(): void
     {
         // create encrypted account:
-        $name          = 'Encrypted name';
-        $iban          = 'HR1723600001101234565';
-        $account       = Account::create(
+        $name    = 'Encrypted name';
+        $iban    = 'HR1723600001101234565';
+        $account = Account::create(
             [
                 'user_id'         => 1,
                 'account_type_id' => 1,

@@ -50,7 +50,7 @@ class BudgetLimitCurrencyTest extends TestCase
         BudgetLimit::whereNull('transaction_currency_id')->forceDelete();
 
         $this->artisan('firefly-iii:bl-currency')
-            ->expectsOutput('All budget limits are correct.')
+             ->expectsOutput('All budget limits are correct.')
              ->assertExitCode(0);
     }
 

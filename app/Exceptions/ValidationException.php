@@ -28,6 +28,7 @@ use Exception;
 
 /**
  * Class ValidationExceptions.
+ * @codeCoverageIgnore
  */
 class ValidationException extends Exception
 {

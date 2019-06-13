@@ -55,7 +55,8 @@ class ConvertToTransferTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToTransfer
      */
     public function testActDeposit(): void
-    {$this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         $deposit = $this->getRandomDeposit();

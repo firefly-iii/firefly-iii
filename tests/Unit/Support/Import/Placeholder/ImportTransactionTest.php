@@ -498,8 +498,8 @@ class ImportTransactionTest extends TestCase
      */
     public function testCalculateAmountNeg(): void
     {
-        $importTransaction                                 = new ImportTransaction;
-        $importTransaction->amount                         = '2.99';
+        $importTransaction                                    = new ImportTransaction;
+        $importTransaction->amount                            = '2.99';
         $importTransaction->modifiers['generic-debit-credit'] = 'D';
         try {
             $this->assertEquals('-2.99', $importTransaction->calculateAmount());
@@ -635,8 +635,8 @@ class ImportTransactionTest extends TestCase
      */
     public function testForeignAmountModNeg(): void
     {
-        $importTransaction                                 = new ImportTransaction;
-        $importTransaction->foreignAmount                  = '6.77';
+        $importTransaction                                    = new ImportTransaction;
+        $importTransaction->foreignAmount                     = '6.77';
         $importTransaction->modifiers['generic-debit-credit'] = 'D';
         $this->assertEquals('-6.77', $importTransaction->calculateForeignAmount());
     }
@@ -648,8 +648,8 @@ class ImportTransactionTest extends TestCase
      */
     public function testForeignAmountModPos(): void
     {
-        $importTransaction                                 = new ImportTransaction;
-        $importTransaction->foreignAmount                  = '-5.77';
+        $importTransaction                                    = new ImportTransaction;
+        $importTransaction->foreignAmount                     = '-5.77';
         $importTransaction->modifiers['generic-debit-credit'] = 'C';
         $this->assertEquals('5.77', $importTransaction->calculateForeignAmount());
     }

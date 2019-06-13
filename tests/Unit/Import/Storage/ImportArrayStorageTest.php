@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Unit\Import\Storage;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollector;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
@@ -620,7 +621,7 @@ class ImportArrayStorageTest extends TestCase
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function singleTransfer(): array
     {
@@ -669,7 +670,7 @@ class ImportArrayStorageTest extends TestCase
 
     /**
      * @return array
-     * @throws \Exception
+     * @throws Exception
      */
     private function singleWithdrawal(): array
     {

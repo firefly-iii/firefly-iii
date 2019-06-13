@@ -56,7 +56,7 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateArray(): void
     {
-        $transformer = $this->mock(PreferenceTransformer::class);
+        $transformer  = $this->mock(PreferenceTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
@@ -80,7 +80,7 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateBoolean(): void
     {
-        $transformer = $this->mock(PreferenceTransformer::class);
+        $transformer  = $this->mock(PreferenceTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
@@ -105,7 +105,7 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateDefault(): void
     {
-        $transformer = $this->mock(PreferenceTransformer::class);
+        $transformer  = $this->mock(PreferenceTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
@@ -129,7 +129,7 @@ class PreferencesControllerTest extends TestCase
      */
     public function testUpdateInteger(): void
     {
-        $transformer = $this->mock(PreferenceTransformer::class);
+        $transformer  = $this->mock(PreferenceTransformer::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:

@@ -62,9 +62,9 @@ class CurrencyControllerTest extends TestCase
     public function testStore(): void
     {
 
-        $currency    = TransactionCurrency::first();
-        $repository  = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer = $this->mock(CurrencyTransformer::class);
+        $currency       = TransactionCurrency::first();
+        $repository     = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer    = $this->mock(CurrencyTransformer::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
 
         // mock transformer
@@ -102,9 +102,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testStoreWithDefault(): void
     {
-        $currency    = TransactionCurrency::first();
-        $repository  = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer = $this->mock(CurrencyTransformer::class);
+        $currency       = TransactionCurrency::first();
+        $repository     = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer    = $this->mock(CurrencyTransformer::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
 
         // mock transformer
@@ -188,9 +188,9 @@ class CurrencyControllerTest extends TestCase
      */
     public function testUpdateWithDefault(): void
     {
-        $currency         = TransactionCurrency::first();
-        $repository       = $this->mock(CurrencyRepositoryInterface::class);
-        $transformer      = $this->mock(CurrencyTransformer::class);
+        $currency    = TransactionCurrency::first();
+        $repository  = $this->mock(CurrencyRepositoryInterface::class);
+        $transformer = $this->mock(CurrencyTransformer::class);
         $this->mock(UserRepositoryInterface::class);
         $preference       = new Preference;
         $preference->data = 'EUR';

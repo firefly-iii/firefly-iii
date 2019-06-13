@@ -57,6 +57,8 @@ class MigrateToGroupsTest extends TestCase
     public function testHandle(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $service      = $this->mock(JournalDestroyService::class);
+        $groupFactory = $this->mock(TransactionGroupFactory::class);
 
         // mock calls:
         $journalRepos->shouldReceive('getSplitJournals')
@@ -85,9 +87,12 @@ class MigrateToGroupsTest extends TestCase
     public function testHandleNoGroup(): void
     {
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $asset        = $this->getRandomAsset();
-        $expense      = $this->getRandomExpense();
-        $journal      = TransactionJournal::create(
+        $service      = $this->mock(JournalDestroyService::class);
+        $groupFactory = $this->mock(TransactionGroupFactory::class);
+
+        $asset   = $this->getRandomAsset();
+        $expense = $this->getRandomExpense();
+        $journal = TransactionJournal::create(
             [
                 'user_id'                 => 1,
                 'transaction_currency_id' => 1,
@@ -97,7 +102,7 @@ class MigrateToGroupsTest extends TestCase
                 'date'                    => '2019-01-01',
             ]
         );
-        $one          = Transaction::create(
+        $one     = Transaction::create(
             [
                 'transaction_journal_id' => $journal->id,
                 'account_id'             => $asset->id,
@@ -105,7 +110,7 @@ class MigrateToGroupsTest extends TestCase
                 'identifier'             => 1,
             ]
         );
-        $two          = Transaction::create(
+        $two     = Transaction::create(
             [
                 'transaction_journal_id' => $journal->id,
                 'account_id'             => $expense->id,
@@ -113,7 +118,7 @@ class MigrateToGroupsTest extends TestCase
                 'identifier'             => 1,
             ]
         );
-        $array        = $journal->toArray();
+        $array   = $journal->toArray();
 
         // mock calls:
         $journalRepos->shouldReceive('getSplitJournals')

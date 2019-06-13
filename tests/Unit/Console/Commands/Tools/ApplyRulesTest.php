@@ -27,6 +27,7 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 use Illuminate\Support\Collection;
 use Log;
@@ -59,6 +60,7 @@ class ApplyRulesTest extends TestCase
         $collector      = $this->mock(GroupCollectorInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleEngine     = $this->mock(RuleEngine::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         // data
         $asset   = $this->getRandomAsset();
@@ -69,6 +71,7 @@ class ApplyRulesTest extends TestCase
         $rules   = new Collection([$rule]);
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
@@ -109,7 +112,7 @@ class ApplyRulesTest extends TestCase
      *
      * @covers \FireflyIII\Console\Commands\Tools\ApplyRules
      */
-    public function testHandEmptye(): void
+    public function testHandEmpty(): void
     {
         $ruleRepos      = $this->mock(RuleRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
@@ -117,6 +120,7 @@ class ApplyRulesTest extends TestCase
         $collector      = $this->mock(GroupCollectorInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleEngine     = $this->mock(RuleEngine::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         // data
         $asset   = $this->getRandomAsset();
@@ -125,6 +129,7 @@ class ApplyRulesTest extends TestCase
         $groups  = new Collection([$group]);
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
@@ -172,6 +177,7 @@ class ApplyRulesTest extends TestCase
         $collector    = $this->mock(GroupCollectorInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $ruleEngine   = $this->mock(RuleEngine::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         // data
         $asset  = $this->getRandomAsset();
@@ -181,6 +187,7 @@ class ApplyRulesTest extends TestCase
         $rules  = new Collection([$rule]);
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
@@ -227,6 +234,7 @@ class ApplyRulesTest extends TestCase
         $collector      = $this->mock(GroupCollectorInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleEngine     = $this->mock(RuleEngine::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         // data
         $asset        = $this->getRandomAsset();
@@ -238,6 +246,7 @@ class ApplyRulesTest extends TestCase
         $rules        = new Collection([$activeRule]);
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
@@ -287,6 +296,7 @@ class ApplyRulesTest extends TestCase
         $collector      = $this->mock(GroupCollectorInterface::class);
         $accountRepos   = $this->mock(AccountRepositoryInterface::class);
         $ruleEngine     = $this->mock(RuleEngine::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
 
         $activeGroup   = $this->user()->ruleGroups()->where('active', 1)->inRandomOrder()->first();
         $inactiveGroup = $this->user()->ruleGroups()->where('active', 0)->inRandomOrder()->first();
@@ -299,6 +309,7 @@ class ApplyRulesTest extends TestCase
         $rules   = new Collection([$rule]);
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('setUser')->atLeast()->once();
@@ -348,8 +359,10 @@ class ApplyRulesTest extends TestCase
         $this->mock(GroupCollectorInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleEngine::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
 
@@ -374,15 +387,17 @@ class ApplyRulesTest extends TestCase
     {
         $ruleRepos      = $this->mock(RuleRepositoryInterface::class);
         $ruleGroupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
+        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $this->mock(RuleEngine::class);
         $this->mock(JournalRepositoryInterface::class);
         $this->mock(GroupCollectorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $this->mock(RuleEngine::class);
 
         // data
         $expense = $this->getRandomExpense();
 
         // expected calls:
+        $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
         $accountRepos->shouldReceive('setUser')->atLeast()->once();

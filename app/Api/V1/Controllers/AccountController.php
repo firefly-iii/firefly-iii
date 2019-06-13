@@ -233,6 +233,9 @@ class AccountController extends Controller
      * @param Account $account
      *
      * @return JsonResponse
+     *
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
      */
     public function transactions(Request $request, Account $account): JsonResponse
     {
@@ -249,8 +252,6 @@ class AccountController extends Controller
         $types   = $this->mapTransactionTypes($this->parameters->get('type'));
         $manager = new Manager();
         $baseUrl = $request->getSchemeAndHttpHost() . '/api/v1';
-
-
         $manager->setSerializer(new JsonApiSerializer($baseUrl));
 
         /** @var User $admin */
@@ -259,18 +260,8 @@ class AccountController extends Controller
         // use new group collector:
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-        $collector
-            ->setUser($admin)
-            // set the account to filter on to the current one:
-            ->setAccounts(new Collection([$account]))
-            // all info needed for the API:
-            ->withAPIInformation()
-            // set page size:
-            ->setLimit($pageSize)
-            // set page to retrieve
-            ->setPage($this->parameters->get('page'))
-            // set types of transactions to return.
-            ->setTypes($types);
+        $collector->setUser($admin)->setAccounts(new Collection([$account]))
+                  ->withAPIInformation()->setLimit($pageSize)->setPage($this->parameters->get('page'))->setTypes($types);
 
         // set range if necessary:
         if (null !== $this->parameters->get('start') && null !== $this->parameters->get('end')) {

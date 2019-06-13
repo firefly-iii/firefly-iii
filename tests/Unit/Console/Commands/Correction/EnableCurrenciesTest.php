@@ -50,7 +50,7 @@ class EnableCurrenciesTest extends TestCase
         $count = TransactionCurrency::where('enabled', 1)->count();
 
         $this->artisan('firefly-iii:enable-currencies')
-            ->expectsOutput('All currencies are correctly enabled or disabled.')
+             ->expectsOutput('All currencies are correctly enabled or disabled.')
              ->assertExitCode(0);
 
 

@@ -104,7 +104,7 @@ class DeleteEmptyJournalsTest extends TestCase
 
         $this->artisan('firefly-iii:delete-empty-journals')
              ->expectsOutput(sprintf('Deleted transaction journal #%d because it had an uneven number of transactions.', $journal->id))
-            ->expectsOutput('No empty transaction journals.')
+             ->expectsOutput('No empty transaction journals.')
              ->assertExitCode(0);
 
         // verify both are gone

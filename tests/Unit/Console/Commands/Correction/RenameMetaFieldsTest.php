@@ -46,7 +46,7 @@ class RenameMetaFieldsTest extends TestCase
     public function testHandle(): void
     {
         $this->artisan('firefly-iii:rename-meta-fields')
-            ->expectsOutput('All meta fields are correct.')
+             ->expectsOutput('All meta fields are correct.')
              ->assertExitCode(0);
     }
 
@@ -66,7 +66,7 @@ class RenameMetaFieldsTest extends TestCase
         );
 
         $this->artisan('firefly-iii:rename-meta-fields')
-            ->expectsOutput('Renamed 1 meta field(s).')
+             ->expectsOutput('Renamed 1 meta field(s).')
              ->assertExitCode(0);
 
         // verify update

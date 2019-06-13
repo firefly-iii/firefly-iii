@@ -54,7 +54,8 @@ class ConvertToWithdrawalTest extends TestCase
      * @covers \FireflyIII\TransactionRules\Actions\ConvertToWithdrawal
      */
     public function testActDeposit()
-    {$this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         $expense = $this->getRandomExpense();

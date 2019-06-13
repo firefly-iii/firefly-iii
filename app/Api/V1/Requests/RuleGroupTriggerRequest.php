@@ -98,6 +98,7 @@ class RuleGroupTriggerRequest extends Request
             Log::debug(sprintf('Searching for asset account with id "%s"', $accountId));
             $account = $accountRepository->findNull((int)$accountId);
             if ($this->validAccount($account)) {
+                /** @noinspection NullPointerExceptionInspection */
                 Log::debug(sprintf('Found account #%d ("%s") and its an asset account', $account->id, $account->name));
                 $accounts->push($account);
             }

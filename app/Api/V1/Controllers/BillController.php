@@ -47,6 +47,8 @@ use League\Fractal\Serializer\JsonApiSerializer;
 
 /**
  * Class BillController.
+ *
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class BillController extends Controller
 {

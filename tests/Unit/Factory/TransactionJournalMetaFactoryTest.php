@@ -49,7 +49,8 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateBasic(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $journal */
@@ -72,7 +73,8 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateDate(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $journal */
@@ -95,7 +97,8 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateDeleteExisting(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $journal */
@@ -125,7 +128,8 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateEmpty(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $journal */
@@ -148,7 +152,8 @@ class TransactionJournalMetaFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\TransactionJournalMetaFactory
      */
     public function testUpdateOrCreateExistingEmpty(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $journal */

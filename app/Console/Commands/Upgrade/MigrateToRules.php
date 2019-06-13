@@ -204,8 +204,10 @@ class MigrateToRules extends Command
                 ],
             ],
             'actions'         => [
-                'type'  => 'link_to_bill',
-                'value' => $bill->name,
+                [
+                    'type'  => 'link_to_bill',
+                    'value' => $bill->name,
+                ],
             ],
         ];
 

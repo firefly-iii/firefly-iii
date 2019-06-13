@@ -180,7 +180,7 @@ class LinkTypeControllerTest extends TestCase
     public function testUpdateNotEditable(): void
     {
         // mock stuff:
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $repository     = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepository = $this->mock(UserRepositoryInterface::class);
 
         // create editable link type:

@@ -835,7 +835,8 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Support\Binder\JournalList
      */
     public function testJournalList(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         Route::middleware(Binder::class)->any(
@@ -854,7 +855,8 @@ class BinderTest extends TestCase
      * @covers \FireflyIII\Support\Binder\JournalList
      */
     public function testJournalListEmpty(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         Route::middleware(Binder::class)->any(

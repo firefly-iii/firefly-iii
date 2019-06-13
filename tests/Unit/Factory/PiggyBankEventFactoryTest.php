@@ -75,7 +75,8 @@ class PiggyBankEventFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
     public function testCreateNoPiggy(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $transfer */
@@ -93,7 +94,8 @@ class PiggyBankEventFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
     public function testCreateNoRep(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $transfer */
@@ -115,7 +117,8 @@ class PiggyBankEventFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
     public function testCreateNotTransfer(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $deposit */
@@ -131,7 +134,8 @@ class PiggyBankEventFactoryTest extends TestCase
      * @covers \FireflyIII\Factory\PiggyBankEventFactory
      */
     public function testCreateSuccess(): void
-    { $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
 
         return;
         /** @var TransactionJournal $transfer */
