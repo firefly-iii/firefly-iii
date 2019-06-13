@@ -1,6 +1,6 @@
 <?php
 /**
- * MigrateNotes.php
+ * MigrateJournalNotes.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -31,9 +31,9 @@ use Illuminate\Console\Command;
 use Log;
 
 /**
- * Class MigrateNotes
+ * Class MigrateJournalNotes
  */
-class MigrateNotes extends Command
+class MigrateJournalNotes extends Command
 {
     public const CONFIG_NAME = '4780_migrate_notes';
     /**
@@ -41,7 +41,7 @@ class MigrateNotes extends Command
      *
      * @var string
      */
-    protected $description = 'Migrate notes';
+    protected $description = 'Migrate notes for transaction journals.';
     /**
      * The name and signature of the console command.
      *
@@ -57,12 +57,14 @@ class MigrateNotes extends Command
     public function handle(): int
     {
         $start = microtime(true);
+        // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
-
+        // @codeCoverageIgnoreEnd
+        $count = 0;
         /** @noinspection PhpUndefinedMethodInspection */
         $set = TransactionJournalMeta::whereName('notes')->get();
         /** @var TransactionJournalMeta $meta */
@@ -79,10 +81,21 @@ class MigrateNotes extends Command
             Log::debug(sprintf('Migrated meta note #%d to Note #%d', $meta->id, $note->id));
             try {
                 $meta->delete();
+                // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::error(sprintf('Could not delete old meta entry #%d: %s', $meta->id, $e->getMessage()));
             }
+            // @codeCoverageIgnoreEnd
+            $count++;
         }
+
+        if (0 === $count) {
+            $this->line('No notes to migrate.');
+        }
+        if (0 !== $count) {
+            $this->line(sprintf('Migrated %d note(s).', $count));
+        }
+
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrated notes in %s seconds.', $end));
         $this->markAsExecuted();

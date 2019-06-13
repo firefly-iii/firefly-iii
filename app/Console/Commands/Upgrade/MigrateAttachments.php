@@ -55,13 +55,17 @@ class MigrateAttachments extends Command
      */
     public function handle(): int
     {
+        // @codeCoverageIgnoreStart
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
             return 0;
         }
+        // @codeCoverageIgnoreEnd
+
         $attachments = Attachment::get();
+        $count       = 0;
 
         /** @var Attachment $att */
         foreach ($attachments as $att) {
@@ -69,6 +73,7 @@ class MigrateAttachments extends Command
             // move description:
             $description = (string)$att->description;
             if ('' !== $description) {
+
                 // find or create note:
                 $note = $att->notes()->first();
                 if (null === $note) {
@@ -82,8 +87,15 @@ class MigrateAttachments extends Command
                 $att->description = '';
                 $att->save();
 
-                Log::debug(sprintf('Migrated attachment #%s description to note #%d', $att->id, $note->id));
+                Log::debug(sprintf('Migrated attachment #%s description to note #%d.', $att->id, $note->id));
+                $count++;
             }
+        }
+        if (0 === $count) {
+            $this->line('All attachments are OK.');
+        }
+        if (0 !== $count) {
+            $this->line(sprintf('Updated %d attachment(s).',$count));
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrated attachment notes in %s seconds.', $end));

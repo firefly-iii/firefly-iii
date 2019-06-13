@@ -48,7 +48,7 @@ class BillUpdateService
     }
 
     /**
-     * @param Bill  $bill
+     * @param Bill $bill
      * @param array $data
      *
      * @return Bill
@@ -69,9 +69,9 @@ class BillUpdateService
         $currency->enabled = true;
         $currency->save();
 
-
         $oldName                       = $bill->name;
         $bill->name                    = $data['name'];
+        $bill->match                   = $data['match'] ?? $bill->match;
         $bill->amount_min              = $data['amount_min'];
         $bill->amount_max              = $data['amount_max'];
         $bill->date                    = $data['date'];

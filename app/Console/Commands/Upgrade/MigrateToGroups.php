@@ -60,6 +60,7 @@ class MigrateToGroups extends Command
     private $journalRepository;
     /** @var JournalDestroyService */
     private $service;
+    private $count;
 
     /**
      * Create a new command instance.
@@ -69,6 +70,7 @@ class MigrateToGroups extends Command
     public function __construct()
     {
         parent::__construct();
+        $this->count             = 0;
         $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->service           = app(JournalDestroyService::class);
         $this->groupFactory      = app(TransactionGroupFactory::class);
@@ -83,14 +85,17 @@ class MigrateToGroups extends Command
     public function handle(): int
     {
         $start = microtime(true);
+        // @codeCoverageIgnoreStart
         if ($this->isMigrated() && true !== $this->option('force')) {
             $this->info('Database already seems to be migrated.');
 
             return 0;
         }
+
         if (true === $this->option('force')) {
             $this->warn('Forcing the migration.');
         }
+        // @codeCoverageIgnoreEnd
 
         Log::debug('---- start group migration ----');
         $this->makeGroupsFromSplitJournals();
@@ -102,14 +107,24 @@ class MigrateToGroups extends Command
         Log::debug('---- end group migration ----');
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrate all journals to groups in %s seconds.', $end));
+
+        if (0 !== $this->count) {
+            $this->line(sprintf('Migrated %d transaction journal(s).', $this->count));
+        }
+        if (0 === $this->count) {
+            $this->line('No journals to migrate to groups.');
+        }
+
+
         $this->markAsMigrated();
+
 
         return 0;
     }
 
     /**
      * @param TransactionJournal $journal
-     * @param Transaction        $transaction
+     * @param Transaction $transaction
      *
      * @return Transaction|null
      */
@@ -117,7 +132,12 @@ class MigrateToGroups extends Command
     {
         $set = $journal->transactions->filter(
             static function (Transaction $subject) use ($transaction) {
-                return $transaction->amount * -1 === (float)$subject->amount && $transaction->identifier === $subject->identifier;
+                $amount     = (float)$transaction->amount * -1 === (float)$subject->amount;
+                $identifier = $transaction->identifier === $subject->identifier;
+                Log::debug(sprintf('Amount the same? %s', var_export($amount, true)));
+                Log::debug(sprintf('ID the same?     %s', var_export($identifier, true)));
+
+                return $amount && $identifier;
             }
         );
 
@@ -152,6 +172,7 @@ class MigrateToGroups extends Command
             ]
         );
         DB::table('transaction_journals')->where('id', $array['id'])->update(['transaction_group_id' => $groupId]);
+        $this->count++;
     }
 
     /**
@@ -209,14 +230,17 @@ class MigrateToGroups extends Command
      * @param TransactionJournal $journal
      *
      * @throws Exception
+     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function makeMultiGroup(TransactionJournal $journal): void
     {
         // double check transaction count.
         if ($journal->transactions->count() <= 2) {
+            // @codeCoverageIgnoreStart
             Log::debug(sprintf('Will not try to convert journal #%d because it has 2 or less transactions.', $journal->id));
 
             return;
+            // @codeCoverageIgnoreEnd
         }
         Log::debug(sprintf('Will now try to convert journal #%d', $journal->id));
 
@@ -264,6 +288,7 @@ class MigrateToGroups extends Command
             $opposingTr = $this->findOpposingTransaction($journal, $transaction);
 
             if (null === $opposingTr) {
+                // @codeCoverageIgnoreStart
                 $this->error(
                     sprintf(
                         'Journal #%d has no opposing transaction for transaction #%d. Cannot upgrade this entry.',
@@ -271,6 +296,7 @@ class MigrateToGroups extends Command
                     )
                 );
                 continue;
+                // @codeCoverageIgnoreEnd
             }
 
             $tArray = [
@@ -321,12 +347,16 @@ class MigrateToGroups extends Command
         // delete the old transaction journal.
         $this->service->destroy($journal);
 
+        $this->count++;
+
         // report on result:
         Log::debug(
-            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
+            sprintf('Migrated journal #%d into group #%d with these journals: #%s',
+                    $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
         );
         $this->line(
-            sprintf('Migrated journal #%d into group #%d with these journals: #%s', $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
+            sprintf('Migrated journal #%d into group #%d with these journals: #%s',
+                    $journal->id, $group->id, implode(', #', $group->transactionJournals->pluck('id')->toArray()))
         );
     }
 

@@ -23,12 +23,13 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Console\Commands\Upgrade;
 
-use Carbon\Carbon;
 use FireflyConfig;
-use FireflyIII\Factory\TransactionJournalFactory;
+use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
+use FireflyIII\Services\Internal\Destroy\JournalDestroyService;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
@@ -49,140 +50,199 @@ class MigrateToGroupsTest extends TestCase
     }
 
     /**
+     * Basic test. Assume nothing is wrong.
+     *
      * @covers \FireflyIII\Console\Commands\Upgrade\MigrateToGroups
      */
-    public function testAlreadyExecuted(): void
+    public function testHandle(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
-        return;
-        $this->mock(TransactionJournalFactory::class);
-        $this->mock(JournalRepositoryInterface::class);
+        // mock calls:
+        $journalRepos->shouldReceive('getSplitJournals')
+                     ->atLeast()->once()
+                     ->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalsWithoutGroup')
+                     ->atLeast()->once()
+                     ->andReturn([]);
 
-        $configObject       = new Configuration;
-        $configObject->data = true;
-        FireflyConfig::shouldReceive('get')->withArgs(['migrated_to_groups_4780', false])->andReturn($configObject)->once();
+        $false       = new Configuration;
+        $false->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrated_to_groups', true]);
 
+        // assume all is well.
         $this->artisan('firefly-iii:migrate-to-groups')
-             ->expectsOutput('Database already seems to be migrated.')
+             ->expectsOutput('No journals to migrate to groups.')
              ->assertExitCode(0);
     }
 
     /**
+     * Return a journal without a group.
+     *
      * @covers \FireflyIII\Console\Commands\Upgrade\MigrateToGroups
      */
-    public function testBasic(): void
+    public function testHandleNoGroup(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
+        $expense      = $this->getRandomExpense();
+        $journal      = TransactionJournal::create(
+            [
+                'user_id'                 => 1,
+                'transaction_currency_id' => 1,
+                'transaction_type_id'     => 1,
+                'description'             => 'Test',
+                'tag_count'               => 0,
+                'date'                    => '2019-01-01',
+            ]
+        );
+        $one          = Transaction::create(
+            [
+                'transaction_journal_id' => $journal->id,
+                'account_id'             => $asset->id,
+                'amount'                 => '-10',
+                'identifier'             => 1,
+            ]
+        );
+        $two          = Transaction::create(
+            [
+                'transaction_journal_id' => $journal->id,
+                'account_id'             => $expense->id,
+                'amount'                 => '10',
+                'identifier'             => 1,
+            ]
+        );
+        $array        = $journal->toArray();
 
-        return;
-        $journalFactory       = $this->mock(TransactionJournalFactory::class);
-        $journalRepos         = $this->mock(JournalRepositoryInterface::class);
-        $withdrawal           = $this->getRandomSplitWithdrawal();
-        $collection           = new Collection([$withdrawal]);
-        $date                 = new Carbon;
-        $opposing             = new Transaction;
-        $opposing->account_id = 13;
+        // mock calls:
+        $journalRepos->shouldReceive('getSplitJournals')
+                     ->atLeast()->once()
+                     ->andReturn(new Collection);
+        $journalRepos->shouldReceive('getJournalsWithoutGroup')
+                     ->atLeast()->once()
+                     ->andReturn([$array]);
 
-        // not yet executed:
-        $configObject       = new Configuration;
-        $configObject->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['migrated_to_groups_4780', false])->andReturn($configObject)->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['migrated_to_groups_4780', true])->once();
+        $false       = new Configuration;
+        $false->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrated_to_groups', true]);
+
+        // assume all is well.
+        $this->artisan('firefly-iii:migrate-to-groups')
+             ->expectsOutput('Migrated 1 transaction journal(s).')
+             ->assertExitCode(0);
+
+        // no longer without a group.
+        $this->assertCount(0, TransactionJournal::where('id', $journal->id)->whereNull('transaction_group_id')->get());
+        $journal->transactionGroup()->forceDelete();
+        $one->forceDelete();
+        $two->forceDelete();
+        $journal->forceDelete();
+    }
+
+    /**
+     * Create split withdrawal and see what the system will do.
+     *
+     * @covers \FireflyIII\Console\Commands\Upgrade\MigrateToGroups
+     */
+    public function testHandleSplitJournal(): void
+    {
+        $asset   = $this->getRandomAsset();
+        $expense = $this->getRandomExpense();
+        $group   = $this->getRandomWithdrawalGroup();
+        $journal = TransactionJournal::create(
+            [
+                'user_id'                 => 1,
+                'transaction_currency_id' => 1,
+                'transaction_type_id'     => 1,
+                'description'             => 'Test',
+                'tag_count'               => 0,
+                'date'                    => '2019-01-01',
+            ]
+        );
+        $one     = Transaction::create(
+            [
+                'transaction_journal_id' => $journal->id,
+                'account_id'             => $asset->id,
+                'amount'                 => '-10',
+                'identifier'             => 1,
+            ]
+        );
+        $two     = Transaction::create(
+            [
+                'transaction_journal_id' => $journal->id,
+                'account_id'             => $expense->id,
+                'amount'                 => '10',
+                'identifier'             => 1,
+            ]
+        );
+        $three   = Transaction::create(
+            [
+                'transaction_journal_id' => $journal->id,
+                'account_id'             => $asset->id,
+                'amount'                 => '-12',
+                'identifier'             => 2,
+            ]
+        );
+        $four    = Transaction::create(
+            [
+                'transaction_journal_id' => $journal->id,
+                'account_id'             => $expense->id,
+                'amount'                 => '12',
+                'identifier'             => 2,
+            ]
+        );
 
 
-        // calls to repository:
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $service      = $this->mock(JournalDestroyService::class);
+        $factory      = $this->mock(TransactionGroupFactory::class);
+
+        // mock calls:
         $journalRepos->shouldReceive('setUser')->atLeast()->once();
-        $journalRepos->shouldReceive('getJournalBudgetId')->atLeast()->once()->andReturn(1);
-        $journalRepos->shouldReceive('getJournalCategoryId')->atLeast()->once()->andReturn(2);
-        $journalRepos->shouldReceive('findOpposingTransaction')->atLeast()->once()->andReturn($opposing);
-        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('I am some notes.');
-        $journalRepos->shouldReceive('getTags')->atLeast()->once()->andReturn(['a', 'b']);
-        $journalRepos->shouldReceive('getSplitJournals')->once()->andReturn($collection);
 
-        // all meta field calls.
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'internal-reference'])->andReturn('ABC');
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-cc'])->andReturnNull();
+        // mock journal things:
+        $journalRepos->shouldReceive('getJournalBudgetId')->atLeast()->once()->andReturn(0);
+        $journalRepos->shouldReceive('getJournalCategoryId')->atLeast()->once()->andReturn(0);
+        $journalRepos->shouldReceive('getNoteText')->atLeast()->once()->andReturn('Some note.');
+        $journalRepos->shouldReceive('getTags')->atLeast()->once()->andReturn(['A', 'B']);
+        $journalRepos->shouldReceive('getMetaField')->atLeast()
+                     ->withArgs([Mockery::any(), Mockery::any()])
+                     ->once()->andReturn(null);
+        $journalRepos->shouldReceive('getMetaDate')->atLeast()
+                     ->withArgs([Mockery::any(), Mockery::any()])
+                     ->once()->andReturn(null);
 
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-ct-op'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-ct-id'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-db'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-country'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-ep'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-ci'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'sepa-batch-id'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'external-id'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'original-source'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'recurrence_id'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_payment_id'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'importHash'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaField')->atLeast()->once()->withArgs([Mockery::any(), 'importHashV2'])->andReturnNull();
+        // create a group
+        $factory->shouldReceive('create')->atLeast()->once()->andReturn($group);
+        $service->shouldReceive('destroy')->atLeast()->once();
 
-        $journalRepos->shouldReceive('getMetaDate')->atLeast()->once()->withArgs([Mockery::any(), 'interest_date'])->andReturn($date);
-        $journalRepos->shouldReceive('getMetaDate')->atLeast()->once()->withArgs([Mockery::any(), 'book_date'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaDate')->atLeast()->once()->withArgs([Mockery::any(), 'process_date'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaDate')->atLeast()->once()->withArgs([Mockery::any(), 'due_date'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaDate')->atLeast()->once()->withArgs([Mockery::any(), 'payment_date'])->andReturnNull();
-        $journalRepos->shouldReceive('getMetaDate')->atLeast()->once()->withArgs([Mockery::any(), 'invoice_date'])->andReturnNull();
+        $factory->shouldReceive('setUser')->atLeast()->once();
 
-        // calls to factory
-        $journalFactory->shouldReceive('setUser')->atLeast()->once();
-        $journalFactory->shouldReceive('create')->atLeast()->once()->withAnyArgs()->andReturn(new Collection());
+        $journalRepos->shouldReceive('getSplitJournals')
+                     ->atLeast()->once()
+                     ->andReturn(new Collection([$journal]));
+        $journalRepos->shouldReceive('getJournalsWithoutGroup')
+                     ->atLeast()->once()
+                     ->andReturn([]);
 
+        $false       = new Configuration;
+        $false->data = false;
+        FireflyConfig::shouldReceive('get')->withArgs(['4780_migrated_to_groups', false])->andReturn($false);
+        FireflyConfig::shouldReceive('set')->withArgs(['4780_migrated_to_groups', true]);
 
         $this->artisan('firefly-iii:migrate-to-groups')
-             ->expectsOutput('Going to un-split 1 transaction(s). This could take some time.')
+             ->expectsOutput('Migrated 1 transaction journal(s).')
              ->assertExitCode(0);
+
+        // delete the created stuff:
+        $one->forceDelete();
+        $two->forceDelete();
+        $three->forceDelete();
+        $four->forceDelete();
+        $journal->forceDelete();
+
+        // the calls above let me know it's OK.
     }
-
-    /**
-     * @covers \FireflyIII\Console\Commands\Upgrade\MigrateToGroups
-     */
-    public function testForced(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $this->mock(TransactionJournalFactory::class);
-        $repository = $this->mock(JournalRepositoryInterface::class);
-
-        $repository->shouldReceive('getSplitJournals')->andReturn(new Collection);
-
-
-        $configObject       = new Configuration;
-        $configObject->data = true;
-        FireflyConfig::shouldReceive('get')->withArgs(['migrated_to_groups_4780', false])->andReturn($configObject)->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['migrated_to_groups_4780', true])->once();
-
-        $this->artisan('firefly-iii:migrate-to-groups --force')
-             ->expectsOutput('Forcing the migration.')
-             ->expectsOutput('Found no split journals. Nothing to do.')
-             ->assertExitCode(0);
-    }
-
-    /**
-     * @covers \FireflyIII\Console\Commands\Upgrade\MigrateToGroups
-     */
-    public function testNotSplit(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $this->mock(TransactionJournalFactory::class);
-        $repository = $this->mock(JournalRepositoryInterface::class);
-        $withdrawal = $this->getRandomWithdrawal();
-
-        $repository->shouldReceive('getSplitJournals')->andReturn(new Collection([$withdrawal]));
-
-
-        $configObject       = new Configuration;
-        $configObject->data = false;
-        FireflyConfig::shouldReceive('get')->withArgs(['migrated_to_groups_4780', false])->andReturn($configObject)->once();
-        FireflyConfig::shouldReceive('set')->withArgs(['migrated_to_groups_4780', true])->once();
-
-        $this->artisan('firefly-iii:migrate-to-groups')
-             ->expectsOutput('Going to un-split 1 transaction(s). This could take some time.')
-             ->assertExitCode(0);
-    }
-
 }

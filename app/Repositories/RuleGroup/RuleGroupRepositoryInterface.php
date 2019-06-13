@@ -37,7 +37,7 @@ interface RuleGroupRepositoryInterface
     public function count(): int;
 
     /**
-     * @param RuleGroup      $ruleGroup
+     * @param RuleGroup $ruleGroup
      * @param RuleGroup|null $moveTo
      *
      * @return bool
@@ -50,6 +50,13 @@ interface RuleGroupRepositoryInterface
      * @return RuleGroup|null
      */
     public function find(int $ruleGroupId): ?RuleGroup;
+
+    /**
+     * @param string $title
+     *
+     * @return RuleGroup|null
+     */
+    public function findByTitle(string $title): ?RuleGroup;
 
     /**
      * Get all rule groups.
@@ -143,7 +150,7 @@ interface RuleGroupRepositoryInterface
 
     /**
      * @param RuleGroup $ruleGroup
-     * @param array     $data
+     * @param array $data
      *
      * @return RuleGroup
      */

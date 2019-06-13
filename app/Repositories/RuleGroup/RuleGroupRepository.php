@@ -343,4 +343,14 @@ class RuleGroupRepository implements RuleGroupRepositoryInterface
 
         return $ruleGroup;
     }
+
+    /**
+     * @param string $title
+     *
+     * @return RuleGroup|null
+     */
+    public function findByTitle(string $title): ?RuleGroup
+    {
+        return $this->user->ruleGroups()->where('title', $title)->first();
+    }
 }

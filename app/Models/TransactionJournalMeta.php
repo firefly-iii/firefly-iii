@@ -84,7 +84,7 @@ class TransactionJournalMeta extends Model
      */
     public function getDataAttribute($value)
     {
-        return json_decode($value);
+        return json_decode($value, false);
     }
 
     /**
