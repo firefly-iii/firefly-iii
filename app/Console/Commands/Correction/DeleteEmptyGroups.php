@@ -47,12 +47,12 @@ class DeleteEmptyGroups extends Command
     /**
      * Execute the console command.
      *
-     * @throws Exception;
      * @return mixed
+     * @throws Exception;
      */
     public function handle(): int
     {
-        $start = microtime(true);
+        $start  = microtime(true);
         $groups = array_unique(TransactionJournal::get(['transaction_group_id'])->pluck('transaction_group_id')->toArray());
         $count  = TransactionGroup::whereNull('deleted_at')->whereNotIn('id', $groups)->count();
         if (0 === $count) {

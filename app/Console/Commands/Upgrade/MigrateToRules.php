@@ -65,19 +65,6 @@ class MigrateToRules extends Command
     private $count;
 
     /**
-     * MigrateToRules constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->count               = 0;
-        $this->userRepository      = app(UserRepositoryInterface::class);
-        $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->billRepository      = app(BillRepositoryInterface::class);
-        $this->ruleRepository      = app(RuleRepositoryInterface::class);
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -85,6 +72,7 @@ class MigrateToRules extends Command
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         $start = microtime(true);
 
         // @codeCoverageIgnoreStart
@@ -113,6 +101,22 @@ class MigrateToRules extends Command
         $this->markAsExecuted();
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count               = 0;
+        $this->userRepository      = app(UserRepositoryInterface::class);
+        $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+        $this->billRepository      = app(BillRepositoryInterface::class);
+        $this->ruleRepository      = app(RuleRepositoryInterface::class);
     }
 
     /**

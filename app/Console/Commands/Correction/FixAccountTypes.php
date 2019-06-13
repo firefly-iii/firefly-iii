@@ -56,15 +56,6 @@ class FixAccountTypes extends Command
     private $count;
 
     /**
-     * FixAccountTypes constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->count = 0;
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -72,6 +63,7 @@ class FixAccountTypes extends Command
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         $start         = microtime(true);
         $this->factory = app(AccountFactory::class);
         // some combinations can be fixed by this script:
@@ -108,6 +100,18 @@ class FixAccountTypes extends Command
         $this->info(sprintf('Verifying account types took %s seconds', $end));
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count = 0;
     }
 
     /**

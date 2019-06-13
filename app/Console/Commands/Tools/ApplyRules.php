@@ -93,24 +93,6 @@ class ApplyRules extends Command
     private $ruleGroupRepository;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->allRules            = false;
-        $this->accounts            = new Collection;
-        $this->ruleSelection       = [];
-        $this->ruleGroupSelection  = [];
-        $this->ruleRepository      = app(RuleRepositoryInterface::class);
-        $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
-        $this->acceptedAccounts    = [AccountType::DEFAULT, AccountType::DEBT, AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE];
-        $this->groups              = new Collection;
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -118,6 +100,7 @@ class ApplyRules extends Command
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         // @codeCoverageIgnoreStart
         if (!$this->verifyAccessToken()) {
             $this->error('Invalid access token.');
@@ -181,6 +164,25 @@ class ApplyRules extends Command
         $this->line('Done!');
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->allRules            = false;
+        $this->accounts            = new Collection;
+        $this->ruleSelection       = [];
+        $this->ruleGroupSelection  = [];
+        $this->ruleRepository      = app(RuleRepositoryInterface::class);
+        $this->ruleGroupRepository = app(RuleGroupRepositoryInterface::class);
+        $this->acceptedAccounts    = [AccountType::DEFAULT, AccountType::DEBT, AccountType::ASSET, AccountType::LOAN, AccountType::MORTGAGE];
+        $this->groups              = new Collection;
     }
 
     /**

@@ -28,6 +28,7 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\Transformers\CurrencyTransformer;
 use Laravel\Passport\Passport;
 use Log;
@@ -64,6 +65,7 @@ class CurrencyControllerTest extends TestCase
         $currency    = TransactionCurrency::first();
         $repository  = $this->mock(CurrencyRepositoryInterface::class);
         $transformer = $this->mock(CurrencyTransformer::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -103,6 +105,7 @@ class CurrencyControllerTest extends TestCase
         $currency    = TransactionCurrency::first();
         $repository  = $this->mock(CurrencyRepositoryInterface::class);
         $transformer = $this->mock(CurrencyTransformer::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -148,6 +151,7 @@ class CurrencyControllerTest extends TestCase
         $currency    = TransactionCurrency::first();
         $repository  = $this->mock(CurrencyRepositoryInterface::class);
         $transformer = $this->mock(CurrencyTransformer::class);
+        $this->mock(UserRepositoryInterface::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -187,6 +191,7 @@ class CurrencyControllerTest extends TestCase
         $currency         = TransactionCurrency::first();
         $repository       = $this->mock(CurrencyRepositoryInterface::class);
         $transformer      = $this->mock(CurrencyTransformer::class);
+        $this->mock(UserRepositoryInterface::class);
         $preference       = new Preference;
         $preference->data = 'EUR';
 

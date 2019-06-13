@@ -181,6 +181,7 @@ class LinkTypeControllerTest extends TestCase
     {
         // mock stuff:
         $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $userRepository = $this->mock(UserRepositoryInterface::class);
 
         // create editable link type:
         $linkType = LinkType::create(

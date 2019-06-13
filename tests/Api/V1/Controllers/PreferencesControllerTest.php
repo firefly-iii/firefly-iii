@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 use FireflyIII\Models\Preference;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Transformers\PreferenceTransformer;
 use Laravel\Passport\Passport;
 use Log;
@@ -56,6 +57,7 @@ class PreferencesControllerTest extends TestCase
     public function testUpdateArray(): void
     {
         $transformer = $this->mock(PreferenceTransformer::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -63,6 +65,7 @@ class PreferencesControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'frontPageAccounts', [1, 2, 3]);
@@ -78,6 +81,7 @@ class PreferencesControllerTest extends TestCase
     public function testUpdateBoolean(): void
     {
         $transformer = $this->mock(PreferenceTransformer::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -85,6 +89,7 @@ class PreferencesControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'twoFactorAuthEnabled', false);
@@ -101,6 +106,7 @@ class PreferencesControllerTest extends TestCase
     public function testUpdateDefault(): void
     {
         $transformer = $this->mock(PreferenceTransformer::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -108,6 +114,7 @@ class PreferencesControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'currencyPreference', false);
@@ -123,6 +130,7 @@ class PreferencesControllerTest extends TestCase
     public function testUpdateInteger(): void
     {
         $transformer = $this->mock(PreferenceTransformer::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         // mock calls to transformer:
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -130,6 +138,7 @@ class PreferencesControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+        $accountRepos->shouldReceive('setUser')->atLeast()->once();
 
         /** @var Preference $preference */
         $preference = Preferences::setForUser($this->user(), 'listPageSize', 13);

@@ -24,9 +24,9 @@ declare(strict_types=1);
 namespace FireflyIII\Console\Commands\Integrity;
 
 
+use Artisan;
 use Illuminate\Console\Command;
 use Schema;
-use Artisan;
 
 /**
  * Class ReportIntegrity

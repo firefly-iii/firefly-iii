@@ -22,10 +22,10 @@
 namespace FireflyIII\Console\Commands\Correction;
 
 use DB;
+use Exception;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
-use Exception;
 use Log;
 
 /**
@@ -105,7 +105,7 @@ class DeleteEmptyJournals extends Command
                 try {
                     TransactionJournal::find((int)$row->transaction_journal_id)->delete();
                     // @codeCoverageIgnoreStart
-                } catch(Exception $e) {
+                } catch (Exception $e) {
                     Log::info(sprintf('Could not delete journal: %s', $e->getMessage()));
                 }
                 // @codeCoverageIgnoreEnd

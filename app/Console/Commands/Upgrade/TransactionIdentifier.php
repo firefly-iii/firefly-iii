@@ -54,13 +54,6 @@ class TransactionIdentifier extends Command
     /** @var int */
     private $count;
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->count             = 0;
-    }
-
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
      * to easier to match to their counterpart. When a journal is split, it has two or three transactions: -3, -4 and -5 for example.
@@ -74,6 +67,7 @@ class TransactionIdentifier extends Command
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         $start = microtime(true);
         // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
@@ -105,6 +99,19 @@ class TransactionIdentifier extends Command
         $this->markAsExecuted();
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->count             = 0;
     }
 
     /**
@@ -184,6 +191,7 @@ class TransactionIdentifier extends Command
 
             return null;
         }
+
         // @codeCoverageIgnoreEnd
 
         return $opposing;

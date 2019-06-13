@@ -124,7 +124,7 @@ class ReportEmptyObjects extends Command
 
         /** @var stdClass $entry */
         foreach ($set as $entry) {
-            $line    = sprintf(
+            $line = sprintf(
                 'User #%d (%s) has budget #%d ("%s") which has no transaction journals.',
                 $entry->user_id,
                 $entry->email,

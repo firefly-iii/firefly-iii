@@ -46,16 +46,6 @@ class UpgradeDatabase extends Command
     protected $signature = 'firefly-iii:upgrade-database {--F|force : Force all upgrades.}';
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int

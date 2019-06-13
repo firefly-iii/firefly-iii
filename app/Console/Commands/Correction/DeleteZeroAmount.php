@@ -21,11 +21,11 @@
 
 namespace FireflyIII\Console\Commands\Correction;
 
-use FireflyIII\Models\TransactionJournal;
+use Exception;
 use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Console\Command;
 use Illuminate\Support\Collection;
-use Exception;
 
 /**
  * Class DeleteZeroAmount
@@ -52,8 +52,8 @@ class DeleteZeroAmount extends Command
     public function handle(): int
     {
         $start = microtime(true);
-        $set = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
-        $set = array_unique($set);
+        $set   = Transaction::where('amount', 0)->get(['transaction_journal_id'])->pluck('transaction_journal_id')->toArray();
+        $set   = array_unique($set);
         /** @var Collection $journals */
         $journals = TransactionJournal::whereIn('id', $set)->get();
         /** @var TransactionJournal $journal */
@@ -74,6 +74,7 @@ class DeleteZeroAmount extends Command
 
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified zero-amount integrity in %s seconds', $end));
+
         return 0;
     }
 }

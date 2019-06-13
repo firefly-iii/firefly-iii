@@ -68,21 +68,11 @@ class CreateCSVImport extends Command
     private $importJob;
 
     /**
-     * CreateCSVImport constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->userRepository   = app(UserRepositoryInterface::class);
-        $this->importRepository = app(ImportJobRepositoryInterface::class);
-
-    }
-
-    /**
      * Run the command.
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         // @codeCoverageIgnoreStart
         if (!$this->verifyAccessToken()) {
             $this->errorLine('Invalid access token.');
@@ -154,6 +144,19 @@ class CreateCSVImport extends Command
         app('preferences')->setForUser($user, 'lastActivity', microtime());
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->userRepository   = app(UserRepositoryInterface::class);
+        $this->importRepository = app(ImportJobRepositoryInterface::class);
     }
 
     /**

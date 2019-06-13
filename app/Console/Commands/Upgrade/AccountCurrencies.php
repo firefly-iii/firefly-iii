@@ -58,23 +58,13 @@ class AccountCurrencies extends Command
     private $count;
 
     /**
-     * AccountCurrencies constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->accountRepos = app(AccountRepositoryInterface::class);
-        $this->userRepos    = app(UserRepositoryInterface::class);
-        $this->count        = 0;
-    }
-
-    /**
      * Each (asset) account must have a reference to a preferred currency. If the account does not have one, it's forced upon the account.
      *
      * @return int
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         $start = microtime(true);
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
@@ -96,6 +86,20 @@ class AccountCurrencies extends Command
         $this->markAsExecuted();
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->accountRepos = app(AccountRepositoryInterface::class);
+        $this->userRepos    = app(UserRepositoryInterface::class);
+        $this->count        = 0;
     }
 
     /**
@@ -141,6 +145,7 @@ class AccountCurrencies extends Command
             AccountMeta::create(['account_id' => $account->id, 'name' => 'currency_id', 'data' => $currency->id]);
             $this->line(sprintf('Account #%d ("%s") now has a currency setting (%s).', $account->id, $account->name, $currency->code));
             $this->count++;
+
             return;
         }
 

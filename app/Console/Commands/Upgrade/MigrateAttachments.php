@@ -95,7 +95,7 @@ class MigrateAttachments extends Command
             $this->line('All attachments are OK.');
         }
         if (0 !== $count) {
-            $this->line(sprintf('Updated %d attachment(s).',$count));
+            $this->line(sprintf('Updated %d attachment(s).', $count));
         }
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Migrated attachment notes in %s seconds.', $end));

@@ -63,20 +63,6 @@ class MigrateToGroups extends Command
     private $count;
 
     /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->count             = 0;
-        $this->journalRepository = app(JournalRepositoryInterface::class);
-        $this->service           = app(JournalDestroyService::class);
-        $this->groupFactory      = app(TransactionGroupFactory::class);
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
@@ -84,6 +70,7 @@ class MigrateToGroups extends Command
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         $start = microtime(true);
         // @codeCoverageIgnoreStart
         if ($this->isMigrated() && true !== $this->option('force')) {
@@ -120,6 +107,21 @@ class MigrateToGroups extends Command
 
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count             = 0;
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->service           = app(JournalDestroyService::class);
+        $this->groupFactory      = app(TransactionGroupFactory::class);
     }
 
     /**

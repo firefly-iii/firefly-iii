@@ -157,7 +157,8 @@ abstract class TestCase extends BaseTestCase
         return $this->getRandomAccount(AccountType::INITIAL_BALANCE, null);
     }
 
-    public function getRandomReconciliation(): Account {
+    public function getRandomReconciliation(): Account
+    {
         return $this->getRandomAccount(AccountType::RECONCILIATION, null);
     }
 
@@ -234,6 +235,14 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return TransactionCurrency
+     */
+    protected function getDollar(): TransactionCurrency
+    {
+        return TransactionCurrency::where('code', 'USD')->first();
+    }
+
+    /**
      * @return TransactionGroup
      */
     protected function getRandomWithdrawalGroup(): TransactionGroup
@@ -257,7 +266,7 @@ abstract class TestCase extends BaseTestCase
         if (in_array($class, $deprecated, true)) {
             throw new RuntimeException(strtoupper('Must not be mocking the transaction collector or transformer.'));
         }
-        Log::debug(sprintf('Will now mock %s', $class));
+        //Log::debug(sprintf('Will now mock %s', $class));
         $object = Mockery::mock($class);
         $this->app->instance($class, $object);
 
@@ -345,7 +354,7 @@ abstract class TestCase extends BaseTestCase
                 DB::raw('COUNT(transaction_journal_id) as ct'),
             ]
         )->first();
-        if(null === $result) {
+        if (null === $result) {
             throw new FireflyException(sprintf('Cannot find suitable %s to use.', $type));
         }
 

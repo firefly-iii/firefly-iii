@@ -71,6 +71,7 @@ class CCLiabilities extends Command
         $debtType = AccountType::where('type', AccountType::DEBT)->first();
         if (null === $ccType || null === $debtType) {
             $this->info('No incorrectly stored credit card liabilities.');
+
             return 0;
         }
         /** @var Collection $accounts */

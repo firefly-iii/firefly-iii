@@ -65,25 +65,13 @@ class OtherCurrenciesCorrections extends Command
     private $count;
 
     /**
-     * JournalCurrencies constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-        $this->count             = 0;
-        $this->accountCurrencies = [];
-        $this->accountRepos      = app(AccountRepositoryInterface::class);
-        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
-        $this->journalRepos      = app(JournalRepositoryInterface::class);
-    }
-
-    /**
      * Execute the console command.
      *
      * @return int
      */
     public function handle(): int
     {
+        $this->stupidLaravel();
         $start = microtime(true);
         // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
@@ -101,6 +89,22 @@ class OtherCurrenciesCorrections extends Command
         $this->info(sprintf('Verified and fixed transaction currencies in %s seconds.', $end));
 
         return 0;
+    }
+
+    /**
+     * Laravel will execute ALL __construct() methods for ALL commands whenever a SINGLE command is
+     * executed. This leads to noticeable slow-downs and class calls. To prevent this, this method should
+     * be called from the handle method instead of using the constructor to initialize the command.
+     *
+     * @codeCoverageIgnore
+     */
+    private function stupidLaravel(): void
+    {
+        $this->count             = 0;
+        $this->accountCurrencies = [];
+        $this->accountRepos      = app(AccountRepositoryInterface::class);
+        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
+        $this->journalRepos      = app(JournalRepositoryInterface::class);
     }
 
     /**
