@@ -70,10 +70,11 @@ class OtherCurrenciesCorrections extends Command
     public function __construct()
     {
         parent::__construct();
-        $this->count         = 0;
-        $this->accountRepos  = app(AccountRepositoryInterface::class);
-        $this->currencyRepos = app(CurrencyRepositoryInterface::class);
-        $this->journalRepos  = app(JournalRepositoryInterface::class);
+        $this->count             = 0;
+        $this->accountCurrencies = [];
+        $this->accountRepos      = app(AccountRepositoryInterface::class);
+        $this->currencyRepos     = app(CurrencyRepositoryInterface::class);
+        $this->journalRepos      = app(JournalRepositoryInterface::class);
     }
 
     /**
@@ -83,9 +84,6 @@ class OtherCurrenciesCorrections extends Command
      */
     public function handle(): int
     {
-        $this->accountCurrencies = [];
-
-
         $start = microtime(true);
         // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
@@ -98,12 +96,7 @@ class OtherCurrenciesCorrections extends Command
         $this->updateOtherJournalsCurrencies();
         $this->markAsExecuted();
 
-        if (0 === $this->count) {
-            $this->line('All transactions are correct.');
-        }
-        if (0 !== $this->count) {
-            $this->line(sprintf('Verified %d transaction(s) and journal(s).', $this->count));
-        }
+        $this->line(sprintf('Verified %d transaction(s) and journal(s).', $this->count));
         $end = round(microtime(true) - $start, 2);
         $this->info(sprintf('Verified and fixed transaction currencies in %s seconds.', $end));
 
@@ -119,7 +112,7 @@ class OtherCurrenciesCorrections extends Command
     {
         $accountId = $account->id;
         if (isset($this->accountCurrencies[$accountId]) && 0 === $this->accountCurrencies[$accountId]) {
-            return null;
+            return null; // @codeCoverageIgnore
         }
         if (isset($this->accountCurrencies[$accountId]) && $this->accountCurrencies[$accountId] instanceof TransactionCurrency) {
             return $this->accountCurrencies[$accountId];
@@ -127,9 +120,11 @@ class OtherCurrenciesCorrections extends Command
         $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
         $result     = $this->currencyRepos->findNull($currencyId);
         if (null === $result) {
+            // @codeCoverageIgnoreStart
             $this->accountCurrencies[$accountId] = 0;
 
             return null;
+            // @codeCoverageIgnoreEnd
         }
         $this->accountCurrencies[$accountId] = $result;
 
@@ -137,24 +132,6 @@ class OtherCurrenciesCorrections extends Command
 
 
     }
-
-    /**
-     * @param TransactionJournal $journal
-     *
-     * @return Transaction|null
-     */
-    private function getFirstAssetTransaction(TransactionJournal $journal): ?Transaction
-    {
-        $result = $journal->transactions->first(
-            static function (Transaction $transaction) {
-                // type can also be liability.
-                return AccountType::ASSET === $transaction->account->accountType->type;
-            }
-        );
-
-        return $result;
-    }
-
 
     /**
      * @return bool
@@ -182,22 +159,31 @@ class OtherCurrenciesCorrections extends Command
      */
     private function updateJournalCurrency(TransactionJournal $journal): void
     {
+        $this->accountRepos->setUser($journal->user);
+        $this->journalRepos->setUser($journal->user);
+        $this->currencyRepos->setUser($journal->user);
+
         $leadTransaction = $this->getLeadTransaction($journal);
 
         if (null === $leadTransaction) {
+            // @codeCoverageIgnoreStart
             $this->error(sprintf('Could not reliably determine which transaction is in the lead for transaction journal #%d.', $journal->id));
 
             return;
+            // @codeCoverageIgnoreEnd
         }
 
         /** @var Account $account */
         $account  = $leadTransaction->account;
         $currency = $this->getCurrency($account);
         if (null === $currency) {
+            // @codeCoverageIgnoreStart
             $this->error(sprintf('Account #%d ("%s") has no currency preference, so transaction journal #%d can\'t be corrected',
                                  $account->id, $account->name, $journal->id));
+            $this->count++;
 
             return;
+            // @codeCoverageIgnoreEnd
         }
         // fix each transaction:
         $journal->transactions->each(
@@ -205,7 +191,6 @@ class OtherCurrenciesCorrections extends Command
                 if (null === $transaction->transaction_currency_id) {
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
-                    //$this->count++;
                 }
 
                 // when mismatch in transaction:
@@ -214,7 +199,6 @@ class OtherCurrenciesCorrections extends Command
                     $transaction->foreign_amount          = $transaction->amount;
                     $transaction->transaction_currency_id = $currency->id;
                     $transaction->save();
-                    //$this->count++;
                 }
             }
         );
@@ -231,8 +215,6 @@ class OtherCurrenciesCorrections extends Command
      * Both source and destination must match the respective currency preference of the related asset account.
      * So FF3 must verify all transactions.
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     private function updateOtherJournalsCurrencies(): void
     {

@@ -152,6 +152,18 @@ abstract class TestCase extends BaseTestCase
     /**
      * @return Account
      */
+    public function getRandomInitialBalance(): Account
+    {
+        return $this->getRandomAccount(AccountType::INITIAL_BALANCE, null);
+    }
+
+    public function getRandomReconciliation(): Account {
+        return $this->getRandomAccount(AccountType::RECONCILIATION, null);
+    }
+
+    /**
+     * @return Account
+     */
     public function getRandomLoan(): Account
     {
         return $this->getRandomAccount(AccountType::LOAN, null);

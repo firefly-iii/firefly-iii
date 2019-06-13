@@ -21,9 +21,9 @@
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
-use DB;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Illuminate\Console\Command;
 use Illuminate\Database\QueryException;
 use Log;
@@ -48,6 +48,19 @@ class TransactionIdentifier extends Command
      */
     protected $signature = 'firefly-iii:transaction-identifiers {--F|force : Force the execution of this command.}';
 
+    /** @var JournalRepositoryInterface */
+    private $journalRepository;
+
+    /** @var int */
+    private $count;
+
+    public function __construct()
+    {
+        parent::__construct();
+        $this->journalRepository = app(JournalRepositoryInterface::class);
+        $this->count             = 0;
+    }
+
     /**
      * This method gives all transactions which are part of a split journal (so more than 2) a sort of "order" so they are easier
      * to easier to match to their counterpart. When a journal is split, it has two or three transactions: -3, -4 and -5 for example.
@@ -61,7 +74,8 @@ class TransactionIdentifier extends Command
      */
     public function handle(): int
     {
-        $start            = microtime(true);
+        $start = microtime(true);
+        // @codeCoverageIgnoreStart
         if ($this->isExecuted() && true !== $this->option('force')) {
             $this->warn('This command has already been executed.');
 
@@ -72,24 +86,22 @@ class TransactionIdentifier extends Command
         if (!Schema::hasTable('transaction_journals')) {
             return 0;
         }
-        $subQuery = TransactionJournal::leftJoin('transactions', 'transactions.transaction_journal_id', '=', 'transaction_journals.id')
-                                      ->whereNull('transaction_journals.deleted_at')
-                                      ->whereNull('transactions.deleted_at')
-                                      ->groupBy(['transaction_journals.id'])
-                                      ->select(['transaction_journals.id', DB::raw('COUNT(transactions.id) AS t_count')]);
-        /** @noinspection PhpStrictTypeCheckingInspection */
-        $result     = DB::table(DB::raw('(' . $subQuery->toSql() . ') AS derived'))
-                        ->mergeBindings($subQuery->getQuery())
-                        ->where('t_count', '>', 2)
-                        ->select(['id', 't_count']);
-        $journalIds = array_unique($result->pluck('id')->toArray());
-        $count= 0;
-        foreach ($journalIds as $journalId) {
-            $this->updateJournalIdentifiers((int)$journalId);
-            $count++;
+        // @codeCoverageIgnoreEnd
+        $journals = $this->journalRepository->getSplitJournals();
+        /** @var TransactionJournal $journal */
+        foreach ($journals as $journal) {
+            $this->updateJournalIdentifiers($journal);
         }
+
+        if (0 === $this->count) {
+            $this->line('All split journal transaction identifiers are correct.');
+        }
+        if (0 !== $this->count) {
+            $this->line(sprintf('Fixed %d split journal transaction identifier(s).', $this->count));
+        }
+
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('Verified and fixed %d transaction identifiers in %s seconds.', $count, $end));
+        $this->info(sprintf('Verified and fixed transaction identifiers in %s seconds.', $end));
         $this->markAsExecuted();
 
         return 0;
@@ -117,47 +129,63 @@ class TransactionIdentifier extends Command
     }
 
     /**
-     * grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
+     * Grab all positive transactions from this journal that are not deleted. for each one, grab the negative opposing one
      * which has 0 as an identifier and give it the same identifier.
      *
-     * @param int $journalId
+     * @param TransactionJournal $transactionJournal
      */
-    private function updateJournalIdentifiers(int $journalId): void
+    private function updateJournalIdentifiers(TransactionJournal $transactionJournal): void
     {
         $identifier   = 0;
-        $processed    = [];
-        $transactions = Transaction::where('transaction_journal_id', $journalId)->where('amount', '>', 0)->get();
+        $exclude      = []; // transactions already processed.
+        $transactions = $transactionJournal->transactions()->where('amount', '>', 0)->get();
+
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {
-            // find opposing:
-            $amount = bcmul((string)$transaction->amount, '-1');
-
-            try {
-                /** @var Transaction $opposing */
-                $opposing = Transaction::where('transaction_journal_id', $journalId)
-                                       ->where('amount', $amount)->where('identifier', '=', 0)
-                                       ->whereNotIn('id', $processed)
-                                       ->first();
-            } catch (QueryException $e) {
-                Log::error($e->getMessage());
-                $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
-                $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
-                $this->error('Please run "php artisan migrate" to add this field to the table.');
-                $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
-
-                return;
-            }
+            $opposing = $this->findOpposing($transaction, $exclude);
             if (null !== $opposing) {
                 // give both a new identifier:
                 $transaction->identifier = $identifier;
                 $opposing->identifier    = $identifier;
                 $transaction->save();
                 $opposing->save();
-                $processed[] = $transaction->id;
-                $processed[] = $opposing->id;
+                $exclude[] = $transaction->id;
+                $exclude[] = $opposing->id;
+                $this->count++;
             }
             ++$identifier;
         }
 
+    }
+
+    /**
+     * @param Transaction $transaction
+     * @param array $exclude
+     * @return Transaction|null
+     */
+    private function findOpposing(Transaction $transaction, array $exclude): ?Transaction
+    {
+        // find opposing:
+        $amount = bcmul((string)$transaction->amount, '-1');
+
+        try {
+            /** @var Transaction $opposing */
+            $opposing = Transaction::where('transaction_journal_id', $transaction->transaction_journal_id)
+                                   ->where('amount', $amount)->where('identifier', '=', 0)
+                                   ->whereNotIn('id', $exclude)
+                                   ->first();
+            // @codeCoverageIgnoreStart
+        } catch (QueryException $e) {
+            Log::error($e->getMessage());
+            $this->error('Firefly III could not find the "identifier" field in the "transactions" table.');
+            $this->error(sprintf('This field is required for Firefly III version %s to run.', config('firefly.version')));
+            $this->error('Please run "php artisan migrate" to add this field to the table.');
+            $this->info('Then, run "php artisan firefly:upgrade-database" to try again.');
+
+            return null;
+        }
+        // @codeCoverageIgnoreEnd
+
+        return $opposing;
     }
 }

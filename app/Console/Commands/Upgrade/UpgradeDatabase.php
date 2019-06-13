@@ -28,6 +28,7 @@ use Illuminate\Console\Command;
 
 /**
  * Class UpgradeDatabase
+ * @codeCoverageIgnore
  */
 class UpgradeDatabase extends Command
 {
@@ -62,6 +63,7 @@ class UpgradeDatabase extends Command
     public function handle(): int
     {
         $commands = [
+            // there are 11 upgrade commands.
             'firefly-iii:transaction-identifiers',
             'firefly-iii:account-currencies',
             'firefly-iii:transfer-currencies',

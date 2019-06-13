@@ -65,12 +65,12 @@ class InstallController extends Controller
     {
         // empty on purpose.
         $this->upgradeCommands = [
-            // there are x initial commands
+            // there are 3 initial commands
             'migrate'                                  => ['--seed' => true, '--force' => true],
             'firefly-iii:decrypt-all'                  => [],
             'generate-keys'                            => [], // an exception :(
 
-            // there are 10 upgrade commands.
+            // there are 11 upgrade commands.
             'firefly-iii:transaction-identifiers'      => [],
             'firefly-iii:account-currencies'           => [],
             'firefly-iii:transfer-currencies'          => [],
