@@ -38,6 +38,7 @@ class PiggyBankFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

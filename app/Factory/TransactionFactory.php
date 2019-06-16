@@ -29,10 +29,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Services\Internal\Support\JournalServiceTrait;
 use FireflyIII\User;
-use FireflyIII\Validation\AccountValidator;
 use Illuminate\Database\QueryException;
 use Log;
 
@@ -41,10 +38,6 @@ use Log;
  */
 class TransactionFactory
 {
-    use JournalServiceTrait;
-
-    /** @var AccountValidator */
-    private $accountValidator;
     /** @var TransactionJournal */
     private $journal;
     /** @var Account */
@@ -60,20 +53,19 @@ class TransactionFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
-        $this->accountRepository = app(AccountRepositoryInterface::class);
-        $this->accountValidator  = app(AccountValidator::class);
-        $this->reconciled        = false;
-        $this->foreignCurrency   = null;
+        $this->reconciled = false;
     }
 
     /**
      * @param bool $reconciled
+     * @codeCoverageIgnore
      */
     public function setReconciled(bool $reconciled): void
     {
@@ -82,6 +74,7 @@ class TransactionFactory
 
     /**
      * @param Account $account
+     * @codeCoverageIgnore
      */
     public function setAccount(Account $account): void
     {
@@ -90,6 +83,7 @@ class TransactionFactory
 
     /**
      * @param TransactionCurrency $currency
+     * @codeCoverageIgnore
      */
     public function setCurrency(TransactionCurrency $currency): void
     {
@@ -98,6 +92,7 @@ class TransactionFactory
 
     /**
      * @param TransactionCurrency $foreignCurrency |null
+     * @codeCoverageIgnore
      */
     public function setForeignCurrency(?TransactionCurrency $foreignCurrency): void
     {
@@ -139,6 +134,7 @@ class TransactionFactory
 
     /**
      * @param TransactionJournal $journal
+     * @codeCoverageIgnore
      */
     public function setJournal(TransactionJournal $journal): void
     {
@@ -147,11 +143,11 @@ class TransactionFactory
 
     /**
      * @param User $user
+     * @codeCoverageIgnore
      */
     public function setUser(User $user): void
     {
         $this->user = $user;
-        $this->accountRepository->setUser($user);
     }
 
     /**
@@ -175,24 +171,18 @@ class TransactionFactory
         ];
         try {
             $result = Transaction::create($data);
+            // @codeCoverageIgnoreStart
         } catch (QueryException $e) {
             Log::error(sprintf('Could not create transaction: %s', $e->getMessage()), $data);
         }
+        // @codeCoverageIgnoreEnd
         if (null !== $result) {
-            Log::debug(
-                sprintf(
-                    'Created transaction #%d (%s %s), part of journal #%d', $result->id,
-                    $this->currency->code, $amount, $this->journal->id
-                )
-            );
+            Log::debug(sprintf('Created transaction #%d (%s %s), part of journal #%d', $result->id, $this->currency->code, $amount, $this->journal->id));
 
-            // do foreign currency thing.
-            // add foreign currency info to $one and $two if necessary.
-            if (null !== $this->foreignCurrency && null !== $foreignAmount
-                && $this->foreignCurrency->id !== $this->currency->id
-            ) {
+            // do foreign currency thing: add foreign currency info to $one and $two if necessary.
+            if (null !== $this->foreignCurrency && null !== $foreignAmount && $this->foreignCurrency->id !== $this->currency->id) {
                 $result->foreign_currency_id = $this->foreignCurrency->id;
-                $result->foreign_amount      = app('steam')->negative($foreignAmount);
+                $result->foreign_amount      = $foreignAmount;
 
             }
             $result->save();

@@ -39,6 +39,7 @@ class CategoryFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

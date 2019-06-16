@@ -36,6 +36,7 @@ class TransactionJournalMetaFactory
 {
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

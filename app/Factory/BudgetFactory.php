@@ -39,6 +39,7 @@ class BudgetFactory
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

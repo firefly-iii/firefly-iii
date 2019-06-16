@@ -30,6 +30,7 @@ use FireflyIII\User;
 
 /**
  * Class TransactionGroupFactory
+ * @codeCoverageIgnore
  */
 class TransactionGroupFactory
 {
@@ -59,12 +60,12 @@ class TransactionGroupFactory
         $this->journalFactory->setUser($this->user);
         $collection = $this->journalFactory->create($data);
         $title      = $data['group_title'] ?? null;
-        $title      = $title === '' ? null : $title;
+        $title      = '' === $title ? null : $title;
         /** @var TransactionJournal $first */
         $first = $collection->first();
         $group = new TransactionGroup;
         $group->user()->associate($first->user);
-        $group->title = $title ?? $first->description;
+        $group->title = $title;
         $group->save();
 
         $group->transactionJournals()->saveMany($collection);

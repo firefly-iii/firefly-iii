@@ -36,6 +36,7 @@ class AccountMetaFactory
 {
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

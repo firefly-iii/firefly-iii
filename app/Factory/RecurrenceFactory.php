@@ -29,7 +29,6 @@ use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Recurrence;
 use FireflyIII\Services\Internal\Support\RecurringTransactionTrait;
-use FireflyIII\Services\Internal\Support\TransactionServiceTrait;
 use FireflyIII\Services\Internal\Support\TransactionTypeTrait;
 use FireflyIII\User;
 use Log;
@@ -42,10 +41,11 @@ class RecurrenceFactory
     /** @var User */
     private $user;
 
-    use TransactionTypeTrait, TransactionServiceTrait, RecurringTransactionTrait;
+    use TransactionTypeTrait, RecurringTransactionTrait;
 
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -64,6 +64,7 @@ class RecurrenceFactory
         try {
             $type = $this->findTransactionType(ucfirst($data['recurrence']['type']));
         } catch (FireflyException $e) {
+            Log::error(sprintf('Cannot make a recurring transaction of type "%s"', $data['recurrence']['type']));
             Log::error($e->getMessage());
 
             return null;
@@ -90,7 +91,14 @@ class RecurrenceFactory
 
         $this->updateMetaData($recurrence, $data);
         $this->createRepetitions($recurrence, $data['repetitions'] ?? []);
-        $this->createTransactions($recurrence, $data['transactions'] ?? []);
+        try {
+            $this->createTransactions($recurrence, $data['transactions'] ?? []);
+            // @codeCoverageIgnoreStart
+        } catch (FireflyException $e) {
+            // TODO make sure error props to the user.
+            Log::error($e->getMessage());
+        }
+        // @codeCoverageIgnoreEnd
 
         return $recurrence;
     }
