@@ -39,6 +39,7 @@
         <!-- unit tests, splitted: -->
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit/Console</directory>
+            <directory suffix="Test.php">./tests/Unit/Factory</directory>
         </testsuite>
 
 
