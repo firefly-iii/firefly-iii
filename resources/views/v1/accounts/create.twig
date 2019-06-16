@@ -22,8 +22,8 @@
                         {% endif %}
                         {% if what == 'liabilities' %}
                             {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
-                            {{ ExpandedForm.amountNoCurrency('openingBalance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
-                            {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
+                            {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                            {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
                             {{ ExpandedForm.percentage('interest') }}
                             {{ ExpandedForm.select('interest_period', interestPeriods) }}
                         {% endif %}
@@ -45,8 +45,8 @@
 
                         {% if what == 'asset' %}
 
-                            {{ ExpandedForm.amountNoCurrency('openingBalance') }}
-                            {{ ExpandedForm.date('openingBalanceDate') }}
+                            {{ ExpandedForm.amountNoCurrency('opening_balance') }}
+                            {{ ExpandedForm.date('opening_balance_date') }}
                             {{ ExpandedForm.select('accountRole', roles,null,{helpText : 'asset_account_role_help'|_}) }}
                             {{ ExpandedForm.amountNoCurrency('virtualBalance') }}
                         {% endif %}
