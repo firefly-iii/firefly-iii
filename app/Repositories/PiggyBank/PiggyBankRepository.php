@@ -57,7 +57,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param string $amount
      *
      * @return bool
      */
@@ -79,7 +79,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBankRepetition $repetition
-     * @param string              $amount
+     * @param string $amount
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param string $amount
      *
      * @return bool
      */
@@ -110,7 +110,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param string $amount
      *
      * @return bool
      */
@@ -143,7 +143,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param string $amount
      *
      * @return PiggyBankEvent
      */
@@ -156,8 +156,8 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank          $piggyBank
-     * @param string             $amount
+     * @param PiggyBank $piggyBank
+     * @param string $amount
      * @param TransactionJournal $journal
      *
      * @return PiggyBankEvent
@@ -225,20 +225,14 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     }
 
     /**
-     * @param PiggyBank|null $piggyBank
-     * @param int|null       $piggyBankId
-     * @param string|null    $piggyBankName
+     * @param int|null $piggyBankId
+     * @param string|null $piggyBankName
      *
      * @return PiggyBank|null
      */
-    public function findPiggyBank(?PiggyBank $piggyBank, ?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
+    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank
     {
         Log::debug('Searching for piggy information.');
-        if ($piggyBank instanceof PiggyBank && $piggyBank->account->user_id === $this->user->id) {
-            Log::debug(sprintf('Piggy object in parameters, will return Piggy #%d', $piggyBank->id));
-
-            return $piggyBank;
-        }
 
         if (null !== $piggyBankId) {
             $searchResult = $this->findNull((int)$piggyBankId);
@@ -291,9 +285,9 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
     /**
      * Used for connecting to a piggy bank.
      *
-     * @param PiggyBank           $piggyBank
+     * @param PiggyBank $piggyBank
      * @param PiggyBankRepetition $repetition
-     * @param TransactionJournal  $journal
+     * @param TransactionJournal $journal
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -466,7 +460,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * Get for piggy account what is left to put in piggies.
      *
      * @param PiggyBank $piggyBank
-     * @param Carbon    $date
+     * @param Carbon $date
      *
      * @return string
      */
@@ -491,7 +485,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param string    $amount
+     * @param string $amount
      *
      * @return bool
      */
@@ -511,7 +505,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
      * set id of piggy bank.
      *
      * @param PiggyBank $piggyBank
-     * @param int       $order
+     * @param int $order
      *
      * @return bool
      */
@@ -556,7 +550,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param array     $data
+     * @param array $data
      *
      * @return PiggyBank
      */
@@ -588,7 +582,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
 
     /**
      * @param PiggyBank $piggyBank
-     * @param string    $note
+     * @param string $note
      *
      * @return bool
      * @throws \Exception

@@ -62,7 +62,7 @@ class AccountUpdateService
         // update the account itself:
         $account->name            = $data['name'];
         $account->active          = $data['active'];
-        $account->virtual_balance = '' === trim($data['virtualBalance']) ? '0' : $data['virtualBalance'];
+        $account->virtual_balance = '' === trim($data['virtual_balance']) ? '0' : $data['virtual_balance'];
         $account->iban            = $data['iban'];
         $account->save();
 
@@ -87,13 +87,13 @@ class AccountUpdateService
         $this->updateMetaData($account, $data);
 
         // has valid initial balance (IB) data?
-        if ($this->validIBData($data)) {
+        if ($this->validOBData($data)) {
             // then do update!
             $this->updateIB($account, $data);
         }
 
         // if not, delete it when exist.
-        if (!$this->validIBData($data)) {
+        if (!$this->validOBData($data)) {
             $this->deleteIB($account);
         }
 

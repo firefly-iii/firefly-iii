@@ -126,15 +126,15 @@ class EditController extends Controller
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
-            'accountNumber'        => $repository->getMetaValue($account, 'accountNumber'),
-            'accountRole'          => $repository->getMetaValue($account, 'accountRole'),
-            'ccType'               => $repository->getMetaValue($account, 'ccType'),
-            'ccMonthlyPaymentDate' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
+            'account_number'        => $repository->getMetaValue($account, 'accountNumber'),
+            'account_role'          => $repository->getMetaValue($account, 'accountRole'),
+            'cc_type'               => $repository->getMetaValue($account, 'ccType'),
+            'cc_monthly_payment_date' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
             'BIC'                  => $repository->getMetaValue($account, 'BIC'),
-            'openingBalanceDate'   => $openingBalanceDate,
+            'opening_balance_date'   => $openingBalanceDate,
             'liability_type_id'    => $account->account_type_id,
-            'openingBalance'       => $openingBalanceAmount,
-            'virtualBalance'       => $account->virtual_balance,
+            'opening_balance'       => $openingBalanceAmount,
+            'virtual_balance'       => $account->virtual_balance,
             'currency_id'          => $currency->id,
             'include_net_worth'    => $includeNetWorth,
             'interest'             => $repository->getMetaValue($account, 'interest'),
@@ -142,9 +142,6 @@ class EditController extends Controller
             'notes'                => $this->repository->getNoteText($account),
             'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
-        if ('liabilities' === $what) {
-            $preFilled['openingBalance'] = bcmul($preFilled['openingBalance'], '-1');
-        }
 
         $request->session()->flash('preFilled', $preFilled);
 

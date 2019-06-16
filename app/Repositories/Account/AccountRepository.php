@@ -28,6 +28,7 @@ use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Services\Internal\Destroy\AccountDestroyService;
@@ -618,5 +619,20 @@ class AccountRepository implements AccountRepositoryInterface
             ->where('transactions.account_id', $account->id)
             ->transactionTypes([TransactionType::OPENING_BALANCE])
             ->first(['transaction_journals.*']);
+    }
+
+    /**
+     * @param Account $account
+     * @return TransactionGroup|null
+     */
+    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup
+    {
+        $journal = $this->getOpeningBalance($account);
+        $group   = null;
+        if (null !== $journal) {
+            $group = $journal->transactionGroup;
+        }
+
+        return $group;
     }
 }

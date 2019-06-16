@@ -50,6 +50,14 @@ interface JournalRepositoryInterface
     public function getAllJournals(array $types): Collection;
 
     /**
+     * Get all transaction journals with a specific type, for the logged in user.
+     *
+     * @param array $types
+     * @return Collection
+     */
+    public function getJournals(array $types): Collection;
+
+    /**
      * @param TransactionJournal $journal
      * @param TransactionType $type
      * @param Account $source

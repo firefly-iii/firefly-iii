@@ -60,7 +60,6 @@ trait JournalServiceTrait
      */
     protected function getForeignAmount(?string $amount): ?string
     {
-        $result = null;
         if (null === $amount) {
             Log::debug('No foreign amount info in array. Return NULL');
 
@@ -152,7 +151,7 @@ trait JournalServiceTrait
             $result = $this->accountRepository->store(
                 [
                     'account_type_id' => null,
-                    'accountType'     => $preferredType,
+                    'account_type'     => $preferredType,
                     'name'            => $accountName,
                     'active'          => true,
                     'iban'            => null,
@@ -243,9 +242,11 @@ trait JournalServiceTrait
             // try to delete existing notes.
             try {
                 $note->delete();
+                // @codeCoverageIgnoreStart
             } catch (Exception $e) {
                 Log::debug(sprintf('Could not delete journal notes: %s', $e->getMessage()));
             }
+            // @codeCoverageIgnoreEnd
         }
     }
 

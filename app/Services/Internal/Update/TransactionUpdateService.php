@@ -30,6 +30,7 @@ use Log;
 
 /**
  * Class TransactionUpdateService
+ * TODO i think this is deprecated.
  */
 class TransactionUpdateService
 {
@@ -48,24 +49,24 @@ class TransactionUpdateService
         }
     }
 
-    /**
-     * @param int $transactionId
-     *
-     * @return Transaction|null
-     */
-    public function reconcile(int $transactionId): ?Transaction
-    {
-        $transaction = Transaction::find($transactionId);
-        if (null !== $transaction) {
-            $transaction->reconciled = true;
-            $transaction->save();
-
-            return $transaction;
-        }
-
-        return null;
-
-    }
+//    /**
+//     * @param int $transactionId
+//     *
+//     * @return Transaction|null
+//     */
+//    public function reconcile(int $transactionId): ?Transaction
+//    {
+//        $transaction = Transaction::find($transactionId);
+//        if (null !== $transaction) {
+//            $transaction->reconciled = true;
+//            $transaction->save();
+//
+//            return $transaction;
+//        }
+//
+//        return null;
+//
+//    }
 
     /**
      * @param User $user
@@ -75,104 +76,104 @@ class TransactionUpdateService
         $this->user = $user;
     }
 
-    /**
-     * @param Transaction $transaction
-     * @param array       $data
-     *
-     * @return Transaction
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.NPathComplexity)
-     *
-     */
-    public function update(Transaction $transaction, array $data): Transaction
-    {
-        $currency = $this->findCurrency($data['currency_id'], $data['currency_code']);
-        $journal  = $transaction->transactionJournal;
-        $amount   = (string)$data['amount'];
-        $account  = null;
-        // update description:
-        $transaction->description = $data['description'];
-        $foreignAmount            = null;
-        if ((float)$transaction->amount < 0) {
-            // this is the source transaction.
-            $type          = $this->accountType($journal, 'source');
-            $account       = $this->findAccount($type, $data['source_id'], $data['source_name']);
-            $amount        = app('steam')->negative($amount);
-            $foreignAmount = app('steam')->negative((string)$data['foreign_amount']);
-        }
-
-        if ((float)$transaction->amount > 0) {
-            // this is the destination transaction.
-            $type          = $this->accountType($journal, 'destination');
-            $account       = $this->findAccount($type, $data['destination_id'], $data['destination_name']);
-            $amount        = app('steam')->positive($amount);
-            $foreignAmount = app('steam')->positive((string)$data['foreign_amount']);
-        }
-
-        // update the actual transaction:
-        $transaction->description             = $data['description'];
-        $transaction->amount                  = $amount;
-        $transaction->foreign_amount          = null;
-        $transaction->transaction_currency_id = null === $currency ? $transaction->transaction_currency_id : $currency->id;
-        $transaction->account_id              = $account->id;
-        $transaction->reconciled              = $data['reconciled'];
-        $transaction->save();
-
-        // set foreign currency
-        $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
-        // set foreign amount:
-        if (null !== $foreign && null !== $data['foreign_amount']) {
-            $this->setForeignCurrency($transaction, $foreign);
-            $this->setForeignAmount($transaction, $foreignAmount);
-        }
-        if (null === $foreign || null === $data['foreign_amount']) {
-            $this->setForeignCurrency($transaction, null);
-            $this->setForeignAmount($transaction, null);
-        }
-
-        // set budget:
-        $budget = $this->findBudget($data['budget_id'], $data['budget_name']);
-        $this->setBudget($transaction, $budget);
-
-        // set category
-        $category = $this->findCategory($data['category_id'], $data['category_name']);
-        $this->setCategory($transaction, $category);
-
-        return $transaction;
-    }
-
-    /**
-     * Update budget for a journal.
-     *
-     * @param Transaction $transaction
-     * @param int         $budgetId
-     *
-     * @return Transaction
-     */
-    public function updateBudget(Transaction $transaction, int $budgetId): Transaction
-    {
-        $budget = $this->findBudget($budgetId, null);
-        $this->setBudget($transaction, $budget);
-
-        return $transaction;
-
-    }
-
-    /**
-     * Update category for a journal.
-     *
-     * @param Transaction $transaction
-     * @param string      $category
-     *
-     * @return Transaction
-     */
-    public function updateCategory(Transaction $transaction, string $category): Transaction
-    {
-        $found = $this->findCategory(0, $category);
-        $this->setCategory($transaction, $found);
-
-        return $transaction;
-    }
+//    /**
+//     * @param Transaction $transaction
+//     * @param array       $data
+//     *
+//     * @return Transaction
+//     * @throws \FireflyIII\Exceptions\FireflyException
+//     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+//     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+//     * @SuppressWarnings(PHPMD.NPathComplexity)
+//     *
+//     */
+//    public function update(Transaction $transaction, array $data): Transaction
+//    {
+//        $currency = $this->findCurrency($data['currency_id'], $data['currency_code']);
+//        $journal  = $transaction->transactionJournal;
+//        $amount   = (string)$data['amount'];
+//        $account  = null;
+//        // update description:
+//        $transaction->description = $data['description'];
+//        $foreignAmount            = null;
+//        if ((float)$transaction->amount < 0) {
+//            // this is the source transaction.
+//            $type          = $this->accountType($journal, 'source');
+//            $account       = $this->findAccount($type, $data['source_id'], $data['source_name']);
+//            $amount        = app('steam')->negative($amount);
+//            $foreignAmount = app('steam')->negative((string)$data['foreign_amount']);
+//        }
+//
+//        if ((float)$transaction->amount > 0) {
+//            // this is the destination transaction.
+//            $type          = $this->accountType($journal, 'destination');
+//            $account       = $this->findAccount($type, $data['destination_id'], $data['destination_name']);
+//            $amount        = app('steam')->positive($amount);
+//            $foreignAmount = app('steam')->positive((string)$data['foreign_amount']);
+//        }
+//
+//        // update the actual transaction:
+//        $transaction->description             = $data['description'];
+//        $transaction->amount                  = $amount;
+//        $transaction->foreign_amount          = null;
+//        $transaction->transaction_currency_id = null === $currency ? $transaction->transaction_currency_id : $currency->id;
+//        $transaction->account_id              = $account->id;
+//        $transaction->reconciled              = $data['reconciled'];
+//        $transaction->save();
+//
+//        // set foreign currency
+//        $foreign = $this->findCurrency($data['foreign_currency_id'], $data['foreign_currency_code']);
+//        // set foreign amount:
+//        if (null !== $foreign && null !== $data['foreign_amount']) {
+//            $this->setForeignCurrency($transaction, $foreign);
+//            $this->setForeignAmount($transaction, $foreignAmount);
+//        }
+//        if (null === $foreign || null === $data['foreign_amount']) {
+//            $this->setForeignCurrency($transaction, null);
+//            $this->setForeignAmount($transaction, null);
+//        }
+//
+//        // set budget:
+//        $budget = $this->findBudget($data['budget_id'], $data['budget_name']);
+//        $this->setBudget($transaction, $budget);
+//
+//        // set category
+//        $category = $this->findCategory($data['category_id'], $data['category_name']);
+//        $this->setCategory($transaction, $category);
+//
+//        return $transaction;
+//    }
+//
+//    /**
+//     * Update budget for a journal.
+//     *
+//     * @param Transaction $transaction
+//     * @param int         $budgetId
+//     *
+//     * @return Transaction
+//     */
+//    public function updateBudget(Transaction $transaction, int $budgetId): Transaction
+//    {
+//        $budget = $this->findBudget($budgetId, null);
+//        $this->setBudget($transaction, $budget);
+//
+//        return $transaction;
+//
+//    }
+//
+//    /**
+//     * Update category for a journal.
+//     *
+//     * @param Transaction $transaction
+//     * @param string      $category
+//     *
+//     * @return Transaction
+//     */
+//    public function updateCategory(Transaction $transaction, string $category): Transaction
+//    {
+//        $found = $this->findCategory(0, $category);
+//        $this->setCategory($transaction, $found);
+//
+//        return $transaction;
+//    }
 }

@@ -117,13 +117,12 @@ interface PiggyBankRepositoryInterface
     public function findNull(int $piggyBankId): ?PiggyBank;
 
     /**
-     * @param PiggyBank|null $piggyBank
      * @param int|null       $piggyBankId
      * @param string|null    $piggyBankName
      *
      * @return PiggyBank|null
      */
-    public function findPiggyBank(?PiggyBank $piggyBank, ?int $piggyBankId, ?string $piggyBankName): ?PiggyBank;
+    public function findPiggyBank(?int $piggyBankId, ?string $piggyBankName): ?PiggyBank;
 
     /**
      * Get current amount saved in piggy bank.

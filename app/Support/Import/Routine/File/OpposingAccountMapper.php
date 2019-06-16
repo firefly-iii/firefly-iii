@@ -116,7 +116,7 @@ class OpposingAccountMapper
             'iban'            => $data['iban'] ?? null,
             'accountNumber'   => $data['number'] ?? null,
             'account_type_id' => null,
-            'accountType'     => $expectedType,
+            'account_type'     => $expectedType,
             'active'          => true,
             'BIC'             => $data['bic'] ?? null,
         ];

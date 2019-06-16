@@ -115,9 +115,9 @@ trait ModelInformation
                 }
                 $data        = [
                     'name'            => $data['destination_account_expense'],
-                    'accountType'     => 'expense',
+                    'account_type'     => 'expense',
                     'account_type_id' => null,
-                    'virtualBalance'  => 0,
+                    'virtual_balance'  => 0,
                     'active'          => true,
                     'iban'            => null,
                 ];
@@ -171,8 +171,8 @@ trait ModelInformation
 
                 $data   = [
                     'name'            => $data['source_account_revenue'],
-                    'accountType'     => 'revenue',
-                    'virtualBalance'  => 0,
+                    'account_type'     => 'revenue',
+                    'virtual_balance'  => 0,
                     'active'          => true,
                     'account_type_id' => null,
                     'iban'            => null,

@@ -140,9 +140,9 @@ class SetDestinationAccount implements ActionInterface
         if (null === $account) {
             $data    = [
                 'name'            => $this->action->action_value,
-                'accountType'     => 'expense',
+                'account_type'     => 'expense',
                 'account_type_id' => null,
-                'virtualBalance'  => 0,
+                'virtual_balance'  => 0,
                 'active'          => true,
                 'iban'            => null,
             ];

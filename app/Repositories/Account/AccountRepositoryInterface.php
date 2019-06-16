@@ -26,6 +26,7 @@ use Carbon\Carbon;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
@@ -42,6 +43,12 @@ interface AccountRepositoryInterface
      * @return TransactionJournal|null
      */
     public function getOpeningBalance(Account $account): ?TransactionJournal;
+
+    /**
+     * @param Account $account
+     * @return TransactionGroup|null
+     */
+    public function getOpeningBalanceGroup(Account $account): ?TransactionGroup;
 
     /**
      * Moved here from account CRUD.
