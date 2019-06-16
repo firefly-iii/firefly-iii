@@ -67,7 +67,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'            => 'Some new asset account #' . random_int(1, 10000),
+            'name'            => 'Some new asset account #' . $this->randomInt(),
             'type'            => 'asset',
             'account_role'    => 'defaultAsset',
             'opening_balance' => '123.45',
@@ -146,7 +146,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'                 => 'Some new liability account #' . random_int(1, 10000),
+            'name'                 => 'Some new liability account #' . $this->randomInt(),
             'type'                 => 'liability',
             'liability_amount'     => '10000',
             'liability_start_date' => '2016-01-01',
@@ -185,7 +185,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . random_int(1, 10000),
+            'name'         => 'Some new asset account #' . $this->randomInt(),
             'type'         => 'asset',
             'account_role' => 'ccAsset',
         ];
@@ -233,7 +233,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'              => 'Some new asset account #' . random_int(1, 10000),
+            'name'              => 'Some new asset account #' . $this->randomInt(),
             'type'              => 'asset',
             'account_role'      => 'defaultAsset',
             'include_net_worth' => false,
@@ -314,7 +314,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'         => 'Some new asset account #' . random_int(1, 10000),
+            'name'         => 'Some new asset account #' . $this->randomInt(),
             'type'         => 'asset',
             'account_role' => 'defaultAsset',
         ];
@@ -355,7 +355,7 @@ class AccountControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'          => 'Some new asset account #' . random_int(1, 10000),
+            'name'          => 'Some new asset account #' . $this->randomInt(),
             'currency_code' => 'EUR',
             'type'          => 'asset',
             'account_role'  => 'defaultAsset',

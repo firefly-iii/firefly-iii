@@ -80,9 +80,9 @@ class LinkTypeControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'     => 'random' . random_int(1, 100000),
-            'outward'  => 'outward' . random_int(1, 100000),
-            'inward'   => 'inward ' . random_int(1, 100000),
+            'name'     => 'random' . $this->randomInt(),
+            'outward'  => 'outward' . $this->randomInt(),
+            'inward'   => 'inward ' . $this->randomInt(),
             'editable' => true,
 
         ];
@@ -110,9 +110,9 @@ class LinkTypeControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'     => 'random' . random_int(1, 100000),
-            'outward'  => 'outward' . random_int(1, 100000),
-            'inward'   => 'inward ' . random_int(1, 100000),
+            'name'     => 'random' . $this->randomInt(),
+            'outward'  => 'outward' . $this->randomInt(),
+            'inward'   => 'inward ' . $this->randomInt(),
             'editable' => true,
 
         ];
@@ -146,9 +146,9 @@ class LinkTypeControllerTest extends TestCase
         // create editable link type:
         $linkType = LinkType::create(
             [
-                'name'     => 'random' . random_int(1, 100000),
-                'outward'  => 'outward' . random_int(1, 100000),
-                'inward'   => 'inward ' . random_int(1, 100000),
+                'name'     => 'random' . $this->randomInt(),
+                'outward'  => 'outward' . $this->randomInt(),
+                'inward'   => 'inward ' . $this->randomInt(),
                 'editable' => true,
 
             ]
@@ -160,9 +160,9 @@ class LinkTypeControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'     => 'random' . random_int(1, 100000),
-            'outward'  => 'outward' . random_int(1, 100000),
-            'inward'   => 'inward ' . random_int(1, 100000),
+            'name'     => 'random' . $this->randomInt(),
+            'outward'  => 'outward' . $this->randomInt(),
+            'inward'   => 'inward ' . $this->randomInt(),
             'editable' => true,
 
         ];
@@ -186,9 +186,9 @@ class LinkTypeControllerTest extends TestCase
         // create editable link type:
         $linkType = LinkType::create(
             [
-                'name'     => 'random' . random_int(1, 100000),
-                'outward'  => 'outward' . random_int(1, 100000),
-                'inward'   => 'inward ' . random_int(1, 100000),
+                'name'     => 'random' . $this->randomInt(),
+                'outward'  => 'outward' . $this->randomInt(),
+                'inward'   => 'inward ' . $this->randomInt(),
                 'editable' => false,
 
             ]
@@ -199,9 +199,9 @@ class LinkTypeControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'     => 'random' . random_int(1, 100000),
-            'outward'  => 'outward' . random_int(1, 100000),
-            'inward'   => 'inward ' . random_int(1, 100000),
+            'name'     => 'random' . $this->randomInt(),
+            'outward'  => 'outward' . $this->randomInt(),
+            'inward'   => 'inward ' . $this->randomInt(),
             'editable' => true,
 
         ];
@@ -227,9 +227,9 @@ class LinkTypeControllerTest extends TestCase
         // create editable link type:
         $linkType = LinkType::create(
             [
-                'name'     => 'random' . random_int(1, 100000),
-                'outward'  => 'outward' . random_int(1, 100000),
-                'inward'   => 'inward ' . random_int(1, 100000),
+                'name'     => 'random' . $this->randomInt(),
+                'outward'  => 'outward' . $this->randomInt(),
+                'inward'   => 'inward ' . $this->randomInt(),
                 'editable' => true,
 
             ]
@@ -240,9 +240,9 @@ class LinkTypeControllerTest extends TestCase
 
         // data to submit
         $data = [
-            'name'     => 'random' . random_int(1, 100000),
-            'outward'  => 'outward' . random_int(1, 100000),
-            'inward'   => 'inward ' . random_int(1, 100000),
+            'name'     => 'random' . $this->randomInt(),
+            'outward'  => 'outward' . $this->randomInt(),
+            'inward'   => 'inward ' . $this->randomInt(),
             'editable' => true,
 
         ];

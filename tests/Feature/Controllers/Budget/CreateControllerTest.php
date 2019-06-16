@@ -91,7 +91,7 @@ class CreateControllerTest extends TestCase
         $this->session(['budgets.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Budget ' . random_int(1000, 9999),
+            'name' => 'New Budget ' . $this->randomInt(),
         ];
         $this->be($this->user());
         $response = $this->post(route('budgets.store'), $data);

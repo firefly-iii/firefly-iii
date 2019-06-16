@@ -46,220 +46,220 @@ class TransactionUpdateServiceTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     */
-    public function testReconcile(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $transaction = $this->user()->transactions()->inRandomOrder()->first();
-
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->reconcile($transaction->id);
-        $this->assertEquals($result->id, $transaction->id);
-        $this->assertEquals(true, $result->reconciled);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
-     */
-    public function testReconcileNull(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->reconcile(-1);
-        $this->assertNull($result);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
-     */
-    public function testUpdateBudget(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Transaction $source */
-        $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-        $budget = $this->user()->budgets()->inRandomOrder()->first();
-
-        $factory = $this->mock(BudgetFactory::class);
-        $factory->shouldReceive('setUser');
-        $factory->shouldReceive('find')->andReturn($budget);
-
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->updateBudget($source, $budget->id);
-
-        $this->assertEquals(1, $result->budgets()->count());
-        $this->assertEquals($budget->name, $result->budgets()->first()->name);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
-     */
-    public function testUpdateCategory(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Transaction $source */
-        $source   = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-        $category = $this->user()->categories()->inRandomOrder()->first();
-
-        $factory = $this->mock(CategoryFactory::class);
-        $factory->shouldReceive('setUser');
-        $factory->shouldReceive('findOrCreate')->andReturn($category);
-
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->updateCategory($source, $category->name);
-
-        $this->assertEquals(1, $result->categories()->count());
-        $this->assertEquals($category->name, $result->categories()->first()->name);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
-     */
-    public function testUpdateDestinationBasic(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Transaction $source */
-        $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-        $data   = [
-            'currency_id'           => 1,
-            'currency_code'         => null,
-            'description'           => 'Some new description',
-            'reconciled'            => false,
-            'foreign_amount'        => null,
-            'budget_id'             => null,
-            'budget_name'           => null,
-            'destination_id'        => (int)$source->account_id,
-            'destination_name'      => null,
-            'category_id'           => null,
-            'category_name'         => null,
-            'amount'                => $source->amount,
-            'foreign_currency_id'   => null,
-            'foreign_currency_code' => null,
-        ];
-
-        // mock repository:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
-
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->update($source, $data);
-
-        $this->assertEquals($source->id, $result->id);
-        $this->assertEquals($result->description, $data['description']);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
-     */
-    public function testUpdateDestinationForeign(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Transaction $source */
-        $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
-        $data   = [
-            'currency_id'           => 1,
-            'currency_code'         => null,
-            'description'           => 'Some new description',
-            'reconciled'            => false,
-            'foreign_amount'        => '12.34',
-            'budget_id'             => null,
-            'budget_name'           => null,
-            'destination_id'        => (int)$source->account_id,
-            'destination_name'      => null,
-            'category_id'           => null,
-            'category_name'         => null,
-            'amount'                => $source->amount,
-            'foreign_currency_id'   => 2,
-            'foreign_currency_code' => null,
-        ];
-
-        // mock repository:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
-
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->update($source, $data);
-
-
-        $this->assertEquals($source->id, $result->id);
-        $this->assertEquals($result->description, $data['description']);
-        $this->assertEquals($data['foreign_amount'], $result->foreign_amount);
-        $this->assertEquals($data['foreign_currency_id'], $result->foreign_currency_id);
-    }
-
-    /**
-     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
-     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
-     */
-    public function testUpdateSourceBasic(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var Transaction $source */
-        $source = $this->user()->transactions()->where('amount', '<', 0)->inRandomOrder()->first();
-        $data   = [
-            'currency_id'           => 1,
-            'currency_code'         => null,
-            'description'           => 'Some new description',
-            'reconciled'            => false,
-            'foreign_amount'        => null,
-            'budget_id'             => null,
-            'budget_name'           => null,
-            'source_id'             => (int)$source->account_id,
-            'source_name'           => null,
-            'category_id'           => null,
-            'category_name'         => null,
-            'amount'                => $source->amount,
-            'foreign_currency_id'   => null,
-            'foreign_currency_code' => null,
-        ];
-
-        // mock repository:
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $accountRepos->shouldReceive('setUser');
-        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
-
-        /** @var TransactionUpdateService $service */
-        $service = app(TransactionUpdateService::class);
-        $service->setUser($this->user());
-        $result = $service->update($source, $data);
-
-        $this->assertEquals($source->id, $result->id);
-        $this->assertEquals($result->description, $data['description']);
-
-
-    }
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     */
+//    public function testReconcile(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        $transaction = $this->user()->transactions()->inRandomOrder()->first();
+//
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->reconcile($transaction->id);
+//        $this->assertEquals($result->id, $transaction->id);
+//        $this->assertEquals(true, $result->reconciled);
+//    }
+//
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+//     */
+//    public function testReconcileNull(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->reconcile(-1);
+//        $this->assertNull($result);
+//    }
+//
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+//     */
+//    public function testUpdateBudget(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        /** @var Transaction $source */
+//        $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
+//        $budget = $this->user()->budgets()->inRandomOrder()->first();
+//
+//        $factory = $this->mock(BudgetFactory::class);
+//        $factory->shouldReceive('setUser');
+//        $factory->shouldReceive('find')->andReturn($budget);
+//
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->updateBudget($source, $budget->id);
+//
+//        $this->assertEquals(1, $result->budgets()->count());
+//        $this->assertEquals($budget->name, $result->budgets()->first()->name);
+//    }
+//
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+//     */
+//    public function testUpdateCategory(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        /** @var Transaction $source */
+//        $source   = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
+//        $category = $this->user()->categories()->inRandomOrder()->first();
+//
+//        $factory = $this->mock(CategoryFactory::class);
+//        $factory->shouldReceive('setUser');
+//        $factory->shouldReceive('findOrCreate')->andReturn($category);
+//
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->updateCategory($source, $category->name);
+//
+//        $this->assertEquals(1, $result->categories()->count());
+//        $this->assertEquals($category->name, $result->categories()->first()->name);
+//    }
+//
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+//     */
+//    public function testUpdateDestinationBasic(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        /** @var Transaction $source */
+//        $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
+//        $data   = [
+//            'currency_id'           => 1,
+//            'currency_code'         => null,
+//            'description'           => 'Some new description',
+//            'reconciled'            => false,
+//            'foreign_amount'        => null,
+//            'budget_id'             => null,
+//            'budget_name'           => null,
+//            'destination_id'        => (int)$source->account_id,
+//            'destination_name'      => null,
+//            'category_id'           => null,
+//            'category_name'         => null,
+//            'amount'                => $source->amount,
+//            'foreign_currency_id'   => null,
+//            'foreign_currency_code' => null,
+//        ];
+//
+//        // mock repository:
+//        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+//        $accountRepos->shouldReceive('setUser');
+//        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
+//
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->update($source, $data);
+//
+//        $this->assertEquals($source->id, $result->id);
+//        $this->assertEquals($result->description, $data['description']);
+//    }
+//
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+//     */
+//    public function testUpdateDestinationForeign(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        /** @var Transaction $source */
+//        $source = $this->user()->transactions()->where('amount', '>', 0)->inRandomOrder()->first();
+//        $data   = [
+//            'currency_id'           => 1,
+//            'currency_code'         => null,
+//            'description'           => 'Some new description',
+//            'reconciled'            => false,
+//            'foreign_amount'        => '12.34',
+//            'budget_id'             => null,
+//            'budget_name'           => null,
+//            'destination_id'        => (int)$source->account_id,
+//            'destination_name'      => null,
+//            'category_id'           => null,
+//            'category_name'         => null,
+//            'amount'                => $source->amount,
+//            'foreign_currency_id'   => 2,
+//            'foreign_currency_code' => null,
+//        ];
+//
+//        // mock repository:
+//        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+//        $accountRepos->shouldReceive('setUser');
+//        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
+//
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->update($source, $data);
+//
+//
+//        $this->assertEquals($source->id, $result->id);
+//        $this->assertEquals($result->description, $data['description']);
+//        $this->assertEquals($data['foreign_amount'], $result->foreign_amount);
+//        $this->assertEquals($data['foreign_currency_id'], $result->foreign_currency_id);
+//    }
+//
+//    /**
+//     * @covers \FireflyIII\Services\Internal\Update\TransactionUpdateService
+//     * @covers \FireflyIII\Services\Internal\Support\TransactionServiceTrait
+//     */
+//    public function testUpdateSourceBasic(): void
+//    {
+//        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+//
+//        return;
+//        /** @var Transaction $source */
+//        $source = $this->user()->transactions()->where('amount', '<', 0)->inRandomOrder()->first();
+//        $data   = [
+//            'currency_id'           => 1,
+//            'currency_code'         => null,
+//            'description'           => 'Some new description',
+//            'reconciled'            => false,
+//            'foreign_amount'        => null,
+//            'budget_id'             => null,
+//            'budget_name'           => null,
+//            'source_id'             => (int)$source->account_id,
+//            'source_name'           => null,
+//            'category_id'           => null,
+//            'category_name'         => null,
+//            'amount'                => $source->amount,
+//            'foreign_currency_id'   => null,
+//            'foreign_currency_code' => null,
+//        ];
+//
+//        // mock repository:
+//        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+//        $accountRepos->shouldReceive('setUser');
+//        $accountRepos->shouldReceive('findNull')->andReturn($source->account);
+//
+//        /** @var TransactionUpdateService $service */
+//        $service = app(TransactionUpdateService::class);
+//        $service->setUser($this->user());
+//        $result = $service->update($source, $data);
+//
+//        $this->assertEquals($source->id, $result->id);
+//        $this->assertEquals($result->description, $data['description']);
+//
+//
+//    }
 }

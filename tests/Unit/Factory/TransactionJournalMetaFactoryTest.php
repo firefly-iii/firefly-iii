@@ -25,7 +25,6 @@ namespace Tests\Unit\Factory;
 
 use Carbon\Carbon;
 use FireflyIII\Factory\TransactionJournalMetaFactory;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalMeta;
 use Log;
 use Tests\TestCase;
@@ -50,14 +49,10 @@ class TransactionJournalMetaFactoryTest extends TestCase
      */
     public function testUpdateOrCreateBasic(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $journal->transactionJournalMeta()->delete();
+        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal->transactionJournalMeta()->delete();
         $set = [
-            'journal' => $journal,
+            'journal' => $withdrawal,
             'name'    => 'hello',
             'data'    => 'bye!',
         ];
@@ -65,7 +60,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $result  = $factory->updateOrCreate($set);
 
-        $this->assertEquals(1, $journal->transactionJournalMeta()->count());
+        $this->assertEquals(1, $withdrawal->transactionJournalMeta()->count());
         $this->assertEquals($set['data'], $result->data);
     }
 
@@ -74,14 +69,10 @@ class TransactionJournalMetaFactoryTest extends TestCase
      */
     public function testUpdateOrCreateDate(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $journal->transactionJournalMeta()->delete();
+        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal->transactionJournalMeta()->delete();
         $set = [
-            'journal' => $journal,
+            'journal' => $withdrawal,
             'name'    => 'hello',
             'data'    => new Carbon('2012-01-01'),
         ];
@@ -89,7 +80,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $result  = $factory->updateOrCreate($set);
 
-        $this->assertEquals(1, $journal->transactionJournalMeta()->count());
+        $this->assertEquals(1, $withdrawal->transactionJournalMeta()->count());
         $this->assertEquals($set['data']->toW3cString(), $result->data);
     }
 
@@ -98,22 +89,18 @@ class TransactionJournalMetaFactoryTest extends TestCase
      */
     public function testUpdateOrCreateDeleteExisting(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
-        $meta    = TransactionJournalMeta::create(
+        $withdrawal = $this->getRandomWithdrawal();
+        TransactionJournalMeta::create(
             [
-                'transaction_journal_id' => $journal->id,
+                'transaction_journal_id' => $withdrawal->id,
                 'name'                   => 'hello',
                 'data'                   => 'bye!',
             ]
         );
-        $count   = $journal->transactionJournalMeta()->count();
+        $count = $withdrawal->transactionJournalMeta()->count();
 
         $set = [
-            'journal' => $journal,
+            'journal' => $withdrawal,
             'name'    => 'hello',
             'data'    => null,
         ];
@@ -121,7 +108,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $factory->updateOrCreate($set);
 
-        $this->assertEquals($count - 1, $journal->transactionJournalMeta()->count());
+        $this->assertEquals($count - 1, $withdrawal->transactionJournalMeta()->count());
     }
 
     /**
@@ -129,14 +116,10 @@ class TransactionJournalMetaFactoryTest extends TestCase
      */
     public function testUpdateOrCreateEmpty(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $journal->transactionJournalMeta()->delete();
+        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal->transactionJournalMeta()->delete();
         $set = [
-            'journal' => $journal,
+            'journal' => $withdrawal,
             'name'    => 'hello',
             'data'    => '',
         ];
@@ -144,7 +127,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $result  = $factory->updateOrCreate($set);
 
-        $this->assertEquals(0, $journal->transactionJournalMeta()->count());
+        $this->assertEquals(0, $withdrawal->transactionJournalMeta()->count());
         $this->assertNull($result);
     }
 
@@ -153,14 +136,10 @@ class TransactionJournalMetaFactoryTest extends TestCase
      */
     public function testUpdateOrCreateExistingEmpty(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $journal */
-        $journal = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $journal->transactionJournalMeta()->delete();
+        $withdrawal = $this->getRandomWithdrawal();
+        $withdrawal->transactionJournalMeta()->delete();
         $set = [
-            'journal' => $journal,
+            'journal' => $withdrawal,
             'name'    => 'hello',
             'data'    => 'SomeData',
         ];
@@ -168,12 +147,12 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $result  = $factory->updateOrCreate($set);
 
-        $this->assertEquals(1, $journal->transactionJournalMeta()->count());
+        $this->assertEquals(1, $withdrawal->transactionJournalMeta()->count());
         $this->assertNotNull($result);
 
         // overrule with empty entry:
         $set = [
-            'journal' => $journal,
+            'journal' => $withdrawal,
             'name'    => 'hello',
             'data'    => '',
         ];
@@ -181,7 +160,7 @@ class TransactionJournalMetaFactoryTest extends TestCase
         $factory = app(TransactionJournalMetaFactory::class);
         $result  = $factory->updateOrCreate($set);
 
-        $this->assertEquals(0, $journal->transactionJournalMeta()->count());
+        $this->assertEquals(0, $withdrawal->transactionJournalMeta()->count());
         $this->assertNull($result);
 
     }

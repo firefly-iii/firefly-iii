@@ -52,6 +52,21 @@ use RuntimeException;
 abstract class TestCase extends BaseTestCase
 {
     /**
+     * @return int
+     */
+    public function randomInt(): int
+    {
+        $result = 4;
+        try {
+            $result = random_int(1, 100000);
+        } catch (Exception $e) {
+            Log::debug(sprintf('Could not generate random number: %s', $e->getMessage()));
+        }
+
+        return $result;
+    }
+
+    /**
      * @param User $user
      * @param string $range
      */

@@ -91,7 +91,7 @@ class CategoryFactoryTest extends TestCase
      */
     public function testFindOrCreateNewName(): void
     {
-        $name = 'Some new category #' . random_int(1, 10000);
+        $name = sprintf('Some new category #%d', $this->randomInt());
 
         /** @var CategoryFactory $factory */
         $factory = app(CategoryFactory::class);

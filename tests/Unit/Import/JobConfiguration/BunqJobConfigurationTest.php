@@ -57,7 +57,7 @@ class BunqJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'bunq_jc_A' . random_int(1, 100000);
+        $job->key           = 'bunq_jc_A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'bunq';
@@ -154,7 +154,7 @@ class BunqJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'bunq_jc_E' . random_int(1, 100000);
+        $job->key           = 'bunq_jc_E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'choose-accounts';
         $job->provider      = 'bunq';

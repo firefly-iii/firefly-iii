@@ -58,7 +58,7 @@ class YnabJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_jc_A' . random_int(1, 100000);
+        $job->key           = 'ynab_jc_A' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'ynab';
@@ -155,7 +155,7 @@ class YnabJobConfigurationTest extends TestCase
         $jobRepos->shouldReceive('setUser')->once();
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'ynab_jc_E' . random_int(1, 100000);
+        $job->key           = 'ynab_jc_E' . $this->randomInt();
         $job->status        = 'new';
         $job->stage         = 'new';
         $job->provider      = 'ynab';

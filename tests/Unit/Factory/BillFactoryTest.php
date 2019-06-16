@@ -27,7 +27,6 @@ namespace Tests\Unit\Factory;
 use Amount;
 use FireflyIII\Factory\BillFactory;
 use FireflyIII\Factory\TransactionCurrencyFactory;
-use FireflyIII\Models\TransactionCurrency;
 use Log;
 use Tests\TestCase;
 
@@ -36,8 +35,6 @@ use Tests\TestCase;
  */
 class BillFactoryTest extends TestCase
 {
-
-
     /**
      *
      */
@@ -56,8 +53,9 @@ class BillFactoryTest extends TestCase
     public function testCreateBasic(): void
     {
         $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $euro            = $this->getEuro();
         $data            = [
-            'name'          => 'Some new bill #' . random_int(1, 10000),
+            'name'          => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'    => '5',
             'currency_id'   => 1,
             'currency_code' => '',
@@ -71,8 +69,7 @@ class BillFactoryTest extends TestCase
         ];
 
         $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([1, ''])->andReturn(TransactionCurrency::find(1));
-
+                        ->withArgs([1, ''])->andReturn($euro);
 
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
@@ -97,10 +94,11 @@ class BillFactoryTest extends TestCase
     public function testCreateDifferentCurrency(): void
     {
         $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $dollar          = $this->getDollar();
         $data            = [
-            'name'          => 'Some new bill #' . random_int(1, 10000),
+            'name'          => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'    => '5',
-            'currency_code' => 'USD',
+            'currency_code' => $dollar->code,
             'amount_max'    => '10',
             'date'          => '2018-01-01',
             'repeat_freq'   => 'monthly',
@@ -111,8 +109,7 @@ class BillFactoryTest extends TestCase
         ];
 
         $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([0, 'USD'])->andReturn(TransactionCurrency::find(5));
-
+                        ->withArgs([0, $dollar->code])->andReturn($dollar);
 
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
@@ -121,7 +118,7 @@ class BillFactoryTest extends TestCase
 
         $this->assertEquals($data['name'], $bill->name);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
-        $this->assertEquals(5, $bill->transaction_currency_id);
+        $this->assertEquals($dollar->id, $bill->transaction_currency_id);
         $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
         $note = $bill->notes()->first();
         $this->assertEquals($data['notes'], $note->text);
@@ -137,13 +134,14 @@ class BillFactoryTest extends TestCase
     public function testCreateEmptyNotes(): void
     {
         $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $euro            = $this->getEuro();
         $data            = [
-            'name'          => 'Some new bill #' . random_int(1, 10000),
+            'name'          => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'    => '5',
             'amount_max'    => '10',
             'date'          => '2018-01-01',
             'repeat_freq'   => 'monthly',
-            'currency_id'   => 1,
+            'currency_id'   => $euro->id,
             'currency_code' => '',
             'skip'          => 0,
             'automatch'     => true,
@@ -152,7 +150,7 @@ class BillFactoryTest extends TestCase
         ];
 
         $currencyFactory->shouldReceive('find')->atLeast()->once()
-                        ->withArgs([1, ''])->andReturn(TransactionCurrency::find(1));
+                        ->withArgs([1, ''])->andReturn($euro);
 
 
         /** @var BillFactory $factory */
@@ -161,7 +159,7 @@ class BillFactoryTest extends TestCase
         $bill = $factory->create($data);
 
         $this->assertEquals($data['name'], $bill->name);
-        $this->assertEquals(1, $bill->transaction_currency_id);
+        $this->assertEquals($euro->id, $bill->transaction_currency_id);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
         $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
         $this->assertEquals(0, $bill->notes()->count());
@@ -177,8 +175,9 @@ class BillFactoryTest extends TestCase
     public function testCreateNoCurrency(): void
     {
         $currencyFactory = $this->mock(TransactionCurrencyFactory::class);
+        $dollar          = $this->getDollar();
         $data            = [
-            'name'        => 'Some new bill #' . random_int(1, 10000),
+            'name'        => sprintf('Some new bill #%d', $this->randomInt()),
             'amount_min'  => '5',
             'amount_max'  => '10',
             'date'        => '2018-01-01',
@@ -192,7 +191,7 @@ class BillFactoryTest extends TestCase
         $currencyFactory->shouldReceive('find')->atLeast()->once()
                         ->withArgs([0, ''])->andReturnNull();
 
-        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn(TransactionCurrency::find(3));
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($dollar);
 
 
         /** @var BillFactory $factory */
@@ -202,7 +201,7 @@ class BillFactoryTest extends TestCase
 
         $this->assertEquals($data['name'], $bill->name);
         $this->assertEquals($data['amount_min'], $bill->amount_min);
-        $this->assertEquals(3, $bill->transaction_currency_id);
+        $this->assertEquals($dollar->id, $bill->transaction_currency_id);
         $this->assertEquals($data['repeat_freq'], $bill->repeat_freq);
         $note = $bill->notes()->first();
         $this->assertEquals($data['notes'], $note->text);
@@ -256,7 +255,7 @@ class BillFactoryTest extends TestCase
         /** @var BillFactory $factory */
         $factory = app(BillFactory::class);
         $factory->setUser($this->user());
-        $piggy = $factory->find(null, 'I dont exist' . random_int(1, 10000));
+        $piggy = $factory->find(null, sprintf('I dont exist #%d', $this->randomInt()));
 
         $this->assertNull($piggy);
     }

@@ -151,8 +151,10 @@ class MigrateToRulesTest extends TestCase
                 ],
             ],
             'actions'         => [
-                'type'  => 'link_to_bill',
-                'value' => $bill->name,
+                [
+                    'type'  => 'link_to_bill',
+                    'value' => $bill->name,
+                ],
             ],
         ];
 
@@ -260,8 +262,10 @@ class MigrateToRulesTest extends TestCase
                 ],
             ],
             'actions'         => [
-                'type'  => 'link_to_bill',
-                'value' => $bill->name,
+                [
+                    'type'  => 'link_to_bill',
+                    'value' => $bill->name,
+                ],
             ],
         ];
 

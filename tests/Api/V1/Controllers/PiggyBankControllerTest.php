@@ -78,7 +78,7 @@ class PiggyBankControllerTest extends TestCase
         $repository->shouldReceive('store')->once()->andReturn($piggy);
 
         $data = [
-            'name'          => 'New piggy #' . random_int(1, 100000),
+            'name'          => 'New piggy #' . $this->randomInt(),
             'account_id'    => 1,
             'target_amount' => '100',
         ];
@@ -106,7 +106,7 @@ class PiggyBankControllerTest extends TestCase
 
 
         $data = [
-            'name'          => 'New piggy #' . random_int(1, 100000),
+            'name'          => 'New piggy #' . $this->randomInt(),
             'account_id'    => 1,
             'target_amount' => '100',
         ];
@@ -157,7 +157,7 @@ class PiggyBankControllerTest extends TestCase
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::first());
 
         $data = [
-            'name'          => 'new pigy bank ' . random_int(1, 10000),
+            'name'          => 'new pigy bank ' . $this->randomInt(),
             'account_id'    => 1,
             'target_amount' => '100',
         ];

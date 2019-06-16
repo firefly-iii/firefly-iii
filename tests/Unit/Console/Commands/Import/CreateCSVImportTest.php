@@ -129,7 +129,7 @@ class CreateCSVImportTest extends TestCase
 
         $importJob = ImportJob::create(
             [
-                'key'       => 'key-' . random_int(1, 100000),
+                'key'       => 'key-' . $this->randomInt(),
                 'user_id'   => 1,
                 'file_type' => 'csv',
                 'status'    => 'new',
@@ -203,7 +203,7 @@ class CreateCSVImportTest extends TestCase
 
         $importJob = ImportJob::create(
             [
-                'key'       => 'key-' . random_int(1, 100000),
+                'key'       => 'key-' . $this->randomInt(),
                 'user_id'   => 1,
                 'file_type' => 'csv',
                 'status'    => 'new',

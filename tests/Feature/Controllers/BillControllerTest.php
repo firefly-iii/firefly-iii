@@ -326,7 +326,7 @@ class BillControllerTest extends TestCase
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $data = [
-            'name'                    => 'New Bill ' . random_int(1000, 9999),
+            'name'                    => 'New Bill ' . $this->randomInt(),
             'amount_min'              => '100',
             'transaction_currency_id' => 1,
             'skip'                    => 0,
@@ -364,7 +364,7 @@ class BillControllerTest extends TestCase
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $data = [
-            'name'                    => 'New Bill ' . random_int(1000, 9999),
+            'name'                    => 'New Bill ' . $this->randomInt(),
             'amount_min'              => '100',
             'transaction_currency_id' => 1,
             'skip'                    => 0,
@@ -400,7 +400,7 @@ class BillControllerTest extends TestCase
         $repository->shouldReceive('store')->andReturn(null);
 
         $data = [
-            'name'                    => 'New Bill ' . random_int(1000, 9999),
+            'name'                    => 'New Bill ' . $this->randomInt(),
             'amount_min'              => '100',
             'transaction_currency_id' => 1,
             'skip'                    => 0,
@@ -437,7 +437,7 @@ class BillControllerTest extends TestCase
         $attachHelper->shouldReceive('getMessages')->andReturn(new MessageBag);
 
         $data = [
-            'name'                    => 'New Bill ' . random_int(1000, 9999),
+            'name'                    => 'New Bill ' . $this->randomInt(),
             'amount_min'              => '100',
             'transaction_currency_id' => 1,
             'skip'                    => 0,
@@ -476,7 +476,7 @@ class BillControllerTest extends TestCase
 
         $data = [
             'id'                      => 1,
-            'name'                    => 'Updated Bill ' . random_int(1000, 9999),
+            'name'                    => 'Updated Bill ' . $this->randomInt(),
             'amount_min'              => '100',
             'transaction_currency_id' => 1,
             'skip'                    => 0,

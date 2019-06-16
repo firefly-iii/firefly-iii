@@ -205,7 +205,7 @@ class EditControllerTest extends TestCase
         $this->session(['accounts.edit.uri' => 'http://localhost/javascript/account']);
         $this->be($this->user());
         $data = [
-            'name'   => 'updated account ' . random_int(1000, 9999),
+            'name'   => 'updated account ' . $this->randomInt(),
             'active' => 1,
             'what'   => 'asset',
         ];
@@ -232,7 +232,7 @@ class EditControllerTest extends TestCase
         $this->session(['accounts.edit.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'           => 'updated account ' . random_int(1000, 9999),
+            'name'           => 'updated account ' . $this->randomInt(),
             'active'         => 1,
             'what'           => 'asset',
             'return_to_edit' => '1',

@@ -57,7 +57,7 @@ class TagControllerTest extends TestCase
     {
         $tagRepos    = $this->mock(TagRepositoryInterface::class);
         $tag         = $this->user()->tags()->inRandomOrder()->first();
-        $data        = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $data        = ['tag' => 'Some tag' . $this->randomInt(),];
         $transformer = $this->mock(TagTransformer::class);
 
         // mock transformer
@@ -126,7 +126,7 @@ class TagControllerTest extends TestCase
     {
         $tagRepos    = $this->mock(TagRepositoryInterface::class);
         $tag         = $this->user()->tags()->inRandomOrder()->first();
-        $data        = ['tag' => 'Some tag' . random_int(1, 10000),];
+        $data        = ['tag' => 'Some tag' . $this->randomInt(),];
         $transformer = $this->mock(TagTransformer::class);
 
         // mock transformer

@@ -80,7 +80,7 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $ruleGroup = $this->user()->ruleGroups()->first();
         $data      = [
-            'title'       => 'Store new rule group ' . random_int(1, 100000),
+            'title'       => 'Store new rule group ' . $this->randomInt(),
             'active'      => 1,
             'description' => 'Hello',
         ];
@@ -214,7 +214,7 @@ class RuleGroupControllerTest extends TestCase
         $ruleGroupRepos->shouldReceive('setUser')->once();
         $ruleGroup = $this->user()->ruleGroups()->first();
         $data      = [
-            'title'       => 'Store new rule ' . random_int(1, 100000),
+            'title'       => 'Store new rule ' . $this->randomInt(),
             'active'      => 1,
             'description' => 'Hello',
         ];

@@ -115,7 +115,7 @@ class AttachmentControllerTest extends TestCase
         // data to submit
         $data = [
             'filename'    => 'Some new att',
-            'description' => sprintf('Attempt #%d', random_int(1, 10000)),
+            'description' => sprintf('Attempt #%d', $this->randomInt()),
             'model'       => 'TransactionJournal',
             'model_id'    => $journal->id,
         ];
@@ -159,7 +159,7 @@ class AttachmentControllerTest extends TestCase
         // data to submit
         $data = [
             'filename'    => $attachment->filename,
-            'description' => sprintf('Attempt #%d', random_int(1, 10000)),
+            'description' => sprintf('Attempt #%d', $this->randomInt()),
             'model'       => 'TransactionJournal',
             'model_id'    => 1,
         ];

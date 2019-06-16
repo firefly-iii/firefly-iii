@@ -184,7 +184,7 @@ class CategoryControllerTest extends TestCase
         $this->session(['categories.create.uri' => 'http://localhost']);
 
         $data = [
-            'name' => 'New Category ' . random_int(1000, 9999),
+            'name' => 'New Category ' . $this->randomInt(),
         ];
         $this->be($this->user());
         $response = $this->post(route('categories.store'), $data);
@@ -212,7 +212,7 @@ class CategoryControllerTest extends TestCase
         $this->session(['categories.edit.uri' => 'http://localhost']);
 
         $data = [
-            'name'   => 'Updated Category ' . random_int(1000, 9999),
+            'name'   => 'Updated Category ' . $this->randomInt(),
             'active' => 1,
         ];
         $this->be($this->user());

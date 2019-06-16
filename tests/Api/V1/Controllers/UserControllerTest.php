@@ -61,7 +61,7 @@ class UserControllerTest extends TestCase
     public function testStoreBasic(): void
     {
         $data = [
-            'email' => 'some_new@user' . random_int(1, 10000) . '.com',
+            'email' => 'some_new@user' . $this->randomInt() . '.com',
         ];
 
         // mock
@@ -91,7 +91,7 @@ class UserControllerTest extends TestCase
     public function testStoreBasicJson(): void
     {
         $data = [
-            'email'        => 'some_new@user' . random_int(1, 10000) . '.com',
+            'email'        => 'some_new@user' . $this->randomInt() . '.com',
             'blocked'      => true,
             'blocked_code' => 'email_changed',
         ];
@@ -185,11 +185,11 @@ class UserControllerTest extends TestCase
     public function testUpdate(): void
     {
         // create a user first:
-        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
+        $user = User::create(['email' => 'some@newu' . $this->randomInt() . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
 
         // data:
         $data = [
-            'email'   => 'some-new@email' . random_int(1, 10000) . '.com',
+            'email'   => 'some-new@email' . $this->randomInt() . '.com',
             'blocked' => 0,
         ];
 
@@ -220,11 +220,11 @@ class UserControllerTest extends TestCase
     public function testUpdateJson(): void
     {
         // create a user first:
-        $user = User::create(['email' => 'some@newu' . random_int(1, 10000) . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
+        $user = User::create(['email' => 'some@newu' . $this->randomInt() . 'ser.nl', 'password' => 'hello', 'blocked' => 0]);
 
         // data:
         $data = [
-            'email'   => 'some-new@email' . random_int(1, 10000) . '.com',
+            'email'   => 'some-new@email' . $this->randomInt() . '.com',
             'blocked' => 0,
         ];
 

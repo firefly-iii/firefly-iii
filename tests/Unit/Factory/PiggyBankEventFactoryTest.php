@@ -27,7 +27,6 @@ namespace Tests\Unit\Factory;
 use FireflyIII\Factory\PiggyBankEventFactory;
 use FireflyIII\Models\PiggyBankEvent;
 use FireflyIII\Models\PiggyBankRepetition;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use Log;
 use Tests\TestCase;
@@ -52,12 +51,8 @@ class PiggyBankEventFactoryTest extends TestCase
      */
     public function testCreateAmountZero(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $transfer */
-        $transfer   = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
-        $piggy      = $this->user()->piggyBanks()->first();
+        $transfer   = $this->getRandomTransfer();
+        $piggy      = $this->user()->piggyBanks()->inRandomOrder()->first();
         $repetition = PiggyBankRepetition::first();
         $repos      = $this->mock(PiggyBankRepositoryInterface::class);
         /** @var PiggyBankEventFactory $factory */
@@ -76,11 +71,8 @@ class PiggyBankEventFactoryTest extends TestCase
      */
     public function testCreateNoPiggy(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $transfer */
-        $transfer = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
+        $this->mock(PiggyBankRepositoryInterface::class);
+        $transfer = $this->getRandomTransfer();
 
         /** @var PiggyBankEventFactory $factory */
         $factory = app(PiggyBankEventFactory::class);
@@ -95,11 +87,7 @@ class PiggyBankEventFactoryTest extends TestCase
      */
     public function testCreateNoRep(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $transfer */
-        $transfer = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
+        $transfer = $this->getRandomTransfer();
         $piggy    = $this->user()->piggyBanks()->first();
         $repos    = $this->mock(PiggyBankRepositoryInterface::class);
         /** @var PiggyBankEventFactory $factory */
@@ -118,12 +106,10 @@ class PiggyBankEventFactoryTest extends TestCase
      */
     public function testCreateNotTransfer(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        $this->mock(PiggyBankRepositoryInterface::class);
+        $deposit = $this->getRandomDeposit();
 
-        return;
-        /** @var TransactionJournal $deposit */
-        $deposit = $this->user()->transactionJournals()->where('transaction_type_id', 2)->first();
-        $piggy   = $this->user()->piggyBanks()->first();
+        $piggy = $this->user()->piggyBanks()->first();
         /** @var PiggyBankEventFactory $factory */
         $factory = app(PiggyBankEventFactory::class);
 
@@ -135,15 +121,12 @@ class PiggyBankEventFactoryTest extends TestCase
      */
     public function testCreateSuccess(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        /** @var TransactionJournal $transfer */
-        $transfer   = $this->user()->transactionJournals()->where('transaction_type_id', 3)->first();
+        $transfer   = $this->getRandomTransfer();
         $piggy      = $this->user()->piggyBanks()->first();
         $repetition = PiggyBankRepetition::first();
         $event      = PiggyBankEvent::first();
         $repos      = $this->mock(PiggyBankRepositoryInterface::class);
+
         /** @var PiggyBankEventFactory $factory */
         $factory = app(PiggyBankEventFactory::class);
 
@@ -155,8 +138,8 @@ class PiggyBankEventFactoryTest extends TestCase
         $repos->shouldReceive('createEventWithJournal')->once()->andReturn($event);
 
         $result = $factory->create($transfer, $piggy);
+        $this->assertNotnull($result);
         $this->assertEquals($result->id, $event->id);
-
     }
 
 }

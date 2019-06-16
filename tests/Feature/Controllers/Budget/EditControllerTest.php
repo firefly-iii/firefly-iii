@@ -90,7 +90,7 @@ class EditControllerTest extends TestCase
         $this->session(['budgets.edit.uri' => 'http://localhost']);
 
         $data = [
-            'name'   => 'Updated Budget ' . random_int(1000, 9999),
+            'name'   => 'Updated Budget ' . $this->randomInt(),
             'active' => 1,
         ];
         $this->be($this->user());
