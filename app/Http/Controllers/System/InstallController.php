@@ -70,7 +70,7 @@ class InstallController extends Controller
             'firefly-iii:decrypt-all'                  => [],
             'generate-keys'                            => [], // an exception :(
 
-            // there are 11 upgrade commands.
+            // there are 12 upgrade commands.
             'firefly-iii:transaction-identifiers'      => [],
             'firefly-iii:account-currencies'           => [],
             'firefly-iii:transfer-currencies'          => [],
@@ -82,6 +82,7 @@ class InstallController extends Controller
             'firefly-iii:cc-liabilities'               => [],
             'firefly-iii:migrate-to-groups'            => [],
             'firefly-iii:back-to-journals'             => [],
+            'firefly-iii:rename-account-meta' => [],
 
             // there are 13 verify commands.
             'firefly-iii:fix-piggies'                  => [],

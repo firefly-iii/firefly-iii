@@ -53,7 +53,7 @@ class UpgradeDatabase extends Command
     public function handle(): int
     {
         $commands = [
-            // there are 11 upgrade commands.
+            // there are 12 upgrade commands.
             'firefly-iii:transaction-identifiers',
             'firefly-iii:account-currencies',
             'firefly-iii:transfer-currencies',
@@ -65,6 +65,7 @@ class UpgradeDatabase extends Command
             'firefly-iii:cc-liabilities',
             'firefly-iii:migrate-to-groups',
             'firefly-iii:back-to-journals',
+            'firefly-iii:rename-account-meta'
         ];
         $args     = [];
         if ($this->option('force')) {

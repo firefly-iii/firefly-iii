@@ -145,6 +145,7 @@
       "@php artisan firefly-iii:cc-liabilities",
       "@php artisan firefly-iii:migrate-to-groups",
       "@php artisan firefly-iii:back-to-journals",
+      "@php artisan firefly-iii:rename-account-meta",
 
       "@php artisan firefly-iii:fix-piggies",
       "@php artisan firefly-iii:create-link-types",
