@@ -1,6 +1,6 @@
 <?php
 /**
- * UpgradeSkeleton.php
+ * RenameAccountMeta.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -21,26 +21,27 @@
 
 namespace FireflyIII\Console\Commands\Upgrade;
 
+use FireflyIII\Models\AccountMeta;
 use Illuminate\Console\Command;
 
 /**
- * Class UpgradeSkeleton
+ * Class RenameAccountMeta
  */
-class UpgradeSkeleton extends Command
+class RenameAccountMeta extends Command
 {
-    public const CONFIG_NAME = '4780_some_name';
+    public const CONFIG_NAME = '4780_rename_account_meta';
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'SOME DESCRIPTION';
+    protected $description = 'Rename account meta-data to new format.';
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'firefly-iii:UPGRSKELETON {--F|force : Force the execution of this command.}';
+    protected $signature = 'firefly-iii:rename-account-meta {--F|force : Force the execution of this command.}';
 
     /**
      * Execute the console command.
@@ -55,12 +56,32 @@ class UpgradeSkeleton extends Command
 
             return 0;
         }
-        $this->warn('Congrats, you found the skeleton command. Boo!');
+        $array = [
+            'accountRole'          => 'account_role',
+            'ccType'               => 'cc_type',
+            'ccMonthlyPaymentDate' => 'cc_monthly_payment_date',
+        ];
+        $count = 0;
 
-        //$this->markAsExecuted();
+        /**
+         * @var string $old
+         * @var string $new
+         */
+        foreach ($array as $old => $new) {
+            $count += AccountMeta::where('name', $old)->update(['name' => $new]);
+        }
+
+        $this->markAsExecuted();
+
+        if (0 === $count) {
+            $this->line('All account meta is OK.');
+        }
+        if (0 !== $count) {
+            $this->line(sprintf('Renamed %d account meta entries (entry).', $count));
+        }
 
         $end = round(microtime(true) - $start, 2);
-        $this->info(sprintf('in %s seconds.', $end));
+        $this->info(sprintf('Fixed account meta data in %s seconds.', $end));
 
         return 0;
     }
