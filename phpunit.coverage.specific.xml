@@ -40,6 +40,9 @@
         <testsuite name="Unit">
             <directory suffix="Test.php">./tests/Unit/Console</directory>
             <directory suffix="Test.php">./tests/Unit/Factory</directory>
+            <directory suffix="Test.php">./tests/Unit/Generator</directory>
+            <directory suffix="Test.php">./tests/Unit/Handlers</directory>
+            <directory suffix="Test.php">./tests/Unit/Helpers</directory>
         </testsuite>
 
 
