@@ -41,14 +41,14 @@
 
                         {{ ExpandedForm.text('iban') }}
                         {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
-                        {{ ExpandedForm.text('accountNumber') }}
+                        {{ ExpandedForm.text('account_number') }}
 
                         {% if what == 'asset' %}
 
                             {{ ExpandedForm.amountNoCurrency('opening_balance') }}
                             {{ ExpandedForm.date('opening_balance_date') }}
-                            {{ ExpandedForm.select('accountRole', roles,null,{helpText : 'asset_account_role_help'|_}) }}
-                            {{ ExpandedForm.amountNoCurrency('virtualBalance') }}
+                            {{ ExpandedForm.select('account_role', roles,null,{helpText : 'asset_account_role_help'|_}) }}
+                            {{ ExpandedForm.amountNoCurrency('virtual_balance') }}
                         {% endif %}
                         {# only correct way to do active checkbox #}
                         {{ ExpandedForm.checkbox('include_net_worth', 1) }}

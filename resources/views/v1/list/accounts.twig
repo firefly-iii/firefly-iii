@@ -13,7 +13,7 @@
             <th data-defaultsign="az">{{ trans('list.liability_type') }}</th>
             <th data-defaultsign="_19">{{ trans('list.interest') }} ({{ trans('list.interest_period') }})</th>
         {% endif %}
-        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.accountNumber') }}</th>
+        <th data-defaultsign="az" class="hidden-sm hidden-xs">{{ trans('form.account_number') }}</th>
         <th data-defaultsign="_19">{{ trans('list.currentBalance') }}</th>
         <th class="hidden-sm hidden-xs">{{ trans('list.active') }}</th>
         {# hide last activity to make room for other stuff #}
@@ -41,7 +41,7 @@
             {% if what == "asset" %}
                 <td class="hidden-sm hidden-xs hidden-md">
                     {% for entry in account.accountmeta %}
-                        {% if entry.name == 'accountRole' %}
+                        {% if entry.name == 'account_role' %}
                             {{ ('account_role_'~entry.data)|_ }}
                         {% endif %}
                     {% endfor %}
@@ -53,7 +53,7 @@
                 {{ account.interest }}% ({{ account.interestPeriod|lower }})
             </td>
             {% endif %}
-            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'accountNumber') }}{% endif %}</td>
+            <td class="hidden-sm hidden-xs">{{ account.iban }}{% if account.iban == '' %}{{ accountGetMetaField(account, 'account_number') }}{% endif %}</td>
             <td data-value="{{ account.endBalance }}" style="text-align: right;">
                 <span style="margin-right:5px;">
                 {{ formatAmountByAccount(account, account.endBalance) }}
