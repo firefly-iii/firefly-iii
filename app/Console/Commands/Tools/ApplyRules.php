@@ -150,6 +150,9 @@ class ApplyRules extends Command
         $ruleEngine->setUser($this->getUser());
         $ruleEngine->setRulesToApply($rulesToApply);
 
+        // for this call, the rule engine only includes "store" rules:
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_STORE);
+
         $bar = $this->output->createProgressBar(count($journals));
         Log::debug(sprintf('Now looping %d transactions.', count($journals)));
         /** @var array $journal */

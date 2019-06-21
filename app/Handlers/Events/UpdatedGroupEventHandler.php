@@ -24,10 +24,8 @@ namespace FireflyIII\Handlers\Events;
 
 use FireflyIII\Events\UpdatedTransactionGroup;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Models\Rule;
-use FireflyIII\Models\RuleGroup;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
-use FireflyIII\TransactionRules\Processor;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\TransactionRules\Engine\RuleEngine;
 
 /**
  * Class UpdatedGroupEventHandler
@@ -38,42 +36,20 @@ class UpdatedGroupEventHandler
      * This method will check all the rules when a journal is updated.
      *
      * @param UpdatedTransactionGroup $updatedJournalEvent
-     *
-     * @return bool
-     * @throws FireflyException
      */
-    public function processRules(UpdatedTransactionGroup $updatedJournalEvent): bool
+    public function processRules(UpdatedTransactionGroup $updatedJournalEvent): void
     {
-        // get all the user's rule groups, with the rules, order by 'order'.
+        /** @var RuleEngine $ruleEngine */
+        $ruleEngine = app(RuleEngine::class);
+        $ruleEngine->setUser($updatedJournalEvent->transactionGroup->user);
+        $ruleEngine->setAllRules(true);
+        $ruleEngine->setTriggerMode(RuleEngine::TRIGGER_UPDATE);
         $journals = $updatedJournalEvent->transactionGroup->transactionJournals;
-        // TODO fix this
-        die('cannot apply rules yet');
-        /** @var RuleGroupRepositoryInterface $ruleGroupRepos */
-        $ruleGroupRepos = app(RuleGroupRepositoryInterface::class);
 
+        /** @var TransactionJournal $journal */
         foreach ($journals as $journal) {
-            $ruleGroupRepos->setUser($journal->user);
-
-            $groups = $ruleGroupRepos->getActiveGroups();
-
-            /** @var RuleGroup $group */
-            foreach ($groups as $group) {
-                $rules = $ruleGroupRepos->getActiveUpdateRules($group);
-                /** @var Rule $rule */
-                foreach ($rules as $rule) {
-                    /** @var Processor $processor */
-                    $processor = app(Processor::class);
-                    $processor->make($rule);
-                    $processor->handleTransactionJournal($journal);
-
-                    if ($rule->stop_processing) {
-                        break;
-                    }
-                }
-            }
+            $ruleEngine->processTransactionJournal($journal);
         }
-
-        return true;
     }
 
 }
