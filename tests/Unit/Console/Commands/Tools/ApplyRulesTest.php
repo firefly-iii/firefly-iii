@@ -91,6 +91,7 @@ class ApplyRulesTest extends TestCase
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
         $ruleEngine->shouldReceive('processJournalArray')->times(3);
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
 
         $parameters = [
             '--user=1',
@@ -149,6 +150,7 @@ class ApplyRulesTest extends TestCase
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
         $ruleEngine->shouldReceive('processJournalArray')->times(3);
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
 
         $parameters = [
             '--user=1',
@@ -205,6 +207,7 @@ class ApplyRulesTest extends TestCase
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
         $ruleEngine->shouldReceive('processJournalArray')->times(3);
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
 
         $parameters = [
             '--user=1',
@@ -269,6 +272,7 @@ class ApplyRulesTest extends TestCase
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
         $ruleEngine->shouldReceive('processJournalArray')->times(3);
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
 
         $parameters = [
             '--user=1',
@@ -330,6 +334,7 @@ class ApplyRulesTest extends TestCase
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setRulesToApply')->atLeast()->once();
         $ruleEngine->shouldReceive('processJournalArray')->times(3);
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
 
         $parameters = [
             '--user=1',
@@ -365,6 +370,7 @@ class ApplyRulesTest extends TestCase
         $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
         $ruleRepos->shouldReceive('setUser')->atLeast()->once();
         $ruleGroupRepos->shouldReceive('setUser')->atLeast()->once();
+
 
         $parameters = [
             '--user=1',

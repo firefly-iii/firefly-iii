@@ -24,7 +24,7 @@ namespace FireflyIII\Support;
 
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Log;
 
 /**
@@ -90,7 +90,7 @@ class Navigation
 
         $months     = ['1M', 'month', 'monthly'];
         $difference = $date->month - $theDate->month;
-        if (2 === $difference && $date->day > 0 && \in_array($repeatFreq, $months, true)) {
+        if (2 === $difference && $date->day > 0 && in_array($repeatFreq, $months, true)) {
             $date->subDays($date->day);
         }
 
@@ -227,7 +227,7 @@ class Navigation
 
         if (isset($modifierMap[$repeatFreq])) {
             $currentEnd->$function($modifierMap[$repeatFreq]);
-            if (\in_array($repeatFreq, $subDay, true)) {
+            if (in_array($repeatFreq, $subDay, true)) {
                 $currentEnd->subDay();
             }
             $currentEnd->endOfDay();
@@ -236,7 +236,7 @@ class Navigation
         }
         $currentEnd->$function();
         $currentEnd->endOfDay();
-        if (\in_array($repeatFreq, $subDay, true)) {
+        if (in_array($repeatFreq, $subDay, true)) {
             $currentEnd->subDay();
         }
 

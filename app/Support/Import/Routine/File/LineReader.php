@@ -93,7 +93,7 @@ class LineReader
         $names          = array_keys($specifics);
         $toApply        = [];
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics, true)) {
+            if (!in_array($name, $validSpecifics, true)) {
                 continue;
             }
             $class     = config(sprintf('csv.import_specifics.%s', $name));

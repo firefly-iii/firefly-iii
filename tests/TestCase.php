@@ -131,8 +131,6 @@ abstract class TestCase extends BaseTestCase
      */
     public function emptyUser(): User
     {
-        throw new FireflyException('emptyUser()-method is obsolete.');
-
         return User::find(2);
     }
 

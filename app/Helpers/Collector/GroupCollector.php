@@ -42,6 +42,7 @@ use Log;
 
 /**
  * Class GroupCollector
+ * @codeCoverageIgnore
  */
 class GroupCollector implements GroupCollectorInterface
 {
@@ -50,7 +51,7 @@ class GroupCollector implements GroupCollectorInterface
     /** @var array The standard fields to select. */
     private $fields;
     /** @var bool Will be set to true if query result contains account information. (see function withAccountInformation). */
-    private $hasAccountInformation;
+    private $hasAccountInfo;
     /** @var bool Will be true if query result includes bill information. */
     private $hasBillInformation;
     /** @var bool Will be true if query result contains budget info. */
@@ -78,11 +79,11 @@ class GroupCollector implements GroupCollectorInterface
         if ('testing' === config('app.env')) {
             app('log')->warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
-        $this->hasAccountInformation = false;
-        $this->hasCatInformation     = false;
-        $this->hasBudgetInformation  = false;
-        $this->hasBillInformation    = false;
-        $this->hasJoinedTagTables    = false;
+        $this->hasAccountInfo       = false;
+        $this->hasCatInformation    = false;
+        $this->hasBudgetInformation = false;
+        $this->hasBillInformation   = false;
+        $this->hasJoinedTagTables   = false;
 
         $this->total  = 0;
         $this->limit  = 50;
@@ -174,7 +175,7 @@ class GroupCollector implements GroupCollectorInterface
         if ($accounts->count() > 0) {
             $accountIds = $accounts->pluck('id')->toArray();
             $this->query->where(
-                function (EloquentBuilder $query) use ($accountIds) {
+                static function (EloquentBuilder $query) use ($accountIds) {
                     $query->whereIn('source.account_id', $accountIds);
                     $query->orWhereIn('destination.account_id', $accountIds);
                 }
@@ -482,7 +483,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function withAccountInformation(): GroupCollectorInterface
     {
-        if (false === $this->hasAccountInformation) {
+        if (false === $this->hasAccountInfo) {
             // join source account table
             $this->query->leftJoin('accounts as source_account', 'source_account.id', '=', 'source.account_id');
             // join source account type table
@@ -503,7 +504,7 @@ class GroupCollector implements GroupCollectorInterface
             $this->fields[] = 'dest_account_type.type as destination_account_type';
 
 
-            $this->hasAccountInformation = true;
+            $this->hasAccountInfo = true;
         }
 
         return $this;
@@ -777,7 +778,6 @@ class GroupCollector implements GroupCollectorInterface
      * @param Collection $collection
      *
      * @return Collection
-     * @throws Exception
      */
     private function parseArray(Collection $collection): Collection
     {
@@ -823,15 +823,18 @@ class GroupCollector implements GroupCollectorInterface
      * @param TransactionGroup $augmentedGroup
      *
      * @return array
-     * @throws Exception
      */
     private function parseAugmentedGroup(TransactionGroup $augmentedGroup): array
     {
-        $result               = $augmentedGroup->toArray();
-        $result['tags']       = [];
-        $result['date']       = new Carbon($result['date']);
-        $result['created_at'] = new Carbon($result['created_at']);
-        $result['updated_at'] = new Carbon($result['updated_at']);
+        $result         = $augmentedGroup->toArray();
+        $result['tags'] = [];
+        try {
+            $result['date']       = new Carbon($result['date']);
+            $result['created_at'] = new Carbon($result['created_at']);
+            $result['updated_at'] = new Carbon($result['updated_at']);
+        } catch (Exception $e) {
+            Log::error($e->getMessage());
+        }
         $result['reconciled'] = 1 === (int)$result['reconciled'];
         if (isset($augmentedGroup['tag_id'])) { // assume the other fields are present as well.
             $tagId   = (int)$augmentedGroup['tag_id'];

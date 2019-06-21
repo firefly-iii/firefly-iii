@@ -229,7 +229,7 @@ class AccountTransformer extends AbstractTransformer
     {
         $openingBalance     = null;
         $openingBalanceDate = null;
-        if (\in_array($accountType, ['asset', 'liabilities'], true)) {
+        if (in_array($accountType, ['asset', 'liabilities'], true)) {
             $amount             = $this->repository->getOpeningBalanceAmount($account);
             $openingBalance     = null === $amount ? null : round($amount, $decimalPlaces);
             $openingBalanceDate = $this->repository->getOpeningBalanceDate($account);

@@ -37,7 +37,7 @@ class Help implements HelpInterface
     /** @var string The cache key */
     public const CACHEKEY = 'help_%s_%s';
     /** @var string The user agent. */
-    protected $userAgent = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_12_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/54.0.2840.71 Safari/537.36';
+    protected $userAgent = 'Firefly III v%s';
 
     /**
      * Constructor.
@@ -47,6 +47,7 @@ class Help implements HelpInterface
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
+        $this->userAgent = sprintf($this->userAgent, config('firefly.version'));
     }
 
     /**

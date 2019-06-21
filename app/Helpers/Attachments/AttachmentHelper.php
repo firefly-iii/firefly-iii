@@ -56,6 +56,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * AttachmentHelper constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -98,7 +99,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Returns the file path relative to upload disk for an attachment,
      *
      * @param Attachment $attachment
-     *
+     * @codeCoverageIgnore
      * @return string
      */
     public function getAttachmentLocation(Attachment $attachment): string
@@ -108,7 +109,7 @@ class AttachmentHelper implements AttachmentHelperInterface
 
     /**
      * Get all attachments.
-     *
+     * @codeCoverageIgnore
      * @return Collection
      */
     public function getAttachments(): Collection
@@ -120,6 +121,7 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all errors.
      *
      * @return MessageBag
+     * @codeCoverageIgnore
      */
     public function getErrors(): MessageBag
     {
@@ -130,13 +132,13 @@ class AttachmentHelper implements AttachmentHelperInterface
      * Get all messages.
      *
      * @return MessageBag
+     * @codeCoverageIgnore
      */
     public function getMessages(): MessageBag
     {
         return $this->messages;
     }
 
-    /** @noinspection MultipleReturnStatementsInspection */
     /**
      * Uploads a file as a string.
      *
@@ -160,7 +162,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         $finfo       = finfo_open(FILEINFO_MIME_TYPE);
         $mime        = finfo_file($finfo, $path);
         $allowedMime = config('firefly.allowedMimes');
-        if (!\in_array($mime, $allowedMime, true)) {
+        if (!in_array($mime, $allowedMime, true)) {
             Log::error(sprintf('Mime type %s is not allowed for API file upload.', $mime));
 
             return false;
@@ -307,7 +309,7 @@ class AttachmentHelper implements AttachmentHelperInterface
         Log::debug('Valid mimes are', $this->allowedMimes);
         $result = true;
 
-        if (!\in_array($mime, $this->allowedMimes, true)) {
+        if (!in_array($mime, $this->allowedMimes, true)) {
             $msg = (string)trans('validation.file_invalid_mime', ['name' => $name, 'mime' => $mime]);
             $this->errors->add('attachments', $msg);
             Log::error($msg);

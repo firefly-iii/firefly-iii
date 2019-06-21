@@ -1,7 +1,7 @@
 <?php
 /**
  * FiscalHelper.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -20,7 +20,7 @@
  */
 declare(strict_types=1);
 
-namespace FireflyIII\Helpers;
+namespace FireflyIII\Helpers\Fiscal;
 
 use Carbon\Carbon;
 use Log;

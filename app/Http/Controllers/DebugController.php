@@ -213,7 +213,7 @@ class DebugController extends Controller
         /** @var Route $route */
         foreach ($set as $route) {
             $name = (string)$route->getName();
-            if (\in_array('GET', $route->methods(), true)) {
+            if (in_array('GET', $route->methods(), true)) {
                 $found = false;
                 foreach ($ignore as $string) {
                     if (!(false === stripos($name, $string))) {

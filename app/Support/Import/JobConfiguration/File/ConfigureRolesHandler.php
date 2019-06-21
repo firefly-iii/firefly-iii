@@ -74,7 +74,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
             if ('_ignore' !== $role) {
                 ++$assigned;
             }
-            if (\in_array($role, ['amount', 'amount_credit', 'amount_debit', 'amount_negated'])) {
+            if (in_array($role, ['amount', 'amount_credit', 'amount_debit', 'amount_negated'])) {
                 $hasAmount = true;
             }
             if ('foreign-currency-code' === $role) {
@@ -372,7 +372,7 @@ class ConfigureRolesHandler implements FileConfigurationInterface
         $specifics      = $config['specifics'] ?? [];
         $names          = array_keys($specifics);
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics, true)) {
+            if (!in_array($name, $validSpecifics, true)) {
                 continue;
             }
             /** @var SpecificInterface $specific */

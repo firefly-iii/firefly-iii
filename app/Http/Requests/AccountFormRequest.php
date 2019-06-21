@@ -24,7 +24,6 @@ namespace FireflyIII\Http\Requests;
 
 use FireflyIII\Models\Account;
 use FireflyIII\Rules\UniqueIban;
-use FireflyIII\Rules\ZeroOrMore;
 
 /**
  * Class AccountFormRequest.
@@ -55,15 +54,15 @@ class AccountFormRequest extends Request
             'account_type'            => $this->string('what'),
             'account_type_id'         => 0,
             'currency_id'             => $this->integer('currency_id'),
-            'virtual_balance'         => $this->string('virtualBalance'),
+            'virtual_balance'         => $this->string('virtual_balance'),
             'iban'                    => $this->string('iban'),
             'BIC'                     => $this->string('BIC'),
-            'account_number'          => $this->string('accountNumber'),
-            'account_role'            => $this->string('accountRole'),
-            'opening_balance'         => $this->string('openingBalance'),
-            'opening_balance_date'    => $this->date('openingBalanceDate'),
-            'cc_type'                 => $this->string('ccType'),
-            'cc_monthly_payment_date' => $this->string('ccMonthlyPaymentDate'),
+            'account_number'          => $this->string('account_number'),
+            'account_role'            => $this->string('account_role'),
+            'opening_balance'         => $this->string('opening_balance'),
+            'opening_balance_date'    => $this->date('opening_balance_date'),
+            'cc_type'                 => $this->string('cc_type'),
+            'cc_monthly_payment_date' => $this->string('cc_monthly_payment_date'),
             'notes'                   => $this->string('notes'),
             'interest'                => $this->string('interest'),
             'interest_period'         => $this->string('interest_period'),
@@ -107,14 +106,14 @@ class AccountFormRequest extends Request
             'ccType'                             => 'in:' . $ccPaymentTypes,
             'cc_monthly_payment_date'            => 'date',
             'amount_currency_id_opening_balance' => 'exists:transaction_currencies,id',
-            'amount_currency_id_virtua_balance'  => 'exists:transaction_currencies,id',
+            'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
             'what'                               => 'in:' . $types,
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
 
         // TODO verify if this will work.
         if ('liabilities' === $this->get('what')) {
-            $rules['opening_balance']      = ['numeric', 'required', new ZeroOrMore];
+            $rules['opening_balance']      = ['numeric', 'required'];
             $rules['opening_balance_date'] = 'date|required';
         }
 

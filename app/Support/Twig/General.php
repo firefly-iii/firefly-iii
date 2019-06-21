@@ -124,7 +124,7 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'activeRouteStrict',
             function (): string {
-                $args  = \func_get_args();
+                $args  = func_get_args();
                 $route = $args[0]; // name of the route.
 
                 if (Route::getCurrentRoute()->getName() === $route) {

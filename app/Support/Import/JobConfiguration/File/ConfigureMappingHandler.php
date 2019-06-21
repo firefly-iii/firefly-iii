@@ -67,7 +67,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
         $specifics      = $config['specifics'] ?? [];
         $names          = array_keys($specifics);
         foreach ($names as $name) {
-            if (!\in_array($name, $validSpecifics, true)) {
+            if (!in_array($name, $validSpecifics, true)) {
                 continue;
             }
             $class = config(sprintf('csv.import_specifics.%s', $name));
@@ -331,7 +331,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         /** @var array $validColumns */
         $validColumns = array_keys(config('csv.import_roles'));
-        if (!\in_array($name, $validColumns, true)) {
+        if (!in_array($name, $validColumns, true)) {
             $name = '_ignore';
         }
 

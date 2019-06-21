@@ -305,7 +305,7 @@ class PiggyBankRepository implements PiggyBankRepositoryInterface
         Log::debug(sprintf('Will add/remove %f to piggy bank #%d ("%s")', $amount, $piggyBank->id, $piggyBank->name));
 
         // if piggy account matches source account, the amount is positive
-        if (\in_array($piggyBank->account_id, $sources, true)) {
+        if (in_array($piggyBank->account_id, $sources, true)) {
             $amount = bcmul($amount, '-1');
             Log::debug(sprintf('Account #%d is the source, so will remove amount from piggy bank.', $piggyBank->account_id));
         }

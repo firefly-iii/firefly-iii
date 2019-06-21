@@ -461,7 +461,7 @@ class AccountRepository implements AccountRepositoryInterface
      */
     public function isLiability(Account $account): bool
     {
-        return \in_array($account->accountType->type, [AccountType::CREDITCARD, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true);
+        return in_array($account->accountType->type, [AccountType::CREDITCARD, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE], true);
     }
 
     /**

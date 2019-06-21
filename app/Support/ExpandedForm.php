@@ -119,11 +119,11 @@ class ExpandedForm
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
             $role       = $repository->getMetaValue($account, 'accountRole');
-            if ('' === $role && !\in_array($account->accountType->type, $liabilityTypes, true)) {
+            if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
 
-            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
 
@@ -508,7 +508,7 @@ class ExpandedForm
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
 
-            if (\in_array($account->accountType->type, $liabilityTypes, true)) {
+            if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
 

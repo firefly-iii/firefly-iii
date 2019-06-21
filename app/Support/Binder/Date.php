@@ -24,7 +24,7 @@ namespace FireflyIII\Support\Binder;
 
 use Carbon\Carbon;
 use Exception;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use Illuminate\Routing\Route;
 use Log;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

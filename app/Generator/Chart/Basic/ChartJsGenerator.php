@@ -32,6 +32,7 @@ class ChartJsGenerator implements GeneratorInterface
 {
     /**
      * Constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

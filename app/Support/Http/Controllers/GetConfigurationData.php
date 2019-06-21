@@ -220,7 +220,7 @@ trait GetConfigurationData
             }, $forbidden
         );
         foreach ($list as $entry) {
-            if (\in_array($entry, $trimmed, true)) {
+            if (in_array($entry, $trimmed, true)) {
                 Log::error('Method "%s" is FORBIDDEN, so the console command cannot be executed.');
 
                 return true;

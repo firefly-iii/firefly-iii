@@ -327,7 +327,7 @@ class FireflyValidator extends Validator
 
         // these trigger types need a numerical check:
         $numerical = ['amount_less', 'amount_more', 'amount_exactly'];
-        if (\in_array($triggerType, $numerical, true)) {
+        if (in_array($triggerType, $numerical, true)) {
             return is_numeric($value);
         }
 
@@ -335,7 +335,7 @@ class FireflyValidator extends Validator
         $length = ['from_account_starts', 'from_account_ends', 'from_account_is', 'from_account_contains', 'to_account_starts', 'to_account_ends',
                    'to_account_is', 'to_account_contains', 'description_starts', 'description_ends', 'description_contains', 'description_is', 'category_is',
                    'budget_is', 'tag_is', 'currency_is', 'notes_contain', 'notes_start', 'notes_end', 'notes_are',];
-        if (\in_array($triggerType, $length, true)) {
+        if (in_array($triggerType, $length, true)) {
             return '' !== $value;
         }
 

@@ -25,12 +25,14 @@ namespace FireflyIII\Helpers\Collector;
 
 
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Transaction;
 use FireflyIII\User;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * Class GroupSumCollector
+ * @codeCoverageIgnore
  */
 class GroupSumCollector implements GroupSumCollectorInterface
 {
@@ -48,6 +50,7 @@ class GroupSumCollector implements GroupSumCollectorInterface
      */
     public function __construct()
     {
+        throw new FireflyException('I dont work. dont use me');
         $this->hasJoinedTypeTable = false;
         $this->fields             = [
             'transactions.amount',
@@ -158,6 +161,21 @@ class GroupSumCollector implements GroupSumCollectorInterface
         return $this;
     }
 
+    /**
+     * @param Carbon $start
+     * @param Carbon $end
+     *
+     * @return GroupSumCollectorInterface
+     */
+    public function setRange(Carbon $start, Carbon $end): GroupSumCollectorInterface
+    {
+        $this->query
+            ->where('transaction_journals.date', '>=', $start->format('Y-m-d H:i:s'))
+            ->where('transaction_journals.date', '<=', $end->format('Y-m-d H:i:s'));
+
+        return $this;
+    }
+
     private function joinTypeTable(): void
     {
         $this->hasJoinedTypeTable = true;
@@ -177,19 +195,5 @@ class GroupSumCollector implements GroupSumCollectorInterface
                                   ->whereNull('transaction_journals.deleted_at')
                                   ->whereNull('transactions.deleted_at')
                                   ->where('transactions.amount', '>', 0);
-    }
-
-    /**
-     * @param Carbon $start
-     * @param Carbon $end
-     *
-     * @return GroupSumCollectorInterface
-     */
-    public function setRange(Carbon $start, Carbon $end): GroupSumCollectorInterface
-    {
-        $this->query
-            ->where('transaction_journals.date','>=',$start->format('Y-m-d H:i:s'))
-            ->where('transaction_journals.date','<=',$end->format('Y-m-d H:i:s'));
-        return $this;
     }
 }

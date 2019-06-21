@@ -297,7 +297,14 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $euro          = $this->getEuro();
         $dollar        = $this->getDollar();
 
+        // make sure that source and destination have the right currencies beforehand
         $source = $transfer->transactions()->where('amount', '<', 0)->first();
+        $source->transaction_currency_id = $euro->id;
+        $source->save();
+
+        $dest= $transfer->transactions()->where('amount', '>', 0)->first();
+        $dest->transaction_currency_id = $dollar->id;
+        $dest->save();
 
         // mock calls:
         $journalRepos->shouldReceive('getAllJournals')
@@ -325,7 +332,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         FireflyConfig::shouldReceive('set')->withArgs(['4780_transfer_currencies', true]);
 
         $this->artisan('firefly-iii:transfer-currencies')
-             ->expectsOutput('Verified currency information of 2 transfer(s).')
+             ->expectsOutput('Verified currency information of 1 transfer(s).')
              ->assertExitCode(0);
 
         // source and destination transaction should be corrected:

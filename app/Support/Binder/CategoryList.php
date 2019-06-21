@@ -54,7 +54,7 @@ class CategoryList implements BinderInterface
                                 ->get();
 
             // add empty category if applicable.
-            if (\in_array(0, $list, true)) {
+            if (in_array(0, $list, true)) {
                 $collection->push(new Category);
             }
 

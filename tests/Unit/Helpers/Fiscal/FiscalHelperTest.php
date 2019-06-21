@@ -1,7 +1,7 @@
 <?php
 /**
  * FiscalHelperTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -21,11 +21,11 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit\Helpers;
+namespace Tests\Unit\Helpers\Fiscal;
 
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelper;
+use FireflyIII\Helpers\Fiscal\FiscalHelper;
 use FireflyIII\Models\Preference;
 use Log;
 use Preferences;
@@ -53,7 +53,7 @@ class FiscalHelperTest extends TestCase
      *
      * Fiscal year ends next year on Mar 31.
      *
-     * @covers \FireflyIII\Helpers\FiscalHelper
+     * @covers \FireflyIII\Helpers\Fiscal\FiscalHelper
      */
     public function testEndOfFiscalYear(): void
     {
@@ -79,7 +79,7 @@ class FiscalHelperTest extends TestCase
      *
      * Fiscal year ends next year on Dec 31.
      *
-     * @covers \FireflyIII\Helpers\FiscalHelper
+     * @covers \FireflyIII\Helpers\Fiscal\FiscalHelper
      */
     public function testEndOfFiscalYearNoPref(): void
     {
@@ -101,7 +101,7 @@ class FiscalHelperTest extends TestCase
      *
      * Fiscal year starts in current year.
      *
-     * @covers \FireflyIII\Helpers\FiscalHelper
+     * @covers \FireflyIII\Helpers\Fiscal\FiscalHelper
      */
     public function testStartOfFiscalYear(): void
     {
@@ -127,7 +127,7 @@ class FiscalHelperTest extends TestCase
      *
      * Fiscal year starts Jan 1st.
      *
-     * @covers \FireflyIII\Helpers\FiscalHelper
+     * @covers \FireflyIII\Helpers\Fiscal\FiscalHelper
      */
     public function testStartOfFiscalYearNoPref(): void
     {
@@ -149,7 +149,7 @@ class FiscalHelperTest extends TestCase
      *
      * Fiscal year starts in previous year.
      *
-     * @covers \FireflyIII\Helpers\FiscalHelper
+     * @covers \FireflyIII\Helpers\Fiscal\FiscalHelper
      */
     public function testStartOfFiscalYearPrev(): void
     {

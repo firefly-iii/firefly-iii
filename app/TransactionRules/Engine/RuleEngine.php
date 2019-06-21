@@ -24,6 +24,7 @@ namespace FireflyIII\TransactionRules\Engine;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
+use FireflyIII\Models\RuleTrigger;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepository;
 use FireflyIII\TransactionRules\Processor;
@@ -40,20 +41,23 @@ use Log;
  */
 class RuleEngine
 {
+    /** @var int */
+    public const TRIGGER_STORE = 1;
+    /** @var int */
+    public const TRIGGER_UPDATE = 2;
+
     /** @var Collection */
     private $ruleGroups;
-
     /** @var array */
     private $rulesToApply;
-
     /** @var bool */
     private $allRules;
-
     /** @var User */
     private $user;
-
     /** @var RuleGroupRepository */
     private $ruleGroupRepository;
+    /** @var int */
+    private $triggerMode;
 
     /**
      * RuleEngine constructor.
@@ -65,6 +69,15 @@ class RuleEngine
         $this->rulesToApply        = [];
         $this->allRules            = false;
         $this->ruleGroupRepository = app(RuleGroupRepository::class);
+        $this->triggerMode         = self::TRIGGER_STORE;
+    }
+
+    /**
+     * @param int $triggerMode
+     */
+    public function setTriggerMode(int $triggerMode): void
+    {
+        $this->triggerMode = $triggerMode;
     }
 
     /**
@@ -204,7 +217,13 @@ class RuleEngine
      */
     private function includeRule(Rule $rule): bool
     {
-        return $this->allRules || in_array($rule->id, $this->rulesToApply, true);
+        /** @var RuleTrigger $trigger */
+        $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+
+        $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode) ||
+                        ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode);
+
+        return $validTrigger && ($this->allRules || in_array($rule->id, $this->rulesToApply, true));
     }
 
 }

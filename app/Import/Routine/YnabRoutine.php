@@ -54,7 +54,7 @@ class YnabRoutine implements RoutineInterface
     {
         Log::debug(sprintf('Now in YNAB routine::run() with status "%s" and stage "%s".', $this->importJob->status, $this->importJob->stage));
         $valid = ['ready_to_run']; // should be only ready_to_run
-        if (\in_array($this->importJob->status, $valid, true)) {
+        if (in_array($this->importJob->status, $valid, true)) {
 
             // get access token from YNAB
             if ('get_access_token' === $this->importJob->stage) {

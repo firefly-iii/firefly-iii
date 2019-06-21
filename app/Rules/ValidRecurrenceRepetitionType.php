@@ -59,7 +59,7 @@ class ValidRecurrenceRepetitionType implements Rule
         }
         //monthly,17
         //ndom,3,7
-        if (\in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
             return true;
         }
         if (0 === strpos($value, 'monthly')) {

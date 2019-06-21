@@ -93,7 +93,7 @@ class ImportProvider implements BinderInterface
     public static function routeBinder(string $value, Route $route): string
     {
         $providers = array_keys(self::getProviders());
-        if (\in_array($value, $providers, true)) {
+        if (in_array($value, $providers, true)) {
             return $value;
         }
         throw new NotFoundHttpException;

@@ -55,7 +55,7 @@ class BudgetList implements BinderInterface
                                 ->get();
 
             // add empty budget if applicable.
-            if (\in_array(0, $list, true)) {
+            if (in_array(0, $list, true)) {
                 $collection->push(new Budget);
             }
 

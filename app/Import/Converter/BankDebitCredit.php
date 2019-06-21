@@ -50,7 +50,7 @@ class BankDebitCredit implements ConverterInterface
             'Af', // ING (NL).
             'Debet', // Triodos (NL)
         ];
-        if (\in_array(trim($value), $negative, true)) {
+        if (in_array(trim($value), $negative, true)) {
             return -1;
         }
 

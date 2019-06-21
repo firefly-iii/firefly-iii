@@ -163,9 +163,6 @@ class MetaPieChart implements MetaPieChartInterface
         $collector->setBudgets($this->budgets);
         $collector->setCategories($this->categories);
 
-        $collector->withCategoryInformation();
-        $collector->withBudgetInformation();
-
         // @codeCoverageIgnoreStart
         if ($this->tags->count() > 0) {
             $collector->setTags($this->tags);

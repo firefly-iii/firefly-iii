@@ -83,69 +83,11 @@ class MonthReportGenerator implements ReportGeneratorInterface
                 ->render();
         } catch (Throwable $e) {
             Log::error(sprintf('Cannot render reports.audit.report: %s', $e->getMessage()));
-            $result = 'Could not render report view.';
+            Log::error($e->getTraceAsString());
+            $result = sprintf('Could not render report view: %s', $e->getMessage());
         }
 
         return $result;
-    }
-
-    /**
-     * Get the audit report.
-     *
-     * @param Account $account
-     * @param Carbon $date
-     *
-     * @return array
-     *
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength) // not that long
-     * @throws FireflyException
-     */
-    public function getAuditReport(Account $account, Carbon $date): array
-    {
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
-        /** @var AccountRepositoryInterface $accountRepository */
-        $accountRepository = app(AccountRepositoryInterface::class);
-        $accountRepository->setUser($account->user);
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)
-            ->withAccountInformation();
-        $journals         = $collector->getExtractedJournals();
-        $dayBeforeBalance = app('steam')->balance($account, $date);
-        $startBalance     = $dayBeforeBalance;
-        $currency         = $currencyRepos->findNull((int)$accountRepository->getMetaValue($account, 'currency_id'));
-
-        if (null === $currency) {
-            throw new FireflyException('Unexpected NULL value in account currency preference.');
-        }
-
-        foreach ($journals as $index => $journal) {
-            $journals[$index]['balance_before'] = $startBalance;
-            $transactionAmount                  = $journal['amount'];
-
-            if ($currency->id === $journal['foreign_currency_id']) {
-                $transactionAmount = $journal['foreign_amount'];
-            }
-
-            $newBalance                        = bcadd($startBalance, $transactionAmount);
-            $journals[$index]['balance_after'] = $newBalance;
-            $startBalance                      = $newBalance;
-
-        }
-
-        $return = [
-            'journals'         => $journals,
-            'exists'           => count($journals) > 0,
-            'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
-            'endBalance'       => app('steam')->balance($account, $this->end),
-            'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
-            'dayBeforeBalance' => $dayBeforeBalance,
-        ];
-
-        return $return;
     }
 
     /**
@@ -214,6 +156,7 @@ class MonthReportGenerator implements ReportGeneratorInterface
      */
     public function setExpense(Collection $expense): ReportGeneratorInterface
     {
+        // doesn't use expense collection.
         return $this;
     }
 
@@ -243,5 +186,63 @@ class MonthReportGenerator implements ReportGeneratorInterface
     public function setTags(Collection $tags): ReportGeneratorInterface
     {
         return $this;
+    }
+
+    /**
+     * Get the audit report.
+     *
+     * @param Account $account
+     * @param Carbon $date
+     *
+     * @return array
+     *
+     * @throws FireflyException
+     */
+    public function getAuditReport(Account $account, Carbon $date): array
+    {
+        /** @var CurrencyRepositoryInterface $currencyRepos */
+        $currencyRepos = app(CurrencyRepositoryInterface::class);
+
+        /** @var AccountRepositoryInterface $accountRepository */
+        $accountRepository = app(AccountRepositoryInterface::class);
+        $accountRepository->setUser($account->user);
+
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setAccounts(new Collection([$account]))->setRange($this->start, $this->end)
+                  ->withAccountInformation();
+        $journals         = $collector->getExtractedJournals();
+        $dayBeforeBalance = app('steam')->balance($account, $date);
+        $startBalance     = $dayBeforeBalance;
+        $currency         = $currencyRepos->findNull((int)$accountRepository->getMetaValue($account, 'currency_id'));
+
+        if (null === $currency) {
+            throw new FireflyException('Unexpected NULL value in account currency preference.'); // @codeCoverageIgnore
+        }
+
+        foreach ($journals as $index => $journal) {
+            $journals[$index]['balance_before'] = $startBalance;
+            $transactionAmount                  = $journal['amount'];
+
+            if ($currency->id === $journal['foreign_currency_id']) {
+                $transactionAmount = $journal['foreign_amount'];
+            }
+
+            $newBalance                        = bcadd($startBalance, $transactionAmount);
+            $journals[$index]['balance_after'] = $newBalance;
+            $startBalance                      = $newBalance;
+
+        }
+
+        $return = [
+            'journals'         => $journals,
+            'exists'           => count($journals) > 0,
+            'end'              => $this->end->formatLocalized((string)trans('config.month_and_day')),
+            'endBalance'       => app('steam')->balance($account, $this->end),
+            'dayBefore'        => $date->formatLocalized((string)trans('config.month_and_day')),
+            'dayBeforeBalance' => $dayBeforeBalance,
+        ];
+
+        return $return;
     }
 }

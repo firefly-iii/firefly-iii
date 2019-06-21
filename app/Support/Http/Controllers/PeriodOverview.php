@@ -474,6 +474,12 @@ trait PeriodOverview
             $sumCollector = app(GroupSumCollectorInterface::class);
             $sumCollector->setTypes($types)->setRange($currentDate['start'], $currentDate['end']);
             $amounts     = $sumCollector->getSum();
+
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setTypes($types)->setRange($currentDate['start'], $currentDate['end']);
+            $amounts = $collector->getSum();
+
             $spent       = [];
             $earned      = [];
             $transferred = [];

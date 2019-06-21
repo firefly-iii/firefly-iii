@@ -50,17 +50,6 @@ class AttachmentHelperTest extends TestCase
     }
 
     /**
-     * @covers  \FireflyIII\Helpers\Attachments\AttachmentHelper
-     */
-    public function testGetAttachmentLocation(): void
-    {
-        $attachment = Attachment::first();
-        $helper     = new AttachmentHelper;
-        $path       = $path = sprintf('%sat-%d.data', DIRECTORY_SEPARATOR, (int)$attachment->id);
-        $this->assertEquals($helper->getAttachmentLocation($attachment), $path);
-    }
-
-    /**
      * Test invalid mime thing
      *
      * @covers \FireflyIII\Helpers\Attachments\AttachmentHelper

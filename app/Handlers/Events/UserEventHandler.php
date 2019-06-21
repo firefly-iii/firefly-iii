@@ -43,7 +43,6 @@ use Mail;
  * This class responds to any events that have anything to do with the User object.
  *
  * The method name reflects what is being done. This is in the present tense.
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class UserEventHandler
 {

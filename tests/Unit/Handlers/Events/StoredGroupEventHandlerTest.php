@@ -1,7 +1,7 @@
 <?php
 /**
- * UpdatedGroupEventHandlerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * StoredGroupEventHandlerTest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -23,16 +23,18 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Handlers\Events;
 
-use FireflyIII\Events\UpdatedTransactionGroup;
-use FireflyIII\Handlers\Events\UpdatedGroupEventHandler;
+
+use FireflyIII\Events\StoredTransactionGroup;
+use FireflyIII\Handlers\Events\StoredGroupEventHandler;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
 use Log;
 use Tests\TestCase;
 
 /**
- * Class UpdatedJournalEventHandlerTest
+ *
+ * Class StoredGroupEventHandlerTest
  */
-class UpdatedGroupEventHandlerTest extends TestCase
+class StoredGroupEventHandlerTest extends TestCase
 {
     /**
      *
@@ -43,9 +45,8 @@ class UpdatedGroupEventHandlerTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-
     /**
-     * @covers \FireflyIII\Handlers\Events\UpdatedGroupEventHandler
+     * @covers \FireflyIII\Handlers\Events\StoredGroupEventHandler
      */
     public function testProcessRules(): void
     {
@@ -54,12 +55,26 @@ class UpdatedGroupEventHandlerTest extends TestCase
 
         $ruleEngine->shouldReceive('setUser')->atLeast()->once();
         $ruleEngine->shouldReceive('setAllRules')->atLeast()->once()->withArgs([true]);
-        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_UPDATE]);
+        $ruleEngine->shouldReceive('setTriggerMode')->atLeast()->once()->withArgs([RuleEngine::TRIGGER_STORE]);
         $ruleEngine->shouldReceive('processTransactionJournal')->atLeast()->once();
 
-        $event   = new UpdatedTransactionGroup($group);
-        $handler = new UpdatedGroupEventHandler;
+        $event = new StoredTransactionGroup($group, true);
+        $handler = new StoredGroupEventHandler;
         $handler->processRules($event);
     }
 
+    /**
+     * @covers \FireflyIII\Handlers\Events\StoredGroupEventHandler
+     */
+    public function testNoProcessRules(): void
+    {
+        $group      = $this->getRandomWithdrawalGroup();
+        $this->mock(RuleEngine::class);
+
+        $event = new StoredTransactionGroup($group, false);
+        $handler = new StoredGroupEventHandler;
+        $handler->processRules($event);
+        $this->assertTrue(true);
+
+    }
 }

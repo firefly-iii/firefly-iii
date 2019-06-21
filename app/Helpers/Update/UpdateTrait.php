@@ -123,10 +123,12 @@ trait UpdateTrait
             $return = (string)trans('firefly.update_newer_version_alert', ['your_version' => $current, 'new_version' => $release->getTitle()]);
         }
 
+        // @codeCoverageIgnoreStart
         if (false === $triggered) {
             Log::debug('No option was triggered.');
             $return = (string)trans('firefly.update_check_error');
         }
+        // @codeCoverageIgnoreEnd
 
         return $return;
     }

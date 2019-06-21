@@ -251,7 +251,7 @@ class RecurrenceFormRequest extends Request
         }
         //monthly,17
         //ndom,3,7
-        if (\in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
+        if (in_array(substr($value, 0, 6), ['yearly', 'weekly'])) {
             $return['type']   = substr($value, 0, 6);
             $return['moment'] = substr($value, 7);
         }

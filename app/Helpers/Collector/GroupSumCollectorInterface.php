@@ -28,6 +28,7 @@ use FireflyIII\User;
 
 /**
  * Interface GroupSumCollectorInterface
+ * @codeCoverageIgnore
  */
 interface GroupSumCollectorInterface
 {
