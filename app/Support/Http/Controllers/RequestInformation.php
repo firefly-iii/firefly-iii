@@ -168,17 +168,17 @@ trait RequestInformation
         $specificPage = $this->getSpecificPageName();
 
         // indicator if user has seen the help for this page ( + special page):
-        $key = 'shown_demo_' . $page . $specificPage;
+        $key = sprintf('shown_demo_%s%s', $page, $specificPage);
         // is there an intro for this route?
-        $intro        = config('intro.' . $page) ?? [];
-        $specialIntro = config('intro.' . $page . $specificPage) ?? [];
+        $intro        = config(sprintf('intro.%s', $page)) ?? [];
+        $specialIntro = config(sprintf('intro.%s%s', $page, $specificPage)) ?? [];
         // some routes have a "what" parameter, which indicates a special page:
 
         $shownDemo = true;
         // both must be array and either must be > 0
         if (count($intro) > 0 || count($specialIntro) > 0) {
             $shownDemo = app('preferences')->get($key, false)->data;
-            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %d', $key, $shownDemo));
+            Log::debug(sprintf('Check if user has already seen intro with key "%s". Result is %s', $key, var_export($shownDemo, true)));
         }
         if (!is_bool($shownDemo)) {
             $shownDemo = true;

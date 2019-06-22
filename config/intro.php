@@ -41,9 +41,9 @@ return [
     ],
     // extra text for asset account creation.
     'accounts_create_asset'          => [
-        'opening_balance' => ['element' => '#ffInput_openingBalance'],
+        'opening_balance' => ['element' => '#ffInput_opening_balance'],
         'currency'        => ['element' => '#ffInput_currency_id'],
-        'virtual'         => ['element' => '#ffInput_virtualBalance'],
+        'virtual'         => ['element' => '#ffInput_virtual_balance'],
     ],
 
     // budgets: index

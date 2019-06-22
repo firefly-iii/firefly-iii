@@ -51,7 +51,7 @@ class AccountFormRequest extends Request
         $data = [
             'name'                    => $this->string('name'),
             'active'                  => $this->boolean('active'),
-            'account_type'            => $this->string('what'),
+            'account_type'            => $this->string('objectType'),
             'account_type_id'         => 0,
             'currency_id'             => $this->integer('currency_id'),
             'virtual_balance'         => $this->string('virtual_balance'),

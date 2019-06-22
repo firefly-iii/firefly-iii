@@ -112,10 +112,10 @@ Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'accounts', 'as' => 'accounts.'], function () {
 
     // show:
-    Route::get('{what}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('what', 'revenue|asset|expense|liabilities');
+    Route::get('{objectType}', ['uses' => 'Account\IndexController@index', 'as' => 'index'])->where('objectType', 'revenue|asset|expense|liabilities');
 
     // create
-    Route::get('create/{what}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('what', 'revenue|asset|expense|liabilities');
+    Route::get('create/{objectType}', ['uses' => 'Account\CreateController@create', 'as' => 'create'])->where('objectType', 'revenue|asset|expense|liabilities');
     Route::post('store', ['uses' => 'Account\CreateController@store', 'as' => 'store']);
 
 
@@ -564,7 +564,7 @@ Route::group(
     Route::get('rate/{fromCurrencyCode}/{toCurrencyCode}/{date}', ['uses' => 'Json\ExchangeController@getRate', 'as' => 'rate']);
 
     // intro things:
-    Route::post('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
+    Route::any('intro/finished/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postFinished', 'as' => 'intro.finished']);
     Route::post('intro/enable/{route}/{specificPage?}', ['uses' => 'Json\IntroController@postEnable', 'as' => 'intro.enable']);
     Route::get('intro/{route}/{specificPage?}', ['uses' => 'Json\IntroController@getIntroSteps', 'as' => 'intro']);
 

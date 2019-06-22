@@ -67,8 +67,8 @@ class EditController extends Controller
     /**
      * Edit account overview.
      *
-     * @param Request                    $request
-     * @param Account                    $account
+     * @param Request $request
+     * @param Account $account
      * @param AccountRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -126,21 +126,21 @@ class EditController extends Controller
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
-            'account_number'        => $repository->getMetaValue($account, 'accountNumber'),
-            'account_role'          => $repository->getMetaValue($account, 'accountRole'),
-            'cc_type'               => $repository->getMetaValue($account, 'ccType'),
-            'cc_monthly_payment_date' => $repository->getMetaValue($account, 'ccMonthlyPaymentDate'),
-            'BIC'                  => $repository->getMetaValue($account, 'BIC'),
-            'opening_balance_date'   => $openingBalanceDate,
-            'liability_type_id'    => $account->account_type_id,
-            'opening_balance'       => $openingBalanceAmount,
-            'virtual_balance'       => $account->virtual_balance,
-            'currency_id'          => $currency->id,
-            'include_net_worth'    => $includeNetWorth,
-            'interest'             => $repository->getMetaValue($account, 'interest'),
-            'interest_period'      => $repository->getMetaValue($account, 'interest_period'),
-            'notes'                => $this->repository->getNoteText($account),
-            'active'               => $hasOldInput ? (bool)$request->old('active') : $account->active,
+            'account_number'          => $repository->getMetaValue($account, 'account_number'),
+            'account_role'            => $repository->getMetaValue($account, 'account_role'),
+            'cc_type'                 => $repository->getMetaValue($account, 'cc_type'),
+            'cc_monthly_payment_date' => $repository->getMetaValue($account, 'cc_monthly_payment_date'),
+            'BIC'                     => $repository->getMetaValue($account, 'BIC'),
+            'opening_balance_date'    => $openingBalanceDate,
+            'liability_type_id'       => $account->account_type_id,
+            'opening_balance'         => $openingBalanceAmount,
+            'virtual_balance'         => $account->virtual_balance,
+            'currency_id'             => $currency->id,
+            'include_net_worth'       => $includeNetWorth,
+            'interest'                => $repository->getMetaValue($account, 'interest'),
+            'interest_period'         => $repository->getMetaValue($account, 'interest_period'),
+            'notes'                   => $this->repository->getNoteText($account),
+            'active'                  => $hasOldInput ? (bool)$request->old('active') : $account->active,
         ];
 
         $request->session()->flash('preFilled', $preFilled);
@@ -155,7 +155,7 @@ class EditController extends Controller
      * Update the account.
      *
      * @param AccountFormRequest $request
-     * @param Account            $account
+     * @param Account $account
      *
      * @return $this|\Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */

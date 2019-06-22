@@ -135,7 +135,7 @@ class IntroController
         Log::debug(sprintf('Going to mark the following route as done: %s with special "%s" (%s)', $route, $specialPage, $key));
         app('preferences')->set($key, true);
 
-        return response()->json(['result' => sprintf('Reported demo watched for route "%s".', $route)]);
+        return response()->json(['result' => sprintf('Reported demo watched for route "%s" (%s): %s.', $route, $specialPage, $key)]);
     }
 
 }

@@ -24,8 +24,8 @@
 
                     {% if what == 'liabilities' %}
                         {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
-                        {{ ExpandedForm.amountNoCurrency('openingBalance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
-                        {{ ExpandedForm.date('openingBalanceDate', null, {label:'debt_start_date'|_}) }}
+                        {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
+                        {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
                         {{ ExpandedForm.percentage('interest') }}
                         {{ ExpandedForm.select('interest_period', interestPeriods) }}
                     {% endif %}
@@ -41,19 +41,19 @@
                 <div class="box-body">
                     {{ ExpandedForm.text('iban') }}
                     {{ ExpandedForm.text('BIC', null, {maxlength: 11}) }}
-                    {% if preFilled.accountRole == 'ccAsset' %}
-                        {{ ExpandedForm.text('accountNumber', null , {label:trans('form.creditCardNumber')}) }}
+                    {% if preFilled.account_role == 'ccAsset' %}
+                        {{ ExpandedForm.text('account_number', null , {label:trans('form.creditCardNumber')}) }}
                     {% else %}
-                        {{ ExpandedForm.text('accountNumber') }}
+                        {{ ExpandedForm.text('account_number') }}
                     {% endif %}
 
                     {% if account.accounttype.type == 'Default account' or account.accounttype.type == 'Asset account' %}
 
                         {# get opening balance entry for this thing! #}
-                        {{ ExpandedForm.amountNoCurrency('openingBalance',null) }}
-                        {{ ExpandedForm.date('openingBalanceDate') }}
-                        {{ ExpandedForm.select('accountRole', roles) }}
-                        {{ ExpandedForm.amountNoCurrency('virtualBalance',null) }}
+                        {{ ExpandedForm.amountNoCurrency('opening_balance',null) }}
+                        {{ ExpandedForm.date('opening_balance_date') }}
+                        {{ ExpandedForm.select('account_role', roles) }}
+                        {{ ExpandedForm.amountNoCurrency('virtual_balance',null) }}
 
                     {% endif %}
 
@@ -68,14 +68,14 @@
             </div>
 
             {# panel for credit card options #}
-            {% if preFilled.accountRole == 'ccAsset' %}
+            {% if preFilled.account_role == 'ccAsset' %}
                 <div class="box">
                     <div class="box-header with-border">
                         <h3 class="box-title">{{ 'credit_card_options'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.select('ccType',Config.get('firefly.ccTypes')) }}
-                        {{ ExpandedForm.date('ccMonthlyPaymentDate',null,{'helpText' : 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.'}) }}
+                        {{ ExpandedForm.select('cc_type',Config.get('firefly.ccTypes')) }}
+                        {{ ExpandedForm.date('cc_monthly_payment_date',null,{'helpText' : 'Select any year and any month, it will be ignored anway. Only the day of the month is relevant.'}) }}
                     </div>
                 </div>
             {% endif %}

@@ -952,7 +952,7 @@ return [
     'errors'                                  => 'Errors',
     'debt_start_date'                         => 'Start date of debt',
     'debt_start_amount'                       => 'Start amount of debt',
-    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Store new liability',
     'edit_liabilities_account'                => 'Edit liability ":name"',
 
