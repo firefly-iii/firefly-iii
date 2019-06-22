@@ -219,6 +219,9 @@ class RuleEngine
     {
         /** @var RuleTrigger $trigger */
         $trigger = $rule->ruleTriggers()->where('trigger_type', 'user_action')->first();
+        if (null === $trigger) {
+            return false;
+        }
 
         $validTrigger = ('store-journal' === $trigger->trigger_value && self::TRIGGER_STORE === $this->triggerMode) ||
                         ('update-journal' === $trigger->trigger_value && self::TRIGGER_UPDATE === $this->triggerMode);

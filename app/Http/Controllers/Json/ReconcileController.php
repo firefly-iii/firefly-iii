@@ -25,12 +25,11 @@ namespace FireflyIII\Http\Controllers\Json;
 
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -44,8 +43,6 @@ use Throwable;
 /**
  *
  * Class ReconcileController
- * TODO needs a full rewrite
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ReconcileController extends Controller
 {
@@ -59,6 +56,7 @@ class ReconcileController extends Controller
 
     /**
      * ReconcileController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -78,7 +76,6 @@ class ReconcileController extends Controller
         );
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * Overview of reconciliation.
      *
@@ -88,86 +85,61 @@ class ReconcileController extends Controller
      * @param Carbon $end
      *
      * @return JsonResponse
-     *
-     * @throws FireflyException
-     *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function overview(Request $request, Account $account, Carbon $start, Carbon $end): JsonResponse
     {
-
-        if (AccountType::ASSET !== $account->accountType->type) {
-            throw new FireflyException(sprintf('Account %s is not an asset account.', $account->name));
+        $startBalance    = $request->get('startBalance');
+        $endBalance      = $request->get('endBalance');
+        $accountCurrency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $amount          = '0';
+        $clearedAmount   = '0';
+        $route           = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
+        $selectedIds     = $request->get('journals') ?? [];
+        $clearedJournals = [];
+        $clearedIds      = $request->get('cleared') ?? [];
+        $journals        = [];
+        /* Collect all submitted journals */
+        if (count($selectedIds) > 0) {
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setJournalIds($selectedIds);
+            $journals = $collector->getExtractedJournals();
         }
-        $startBalance   = $request->get('startBalance');
-        $endBalance     = $request->get('endBalance');
-        $transactionIds = $request->get('transactions') ?? [];
-        $clearedIds     = $request->get('cleared') ?? [];
-        $amount         = '0';
-        $clearedAmount  = '0';
-        $route          = route('accounts.reconcile.submit', [$account->id, $start->format('Ymd'), $end->format('Ymd')]);
-        // get sum of transaction amounts:
-        // TODO these methods no longer exist:
-        $transactions = $this->repository->getTransactionsById($transactionIds);
-        $cleared      = $this->repository->getTransactionsById($clearedIds);
-        $countCleared = 0;
+
+        /* Collect all journals already reconciled */
+        if (count($clearedIds) > 0) {
+            /** @var GroupCollectorInterface $collector */
+            $collector = app(GroupCollectorInterface::class);
+            $collector->setJournalIds($clearedIds);
+            $clearedJournals = $collector->getExtractedJournals();
+        }
 
         Log::debug('Start transaction loop');
-        /** @var Transaction $transaction */
-        foreach ($transactions as $transaction) {
-            // find the account and opposing account for this transaction
-            Log::debug(sprintf('Now at transaction #%d: %s', $transaction->journal_id, $transaction->description));
-            $srcAccount  = $this->accountRepos->findNull((int)$transaction->account_id);
-            $dstAccount  = $this->accountRepos->findNull((int)$transaction->opposing_account_id);
-            $srcCurrency = (int)$this->accountRepos->getMetaValue($srcAccount, 'currency_id');
-            $dstCurrency = (int)$this->accountRepos->getMetaValue($dstAccount, 'currency_id');
-
-            // is $account source or destination?
-            if ($account->id === $srcAccount->id) {
-                // source, and it matches the currency id or is 0
-                if ($srcCurrency === $transaction->transaction_currency_id || 0 === $srcCurrency) {
-                    Log::debug(sprintf('Source matches currency: %s', $transaction->transaction_amount));
-                    $amount = bcadd($amount, $transaction->transaction_amount);
-                }
-                // destination, and it matches the foreign currency ID.
-                if ($srcCurrency === $transaction->foreign_currency_id) {
-                    Log::debug(sprintf('Source matches foreign currency: %s', $transaction->transaction_foreign_amount));
-                    $amount = bcadd($amount, $transaction->transaction_foreign_amount);
-                }
-            }
-
-            if ($account->id === $dstAccount->id) {
-                // destination, and it matches the currency id or is 0
-                if ($dstCurrency === $transaction->transaction_currency_id || 0 === $dstCurrency) {
-                    Log::debug(sprintf('Destination matches currency: %s', app('steam')->negative($transaction->transaction_amount)));
-                    $amount = bcadd($amount, app('steam')->negative($transaction->transaction_amount));
-                }
-                // destination, and it matches the foreign currency ID.
-                if ($dstCurrency === $transaction->foreign_currency_id) {
-                    Log::debug(sprintf('Destination matches foreign currency: %s', $transaction->transaction_foreign_amount));
-                    $amount = bcadd($amount, $transaction->transaction_foreign_amount);
-                }
-            }
-            Log::debug(sprintf('Amount is now %s', $amount));
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = $this->processJournal($account, $accountCurrency, $journal, $amount);
         }
+        Log::debug(sprintf('Final amount is %s', $amount));
         Log::debug('End transaction loop');
-        /** @var Transaction $transaction */
-        foreach ($cleared as $transaction) {
-            if ($transaction->date <= $end) {
-                $clearedAmount = bcadd($clearedAmount, $transaction->transaction_amount); // @codeCoverageIgnore
-                ++$countCleared;
+
+        /** @var array $journal */
+        foreach ($clearedJournals as $journal) {
+            if ($journal['date'] <= $end) {
+                $clearedAmount = $this->processJournal($account, $accountCurrency, $journal, $clearedAmount);
             }
         }
-        $difference  = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
-        $diffCompare = bccomp($difference, '0');
+        $difference   = bcadd(bcadd(bcsub($startBalance, $endBalance), $clearedAmount), $amount);
+        $diffCompare  = bccomp($difference, '0');
+        $countCleared = count($clearedJournals);
+
+        $reconSum = bcadd(bcadd($startBalance, $amount), $clearedAmount);
 
         try {
             $view = view(
                 'accounts.reconcile.overview', compact(
-                                                 'account', 'start', 'diffCompare', 'difference', 'end', 'clearedIds', 'transactionIds', 'clearedAmount',
+                                                 'account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount',
                                                  'startBalance', 'endBalance', 'amount',
-                                                 'route', 'countCleared'
+                                                 'route', 'countCleared', 'reconSum'
                                              )
             )->render();
             // @codeCoverageIgnoreStart
@@ -199,22 +171,12 @@ class ReconcileController extends Controller
      */
     public function transactions(Account $account, Carbon $start, Carbon $end)
     {
-        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account);
-        }
-
         $startDate = clone $start;
-        $startDate->subDays(1);
+        $startDate->subDay();
 
-        $currencyId = (int)$this->accountRepos->getMetaValue($account, 'currency_id');
-        $currency   = $this->currencyRepos->findNull($currencyId);
-        if (0 === $currencyId) {
-            $currency = app('amount')->getDefaultCurrency(); // @codeCoverageIgnore
-        }
-
+        $currency     = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
         $startBalance = round(app('steam')->balance($account, $startDate), $currency->decimal_places);
         $endBalance   = round(app('steam')->balance($account, $end), $currency->decimal_places);
-
         // get the transactions
         $selectionStart = clone $start;
         $selectionStart->subDays(3);
@@ -226,20 +188,78 @@ class ReconcileController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setAccounts(new Collection([$account]))
-                  ->setRange($selectionStart, $selectionEnd)->withBudgetInformation()->withCategoryInformation();
-        $groups = $collector->getGroups();
+                  ->setRange($selectionStart, $selectionEnd)
+                  ->withBudgetInformation()->withCategoryInformation()->withAccountInformation();
+        $array    = $collector->getExtractedJournals();
+        $journals = [];
+        // "fix" amounts to make it easier on the reconciliation overview:
+        /** @var array $journal */
+        foreach ($array as $journal) {
+            $inverse = false;
+            if (TransactionType::DEPOSIT === $journal['transaction_type_type']) {
+                $inverse = true;
+            }
+            // transfer to this account? then positive amount:
+            if (TransactionType::TRANSFER === $journal['transaction_type_type']
+                && $account->id === $journal['destination_account_id']
+            ) {
+                $inverse = true;
+            }
+            if (true === $inverse) {
+                $journal['amount'] = app('steam')->positive($journal['amount']);
+                if (null !== $journal['foreign_amount']) {
+                    $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
+                }
+            }
+
+            $journals[] = $journal;
+        }
+
         try {
-            $html = view(
-                'accounts.reconcile.transactions', compact('account', 'groups', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd')
-            )->render();
+            $html = view('accounts.reconcile.transactions',
+                         compact('account', 'journals', 'currency', 'start', 'end', 'selectionStart', 'selectionEnd'))->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('Could not render: %s', $e->getMessage()));
-            $html = 'Could not render accounts.reconcile.transactions';
+            $html = sprintf('Could not render accounts.reconcile.transactions: %s', $e->getMessage());
         }
 
         // @codeCoverageIgnoreEnd
 
         return response()->json(['html' => $html, 'startBalance' => $startBalance, 'endBalance' => $endBalance]);
+    }
+
+    /**
+     * @param Account $account
+     * @param TransactionCurrency $currency
+     * @param array $journal
+     * @param string $amount
+     * @return string
+     */
+    private function processJournal(Account $account, TransactionCurrency $currency, array $journal, string $amount): string
+    {
+        $toAdd = '0';
+        Log::debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+        if ($account->id === $journal['source_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = $journal['amount'];
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = $journal['foreign_amount'];
+            }
+        }
+        if ($account->id === $journal['destination_account_id']) {
+            if ($currency->id === $journal['currency_id']) {
+                $toAdd = bcmul($journal['amount'], '-1');
+            }
+            if (null !== $journal['foreign_currency_id'] && $journal['foreign_currency_id'] === $currency->id) {
+                $toAdd = bcmul($journal['foreign_amount'], '-1');
+            }
+        }
+        Log::debug(sprintf('Going to add %s to %s', $toAdd, $amount));
+        $amount = bcadd($amount, $toAdd);
+        Log::debug(sprintf('Result is %s', $amount));
+
+        return $amount;
     }
 }

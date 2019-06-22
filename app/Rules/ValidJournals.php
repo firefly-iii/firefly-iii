@@ -1,8 +1,8 @@
 <?php
 
 /**
- * ValidTransactions.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * ValidJournals.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -25,25 +25,15 @@ declare(strict_types=1);
 
 namespace FireflyIII\Rules;
 
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use Illuminate\Contracts\Validation\Rule;
 use Log;
 
 /**
- * Class ValidTransactions
+ * Class ValidJournals
  */
-class ValidTransactions implements Rule
+class ValidJournals implements Rule
 {
-    /**
-     * Create a new rule instance.
-     *
-     * @return void
-     */
-    public function __construct()
-    {
-        //
-    }
-
     /**
      * Get the validation error message.
      *
@@ -57,25 +47,23 @@ class ValidTransactions implements Rule
     /**
      * Determine if the validation rule passes.
      *
-     * @param  string $attribute
-     * @param  mixed  $value
+     * @param string $attribute
+     * @param mixed $value
      *
      * @return bool
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function passes($attribute, $value): bool
     {
-        Log::debug('In ValidTransactions::passes');
+        Log::debug('In ValidJournals::passes');
         if (!is_array($value)) {
             return true;
         }
         $userId = auth()->user()->id;
-        foreach ($value as $transactionId) {
-            $count = Transaction::where('transactions.id', $transactionId)
-                                ->leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                ->where('accounts.user_id', $userId)->count();
+        foreach ($value as $journalId) {
+            $count = TransactionJournal::where('id', $journalId)->where('user_id', $userId)->count();
             if (0 === $count) {
-                Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $transactionId, $userId));
+                Log::debug(sprintf('Count for transaction #%d and user #%d is zero! Return FALSE', $journalId, $userId));
 
                 return false;
             }

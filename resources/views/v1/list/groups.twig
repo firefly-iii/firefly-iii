@@ -45,24 +45,23 @@ TODO: hide and show columns
         {% endif %}
         <tr>
             <td {{ style|raw }}>
-                {% if transaction.transaction_type_type == 'Withdrawal' %}
+                {% if journal.transaction_type_type == 'Withdrawal' %}
                     <i class="fa fa-long-arrow-left fa-fw" title="{{ trans('firefly.Withdrawal') }}"></i>
                 {% endif %}
 
-                {% if transaction.transaction_type_type == 'Deposit' %}
+                {% if journal.transaction_type_type == 'Deposit' %}
                     <i class="fa fa-long-arrow-right fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
                 {% endif %}
 
-                {% if transaction.transaction_type_type == 'Transfer' %}
+                {% if journal.transaction_type_type == 'Transfer' %}
                     <i class="fa fa-exchange fa-fw" title="{{ trans('firefly.Deposit') }}"></i>
                 {% endif %}
 
-                {% if transaction.transaction_type_type == 'Reconciliation' %}
-                    XX
+                {% if journal.transaction_type_type == 'Reconciliation' %}
+                    <i class="fa-fw fa fa-calculator" title="{{ trans('firefly.reconciliation_transaction') }}"></i>
                 {% endif %}
-
-                {% if transaction.transaction_type_type == 'Opening balance' %}
-                    XX
+                {% if journal.transaction_type_type == 'Opening balance' %}
+                    <i class="fa-fw fa fa-star-o" title="{{ trans('firefly.Opening balance') }}"></i>
                 {% endif %}
 
             </td>

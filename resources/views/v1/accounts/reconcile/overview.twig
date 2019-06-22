@@ -36,6 +36,10 @@
                         <td>{{ 'submitted_end_balance'|_ }} ({{ end.formatLocalized(monthAndDayFormat) }})</td>
                         <td>{{ formatAmountByAccount(account, endBalance) }}</td>
                     </tr>
+                    <tr>
+                        <td>{{ 'sum_of_reconciliation'|_ }}</td>
+                        <td>{{ formatAmountByAccount(account, reconSum) }}</td>
+                    </tr>
 
                     <tr>
                         <td>{{ 'difference'|_ }}</td>

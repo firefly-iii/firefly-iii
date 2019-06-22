@@ -25,6 +25,7 @@ namespace FireflyIII\Handlers\Events;
 use FireflyIII\Events\StoredTransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
+use Log;
 
 /**
  * Class StoredGroupEventHandler
@@ -41,6 +42,7 @@ class StoredGroupEventHandler
         if (false === $storedJournalEvent->applyRules) {
             return;
         }
+        Log::debug('Now in StoredGroupEventHandler::processRules()');
 
         /** @var RuleEngine $ruleEngine */
         $ruleEngine = app(RuleEngine::class);
