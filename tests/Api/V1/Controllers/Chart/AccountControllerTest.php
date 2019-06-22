@@ -55,6 +55,7 @@ class AccountControllerTest extends TestCase
      */
     public function testOverview(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -93,6 +94,7 @@ class AccountControllerTest extends TestCase
      */
     public function testRevenueOverview(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -134,6 +136,7 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseOverview(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock repositories
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);

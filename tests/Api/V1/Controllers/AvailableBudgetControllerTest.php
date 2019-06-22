@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\Api\V1\Controllers;
 
-
+use Preferences;
 use Amount;
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\AvailableBudget;
@@ -61,6 +61,7 @@ class AvailableBudgetControllerTest extends TestCase
      */
     public function testStore(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         $repository      = $this->mock(BudgetRepositoryInterface::class);
         $transformer     = $this->mock(AvailableBudgetTransformer::class);
         $factory         = $this->mock(TransactionCurrencyFactory::class);
@@ -101,6 +102,7 @@ class AvailableBudgetControllerTest extends TestCase
      */
     public function testStoreNoCurrencyAtAll(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock stuff:
         $repository      = $this->mock(BudgetRepositoryInterface::class);
         $transformer     = $this->mock(AvailableBudgetTransformer::class);
@@ -142,6 +144,7 @@ class AvailableBudgetControllerTest extends TestCase
      */
     public function testStoreNoCurrencyId(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         /** @var AvailableBudget $availableBudget */
         $availableBudget = $this->user()->availableBudgets()->first();
 
@@ -188,11 +191,15 @@ class AvailableBudgetControllerTest extends TestCase
      */
     public function testUpdate(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
         // mock repositories
         $repository         = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepository = $this->mock(CurrencyRepositoryInterface::class);
         $transformer        = $this->mock(AvailableBudgetTransformer::class);
         $factory            = $this->mock(TransactionCurrencyFactory::class);
+        $euro = $this->getEuro();
+        // mock facades:
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();

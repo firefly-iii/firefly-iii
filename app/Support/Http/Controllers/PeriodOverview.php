@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-use FireflyIII\Helpers\Collector\GroupSumCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
@@ -133,34 +132,6 @@ trait PeriodOverview
         //$cache->store($entries);
 
         return $entries;
-    }
-
-    /**
-     * @param array $journals
-     *
-     * @return array
-     */
-    private function groupByCurrency(array $journals): array
-    {
-        $return = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $currencyId = (int)$journal['currency_id'];
-            if (!isset($return[$currencyId])) {
-                $currency                 = new TransactionCurrency;
-                $currency->symbol         = $journal['currency_symbol'];
-                $currency->decimal_places = $journal['currency_decimal_places'];
-                $currency->name           = $journal['currency_name'];
-                $return[$currencyId]      = [
-                    'amount'   => '0',
-                    'currency' => $currency,
-                    //'currency' => 'x',//$currency,
-                ];
-            }
-            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount']);
-        }
-
-        return $return;
     }
 
     /**
@@ -469,16 +440,11 @@ trait PeriodOverview
         $entries = new Collection;
 
         foreach ($dates as $currentDate) {
-
-            /** @var GroupSumCollectorInterface $sumCollector */
-            $sumCollector = app(GroupSumCollectorInterface::class);
-            $sumCollector->setTypes($types)->setRange($currentDate['start'], $currentDate['end']);
-            $amounts     = $sumCollector->getSum();
-
             /** @var GroupCollectorInterface $collector */
             $collector = app(GroupCollectorInterface::class);
             $collector->setTypes($types)->setRange($currentDate['start'], $currentDate['end']);
-            $amounts = $collector->getSum();
+            $journals = $collector->getExtractedJournals();
+            $amounts  = $this->getJournalsSum($journals);
 
             $spent       = [];
             $earned      = [];
@@ -549,6 +515,82 @@ trait PeriodOverview
             ++$return[$currencyId]['count'];
         }
         asort($return);
+
+        return $return;
+    }
+
+    /**
+     * @param array $journals
+     *
+     * @return array
+     */
+    private function groupByCurrency(array $journals): array
+    {
+        $return = [];
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $currencyId = (int)$journal['currency_id'];
+            if (!isset($return[$currencyId])) {
+                $currency                 = new TransactionCurrency;
+                $currency->symbol         = $journal['currency_symbol'];
+                $currency->decimal_places = $journal['currency_decimal_places'];
+                $currency->name           = $journal['currency_name'];
+                $return[$currencyId]      = [
+                    'amount'   => '0',
+                    'currency' => $currency,
+                    //'currency' => 'x',//$currency,
+                ];
+            }
+            $return[$currencyId]['amount'] = bcadd($return[$currencyId]['amount'], $journal['amount']);
+        }
+
+        return $return;
+    }
+
+    /**
+     * @param array $journals
+     * @return array
+     */
+    private function getJournalsSum(array $journals): array
+    {
+        $return = [
+            'count' => 0,
+            'sums'  => [],
+        ];
+        if (0 === count($journals)) {
+            return $return;
+        }
+
+        foreach ($journals as $row) {
+            $return['count']++;
+            $currencyId = (int)$row['currency_id'];
+            if (!isset($return['sums'][$currencyId])) {
+                $return['sums'][$currencyId] = [
+                    'sum'                     => '0',
+                    'currency_id'             => $currencyId,
+                    'currency_code'           => $row['currency_code'],
+                    'currency_symbol'         => $row['currency_symbol'],
+                    'currency_name'           => $row['currency_name'],
+                    'currency_decimal_places' => (int)$row['currency_decimal_places'],
+                ];
+            }
+            // add amounts:
+            $return['sums'][$currencyId]['sum'] = bcadd($return['sums'][$currencyId]['sum'], (string)$row['amount']);
+
+            // same but for foreign amounts:
+            if (null !== $row['foreign_currency_id'] && 0 !== $row['foreign_currency_id']) {
+                $foreignCurrencyId                         = (int)$row['foreign_currency_id'];
+                $return['sums'][$foreignCurrencyId]        = [
+                    'sum'                     => '0',
+                    'currency_id'             => $foreignCurrencyId,
+                    'currency_code'           => $row['foreign_currency_code'],
+                    'currency_symbol'         => $row['foreign_currency_symbol'],
+                    'currency_name'           => $row['foreign_currency_name'],
+                    'currency_decimal_places' => (int)$row['foreign_currency_decimal_places'],
+                ];
+                $return['sums'][$foreignCurrencyId]['sum'] = bcadd($return['sums'][$foreignCurrencyId]['sum'], (string)$row['foreign_amount']);
+            }
+        }
 
         return $return;
     }

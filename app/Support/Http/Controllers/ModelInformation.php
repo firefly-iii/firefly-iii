@@ -25,6 +25,7 @@ namespace FireflyIII\Support\Http\Controllers;
 
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
@@ -74,8 +75,8 @@ trait ModelInformation
      * Get the destination account. Is complex.
      *
      * @param TransactionJournal $journal
-     * @param TransactionType    $destinationType
-     * @param array              $data
+     * @param TransactionType $destinationType
+     * @param array $data
      *
      * @return Account
      *
@@ -115,9 +116,9 @@ trait ModelInformation
                 }
                 $data        = [
                     'name'            => $data['destination_account_expense'],
-                    'account_type'     => 'expense',
+                    'account_type'    => 'expense',
                     'account_type_id' => null,
-                    'virtual_balance'  => 0,
+                    'virtual_balance' => 0,
                     'active'          => true,
                     'iban'            => null,
                 ];
@@ -137,8 +138,8 @@ trait ModelInformation
      * Get the source account.
      *
      * @param TransactionJournal $journal
-     * @param TransactionType    $destinationType
-     * @param array              $data
+     * @param TransactionType $destinationType
+     * @param array $data
      *
      * @return Account
      *
@@ -171,8 +172,8 @@ trait ModelInformation
 
                 $data   = [
                     'name'            => $data['source_account_revenue'],
-                    'account_type'     => 'revenue',
-                    'virtual_balance'  => 0,
+                    'account_type'    => 'revenue',
+                    'virtual_balance' => 0,
                     'active'          => true,
                     'account_type_id' => null,
                     'iban'            => null,
@@ -236,6 +237,43 @@ trait ModelInformation
         }
 
         return $result;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    protected function getRoles(): array
+    {
+        $roles = [];
+        foreach (config('firefly.accountRoles') as $role) {
+            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
+        }
+
+        return $roles;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * @return array
+     */
+    protected function getLiabilityTypes(): array
+    {
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+        // types of liability:
+        $debt     = $repository->getAccountTypeByType(AccountType::DEBT);
+        $loan     = $repository->getAccountTypeByType(AccountType::LOAN);
+        $mortgage = $repository->getAccountTypeByType(AccountType::MORTGAGE);
+        /** @noinspection NullPointerExceptionInspection */
+        $liabilityTypes = [
+            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
+            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
+            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
+        ];
+        asort($liabilityTypes);
+
+        return $liabilityTypes;
     }
 
     /**

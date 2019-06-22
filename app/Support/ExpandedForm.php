@@ -53,8 +53,8 @@ class ExpandedForm
 {
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -93,8 +93,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -140,11 +140,10 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
-     * @throws FireflyException
      */
     public function amount(string $name, $value = null, array $options = null): string
     {
@@ -153,8 +152,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -185,7 +184,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
@@ -227,8 +226,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -267,8 +266,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @throws FireflyException
@@ -280,8 +279,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @throws FireflyException
@@ -293,9 +292,9 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param int    $value
-     * @param mixed  $checked
-     * @param array  $options
+     * @param int $value
+     * @param mixed $checked
+     * @param array $options
      *
      * @return string
      *
@@ -331,8 +330,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -354,8 +353,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -379,8 +378,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -404,7 +403,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
@@ -427,8 +426,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -453,8 +452,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -478,8 +477,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -580,8 +579,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -611,8 +610,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -656,7 +655,7 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param array  $options
+     * @param array $options
      *
      * @return string
      *
@@ -681,8 +680,8 @@ class ExpandedForm
      * Function to render a percentage.
      *
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -707,8 +706,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -732,8 +731,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      */
@@ -754,8 +753,8 @@ class ExpandedForm
     }
 
     /**
-     * @param string     $name
-     * @param null       $value
+     * @param string $name
+     * @param null $value
      * @param array|null $options
      *
      * @return HtmlString
@@ -785,9 +784,9 @@ class ExpandedForm
     /** @noinspection MoreThanThreeArgumentsInspection */
     /**
      * @param string $name
-     * @param array  $list
-     * @param mixed  $selected
-     * @param array  $options
+     * @param array $list
+     * @param mixed $selected
+     * @param array $options
      *
      * @return string
      */
@@ -811,8 +810,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -834,8 +833,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -859,8 +858,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -883,8 +882,8 @@ class ExpandedForm
 
     /**
      * @param string $name
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      *
@@ -916,8 +915,8 @@ class ExpandedForm
     /**
      * @param string $name
      * @param string $view
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)
@@ -969,8 +968,8 @@ class ExpandedForm
     /**
      * @param string $name
      * @param string $view
-     * @param mixed  $value
-     * @param array  $options
+     * @param mixed $value
+     * @param array $options
      *
      * @return string
      * @SuppressWarnings(PHPMD.CyclomaticComplexity)

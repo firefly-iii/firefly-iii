@@ -34,7 +34,7 @@ use Laravel\Passport\Passport;
 use Log;
 use Preferences;
 use Tests\TestCase;
-
+use Amount;
 /**
  * Class CurrencyControllerTest
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
@@ -65,7 +65,7 @@ class CurrencyControllerTest extends TestCase
         $currency       = TransactionCurrency::first();
         $repository     = $this->mock(CurrencyRepositoryInterface::class);
         $transformer    = $this->mock(CurrencyTransformer::class);
-        $userRepository = $this->mock(UserRepositoryInterface::class);
+        $this->mock(UserRepositoryInterface::class);
 
         // mock transformer
         $transformer->shouldReceive('setParameters')->withAnyArgs()->atLeast()->once();
@@ -73,6 +73,9 @@ class CurrencyControllerTest extends TestCase
         $transformer->shouldReceive('getDefaultIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('getAvailableIncludes')->withAnyArgs()->atLeast()->once()->andReturn([]);
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(['id' => 5]);
+
+        // mock facades.
+        Amount::shouldReceive('getDefaultCurrencyByUser')->atLeast()->once()->andReturn($currency);
 
         // mock calls:
         $repository->shouldReceive('setUser')->once();

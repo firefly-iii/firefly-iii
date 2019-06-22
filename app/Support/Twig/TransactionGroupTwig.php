@@ -26,6 +26,7 @@ namespace FireflyIII\Support\Twig\Extension;
 use Carbon\Carbon;
 use DB;
 use FireflyIII\Models\TransactionType;
+use Log;
 use Twig_Extension;
 use Twig_SimpleFunction;
 
@@ -94,7 +95,9 @@ class TransactionGroupTwig extends Twig_Extension
         return new Twig_SimpleFunction(
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
-
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)
@@ -117,7 +120,9 @@ class TransactionGroupTwig extends Twig_Extension
         return new Twig_SimpleFunction(
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
-
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)
@@ -140,6 +145,9 @@ class TransactionGroupTwig extends Twig_Extension
         return new Twig_SimpleFunction(
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
                 $count = DB::table('journal_meta')
                            ->where('name', $metaField)
                            ->where('transaction_journal_id', $journalId)

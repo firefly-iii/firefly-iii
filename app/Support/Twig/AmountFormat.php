@@ -26,6 +26,7 @@ use FireflyIII\Models\Account as AccountModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use Log;
 use Twig_Extension;
 use Twig_SimpleFilter;
 use Twig_SimpleFunction;
@@ -83,7 +84,12 @@ class AmountFormat extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'formatAmountByAccount',
-            function (AccountModel $account, string $amount, bool $coloured = null): string {
+            static function (AccountModel $account, string $amount, bool $coloured = null): string {
+
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
+
                 $coloured = $coloured ?? true;
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);

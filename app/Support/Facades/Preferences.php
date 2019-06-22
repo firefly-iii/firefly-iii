@@ -26,7 +26,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\User;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
-
+use Log;
 /**
  * @codeCoverageIgnore
  * Class Preferences.
@@ -44,6 +44,11 @@ use Illuminate\Support\Facades\Facade;
  */
 class Preferences extends Facade
 {
+    public function __construct()
+    {
+        Log::warning('Hi there');
+    }
+
     /**
      * Get the registered name of the component.
      *

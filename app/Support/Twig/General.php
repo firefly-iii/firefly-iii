@@ -27,6 +27,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use League\CommonMark\CommonMarkConverter;
+use Log;
 use Route;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -145,12 +146,16 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'balance',
-            function (?Account $account): string {
+            static function (?Account $account): string {
                 if (null === $account) {
                     return 'NULL';
                 }
                 /** @var Carbon $date */
                 $date = session('end', Carbon::now()->endOfMonth());
+
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
 
                 return app('steam')->balance($account, $date);
             }
@@ -207,6 +212,10 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'accountGetMetaField',
             static function (Account $account, string $field): string {
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
+
                 /** @var AccountRepositoryInterface $repository */
                 $repository = app(AccountRepositoryInterface::class);
                 $result     = $repository->getMetaValue($account, $field);
@@ -228,7 +237,10 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'hasRole',
-            function (string $role): bool {
+            static function (string $role): bool {
+                if ('testing' === config('app.env')) {
+                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                }
                 $repository = app(UserRepositoryInterface::class);
                 if ($repository->hasRole(auth()->user(), $role)) {
                     return true;
