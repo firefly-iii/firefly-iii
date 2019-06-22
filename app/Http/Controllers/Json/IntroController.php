@@ -82,7 +82,7 @@ class IntroController
         $routeKey = str_replace('.', '_', $route);
         Log::debug(sprintf('Has outro step for route %s', $routeKey));
         $elements = config(sprintf('intro.%s', $routeKey));
-        if (!\is_array($elements)) {
+        if (!is_array($elements)) {
             return false;
         }
 

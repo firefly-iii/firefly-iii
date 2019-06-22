@@ -291,7 +291,7 @@ trait JournalServiceTrait
     //        $factory = app(TagFactory::class);
     //        $factory->setUser($journal->user);
     //        $set = [];
-    //        if (!\is_array($data['tags'])) {
+    //        if (!is_array($data['tags'])) {
     //            return; // @codeCoverageIgnore
     //        }
     //        foreach ($data['tags'] as $string) {

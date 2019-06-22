@@ -563,7 +563,7 @@ class JournalRepository implements JournalRepositoryInterface
 
         $value = $entry->data;
 
-        if (\is_array($value)) {
+        if (is_array($value)) {
             $return = implode(',', $value);
             $cache->store($return);
 

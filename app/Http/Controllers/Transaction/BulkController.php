@@ -97,7 +97,7 @@ class BulkController extends Controller
     public function update(BulkEditJournalRequest $request)
     {
         $journalIds     = $request->get('journals');
-        $journalIds     = \is_array($journalIds) ? $journalIds : [];
+        $journalIds     = is_array($journalIds) ? $journalIds : [];
         $ignoreCategory = 1 === (int)$request->get('ignore_category');
         $ignoreBudget   = 1 === (int)$request->get('ignore_budget');
         $ignoreTags     = 1 === (int)$request->get('ignore_tags');

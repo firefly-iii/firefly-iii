@@ -68,7 +68,7 @@ trait GetConfigurationData
         $routeKey = str_replace('.', '_', $route);
         $elements = config(sprintf('intro.%s', $routeKey));
         $steps    = [];
-        if (\is_array($elements) && count($elements) > 0) {
+        if (is_array($elements) && count($elements) > 0) {
             foreach ($elements as $key => $options) {
                 $currentStep = $options;
 
@@ -188,7 +188,7 @@ trait GetConfigurationData
         if ('' !== $specificPage) {
             $routeKey = str_replace('.', '_', $route);
             $elements = config(sprintf('intro.%s', $routeKey . '_' . $specificPage));
-            if (\is_array($elements) && count($elements) > 0) {
+            if (is_array($elements) && count($elements) > 0) {
                 foreach ($elements as $key => $options) {
                     $currentStep = $options;
 

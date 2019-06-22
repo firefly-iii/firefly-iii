@@ -190,7 +190,7 @@ class Preferences
         if (null !== $preference && null !== $preference->data) {
             $lastActivity = $preference->data;
         }
-        if (\is_array($lastActivity)) {
+        if (is_array($lastActivity)) {
             $lastActivity = implode(',', $lastActivity);
         }
 

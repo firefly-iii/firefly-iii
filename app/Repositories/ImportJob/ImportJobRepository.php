@@ -224,7 +224,7 @@ class ImportJobRepository implements ImportJobRepositoryInterface
     public function getExtendedStatus(ImportJob $job): array
     {
         $status = $job->extended_status;
-        if (\is_array($status)) {
+        if (is_array($status)) {
             return $status;
         }
 

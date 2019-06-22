@@ -131,7 +131,7 @@ class ConfigureUploadHandler implements FileConfigurationInterface
     {
         $return = [];
         // check if specifics given are correct:
-        if (isset($data['specifics']) && \is_array($data['specifics'])) {
+        if (isset($data['specifics']) && is_array($data['specifics'])) {
 
             foreach ($data['specifics'] as $name) {
                 // verify their content.

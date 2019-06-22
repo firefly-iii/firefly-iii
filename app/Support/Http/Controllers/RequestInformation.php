@@ -144,7 +144,7 @@ trait RequestInformation
     {
         $triggers = [];
         $data     = $request->get('triggers');
-        if (\is_array($data)) {
+        if (is_array($data)) {
             foreach ($data as $index => $triggerInfo) {
                 $triggers[] = [
                     'type'            => $triggerInfo['type'] ?? '',

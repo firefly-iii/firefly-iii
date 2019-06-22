@@ -96,7 +96,7 @@ trait RuleManagement
         $index    = 0;
         $triggers = [];
         $oldInput = $request->old('actions');
-        if (\is_array($oldInput)) {
+        if (is_array($oldInput)) {
             foreach ($oldInput as $oldAction) {
                 try {
                     $triggers[] = view(
@@ -129,7 +129,7 @@ trait RuleManagement
         $index    = 0;
         $triggers = [];
         $oldInput = $request->old('triggers');
-        if (\is_array($oldInput)) {
+        if (is_array($oldInput)) {
             foreach ($oldInput as $oldTrigger) {
                 try {
                     $triggers[] = view(

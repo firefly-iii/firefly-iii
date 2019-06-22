@@ -92,7 +92,7 @@ class ConfigureMappingHandler implements FileConfigurationInterface
     {
         $config = $this->importJob->configuration;
 
-        if (isset($data['mapping']) && \is_array($data['mapping'])) {
+        if (isset($data['mapping']) && is_array($data['mapping'])) {
             foreach ($data['mapping'] as $index => $array) {
                 $config['column-mapping-config'][$index] = [];
                 foreach ($array as $value => $mapId) {

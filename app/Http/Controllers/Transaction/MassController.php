@@ -100,7 +100,7 @@ class MassController extends Controller
     {
         $ids   = $request->get('confirm_mass_delete');
         $count = 0;
-        if (\is_array($ids)) {
+        if (is_array($ids)) {
             /** @var string $journalId */
             foreach ($ids as $journalId) {
                 /** @var TransactionJournal $journal */
@@ -190,7 +190,7 @@ class MassController extends Controller
         throw new FireflyException('Needs refactor');
         $journalIds = $request->get('journals');
         $count      = 0;
-        if (\is_array($journalIds)) {
+        if (is_array($journalIds)) {
             foreach ($journalIds as $journalId) {
                 $journal = $repository->findNull((int)$journalId);
                 if (null !== $journal) {

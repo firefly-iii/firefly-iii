@@ -102,7 +102,7 @@ class IndexController extends Controller
     public function reorderRuleActions(Request $request, Rule $rule): JsonResponse
     {
         $ids = $request->get('actions');
-        if (\is_array($ids)) {
+        if (is_array($ids)) {
             $this->ruleRepos->reorderRuleActions($rule, $ids);
         }
 
@@ -120,7 +120,7 @@ class IndexController extends Controller
     public function reorderRuleTriggers(Request $request, Rule $rule): JsonResponse
     {
         $ids = $request->get('triggers');
-        if (\is_array($ids)) {
+        if (is_array($ids)) {
             $this->ruleRepos->reorderRuleTriggers($rule, $ids);
         }
 
