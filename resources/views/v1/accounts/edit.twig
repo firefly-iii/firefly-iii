@@ -8,7 +8,7 @@
     {{ Form.model(account, {'class' : 'form-horizontal','id' : 'update','url' : route('accounts.update',account.id) } ) }}
 
     <input type="hidden" name="id" value="{{ account.id }}"/>
-    <input type="hidden" name="what" value="{{ what }}"/>
+    <input type="hidden" name="objectType" value="{{ objectType }}"/>
 
     <div class="row">
         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -18,11 +18,11 @@
                 </div>
                 <div class="box-body">
                     {{ ExpandedForm.text('name') }}
-                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or what == 'liabilities' %}
+                    {% if account.accountType.type == 'Default account' or account.accountType.type == 'Asset account' or objectType == 'liabilities' %}
                         {{ ExpandedForm.currencyList('currency_id', null, {helpText:'account_default_currency'|_}) }}
                     {% endif %}
 
-                    {% if what == 'liabilities' %}
+                    {% if objectType == 'liabilities' %}
                         {{ ExpandedForm.select('liability_type_id', liabilityTypes) }}
                         {{ ExpandedForm.amountNoCurrency('opening_balance', null, {label:'debt_start_amount'|_, helpText: 'debt_start_amount_help'|_}) }}
                         {{ ExpandedForm.date('opening_balance_date', null, {label:'debt_start_date'|_}) }}
@@ -90,7 +90,7 @@
                 </div>
                 <div class="box-footer">
                     <button type="submit" class="btn pull-right btn-success">
-                        {{ ('update_' ~ what ~ '_account')|_ }}
+                        {{ ('update_' ~ objectType ~ '_account')|_ }}
                     </button>
                 </div>
             </div>

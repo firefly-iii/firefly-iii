@@ -26,11 +26,15 @@ namespace FireflyIII\Services\Internal\Support;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountMetaFactory;
+use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Note;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Destroy\TransactionGroupDestroyService;
 use Log;
@@ -73,6 +77,32 @@ trait AccountServiceTrait
 
 
         return $iban;
+    }
+
+    /**
+     * Update meta data for account. Depends on type which fields are valid.
+     *
+     * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
+     *
+     * @param Account $account
+     * @param array $data
+     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     */
+    public function updateMetaData(Account $account, array $data): void
+    {
+        $fields = $this->validFields;
+
+        if ($account->accountType->type === AccountType::ASSET) {
+            $fields = $this->validAssetFields;
+        }
+        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
+            $fields = $this->validCCFields;
+        }
+        /** @var AccountMetaFactory $factory */
+        $factory = app(AccountMetaFactory::class);
+        foreach ($fields as $field) {
+            $factory->crud($account, $field, (string)($data[$field] ?? ''));
+        }
     }
 
 //    /**
@@ -126,29 +156,34 @@ trait AccountServiceTrait
 //    }
 
     /**
-     * Update meta data for account. Depends on type which fields are valid.
-     *
-     * TODO this method treats expense accounts and liabilities the same way (tries to save interest)
-     *
      * @param Account $account
-     * @param array $data
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+     * @param string $note
+     *
+     * @return bool
      */
-    public function updateMetaData(Account $account, array $data): void
+    public function updateNote(Account $account, string $note): bool
     {
-        $fields = $this->validFields;
+        if ('' === $note) {
+            $dbNote = $account->notes()->first();
+            if (null !== $dbNote) {
+                try {
+                    $dbNote->delete();
+                } catch (Exception $e) {
+                    Log::debug($e->getMessage());
+                }
+            }
 
-        if ($account->accountType->type === AccountType::ASSET) {
-            $fields = $this->validAssetFields;
+            return true;
         }
-        if ($account->accountType->type === AccountType::ASSET && 'ccAsset' === $data['account_role']) {
-            $fields = $this->validCCFields;
+        $dbNote = $account->notes()->first();
+        if (null === $dbNote) {
+            $dbNote = new Note;
+            $dbNote->noteable()->associate($account);
         }
-        /** @var AccountMetaFactory $factory */
-        $factory = app(AccountMetaFactory::class);
-        foreach ($fields as $field) {
-            $factory->crud($account, $field, (string)($data[$field] ?? ''));
-        }
+        $dbNote->text = trim($note);
+        $dbNote->save();
+
+        return true;
     }
 
 //    /**
@@ -263,37 +298,6 @@ trait AccountServiceTrait
 //    }
 
     /**
-     * @param Account $account
-     * @param string $note
-     *
-     * @return bool
-     */
-    public function updateNote(Account $account, string $note): bool
-    {
-        if ('' === $note) {
-            $dbNote = $account->notes()->first();
-            if (null !== $dbNote) {
-                try {
-                    $dbNote->delete();
-                } catch (Exception $e) {
-                    Log::debug($e->getMessage());
-                }
-            }
-
-            return true;
-        }
-        $dbNote = $account->notes()->first();
-        if (null === $dbNote) {
-            $dbNote = new Note;
-            $dbNote->noteable()->associate($account);
-        }
-        $dbNote->text = trim($note);
-        $dbNote->save();
-
-        return true;
-    }
-
-    /**
      * Verify if array contains valid data to possibly store or update the opening balance.
      *
      * @param array $data
@@ -311,6 +315,29 @@ trait AccountServiceTrait
         Log::debug('Array does not have valid opening balance data.');
 
         return false;
+    }
+
+    /**
+     * @param int $currencyId
+     * @param string $currencyCode
+     * @return TransactionCurrency
+     */
+    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
+    {
+        // find currency, or use default currency instead.
+        /** @var TransactionCurrencyFactory $factory */
+        $factory = app(TransactionCurrencyFactory::class);
+        /** @var TransactionCurrency $currency */
+        $currency = $factory->find($currencyId, $currencyCode);
+
+        if (null === $currency) {
+            // use default currency:
+            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
+        }
+        $currency->enabled = true;
+        $currency->save();
+
+        return $currency;
     }
 
 //    /**
@@ -446,6 +473,7 @@ trait AccountServiceTrait
             Log::error($e->getMessage());
             Log::error($e->getTraceAsString());
         }
+
         // @codeCoverageIgnoreEnd
 
         return $group;
@@ -462,12 +490,46 @@ trait AccountServiceTrait
      */
     protected function updateOBGroup(Account $account, array $data): ?TransactionGroup
     {
-        if (null === $this->getOBGroup($account)) {
+        $obGroup = $this->getOBGroup($account);
+        if (null === $obGroup) {
             return $this->createOBGroup($account, $data);
         }
+        /** @var TransactionJournal $journal */
+        $journal                          = $obGroup->transactionJournals()->first();
+        $journal->date                    = $data['opening_balance_date'] ?? $journal->date;
+        $journal->transaction_currency_id = $data['currency_id'];
 
-        // edit in this method
-        die('cannot handle edit');
+        /** @var Transaction $obTransaction */
+        $obTransaction = $journal->transactions()->where('account_id', '!=', $account->id)->first();
+        /** @var Transaction $accountTransaction */
+        $accountTransaction = $journal->transactions()->where('account_id', $account->id)->first();
+
+        // if amount is negative:
+        if (1 === bccomp('0', $data['opening_balance'])) {
+            // account transaction loses money:
+            $accountTransaction->amount                  = app('steam')->negative($data['opening_balance']);
+            $accountTransaction->transaction_currency_id = $data['currency_id'];
+
+            // OB account transaction gains money
+            $obTransaction->amount                  = app('steam')->positive($data['opening_balance']);
+            $obTransaction->transaction_currency_id = $data['currency_id'];
+        }
+        if (-1 === bccomp('0', $data['opening_balance'])) {
+            // account gains money:
+            $accountTransaction->amount                  = app('steam')->positive($data['opening_balance']);
+            $accountTransaction->transaction_currency_id = $data['currency_id'];
+
+            // OB account loses money:
+            $obTransaction->amount                  = app('steam')->negative($data['opening_balance']);
+            $obTransaction->transaction_currency_id = $data['currency_id'];
+        }
+        // save both
+        $accountTransaction->save();
+        $obTransaction->save();
+        $journal->save();
+        $obGroup->refresh();
+
+        return $obGroup;
     }
 
     /**

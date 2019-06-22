@@ -27,7 +27,6 @@ namespace FireflyIII\Factory;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use FireflyIII\User;
@@ -40,12 +39,13 @@ use Log;
  */
 class AccountFactory
 {
+    use AccountServiceTrait;
+
     /** @var AccountRepositoryInterface */
     protected $accountRepository;
     /** @var User */
     private $user;
 
-    use AccountServiceTrait;
     /** @var array */
     private $canHaveVirtual;
 
@@ -223,27 +223,5 @@ class AccountFactory
 
     }
 
-    /**
-     * @param int $currencyId
-     * @param string $currencyCode
-     * @return TransactionCurrency
-     */
-    protected function getCurrency(int $currencyId, string $currencyCode): TransactionCurrency
-    {
-        // find currency, or use default currency instead.
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($currencyId, $currencyCode);
-
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrencyByUser($this->user);
-        }
-        $currency->enabled = true;
-        $currency->save();
-
-        return $currency;
-    }
 
 }

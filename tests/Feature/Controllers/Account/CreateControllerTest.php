@@ -24,8 +24,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Account;
 
 
-use FireflyIII\Models\Account;
+use Amount;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -39,7 +40,10 @@ use Tests\TestCase;
 
 /**
  *
- * Class CreateControllerTest
+ * Class CreateControllerTest.
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CreateControllerTest extends TestCase
 {
@@ -63,11 +67,23 @@ class CreateControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $euro         = $this->getEuro();
         $repository->shouldReceive('get')->andReturn(new Collection);
+
+        // used for session range.
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
+        // mock default calls to Preferences:
+        $this->mockDefaultPreferences();
+        $this->mockIntroPreference('shown_demo_accounts_create_asset');
+
+        // mock default calls to Configuration:
+        $this->mockDefaultConfiguration();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -91,23 +107,40 @@ class CreateControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-
-        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+        $asset        = $this->getRandomAsset();
+        $euro         = $this->getEuro();
+        $repository->shouldReceive('store')->once()->andReturn($asset);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        // change the preference:
-        Preferences::setForUser($this->user(), 'frontPageAccounts', [1]);
+        // mock default calls to Configuration:
+        $this->mockDefaultConfiguration();
 
-        $this->session(['accounts.create.uri' => 'http://localhost']);
+        // change the preference:
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', [$asset->id]]);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
+
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+
+        // mock default calls to Preferences:
+        $this->mockDefaultPreferences();
+
+
+
+        $this->session(['accounts.create.uri' => 'http://localhost/x']);
         $this->be($this->user());
         $data = [
-            'name' => 'new account ' . $this->randomInt(),
-            'what' => 'asset',
+            'name'       => 'new account ' . $this->randomInt(),
+            'objectType' => 'asset',
         ];
 
         $response = $this->post(route('accounts.store', ['asset']), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+        $response->assertRedirect('http://localhost/x');
     }
 
     /**
@@ -120,21 +153,44 @@ class CreateControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
+        $euro         = $this->getEuro();
 
-        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+        $repository->shouldReceive('store')->once()->andReturn($asset);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        // change the preference:
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', [$asset->id]]);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
+
+        // mock default calls to Preferences:
+        $this->mockDefaultPreferences();
+        //$this->mockIntroPreference('shown_demo_accounts_create_asset');
+
+        // mock default calls to Configuration:
+        $this->mockDefaultConfiguration();
+
+
+
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
             'name'           => 'new account ' . $this->randomInt(),
-            'what'           => 'asset',
+            'objectType'     => 'asset',
             'create_another' => 1,
         ];
+
 
         $response = $this->post(route('accounts.store', ['asset']), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+        $response->assertRedirect('http://localhost/accounts/create/asset');
     }
 
     /**
@@ -147,21 +203,36 @@ class CreateControllerTest extends TestCase
         // mock stuff
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
-
-        $repository->shouldReceive('store')->once()->andReturn(factory(Account::class)->make());
+        $liability    = $this->getRandomLoan();
+        $loan         = AccountType::where('type', AccountType::LOAN)->first();
+        $euro         = $this->getEuro();
+        $repository->shouldReceive('store')->once()->andReturn($liability);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
         // change the preference:
-        Preferences::setForUser($this->user(), 'frontPageAccounts', [1]);
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+
+        // mock default calls to Preferences:
+        $this->mockDefaultPreferences();
+        //$this->mockIntroPreference('shown_demo_accounts_create_asset');
+
+        // mock default calls to Configuration:
+        $this->mockDefaultConfiguration();
+
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
         $this->session(['accounts.create.uri' => 'http://localhost']);
         $this->be($this->user());
         $data = [
-            'name'               => 'new liability account ' . $this->randomInt(),
-            'what'               => 'liabilities',
-            'liability_type_id'  => AccountType::where('type', AccountType::LOAN)->first()->id,
-            'openingBalance'     => '100',
-            'openingBalanceDate' => '2018-01-01',
+            'name'                 => 'new liability account ' . $this->randomInt(),
+            'objectType'           => 'liabilities',
+            'liability_type_id'    => $loan->id,
+            'opening_balance'      => '-100',
+            'opening_balance_date' => '2018-01-01',
         ];
 
         $response = $this->post(route('accounts.store', ['liabilities']), $data);

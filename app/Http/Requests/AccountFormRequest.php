@@ -111,8 +111,7 @@ class AccountFormRequest extends Request
             'interest_period'                    => 'in:daily,monthly,yearly',
         ];
 
-        // TODO verify if this will work.
-        if ('liabilities' === $this->get('what')) {
+        if ('liabilities' === $this->get('objectType')) {
             $rules['opening_balance']      = ['numeric', 'required'];
             $rules['opening_balance_date'] = 'date|required';
         }

@@ -28,6 +28,7 @@ use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Http\Request;
 use Log;
 
@@ -37,11 +38,13 @@ use Log;
  */
 class CreateController extends Controller
 {
+    use ModelInformation;
     /** @var AccountRepositoryInterface The account repository */
     private $repository;
 
     /**
      * CreateController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -122,11 +125,9 @@ class CreateController extends Controller
 
         // update preferences if necessary:
         $frontPage = app('preferences')->get('frontPageAccounts', [])->data;
-        if (AccountType::ASSET === $account->accountType->type && count($frontPage) > 0) {
-            // @codeCoverageIgnoreStart
+        if (AccountType::ASSET === $account->accountType->type) {
             $frontPage[] = $account->id;
             app('preferences')->set('frontPageAccounts', $frontPage);
-            // @codeCoverageIgnoreEnd
         }
         // redirect to previous URL.
         $redirect = redirect($this->getPreviousUri('accounts.create.uri'));
@@ -140,40 +141,6 @@ class CreateController extends Controller
         return $redirect;
     }
 
-    /**
-     * @codeCoverageIgnore
-     * @return array
-     */
-    protected function getRoles(): array
-    {
-        $roles = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans(sprintf('firefly.account_role_%s', $role));
-        }
 
-        return $roles;
-    }
-
-    /**
-     * @codeCoverageIgnore
-     * @return array
-     */
-    protected function getLiabilityTypes(): array
-    {
-
-        // types of liability:
-        $debt     = $this->repository->getAccountTypeByType(AccountType::DEBT);
-        $loan     = $this->repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
-        /** @noinspection NullPointerExceptionInspection */
-        $liabilityTypes = [
-            $debt->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::DEBT)),
-            $loan->id     => (string)trans(sprintf('firefly.account_type_%s', AccountType::LOAN)),
-            $mortgage->id => (string)trans(sprintf('firefly.account_type_%s', AccountType::MORTGAGE)),
-        ];
-        asort($liabilityTypes);
-
-        return $liabilityTypes;
-    }
 
 }

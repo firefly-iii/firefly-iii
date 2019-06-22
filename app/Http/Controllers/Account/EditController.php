@@ -27,9 +27,9 @@ namespace FireflyIII\Http\Controllers\Account;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\AccountFormRequest;
 use FireflyIII\Models\Account;
-use FireflyIII\Models\AccountType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Support\Http\Controllers\ModelInformation;
 use Illuminate\Http\Request;
 
 /**
@@ -38,6 +38,7 @@ use Illuminate\Http\Request;
  */
 class EditController extends Controller
 {
+    use ModelInformation;
     /** @var CurrencyRepositoryInterface The currency repository */
     private $currencyRepos;
     /** @var AccountRepositoryInterface The account repository */
@@ -78,24 +79,11 @@ class EditController extends Controller
      */
     public function edit(Request $request, Account $account, AccountRepositoryInterface $repository)
     {
-        $what         = config('firefly.shortNamesByFullName')[$account->accountType->type];
-        $subTitle     = (string)trans('firefly.edit_' . $what . '_account', ['name' => $account->name]);
-        $subTitleIcon = config('firefly.subIconsByIdentifier.' . $what);
-        $roles        = [];
-        foreach (config('firefly.accountRoles') as $role) {
-            $roles[$role] = (string)trans('firefly.account_role_' . $role);
-        }
-
-        // types of liability:
-        $debt           = $this->repository->getAccountTypeByType(AccountType::DEBT);
-        $loan           = $this->repository->getAccountTypeByType(AccountType::LOAN);
-        $mortgage       = $this->repository->getAccountTypeByType(AccountType::MORTGAGE);
-        $liabilityTypes = [
-            $debt->id     => (string)trans('firefly.account_type_' . AccountType::DEBT),
-            $loan->id     => (string)trans('firefly.account_type_' . AccountType::LOAN),
-            $mortgage->id => (string)trans('firefly.account_type_' . AccountType::MORTGAGE),
-        ];
-        asort($liabilityTypes);
+        $objectType     = config('firefly.shortNamesByFullName')[$account->accountType->type];
+        $subTitle       = (string)trans(sprintf('firefly.edit_%s_account', $objectType), ['name' => $account->name]);
+        $subTitleIcon   = config(sprintf('firefly.subIconsByIdentifier.%s', $objectType));
+        $roles          = $this->getRoles();
+        $liabilityTypes = $this->getLiabilityTypes();
 
         // interest calculation periods:
         $interestPeriods = [
@@ -146,7 +134,7 @@ class EditController extends Controller
         $request->session()->flash('preFilled', $preFilled);
 
         return view(
-            'accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'what', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods')
+            'accounts.edit', compact('account', 'currency', 'subTitle', 'subTitleIcon', 'objectType', 'roles', 'preFilled', 'liabilityTypes', 'interestPeriods')
         );
     }
 

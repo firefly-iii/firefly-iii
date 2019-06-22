@@ -27,11 +27,13 @@ use Carbon\Carbon;
 use Closure;
 use DB;
 use Exception;
+use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
@@ -42,6 +44,7 @@ use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
 use Log;
 use Mockery;
+use Preferences;
 use RuntimeException;
 
 /**
@@ -51,6 +54,56 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * Mock the Preferences call that checks if the user has seen the introduction popups already.
+     *
+     * @param string $key
+     */
+    public function mockIntroPreference(string $key): void
+    {
+        $true       = new Preference;
+        $true->data = true;
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs([$key, false])->andReturn($true);
+    }
+
+    /**
+     * Mock the call that checks for the users last activity (for caching).
+     */
+    public function mockLastActivity(): void
+    {
+        Preferences::shouldReceive('lastActivity')->withNoArgs()->atLeast()->once()->andReturn('md512345');
+    }
+
+    public function mockDefaultConfiguration(): void
+    {
+
+        $falseConfig       = new Configuration;
+        $falseConfig->data = false;
+
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+    }
+
+    /**
+     * Mock default preferences.
+     */
+    public function mockDefaultPreferences(): void
+    {
+        $false       = new Preference;
+        $false->data = false;
+        $view        = new Preference;
+        $view->data  = '1M';
+        $lang        = new Preference;
+        $lang->data  = 'en_US';
+        $list        = new Preference;
+        $list->data  = 50;
+
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['twoFactorAuthEnabled', false])->andReturn($false);
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['twoFactorAuthSecret'])->andReturnNull();
+        Preferences::shouldReceive('get')->withArgs(['viewRange', Mockery::any()])->andReturn($view);
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['language', 'en_US'])->andReturn($lang);
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['list-length', 10])->andReturn($list);
+    }
+
     /**
      * @return int
      */

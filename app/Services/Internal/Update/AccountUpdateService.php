@@ -25,7 +25,9 @@ namespace FireflyIII\Services\Internal\Update;
 
 use FireflyIII\Factory\TransactionCurrencyFactory;
 use FireflyIII\Models\Account;
+use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Services\Internal\Support\AccountServiceTrait;
 use Log;
 
@@ -36,6 +38,11 @@ class AccountUpdateService
 {
     use AccountServiceTrait;
 
+    /** @var array */
+    private $canHaveVirtual;
+    /** @var AccountRepositoryInterface */
+    protected $accountRepository;
+
     /**
      * Constructor.
      */
@@ -44,6 +51,9 @@ class AccountUpdateService
         if ('testing' === config('app.env')) {
             Log::warning(sprintf('%s should not be instantiated in the TEST environment!', get_class($this)));
         }
+        // TODO move to configuration.
+        $this->canHaveVirtual    = [AccountType::ASSET, AccountType::DEBT, AccountType::LOAN, AccountType::MORTGAGE, AccountType::CREDITCARD];
+        $this->accountRepository = app(AccountRepositoryInterface::class);
     }
 
     /**
@@ -53,12 +63,11 @@ class AccountUpdateService
      * @param array   $data
      *
      * @return Account
-     * @throws \FireflyIII\Exceptions\FireflyException
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function update(Account $account, array $data): Account
     {
+        $this->accountRepository->setUser($account->user);
+
         // update the account itself:
         $account->name            = $data['name'];
         $account->active          = $data['active'];
@@ -69,32 +78,26 @@ class AccountUpdateService
         if (isset($data['currency_id']) && 0 === $data['currency_id']) {
             unset($data['currency_id']);
         }
-        // find currency, or use default currency instead.
-        /** @var TransactionCurrencyFactory $factory */
-        $factory = app(TransactionCurrencyFactory::class);
-        /** @var TransactionCurrency $currency */
-        $currency = $factory->find($data['currency_id'] ?? null, $data['currency_code'] ?? null);
 
-        if (null === $currency) {
-            // use default currency:
-            $currency = app('amount')->getDefaultCurrencyByUser($account->user);
-        }
-        $currency->enabled = true;
-        $currency->save();
+        // find currency, or use default currency instead.
+        $currency = $this->getCurrency((int)($data['currency_id'] ?? null), (string)($data['currency_code'] ?? null));
+        unset($data['currency_code']);
         $data['currency_id'] = $currency->id;
+
 
         // update all meta data:
         $this->updateMetaData($account, $data);
 
         // has valid initial balance (IB) data?
-        if ($this->validOBData($data)) {
-            // then do update!
-            $this->updateIB($account, $data);
-        }
-
-        // if not, delete it when exist.
-        if (!$this->validOBData($data)) {
-            $this->deleteIB($account);
+        $type = $account->accountType;
+        // if it can have a virtual balance, it can also have an opening balance.
+        if (in_array($type->type, $this->canHaveVirtual, true)) {
+            if ($this->validOBData($data)) {
+                $this->updateOBGroup($account, $data);
+            }
+            if (!$this->validOBData($data)) {
+                $this->deleteOBGroup($account);
+            }
         }
 
         // update note:

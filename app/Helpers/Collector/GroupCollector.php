@@ -121,6 +121,7 @@ class GroupCollector implements GroupCollectorInterface
             'source.foreign_amount as foreign_amount',
             'source.foreign_currency_id as foreign_currency_id',
             'foreign_currency.code as foreign_currency_code',
+            'foreign_currency.name as foreign_currency_name',
             'foreign_currency.symbol as foreign_currency_symbol',
             'foreign_currency.decimal_places as foreign_currency_decimal_places',
 
@@ -590,6 +591,7 @@ class GroupCollector implements GroupCollectorInterface
 
     /**
      * Return the sum of all journals.
+     * TODO ignores the currency.
      *
      * @return string
      */

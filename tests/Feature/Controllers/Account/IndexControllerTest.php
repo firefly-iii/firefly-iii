@@ -22,8 +22,8 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Account;
 
-use FireflyIII\Models\Account;
-use FireflyIII\Models\TransactionCurrency;
+use Amount;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
@@ -32,13 +32,14 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Steam;
 use Tests\TestCase;
+
 
 /**
  * Class IndexControllerTest
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -64,26 +65,40 @@ class IndexControllerTest extends TestCase
     public function testIndex(string $range): void
     {
         // mock stuff
-        $account       = factory(Account::class)->make();
+        $account       = $this->getRandomAsset();
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
-
+        $euro          = $this->getEuro();
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro);
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
+
+        // mock calls to Preferences:
+        $this->mockDefaultPreferences();
+
+        // mock calls to Configuration:
+        $this->mockDefaultConfiguration();
+
+        // list size
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        Amount::shouldReceive('formatAnything')->andReturn('123');
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');
-
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountNumber'])->andReturn('123');
+        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('123');
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
