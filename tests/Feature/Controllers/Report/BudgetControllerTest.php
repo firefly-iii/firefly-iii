@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;

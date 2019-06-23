@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Report;
 
 use Carbon\Carbon;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use Log;
 use Tests\TestCase;

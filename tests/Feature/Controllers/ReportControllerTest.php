@@ -29,7 +29,7 @@ use FireflyIII\Generator\Report\Budget\YearReportGenerator as BYRG;
 use FireflyIII\Generator\Report\Category\YearReportGenerator as CYRG;
 use FireflyIII\Generator\Report\Standard\YearReportGenerator as SYRG;
 use FireflyIII\Generator\Report\Tag\YearReportGenerator as TYRG;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\ReportHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;

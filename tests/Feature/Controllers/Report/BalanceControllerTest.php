@@ -24,7 +24,7 @@ namespace Tests\Feature\Controllers\Report;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collection\Balance;
-use FireflyIII\Helpers\FiscalHelperInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use Log;
 use Tests\TestCase;
