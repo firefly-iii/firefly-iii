@@ -22,11 +22,15 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Admin;
 
+use Amount;
 use FireflyConfig;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -45,13 +49,18 @@ class ConfigurationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
-     * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
      */
     public function testIndex(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $euro         = $this->getEuro();
 
+        // for session
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        $this->mockDefaultPreferences();
 
         $this->be($this->user());
         $falseConfig       = new Configuration;
@@ -72,10 +81,19 @@ class ConfigurationControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\ConfigurationController
+     * @covers \FireflyIII\Http\Requests\ConfigurationRequest
      */
     public function testPostIndex(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $euro         = $this->getEuro();
+
+        // for session
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        $this->mockDefaultPreferences();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
@@ -86,6 +104,7 @@ class ConfigurationControllerTest extends TestCase
         FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
         FireflyConfig::shouldReceive('set')->withArgs(['single_user_mode', false])->once();
         FireflyConfig::shouldReceive('set')->withArgs(['is_demo_site', false])->once();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->post(route('admin.configuration.index.post'));

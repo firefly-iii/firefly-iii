@@ -37,13 +37,14 @@ class ConfigurationController extends Controller
 {
     /**
      * ConfigurationController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.administration'));
                 app('view')->share('mainTitleIcon', 'fa-hand-spock-o');
 

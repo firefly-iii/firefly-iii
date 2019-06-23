@@ -27,11 +27,9 @@ use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Log;
@@ -68,12 +66,10 @@ class ShowControllerTest extends TestCase
         $this->session(['start' => $date, 'end' => clone $date]);
 
         // mock stuff:
-
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $tasker        = $this->mock(AccountTaskerInterface::class);
+        //$tasker        = $this->mock(AccountTaskerInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
+        //$accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $journal       = $this->getRandomWithdrawalAsArray();
@@ -81,26 +77,19 @@ class ShowControllerTest extends TestCase
         $asset         = $this->getRandomAsset();
         $euro          = $this->getEuro();
 
-        // mock stuff
-        $this->mockDefaultConfiguration();
-        $this->mockDefaultPreferences();
+        $this->mockDefaultSession();
 
         // amount mocks:
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
         $repository->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
 
-
-        // used for session range.
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
         // list size
         $pref       = new Preference;
         $pref->data = 50;
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
-        Preferences::shouldReceive('lastActivity')->atLeast()->once();
+        $this->mockLastActivity();
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
@@ -132,8 +121,6 @@ class ShowControllerTest extends TestCase
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
         // mock stuff:
-
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $tasker        = $this->mock(AccountTaskerInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
@@ -145,21 +132,11 @@ class ShowControllerTest extends TestCase
         $euro          = $this->getEuro();
         $asset         = $this->getRandomAsset();
 
-        // mock stuff
-        $this->mockDefaultConfiguration();
-        $this->mockDefaultPreferences();
-
-        // amount mocks:
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-//        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
+        $this->mockDefaultSession();
 
         $repository->shouldReceive('isLiability')->andReturn(false)->atLeast()->once();
         $repository->shouldReceive('getAccountCurrency')->andReturn($euro)->atLeast()->once();
         $repository->shouldReceive('oldestJournalDate')->andReturn(clone $date)->once();
-
-
-        // used for session range.
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // list size
         $pref       = new Preference;

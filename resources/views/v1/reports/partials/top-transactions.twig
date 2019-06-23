@@ -16,7 +16,7 @@
             <td data-value="{{ transaction.description }}">{{ transaction.description }}</td>
             <td data-value="{{ transaction.date.format('Y-m-d') }}">
                 {{ transaction.date.formatLocalized(monthAndDayFormat) }}
-            </td>
+            </td><!-- TODO i dont think transactionAmount will work -->
             <td style="text-align: right;" data-value="{{ transaction.transaction_amount }}"><span
                         style="margin-right:5px;">{{ transaction|transactionAmount }}</span></td>
         </tr>

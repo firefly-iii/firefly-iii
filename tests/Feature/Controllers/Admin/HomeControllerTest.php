@@ -22,8 +22,11 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Admin;
 
+use Amount;
 use Event;
 use FireflyIII\Events\AdminRequestedTestMessage;
+use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
@@ -49,6 +52,14 @@ class HomeControllerTest extends TestCase
     public function testIndex(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $euro         = $this->getEuro();
+
+        // default for session
+        $this->mockDefaultPreferences();
+        $this->mockDefaultConfiguration();
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
@@ -65,6 +76,13 @@ class HomeControllerTest extends TestCase
     public function testTestMessage(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $euro         = $this->getEuro();
+
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        $this->mockDefaultPreferences();
+        $this->mockDefaultConfiguration();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();

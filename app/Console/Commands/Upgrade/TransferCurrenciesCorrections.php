@@ -319,10 +319,12 @@ class TransferCurrenciesCorrections extends Command
         // both accounts must have currency preference:
         // @codeCoverageIgnoreStart
         if ($this->isNoCurrencyPresent()) {
+            $this->error(
+                sprintf('Source or destination accounts for transaction journal #%d have no currency information. Cannot fix this one.', $transfer->id));
+
             return;
         }
         // @codeCoverageIgnoreEnd
-
 
         // fix source transaction having no currency.
         $this->fixSourceNoCurrency();
@@ -397,8 +399,6 @@ class TransferCurrenciesCorrections extends Command
             null === $this->sourceTransaction->foreign_amount &&
             (int)$this->sourceTransaction->transaction_currency_id !== (int)$this->sourceCurrency->id
         ) {
-
-
             $message = sprintf(
                 'Transaction #%d has a currency setting #%d that should be #%d. Amount remains %s, currency is changed.',
                 $this->sourceTransaction->id,

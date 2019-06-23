@@ -298,11 +298,11 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         $dollar        = $this->getDollar();
 
         // make sure that source and destination have the right currencies beforehand
-        $source = $transfer->transactions()->where('amount', '<', 0)->first();
+        $source                          = $transfer->transactions()->where('amount', '<', 0)->first();
         $source->transaction_currency_id = $euro->id;
         $source->save();
 
-        $dest= $transfer->transactions()->where('amount', '>', 0)->first();
+        $dest                          = $transfer->transactions()->where('amount', '>', 0)->first();
         $dest->transaction_currency_id = $dollar->id;
         $dest->save();
 
@@ -448,7 +448,6 @@ class TransferCurrenciesCorrectionsTest extends TestCase
      */
     public function testHandleTransferBadSourceCurrency(): void
     {
-
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
@@ -459,6 +458,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         /** @var Transaction $source */
         $source                          = $transfer->transactions()->where('amount', '<', 0)->first();
         $source->transaction_currency_id = 2;
+        $source->foreign_amount          = null;
         $source->save();
 
         // mock calls:

@@ -33,6 +33,7 @@ use Log;
 
 /**
  * Class ForgotPasswordController
+ * @codeCoverageIgnore
  */
 class ForgotPasswordController extends Controller
 {
@@ -72,6 +73,7 @@ class ForgotPasswordController extends Controller
         $this->validateEmail($request);
 
         // verify if the user is not a demo user. If so, we give him back an error.
+        /** @var User $user */
         $user = User::where('email', $request->get('email'))->first();
 
         if (null !== $user && $repository->hasRole($user, 'demo')) {

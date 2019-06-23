@@ -23,16 +23,13 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Account;
 
-use Amount;
 use Carbon\Carbon;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
@@ -67,23 +64,20 @@ class ReconcileControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $this->mock(GroupCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $euro         = $this->getEuro();
-        $asset        = $this->getRandomAsset();
-        $date         = new Carbon;
+        $euro  = $this->getEuro();
+        $asset = $this->getRandomAsset();
+        $date  = new Carbon;
 
-        // used for session range.
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $userRepos->shouldReceive('hasRole')->atLeast()->once()->withArgs([Mockery::any(), 'owner'])->andReturnTrue();
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $this->mockDefaultConfiguration();
-        $this->mockDefaultPreferences();
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
         Steam::shouldReceive('balance')->atLeast()->once()->andReturn('100');
         $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
+
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         $this->be($this->user());
         $response = $this->get(route('accounts.reconcile', [$asset->id, '20170101', '20170131']));
@@ -103,7 +97,7 @@ class ReconcileControllerTest extends TestCase
     {
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos = $this->mockDefaultSession();
         $asset        = $this->getRandomAsset();
         $euro         = $this->getEuro();
         $date         = new Carbon;
@@ -112,15 +106,8 @@ class ReconcileControllerTest extends TestCase
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(GroupCollectorInterface::class);
 
-
-        // used for session range.
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-
-        $this->mockDefaultPreferences();
-        $this->mockDefaultConfiguration();
-
         Preferences::shouldReceive('mark')->atLeast()->once();
+
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
@@ -129,6 +116,7 @@ class ReconcileControllerTest extends TestCase
         $repository->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
         $factory->shouldReceive('setUser')->atLeast()->once();
         $factory->shouldReceive('create')->andReturn($group);
+
 
         $data = [
             'journals'   => [1, 2, 3],
@@ -154,22 +142,13 @@ class ReconcileControllerTest extends TestCase
     {
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos = $this->mockDefaultSession();
         $asset        = $this->getRandomAsset();
         $euro         = $this->getEuro();
         $date         = new Carbon;
         $factory      = $this->mock(TransactionGroupFactory::class);
-        $group        = $this->getRandomWithdrawalGroup();
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(GroupCollectorInterface::class);
-
-
-        // used for session range.
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-
-        $this->mockDefaultPreferences();
-        $this->mockDefaultConfiguration();
 
         Preferences::shouldReceive('mark')->atLeast()->once();
 

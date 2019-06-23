@@ -62,25 +62,20 @@ class EditControllerTest extends TestCase
      */
     public function testEdit(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $asset        = $this->getRandomAsset();
         $euro         = $this->getEuro();
 
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        // mock default session stuff
+        $this->mockDefaultSession();
 
-        // mock preferences:
-        $this->mockDefaultPreferences();
-
-        //$repository->shouldReceive('findNull')->withArgs([1])->andReturn($euro)->atLeast()->once();
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $repository->shouldReceive('get')->andReturn(new Collection)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull()->atLeast()->once();
@@ -100,12 +95,6 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Loan'])->andReturn(AccountType::find(9))->once();
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Mortgage'])->andReturn(AccountType::find(12))->once();
 
-        // mock calls to Preferences:
-        //$this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
-
         $this->be($this->user());
         $response = $this->get(route('accounts.edit', [$asset->id]));
         $response->assertStatus(200);
@@ -120,7 +109,6 @@ class EditControllerTest extends TestCase
      */
     public function testEditLiability(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
@@ -131,7 +119,7 @@ class EditControllerTest extends TestCase
 
         //$repository->shouldReceive('findNull')->once()->andReturn($euro);
         $repository->shouldReceive('get')->andReturn(new Collection);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
@@ -151,16 +139,8 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Loan'])->andReturn(AccountType::find(9))->once();
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Mortgage'])->andReturn(AccountType::find(12))->once();
 
-        // mock Amount
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
-
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         $this->be($this->user());
         $response = $this->get(route('accounts.edit', [$loan->id]));
@@ -177,7 +157,6 @@ class EditControllerTest extends TestCase
     public function testEditNull(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
@@ -185,10 +164,7 @@ class EditControllerTest extends TestCase
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(2));
-        //$repository->shouldReceive('findNull')->once()->andReturn(null);
         $repository->shouldReceive('get')->andReturn(new Collection);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
@@ -203,11 +179,8 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');
         $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
 
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -232,17 +205,14 @@ class EditControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
 
         $repository->shouldReceive('update')->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
-
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
         Preferences::shouldReceive('mark')->atLeast()->once();
+
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         $this->session(['accounts.edit.uri' => 'http://localhost/javascript/account']);
         $this->be($this->user());
@@ -251,12 +221,6 @@ class EditControllerTest extends TestCase
             'active' => 1,
             'what'   => 'asset',
         ];
-
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
 
         $response = $this->post(route('accounts.update', [1]), $data);
         $response->assertStatus(302);
@@ -271,11 +235,9 @@ class EditControllerTest extends TestCase
     public function testUpdateAgain(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('update')->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->session(['accounts.edit.uri' => 'http://localhost']);
         $this->be($this->user());
@@ -286,15 +248,10 @@ class EditControllerTest extends TestCase
             'return_to_edit' => '1',
         ];
 
-        $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         $response = $this->post(route('accounts.update', [1]), $data);
         $response->assertStatus(302);

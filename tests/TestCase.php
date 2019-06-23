@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests;
 
+use Amount;
 use Carbon\Carbon;
 use Closure;
 use DB;
@@ -33,12 +34,14 @@ use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
+use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
 use FireflyIII\User;
 use Illuminate\Foundation\Testing\TestCase as BaseTestCase;
@@ -54,6 +57,45 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
+
+    /**
+     * @return Budget
+     */
+    public function getRandomBudget(): Budget
+    {
+        return $this->user()->budgets()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return BudgetLimit
+     */
+    public function getRandomBudgetLimit(): BudgetLimit
+    {
+        return BudgetLimit
+            ::leftJoin('budgets', 'budgets.id', '=', 'budget_limits.budget_id')
+            ->where('budgets.user_id', $this->user()->id)
+            ->inRandomOrder()->first(['budget_limits.*']);
+    }
+
+    /**
+     *
+     */
+    public function mockDefaultSession()
+    {
+        $this->mockDefaultConfiguration();
+        $this->mockDefaultPreferences();
+        $euro = $this->getEuro();
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
+        $journal       = new TransactionJournal;
+        $journal->date = new Carbon;
+
+        $journalRepos->shouldReceive('firstNull')->andReturn($journal);
+
+        return $journalRepos;
+    }
+
     /**
      * Mock the Preferences call that checks if the user has seen the introduction popups already.
      *
@@ -94,7 +136,12 @@ abstract class TestCase extends BaseTestCase
         return [
             'transaction_journal_id'  => $withdrawal->id,
             'currency_id'             => $euro->id,
+            'foreign_currency_id'     => null,
+            'date'                    => new Carbon,
+            'source_account_id'       => 1,
+            'destination_account_id'  => 4,
             'currency_name'           => $euro->name,
+            'currency_code'           => $euro->code,
             'currency_symbol'         => $euro->symbol,
             'currency_decimal_places' => $euro->decimal_places,
             'amount'                  => '-30',

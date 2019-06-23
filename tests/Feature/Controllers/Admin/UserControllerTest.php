@@ -26,6 +26,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -50,6 +51,9 @@ class UserControllerTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
+
+        $this->mockDefaultSession();
+
         $this->be($this->user());
         $response = $this->get(route('admin.users.delete', [1]));
         $response->assertStatus(200);
@@ -67,6 +71,8 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
 
+        $this->mockDefaultSession();
+
         $this->be($this->user());
         $response = $this->post(route('admin.users.destroy', ['2']));
         $response->assertStatus(302);
@@ -81,6 +87,9 @@ class UserControllerTest extends TestCase
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(2)->andReturn(true);
+
+        $this->mockDefaultSession();
+
         $this->be($this->user());
         $response = $this->get(route('admin.users.edit', [1]));
         $response->assertStatus(200);
@@ -97,6 +106,15 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->times(3)->andReturn(true);
         $user = $this->user();
         $repository->shouldReceive('all')->andReturn(new Collection([$user]));
+
+        Preferences::shouldReceive('getArrayForUser')->atLeast()->once()->andReturn(
+            [
+                'twoFactorAuthEnabled' => false,
+                'twoFactorAuthSecret'  => null,
+            ]
+        );
+
+        $this->mockDefaultSession();
 
         $this->be($user);
         $response = $this->get(route('admin.users'));
@@ -120,6 +138,8 @@ class UserControllerTest extends TestCase
             ]
         );
 
+        $this->mockDefaultSession();
+
         $this->be($this->user());
         $response = $this->get(route('admin.users.show', [1]));
         $response->assertStatus(200);
@@ -129,6 +149,7 @@ class UserControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Admin\UserController
+     * @covers \FireflyIII\Http\Requests\UserFormRequest
      */
     public function testUpdate(): void
     {
@@ -138,6 +159,10 @@ class UserControllerTest extends TestCase
         $repository->shouldReceive('updateEmail')->once();
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->once()->andReturn(true);
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark');
+
         $data = [
             'id'                    => 1,
             'email'                 => 'test@example.com',

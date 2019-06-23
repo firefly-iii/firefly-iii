@@ -101,7 +101,7 @@
     {% endif %}
 
     <div class="row">
-        <div class="{% if periods.count > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
+        <div class="{% if periods|length > 0 %}col-lg-10 col-md-8 col-sm-12{% else %}col-lg-12 col-md-12 col-sm-12{% endif %}">
             <div class="box">
                 <div class="box-header with-border">
                     <h3 class="box-title">{{ 'transactions'|_ }}</h3>
@@ -116,7 +116,7 @@
                     {% include 'list.groups' %}
                     <p>
                         <i class="fa fa-calendar"></i>
-                        {% if periods.count > 0 %}
+                        {% if periods|length > 0 %}
                             <a href="{{ route('accounts.show.all', [account.id]) }}">
                                 {{ 'show_all_no_filter'|_ }}
                             </a>
@@ -129,7 +129,7 @@
                 </div>
             </div>
         </div>
-        {% if periods.count > 0 %}
+        {% if periods|length > 0 %}
             <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
                 {% include 'list.periods' %}
             </div>

@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
-use FireflyIII\Exceptions\FireflyException;
+use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
@@ -36,7 +36,6 @@ use FireflyIII\Support\Http\Controllers\UserNavigation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use View;
-use Exception;
 
 /**
  * Class ShowController
@@ -101,17 +100,18 @@ class ShowController extends Controller
             [$start, $end] = [$end, $start]; // @codeCoverageIgnore
         }
 
-        $objectType   = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
-        $today        = new Carbon;
-        $subTitleIcon = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
-        $page         = (int)$request->get('page');
-        $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $currency     = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
-        $fStart       = $start->formatLocalized($this->monthAndDayFormat);
-        $fEnd         = $end->formatLocalized($this->monthAndDayFormat);
-        $subTitle     = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
-        $chartUri     = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-        $periods      = $this->getAccountPeriodOverview($account, $end);
+        $objectType       = config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type));
+        $today            = new Carbon;
+        $subTitleIcon     = config(sprintf('firefly.subIconsByIdentifier.%s', $account->accountType->type));
+        $page             = (int)$request->get('page');
+        $pageSize         = (int)app('preferences')->get('listPageSize', 50)->data;
+        $currency         = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $fStart           = $start->formatLocalized($this->monthAndDayFormat);
+        $fEnd             = $end->formatLocalized($this->monthAndDayFormat);
+        $subTitle         = (string)trans('firefly.journals_in_period_for_account', ['name' => $account->name, 'start' => $fStart, 'end' => $fEnd]);
+        $chartUri         = route('chart.account.period', [$account->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
+        $firstTransaction = $this->repository->oldestJournalDate($account) ?? $start;
+        $periods          = $this->getAccountPeriodOverview($account, $firstTransaction, $end);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -138,10 +138,10 @@ class ShowController extends Controller
      *
      * @param Request $request
      * @param Account $account
-     * @throws Exception
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector|View
      *
      *
+     * @throws Exception
      */
     public function showAll(Request $request, Account $account)
     {

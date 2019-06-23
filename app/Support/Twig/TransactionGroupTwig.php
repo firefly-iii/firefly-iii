@@ -25,6 +25,8 @@ namespace FireflyIII\Support\Twig\Extension;
 
 use Carbon\Carbon;
 use DB;
+use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use Log;
 use Twig_Extension;
@@ -43,7 +45,8 @@ class TransactionGroupTwig extends Twig_Extension
     public function getFunctions(): array
     {
         return [
-            $this->transactionAmount(),
+            $this->journalArrayAmount(),
+            $this->journalObjectAmount(),
             $this->groupAmount(),
             $this->journalHasMeta(),
             $this->journalGetMetaDate(),
@@ -160,18 +163,44 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
+     * Shows the amount for a single journal array.
+     *
      * @return Twig_SimpleFunction
      */
-    public function transactionAmount(): Twig_SimpleFunction
+    public function journalArrayAmount(): Twig_SimpleFunction
     {
         return new Twig_SimpleFunction(
-            'transactionAmount',
+            'journalArrayAmount',
             function (array $array): string {
                 // if is not a withdrawal, amount positive.
-                $result = $this->normalAmount($array);
+                $result = $this->normalJournalArrayAmount($array);
                 // now append foreign amount, if any.
                 if (null !== $array['foreign_amount']) {
-                    $foreign = $this->foreignAmount($array);
+                    $foreign = $this->foreignJournalArrayAmount($array);
+                    $result  = sprintf('%s (%s)', $result, $foreign);
+                }
+
+                return $result;
+            },
+            ['is_safe' => ['html']]
+        );
+    }
+
+    /**
+     * Shows the amount for a single journal object.
+     *
+     * @return Twig_SimpleFunction
+     */
+    public function journalObjectAmount(): Twig_SimpleFunction
+    {
+        return new Twig_SimpleFunction(
+            'journalObjectAmount',
+            function (TransactionJournal $journal): string {
+                // if is not a withdrawal, amount positive.
+                $result = $this->normalJournalObjectAmount($journal);
+                // now append foreign amount, if any.
+                if ($this->journalObjectHasForeign($journal)) {
+                    $foreign = $this->foreignJournalObjectAmount($journal);
                     $result  = sprintf('%s (%s)', $result, $foreign);
                 }
 
@@ -188,7 +217,7 @@ class TransactionGroupTwig extends Twig_Extension
      *
      * @return string
      */
-    private function foreignAmount(array $array): string
+    private function foreignJournalArrayAmount(array $array): string
     {
         $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $array['foreign_amount'] ?? '0';
@@ -208,13 +237,42 @@ class TransactionGroupTwig extends Twig_Extension
     }
 
     /**
+     * Generate foreign amount for journal from a transaction group.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    private function foreignJournalObjectAmount(TransactionJournal $journal): string
+    {
+        $type = $journal->transactionType->type;
+        /** @var Transaction $first */
+        $first    = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency = $first->foreignCurrency;
+        $amount   = $first->foreign_amount ?? '0';
+        $colored  = true;
+        if ($type !== TransactionType::WITHDRAWAL) {
+            $amount = bcmul($amount, '-1');
+        }
+        if ($type === TransactionType::TRANSFER) {
+            $colored = false;
+        }
+        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
+        if ($type === TransactionType::TRANSFER) {
+            $result = sprintf('<span class="text-info">%s</span>', $result);
+        }
+
+        return $result;
+    }
+
+    /**
      * Generate normal amount for transaction from a transaction group.
      *
      * @param array $array
      *
      * @return string
      */
-    private function normalAmount(array $array): string
+    private function normalJournalArrayAmount(array $array): string
     {
         $type    = $array['transaction_type_type'] ?? TransactionType::WITHDRAWAL;
         $amount  = $array['amount'] ?? '0';
@@ -231,5 +289,45 @@ class TransactionGroupTwig extends Twig_Extension
         }
 
         return $result;
+    }
+
+    /**
+     * Generate normal amount for transaction from a transaction group.
+     *
+     * @param TransactionJournal $journal
+     *
+     * @return string
+     */
+    private function normalJournalObjectAmount(TransactionJournal $journal): string
+    {
+        $type     = $journal->transactionType->type;
+        $first    = $journal->transactions()->where('amount', '<', 0)->first();
+        $currency = $journal->transactionCurrency;
+        $amount   = $first->amount ?? '0';
+        $colored  = true;
+        if ($type !== TransactionType::WITHDRAWAL) {
+            $amount = bcmul($amount, '-1');
+        }
+        if ($type === TransactionType::TRANSFER) {
+            $colored = false;
+        }
+        $result = app('amount')->formatFlat($currency->symbol, (int)$currency->decimal_places, $amount, $colored);
+        if ($type === TransactionType::TRANSFER) {
+            $result = sprintf('<span class="text-info">%s</span>', $result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param TransactionJournal $journal
+     * @return bool
+     */
+    private function journalObjectHasForeign(TransactionJournal $journal): bool
+    {
+        /** @var Transaction $first */
+        $first = $journal->transactions()->where('amount', '<', 0)->first();
+
+        return null !== $first->foreign_amount;
     }
 }

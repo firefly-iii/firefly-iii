@@ -63,27 +63,18 @@ class CreateControllerTest extends TestCase
     public function testCreate(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $euro         = $this->getEuro();
         $repository->shouldReceive('get')->andReturn(new Collection);
-
-        // used for session range.
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-
-        // mock default calls to Preferences:
-        $this->mockDefaultPreferences();
+        // mock default calls
+        $this->mockDefaultSession();
         $this->mockIntroPreference('shown_demo_accounts_create_asset');
-
-        // mock default calls to Configuration:
-        $this->mockDefaultConfiguration();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -105,30 +96,21 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $asset        = $this->getRandomAsset();
-        $euro         = $this->getEuro();
-        $repository->shouldReceive('store')->once()->andReturn($asset);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        // mock default calls to Configuration:
-        $this->mockDefaultConfiguration();
+        $repository->shouldReceive('store')->once()->andReturn($asset);
+
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         // change the preference:
         $emptyPref       = new Preference;
         $emptyPref->data = [];
         Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
         Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', [$asset->id]]);
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-
-
         Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
-
-        // mock default calls to Preferences:
-        $this->mockDefaultPreferences();
-
-
 
         $this->session(['accounts.create.uri' => 'http://localhost/x']);
         $this->be($this->user());
@@ -151,28 +133,20 @@ class CreateControllerTest extends TestCase
     public function testStoreAnother(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $asset        = $this->getRandomAsset();
-        $euro         = $this->getEuro();
 
         $repository->shouldReceive('store')->once()->andReturn($asset);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         // change the preference:
         $emptyPref       = new Preference;
         $emptyPref->data = [];
         Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
         Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', [$asset->id]]);
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
 
-        // mock default calls to Preferences:
-        $this->mockDefaultPreferences();
-        //$this->mockIntroPreference('shown_demo_accounts_create_asset');
-
-        // mock default calls to Configuration:
-        $this->mockDefaultConfiguration();
+        // mock default session stuff
+        $this->mockDefaultSession();
 
 
 
@@ -201,28 +175,18 @@ class CreateControllerTest extends TestCase
     public function testStoreLiability(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $liability    = $this->getRandomLoan();
         $loan         = AccountType::where('type', AccountType::LOAN)->first();
-        $euro         = $this->getEuro();
         $repository->shouldReceive('store')->once()->andReturn($liability);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         // change the preference:
         $emptyPref       = new Preference;
         $emptyPref->data = [];
         Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
-
-        // mock default calls to Preferences:
-        $this->mockDefaultPreferences();
-        //$this->mockIntroPreference('shown_demo_accounts_create_asset');
-
-        // mock default calls to Configuration:
-        $this->mockDefaultConfiguration();
-
         Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
 
         $this->session(['accounts.create.uri' => 'http://localhost']);

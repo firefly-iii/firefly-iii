@@ -62,25 +62,15 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $asset        = $this->getRandomAsset();
-        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        // mock hasRole for user repository:
+        $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        // mock Amount
-        $euro         = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
-
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         $this->be($this->user());
         $response = $this->get(route('accounts.delete', [$asset->id]));
@@ -96,24 +86,15 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $asset        = $this->getRandomAsset();
-        $euro         = $this->getEuro();
         $repository->shouldReceive('findNull')->withArgs([0])->once()->andReturn(null);
         $repository->shouldReceive('destroy')->andReturn(true);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         Preferences::shouldReceive('mark')->atLeast()->once();
-
-        // mock Amount
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
         $this->session(['accounts.delete.uri' => 'http://localhost/accounts/show/1']);
 

@@ -43,20 +43,22 @@ use Illuminate\Http\Request;
 class ShowController extends Controller
 {
     use PeriodOverview, AugumentData;
+    /** @var JournalRepositoryInterface */
+    private $journalRepos;
 
     /**
      * ShowController constructor.
+     *
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
-
-        app('view')->share('hideBudgets', true);
-
         $this->middleware(
             function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.budgets'));
                 app('view')->share('mainTitleIcon', 'fa-tasks');
+                $this->journalRepos = app(JournalRepositoryInterface::class);
 
                 return $next($request);
             }
@@ -82,9 +84,13 @@ class ShowController extends Controller
             'firefly.without_budget_between',
             ['start' => $start->formatLocalized($this->monthAndDayFormat), 'end' => $end->formatLocalized($this->monthAndDayFormat)]
         );
-        $periods  = $this->getNoBudgetPeriodOverview($end);
-        $page     = (int)$request->get('page');
-        $pageSize = (int)app('preferences')->get('listPageSize', 50)->data;
+
+        // get first journal ever to set off the budget period overview.
+        $first     = $this->journalRepos->firstNull();
+        $firstDate = null !== $first ? $first->date : $start;
+        $periods   = $this->getNoBudgetPeriodOverview($firstDate, $end);
+        $page      = (int)$request->get('page');
+        $pageSize  = (int)app('preferences')->get('listPageSize', 50)->data;
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
@@ -100,16 +106,13 @@ class ShowController extends Controller
      * Shows ALL transactions without a budget.
      *
      * @param Request $request
-     * @param JournalRepositoryInterface $repository
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    public function noBudgetAll(Request $request, JournalRepositoryInterface $repository)
+    public function noBudgetAll(Request $request)
     {
         $subTitle = (string)trans('firefly.all_journals_without_budget');
-        $first    = $repository->firstNull();
+        $first    = $this->journalRepos->firstNull();
         $start    = null === $first ? new Carbon : $first->date;
         $end      = new Carbon;
         $page     = (int)$request->get('page');
@@ -169,7 +172,7 @@ class ShowController extends Controller
     public function showByBudgetLimit(Request $request, Budget $budget, BudgetLimit $budgetLimit)
     {
         if ($budgetLimit->budget->id !== $budget->id) {
-            throw new FireflyException('This budget limit is not part of this budget.');
+            throw new FireflyException('This budget limit is not part of this budget.'); // @codeCoverageIgnore
         }
 
         $page     = (int)$request->get('page');

@@ -67,7 +67,6 @@ class IndexControllerTest extends TestCase
         // mock stuff
         $account       = $this->getRandomAsset();
         $repository    = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $euro          = $this->getEuro();
@@ -76,17 +75,12 @@ class IndexControllerTest extends TestCase
 
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro);
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 
-
-        // mock calls to Preferences:
-        $this->mockDefaultPreferences();
-
-        // mock calls to Configuration:
-        $this->mockDefaultConfiguration();
+        // mock default session stuff
+        $this->mockDefaultSession();
 
         // list size
         $pref       = new Preference;
@@ -94,7 +88,6 @@ class IndexControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
         Amount::shouldReceive('formatAnything')->andReturn('123');
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1');
         $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');

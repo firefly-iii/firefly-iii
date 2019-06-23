@@ -29,6 +29,7 @@ use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -54,12 +55,13 @@ class DeleteControllerTest extends TestCase
     {
         Log::debug('Now in testDelete()');
         // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
 
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $this->mockDefaultSession();
+
 
         $this->be($this->user());
         $response = $this->get(route('budgets.delete', [1]));
@@ -75,11 +77,11 @@ class DeleteControllerTest extends TestCase
     {
         Log::debug('Now in testDestroy()');
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mock(UserRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $repository->shouldReceive('destroy')->andReturn(true);
 

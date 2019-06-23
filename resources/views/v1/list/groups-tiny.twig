@@ -4,7 +4,7 @@
             {% for transaction in group.transactions %}
                 {{ transaction.description }}
                 <span class="pull-right small">
-                    {{ transactionAmount(transaction) }}
+                    {{ journalArrayAmount(transaction) }}
                 </span>
                 <br/>
             {% endfor %}
