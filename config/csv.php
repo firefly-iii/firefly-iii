@@ -27,6 +27,7 @@ use FireflyIII\Import\Specifics\IngDescription;
 use FireflyIII\Import\Specifics\PresidentsChoice;
 use FireflyIII\Import\Specifics\SnsDescription;
 use FireflyIII\Import\Specifics\Belfius;
+use FireflyIII\Import\Specifics\IngBelgium;
 
 return [
 
@@ -38,7 +39,8 @@ return [
         'AbnAmroDescription' => AbnAmroDescription::class,
         'SnsDescription'     => SnsDescription::class,
         'PresidentsChoice'   => PresidentsChoice::class,
-        'Belfius'            => Belfius::class
+        'Belfius'            => Belfius::class,
+        'IngBelgium'         => IngBelgium::class
     ],
 
     /*
