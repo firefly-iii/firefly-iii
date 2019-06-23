@@ -84,6 +84,24 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return array
+     */
+    public function getRandomWithdrawalAsArray(): array
+    {
+        $withdrawal = $this->getRandomWithdrawal();
+        $euro       = $this->getEuro();
+
+        return [
+            'transaction_journal_id'  => $withdrawal->id,
+            'currency_id'             => $euro->id,
+            'currency_name'           => $euro->name,
+            'currency_symbol'         => $euro->symbol,
+            'currency_decimal_places' => $euro->decimal_places,
+            'amount'                  => '-30',
+        ];
+    }
+
+    /**
      * Mock default preferences.
      */
     public function mockDefaultPreferences(): void
@@ -388,7 +406,10 @@ abstract class TestCase extends BaseTestCase
                             ->where('transaction_type_id', $transactionType->id)->inRandomOrder()->first();
             /** @var TransactionGroup $group */
             $group = $journal->transactionGroup;
-            $count = $group->transactionJournals()->count();
+            $count = 0;
+            if (null !== $group) {
+                $count = $group->transactionJournals()->count();
+            }
             Log::debug(sprintf('Count is %d', $count));
         } while (1 !== $count);
 

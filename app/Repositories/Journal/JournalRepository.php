@@ -688,18 +688,14 @@ class JournalRepository implements JournalRepositoryInterface
 
     /**
      * @param int $transactionId
-     *
-     * @return bool
      */
-    public function reconcileById(int $transactionId): bool
+    public function reconcileById(int $journalId): void
     {
-        /** @var Transaction $transaction */
-        $transaction = $this->user->transactions()->find($transactionId);
-        if (null !== $transaction) {
-            return $this->reconcile($transaction);
+        /** @var TransactionJournal $journal */
+        $journal = $this->user->transactionJournals()->find($journalId);
+        if (null !== $journal) {
+            $journal->transactions()->update(['reconciled' => true]);
         }
-
-        return false;
     }
 
     /**

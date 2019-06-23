@@ -124,6 +124,9 @@ class AccountValidator
             case TransactionType::OPENING_BALANCE:
                 $result = $this->validateOBDestination($destinationId, $destinationName);
                 break;
+            case TransactionType::RECONCILIATION:
+                $result = $this->validateReconciliationDestination($destinationId);
+                break;
             //case TransactionType::OPENING_BALANCE:
             //case TransactionType::RECONCILIATION:
             //    die(sprintf('Cannot handle type "%s"', $this->transactionType));
@@ -158,6 +161,9 @@ class AccountValidator
                 break;
             case TransactionType::OPENING_BALANCE:
                 $result = $this->validateOBSource($accountId, $accountName);
+                break;
+            case TransactionType::RECONCILIATION:
+                $result = $this->validateReconciliationSource($accountId);
                 break;
             //case TransactionType::OPENING_BALANCE:
             //case TransactionType::RECONCILIATION:
@@ -580,6 +586,52 @@ class AccountValidator
         $this->source = $search;
 
         return true;
+    }
+
+    /**
+     * @param int|null $accountId
+     * @return bool
+     */
+    private function validateReconciliationSource(?int $accountId): bool
+    {
+        if (null === $accountId) {
+            return false;
+        }
+        $result = $this->accountRepository->findNull($accountId);
+        $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
+        if (null === $result) {
+            return false;
+        }
+        if (in_array($result->accountType->type, $types, true)) {
+            $this->source = $result;
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param int|null $accountId
+     * @return bool
+     */
+    private function validateReconciliationDestination(?int $accountId): bool
+    {
+        if (null === $accountId) {
+            return false;
+        }
+        $result = $this->accountRepository->findNull($accountId);
+        $types  = [AccountType::ASSET, AccountType::LOAN, AccountType::DEBT, AccountType::MORTGAGE, AccountType::RECONCILIATION];
+        if (null === $result) {
+            return false;
+        }
+        if (in_array($result->accountType->type, $types, true)) {
+            $this->destination = $result;
+
+            return true;
+        }
+
+        return false;
     }
 
 

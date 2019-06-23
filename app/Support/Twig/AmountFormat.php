@@ -87,7 +87,7 @@ class AmountFormat extends Twig_Extension
             static function (AccountModel $account, string $amount, bool $coloured = null): string {
 
                 if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                    Log::warning('AmountFormat::formatAmountByAccount should NOT be called in the TEST environment!');
                 }
 
                 $coloured = $coloured ?? true;

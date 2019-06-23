@@ -309,11 +309,9 @@ interface JournalRepositoryInterface
     public function reconcile(Transaction $transaction): bool;
 
     /**
-     * @param int $transactionId
-     *
-     * @return bool
+     * @param int $journalId
      */
-    public function reconcileById(int $transactionId): bool;
+    public function reconcileById(int $journalId): void;
 
     /**
      * @param TransactionJournal $journal

@@ -23,20 +23,21 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Account;
 
+use Amount;
 use Carbon\Carbon;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Helpers\FiscalHelperInterface;
-use FireflyIII\Models\Account;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionGroupFactory;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
+use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
+use Steam;
 use Tests\TestCase;
 
 /**
@@ -53,64 +54,6 @@ class ReconcileControllerTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-    /**
-     * Test editing a reconciliation.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testEdit(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $repository    = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-
-        $journal     = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-        $transaction = $journal->transactions()->where('amount', '>', 0)->first();
-        $repository->shouldReceive('firstNull')->andReturn($journal);
-        $repository->shouldReceive('getFirstPosTransaction')->andReturn($transaction);
-        $repository->shouldReceive('getJournalDate')->andReturn('2018-01-01');
-        $repository->shouldReceive('getJournalCategoryName')->andReturn('');
-        $repository->shouldReceive('getJournalBudgetid')->andReturn(0);
-
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.edit', [$journal->id]));
-        $response->assertStatus(200);
-
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * Test the redirect if journal is not a reconciliation.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testEditRedirect(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.edit', [$journal->id]));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('transactions.edit', [$journal->id]));
-    }
-
 
     /**
      * Test showing the reconciliation.
@@ -119,239 +62,35 @@ class ReconcileControllerTest extends TestCase
      */
     public function testReconcile(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
+        $this->mock(GroupCollectorInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $euro         = $this->getEuro();
+        $asset        = $this->getRandomAsset();
         $date         = new Carbon;
+
+        // used for session range.
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->withArgs([Mockery::any(), 'owner'])->andReturnTrue();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $this->mockDefaultConfiguration();
+        $this->mockDefaultPreferences();
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        Steam::shouldReceive('balance')->atLeast()->once()->andReturn('100');
+        $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
 
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-
-        // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-
-        $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
         $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile', [1, '20170101', '20170131']));
+        $response = $this->get(route('accounts.reconcile', [$asset->id, '20170101', '20170131']));
         $response->assertStatus(200);
 
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * Test showing the reconciliation (its a initial balance).
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testReconcileInitialBalance(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $date         = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $transaction = Transaction::leftJoin('accounts', 'accounts.id', '=', 'transactions.account_id')
-                                  ->where('accounts.user_id', $this->user()->id)->where('accounts.account_type_id', 6)->first(['account_id']);
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile', [$transaction->account_id, '20170101', '20170131']));
-        $response->assertStatus(302);
-    }
-
-    /**
-     * Test reconcile view (without date info).
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testReconcileNoDates(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-
-
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-
-        // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-
-        $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
-
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile', [1]));
-        $response->assertStatus(200);
-
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * Test reconcile view (without end date).
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testReconcileNoEndDate(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $date         = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-
-        // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-
-        $repository->shouldReceive('findNull')->once()->andReturn(TransactionCurrency::find(1));
-
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile', [1, '20170101']));
-        $response->assertStatus(200);
-
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * Test reconcile view when account is not an asset.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testReconcileNotAsset(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-        $date          = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $account = $this->user()->accounts()->where('account_type_id', '!=', 6)->where('account_type_id', '!=', 3)->first();
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile', [$account->id, '20170101', '20170131']));
-        $response->assertStatus(302);
-    }
-
-    /**
-     * Test show for actual reconciliation.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testShow(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $repository    = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        $accountRepos->shouldReceive('getMetaValue')
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
-        $currencyRepos->shouldReceive('findNull')->atLeast()->once()->withArgs([1])->andReturn(TransactionCurrency::find(1));
-
-        // mock hasRole for user repository:
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getAssetTransaction')->once()->andReturn($journal->transactions()->first());
-
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.show', [$journal->id]));
-        $response->assertStatus(200);
-
-        // has bread crumb
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-
-    /**
-     * Test show for actual reconciliation.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testShowError(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $repository    = $this->mock(JournalRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-
-        $repository->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getAssetTransaction')->once()->andReturnNull();
-
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.show', [$journal->id]));
-        $response->assertStatus(500);
-
-        // has bread crumb
-        $response->assertSee('The transaction data is incomplete. This is probably a bug. Apologies.');
-    }
-
-
-    /**
-     * Test show for actual reconciliation, but its not a reconciliation.
-     *
-     * @covers \FireflyIII\Http\Controllers\Account\ReconcileController
-     */
-    public function testShowSomethingElse(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
-        $this->be($this->user());
-        $response = $this->get(route('accounts.reconcile.show', [$journal->id]));
-        $response->assertStatus(302);
-        $response->assertRedirect(route('transactions.show', [$journal->id]));
     }
 
     /**
@@ -362,115 +101,97 @@ class ReconcileControllerTest extends TestCase
      */
     public function testSubmit(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
+        $euro         = $this->getEuro();
+        $date         = new Carbon;
+        $factory      = $this->mock(TransactionGroupFactory::class);
+        $group        = $this->getRandomWithdrawalGroup();
+        $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(GroupCollectorInterface::class);
 
-        return;
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-        $date          = new Carbon;
+
+        // used for session range.
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
+        $this->mockDefaultPreferences();
+        $this->mockDefaultConfiguration();
+
+        Preferences::shouldReceive('mark')->atLeast()->once();
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('reconcileById')->andReturn(true);
-        $journalRepos->shouldReceive('store')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('getReconciliation')->andReturn(new Account);
-        $repository->shouldReceive('findNull')->andReturn(new Account);
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        $journalRepos->shouldReceive('reconcileById')->times(3);
+        $repository->shouldReceive('getReconciliation')->atLeast()->once()->andReturn($asset);
+        $repository->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('create')->andReturn($group);
 
         $data = [
-            'transactions' => [1, 2, 3],
-            'reconcile'    => 'create',
-            'difference'   => '5',
-            'start'        => '20170101',
-            'end'          => '20170131',
+            'journals'   => [1, 2, 3],
+            'reconcile'  => 'create',
+            'difference' => '5',
+            'start'      => '20170101',
+            'end'        => '20170131',
         ];
         $this->be($this->user());
-        $response = $this->post(route('accounts.reconcile.submit', [1, '20170101', '20170131']), $data);
+        $response = $this->post(route('accounts.reconcile.submit', [$asset->id, '20170101', '20170131']), $data);
 
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
 
     /**
+     * Submit reconciliation, but throw an error.
+     *
      * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
-     * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
+     * @covers       \FireflyIII\Http\Requests\ReconciliationStoreRequest
      */
-    public function testUpdate(): void
+    public function testSubmitError(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
+        $euro         = $this->getEuro();
+        $date         = new Carbon;
+        $factory      = $this->mock(TransactionGroupFactory::class);
+        $group        = $this->getRandomWithdrawalGroup();
+        $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(GroupCollectorInterface::class);
 
-        return;
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('getJournalSourceAccounts')->andReturn(new Collection([new Account]));
-        $journalRepos->shouldReceive('getJournalDestinationAccounts')->andReturn(new Collection([new Account]));
-        $journalRepos->shouldReceive('getNoteText')->andReturn('');
-        $journalRepos->shouldReceive('update')->once();
+        // used for session range.
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
 
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-        $data    = [
-            'amount' => '5',
+        $this->mockDefaultPreferences();
+        $this->mockDefaultConfiguration();
+
+        Preferences::shouldReceive('mark')->atLeast()->once();
+
+        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
+        $journalRepos->shouldReceive('reconcileById')->times(3);
+        $repository->shouldReceive('getReconciliation')->atLeast()->once()->andReturn($asset);
+        $repository->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
+        $factory->shouldReceive('setUser')->atLeast()->once();
+        $factory->shouldReceive('create')->andThrow(new FireflyException('Some error'));
+
+        $data = [
+            'journals'   => [1, 2, 3],
+            'reconcile'  => 'create',
+            'difference' => '5',
+            'start'      => '20170101',
+            'end'        => '20170131',
         ];
-
         $this->be($this->user());
-        $response = $this->post(route('accounts.reconcile.update', [$journal->id]), $data);
-        $response->assertStatus(302);
-    }
+        $response = $this->post(route('accounts.reconcile.submit', [$asset->id, '20170101', '20170131']), $data);
 
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
-     * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
-     */
-    public function testUpdateNotReconcile(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', '!=', 5)->first();
-        $data    = ['amount' => '5',];
-
-        $this->be($this->user());
-        $response = $this->post(route('accounts.reconcile.update', [$journal->id]), $data);
-        $response->assertStatus(302);
-        $response->assertRedirect(route('transactions.show', [$journal->id]));
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Account\ReconcileController
-     * @covers       \FireflyIII\Http\Requests\ReconciliationUpdateRequest
-     */
-    public function testUpdateZero(): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
-
-        $journal = $this->user()->transactionJournals()->where('transaction_type_id', 5)->first();
-        $data    = ['amount' => '0',];
-
-        $this->be($this->user());
-        $response = $this->post(route('accounts.reconcile.update', [$journal->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('error');
     }
-
-
 }

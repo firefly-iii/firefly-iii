@@ -139,7 +139,7 @@ class ReconcileController extends Controller
                 'accounts.reconcile.overview', compact(
                                                  'account', 'start', 'diffCompare', 'difference', 'end', 'clearedAmount',
                                                  'startBalance', 'endBalance', 'amount',
-                                                 'route', 'countCleared', 'reconSum'
+                                                 'route', 'countCleared', 'reconSum', 'selectedIds'
                                              )
             )->render();
             // @codeCoverageIgnoreStart

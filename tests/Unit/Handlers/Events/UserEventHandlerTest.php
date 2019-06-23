@@ -251,7 +251,8 @@ class UserEventHandlerTest extends TestCase
         Mail::fake();
         $user  = $this->emptyUser();
         $event = new RegisteredUser($user, '127.0.0.1');
-
+        //config('firefly.send_registration_mail', true);
+        \Config::set('firefly.send_registration_mail', true);
         $listener = new UserEventHandler;
         $listener->sendRegistrationMail($event);
 

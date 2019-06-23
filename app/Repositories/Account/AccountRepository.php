@@ -230,6 +230,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($accountIds) > 0) {
             $query->whereIn('accounts.id', $accountIds);
         }
+        $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
 
         $result = $query->get(['accounts.*']);
@@ -249,6 +250,7 @@ class AccountRepository implements AccountRepositoryInterface
         if (count($types) > 0) {
             $query->accountTypeIn($types);
         }
+        $query->orderBy('accounts.active', 'DESC');
         $query->orderBy('accounts.name', 'ASC');
         $result = $query->get(['accounts.*']);
 

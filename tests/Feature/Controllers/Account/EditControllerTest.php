@@ -74,17 +74,18 @@ class EditControllerTest extends TestCase
         // mock preferences:
         $this->mockDefaultPreferences();
 
-        $repository->shouldReceive('findNull')->withArgs([1])->andReturn($euro)->atLeast()->once();
+        //$repository->shouldReceive('findNull')->withArgs([1])->andReturn($euro)->atLeast()->once();
 
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $repository->shouldReceive('get')->andReturn(new Collection)->atLeast()->once();
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull()->atLeast()->once();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull()->atLeast()->once();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
+        //$accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('123')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset')->atLeast()->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'cc_type'])->andReturn('')->atLeast()->once();
@@ -128,13 +129,13 @@ class EditControllerTest extends TestCase
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        $repository->shouldReceive('findNull')->once()->andReturn($euro);
+        //$repository->shouldReceive('findNull')->once()->andReturn($euro);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
         $accountRepos->shouldReceive('getOpeningBalanceAmount')->andReturnNull();
         $accountRepos->shouldReceive('getOpeningBalanceDate')->andReturnNull();
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+        //$accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_number'])->andReturn('123');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->andReturn('defaultAsset');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'cc_type'])->andReturn('');
@@ -143,6 +144,7 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
 
         // get all types:
         $accountRepos->shouldReceive('getAccountTypeByType')->withArgs(['Debt'])->andReturn(AccountType::find(11))->once();
@@ -179,12 +181,12 @@ class EditControllerTest extends TestCase
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-
+        $euro         = $this->getEuro();
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         Amount::shouldReceive('getDefaultCurrency')->andReturn(TransactionCurrency::find(2));
-        $repository->shouldReceive('findNull')->once()->andReturn(null);
+        //$repository->shouldReceive('findNull')->once()->andReturn(null);
         $repository->shouldReceive('get')->andReturn(new Collection);
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $accountRepos->shouldReceive('getNoteText')->andReturn('Some text')->once();
@@ -199,6 +201,7 @@ class EditControllerTest extends TestCase
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'BIC'])->andReturn('BIC');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest'])->andReturn('1');
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'interest_period'])->andReturn('monthly');
+        $accountRepos->shouldReceive('getAccountCurrency')->andReturn($euro)->once();
 
         // mock calls to Preferences:
         $this->mockDefaultPreferences();

@@ -65,29 +65,6 @@ class TransactionController extends Controller
         );
     }
 
-
-    /**
-     * Do a reconciliation.
-     *
-     * @param Request $request
-     *
-     * @return JsonResponse
-     */
-    public function reconcile(Request $request): JsonResponse
-    {
-        $transactionIds = $request->get('transactions');
-        foreach ($transactionIds as $transactionId) {
-            $transactionId = (int)$transactionId;
-            $transaction   = $this->repository->findTransaction($transactionId);
-            if (null !== $transaction) {
-                Log::debug(sprintf('Transaction ID is %d', $transaction->id));
-                $this->repository->reconcile($transaction);
-            }
-        }
-
-        return response()->json(['ok' => 'reconciled']);
-    }
-
     /**
      * Reorder transactions.
      *

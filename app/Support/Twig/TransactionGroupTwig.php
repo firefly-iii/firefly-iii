@@ -96,7 +96,7 @@ class TransactionGroupTwig extends Twig_Extension
             'journalGetMetaDate',
             static function (int $journalId, string $metaField) {
                 if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                    Log::warning('Twig TransactionGroup::journalGetMetaDate should NOT be called in the TEST environment!');
                 }
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
@@ -121,7 +121,7 @@ class TransactionGroupTwig extends Twig_Extension
             'journalGetMetaField',
             static function (int $journalId, string $metaField) {
                 if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                    Log::warning('Twig TransactionGroup::journalGetMetaField should NOT be called in the TEST environment!');
                 }
                 $entry = DB::table('journal_meta')
                            ->where('name', $metaField)
@@ -146,7 +146,7 @@ class TransactionGroupTwig extends Twig_Extension
             'journalHasMeta',
             static function (int $journalId, string $metaField) {
                 if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                    Log::warning('Twig TransactionGroup::journalHasMeta should NOT be called in the TEST environment!');
                 }
                 $count = DB::table('journal_meta')
                            ->where('name', $metaField)

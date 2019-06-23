@@ -780,7 +780,9 @@ return [
     'reconcile_go_back'                       => 'You can always edit or delete a correction later.',
     'must_be_asset_account'                   => 'You can only reconcile asset accounts',
     'reconciliation_stored'                   => 'Reconciliation stored',
-    'reconcilliation_transaction_title'       => 'Reconciliation (:from to :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Reconcile this account',
     'confirm_reconciliation'                  => 'Confirm reconciliation',
     'submitted_start_balance'                 => 'Submitted start balance',
@@ -1381,13 +1383,13 @@ return [
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
 
     // new lines for summary controller.
-    'box_balance_in_currency'                    => 'Balance (:currency)',
-    'box_spent_in_currency'                      => 'Spent (:currency)',
-    'box_earned_in_currency'                     => 'Earned (:currency)',
-    'box_bill_paid_in_currency'                  => 'Bills paid (:currency)',
-    'box_bill_unpaid_in_currency'                => 'Bills unpaid (:currency)',
-    'box_left_to_spend_in_currency'              => 'Left to spend (:currency)',
-    'box_net_worth_in_currency'                  => 'Net worth (:currency)',
-    'box_spend_per_day'                          => 'Left to spend per day: :amount',
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
 
 ];

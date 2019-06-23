@@ -61,6 +61,7 @@ class RenameAccountMeta extends Command
         $array = [
             'accountRole'          => 'account_role',
             'ccType'               => 'cc_type',
+            'accountNumber'        => 'account_number',
             'ccMonthlyPaymentDate' => 'cc_monthly_payment_date',
         ];
         $count = 0;
@@ -71,6 +72,9 @@ class RenameAccountMeta extends Command
          */
         foreach ($array as $old => $new) {
             $count += AccountMeta::where('name', $old)->update(['name' => $new]);
+
+            // delete empty entries while we're at it.
+            AccountMeta::where('name', $new)->where('data','""')->delete();
         }
 
         $this->markAsExecuted();

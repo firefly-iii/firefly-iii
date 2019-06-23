@@ -25,15 +25,18 @@ namespace FireflyIII\Http\Controllers\Account;
 
 use Carbon\Carbon;
 use Exception;
+use FireflyIII\Exceptions\FireflyException;
+use FireflyIII\Factory\TransactionGroupFactory;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Http\Requests\ReconciliationStoreRequest;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Support\Http\Controllers\UserNavigation;
+use FireflyIII\User;
 use Log;
 
 /**
@@ -83,13 +86,12 @@ class ReconcileController extends Controller
      */
     public function reconcile(Account $account, Carbon $start = null, Carbon $end = null)
     {
-        if (AccountType::INITIAL_BALANCE === $account->accountType->type) {
-            return $this->redirectToOriginalAccount($account);
-        }
         if (AccountType::ASSET !== $account->accountType->type) {
+            // @codeCoverageIgnoreStart
             session()->flash('error', (string)trans('firefly.must_be_asset_account'));
 
             return redirect(route('accounts.index', [config(sprintf('firefly.shortNamesByFullName.%s', $account->accountType->type))]));
+            // @codeCoverageIgnoreEnd
         }
         $currency = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
@@ -97,16 +99,20 @@ class ReconcileController extends Controller
         $range = app('preferences')->get('viewRange', '1M')->data;
 
         // get start and end
+        // @codeCoverageIgnoreStart
         if (null === $start && null === $end) {
+
             /** @var Carbon $start */
             $start = clone session('start', app('navigation')->startOfPeriod(new Carbon, $range));
             /** @var Carbon $end */
             $end = clone session('end', app('navigation')->endOfPeriod(new Carbon, $range));
+
         }
         if (null === $end) {
             /** @var Carbon $end */
             $end = app('navigation')->endOfPeriod($start, $range);
         }
+        // @codeCoverageIgnoreEnd
 
         $startDate = clone $start;
         $startDate->subDay();
@@ -142,70 +148,78 @@ class ReconcileController extends Controller
         Log::debug('In ReconcileController::submit()');
         $data = $request->getAll();
 
-        /** @var Transaction $transaction */
-        foreach ($data['transactions'] as $transactionId) {
-            $this->repository->reconcileById((int)$transactionId);
+        /** @var string $journalId */
+        foreach ($data['journals'] as $journalId) {
+            $this->repository->reconcileById((int)$journalId);
         }
         Log::debug('Reconciled all transactions.');
 
         // create reconciliation transaction (if necessary):
+        $result = '';
         if ('create' === $data['reconcile']) {
-            // get "opposing" account.
-            $reconciliation = $this->accountRepos->getReconciliation($account);
-            $difference     = $data['difference'];
-            $source         = $reconciliation;
-            $destination    = $account;
-            if (1 === bccomp($difference, '0')) {
-                // amount is positive. Add it to reconciliation?
-                $source      = $account;
-                $destination = $reconciliation;
-            }
-
-            // data for journal
-            $description = trans(
-                'firefly.reconcilliation_transaction_title',
-                ['from' => $start->formatLocalized($this->monthAndDayFormat), 'to' => $end->formatLocalized($this->monthAndDayFormat)]
-            );
-            $journalData = [
-                'type'            => 'Reconciliation',
-                'description'     => $description,
-                'user'            => auth()->user()->id,
-                'date'            => $data['end'],
-                'bill_id'         => null,
-                'bill_name'       => null,
-                'piggy_bank_id'   => null,
-                'piggy_bank_name' => null,
-                'tags'            => null,
-                'interest_date'   => null,
-                'transactions'    => [[
-                                          'currency_id'           => (int)$this->accountRepos->getMetaValue($account, 'currency_id'),
-                                          'currency_code'         => null,
-                                          'description'           => null,
-                                          'amount'                => app('steam')->positive($difference),
-                                          'source_id'             => $source->id,
-                                          'source_name'           => null,
-                                          'destination_id'        => $destination->id,
-                                          'destination_name'      => null,
-                                          'reconciled'            => true,
-                                          'identifier'            => 0,
-                                          'foreign_currency_id'   => null,
-                                          'foreign_currency_code' => null,
-                                          'foreign_amount'        => null,
-                                          'budget_id'             => null,
-                                          'budget_name'           => null,
-                                          'category_id'           => null,
-                                          'category_name'         => null,
-                                      ],
-                ],
-                'notes'           => implode(', ', $data['transactions']),
-            ];
-
-            $this->repository->store($journalData);
+            $result = $this->createReconciliation($account, $start, $end, $data['difference']);
         }
         Log::debug('End of routine.');
         app('preferences')->mark();
-        session()->flash('success', (string)trans('firefly.reconciliation_stored'));
+        if ('' === $result) {
+            session()->flash('success', (string)trans('firefly.reconciliation_stored'));
+        }
+        if ('' !== $result) {
+            session()->flash('error', (string)trans('firefly.reconciliation_error', ['error' => $result]));
+        }
 
         return redirect(route('accounts.show', [$account->id]));
+    }
+
+    /**
+     * Creates a reconciliation group.
+     * @return string
+     */
+    private function createReconciliation(Account $account, Carbon $start, Carbon $end, string $difference): string
+    {
+        $reconciliation = $this->accountRepos->getReconciliation($account);
+        $currency       = $this->accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
+        $source         = $reconciliation;
+        $destination    = $account;
+        if (1 === bccomp($difference, '0')) {
+            $source      = $account;
+            $destination = $reconciliation;
+        }
+
+        // title:
+        $description = trans('firefly.reconciliation_transaction_title',
+                             ['from' => $start->formatLocalized($this->monthAndDayFormat), 'to'   => $end->formatLocalized($this->monthAndDayFormat)]);
+        $submission = [
+            'user'         => auth()->user()->id,
+            'group_title'  => null,
+            'transactions' => [
+                [
+                    'user'                => auth()->user()->id,
+                    'type'                => strtolower(TransactionType::RECONCILIATION),
+                    'date'                => $end,
+                    'order'               => 0,
+                    'currency_id'         => $currency->id,
+                    'foreign_currency_id' => null,
+                    'amount'              => $difference,
+                    'foreign_amount'      => null,
+                    'description'         => $description,
+                    'source_id'           => $source->id,
+                    'destination_id'      => $destination->id,
+                    'reconciled'          => true,
+                ],
+            ],
+        ];
+        /** @var TransactionGroupFactory $factory */
+        $factory = app(TransactionGroupFactory::class);
+        /** @var User $user */
+        $user = auth()->user();
+        $factory->setUser($user);
+        try {
+            $factory->create($submission);
+        } catch (FireflyException $e) {
+            return $e->getMessage();
+        }
+
+        return '';
     }
 }

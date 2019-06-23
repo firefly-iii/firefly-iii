@@ -172,15 +172,17 @@ class AccountCurrenciesTest extends TestCase
      */
     public function testHandleDifferent(): void
     {
-        $false        = new Configuration;
-        $false->data  = false;
-        $pref         = new Preference;
-        $pref->data   = 'USD';
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journal      = $this->getRandomWithdrawal();
-        $account      = $this->getRandomAsset();
-        $euro         = TransactionCurrency::where('code', 'EUR')->first();
+        $false                            = new Configuration;
+        $false->data                      = false;
+        $pref                             = new Preference;
+        $pref->data                       = 'USD';
+        $accountRepos                     = $this->mock(AccountRepositoryInterface::class);
+        $userRepos                        = $this->mock(UserRepositoryInterface::class);
+        $journal                          = $this->getRandomWithdrawal();
+        $account                          = $this->getRandomAsset();
+        $euro                             = $this->getEuro();
+        $journal->transaction_currency_id = $euro->id;
+        $journal->save();
 
         // delete meta data of account just in case:
         AccountMeta::where('account_id', $account->id)->where('name', 'currency_id')->forceDelete();

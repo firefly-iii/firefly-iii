@@ -100,16 +100,11 @@ class EditController extends Controller
 
         $openingBalanceAmount = (string)$repository->getOpeningBalanceAmount($account);
         $openingBalanceDate   = $repository->getOpeningBalanceDate($account);
-        $default              = app('amount')->getDefaultCurrency();
-        $currency             = $this->currencyRepos->findNull((int)$repository->getMetaValue($account, 'currency_id'));
+        $currency             = $this->repository->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
         // include this account in net-worth charts?
         $includeNetWorth = $repository->getMetaValue($account, 'include_net_worth');
         $includeNetWorth = null === $includeNetWorth ? true : '1' === $includeNetWorth;
-
-        if (null === $currency) {
-            $currency = $default;
-        }
 
         // code to handle active-checkboxes
         $hasOldInput = null !== $request->old('_token');

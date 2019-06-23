@@ -23,7 +23,7 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Requests;
 
-use FireflyIII\Rules\ValidTransactions;
+use FireflyIII\Rules\ValidJournals;
 use Log;
 
 /**
@@ -59,7 +59,7 @@ class ReconciliationStoreRequest extends Request
             'start_balance' => $this->string('startBalance'),
             'end_balance'   => $this->string('endBalance'),
             'difference'    => $this->string('difference'),
-            'journals'  => $transactions,
+            'journals'      => $transactions,
             'reconcile'     => $this->string('reconcile'),
         ];
         Log::debug('In ReconciliationStoreRequest::getAll(). Will now return data.');
@@ -80,7 +80,7 @@ class ReconciliationStoreRequest extends Request
             'startBalance' => 'numeric',
             'endBalance'   => 'numeric',
             'difference'   => 'required|numeric',
-            'journals' => [new ValidJournals],
+            'journals'     => [new ValidJournals],
             'reconcile'    => 'required|in:create,nothing',
         ];
     }

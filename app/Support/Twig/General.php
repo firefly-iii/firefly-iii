@@ -153,10 +153,6 @@ class General extends Twig_Extension
                 /** @var Carbon $date */
                 $date = session('end', Carbon::now()->endOfMonth());
 
-                if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-                }
-
                 return app('steam')->balance($account, $date);
             }
         );
@@ -213,7 +209,7 @@ class General extends Twig_Extension
             'accountGetMetaField',
             static function (Account $account, string $field): string {
                 if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
+                    Log::warning('Twig General::getMetaField should NOT be called in the TEST environment!');
                 }
 
                 /** @var AccountRepositoryInterface $repository */
@@ -238,9 +234,6 @@ class General extends Twig_Extension
         return new Twig_SimpleFunction(
             'hasRole',
             static function (string $role): bool {
-                if ('testing' === config('app.env')) {
-                    Log::warning(sprintf('%s should NOT be called in the TEST environment!', __METHOD__));
-                }
                 $repository = app(UserRepositoryInterface::class);
                 if ($repository->hasRole(auth()->user(), $role)) {
                     return true;
@@ -258,7 +251,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'markdown',
-            function (string $text): string {
+            static function (string $text): string {
                 $converter = new CommonMarkConverter;
 
                 return $converter->convertToHtml($text);
@@ -275,7 +268,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFilter(
             'mimeIcon',
-            function (string $string): string {
+            static function (string $string): string {
                 switch ($string) {
                     default:
                         return 'fa-file-o';
@@ -354,7 +347,7 @@ class General extends Twig_Extension
     {
         return new Twig_SimpleFunction(
             'phpdate',
-            function (string $str): string {
+            static function (string $str): string {
                 return date($str);
             }
         );
