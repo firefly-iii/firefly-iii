@@ -46,7 +46,7 @@ return [
     'create_withdrawal'      => '新增提款',
     'create_deposit'         => '新增存款',
     'create_transfer'        => '新增轉帳',
-    'create_new_transaction' => 'Create a new transaction',
+    'create_new_transaction' => '建立新交易',
     'edit_journal'           => '編輯交易 ":description"',
     'edit_reconciliation'    => '編輯 ":description"',
     'delete_journal'         => '刪除交易 ":description"',

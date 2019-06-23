@@ -45,7 +45,7 @@ return [
     'at_least_one_repetition'        => 'Mindestens eine Wiederholung erforderlich.',
     'require_repeat_until'           => 'Erfordert entweder eine Anzahl von Wiederholungen oder ein Enddatum (repeat_until). Nicht beides.',
     'require_currency_info'          => 'Der Inhalt dieses Feldes ist ohne Währungsinformationen ungültig.',
-    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
+    'require_currency_amount'        => 'Der Inhalt dieses Feldes ist ohne Fremdbetragsangaben ungültig.',
     'equal_description'              => 'Die Transaktionsbeschreibung darf nicht der globalen Beschreibung entsprechen.',
     'file_invalid_mime'              => 'Die Datei „:name” ist vom Typ „:mime”, welcher nicht zum Hochladen zugelassen ist.',
     'file_too_large'                 => 'Die Datei „:name” ist zu groß.',
@@ -139,8 +139,8 @@ return [
         'name'                    => 'Name',
         'piggy_bank_id'           => 'Sparschwein ID',
         'targetamount'            => 'Zielbetrag',
-        'openingBalanceDate'      => 'Datum des Eröffnungskontostands',
-        'openingBalance'          => 'Eröffnungskontostand',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'Übereinstimmung',
         'amount_min'              => 'Mindestbetrag',
         'amount_max'              => 'Höchstbetrag',
@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'withdrawal_source_bad_data'     => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
     'withdrawal_dest_need_data'      => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Um fortzufahren, benötigen Sie eine gültige Quellkontenkennung und/oder einen gültigen Quellkontonamen.',
     'deposit_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
@@ -183,5 +184,9 @@ return [
     'transfer_source_bad_data'  => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Quellkonto gefunden werden.',
     'transfer_dest_need_data'   => 'Um fortzufahren, benötigen Sie eine gültige Zielkontenkennung und/oder einen gültigen Zielkontonamen.',
     'transfer_dest_bad_data'    => 'Bei der Suche nach der Kennung „:id” oder dem Namen „:name” konnte kein gültiges Zielkonto gefunden werden.',
-    'need_id_in_edit'           => 'Bei der Aktualisierung einer Buchung mit Aufteilungen muss jede Aufteilung eine gültige Buchungsjournalkennung aufweisen (Feld „transaction_journal_id”).',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

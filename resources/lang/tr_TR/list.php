@@ -88,7 +88,6 @@ return [
     'attachments_count'       => 'Eklerin sayısı',
     'bills_count'             => 'Fatura sayısı',
     'categories_count'        => 'Kategori sayısı',
-    'export_jobs_count'       => 'İhracat sayısı',
     'import_jobs_count'       => 'İthalat sayısı',
     'budget_count'            => 'Bütçelerin sayısı',
     'rule_and_groups_count'   => 'Kuralların ve kural gruplarının sayısı',

@@ -33,7 +33,7 @@ return [
     'last_seven_days'                            => 'Laatste zeven dagen',
     'last_thirty_days'                           => 'Laatste dertig dagen',
     'welcomeBack'                                => 'Hoe staat het er voor?',
-    'welcome_back'                               => 'What\'s playing?',
+    'welcome_back'                               => 'Hoe staat het er voor?',
     'everything'                                 => 'Alles',
     'today'                                      => 'vandaag',
     'customRange'                                => 'Zelf bereik kiezen',
@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => 'Nieuw',
     'new_withdrawal'                             => 'Nieuwe uitgave',
     'create_new_transaction'                     => 'Maak nieuwe transactie',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => 'Nieuwe transactie',
     'go_to_asset_accounts'                       => 'Bekijk je betaalrekeningen',
     'go_to_budgets'                              => 'Ga naar je budgetten',
     'go_to_categories'                           => 'Ga naar je categorieën',
@@ -257,33 +257,6 @@ return [
     'quarterly'                                  => 'elk kwartaal',
     'half-year'                                  => 'elk half jaar',
     'yearly'                                     => 'elk jaar',
-
-    // export data:
-    'import_and_export'                          => 'Import en export',
-    'export_data'                                => 'Exporteren',
-    'export_and_backup_data'                     => 'Exporteren',
-    'export_data_intro'                          => 'Gebruik de geëxporteerde data om naar een nieuwe financiële applicatie te gaan. Gebruik deze bestanden niet als backup. Er zit niet genoeg metadata bij om een nieuwe Firefly III mee op te zetten. Als je een backup wilt maken van je gegevens, backup dan de database zelf.',
-    'export_format'                              => 'Exporteerformaat',
-    'export_format_csv'                          => 'Komma-gescheiden bestand (CSV)',
-    'export_format_mt940'                        => 'MT940 bestand',
-    'include_old_uploads_help'                   => 'Firefly III gooit je oude geïmporteerde CSV bestanden niet weg. Je kan ze meenemen in je exportbestand.',
-    'do_export'                                  => 'Exporteren',
-    'export_status_never_started'                => 'Het exporteren is nog niet begonnen',
-    'export_status_make_exporter'                => 'Exporteerding maken...',
-    'export_status_collecting_journals'          => 'Transacties verzamelen...',
-    'export_status_collected_journals'           => 'Transacties verzameld!',
-    'export_status_converting_to_export_format'  => 'Transacties overzetten...',
-    'export_status_converted_to_export_format'   => 'Transacties overgezet!',
-    'export_status_creating_journal_file'        => 'Exportbestand maken...',
-    'export_status_created_journal_file'         => 'Exportbestand gemaakt!',
-    'export_status_collecting_attachments'       => 'Bijlagen verzamelen...',
-    'export_status_collected_attachments'        => 'Bijlagen verzameld!',
-    'export_status_collecting_old_uploads'       => 'Oude uploads verzamelen...',
-    'export_status_collected_old_uploads'        => 'Oude uploads verzameld!',
-    'export_status_creating_zip_file'            => 'Zipbestand maken...',
-    'export_status_created_zip_file'             => 'Zipbestand gemaakt!',
-    'export_status_finished'                     => 'Klaar met exportbestand! Hoera!',
-    'export_data_please_wait'                    => 'Een ogenblik geduld...',
 
     // rules
     'rules'                                      => 'Regels',
@@ -635,9 +608,9 @@ return [
     'converted_to_Transfer'                   => 'De transactie is veranderd in een overschrijving',
     'invalid_convert_selection'               => 'De rekening die je hebt geselecteerd wordt al gebruikt in deze transactie, of bestaat niet.',
     'source_or_dest_invalid'                  => 'Kan de juiste transactiegegevens niet vinden. Conversie is niet mogelijk.',
-    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
-    'convert_to_deposit'                      => 'Convert to a deposit',
-    'convert_to_transfer'                     => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => 'Converteren naar een uitgave',
+    'convert_to_deposit'                      => 'Converteer naar inkomsten',
+    'convert_to_transfer'                     => 'Converteren naar een overschrijving',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Nieuwe uitgave',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Gebruik deze bedragen om een indruk te krijgen van wat je totale budget zou kunnen zijn.',
     'suggested'                               => 'Gesuggereerd',
     'average_between'                         => 'Gemiddelde tussen :start en :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Normaalgesproken budgetteer je :amount per dag. Nu sta je op :over_amount per dag.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Contract past bij transacties tussen :low en :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Je kan een afstemmingstransactie later altijd wijzigen.',
     'must_be_asset_account'                   => 'Je kan alleen betaalrekeningen afstemmen',
     'reconciliation_stored'                   => 'Afstemming opgeslagen',
-    'reconcilliation_transaction_title'       => 'Afstemming (:from tot :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Stem deze rekening af',
     'confirm_reconciliation'                  => 'Bevestig afstemming',
     'submitted_start_balance'                 => 'Ingevoerd startsaldo',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Per dag',
     'interest_calc_monthly'                   => 'Per maand',
     'interest_calc_yearly'                    => 'Per jaar',
-    'initial_balance_account'                 => 'Startsaldorekening voor :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Nieuwe categorie',
@@ -851,7 +828,8 @@ return [
     'deleted_deposit'                         => 'Inkomsten ":description" verwijderd',
     'deleted_transfer'                        => 'Overschrijving ":description" verwijderd',
     'stored_journal'                          => 'Nieuw transactie ":description" opgeslagen',
-    'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'stored_journal_no_descr'                 => 'Uw nieuwe transactie is succesvol aangemaakt',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Selecteer transacties',
     'rule_group_select_transactions'          => '":title" op transacties toepassen',
     'rule_select_transactions'                => '":title" op transacties toepassen',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Fouten',
     'debt_start_date'                         => 'Begindatum van schuld',
     'debt_start_amount'                       => 'Beginbedrag van schuld',
-    'debt_start_amount_help'                  => 'Voer de originele schuld in als een positief getal. Je mag ook je huidige schuld invullen. Pas de datum hier op aan.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Nieuwe passiva opslaan',
     'edit_liabilities_account'                => 'Passiva ":name" wijzigen',
 
@@ -1150,7 +1128,7 @@ return [
     'deleted_piggy_bank'        => 'Spaarpotje ":name" verwijderd',
     'added_amount_to_piggy'     => ':amount aan ":name" toegevoegd',
     'removed_amount_from_piggy' => ':amount uit ":name" gehaald',
-    'piggy_events'              => 'Related piggy banks',
+    'piggy_events'              => 'Gerelateerde spaarpotjes',
 
     // tags
     'delete_tag'                => 'Verwijder tag ":tag"',
@@ -1162,8 +1140,8 @@ return [
 
     'transaction_journal_information'  => 'Transactieinformatie',
     'transaction_journal_meta'         => 'Metainformatie',
-    'transaction_journal_more'         => 'More information',
-    'att_part_of_journal'              => 'Stored under ":journal"',
+    'transaction_journal_more'         => 'Meer informatie',
+    'att_part_of_journal'              => 'Opgeslagen onder ":journal"',
     'total_amount'                     => 'Totaalbedrag',
     'number_of_decimals'               => 'Aantal decimalen',
 
@@ -1179,7 +1157,7 @@ return [
     'store_configuration'              => 'Configuratie opslaan',
     'single_user_administration'       => 'Gebruikersadministratie voor :email',
     'edit_user'                        => 'Wijzig gebruiker :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => 'U kunt meer transactieopties inschakelen in uw <a href=":link">instellingen</a>.',
     'user_data_information'            => 'Gebruikersgegevens',
     'user_information'                 => 'Gebruikersinformatie',
     'total_size'                       => 'totale grootte',
@@ -1204,12 +1182,12 @@ return [
     'send_message'                     => 'Verstuur bericht',
     'send_test_triggered'              => 'Testmail verstuurd. Check je inbox en de logboeken.',
 
-    'split_transaction_title'               => 'Description of the split transaction',
-    'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
-    'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'split_transaction_title'               => 'Beschrijving van de gesplitste transactie',
+    'split_title_help'                      => 'Als u een gesplitste transactie maakt, moet er een algemene beschrijving zijn voor alle splitsingen van de transactie.',
+    'transaction_information'               => 'Transactieinformatie',
+    'you_create_transfer'                   => 'Je maakt een <strong>overschrijving</strong>.',
+    'you_create_withdrawal'                 => 'Je maakt een <strong>uitgave</strong>.',
+    'you_create_deposit'                    => 'Je maakt een <strong>inkomsten</strong>.',
 
 
     // links
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Wordt op de maandag erna gemaakt i. p. v. in het weekend.',
     'except_weekends'                    => 'Behalve de weekenden',
     'recurrence_deleted'                 => 'Periodieke transactie ":title" verwijderd',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

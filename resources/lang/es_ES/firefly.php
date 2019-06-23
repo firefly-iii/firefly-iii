@@ -258,33 +258,6 @@ return [
     'half-year'                                  => 'cada medio año',
     'yearly'                                     => 'anualmente',
 
-    // export data:
-    'import_and_export'                          => 'Importar y exportar',
-    'export_data'                                => 'Exportar datos',
-    'export_and_backup_data'                     => 'Exportar datos',
-    'export_data_intro'                          => 'Use los datos exportados para pasar a una nueva aplicación financiera. Por favor tenga en cuenta que estos archivos no son un respaldo. No contienen suficiente metadatos para restaurar completamente una nueva instalación de Firefly III. Si usted desea realizar un respaldo de sus datos, por favor haga un respaldo de la base de datos directamente.',
-    'export_format'                              => 'Formato de exportación',
-    'export_format_csv'                          => 'Las comas separan valores (archivos CSV)',
-    'export_format_mt940'                        => 'MT940 formato compatible',
-    'include_old_uploads_help'                   => 'Firefly III no arroja los archivos originales CVS que usted importo en el pasado. Usted puede incluirlos en su informe.',
-    'do_export'                                  => 'Exportar',
-    'export_status_never_started'                => 'La exportación no ha comenzado aun',
-    'export_status_make_exporter'                => 'Creando cosa del exportador...',
-    'export_status_collecting_journals'          => 'Recolectando sus transacciones...',
-    'export_status_collected_journals'           => '¡Recolectadas sus transacciones!',
-    'export_status_converting_to_export_format'  => 'Convirtiendo tus transacciones...',
-    'export_status_converted_to_export_format'   => '¡Convertidas tus transacciones!',
-    'export_status_creating_journal_file'        => 'Creando el archivo de exportación...',
-    'export_status_created_journal_file'         => '¡El archivo de exportación creado!',
-    'export_status_collecting_attachments'       => 'Recolectando todos tus accesorios...',
-    'export_status_collected_attachments'        => '¡Recolectados todos sus accesorios!',
-    'export_status_collecting_old_uploads'       => 'Recolectando todas sus cargas anteriores...',
-    'export_status_collected_old_uploads'        => 'Recolectando todas sus cargas anteriores!',
-    'export_status_creating_zip_file'            => 'Creando un archivo zip...',
-    'export_status_created_zip_file'             => '¡Se creo un archivo zip!',
-    'export_status_finished'                     => 'Exportación ha acabado con éxito! Hurra!',
-    'export_data_please_wait'                    => 'Espera, por favor...',
-
     // rules
     'rules'                                      => 'Reglas',
     'rule_name'                                  => 'Nombre de la regla',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Utilice estas cantidades para obtener una indicación de lo que podría ser su presupuesto total.',
     'suggested'                               => 'Sugerido',
     'average_between'                         => 'Promedio entre :start y :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Normalmente usas de tu presupuesto, cerca de :amount por día. Se trata de :over_amount por día.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'La cuenta iguala transacciones entre :low y :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Usted puede siempre editar o eliminar una corrección mas tarde.',
     'must_be_asset_account'                   => 'Usted solo puede reconciliar cuentas de activos',
     'reconciliation_stored'                   => 'Reconciliación almacenada',
-    'reconcilliation_transaction_title'       => 'Reconciliación (:from a :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Reconciliar esta cuenta',
     'confirm_reconciliation'                  => 'Confirmar la reconciliacion',
     'submitted_start_balance'                 => 'Balance final enviado',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Por dia',
     'interest_calc_monthly'                   => 'Por mes',
     'interest_calc_yearly'                    => 'Por año',
-    'initial_balance_account'                 => 'Balance inicial de la cuenta :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Nueva categoría',
@@ -852,6 +829,7 @@ return [
     'deleted_transfer'                        => 'Transferencia eliminada exitosamente ":description"',
     'stored_journal'                          => 'Nueva transacción creada exitosamente ":description"',
     'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Seleccionar transacciones',
     'rule_group_select_transactions'          => 'Aplicar ":title" a las transacciones',
     'rule_select_transactions'                => 'Aplicar ":title" a las transacciones',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Errores',
     'debt_start_date'                         => 'Fecha de inicio de deuda',
     'debt_start_amount'                       => 'Cantidad inicial de la deuda',
-    'debt_start_amount_help'                  => 'Introduce la cantidad original de este pasivo como un número positivo. También puede ingresar la cantidad actual. Asegúrese de editar la fecha de abajo para que coincida.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Crear nuevo pasivo',
     'edit_liabilities_account'                => 'Editar pasivo ":name"',
 
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Se creará el lunes en lugar de los fines de semana.',
     'except_weekends'                    => 'Excluir los fines de semana',
     'recurrence_deleted'                 => 'Transacción recurrente ":title" eliminada',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

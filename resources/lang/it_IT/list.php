@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Numero di allegati',
     'bills_count'             => 'Numero di bollette',
     'categories_count'        => 'Numero di categorie',
-    'export_jobs_count'       => 'Numero delle operazioni di esportazione',
     'import_jobs_count'       => 'Numero delle operazioni di importazione',
     'budget_count'            => 'Numero di budget',
     'rule_and_groups_count'   => 'Numero di regole e gruppi di regole',

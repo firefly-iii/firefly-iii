@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => 'Erstelle neue Dinge',
     'new_withdrawal'                             => 'Neue Ausgabe',
     'create_new_transaction'                     => 'Neue Buchung erstellen',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => 'Neue Buchung',
     'go_to_asset_accounts'                       => 'Bestandskonten anzeigen',
     'go_to_budgets'                              => 'Budgets anzeigen',
     'go_to_categories'                           => 'Kategorien anzeigen',
@@ -258,33 +258,6 @@ return [
     'half-year'                                  => 'halbjährlich',
     'yearly'                                     => 'jährlich',
 
-    // export data:
-    'import_and_export'                          => 'Import und Export',
-    'export_data'                                => 'Daten exportieren',
-    'export_and_backup_data'                     => 'Daten exportieren',
-    'export_data_intro'                          => 'Exporte können Sie verwenden um Ihre Daten in anderen Anwendungen zu importieren. Bitte beachten Sie, dass diese Dateien nicht als Backup gedacht sind. Sie enthalten nicht genügend Metadaten, um eine neue Firefly III-Installation vollständig wiederherzustellen. Wenn Sie Ihre Daten sichern möchten, sichern Sie bitte die Datenbank direkt.',
-    'export_format'                              => 'Export-Format',
-    'export_format_csv'                          => 'Durch Komma getrennte Werte (CSV-Datei)',
-    'export_format_mt940'                        => 'MT940 kompatibles Format',
-    'include_old_uploads_help'                   => 'Firefly III löscht keine originalen CSV-Dateien, welche zuvor importiert wurden. Sie können dem Export hinzugefügt werden.',
-    'do_export'                                  => 'Export',
-    'export_status_never_started'                => 'Der Export hat noch nicht begonnen',
-    'export_status_make_exporter'                => 'Export wird erstellt...',
-    'export_status_collecting_journals'          => 'Sammeln Ihrer Buchungen...',
-    'export_status_collected_journals'           => 'Alle Ihre Buchungen wurden zusammengetragen!',
-    'export_status_converting_to_export_format'  => 'Buchungen werden umgewandelt...',
-    'export_status_converted_to_export_format'   => 'Ihre Buchungen wurden umgewandelt!',
-    'export_status_creating_journal_file'        => 'Exportdatei wird erstellt...',
-    'export_status_created_journal_file'         => 'Exportdatei erstellt!',
-    'export_status_collecting_attachments'       => 'Sammeln aller Ihrer Anhänge...',
-    'export_status_collected_attachments'        => 'Alle Anhänge wurden zusammengetragen!',
-    'export_status_collecting_old_uploads'       => 'Sammeln aller bisherigen Uploads...',
-    'export_status_collected_old_uploads'        => 'Alle bisherigen Uploads wurden zusammengetragen!',
-    'export_status_creating_zip_file'            => 'Erstelle eine Zip-Datei...',
-    'export_status_created_zip_file'             => 'Zip-Datei erstellt!',
-    'export_status_finished'                     => 'Export erfolgreich beendet! Yay!',
-    'export_data_please_wait'                    => 'Bitte warten...',
-
     // rules
     'rules'                                      => 'Regeln',
     'rule_name'                                  => 'Name der Regel',
@@ -456,7 +429,7 @@ return [
     'rule_action_set_notes'                      => 'Notizen auf „:action_value” setzen',
     'rule_action_convert_deposit_choice'         => 'Buchung in eine Einzahlung umwandeln',
     'rule_action_convert_deposit'                => 'Buchung von ":action_value" in eine Einzahlung umwandeln',
-    'rule_action_convert_withdrawal_choice'      => 'Buchung in eine Auszahlung umwandeln',
+    'rule_action_convert_withdrawal_choice'      => 'Buchung in eine Ausgabe umwandeln',
     'rule_action_convert_withdrawal'             => 'Buchung von ":action_value" in eine Auszahlung umwandeln',
     'rule_action_convert_transfer_choice'        => 'Buchung in eine Umbuchung umwandeln',
     'rule_action_convert_transfer'               => 'Buchung von ":action_value" in eine Umbuchung umwandeln',
@@ -635,9 +608,9 @@ return [
     'converted_to_Transfer'                   => 'Die Buchung wurde in eine Umbuchung konvertiert',
     'invalid_convert_selection'               => 'Das von Ihnen ausgewählte Konto wird für diese Buchung bereits verwendet oder ist nicht vorhanden.',
     'source_or_dest_invalid'                  => 'Die korrekten Buchungsdetails konnten nicht gefunden werden. Eine Konvertierung ist nicht möglich.',
-    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
-    'convert_to_deposit'                      => 'Convert to a deposit',
-    'convert_to_transfer'                     => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => 'In eine Ausgabe umwandeln',
+    'convert_to_deposit'                      => 'In eine Einzahlung umwandeln',
+    'convert_to_transfer'                     => 'In eine Umbuchungen umwandeln',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Erstelle eine neue Ausgabe',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Verwenden Sie diese Angaben, um einen Anhaltspunkt darüber zu erhalten, wie hoch Ihr komplettes Budget sein könnte.',
     'suggested'                               => 'Vorgeschlagen',
     'average_between'                         => 'Durchschnitt zwischen :start und :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Normalerweise veranschlagen Sie ca. :amount pro Tag. Aktuell sind es aber :over_amount pro Tag.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Rechnung passt zu Transaktionen zwischen :low und :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Sie können dies jederzeit später bearbeiten oder löschen.',
     'must_be_asset_account'                   => 'Sie können nur Bestandskonten abgleichen',
     'reconciliation_stored'                   => 'Kontenabgleich gespeichert',
-    'reconcilliation_transaction_title'       => 'Ausgleich (:from zu :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Dieses Konto abgleichen',
     'confirm_reconciliation'                  => 'Kontenabgleich bestätigen',
     'submitted_start_balance'                 => 'Übermitteltes Startguthaben',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Täglich',
     'interest_calc_monthly'                   => 'Monatlich',
     'interest_calc_yearly'                    => 'Jährlich',
-    'initial_balance_account'                 => 'Eröffnungssaldo von :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Neue Kategorie',
@@ -851,7 +828,8 @@ return [
     'deleted_deposit'                         => 'Einnahme ":description" erfolgreich gelöscht',
     'deleted_transfer'                        => 'Umbuchung ":description" erfolgreich gelöscht',
     'stored_journal'                          => 'Neue Überweisung ":description" erfolgreich erstellt',
-    'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'stored_journal_no_descr'                 => 'Ihre neue Buchung wurde erfolgreich erstellt',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Buchungen auswählen',
     'rule_group_select_transactions'          => '„:title” auf Buchungen anwenden',
     'rule_select_transactions'                => '„:title” auf Buchungen anwenden',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Fehler',
     'debt_start_date'                         => 'Startdatum der Verschuldung',
     'debt_start_amount'                       => 'Startbetrag der Verschuldung',
-    'debt_start_amount_help'                  => 'Bitte geben Sie den ursprünglichen Betrag dieser Forderung als positive Zahl ein. Sie können auch den aktuellen Betrag eingeben. Stellen Sie sicher, dass Sie das untenstehende Datum so ändern, dass es mit dem Datum übereinstimmt.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Neue Verbindlichkeit speichern',
     'edit_liabilities_account'                => 'Verbindlichkeit „:name” bearbeiten',
 
@@ -1150,7 +1128,7 @@ return [
     'deleted_piggy_bank'        => 'Sparschwein „:name” gelöscht',
     'added_amount_to_piggy'     => ':amount zu „:name” hinzugefügt',
     'removed_amount_from_piggy' => ':amount aus „:name” entfernt',
-    'piggy_events'              => 'Related piggy banks',
+    'piggy_events'              => 'Zugehörige Sparschweine',
 
     // tags
     'delete_tag'                => 'Schlagwort „:tag” entfernen',
@@ -1162,8 +1140,8 @@ return [
 
     'transaction_journal_information'  => 'Transaktionsinformationen',
     'transaction_journal_meta'         => 'Metainformationen',
-    'transaction_journal_more'         => 'More information',
-    'att_part_of_journal'              => 'Stored under ":journal"',
+    'transaction_journal_more'         => 'Weitere Informationen',
+    'att_part_of_journal'              => 'Unter „:journal” gespeichert',
     'total_amount'                     => 'Gesamtbetrag',
     'number_of_decimals'               => 'Anzahl der Nachkommastellen',
 
@@ -1179,7 +1157,7 @@ return [
     'store_configuration'              => 'Konfiguration speichern',
     'single_user_administration'       => 'Benutzerverwaltung für :email',
     'edit_user'                        => 'Benutzer :email bearbeiten',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => 'Sie können weitere Buchungsoptionen in Ihren <a href=":link">Einstellungen</a> aktivieren.',
     'user_data_information'            => 'Nutzerdaten',
     'user_information'                 => 'Benutzerinformationen',
     'total_size'                       => 'Gesamtgröße',
@@ -1204,12 +1182,12 @@ return [
     'send_message'                     => 'Nachricht senden',
     'send_test_triggered'              => 'Der Test wurde ausgelöst. Überprüfen Sie Ihren Posteingang und die Protokolldateien.',
 
-    'split_transaction_title'               => 'Description of the split transaction',
-    'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
-    'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'split_transaction_title'               => 'Beschreibung der Splittbuchung',
+    'split_title_help'                      => 'Wenn Sie eine Splittbuchung anlegen, muss es eine eindeutige Beschreibung für alle Aufteilungen der Buchhaltung geben.',
+    'transaction_information'               => 'Buchungsinformation',
+    'you_create_transfer'                   => 'Sie erstellen gerade eine <strong>Umbuchung</strong>.',
+    'you_create_withdrawal'                 => 'Sie erstellen gerade eine <strong>Ausgabe</strong>.',
+    'you_create_deposit'                    => 'Sie erstellen gerade eine <strong>Einzahlung</strong>.',
 
 
     // links
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Wird am Montag statt am Wochenende ausgeführt.',
     'except_weekends'                    => 'Außer an Wochenenden',
     'recurrence_deleted'                 => 'Dauerauftrag „:title” gelöscht',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

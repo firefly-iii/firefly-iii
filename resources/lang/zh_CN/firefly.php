@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => '建立新内容',
     'new_withdrawal'                             => '新提款',
     'create_new_transaction'                     => '建立新交易',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => '新交易',
     'go_to_asset_accounts'                       => '检视您的资产帐户',
     'go_to_budgets'                              => '前往您的预算',
     'go_to_categories'                           => '前往您的分类',
@@ -239,7 +239,7 @@ return [
     'search_modifier_on'                         => '交易日期为 :value',
     'search_modifier_before'                     => '交易日期早于 :value',
     'search_modifier_after'                      => '交易日期晚于 :value',
-    'modifiers_applies_are'                      => 'The following modifiers are applied to the search as well:',
+    'modifiers_applies_are'                      => '以下修饰也适用于搜索：',
     'general_search_error'                       => '在搜索时发生错误，请前往log files查看更错信息。',
     'search_box'                                 => '搜寻',
     'search_box_intro'                           => '欢迎使用 Firefly III 的搜寻功能，请于方框内键入搜寻条件。请确保您以阅读过协助档案，因为此搜寻功能非常先进。',
@@ -257,33 +257,6 @@ return [
     'quarterly'                                  => '每季',
     'half-year'                                  => '每半年',
     'yearly'                                     => '每年',
-
-    // export data:
-    'import_and_export'                          => '导入/导出',
-    'export_data'                                => '导出资料',
-    'export_and_backup_data'                     => '导出资料',
-    'export_data_intro'                          => '使用导出资料转移至新的财务应用程式。请注意这些档案并非备份，它们未包含足够的后设资料以供新安装的 Firefly III 作为完全还原所用。如果您希望备份您的资料，请直接备份整个数据库。',
-    'export_format'                              => '导出格式',
-    'export_format_csv'                          => '逗号分隔值 (CSV档案)',
-    'export_format_mt940'                        => 'MT940 兼容格式',
-    'include_old_uploads_help'                   => 'Firefly III 不会删除过去已导入的原始 CSV 档，你可以将它们包含在导出的档案中。',
-    'do_export'                                  => '导出',
-    'export_status_never_started'                => '未开始导出',
-    'export_status_make_exporter'                => '建立导出相关物件…',
-    'export_status_collecting_journals'          => '蒐集您的交易…',
-    'export_status_collected_journals'           => '已蒐集您的交易！',
-    'export_status_converting_to_export_format'  => '转换您的交易…',
-    'export_status_converted_to_export_format'   => '已转换您的交易！',
-    'export_status_creating_journal_file'        => '建立汇出档…',
-    'export_status_created_journal_file'         => '已建立汇出档！',
-    'export_status_collecting_attachments'       => '蒐集所有您的附加档案…',
-    'export_status_collected_attachments'        => '已蒐集所有您的附加档案！',
-    'export_status_collecting_old_uploads'       => '蒐集您过往的上传…',
-    'export_status_collected_old_uploads'        => '已蒐集您过往的上传！',
-    'export_status_creating_zip_file'            => '建立一个压缩档…',
-    'export_status_created_zip_file'             => '已建立一个压缩档！',
-    'export_status_finished'                     => '汇出已成功完成！耶！',
-    'export_data_please_wait'                    => '请稍后…',
 
     // rules
     'rules'                                      => '规则',
@@ -635,9 +608,9 @@ return [
     'converted_to_Transfer'                   => '此交易已被转换为一笔转帐',
     'invalid_convert_selection'               => '您选择的帐户已用于此交易或不存在',
     'source_or_dest_invalid'                  => '找不到正确的交易细节，无法转换。',
-    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
-    'convert_to_deposit'                      => 'Convert to a deposit',
-    'convert_to_transfer'                     => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => '转换为提款',
+    'convert_to_deposit'                      => '转换为存款',
+    'convert_to_transfer'                     => '转换为转帐',
 
     // create new stuff:
     'create_new_withdrawal'                   => '建立新提款',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => '使用这些金额以获得您总预算可能为何的指标',
     'suggested'                               => '建议',
     'average_between'                         => '自 :start 至 :end 的平均',
-    'over_budget_warn'                        => '<i class="fa fa-money"> 通常您的每日预算为 :amount，此为每日 :over_amount。',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => '帐单配合自 :low 至 :high 的交易。',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => '您可之后再编辑或删除较正。',
     'must_be_asset_account'                   => '您只可以对帐资产帐户。',
     'reconciliation_stored'                   => '已储存对帐',
-    'reconcilliation_transaction_title'       => '对帐 (:from 至 :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => '对帐此帐户',
     'confirm_reconciliation'                  => '确认对帐',
     'submitted_start_balance'                 => '初始余额已送出',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => '每日',
     'interest_calc_monthly'                   => '每月',
     'interest_calc_yearly'                    => '每年',
-    'initial_balance_account'                 => ':name 帐户的初始余额',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => '新分类',
@@ -851,7 +828,8 @@ return [
     'deleted_deposit'                         => '已成功删除存款 ”:description“',
     'deleted_transfer'                        => '已成功删除转帐 ”:description“',
     'stored_journal'                          => '已成功建立新交易 ”:description“',
-    'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'stored_journal_no_descr'                 => '成功创建您的新交易',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => '选择交易',
     'rule_group_select_transactions'          => '套用 ”:title“ 至交易',
     'rule_select_transactions'                => '套用 ”:title“ 至交易',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => '错误',
     'debt_start_date'                         => '负债开始日期',
     'debt_start_amount'                       => '负债开始金额',
-    'debt_start_amount_help'                  => '请以正数输入此债务的原始金额，您也可以输入目前的金额。请确定修改下方的日期以符合需求。',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => '储存新债务',
     'edit_liabilities_account'                => '编辑债务 “:name”',
 
@@ -1150,7 +1128,7 @@ return [
     'deleted_piggy_bank'        => '删除存钱罐 ":name"',
     'added_amount_to_piggy'     => '已新增 :amount 至 “:name”',
     'removed_amount_from_piggy' => '已自 “:name” 移除 :amount',
-    'piggy_events'              => 'Related piggy banks',
+    'piggy_events'              => '相关的存钱罐',
 
     // tags
     'delete_tag'                => '删除标签 ":tag"',
@@ -1162,8 +1140,8 @@ return [
 
     'transaction_journal_information'  => '交易资讯',
     'transaction_journal_meta'         => '后设资讯',
-    'transaction_journal_more'         => 'More information',
-    'att_part_of_journal'              => 'Stored under ":journal"',
+    'transaction_journal_more'         => '更多信息',
+    'att_part_of_journal'              => '在“:journal”中存储',
     'total_amount'                     => '总金额',
     'number_of_decimals'               => '小数位数：',
 
@@ -1179,7 +1157,7 @@ return [
     'store_configuration'              => '储存设定',
     'single_user_administration'       => ':email 的使用者管理后台',
     'edit_user'                        => '编辑使用者 :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => '您可以在 <a href=":link">设置</a>中启用更多的交易选项。',
     'user_data_information'            => '使用者资料',
     'user_information'                 => '使用者资讯',
     'total_size'                       => '总大小',
@@ -1204,12 +1182,12 @@ return [
     'send_message'                     => '发送消息',
     'send_test_triggered'              => '测试已触发，请检视您的收件匣与日志档。',
 
-    'split_transaction_title'               => 'Description of the split transaction',
-    'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
-    'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'split_transaction_title'               => '拆分交易的描述',
+    'split_title_help'                      => '如果您创建一个拆分交易，必须有一个全局的交易描述。',
+    'transaction_information'               => '交易信息',
+    'you_create_transfer'                   => '您正在创建一笔<strong>转账</strong>。',
+    'you_create_withdrawal'                 => '您正在创建一笔<strong>提款</strong>。',
+    'you_create_deposit'                    => '您正在创建一笔<strong>存款</strong>。',
 
 
     // links
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => '将推迟到星期一创建交易记录而不是周末创建。',
     'except_weekends'                    => '例外的周末',
     'recurrence_deleted'                 => '定期重复交易 ":title" 已删除',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

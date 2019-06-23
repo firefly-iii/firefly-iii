@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => 'Utwórz nowe rzeczy',
     'new_withdrawal'                             => 'Nowa wypłata',
     'create_new_transaction'                     => 'Stwórz nową transakcję',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => 'Nowa transakcja',
     'go_to_asset_accounts'                       => 'Zobacz swoje konta aktywów',
     'go_to_budgets'                              => 'Przejdź do swoich budżetów',
     'go_to_categories'                           => 'Przejdź do swoich kategorii',
@@ -257,33 +257,6 @@ return [
     'quarterly'                                  => 'kwartalnie',
     'half-year'                                  => 'co pół roku',
     'yearly'                                     => 'rocznie',
-
-    // export data:
-    'import_and_export'                          => 'Import / eksport',
-    'export_data'                                => 'Eksportuj dane',
-    'export_and_backup_data'                     => 'Eksportuj dane',
-    'export_data_intro'                          => 'Użyj wyeksportowanych danych, aby przejść do nowej aplikacji finansowej. Należy pamiętać, że te pliki są kopią zapasową. Nie zawierają one wystarczającej ilości metadanych, aby w pełni przywrócić nową instalację Firefly III. Jeśli chcesz wykonać kopię zapasową danych, wykonaj bezpośrednio kopię bazy danych.',
-    'export_format'                              => 'Format eksportu',
-    'export_format_csv'                          => 'Wartości oddzielone przecinkami (plik CSV)',
-    'export_format_mt940'                        => 'Format kompatybilny z MT940',
-    'include_old_uploads_help'                   => 'Firefly III nie wyrzuca oryginalnych plików CSV zaimportowanych w przeszłości. Możesz uwzględnić je w eksporcie.',
-    'do_export'                                  => 'Eksportuj',
-    'export_status_never_started'                => 'Eksport nie został jeszcze rozpoczęty',
-    'export_status_make_exporter'                => 'Tworzenie rzeczy dla eksportera...',
-    'export_status_collecting_journals'          => 'Zbieranie Twoich transakcji...',
-    'export_status_collected_journals'           => 'Zebrano twoje transakcje!',
-    'export_status_converting_to_export_format'  => 'Konwertowanie Twoich transakcji...',
-    'export_status_converted_to_export_format'   => 'Przekonwertowano twoje transakcje!',
-    'export_status_creating_journal_file'        => 'Tworzenie pliku eksportu...',
-    'export_status_created_journal_file'         => 'Utworzono plik eksportu!',
-    'export_status_collecting_attachments'       => 'Zbieram wszystkie Twoje załączniki...',
-    'export_status_collected_attachments'        => 'Zebrano wszystkie twoje załączniki!',
-    'export_status_collecting_old_uploads'       => 'Zbieram Twoje wszystkie przesłane pliki...',
-    'export_status_collected_old_uploads'        => 'Zebrano wszystkie poprzednie pliki!',
-    'export_status_creating_zip_file'            => 'Tworzenie pliku zip...',
-    'export_status_created_zip_file'             => 'Utworzono plik zip!',
-    'export_status_finished'                     => 'Eksport został pomyślnie zakończony! Yay!',
-    'export_data_please_wait'                    => 'Proszę czekać...',
 
     // rules
     'rules'                                      => 'Reguły',
@@ -635,9 +608,9 @@ return [
     'converted_to_Transfer'                   => 'Transakcja została przekonwertowana do transferu',
     'invalid_convert_selection'               => 'Wybrane konto jest już używane w tej transakcji lub nie istnieje.',
     'source_or_dest_invalid'                  => 'Nie można znaleźć poprawnych szczegółów transakcji. Konwersja nie jest możliwa.',
-    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
-    'convert_to_deposit'                      => 'Convert to a deposit',
-    'convert_to_transfer'                     => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => 'Konwertuj na wypłatę',
+    'convert_to_deposit'                      => 'Konwertuj na wpłatę',
+    'convert_to_transfer'                     => 'Konwertuj na transfer',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Utwórz nową wypłatę',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Skorzystaj z tych kwot, aby uzyskać wskazówkę ile może wynosić Twój całkowity budżet.',
     'suggested'                               => 'Sugerowane',
     'average_between'                         => 'Średnia pomiędzy :start a :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Zwykle budżetujesz około :amount dziennie. Obecna wartość to :over_amount dziennie.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Rachunek pasuje do transakcji między :low a :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Możesz zawsze zmodyfikować lub usunąć korektę później.',
     'must_be_asset_account'                   => 'Możesz uzgodnić tylko konta aktywów',
     'reconciliation_stored'                   => 'Uzgodnienie zapisane',
-    'reconcilliation_transaction_title'       => 'Rozrachunek (od :from do :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Uzgodnij to konto',
     'confirm_reconciliation'                  => 'Potwierdź rozrachunek',
     'submitted_start_balance'                 => 'Przesłane saldo początkowe',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Co dzień',
     'interest_calc_monthly'                   => 'Co miesiąc',
     'interest_calc_yearly'                    => 'Co rok',
-    'initial_balance_account'                 => 'Początkowe saldo konta ":name"',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Nowa kategoria',
@@ -851,7 +828,8 @@ return [
     'deleted_deposit'                         => 'Pomyślnie usunięto depozyt ":description"',
     'deleted_transfer'                        => 'Pomyślnie usunięto transfer ":description"',
     'stored_journal'                          => 'Pomyślnie utworzono nową transakcję ":description"',
-    'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'stored_journal_no_descr'                 => 'Pomyślnie utworzono nową transakcję',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Wybierz transakcje',
     'rule_group_select_transactions'          => 'Zastosuj ":title" do transakcji',
     'rule_select_transactions'                => 'Zastosuj ":title" do transakcji',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Błędy',
     'debt_start_date'                         => 'Początkowa data długu',
     'debt_start_amount'                       => 'Początkowa kwota długu',
-    'debt_start_amount_help'                  => 'Wprowadź proszę oryginalną kwotę tego zobowiązania jako dodatnią liczbę. Możesz także podać aktualną kwotę. Pamiętaj, aby zmodyfikować odpowiednio poniższą datę.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Zapisz nowe zobowiązanie',
     'edit_liabilities_account'                => 'Modyfikuj zobowiązanie ":name"',
 
@@ -1150,7 +1128,7 @@ return [
     'deleted_piggy_bank'        => 'Usunięto skarbonkę ":name"',
     'added_amount_to_piggy'     => 'Dodano :amount do ":name"',
     'removed_amount_from_piggy' => 'Usunięto :amount z ":name"',
-    'piggy_events'              => 'Related piggy banks',
+    'piggy_events'              => 'Powiązane skarbonki',
 
     // tags
     'delete_tag'                => 'Usuń tag ":tag"',
@@ -1162,8 +1140,8 @@ return [
 
     'transaction_journal_information'  => 'Informacje o transakcji',
     'transaction_journal_meta'         => 'Meta informacje',
-    'transaction_journal_more'         => 'More information',
-    'att_part_of_journal'              => 'Stored under ":journal"',
+    'transaction_journal_more'         => 'Więcej informacji',
+    'att_part_of_journal'              => 'Zapisano jako ":journal"',
     'total_amount'                     => 'Łączna kwota',
     'number_of_decimals'               => 'Ilość miejsc dziesiętnych',
 
@@ -1179,7 +1157,7 @@ return [
     'store_configuration'              => 'Zapisz konfigurację',
     'single_user_administration'       => 'Administracja użytkownika dla :email',
     'edit_user'                        => 'Modyfikuj użytkownika :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => 'Możesz włączyć więcej opcji transakcji w swoich <a href=":link">ustawieniach</a>.',
     'user_data_information'            => 'Dane użytkownika',
     'user_information'                 => 'Informacja o użytkowniku',
     'total_size'                       => 'łączny rozmiar',
@@ -1204,12 +1182,12 @@ return [
     'send_message'                     => 'Wyślij wiadomość',
     'send_test_triggered'              => 'Test został uruchomiony. Sprawdź swoją skrzynkę odbiorczą i pliki dziennika.',
 
-    'split_transaction_title'               => 'Description of the split transaction',
-    'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
-    'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'split_transaction_title'               => 'Opis podzielonej transakcji',
+    'split_title_help'                      => 'Podzielone transakcje muszą posiadać globalny opis.',
+    'transaction_information'               => 'Informacje o transakcji',
+    'you_create_transfer'                   => 'Tworzysz <strong>przelew</strong>.',
+    'you_create_withdrawal'                 => 'Tworzysz <strong>wydatek</strong>.',
+    'you_create_deposit'                    => 'Tworzysz <strong>wpłatę</strong>.',
 
 
     // links
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Zostanie utworzona w poniedziałki zamiast w weekendy.',
     'except_weekends'                    => 'Pomiń weekendy',
     'recurrence_deleted'                 => 'Cykliczna transakcja ":title" została usunięta',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

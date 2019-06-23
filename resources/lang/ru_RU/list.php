@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Всего вложений',
     'bills_count'             => 'Всего счетов к оплате',
     'categories_count'        => 'Всего категорий',
-    'export_jobs_count'       => 'Задачи по экспорту',
     'import_jobs_count'       => 'Задачи по импорту',
     'budget_count'            => 'Всего категорий бюджета',
     'rule_and_groups_count'   => 'Всего правил и групп правил',

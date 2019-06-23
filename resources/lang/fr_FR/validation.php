@@ -45,7 +45,7 @@ return [
     'at_least_one_repetition'        => 'Besoin d\'au moins une répétition.',
     'require_repeat_until'           => 'Besoin d’un certain nombre de répétitions ou d\'une date de fin (repeat_until). Pas les deux.',
     'require_currency_info'          => 'Le contenu de ce champ n\'est pas valide sans informations sur la devise.',
-    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
+    'require_currency_amount'        => 'Le contenu de ce champ est invalide sans informations sur le montant étranger.',
     'equal_description'              => 'La description de la transaction ne doit pas être identique à la description globale.',
     'file_invalid_mime'              => 'Le fichier ":name" est du type ":mime" ce qui n\'est pas accepté pour un nouvel envoi.',
     'file_too_large'                 => 'Le fichier ":name" est trop grand.',
@@ -139,8 +139,8 @@ return [
         'name'                    => 'nom',
         'piggy_bank_id'           => 'ID de tirelire',
         'targetamount'            => 'montant cible',
-        'openingBalanceDate'      => 'date du solde initial',
-        'openingBalance'          => 'solde initial',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'correspondance',
         'amount_min'              => 'montant minimum',
         'amount_max'              => 'montant maximum',
@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
     'withdrawal_source_bad_data'     => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
     'withdrawal_dest_need_data'      => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Vous devez obtenir un ID de compte source valide et/ou un nom de compte source valide pour continuer.',
     'deposit_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
@@ -183,5 +184,9 @@ return [
     'transfer_source_bad_data'  => 'Impossible de trouver un compte source valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
     'transfer_dest_need_data'   => 'Vous devez obtenir un ID de compte de destination valide et/ou un nom de compte de destination valide pour continuer.',
     'transfer_dest_bad_data'    => 'Impossible de trouver un compte de destination valide lors de la recherche de l\'ID ":id" ou du nom ":name".',
-    'need_id_in_edit'           => 'Lors de la mise à jour d\'une transaction qui a été ventilée, chaque ventilation doit avoir un identifiant de journal de transaction valide (champ "transaction_journal_id").',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

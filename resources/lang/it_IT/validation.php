@@ -45,7 +45,7 @@ return [
     'at_least_one_repetition'        => 'È necessaria almeno una ripetizione.',
     'require_repeat_until'           => 'Richiede un numero di ripetizioni o una data di fine (ripeti fino al), non entrambi.',
     'require_currency_info'          => 'Il contenuto di questo campo non è valido senza informazioni sulla valuta.',
-    'require_currency_amount'        => 'The content of this field is invalid without foreign amount information.',
+    'require_currency_amount'        => 'Il contenuto di questo campo non è valido senza le informazioni sull\'importo estero.',
     'equal_description'              => 'La descrizione della transazione non deve essere uguale alla descrizione globale.',
     'file_invalid_mime'              => 'Il file ":name" è di tipo ":mime" che non è accettato come nuovo caricamento.',
     'file_too_large'                 => 'Il file ":name" è troppo grande.',
@@ -139,8 +139,8 @@ return [
         'name'                    => 'nome',
         'piggy_bank_id'           => 'ID salvadanaio',
         'targetamount'            => 'importo obiettivo',
-        'openingBalanceDate'      => 'data saldo di apertura',
-        'openingBalance'          => 'saldo di apertura',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'abbinamento',
         'amount_min'              => 'importo minimo',
         'amount_max'              => 'importo massimo',
@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
     'withdrawal_source_bad_data'     => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'withdrawal_dest_need_data'      => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'È necessario ottenere un ID e/o un nome del conto di origine validi per continuare.',
     'deposit_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
@@ -183,5 +184,9 @@ return [
     'transfer_source_bad_data'  => 'Non è stato possibile trovare un conto d\'origine valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
     'transfer_dest_need_data'   => 'È necessario ottenere un ID e/o un nome del conto di destinazione validi per continuare.',
     'transfer_dest_bad_data'    => 'Non è stato possibile trovare un conto di destinazione valido effettuando la ricerca con l\'ID ":id" o il nome ":name".',
-    'need_id_in_edit'           => 'Quando si aggiorna una transazione che ha delle suddivisioni, ogni suddivisione deve avere un identificativo del journal delle transazioni valido (campo "transaction_journal_id").',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Aantal bijlagen',
     'bills_count'             => 'Aantal contracten',
     'categories_count'        => 'Aantal categorieën',
-    'export_jobs_count'       => 'Aantal export-jobs',
     'import_jobs_count'       => 'Aantal import-jobs',
     'budget_count'            => 'Aantal budgetten',
     'rule_and_groups_count'   => 'Aantal regels en regelgroepen',

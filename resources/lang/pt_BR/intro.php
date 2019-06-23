@@ -74,7 +74,7 @@ return [
     'transactions_create_switch_box'                          => 'Use esses botões para mudar rapidamente o tipo de transação que deseja salvar.',
     'transactions_create_ffInput_category'                    => 'Você pode digitar livremente neste campo. As categorias criadas anteriormente serão sugeridas.',
     'transactions_create_withdrawal_ffInput_budget'           => 'Vincule sua retirada a um orçamento para um melhor controle financeiro.',
-    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use este menu suspenso quando seu depósito estiver em outra moeda.',
+    'transactions_create_withdrawal_currency_dropdown_amount' => 'Use este menu quando seu depósito estiver em outra moeda.',
     'transactions_create_deposit_currency_dropdown_amount'    => 'Use este menu suspenso quando seu depósito estiver em outra moeda.',
     'transactions_create_transfer_ffInput_piggy_bank_id'      => 'Selecione um banco e vincule essa transferência às suas economias.',
 

@@ -258,33 +258,6 @@ return [
     'half-year'                                  => 'hvert halvår',
     'yearly'                                     => 'årlig',
 
-    // export data:
-    'import_and_export'                          => 'Import og eksport',
-    'export_data'                                => 'Eksporter data',
-    'export_and_backup_data'                     => 'Eksporter data',
-    'export_data_intro'                          => 'Bruk de eksporterte dataene for å flytte til en ny finansapplikasjon. Vær oppmerksom på at disse filene ikke er ment som noen sikkerhetskopi. De inneholder ikke nok metadata for å fullt ut gjenopprette en ny Firefly III-installasjon. Hvis du vil sikkerhetskopiere dataene dine, må du sikkerhetskopiere databasen direkte.',
-    'export_format'                              => 'Eksportformat',
-    'export_format_csv'                          => 'Kommaseparerte verdier (CSV-fil)',
-    'export_format_mt940'                        => 'MT940-kompatibelt format',
-    'include_old_uploads_help'                   => 'Firefly III sletter ikke de opprinnelige CSV-filene du har importert tidligere. Du kan inkludere dem i eksporten din.',
-    'do_export'                                  => 'Eksporter',
-    'export_status_never_started'                => 'Eksporteringen har ikke startet ennå',
-    'export_status_make_exporter'                => 'Lager eksportørting...',
-    'export_status_collecting_journals'          => 'Samler transaksjonene dine...',
-    'export_status_collected_journals'           => 'Samlet transaksjonene dine!',
-    'export_status_converting_to_export_format'  => 'Konverterer dine transaksjoner...',
-    'export_status_converted_to_export_format'   => 'Dine transaksjoner ble konvertert!',
-    'export_status_creating_journal_file'        => 'Oppretter eksportfil...',
-    'export_status_created_journal_file'         => 'Eksportfilen ble opprettet!',
-    'export_status_collecting_attachments'       => 'Samler alle dine vedlegg...',
-    'export_status_collected_attachments'        => 'Samlet alle dine vedlegg!',
-    'export_status_collecting_old_uploads'       => 'Samler alle dine tidligere opplastinger...',
-    'export_status_collected_old_uploads'        => 'Samlet alle dine tidligere opplastinger!',
-    'export_status_creating_zip_file'            => 'Oppretter en zip-fil...',
-    'export_status_created_zip_file'             => 'Opprettet en zip-fil!',
-    'export_status_finished'                     => 'Eksporten var vellykket! Jippi!',
-    'export_data_please_wait'                    => 'Vennligst vent...',
-
     // rules
     'rules'                                      => 'Regler',
     'rule_name'                                  => 'Navn på regel',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Bruk disse beløpene for å få en indikasjon på hva ditt totale budsjett kan være.',
     'suggested'                               => 'Foreslått',
     'average_between'                         => 'Gjennomsnitt mellom :start og :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Normalt budsjetterer du ca. :amount per day. Dette er :over_amount pr. dag.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Regning matcher transaksjoner mellom :low og :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Du kan alltid redigere eller slette en korreksjon senere.',
     'must_be_asset_account'                   => 'Du kan bare avstemme aktivakontoer',
     'reconciliation_stored'                   => 'Avstemming lagret',
-    'reconcilliation_transaction_title'       => 'Rekonsiliasjon (:from til :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Avstem denne kontoen',
     'confirm_reconciliation'                  => 'Bekreft avstemming',
     'submitted_start_balance'                 => 'Innsendt startsaldo',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Per dag',
     'interest_calc_monthly'                   => 'Per måned',
     'interest_calc_yearly'                    => 'Per år',
-    'initial_balance_account'                 => 'Start saldo for konto :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Ny kategori',
@@ -852,6 +829,7 @@ return [
     'deleted_transfer'                        => 'Slettet overføring ":description"',
     'stored_journal'                          => 'Opprettet ny transaksjon ":description"',
     'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Velg transaksjoner',
     'rule_group_select_transactions'          => 'Påfør ":title" på transaksjonene',
     'rule_select_transactions'                => 'Påfør ":title" på transaksjonene',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Feil',
     'debt_start_date'                         => 'Startdato for gjeld',
     'debt_start_amount'                       => 'Start beløp for gjeld',
-    'debt_start_amount_help'                  => 'Skriv inn opprinnelig beløp for denne gjeld som et positivt tall. Du kan også angi gjeldende beløp. Pass på å redigere datoen nedenfor slik at det passer.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Lagre ny gjeld',
     'edit_liabilities_account'                => 'Rediger gjeld ":name"',
 
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Opprettes på Mandag i stedet for i helgene.',
     'except_weekends'                    => 'Unntatt helger',
     'recurrence_deleted'                 => 'Gjentakende transaksjon ":title" slettet',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

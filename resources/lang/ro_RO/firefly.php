@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => 'Creați lucruri noi',
     'new_withdrawal'                             => 'Tranzacție nouă',
     'create_new_transaction'                     => 'Creați o nouă tranzacție',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => 'Tranzacţie nouă',
     'go_to_asset_accounts'                       => 'Vizualizați conturile de active',
     'go_to_budgets'                              => 'Mergi la bugete',
     'go_to_categories'                           => 'Mergi la categorii',
@@ -257,33 +257,6 @@ return [
     'quarterly'                                  => 'trimestrial',
     'half-year'                                  => 'fiecare jumătate de an',
     'yearly'                                     => 'anual',
-
-    // export data:
-    'import_and_export'                          => 'Import și export',
-    'export_data'                                => 'Export de date',
-    'export_and_backup_data'                     => 'Export de date',
-    'export_data_intro'                          => 'Utilizați datele exportate pentru a trece la o nouă aplicație financiară. Rețineți că aceste fișiere nu sunt menite să facă backup. Ele nu conțin suficiente meta-date pentru a restabili complet o nouă instalație Firefly III. Dacă doriți să faceți o copie de rezervă a datelor, vă rugăm să salvați direct baza de date.',
-    'export_format'                              => 'Formatul de export',
-    'export_format_csv'                          => 'Valori separate prin virgulă (fișier CSV)',
-    'export_format_mt940'                        => 'Formatul compatibil MT940',
-    'include_old_uploads_help'                   => 'Firefly III nu aruncă fișierele originale CSV pe care le-ați importat în trecut. Puteți să le includeți în export.',
-    'do_export'                                  => 'Exportă',
-    'export_status_never_started'                => 'Exportul nu a început încă',
-    'export_status_make_exporter'                => 'Crearea unui lucru pentru exportator...',
-    'export_status_collecting_journals'          => 'Colectarea tranzacțiilor...',
-    'export_status_collected_journals'           => 'A colectat tranzacțiile!',
-    'export_status_converting_to_export_format'  => 'Conversia tranzacțiilor...',
-    'export_status_converted_to_export_format'   => 'Conversia tranzacțiilor!',
-    'export_status_creating_journal_file'        => 'Crearea fișierului de export...',
-    'export_status_created_journal_file'         => 'Fișierul de export a fost creat!',
-    'export_status_collecting_attachments'       => 'Colectarea tuturor atașamentele...',
-    'export_status_collected_attachments'        => 'A colectat toate atașamentele!',
-    'export_status_collecting_old_uploads'       => 'Colectarea tuturor încărcărilor anterioare...',
-    'export_status_collected_old_uploads'        => 'A colectat toate încărcările anterioare!',
-    'export_status_creating_zip_file'            => 'Crearea unui fișier zip...',
-    'export_status_created_zip_file'             => 'A creat un fișier zip!',
-    'export_status_finished'                     => 'Exportul a fost finalizat cu succes! Ura!',
-    'export_data_please_wait'                    => 'Vă rugăm să așteptați...',
 
     // rules
     'rules'                                      => 'Reguli',
@@ -635,9 +608,9 @@ return [
     'converted_to_Transfer'                   => 'Tranzacția a fost transformată în transfer',
     'invalid_convert_selection'               => 'Contul pe care l-ați selectat este deja utilizat în această tranzacție sau nu există.',
     'source_or_dest_invalid'                  => 'Nu se pot găsi detaliile corecte ale tranzacției. Conversia nu este posibilă.',
-    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
-    'convert_to_deposit'                      => 'Convert to a deposit',
-    'convert_to_transfer'                     => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => 'Convertește la retragere',
+    'convert_to_deposit'                      => 'Convertește la depozit',
+    'convert_to_transfer'                     => 'Convertește la transfer',
 
     // create new stuff:
     'create_new_withdrawal'                   => 'Creați o nouă retragere',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Utilizați aceste sume pentru a obține o indicație cu privire la bugetul dvs. total.',
     'suggested'                               => 'Sugerat',
     'average_between'                         => 'Media între :start și :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> În mod normal, bugetul este de aproximativ :amount pe zi. Aceasta este :over_amount pe zi.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Factura se potrivește tranzacțiilor între :low și :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Puteți modifica sau șterge întotdeauna o corecție mai târziu.',
     'must_be_asset_account'                   => 'Puteți reconcilia numai contul de active',
     'reconciliation_stored'                   => 'Reconciliere salvată',
-    'reconcilliation_transaction_title'       => 'Reconciliere (:from la :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Reconciliați acest cont',
     'confirm_reconciliation'                  => 'Confirmați reconcilierea',
     'submitted_start_balance'                 => 'Balanța inițială afișată',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Pe zi',
     'interest_calc_monthly'                   => 'Pe lună',
     'interest_calc_yearly'                    => 'Pe an',
-    'initial_balance_account'                 => 'Bilanțul inițial al contului :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Categorie nouă',
@@ -851,7 +828,8 @@ return [
     'deleted_deposit'                         => 'Depozitul ":description" șters cu succes',
     'deleted_transfer'                        => 'Transferul ":description" șters cu succes',
     'stored_journal'                          => 'A fost creată cu succes o tranzacție nouă ":description"',
-    'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'stored_journal_no_descr'                 => 'Tranzacția s-a creat cu succes',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Selectați tranzacțiile',
     'rule_group_select_transactions'          => 'Aplică ":title" la tranzacții',
     'rule_select_transactions'                => 'Aplică ":title" la tranzacții',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Erori',
     'debt_start_date'                         => 'Data de începere a datoriilor',
     'debt_start_amount'                       => 'Valoarea inițială a datoriei',
-    'debt_start_amount_help'                  => 'Introduceți valoarea inițială a acestei obligații ca număr pozitiv. De asemenea, puteți introduce suma curentă. Asigurați-vă că modificați data de mai jos pentru a se potrivi.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Salvați provizion nou',
     'edit_liabilities_account'                => 'Editați provizion ":name"',
 
@@ -1150,7 +1128,7 @@ return [
     'deleted_piggy_bank'        => 'Pușculița ":name" a fost ștearsă',
     'added_amount_to_piggy'     => 'Adăugat :amount la ":name"',
     'removed_amount_from_piggy' => 'Eliminat :amount din ":name"',
-    'piggy_events'              => 'Related piggy banks',
+    'piggy_events'              => 'Pușculițe asociate',
 
     // tags
     'delete_tag'                => 'Șterge eticheta ":tag"',
@@ -1162,8 +1140,8 @@ return [
 
     'transaction_journal_information'  => 'Informații despre tranzacții',
     'transaction_journal_meta'         => 'Informații meta',
-    'transaction_journal_more'         => 'More information',
-    'att_part_of_journal'              => 'Stored under ":journal"',
+    'transaction_journal_more'         => 'Mai multe informaţii',
+    'att_part_of_journal'              => 'Salvat în ":journal"',
     'total_amount'                     => 'Valoare totală',
     'number_of_decimals'               => 'Număr de zecimale',
 
@@ -1179,7 +1157,7 @@ return [
     'store_configuration'              => 'Salvați configurarea',
     'single_user_administration'       => 'Administrare utilizator pentru :email',
     'edit_user'                        => 'Editați user :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => 'Aveți mai multe opțiuni pentru tranzacții în <a href=":link">setări</a>.',
     'user_data_information'            => 'Datele utilizatorului',
     'user_information'                 => 'Informații utilizator',
     'total_size'                       => 'marimea totală',
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Va fi creat luni, în loc de weekend.',
     'except_weekends'                    => 'Cu excepția weekend-urilor',
     'recurrence_deleted'                 => 'tranzacție recurentă ":title" ștearsă',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

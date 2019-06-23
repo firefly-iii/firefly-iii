@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Anzahl Anhänge',
     'bills_count'             => 'Anzahl Rechnungen',
     'categories_count'        => 'Anzahl Kategorien',
-    'export_jobs_count'       => 'Anzahl exportierter Jobs',
     'import_jobs_count'       => 'Anzahl importierter Jobs',
     'budget_count'            => 'Anzahl Kostenpläne',
     'rule_and_groups_count'   => 'Anzahl Regeln und Regelgruppen',

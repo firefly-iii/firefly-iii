@@ -46,7 +46,7 @@ return [
     'create_withdrawal'      => 'Crează o nouă retragere',
     'create_deposit'         => 'Crează depozit nou',
     'create_transfer'        => 'Crează transfer nou',
-    'create_new_transaction' => 'Create a new transaction',
+    'create_new_transaction' => 'Creați o tranzacție nouă',
     'edit_journal'           => 'Editează tranzacția ":description"',
     'edit_reconciliation'    => 'Editează ":description"',
     'delete_journal'         => 'Șterge tranzacția ":description"',

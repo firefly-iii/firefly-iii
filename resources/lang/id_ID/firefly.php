@@ -258,33 +258,6 @@ return [
     'half-year'                                  => 'setiap setengah tahun',
     'yearly'                                     => 'tahunan',
 
-    // export data:
-    'import_and_export'                          => 'Impor dan ekspor',
-    'export_data'                                => 'Data ekspor',
-    'export_and_backup_data'                     => 'Export data',
-    'export_data_intro'                          => 'Use the exported data to move to a new financial application. Please note that these files are not meant as a backup. They do not contain enough meta-data to fully restore a new Firefly III installation. If you want to make a backup of your data, please backup the database directly.',
-    'export_format'                              => 'Format ekspor',
-    'export_format_csv'                          => 'Nilai yang dipisahkan koma (file CSV)',
-    'export_format_mt940'                        => 'Format MT940 yang kompatibel',
-    'include_old_uploads_help'                   => 'Firefly III tidak membuang file CSV asli yang telah Anda impor sebelumnya. Anda bisa memasukkannya ke dalam ekspor Anda.',
-    'do_export'                                  => 'Ekspor',
-    'export_status_never_started'                => 'Ekspor belum dimulai',
-    'export_status_make_exporter'                => 'Membuat barang eksportir...',
-    'export_status_collecting_journals'          => 'Mengumpulkan transaksi Anda...',
-    'export_status_collected_journals'           => 'Mengumpulkan transaksi Anda!',
-    'export_status_converting_to_export_format'  => 'Mengubah transaksi Anda...',
-    'export_status_converted_to_export_format'   => 'Mengubah transaksi anda!',
-    'export_status_creating_journal_file'        => 'Membuat file ekspor...',
-    'export_status_created_journal_file'         => 'Membuat file ekspor!',
-    'export_status_collecting_attachments'       => 'Mengumpulkan semua lampiran Anda...',
-    'export_status_collected_attachments'        => 'Mengumpulkan semua lampiran Anda!',
-    'export_status_collecting_old_uploads'       => 'Mengumpulkan semua unggahan sebelumnya...',
-    'export_status_collected_old_uploads'        => 'Mengumpulkan semua upload sebelumnya!',
-    'export_status_creating_zip_file'            => 'Membuat file zip...',
-    'export_status_created_zip_file'             => 'Membuat file zip!',
-    'export_status_finished'                     => 'Ekspor telah berhasil selesai! Yay!',
-    'export_data_please_wait'                    => 'Mohon tunggu...',
-
     // rules
     'rules'                                      => 'Aturan',
     'rule_name'                                  => 'Nama aturan',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Gunakan jumlah ini untuk mendapatkan indikasi berapa total anggaran Anda.',
     'suggested'                               => 'Disarankan',
     'average_between'                         => 'Rata-rata antara :start dan :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Normally you budget about :amount per day. This is :over_amount per day.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Bill matches transactions between :low and :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Anda selalu dapat mengedit atau menghapus koreksi kemudian.',
     'must_be_asset_account'                   => 'Anda hanya bisa mendamaikan akun aset',
     'reconciliation_stored'                   => 'Rekonsiliasi disimpan',
-    'reconcilliation_transaction_title'       => 'Rekonsiliasi (:from ke :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Rekonsiliasi akun ini',
     'confirm_reconciliation'                  => 'Konfirmasikan rekonsiliasi',
     'submitted_start_balance'                 => 'Saldo awal yang dikirim',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'Per day',
     'interest_calc_monthly'                   => 'Per month',
     'interest_calc_yearly'                    => 'Per year',
-    'initial_balance_account'                 => 'Initial balance account of :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Kategori baru',
@@ -852,6 +829,7 @@ return [
     'deleted_transfer'                        => 'Berhasil menghapus transfer ":description"',
     'stored_journal'                          => 'Berhasil membuat transaksi baru ":description"',
     'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Pilih transaksi',
     'rule_group_select_transactions'          => 'Terapkan ":title" untuk transaksi',
     'rule_select_transactions'                => 'Terapkan ":title" untuk transaksi',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Kesalahan',
     'debt_start_date'                         => 'Start date of debt',
     'debt_start_amount'                       => 'Start amount of debt',
-    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Store new liability',
     'edit_liabilities_account'                => 'Edit liability ":name"',
 
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Will be created on Monday instead of the weekends.',
     'except_weekends'                    => 'Except weekends',
     'recurrence_deleted'                 => 'Recurring transaction ":title" deleted',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

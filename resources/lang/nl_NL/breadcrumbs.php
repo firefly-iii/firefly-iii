@@ -46,7 +46,7 @@ return [
     'create_withdrawal'      => 'Sla nieuwe uitgave op',
     'create_deposit'         => 'Sla nieuwe inkomsten op',
     'create_transfer'        => 'Sla nieuwe overschrijving op',
-    'create_new_transaction' => 'Create a new transaction',
+    'create_new_transaction' => 'Maak een nieuwe transactie',
     'edit_journal'           => 'Wijzig transactie ":description"',
     'edit_reconciliation'    => 'Wijzig ":description"',
     'delete_journal'         => 'Verwijder transactie ":description"',

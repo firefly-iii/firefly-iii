@@ -139,8 +139,8 @@ return [
         'name'                    => 'navn',
         'piggy_bank_id'           => 'sparegris ID',
         'targetamount'            => 'målbeløp',
-        'openingBalanceDate'      => 'åpningssaldo dato',
-        'openingBalance'          => 'åpningssaldo',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'match',
         'amount_min'              => 'minimumsbeløp',
         'amount_max'              => 'maksimumsbeløp',
@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
     'withdrawal_source_bad_data'     => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
     'withdrawal_dest_need_data'      => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trenger en gyldig kilde konto-ID og/eller gyldig kilde kontonavn for å fortsette.',
     'deposit_source_bad_data'  => 'Kunne ikke finne en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
@@ -183,5 +184,9 @@ return [
     'transfer_source_bad_data'  => 'Finner ikke en gyldig kilde-konto ved å søke etter ID ":id" eller navn ":name".',
     'transfer_dest_need_data'   => 'Trenger en gyldig destinasjons konto-ID og/eller gyldig destinasjons kontonavn for å fortsette.',
     'transfer_dest_bad_data'    => 'Kunne ikke finne en gyldig destinasjons konto ved å søke etter ID ":id" eller navn ":name".',
-    'need_id_in_edit'           => 'Når du oppdaterer en transaksjon med flere deler, må hver del ha en gyldig transaksjons journal-id (feltet "transaction_journal_id").',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

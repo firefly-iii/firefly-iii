@@ -46,7 +46,7 @@ return [
     'create_withdrawal'      => 'Создать новый расход',
     'create_deposit'         => 'Создать новый доход',
     'create_transfer'        => 'Создать новый перевод',
-    'create_new_transaction' => 'Create a new transaction',
+    'create_new_transaction' => 'Создать новую транзакцию',
     'edit_journal'           => 'Редактирование транзакции ":description"',
     'edit_reconciliation'    => 'Редактировать ":description"',
     'delete_journal'         => 'Удаление транзакции ":description"',

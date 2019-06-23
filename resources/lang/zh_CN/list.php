@@ -87,7 +87,6 @@ return [
     'attachments_count'       => '附加档案数量',
     'bills_count'             => '帐单数量',
     'categories_count'        => '分类数量',
-    'export_jobs_count'       => '汇出工作数量',
     'import_jobs_count'       => '导入工作数量',
     'budget_count'            => '预算数量',
     'rule_and_groups_count'   => '规则及规则群组数量',

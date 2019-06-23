@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Număr de atașamente',
     'bills_count'             => 'Număr de facturi',
     'categories_count'        => 'Număr de categorii',
-    'export_jobs_count'       => 'Număr de servicii exportate',
     'import_jobs_count'       => 'Număr de servicii importate',
     'budget_count'            => 'Număr de bugete',
     'rule_and_groups_count'   => 'Număr de reguli și grupuri de reguli',

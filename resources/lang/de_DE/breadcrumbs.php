@@ -46,7 +46,7 @@ return [
     'create_withdrawal'      => 'Neue Ausgabe erstellen',
     'create_deposit'         => 'Neue Einnahme erstellen',
     'create_transfer'        => 'Neue Umbuchung erstellen',
-    'create_new_transaction' => 'Create a new transaction',
+    'create_new_transaction' => 'Neue Buchung erstellen',
     'edit_journal'           => 'Transaktion ":description" bearbeiten',
     'edit_reconciliation'    => '„:description” bearbeiten',
     'delete_journal'         => 'Transaktion ":description" löschen',

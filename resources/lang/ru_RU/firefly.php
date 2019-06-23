@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => 'Создать новый объект',
     'new_withdrawal'                             => 'Новый расход',
     'create_new_transaction'                     => 'Создать новую транзакцию',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => 'Новая транзакция',
     'go_to_asset_accounts'                       => 'Просмотр ваших основных счетов',
     'go_to_budgets'                              => 'Перейти к вашим бюджетам',
     'go_to_categories'                           => 'Перейти к вашим категориям',
@@ -257,33 +257,6 @@ return [
     'quarterly'                                  => 'раз в квартал',
     'half-year'                                  => 'раз в полгода',
     'yearly'                                     => 'ежегодно',
-
-    // export data:
-    'import_and_export'                          => 'Импорт и экспорт',
-    'export_data'                                => 'Экспорт данных',
-    'export_and_backup_data'                     => 'Экспорт данных',
-    'export_data_intro'                          => 'Используйте экспортированные данные для перехода на новое финансовое приложение. Обратите внимание, что эти файлы не предназначены для резервного копирования. Они не содержат достаточного количества данных, чтобы полностью восстановить новую копию Firefly III. Если вы хотите сделать резервную копию своих данных, сделайте резервную копию базы данных напрямую.',
-    'export_format'                              => 'Формат для экспорта',
-    'export_format_csv'                          => 'Значения, разделенные запятыми (CSV)',
-    'export_format_mt940'                        => 'Формат, совместимый с MT940',
-    'include_old_uploads_help'                   => 'Firefly III не выбрасывает исходные CSV-файлы, которые вы импортировали в прошлом. Вы можете включить их в свой экспорт.',
-    'do_export'                                  => 'Экспорт',
-    'export_status_never_started'                => 'Экспорт пока не начался',
-    'export_status_make_exporter'                => 'Создание задания на экспорт...',
-    'export_status_collecting_journals'          => 'Сбор ваших транзакций...',
-    'export_status_collected_journals'           => 'Ваши транзакции собраны!',
-    'export_status_converting_to_export_format'  => 'Преобразование ваших транзакций...',
-    'export_status_converted_to_export_format'   => 'Ваши транзакции преобразованы!',
-    'export_status_creating_journal_file'        => 'Создание файла экспорта...',
-    'export_status_created_journal_file'         => 'Файл экспорта создан!',
-    'export_status_collecting_attachments'       => 'Сбор всех ваших вложений...',
-    'export_status_collected_attachments'        => 'Все ваши вложения собраны!',
-    'export_status_collecting_old_uploads'       => 'Сбор всех ваших предыдущих загрузок...',
-    'export_status_collected_old_uploads'        => 'Все ваши предыдущие загрузки собраны!',
-    'export_status_creating_zip_file'            => 'Создание zip-файла...',
-    'export_status_created_zip_file'             => 'Создан zip-файл!',
-    'export_status_finished'                     => 'Экспорт успешно завершен! Ура!',
-    'export_data_please_wait'                    => 'Подождите пожалуйста...',
 
     // rules
     'rules'                                      => 'Правила',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => 'Используйте эти суммы, чтобы узнать, каким может быть ваш суммарный бюджет.',
     'suggested'                               => 'Рекомендуемые',
     'average_between'                         => 'В среднем между :start и :end',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> Обычно ваш бюджет - около :amount в день. Это :over_amount в день.',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => 'Сравнение транзакций по счетам к оплате между :low и :high.',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => 'Вы сможете изменить или удалить корректировку позже.',
     'must_be_asset_account'                   => 'Вы можете производить сверку только для основных счётов',
     'reconciliation_stored'                   => 'Сверка сохранена',
-    'reconcilliation_transaction_title'       => 'Сверка (с :from по :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => 'Произвести сверку данного счёта',
     'confirm_reconciliation'                  => 'Подтвердить сверку',
     'submitted_start_balance'                 => 'Подтверждённый начальный баланс',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => 'В день',
     'interest_calc_monthly'                   => 'В месяц',
     'interest_calc_yearly'                    => 'В год',
-    'initial_balance_account'                 => 'Начальный баланс для счёта :name',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => 'Новая категория',
@@ -852,6 +829,7 @@ return [
     'deleted_transfer'                        => 'Перевод ":description" успешно удалён',
     'stored_journal'                          => 'Новая транзакция ":description" успешно создана',
     'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => 'Выбрать транзакции',
     'rule_group_select_transactions'          => 'Применить ":title" к транзакциям',
     'rule_select_transactions'                => 'Применить ":title" к транзакциям',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => 'Ошибки',
     'debt_start_date'                         => 'Start date of debt',
     'debt_start_amount'                       => 'Start amount of debt',
-    'debt_start_amount_help'                  => 'Please enter the original amount of this liability as a positive number. You may also enter the current amount. Make sure to edit the date below to match.',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => 'Store new liability',
     'edit_liabilities_account'                => 'Редактировать долговой счёт ":name"',
 
@@ -1207,9 +1185,9 @@ return [
     'split_transaction_title'               => 'Description of the split transaction',
     'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
     'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'you_create_transfer'                   => 'Вы создаёте <strong>перевод</strong>.',
+    'you_create_withdrawal'                 => 'Вы создаете <strong>расход</strong>.',
+    'you_create_deposit'                    => 'Вы создаёте <strong>вклад</strong>.',
 
 
     // links
@@ -1254,7 +1232,7 @@ return [
     'Paid_name'                             => 'Оплачено',
     'Refund_name'                           => 'Возврат',
     'Reimbursement_name'                    => 'Возмещение',
-    'Related_name'                          => 'Related',
+    'Related_name'                          => 'Связанные',
     'relates to_inward'                     => 'связано с',
     'is (partially) refunded by_inward'     => '(частично) возвращён',
     'is (partially) paid for by_inward'     => '(частично) оплачен',
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => 'Будет создана в понедельник, а не в выходной день.',
     'except_weekends'                    => 'Исключить выходные дни',
     'recurrence_deleted'                 => 'Повторяющаяся транзакция ":title" удалена',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

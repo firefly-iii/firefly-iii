@@ -139,8 +139,8 @@ return [
         'name'                    => 'nama',
         'piggy_bank_id'           => 'celengan ID',
         'targetamount'            => 'target dana',
-        'openingBalanceDate'      => 'tanggal saldo awal',
-        'openingBalance'          => 'saldo awal',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'cocok',
         'amount_min'              => 'jumlah minimal',
         'amount_max'              => 'jumlah maksimal',
@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'withdrawal_source_bad_data'     => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'withdrawal_dest_need_data'      => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
     'deposit_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
@@ -183,5 +184,9 @@ return [
     'transfer_source_bad_data'  => 'Could not find a valid source account when searching for ID ":id" or name ":name".',
     'transfer_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
     'transfer_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
-    'need_id_in_edit'           => 'When updating a transaction with splits, each split must have a valid transaction journal id (field "transaction_journal_id").',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

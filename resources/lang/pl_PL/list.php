@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Liczba załączników',
     'bills_count'             => 'Liczba rachunków',
     'categories_count'        => 'Liczba kategorii',
-    'export_jobs_count'       => 'Liczba zadań eksportu',
     'import_jobs_count'       => 'Liczba zadań importu',
     'budget_count'            => 'Liczba budżetów',
     'rule_and_groups_count'   => 'Liczba reguł i grup reguł',

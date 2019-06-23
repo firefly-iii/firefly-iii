@@ -139,8 +139,8 @@ return [
         'name'                    => 'nume',
         'piggy_bank_id'           => 'ID-ul pușculiței',
         'targetamount'            => 'suma țintă',
-        'openingBalanceDate'      => 'data de deschidere a soldului',
-        'openingBalance'          => 'soldul de deschidere',
+        'opening_balance_date'    => 'opening balance date',
+        'opening_balance'         => 'opening balance',
         'match'                   => 'potrivire',
         'amount_min'              => 'suma minimă',
         'amount_max'              => 'suma maximă',
@@ -173,6 +173,7 @@ return [
     'withdrawal_source_need_data'    => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
     'withdrawal_source_bad_data'     => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
     'withdrawal_dest_need_data'      => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
+    'withdrawal_dest_bad_data'       => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 
     'deposit_source_need_data' => 'Trebuie să continuați să obțineți un ID de cont sursă valabil și / sau un nume de cont sursă valabil.',
     'deposit_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
@@ -183,5 +184,9 @@ return [
     'transfer_source_bad_data'  => 'Nu s-a găsit un cont sursă valabil la căutarea ID ":id" sau nume ":name".',
     'transfer_dest_need_data'   => 'Trebuie să continuați să obțineți un ID de cont de destinație valabil și / sau un nume de cont de destinație valabil.',
     'transfer_dest_bad_data'    => 'Nu s-a găsit un cont de destinaţie valabil la căutarea ID ":id" sau nume ":name".',
-    'need_id_in_edit'           => 'Atunci când actualizați o tranzacție cu diviziuni, fiecare divizie trebuie să aibă un id de jurnal de tranzacții valabil (câmpul "transaction_journal_id").',
+    'need_id_in_edit'           => 'Each split must have transaction_journal_id (either valid ID or 0).',
+
+    'ob_source_need_data' => 'Need to get a valid source account ID and/or valid source account name to continue.',
+    'ob_dest_need_data'   => 'Need to get a valid destination account ID and/or valid destination account name to continue.',
+    'ob_dest_bad_data'    => 'Could not find a valid destination account when searching for ID ":id" or name ":name".',
 ];

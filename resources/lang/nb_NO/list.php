@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Antall vedlegg',
     'bills_count'             => 'Antall regninger',
     'categories_count'        => 'Antall kategorier',
-    'export_jobs_count'       => 'Antall eksportjobber',
     'import_jobs_count'       => 'Antall importjobber',
     'budget_count'            => 'Antall budsjetter',
     'rule_and_groups_count'   => 'Antall regler og regelgrupper',

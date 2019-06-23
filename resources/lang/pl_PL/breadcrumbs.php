@@ -46,7 +46,7 @@ return [
     'create_withdrawal'      => 'Utwórz nową wypłatę',
     'create_deposit'         => 'Utwórz nową wpłatę',
     'create_transfer'        => 'Utwórz nowy transfer',
-    'create_new_transaction' => 'Create a new transaction',
+    'create_new_transaction' => 'Stwórz nową transakcję',
     'edit_journal'           => 'Modyfikuj transakcję ":description"',
     'edit_reconciliation'    => 'Edytuj ":description"',
     'delete_journal'         => 'Usuń transakcję ":description"',

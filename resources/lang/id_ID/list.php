@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Jumlah lampiran',
     'bills_count'             => 'Jumlah tagihan',
     'categories_count'        => 'Jumlah kategori',
-    'export_jobs_count'       => 'Jumlah pekerjaan ekspor',
     'import_jobs_count'       => 'Jumlah pekerjaan impor',
     'budget_count'            => 'Jumlah anggaran',
     'rule_and_groups_count'   => 'Jumlah aturan dan kelompok aturan',

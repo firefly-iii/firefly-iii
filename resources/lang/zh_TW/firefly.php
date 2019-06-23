@@ -54,7 +54,7 @@ return [
     'create_new_stuff'                           => '建立新內容',
     'new_withdrawal'                             => '新提款',
     'create_new_transaction'                     => '建立新交易',
-    'new_transaction'                            => 'New transaction',
+    'new_transaction'                            => '新交易',
     'go_to_asset_accounts'                       => '檢視您的資產帳戶',
     'go_to_budgets'                              => '前往您的預算',
     'go_to_categories'                           => '前往您的分類',
@@ -257,33 +257,6 @@ return [
     'quarterly'                                  => '每季',
     'half-year'                                  => '每半年',
     'yearly'                                     => '每年',
-
-    // export data:
-    'import_and_export'                          => '匯入/匯出',
-    'export_data'                                => '匯出資料',
-    'export_and_backup_data'                     => '匯出資料',
-    'export_data_intro'                          => '使用匯出資料轉移至新的財務應用程式。請注意這些檔案並非備份，它們未包含足夠的中繼資料在全新的 Firefly III 重新還原。如果您希望備份資料，請直接備份整個資料庫。',
-    'export_format'                              => '匯出格式',
-    'export_format_csv'                          => '逗號分隔數值 (CSV 檔案)',
-    'export_format_mt940'                        => 'MT940 相容格式',
-    'include_old_uploads_help'                   => 'Firefly III 不會扔掉過去已匯入的原始 CSV 檔，你可以將它們包含在匯出的檔案中。',
-    'do_export'                                  => '匯出',
-    'export_status_never_started'                => '匯出尚未開始',
-    'export_status_make_exporter'                => '建立匯出相關物件…',
-    'export_status_collecting_journals'          => '蒐集您的交易…',
-    'export_status_collected_journals'           => '已蒐集您的交易！',
-    'export_status_converting_to_export_format'  => '轉換您的交易…',
-    'export_status_converted_to_export_format'   => '已轉換您的交易！',
-    'export_status_creating_journal_file'        => '建立匯出檔…',
-    'export_status_created_journal_file'         => '已建立匯出檔！',
-    'export_status_collecting_attachments'       => '蒐集所有您的附加檔案…',
-    'export_status_collected_attachments'        => '已蒐集所有您的附加檔案！',
-    'export_status_collecting_old_uploads'       => '蒐集您過往的上傳…',
-    'export_status_collected_old_uploads'        => '已蒐集您過往的上傳！',
-    'export_status_creating_zip_file'            => '建立一個壓縮檔…',
-    'export_status_created_zip_file'             => '已建立一個壓縮檔！',
-    'export_status_finished'                     => '匯出已成功完成！耶！',
-    'export_data_please_wait'                    => '請稍候…',
 
     // rules
     'rules'                                      => '規則',
@@ -635,9 +608,9 @@ return [
     'converted_to_Transfer'                   => '此交易已被轉換為一筆轉帳',
     'invalid_convert_selection'               => '您選擇的帳戶已用於此交易或不存在',
     'source_or_dest_invalid'                  => '找不到正確的交易細節，無法轉換。',
-    'convert_to_withdrawal'                   => 'Convert to a withdrawal',
-    'convert_to_deposit'                      => 'Convert to a deposit',
-    'convert_to_transfer'                     => 'Convert to a transfer',
+    'convert_to_withdrawal'                   => '轉換成提款',
+    'convert_to_deposit'                      => '轉換成存款',
+    'convert_to_transfer'                     => '轉換成轉帳',
 
     // create new stuff:
     'create_new_withdrawal'                   => '建立新提款',
@@ -699,7 +672,9 @@ return [
     'available_amount_indication'             => '使用這些金額以獲得您總預算可能為何的指標',
     'suggested'                               => '建議',
     'average_between'                         => '自 :start 至 :end 的平均',
-    'over_budget_warn'                        => '<i class="fa fa-money"></i> 您每日通常預算約 :amount，此為每日 :over_amount。',
+    'over_budget_warn'                        => '<i class="fa fa-money"></i> Usually you budget about :amount per day. This time it\'s :over_amount per day. Are you sure?',
+    'transferred_in'                          => 'Transferred (in)',
+    'transferred_away'                        => 'Transferred (away)',
 
     // bills:
     'match_between_amounts'                   => '帳單配合自 :low 至 :high 的交易。',
@@ -807,7 +782,9 @@ return [
     'reconcile_go_back'                       => '您可稍後再編輯或刪除校正。',
     'must_be_asset_account'                   => '您只可以對帳資產帳戶。',
     'reconciliation_stored'                   => '已儲存對帳',
-    'reconcilliation_transaction_title'       => '對帳 (:from 至 :to)',
+    'reconciliation_error'                    => 'Due to an error the transactions were marked as reconciled but the correction has not been stored: :error.',
+    'reconciliation_transaction_title'        => 'Reconciliation (:from to :to)',
+    'sum_of_reconciliation'                   => 'Sum of reconciliation',
     'reconcile_this_account'                  => '對帳此帳戶',
     'confirm_reconciliation'                  => '確認對帳',
     'submitted_start_balance'                 => '初始餘額已送出',
@@ -819,7 +796,7 @@ return [
     'interest_calc_daily'                     => '每日',
     'interest_calc_monthly'                   => '每月',
     'interest_calc_yearly'                    => '每年',
-    'initial_balance_account'                 => ':name 帳戶的初始餘額',
+    'initial_balance_account'                 => 'Initial balance account of :account',
 
     // categories:
     'new_category'                            => '新分類',
@@ -851,7 +828,8 @@ return [
     'deleted_deposit'                         => '已成功刪除存款 “:description”',
     'deleted_transfer'                        => '已成功刪除轉帳 “:description”',
     'stored_journal'                          => '已成功建立新交易 “:description”',
-    'stored_journal_no_descr'                 => 'Successfully created your new transaction',
+    'stored_journal_no_descr'                 => '已成功建立新交易',
+    'updated_journal_no_descr'                => 'Successfully updated your transaction',
     'select_transactions'                     => '選擇交易',
     'rule_group_select_transactions'          => '套用 ”:title“ 至交易',
     'rule_select_transactions'                => '套用 ”:title“ 至交易',
@@ -978,7 +956,7 @@ return [
     'errors'                                  => '錯誤',
     'debt_start_date'                         => '負債開始日期',
     'debt_start_amount'                       => '負債開始金額',
-    'debt_start_amount_help'                  => '請以正數輸入此債務的原始金額，您也可以輸入目前的金額。請確定修改下方的日期以符合需求。',
+    'debt_start_amount_help'                  => 'If you owe an amount its best to enter a negative amount, because it influences your net worth. If you\'re owed an amount the same applies. Check out the help pages for more information.',
     'store_new_liabilities_account'           => '儲存新債務',
     'edit_liabilities_account'                => '編輯債務 “:name”',
 
@@ -1150,7 +1128,7 @@ return [
     'deleted_piggy_bank'        => '删除小豬撲滿 ":name"',
     'added_amount_to_piggy'     => '已新增 :amount 至 “:name”',
     'removed_amount_from_piggy' => '已自 “:name” 移除 :amount',
-    'piggy_events'              => 'Related piggy banks',
+    'piggy_events'              => '相關的小豬撲滿',
 
     // tags
     'delete_tag'                => '刪除標籤 ":tag"',
@@ -1162,8 +1140,8 @@ return [
 
     'transaction_journal_information'  => '交易資訊',
     'transaction_journal_meta'         => '後設資訊',
-    'transaction_journal_more'         => 'More information',
-    'att_part_of_journal'              => 'Stored under ":journal"',
+    'transaction_journal_more'         => '更多資訊',
+    'att_part_of_journal'              => '儲存在 ":journal"',
     'total_amount'                     => '總金額',
     'number_of_decimals'               => '小數位數：',
 
@@ -1179,7 +1157,7 @@ return [
     'store_configuration'              => '儲存設定',
     'single_user_administration'       => ':email 的使用者管理後臺',
     'edit_user'                        => '編輯使用者 :email',
-    'hidden_fields_preferences'        => 'You can enable more transaction options in your <a href=":link">settings</a>.',
+    'hidden_fields_preferences'        => '您可在 <a href=":link">設定</a> 啟用更多交易選項。',
     'user_data_information'            => '使用者資料',
     'user_information'                 => '使用者資訊',
     'total_size'                       => '總大小',
@@ -1204,12 +1182,12 @@ return [
     'send_message'                     => '發送消息',
     'send_test_triggered'              => '測試已觸發，請檢視您的收件匣與日誌檔。',
 
-    'split_transaction_title'               => 'Description of the split transaction',
-    'split_title_help'                      => 'If you create a split transaction, there must be a global description for all splits of the transaction.',
-    'transaction_information'               => 'Transaction information',
-    'you_create_transfer'                   => 'You\'re creating a <strong>transfer</strong>.',
-    'you_create_withdrawal'                 => 'You\'re creating a <strong>withdrawal</strong>.',
-    'you_create_deposit'                    => 'You\'re creating a <strong>deposit</strong>.',
+    'split_transaction_title'               => '拆分交易的描述',
+    'split_title_help'                      => '若您建立一筆拆分交易，須有一個有關交易所有拆分的整體描述。',
+    'transaction_information'               => '交易資訊',
+    'you_create_transfer'                   => '您正在建立一筆 <strong>轉帳</strong>。',
+    'you_create_withdrawal'                 => '您正在建立一筆 <strong>提款</strong>。',
+    'you_create_deposit'                    => '您正在建立一筆 <strong>存款</strong>。',
 
 
     // links
@@ -1405,4 +1383,15 @@ return [
     'will_jump_monday'                   => '將於週一建立交易，而非週末。',
     'except_weekends'                    => '例外的周末',
     'recurrence_deleted'                 => '週期性交易 ":title" 已刪除',
+
+    // new lines for summary controller.
+    'box_balance_in_currency'            => 'Balance (:currency)',
+    'box_spent_in_currency'              => 'Spent (:currency)',
+    'box_earned_in_currency'             => 'Earned (:currency)',
+    'box_bill_paid_in_currency'          => 'Bills paid (:currency)',
+    'box_bill_unpaid_in_currency'        => 'Bills unpaid (:currency)',
+    'box_left_to_spend_in_currency'      => 'Left to spend (:currency)',
+    'box_net_worth_in_currency'          => 'Net worth (:currency)',
+    'box_spend_per_day'                  => 'Left to spend per day: :amount',
+
 ];

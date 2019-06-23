@@ -87,7 +87,6 @@ return [
     'attachments_count'       => 'Núm. de datos adjuntos',
     'bills_count'             => 'Número de facturas',
     'categories_count'        => 'Número de categorías',
-    'export_jobs_count'       => 'Número de operaciones de exportación',
     'import_jobs_count'       => 'Número de operaciones de importación',
     'budget_count'            => 'Número de presupuestos',
     'rule_and_groups_count'   => 'Número de reglas y grupos de reglas',
