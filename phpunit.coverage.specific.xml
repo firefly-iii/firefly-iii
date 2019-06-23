@@ -44,6 +44,9 @@
             <directory suffix="Test.php">./tests/Unit/Handlers</directory>
             <directory suffix="Test.php">./tests/Unit/Helpers</directory>
         </testsuite>
+        <testsuite name="Feature">
+            <directory suffix="Test.php">./tests/Feature/Controllers/Account</directory>
+        </testsuite>
 
 
         <!--
