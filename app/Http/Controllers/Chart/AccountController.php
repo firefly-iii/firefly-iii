@@ -62,6 +62,7 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
+     * @codeCoverageIgnore 
      */
     public function __construct()
     {
@@ -341,9 +342,8 @@ class AccountController extends Controller
 
         Log::debug('Frontpage preference set is ', $frontPage->data);
         if (0 === count($frontPage->data)) {
-            $frontPage->data = $defaultSet;
+            app('preferences')->set('frontPageAccounts', $defaultSet);
             Log::debug('frontpage set is empty!');
-            $frontPage->save();
         }
         $accounts = $repository->getAccountsById($frontPage->data);
 

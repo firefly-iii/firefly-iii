@@ -42,6 +42,7 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

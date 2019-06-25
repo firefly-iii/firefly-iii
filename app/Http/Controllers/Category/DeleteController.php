@@ -1,7 +1,7 @@
 <?php
 /**
- * CategoryController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * DeleteController.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,27 +18,26 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Http\Controllers;
+namespace FireflyIII\Http\Controllers\Category;
 
-use FireflyIII\Http\Requests\CategoryFormRequest;
+
+use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use Illuminate\Http\Request;
-use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 /**
- * Class CategoryController.
+ * Class DeleteController
  */
-class CategoryController extends Controller
+class DeleteController extends Controller
 {
     /** @var CategoryRepositoryInterface The category repository */
     private $repository;
 
     /**
      * CategoryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -55,11 +54,39 @@ class CategoryController extends Controller
         );
     }
 
+    /**
+     * Delete a category.
+     *
+     * @param Category $category
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function delete(Category $category)
+    {
+        $subTitle = (string)trans('firefly.delete_category', ['name' => $category->name]);
 
+        // put previous url in session
+        $this->rememberPreviousUri('categories.delete.uri');
 
+        return view('categories.delete', compact('category', 'subTitle'));
+    }
 
+    /**
+     * Destroy a category.
+     *
+     * @param Request  $request
+     * @param Category $category
+     *
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
+     */
+    public function destroy(Request $request, Category $category)
+    {
+        $name = $category->name;
+        $this->repository->destroy($category);
 
+        $request->session()->flash('success', (string)trans('firefly.deleted_category', ['name' => $name]));
+        app('preferences')->mark();
 
-
-
+        return redirect($this->getPreviousUri('categories.delete.uri'));
+    }
 }

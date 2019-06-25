@@ -46,6 +46,9 @@
         </testsuite>
         <testsuite name="Feature">
             <directory suffix="Test.php">./tests/Feature/Controllers/Account</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Admin</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Budget</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Category</directory>
         </testsuite>
 
 

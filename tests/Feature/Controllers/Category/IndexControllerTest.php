@@ -1,7 +1,7 @@
 <?php
 /**
- * CategoryControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * IndexControllerTest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,31 +18,27 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Tests\Feature\Controllers;
+namespace Tests\Feature\Controllers\Category;
+
 
 use Carbon\Carbon;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
- * Class CategoryControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Class IndexControllerTest
  */
-class CategoryControllerTest extends TestCase
+class IndexControllerTest extends TestCase
 {
+
     /**
      *
      */
@@ -53,9 +49,8 @@ class CategoryControllerTest extends TestCase
     }
 
 
-
     /**
-     * @covers \FireflyIII\Http\Controllers\CategoryController
+     * @covers \FireflyIII\Http\Controllers\Category\IndexController
      */
     public function testIndex(): void
     {
@@ -63,14 +58,18 @@ class CategoryControllerTest extends TestCase
         // mock stuff
         $category      = factory(Category::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]))->once();
         $categoryRepos->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $this->mockDefaultSession();
+        // list size
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
 
         $this->be($this->user());
         $response = $this->get(route('categories.index'));
@@ -78,6 +77,4 @@ class CategoryControllerTest extends TestCase
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
-
-
 }

@@ -23,13 +23,12 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
-use FireflyIII\Models\Transaction;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -58,6 +57,10 @@ class BillControllerTest extends TestCase
         $repository    = $this->mock(BillRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $amounts = [
             1 => '100',
             2 => '100',
@@ -81,17 +84,16 @@ class BillControllerTest extends TestCase
      */
     public function testSingle(): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $generator  = $this->mock(GeneratorInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
 
-        return;
-        $transaction = factory(Transaction::class)->make();
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(TransactionCollectorInterface::class);
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setBills')->andReturnSelf()->once();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]))->once();
-
+        $collector->shouldReceive('setBill')->andReturnSelf()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->once();
         $generator->shouldReceive('multiSet')->once()->andReturn([]);
 
         $this->be($this->user());

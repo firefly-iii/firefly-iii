@@ -47,6 +47,7 @@ class ShowController extends Controller
 
     /**
      * CategoryController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -85,7 +86,8 @@ class ShowController extends Controller
         $subTitleIcon = 'fa-bar-chart';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $periods      = $this->getCategoryPeriodOverview($category, $end);
+        $oldest       = $this->repository->firstUseDate($category) ?? Carbon::create()->startOfYear();
+        $periods      = $this->getCategoryPeriodOverview($category, $oldest, $end);
         $path         = route('categories.show', [$category->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $subTitle     = trans(
             'firefly.journals_in_period_for_category',

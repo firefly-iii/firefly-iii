@@ -35,6 +35,7 @@ use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
+use FireflyIII\Models\Category;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
@@ -64,6 +65,14 @@ abstract class TestCase extends BaseTestCase
     public function getRandomBudget(): Budget
     {
         return $this->user()->budgets()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return Category
+     */
+    public function getRandomCategory(): Category
+    {
+        return $this->user()->categories()->inRandomOrder()->first();
     }
 
     /**
@@ -132,12 +141,19 @@ abstract class TestCase extends BaseTestCase
     {
         $withdrawal = $this->getRandomWithdrawal();
         $euro       = $this->getEuro();
+        $budget     = $this->getRandomBudget();
+        $category   = $this->getRandomCategory();
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
 
         return [
             'transaction_journal_id'  => $withdrawal->id,
             'currency_id'             => $euro->id,
             'foreign_currency_id'     => null,
-            'date'                    => new Carbon,
+            'date'                    => $date,
             'source_account_id'       => 1,
             'destination_account_id'  => 4,
             'currency_name'           => $euro->name,
@@ -145,6 +161,46 @@ abstract class TestCase extends BaseTestCase
             'currency_symbol'         => $euro->symbol,
             'currency_decimal_places' => $euro->decimal_places,
             'amount'                  => '-30',
+            'budget_id'               => $budget->id,
+            'category_id'             => $category->id,
+        ];
+    }
+
+    /**
+     * @return array
+     * @throws Exception
+     */
+    public function getRandomWithdrawalGroupAsArray(): array
+    {
+        $withdrawal = $this->getRandomWithdrawal();
+        $euro       = $this->getEuro();
+        $budget     = $this->getRandomBudget();
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        return [
+            [
+                'group_title'  => null,
+                'transactions' => [
+                    [
+                        'transaction_journal_id'  => $withdrawal->id,
+                        'currency_id'             => $euro->id,
+                        'foreign_currency_id'     => null,
+                        'date'                    => $date,
+                        'source_account_id'       => 1,
+                        'destination_account_id'  => 4,
+                        'currency_name'           => $euro->name,
+                        'currency_code'           => $euro->code,
+                        'currency_symbol'         => $euro->symbol,
+                        'currency_decimal_places' => $euro->decimal_places,
+                        'amount'                  => '-30',
+                        'budget_id'               => $budget->id,
+                    ],
+                ],
+            ],
         ];
     }
 

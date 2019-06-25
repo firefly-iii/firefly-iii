@@ -25,9 +25,11 @@ namespace Tests\Feature\Controllers\Category;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -39,6 +41,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Navigation;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -65,44 +68,38 @@ class ShowControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        Log::info(sprintf('Test show(%s)', $range));
-        $transaction   = factory(Transaction::class)->make();
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
+        $collector     = $this->mock(GroupCollectorInterface::class);
+
+        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
 
         // mock stuff
         $categoryRepos->shouldReceive('spentInPeriodCollection')->andReturn(new Collection);
         $categoryRepos->shouldReceive('earnedInPeriodCollection')->andReturn(new Collection);
+        $categoryRepos->shouldReceive('firstUseDate')->andReturnNull();
 
-        //$accountRepos->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
 
-        $collector = $this->mock(TransactionCollectorInterface::class);
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast(2);
         $collector->shouldReceive('setRange')->andReturnSelf()->atLeast(2);
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->atLeast(2);
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast(2);
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->once();
         $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(2);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([$withdrawal], 0, 10))->once();
 
         $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
+        $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
 
         Navigation::shouldReceive('updateStartDate')->andReturn(new Carbon);
         Navigation::shouldReceive('updateEndDate')->andReturn(new Carbon);
@@ -126,36 +123,28 @@ class ShowControllerTest extends TestCase
      */
     public function testShowAll(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        Log::info(sprintf('Test showAll(%s)', $range));
-        // mock stuff
-        $transaction  = factory(Transaction::class)->make();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
+
+        $this->mockDefaultSession();
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
         $collector->shouldReceive('setRange')->andReturnSelf()->once();
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->once();
+        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(2);
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([$withdrawal], 0, 10))->once();
 
-        $collector->shouldReceive('setCategory')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);
 
         $this->be($this->user());
@@ -164,115 +153,4 @@ class ShowControllerTest extends TestCase
         $response->assertStatus(200);
         $response->assertSee('<ol class="breadcrumb">');
     }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Category\ShowController
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testShowByDate(string $range): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        Log::info(sprintf('Test testShowByDate(%s)', $range));
-        // mock stuff
-        $transaction  = factory(Transaction::class)->make();
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $month = new Carbon();
-        $month->startOfMonth();
-        $journal = TransactionJournal::where('date', '>=', $month->format('Y-m-d') . ' 00:00:00')->first();
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($journal);
-
-        //$accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
-
-        $collector->shouldReceive('setPage')->andReturnSelf()->once();
-        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([$transaction], 0, 10))->once();
-
-        $repository->shouldReceive('spentInPeriodCollection')->andReturn(new Collection);
-        $repository->shouldReceive('earnedInPeriodCollection')->andReturn(new Collection);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $today = new Carbon();
-        $today->subDay();
-        $response = $this->get(route('categories.show', [1, $today->format('Y-m-d')]));
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
-    /**
-     * @covers       \FireflyIII\Http\Controllers\Category\ShowController
-     *
-     * @dataProvider dateRangeProvider
-     *
-     * @param string $range
-     */
-    public function testShowEmpty(string $range): void
-    {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $latestJournal = $this->user()->transactionJournals()
-                              ->orderBy('date', 'DESC')->first();
-
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($latestJournal);
-
-        // mock stuff
-        $repository->shouldReceive('spentInPeriodCollection')->andReturn(new Collection);
-        $repository->shouldReceive('earnedInPeriodCollection')->andReturn(new Collection);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        //  $accountRepos->shouldReceive('getAccountsByType')->once()->andReturn(new Collection);
-        $collector->shouldReceive('setPage')->andReturnSelf()->once();
-        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection)->atLeast(1);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast(1);
-
-        $this->be($this->user());
-        $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('categories.show', [1]));
-        $response->assertStatus(200);
-        $response->assertSee('<ol class="breadcrumb">');
-    }
-
 }

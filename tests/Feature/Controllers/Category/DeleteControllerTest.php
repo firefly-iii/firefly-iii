@@ -1,7 +1,7 @@
 <?php
 /**
- * CategoryControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * DeleteControllerTest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,30 +18,22 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace Tests\Feature\Controllers;
+namespace Tests\Feature\Controllers\Category;
 
-use Carbon\Carbon;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\TransactionJournal;
+
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
- * Class CategoryControllerTest
- *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
- * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * Class DeleteControllerTest
  */
-class CategoryControllerTest extends TestCase
+class DeleteControllerTest extends TestCase
 {
     /**
      *
@@ -52,32 +44,45 @@ class CategoryControllerTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-
-
     /**
-     * @covers \FireflyIII\Http\Controllers\CategoryController
+     * @covers \FireflyIII\Http\Controllers\Category\DeleteController
      */
-    public function testIndex(): void
+    public function testDelete(): void
     {
-        Log::debug('Test index()');
+        Log::debug('Test Delete()');
         // mock stuff
-        $category      = factory(Category::class)->make();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $this->mockDefaultSession();
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(TransactionJournal::first());
-        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]))->once();
-        $categoryRepos->shouldReceive('lastUseDate')->andReturn(new Carbon)->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
-        $response = $this->get(route('categories.index'));
+        $response = $this->get(route('categories.delete', [1]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
 
 
+    /**
+     * @covers \FireflyIII\Http\Controllers\Category\DeleteController
+     */
+    public function testDestroy(): void
+    {
+        Log::debug('Test destroy()');
+        // mock stuff
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
+        $categoryRepos->shouldReceive('destroy')->andReturn(true);
+
+        $this->session(['categories.delete.uri' => 'http://localhost']);
+        $this->be($this->user());
+        $response = $this->post(route('categories.destroy', [1]));
+        $response->assertStatus(302);
+        $response->assertSessionHas('success');
+    }
 }

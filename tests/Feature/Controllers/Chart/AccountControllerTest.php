@@ -24,11 +24,12 @@ namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Category;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
@@ -68,10 +69,16 @@ class AccountControllerTest extends TestCase
         $generator     = $this->mock(GeneratorInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        $euro          = $this->getEuro();
+        $dollar        = $this->getDollar();
 
         // grab two expense accounts from the current user.
         $accounts = $this->user()->accounts()->where('account_type_id', 4)->take(2)->get();
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
 
         $firstId  = $accounts->first()->id;
         $secondId = $accounts->first()->id;
@@ -86,8 +93,8 @@ class AccountControllerTest extends TestCase
         Steam::shouldReceive('balancesPerCurrencyByAccounts')->twice()->andReturn($start, $end);
 
         // currency should be looking for the currency ID's:
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn(TransactionCurrency::find(1));
-        $currencyRepos->shouldReceive('findNull')->withArgs([2])->once()->andReturn(TransactionCurrency::find(2));
+        $currencyRepos->shouldReceive('findNull')->withArgs([1])->once()->andReturn($euro);
+        $currencyRepos->shouldReceive('findNull')->withArgs([2])->once()->andReturn($dollar);
 
         $generator->shouldReceive('multiSet')->andReturn([])->once();
 
@@ -106,27 +113,31 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudget(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $budget        = $this->user()->budgets()->find($withdrawal['budget_id']);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $transaction = factory(Transaction::class)->make();
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
-        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+        $generator->shouldReceive('multiCurrencyPieChart')->andReturn([])->atLeast()->once();
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]))->atLeast()->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -142,23 +153,28 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudgetAll(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
         $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $transaction   = factory(Transaction::class)->make();
+        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $budget        = $this->user()->budgets()->find($withdrawal['budget_id']);
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
-        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection);
+        $budgetRepos->shouldReceive('getBudgets')->andReturn(new Collection([$budget]));
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromFormat('U', time())->startOfMonth());
 
         $this->be($this->user());
@@ -175,26 +191,32 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseCategory(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $transaction   = factory(Transaction::class)->make();
-        $category      = factory(Category::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $category      = $this->user()->categories()->find($withdrawal['category_id']);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+
+
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
 
@@ -212,23 +234,24 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseCategoryAll(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $transaction   = factory(Transaction::class)->make();
-        $category      = factory(Category::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $category      = $this->user()->categories()->find($withdrawal['category_id']);
 
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::WITHDRAWAL]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
         $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromFormat('U', time())->startOfMonth());
@@ -253,8 +276,16 @@ class AccountControllerTest extends TestCase
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
+
         // change the preference:
-        Preferences::setForUser($this->user(), 'frontPageAccounts', []);
+        $emptyPref       = new Preference;
+        $emptyPref->data = [];
+        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['frontPageAccounts', []])->andReturn($emptyPref);
+        Preferences::shouldReceive('set')->atLeast()->once()->withArgs(['frontPageAccounts', []]);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection);
@@ -276,28 +307,33 @@ class AccountControllerTest extends TestCase
      */
     public function testIncomeCategory(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $transaction   = factory(Transaction::class)->make();
-        $account       = factory(Account::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $category      = $this->user()->categories()->find($withdrawal['category_id']);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
-        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -313,24 +349,26 @@ class AccountControllerTest extends TestCase
      */
     public function testIncomeCategoryAll(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $transaction   = factory(Transaction::class)->make();
-        $account       = factory(Account::class)->make();
         $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
+        $category      = $this->user()->categories()->find($withdrawal['category_id']);
 
-        $collector->shouldReceive('setAccounts')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection([$transaction]));
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $collector->shouldReceive('setAccounts')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTypes')->withArgs([[TransactionType::DEPOSIT]])->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([$withdrawal])->atLeast()->once();
+
         $generator->shouldReceive('multiCurrencyPieChart')->andReturn([]);
-        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$account]));
+        $categoryRepos->shouldReceive('getCategories')->andReturn(new Collection([$category]));
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(Carbon::createFromFormat('U', time())->startOfMonth());
 
         $this->be($this->user());
@@ -351,6 +389,12 @@ class AccountControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
         $date          = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
@@ -374,6 +418,12 @@ class AccountControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $generator     = $this->mock(GeneratorInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
         $date          = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
@@ -401,6 +451,12 @@ class AccountControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+
+        // mock default session
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
         // grab two expense accounts from the current user.

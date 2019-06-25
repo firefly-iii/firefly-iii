@@ -25,9 +25,11 @@ namespace Tests\Feature\Controllers\Category;
 
 
 use Carbon\Carbon;
+use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
 use FireflyIII\Helpers\Filter\InternalTransferFilter;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
@@ -38,6 +40,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Navigation;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -64,37 +67,30 @@ class NoCategoryControllerTest extends TestCase
      */
     public function testNoCategory(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        Log::info('Test noCategory()');
-        // mock stuff
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
 
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
+        $this->mockDefaultSession();
+        // list size
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        $this->mockLastActivity();
 
         // get the journal with the most recent date for firstNull:
-        $journal = $this->user()->transactionJournals()->orderBy('date', 'DESC')->first();
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn($journal);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withoutCategory')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withoutCategory')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -113,35 +109,30 @@ class NoCategoryControllerTest extends TestCase
      */
     public function testNoCategoryAll(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        Log::info('Test nocategoryAll()');
-        // mock stuff
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+
+        $this->mockDefaultSession();
+        // list size
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
         $fiscalHelper->shouldReceive('startOfFiscalYear')->andReturn(new Carbon);
         $fiscalHelper->shouldReceive('endOfFiscalYear')->andReturn(new Carbon);
 
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withoutCategory')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withoutCategory')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
 
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
@@ -159,35 +150,32 @@ class NoCategoryControllerTest extends TestCase
      */
     public function testNoCategoryDate(string $range): void
     {
-        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        Log::info('Test nocategorydate()');
-        // mock stuff
-        $collector     = $this->mock(TransactionCollectorInterface::class);
+        $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $date          = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 
-        $journalRepos->shouldReceive('firstNull')->twice()->andReturn(TransactionJournal::first());
+        $this->mockDefaultSession();
+        // list size
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+        $this->mockLastActivity();
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf();
-        $collector->shouldReceive('setTypes')->andReturnSelf();
-        $collector->shouldReceive('setRange')->andReturnSelf();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf();
-        $collector->shouldReceive('withoutCategory')->andReturnSelf();
-        $collector->shouldReceive('getTransactions')->andReturn(new Collection);
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10));
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withoutCategory')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([], 0, 10))->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
 
-        $collector->shouldReceive('setPage')->andReturnSelf();
-        $collector->shouldReceive('removeFilter')->withArgs([InternalTransferFilter::class])->andReturnSelf();
-        $collector->shouldReceive('setLimit')->andReturnSelf();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
 
         Navigation::shouldReceive('updateStartDate')->andReturn(new Carbon);
         Navigation::shouldReceive('updateEndDate')->andReturn(new Carbon);
