@@ -197,7 +197,11 @@ return [
                 'is_safe' => ['date', 'text', 'select', 'balance', 'optionsList', 'checkbox', 'amount', 'tags', 'integer', 'textarea', 'location', 'file',
                               'staticText', 'password', 'nonSelectableAmount', 'number', 'assetAccountList', 'amountNoCurrency', 'currencyList',
                               'ruleGroupList', 'assetAccountCheckList', 'ruleGroupListWithEmpty', 'piggyBankList', 'currencyListEmpty',
-                              'activeAssetAccountList', 'percentage', 'activeLongAccountList', 'longAccountList','balanceAll'],],
+                              'activeAssetAccountList', 'percentage', 'activeLongAccountList', 'longAccountList','balanceAll',
+                              'activeWithdrawalDestinations','activeDepositDestinations'
+
+
+                ],],
             'Form'         => ['is_safe' => ['input', 'select', 'checkbox', 'model', 'open', 'radio', 'textarea', 'file',],
             ],
         ],

@@ -120,11 +120,11 @@ class RecurrenceFormRequest extends Request
             default:
                 throw new FireflyException(sprintf('Cannot handle transaction type "%s"', $this->string('transaction_type'))); // @codeCoverageIgnore
             case 'withdrawal':
-                $return['transactions'][0]['source_id']        = $this->integer('source_id');
-                $return['transactions'][0]['destination_name'] = $this->string('destination_name');
+                $return['transactions'][0]['source_id']      = $this->integer('source_id');
+                $return['transactions'][0]['destination_id'] = $this->integer('withdrawal_destination_id');
                 break;
             case 'deposit':
-                $return['transactions'][0]['source_name']    = $this->string('source_name');
+                $return['transactions'][0]['source_id']      = $this->integer('deposit_source_id');
                 $return['transactions'][0]['destination_id'] = $this->integer('destination_id');
                 break;
             case 'transfer':

@@ -176,10 +176,9 @@ interface RecurringRepositoryInterface
 
     /**
      * Store a new recurring transaction.
-     *\
      *
      * @param array $data
-     *
+     * @throws FireflyException
      * @return Recurrence
      */
     public function store(array $data): Recurrence;

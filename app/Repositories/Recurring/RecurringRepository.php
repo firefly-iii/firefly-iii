@@ -429,13 +429,19 @@ class RecurringRepository implements RecurringRepositoryInterface
      * @param array $data
      *
      * @return Recurrence
+     * @throws FireflyException
      */
     public function store(array $data): Recurrence
     {
-        $factory = new RecurrenceFactory;
+        /** @var RecurrenceFactory $factory */
+        $factory = app(RecurrenceFactory::class);
         $factory->setUser($this->user);
+        $result = $factory->create($data);
+        if (null === $result) {
+            throw new FireflyException($factory->getErrors()->first());
+        }
 
-        return $factory->create($data);
+        return $result;
     }
 
     /**

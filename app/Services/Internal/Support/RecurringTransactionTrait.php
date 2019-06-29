@@ -154,7 +154,7 @@ trait RecurringTransactionTrait
             }
 
             if (!$validator->validateDestination($destination->id, null)) {
-                throw new FireflyException(sprintf('Destination invalid: %s', $validator->sourceError)); // @codeCoverageIgnore
+                throw new FireflyException(sprintf('Destination invalid: %s', $validator->destError)); // @codeCoverageIgnore
             }
 
             $transaction = new RecurrenceTransaction(

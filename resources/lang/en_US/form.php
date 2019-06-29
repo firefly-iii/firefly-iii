@@ -66,7 +66,7 @@ return [
     'opening_balance'             => 'Opening balance',
     'tagMode'                     => 'Tag mode',
     'tag_position'                => 'Tag location',
-    'virtual_balance'              => 'Virtual balance',
+    'virtual_balance'             => 'Virtual balance',
     'targetamount'                => 'Target amount',
     'account_role'                => 'Account role',
     'opening_balance_date'        => 'Opening balance date',
@@ -252,5 +252,8 @@ return [
     'calendar'                => 'Calendar',
     'weekend'                 => 'Weekend',
     'client_secret'           => 'Client secret',
+
+    'withdrawal_destination_id' => 'Destination account',
+    'deposit_source_id'         => 'Source account',
 
 ];
