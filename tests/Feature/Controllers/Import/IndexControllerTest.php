@@ -70,6 +70,8 @@ class IndexControllerTest extends TestCase
         $importJob->provider = 'fake';
         $importJob->key      = 'fake_job_1';
 
+        $this->mockDefaultSession();
+
         // mock calls:
         $ynabPrerequisites->shouldReceive('setUser')->once();
         $fakePrerequisites->shouldReceive('setUser')->once();
@@ -104,6 +106,8 @@ class IndexControllerTest extends TestCase
         $importJob           = new ImportJob;
         $importJob->provider = 'spectre';
         $importJob->key      = 'fake_job_1';
+
+        $this->mockDefaultSession();
 
         // mock calls:
         $ynabPrerequisites->shouldReceive('setUser')->times(2);
@@ -142,6 +146,8 @@ class IndexControllerTest extends TestCase
         $importJob->provider = 'fake';
         $importJob->key      = 'fake_job_1';
         $importJob->user_id  = 1;
+
+        $this->mockDefaultSession();
 
         // mock calls
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(true)->times(3);
@@ -187,6 +193,8 @@ class IndexControllerTest extends TestCase
         $importJob->provider = 'fake';
         $importJob->key      = 'fake_job_2';
         $importJob->user_id  = 1;
+
+        $this->mockDefaultSession();
 
         // mock call:
 
@@ -235,6 +243,8 @@ class IndexControllerTest extends TestCase
         $importJob->key      = 'file_job_1';
         $importJob->user_id  = 1;
 
+        $this->mockDefaultSession();
+
         // mock calls
         $fakePrerequisites->shouldReceive('setUser')->times(2);
         $bunqPrerequisites->shouldReceive('setUser')->times(2);
@@ -272,9 +282,11 @@ class IndexControllerTest extends TestCase
         $filePrerequisites    = $this->mock(FilePrerequisites::class);
         $ynabPrerequisites    = $this->mock(YnabPrerequisites::class);
 
+        $this->mockDefaultSession();
+
         $job                = new ImportJob;
         $job->user_id       = $this->user()->id;
-        $job->key           = 'dc_' . random_int(1, 10000);
+        $job->key           = 'dc_' . $this->randomInt();
         $job->status        = 'ready_to_run';
         $job->stage         = 'go-for-import';
         $job->provider      = 'file';
@@ -325,6 +337,8 @@ class IndexControllerTest extends TestCase
         $ynabPrerequisites    = $this->mock(YnabPrerequisites::class);
         $repository           = $this->mock(ImportJobRepositoryInterface::class);
 
+        $this->mockDefaultSession();
+
         // call methods:
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false);
         $userRepository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(false);
@@ -359,6 +373,8 @@ class IndexControllerTest extends TestCase
         $userRepository       = $this->mock(UserRepositoryInterface::class);
         $ynabPrerequisites    = $this->mock(YnabPrerequisites::class);
         $repository           = $this->mock(ImportJobRepositoryInterface::class);
+
+        $this->mockDefaultSession();
 
         // call methods:
         $fakePrerequisites->shouldReceive('setUser')->once();

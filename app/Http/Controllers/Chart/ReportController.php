@@ -46,6 +46,7 @@ class ReportController extends Controller
 
     /**
      * ReportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

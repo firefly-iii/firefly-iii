@@ -222,7 +222,7 @@ trait AugumentData
     protected function filterBudgetLimits(Collection $budgetLimits, Budget $budget, Carbon $start, Carbon $end): Collection // filter data
     {
         $set = $budgetLimits->filter(
-            function (BudgetLimit $budgetLimit) use ($budget, $start, $end) {
+            static function (BudgetLimit $budgetLimit) use ($budget, $start, $end) {
                 if ($budgetLimit->budget_id === $budget->id
                     && $budgetLimit->start_date->lte($start) // start of budget limit is on or before start
                     && $budgetLimit->end_date->gte($end) // end of budget limit is on or after end

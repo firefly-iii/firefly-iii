@@ -51,6 +51,7 @@ class BudgetReportController extends Controller
 
     /**
      * BudgetReportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

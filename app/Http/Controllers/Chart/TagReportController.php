@@ -44,6 +44,7 @@ class TagReportController extends Controller
 
     /**
      * TagReportController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -279,7 +280,7 @@ class TagReportController extends Controller
         $newSet = [];
         foreach ($chartData as $key => $entry) {
             if (0 === !array_sum($entry['entries'])) {
-                $newSet[$key] = $chartData[$key];
+                $newSet[$key] = $chartData[$key]; // @codeCoverageIgnore
             }
         }
         if (0 === count($newSet)) {

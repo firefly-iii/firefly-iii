@@ -143,6 +143,7 @@ abstract class TestCase extends BaseTestCase
         $euro       = $this->getEuro();
         $budget     = $this->getRandomBudget();
         $category   = $this->getRandomCategory();
+        $expense    = $this->getRandomExpense();
         try {
             $date = new Carbon;
         } catch (Exception $e) {
@@ -150,15 +151,18 @@ abstract class TestCase extends BaseTestCase
         }
 
         return [
-            'transaction_journal_id'  => $withdrawal->id,
-            'currency_id'             => $euro->id,
-            'foreign_currency_id'     => null,
-            'date'                    => $date,
-            'source_account_id'       => 1,
-            'destination_account_id'  => 4,
-            'currency_name'           => $euro->name,
-            'currency_code'           => $euro->code,
-            'currency_symbol'         => $euro->symbol,
+            'transaction_journal_id'   => $withdrawal->id,
+            'transaction_type_type'    => 'Withdrawal',
+            'currency_id'              => $euro->id,
+            'foreign_currency_id'      => null,
+            'date'                     => $date,
+            'source_account_id'        => 1,
+            'destination_account_id'   => $expense->id,
+            'destination_account_name' => $expense->name,
+            'currency_name'            => $euro->name,
+            'currency_code'            => $euro->code,
+            'currency_symbol'          => $euro->symbol,
+
             'currency_decimal_places' => $euro->decimal_places,
             'amount'                  => '-30',
             'budget_id'               => $budget->id,

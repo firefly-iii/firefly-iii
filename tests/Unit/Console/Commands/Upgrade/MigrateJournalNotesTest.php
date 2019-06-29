@@ -69,7 +69,11 @@ class MigrateJournalNotesTest extends TestCase
         FireflyConfig::shouldReceive('set')->withArgs(['4780_migrate_notes', true]);
 
         $journal = $this->getRandomWithdrawal();
-        $meta    = TransactionJournalMeta::create(
+
+        // delete any notes the journal may have already:
+        $journal->notes()->forceDelete();
+
+        $meta = TransactionJournalMeta::create(
             [
                 'transaction_journal_id' => $journal->id,
                 'name'                   => 'notes',

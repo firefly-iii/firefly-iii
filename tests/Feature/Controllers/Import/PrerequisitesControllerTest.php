@@ -60,7 +60,7 @@ class PrerequisitesControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'A_pre_job_' . random_int(1, 10000);
+        $job->key          = 'A_pre_job_' . $this->randomInt();
         $job->status       = 'new';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -93,7 +93,7 @@ class PrerequisitesControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'B_pre_job_' . random_int(1, 10000);
+        $job->key          = 'B_pre_job_' . $this->randomInt();
         $job->status       = 'some_Bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -121,7 +121,7 @@ class PrerequisitesControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'C_pre_job_' . random_int(1, 10000);
+        $job->key          = 'C_pre_job_' . $this->randomInt();
         $job->status       = 'new';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -153,7 +153,7 @@ class PrerequisitesControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'D_pre_job_' . random_int(1, 10000);
+        $job->key          = 'D_pre_job_' . $this->randomInt();
         $job->status       = 'new';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -185,7 +185,7 @@ class PrerequisitesControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'D_pre_job_' . random_int(1, 10000);
+        $job->key          = 'D_pre_job_' . $this->randomInt();
         $job->status       = 'badstate';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -241,7 +241,7 @@ class PrerequisitesControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'D_pre_job_' . random_int(1, 10000);
+        $job->key          = 'D_pre_job_' . $this->randomInt();
         $job->status       = 'new';
         $job->provider     = 'fake';
         $job->transactions = [];

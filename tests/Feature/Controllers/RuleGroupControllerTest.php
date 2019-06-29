@@ -143,7 +143,7 @@ class RuleGroupControllerTest extends TestCase
 
         /** @var RuleGroup $ruleGroup */
         $ruleGroup              = $this->user()->ruleGroups()->first();
-        $ruleGroup->description = 'Some description ' . random_int(1, 10000);
+        $ruleGroup->description = 'Some description ' . periods|length(1, 10000);
         $ruleGroup->save();
 
         $this->be($this->user());

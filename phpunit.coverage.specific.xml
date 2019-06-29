@@ -49,6 +49,8 @@
             <directory suffix="Test.php">./tests/Feature/Controllers/Admin</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Budget</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Category</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Chart</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Import</directory>
         </testsuite>
 
 

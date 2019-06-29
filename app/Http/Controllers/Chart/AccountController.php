@@ -62,7 +62,7 @@ class AccountController extends Controller
 
     /**
      * AccountController constructor.
-     * @codeCoverageIgnore 
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

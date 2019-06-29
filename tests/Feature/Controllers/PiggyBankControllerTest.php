@@ -502,7 +502,7 @@ class PiggyBankControllerTest extends TestCase
 
         $this->session(['piggy-banks.create.uri' => 'http://localhost']);
         $data = [
-            'name'                            => 'Piggy ' . random_int(999, 10000),
+            'name'                            => 'Piggy ' . $this->randomInt(),
             'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,
@@ -533,7 +533,7 @@ class PiggyBankControllerTest extends TestCase
         $this->session(['piggy-banks.edit.uri' => 'http://localhost']);
         $data = [
             'id'                              => 3,
-            'name'                            => 'Updated Piggy ' . random_int(999, 10000),
+            'name'                            => 'Updated Piggy ' . $this->randomInt(),
             'targetamount'                    => '100.123',
             'account_id'                      => 2,
             'amount_currency_id_targetamount' => 1,

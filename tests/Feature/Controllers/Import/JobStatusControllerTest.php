@@ -61,11 +61,13 @@ class JobStatusControllerTest extends TestCase
         $userRepos      = $this->mock(UserRepositoryInterface::class);
         $job            = new ImportJob;
         $job->user_id   = $this->user()->id;
-        $job->key       = 'Afake_job_' . random_int(1, 10000);
+        $job->key       = 'Afake_job_' . $this->randomInt();
         $job->status    = 'ready_to_run';
         $job->provider  = 'fake';
         $job->file_type = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -86,12 +88,14 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Bfake_job_' . random_int(1, 10000);
+        $job->key          = 'Bfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'file';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
 
@@ -114,13 +118,15 @@ class JobStatusControllerTest extends TestCase
         $tag               = $this->user()->tags()->first();
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Cfake_job_' . random_int(1, 10000);
+        $job->key          = 'Cfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->tag()->associate($tag);
         $job->save();
+
+        $this->mockDefaultSession();
 
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(0);
 
@@ -147,11 +153,13 @@ class JobStatusControllerTest extends TestCase
         $second  = $this->user()->transactionJournals()->where('id', '!=', $journal->id)->first();
         $tag->transactionJournals()->sync([$journal->id, $second->id]);
 
+        $this->mockDefaultSession();
+
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(2);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Dfake_job_' . random_int(1, 10000);
+        $job->key          = 'Dfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -181,11 +189,13 @@ class JobStatusControllerTest extends TestCase
         $journal = $this->user()->transactionJournals()->first();
         $tag->transactionJournals()->sync([$journal->id]);
 
+        $this->mockDefaultSession();
+
         $importRepos->shouldReceive('countTransactions')->once()->andReturn(1);
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Efake_job_' . random_int(1, 10000);
+        $job->key          = 'Efake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -211,12 +221,14 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Ffake_job_' . random_int(1, 10000);
+        $job->key          = 'Ffake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -242,12 +254,14 @@ class JobStatusControllerTest extends TestCase
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Gfake_job_' . random_int(1, 10000);
+        $job->key          = 'Gfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -273,12 +287,14 @@ class JobStatusControllerTest extends TestCase
         $userRepos         = $this->mock(UserRepositoryInterface::class);
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Hfake_job_' . random_int(1, 10000);
+        $job->key          = 'Hfake_job_' . $this->randomInt();
         $job->status       = 'ready_to_run';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -307,9 +323,11 @@ class JobStatusControllerTest extends TestCase
         $importRepos->shouldReceive('setStatus')->withArgs([Mockery::any(), 'error'])
                     ->atLeast()->once();
 
+        $this->mockDefaultSession();
+
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Ifake_job_' . random_int(1, 10000);
+        $job->key          = 'Ifake_job_' . $this->randomInt();
         $job->status       = 'bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];
@@ -330,12 +348,14 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Jfake_job_' . random_int(1, 10000);
+        $job->key          = 'Jfake_job_' . $this->randomInt();
         $job->status       = 'provider_finished';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -362,12 +382,14 @@ class JobStatusControllerTest extends TestCase
     {
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Lfake_job_' . random_int(1, 10000);
+        $job->key          = 'Lfake_job_' . $this->randomInt();
         $job->status       = 'provider_finished';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         // mock stuff
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -395,12 +417,14 @@ class JobStatusControllerTest extends TestCase
         $importRepos       = $this->mock(ImportJobRepositoryInterface::class);
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
-        $job->key          = 'Kfake_job_' . random_int(1, 10000);
+        $job->key          = 'Kfake_job_' . $this->randomInt();
         $job->status       = 'some_bad_state';
         $job->provider     = 'fake';
         $job->transactions = [];
         $job->file_type    = '';
         $job->save();
+
+        $this->mockDefaultSession();
 
         $this->be($this->user());
         $response = $this->post(route('import.job.store', [$job->key]));

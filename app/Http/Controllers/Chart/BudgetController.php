@@ -55,6 +55,7 @@ class BudgetController extends Controller
 
     /**
      * BudgetController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -297,7 +298,6 @@ class BudgetController extends Controller
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
-
         $collector->setTypes([TransactionType::WITHDRAWAL])->setBudget($budget)->withAccountInformation();
         if (null !== $budgetLimit) {
             $collector->setRange($budgetLimit->start_date, $budgetLimit->end_date);

@@ -32,6 +32,7 @@ use FireflyIII\Repositories\Account\AccountTaskerInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Steam;
 use Tests\TestCase;
 
@@ -62,8 +63,10 @@ class ReportControllerTest extends TestCase
         $date          = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        //$currencyRepos->shouldReceive('setUser');
-        //$currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
+
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $netWorth->shouldReceive('getNetWorthByCurrency')->andReturn(
             [
@@ -104,6 +107,10 @@ class ReportControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $date          = new Carbon;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $income  = [1 => ['sum' => '100']];
@@ -127,6 +134,10 @@ class ReportControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $date          = new Carbon;
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 

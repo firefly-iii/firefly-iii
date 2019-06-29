@@ -55,9 +55,7 @@ trait TransactionCalculation
                   ->withAccountInformation()
                   ->setTypes([TransactionType::WITHDRAWAL]);
 
-        $result = $collector->getExtractedJournals();
-
-        return $result;
+        return $collector->getExtractedJournals();
     }
 
     /**
