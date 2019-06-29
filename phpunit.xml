@@ -51,6 +51,8 @@
             <directory suffix="Test.php">./tests/Feature/Controllers/Category</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Chart</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Import</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Json</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Popup</directory>
         </testsuite>
 
         <!--

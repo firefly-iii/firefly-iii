@@ -24,6 +24,7 @@ namespace Tests\Feature\Controllers\Json;
 
 use Log;
 use Tests\TestCase;
+use Preferences;
 
 /**
  * Class IntroControllerTest
@@ -48,6 +49,7 @@ class IntroControllerTest extends TestCase
      */
     public function testGetIntroSteps(): void
     {
+        $this->mockDefaultSession();
         $this->be($this->user());
         $response = $this->get(route('json.intro', ['index']));
         $response->assertStatus(200);
@@ -58,6 +60,7 @@ class IntroControllerTest extends TestCase
      */
     public function testGetIntroStepsAsset(): void
     {
+        $this->mockDefaultSession();
         $this->be($this->user());
         $response = $this->get(route('json.intro', ['accounts_create', 'asset']));
         $response->assertStatus(200);
@@ -68,6 +71,7 @@ class IntroControllerTest extends TestCase
      */
     public function testGetIntroStepsOutro(): void
     {
+        $this->mockDefaultSession();
         $this->be($this->user());
         $response = $this->get(route('json.intro', ['reports_report', 'category']));
         $response->assertStatus(200);
@@ -78,6 +82,10 @@ class IntroControllerTest extends TestCase
      */
     public function testPostEnable(): void
     {
+        $this->mockDefaultSession();
+
+        Preferences::shouldReceive('set')->withArgs(['shown_demo_accounts_create_asset', false])->atLeast()->once();
+
         $this->be($this->user());
         $response = $this->post(route('json.intro.enable', ['accounts_create', 'asset']));
         $response->assertStatus(200);
@@ -88,6 +96,10 @@ class IntroControllerTest extends TestCase
      */
     public function testPostFinished(): void
     {
+        $this->mockDefaultSession();
+
+        Preferences::shouldReceive('set')->withArgs(['shown_demo_accounts_create_asset', true])->atLeast()->once();
+
         $this->be($this->user());
         $response = $this->post(route('json.intro.finished', ['accounts_create', 'asset']));
         $response->assertStatus(200);

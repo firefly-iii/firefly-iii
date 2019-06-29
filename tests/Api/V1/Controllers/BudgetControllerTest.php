@@ -24,7 +24,7 @@ declare(strict_types=1);
 namespace Tests\Api\V1\Controllers;
 
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;

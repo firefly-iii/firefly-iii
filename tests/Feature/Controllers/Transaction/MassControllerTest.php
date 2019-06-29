@@ -22,7 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Transaction;
 
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionJournal;

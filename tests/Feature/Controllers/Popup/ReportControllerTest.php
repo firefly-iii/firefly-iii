@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Popup;
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\PopupReportInterface;
 use FireflyIII\Models\Account;
@@ -53,11 +54,15 @@ class ReportControllerTest extends TestCase
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testBadEndDate(): void
     {
-        $popupReport = $this->mock(PopupReportInterface::class);
+        $this->mock(PopupReportInterface::class);
+
+        $this->mockDefaultSession();
+
+
         $this->be($this->user());
         $arguments = [
             'attributes' => [
@@ -73,17 +78,19 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertSee('Firefly III cannot handle');
     }
 
     /**
-     * @covers                   \FireflyIII\Http\Controllers\Popup\ReportController
-     * @expectedExceptionMessage Could not parse start date
+     * @covers \FireflyIII\Http\Controllers\Popup\ReportController
      */
     public function testBadStartDate(): void
     {
-        $popupReport = $this->mock(PopupReportInterface::class);
+        $this->mock(PopupReportInterface::class);
 
         $this->be($this->user());
+        $this->mockDefaultSession();
+
         $arguments = [
             'attributes' => [
                 'location'   => 'bla-bla',
@@ -98,6 +105,7 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertSee('Firefly III cannot handle');
     }
 
     /**
@@ -105,15 +113,20 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountDefaultNoBudget(): void
     {
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $popupHelper   = $this->mock(PopupReportInterface::class);
-        $account       = factory(Account::class)->make();
-        $popupHelper->shouldReceive('balanceForNoBudget')->andReturn(new Collection);
+        $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $popupHelper  = $this->mock(PopupReportInterface::class);
+        $account      = $this->getRandomAsset();
+
+        $this->mockDefaultSession();
+
+        $popupHelper->shouldReceive('balanceForNoBudget')->andReturn([]);
         $budgetRepos->shouldReceive('findNull')->andReturn(new Budget)->once()->withArgs([0]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
-        $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn(new Collection);
+        $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn([]);
+
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
 
         $this->be($this->user());
         $arguments = [
@@ -131,6 +144,7 @@ class ReportControllerTest extends TestCase
         $uri       = route('popup.general') . '?' . http_build_query($arguments);
         $response  = $this->get($uri);
         $response->assertStatus(200);
+        $response->assertSee($account->name);
     }
 
     /**
@@ -138,16 +152,18 @@ class ReportControllerTest extends TestCase
      */
     public function testBalanceAmountDefaultRole(): void
     {
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $popupHelper   = $this->mock(PopupReportInterface::class);
-        $budget        = factory(Budget::class)->make();
-        $account       = factory(Account::class)->make();
+        $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $popupHelper  = $this->mock(PopupReportInterface::class);
+        $account      = $this->getRandomAsset();
+        $budget       = $this->getRandomBudget();
+        $this->mockDefaultSession();
+
 
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
-        $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn(new Collection);
+        $popupHelper->shouldReceive('balanceForBudget')->once()->andReturn([]);
 
         $this->be($this->user());
         $arguments = [
@@ -176,9 +192,10 @@ class ReportControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $popupReport   = $this->mock(PopupReportInterface::class);
-        $budget        = factory(Budget::class)->make();
-        $account       = factory(Account::class)->make();
+        $account      = $this->getRandomAsset();
+        $budget       = $this->getRandomBudget();
 
+        $this->mockDefaultSession();
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
         $accountRepos->shouldReceive('findNull')->andReturn($account)->once()->withArgs([1]);
 
@@ -210,10 +227,11 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
-        $budget        = factory(Budget::class)->make();
+        $budget       = $this->getRandomBudget();
 
+        $this->mockDefaultSession();
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
-        $popupHelper->shouldReceive('byBudget')->andReturn(new Collection);
+        $popupHelper->shouldReceive('byBudget')->andReturn([]);
 
         $this->be($this->user());
         $arguments = [
@@ -237,14 +255,15 @@ class ReportControllerTest extends TestCase
      */
     public function testCategoryEntry(): void
     {
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(BudgetRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
-        $category      = factory(Category::class)->make();
+        $category = $this->getRandomCategory();
 
+        $this->mockDefaultSession();
         $categoryRepos->shouldReceive('findNull')->andReturn($category)->once()->withArgs([1]);
-        $popupHelper->shouldReceive('byCategory')->andReturn(new Collection);
+        $popupHelper->shouldReceive('byCategory')->andReturn([]);
 
         $this->be($this->user());
         $arguments = [
@@ -273,10 +292,11 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $account       = factory(Account::class)->make();
+        $account      = $this->getRandomAsset();
 
+        $this->mockDefaultSession();
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
-        $popupHelper->shouldReceive('byExpenses')->andReturn(new Collection);
+        $popupHelper->shouldReceive('byExpenses')->andReturn([]);
 
         $this->be($this->user());
         $arguments = [
@@ -305,10 +325,11 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $account       = factory(Account::class)->make();
+        $account      = $this->getRandomAsset();
 
+        $this->mockDefaultSession();
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
-        $popupHelper->shouldReceive('byIncome')->andReturn(new Collection);
+        $popupHelper->shouldReceive('byIncome')->andReturn([]);
 
         $this->be($this->user());
         $arguments = [
@@ -335,6 +356,7 @@ class ReportControllerTest extends TestCase
     {
         $popupReport = $this->mock(PopupReportInterface::class);
 
+        $this->mockDefaultSession();
         $this->be($this->user());
         $arguments = [
             'attributes' => [

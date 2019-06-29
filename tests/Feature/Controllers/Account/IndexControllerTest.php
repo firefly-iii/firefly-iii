@@ -65,17 +65,16 @@ class IndexControllerTest extends TestCase
     public function testIndex(string $range): void
     {
         // mock stuff
+        $this->mock(CurrencyRepositoryInterface::class);
         $account       = $this->getRandomAsset();
         $repository    = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $euro          = $this->getEuro();
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
         $repository->shouldReceive('getAccountsByType')->andReturn(new Collection([$account]));
-        $repository->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
-        $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn($euro);
+        $repository->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
         Steam::shouldReceive('balancesByAccounts')->andReturn([$account->id => '100']);
         Steam::shouldReceive('getLastActivities')->andReturn([]);
 

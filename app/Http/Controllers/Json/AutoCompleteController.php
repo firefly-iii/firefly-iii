@@ -22,21 +22,16 @@ declare(strict_types=1);
 
 namespace FireflyIII\Http\Controllers\Json;
 
-use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Http\Controllers\Controller;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
-use FireflyIII\Support\CacheProperties;
-use FireflyIII\Support\Http\Controllers\AutoCompleteCollector;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -44,11 +39,12 @@ use Log;
 /**
  * Class AutoCompleteController.
  *
+ * TODO autocomplete for transaction types.
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class AutoCompleteController extends Controller
 {
-    use AutoCompleteCollector;
 
     /**
      * @param Request $request
@@ -96,118 +92,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
-     * List of all journals.
-     *
-     * @param Request $request
      * @return JsonResponse
-     */
-    public function allTransactionJournals(Request $request): JsonResponse
-    {
-        $search = (string)$request->get('search');
-        $cache  = new CacheProperties;
-        $cache->addProperty('ac-all-journals');
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        // find everything:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setLimit(250)->setPage(1);
-
-        $journals = $collector->getExtractedJournals();
-        $return   = [];
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            if (strlen($journal['group_title']) > 0) {
-                $return[] = $journal['group_title'];
-            }
-            if (strlen($journal['description']) > 0) {
-                $return[] = $journal['description'];
-            }
-        }
-        $return = array_unique($return);
-
-        if ('' !== $search) {
-            $return = array_values(
-                array_unique(
-                    array_filter(
-                        $return, function (string $value) use ($search) {
-                        return !(false === stripos($value, $search));
-                    }, ARRAY_FILTER_USE_BOTH
-                    )
-                )
-            );
-        }
-        $cache->store($return);
-
-        return response()->json($return);
-    }
-
-    /**
-     * @param Request $request
-     * @param string $subject
-     *
-     * @return JsonResponse
-     * @throws FireflyException
-     */
-    public function autoComplete(Request $request, string $subject): JsonResponse
-    {
-        $search     = (string)$request->get('search');
-        $unfiltered = null;
-        $filtered   = null;
-
-        switch ($subject) {
-            default:
-                break;
-            case 'all-accounts':
-                $unfiltered = $this->getAccounts(
-                    [AccountType::REVENUE, AccountType::EXPENSE, AccountType::BENEFICIARY, AccountType::DEFAULT, AccountType::ASSET, AccountType::LOAN,
-                     AccountType::DEBT, AccountType::MORTGAGE]
-                );
-                break;
-            case 'expense-accounts':
-                $unfiltered = $this->getAccounts([AccountType::EXPENSE, AccountType::BENEFICIARY]);
-                break;
-            case 'revenue-accounts':
-                $unfiltered = $this->getAccounts([AccountType::REVENUE]);
-                break;
-            case 'asset-accounts':
-                $unfiltered = $this->getAccounts([AccountType::ASSET, AccountType::DEFAULT]);
-                break;
-            case 'categories':
-                $unfiltered = $this->getCategories();
-                break;
-            case 'budgets':
-                $unfiltered = $this->getBudgets();
-                break;
-            case 'tags':
-                $unfiltered = $this->getTags();
-                break;
-            case 'bills':
-                $unfiltered = $this->getBills();
-                break;
-            case 'currency-names':
-                $unfiltered = $this->getCurrencyNames();
-                break;
-            case 'transaction-types':
-            case 'transaction_types':
-                $unfiltered = $this->getTransactionTypes();
-                break;
-        }
-        $filtered = $this->filterResult($unfiltered, $search);
-
-        if (null === $filtered) {
-            throw new FireflyException(sprintf('Auto complete handler cannot handle "%s"', $subject)); // @codeCoverageIgnore
-        }
-
-        return response()->json($filtered);
-    }
-
-    /**
-     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function budgets(): JsonResponse
     {
@@ -221,6 +107,7 @@ class AutoCompleteController extends Controller
      * @param Request $request
      *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function categories(Request $request): JsonResponse
     {
@@ -233,11 +120,10 @@ class AutoCompleteController extends Controller
     }
 
     /**
-     * @param Request $request
-     *
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
-    public function currencies(Request $request): JsonResponse
+    public function currencies(): JsonResponse
     {
         /** @var CurrencyRepositoryInterface $repository */
         $repository = app(CurrencyRepositoryInterface::class);
@@ -260,60 +146,8 @@ class AutoCompleteController extends Controller
     }
 
     /**
-     * List of journals with their ID.
-     *
-     * @param Request $request
-     * @param TransactionJournal $except
-     *
      * @return JsonResponse
-     */
-    public function journalsWithId(Request $request, TransactionJournal $except): JsonResponse
-    {
-        $search = (string)$request->get('search');
-        $cache  = new CacheProperties;
-        $cache->addProperty('ac-expense-accounts');
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        // find everything:
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setLimit(400)->setPage(1);
-        $set    = $collector->getExtractedJournals();
-        $return = [];
-        foreach ($set as $journal) {
-            $id = (int)$journal['transaction_journal_id'];
-            if ($id !== $except->id) {
-                $return[] = [
-                    'id'   => $id,
-                    'name' => $id . ': ' . $journal['description'],
-                ];
-            }
-        }
-
-        sort($return);
-
-        if ('' !== $search) {
-            $return = array_filter(
-                $return, function (array $array) use ($search) {
-                $haystack = $array['name'];
-                $result   = stripos($haystack, $search);
-
-                return !(false === $result);
-            }
-            );
-
-        }
-        $cache->store($return);
-
-        return response()->json($return);
-    }
-
-    /**
-     * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function piggyBanks(): JsonResponse
     {
@@ -324,7 +158,9 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function tags(Request $request): JsonResponse
     {
@@ -337,53 +173,4 @@ class AutoCompleteController extends Controller
         return response()->json($result->toArray());
     }
 
-    /**
-     * List of journals by type.
-     *
-     * @param Request $request
-     * @param string $what
-     *
-     * @return JsonResponse
-     */
-    public function transactionJournals(Request $request, string $what): JsonResponse
-    {
-        $search = (string)$request->get('search');
-        $cache  = new CacheProperties;
-        $cache->addProperty('ac-journals');
-        // very unlikely a user will actually search for this string.
-        $key = '' === $search ? 'skjf0893j89fj2398hd89dh289h2398hr7isd8900828u209ujnxs88929282u' : $search;
-        $cache->addProperty($key);
-        if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
-        }
-        // find everything:
-        $type  = config('firefly.transactionTypesByWhat.' . $what);
-        $types = [$type];
-
-        /** @var GroupCollectorInterface $collector */
-        $collector = app(GroupCollectorInterface::class);
-        $collector->setTypes($types)->setLimit(250)->setPage(1);
-        $result = $collector->getExtractedJournals();
-        $return = [];
-        foreach ($result as $journal) {
-            $return[] = $journal['description'];
-        }
-        $return = array_unique($return);
-        sort($return);
-
-        if ('' !== $search) {
-            $return = array_values(
-                array_unique(
-                    array_filter(
-                        $return, function (string $value) use ($search) {
-                        return !(false === stripos($value, $search));
-                    }, ARRAY_FILTER_USE_BOTH
-                    )
-                )
-            );
-        }
-        $cache->store($return);
-
-        return response()->json($return);
-    }
 }

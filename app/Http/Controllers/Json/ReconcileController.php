@@ -145,7 +145,7 @@ class ReconcileController extends Controller
             // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::debug(sprintf('View error: %s', $e->getMessage()));
-            $view = 'Could not render accounts.reconcile.overview';
+            $view = sprintf('Could not render accounts.reconcile.overview: %s', $e->getMessage());
         }
         // @codeCoverageIgnoreEnd
 
@@ -196,6 +196,7 @@ class ReconcileController extends Controller
         /** @var array $journal */
         foreach ($array as $journal) {
             $inverse = false;
+            // @codeCoverageIgnoreStart
             if (TransactionType::DEPOSIT === $journal['transaction_type_type']) {
                 $inverse = true;
             }
@@ -211,6 +212,7 @@ class ReconcileController extends Controller
                     $journal['foreign_amount'] = app('steam')->positive($journal['foreign_amount']);
                 }
             }
+            // @codeCoverageIgnoreEnd
 
             $journals[] = $journal;
         }
@@ -240,6 +242,9 @@ class ReconcileController extends Controller
     {
         $toAdd = '0';
         Log::debug(sprintf('User submitted %s #%d: "%s"', $journal['transaction_type_type'], $journal['transaction_journal_id'], $journal['description']));
+
+        // not much magic below we need to cover using tests.
+        // @codeCoverageIgnoreStart
         if ($account->id === $journal['source_account_id']) {
             if ($currency->id === $journal['currency_id']) {
                 $toAdd = $journal['amount'];
@@ -256,6 +261,8 @@ class ReconcileController extends Controller
                 $toAdd = bcmul($journal['foreign_amount'], '-1');
             }
         }
+        // @codeCoverageIgnoreEnd
+
         Log::debug(sprintf('Going to add %s to %s', $toAdd, $amount));
         $amount = bcadd($amount, $toAdd);
         Log::debug(sprintf('Result is %s', $amount));

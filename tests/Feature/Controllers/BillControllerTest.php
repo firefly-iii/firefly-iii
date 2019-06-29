@@ -23,7 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionJournal;

@@ -50,6 +50,8 @@ class FrontpageControllerTest extends TestCase
      */
     public function testPiggyBanks(): void
     {
+        $this->mockDefaultSession();
+
         $piggy      = $this->user()->piggyBanks()->first();
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $repository->shouldReceive('getPiggyBanks')->andReturn(new Collection([$piggy]));

@@ -55,6 +55,9 @@ class ExchangeControllerTest extends TestCase
     {
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+
+        $this->mockDefaultSession();
+
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);

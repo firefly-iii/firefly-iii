@@ -30,7 +30,7 @@ use DB;
 use Exception;
 use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
-use FireflyIII\Helpers\Collector\TransactionCollectorInterface;
+
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -131,7 +131,7 @@ abstract class TestCase extends BaseTestCase
         $falseConfig       = new Configuration;
         $falseConfig->data = false;
 
-        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
+        FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->andReturn($falseConfig);
     }
 
     /**
@@ -156,6 +156,7 @@ abstract class TestCase extends BaseTestCase
             'currency_id'              => $euro->id,
             'foreign_currency_id'      => null,
             'date'                     => $date,
+            'description'              => sprintf('I am descr #%d', $this->randomInt()),
             'source_account_id'        => 1,
             'destination_account_id'   => $expense->id,
             'destination_account_name' => $expense->name,

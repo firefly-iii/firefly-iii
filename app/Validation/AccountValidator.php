@@ -554,6 +554,7 @@ class AccountValidator
         }
 
         // don't expect to end up here:
+
         return false;
     }
 

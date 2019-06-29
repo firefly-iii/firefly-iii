@@ -25,7 +25,6 @@ namespace FireflyIII\Support\Twig;
 use FireflyIII\Models\Account as AccountModel;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use Log;
 use Twig_Extension;
 use Twig_SimpleFilter;
@@ -87,23 +86,14 @@ class AmountFormat extends Twig_Extension
             static function (AccountModel $account, string $amount, bool $coloured = null): string {
 
                 if ('testing' === config('app.env')) {
-                    Log::warning('AmountFormat::formatAmountByAccount should NOT be called in the TEST environment!');
+                    Log::warning('Twig AmountFormat::formatAmountByAccount should NOT be called in the TEST environment!');
+                    Log::warning('Make sure AccountRepos and Amount::getDefaultCurrency are mocked.');
                 }
 
                 $coloured = $coloured ?? true;
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);
-                /** @var CurrencyRepositoryInterface $currencyRepos */
-                $currencyRepos   = app(CurrencyRepositoryInterface::class);
-                $currency        = app('amount')->getDefaultCurrency();
-                $currencyId      = (int)$accountRepos->getMetaValue($account, 'currency_id');
-                $accountCurrency = null;
-                if (0 !== $currencyId) {
-                    $accountCurrency = $currencyRepos->findNull($currencyId);
-                }
-                if (null !== $accountCurrency) {
-                    $currency = $accountCurrency;
-                }
+                $currency     = $accountRepos->getAccountCurrency($account) ?? app('amount')->getDefaultCurrency();
 
                 return app('amount')->formatAnything($currency, $amount, $coloured);
             },
