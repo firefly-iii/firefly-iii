@@ -36,7 +36,31 @@ use Illuminate\Http\Request;
  */
 class IndexController extends Controller
 {
-    use  PeriodOverview;
+    use PeriodOverview;
+
+    /** @var JournalRepositoryInterface */
+    private $repository;
+
+    /**
+     * IndexController constructor.
+     * @codeCoverageIgnore
+     */
+    public function __construct()
+    {
+        parent::__construct();
+
+        // translations:
+        $this->middleware(
+            function ($request, $next) {
+                app('view')->share('mainTitleIcon', 'fa-credit-card');
+                app('view')->share('title', (string)trans('firefly.accounts'));
+
+                $this->repository = app(JournalRepositoryInterface::class);
+
+                return $next($request);
+            }
+        );
+    }
 
     /**
      * Index for a range of transactions.
@@ -54,6 +78,7 @@ class IndexController extends Controller
         $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
+        $pageSize =3;
         if (null === $start) {
             $start = session('start');
             $end   = session('end');
@@ -62,16 +87,16 @@ class IndexController extends Controller
             $end = session('end');
         }
 
-        if ($end < $start) {
-            [$start, $end] = [$end, $start];
-        }
-
-        $path = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
-
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
+        $path     = route('transactions.index', [$objectType, $start->format('Y-m-d'), $end->format('Y-m-d')]);
         $startStr = $start->formatLocalized($this->monthAndDayFormat);
         $endStr   = $end->formatLocalized($this->monthAndDayFormat);
         $subTitle = (string)trans(sprintf('firefly.title_%s_between', $objectType), ['start' => $startStr, 'end' => $endStr]);
-        $periods  = $this->getTransactionPeriodOverview($objectType, $end);
+
+        $firstJournal = $this->repository->firstNull();
+        $startPeriod  = null === $firstJournal ? new Carbon : $firstJournal->date;
+        $endPeriod    = clone $end;
+        $periods      = $this->getTransactionPeriodOverview($objectType, $startPeriod, $endPeriod);
 
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);

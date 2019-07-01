@@ -303,13 +303,11 @@ class RecurringRepository implements RecurringRepositoryInterface
     }
 
     /**
-     * TODO check usage and verify it still works.
-     *
      * @param Recurrence $recurrence
      *
      * @return Collection
      */
-    public function getTransactions(Recurrence $recurrence): array
+    public function getTransactions(Recurrence $recurrence): Collection
     {
         $journalMeta = TransactionJournalMeta
             ::leftJoin('transaction_journals', 'transaction_journals.id', '=', 'journal_meta.transaction_journal_id')
@@ -319,9 +317,17 @@ class RecurringRepository implements RecurringRepositoryInterface
             ->where('data', json_encode((string)$recurrence->id))
             ->get()->pluck('transaction_journal_id')->toArray();
         $search      = [];
+
+
+
         foreach ($journalMeta as $journalId) {
             $search[] = (int)$journalId;
         }
+        if (0 === count($search)) {
+
+            return [];
+        }
+
         /** @var GroupCollectorInterface $collector */
         $collector = app(GroupCollectorInterface::class);
 
@@ -330,7 +336,7 @@ class RecurringRepository implements RecurringRepositoryInterface
         // filter on specific journals.
         $collector->setJournalIds($search);
 
-        return $collector->getExtractedJournals();
+        return $collector->getGroups();
     }
 
     /**

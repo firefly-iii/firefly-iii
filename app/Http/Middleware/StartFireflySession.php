@@ -53,10 +53,10 @@ class StartFireflySession extends StartSession
             && 'GET' === $request->method()
             && !$request->ajax()) {
             $session->setPreviousUrl($uri);
-            Log::debug(sprintf('Will set previous URL to %s', $uri));
+            //Log::debug(sprintf('Will set previous URL to %s', $uri));
 
             return;
         }
-        Log::debug(sprintf('Will NOT set previous URL to %s', $uri));
+        //Log::debug(sprintf('Will NOT set previous URL to %s', $uri));
     }
 }

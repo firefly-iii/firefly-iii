@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionType;
 
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Collection;
 
 /**
  * Interface TransactionTypeRepositoryInterface
@@ -44,4 +45,10 @@ interface TransactionTypeRepositoryInterface
      * @return TransactionType|null
      */
     public function findByType(string $type): ?TransactionType;
+
+    /**
+     * @param string $query
+     * @return Collection
+     */
+    public function searchTypes(string $query): Collection;
 }

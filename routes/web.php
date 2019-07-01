@@ -537,6 +537,8 @@ Route::group(
     Route::get('currencies', ['uses' => 'Json\AutoCompleteController@currencies', 'as' => 'autocomplete.currencies']);
     Route::get('piggy-banks', ['uses' => 'Json\AutoCompleteController@piggyBanks', 'as' => 'autocomplete.piggy-banks']);
     Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'autocomplete.tags']);
+    Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
+    Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
 
 
 

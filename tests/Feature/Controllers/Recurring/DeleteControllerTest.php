@@ -28,6 +28,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -53,7 +54,9 @@ class DeleteControllerTest extends TestCase
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
 
-        $recurringRepos->shouldReceive('getTransactions')->andReturn(new Collection())->once();
+        $this->mockDefaultSession();
+
+        $recurringRepos->shouldReceive('getTransactions')->andReturn(new Collection)->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
@@ -69,6 +72,9 @@ class DeleteControllerTest extends TestCase
     {
         $recurringRepos = $this->mock(RecurringRepositoryInterface::class);
         $userRepos      = $this->mock(UserRepositoryInterface::class);
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $recurringRepos->shouldReceive('destroy')->once();
 

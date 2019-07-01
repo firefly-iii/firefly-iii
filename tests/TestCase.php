@@ -30,7 +30,6 @@ use DB;
 use Exception;
 use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
-
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Budget;
@@ -167,7 +166,9 @@ abstract class TestCase extends BaseTestCase
             'currency_decimal_places' => $euro->decimal_places,
             'amount'                  => '-30',
             'budget_id'               => $budget->id,
+            'budget_name'             => $budget->name,
             'category_id'             => $category->id,
+            'category_name'           => $category->name,
         ];
     }
 

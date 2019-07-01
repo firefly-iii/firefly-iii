@@ -35,6 +35,12 @@ use Illuminate\Support\Collection;
 interface CurrencyRepositoryInterface
 {
     /**
+     * @param string $search
+     * @return Collection
+     */
+    public function searchCurrency(string $search): Collection;
+
+    /**
      * @param TransactionCurrency $currency
      *
      * @return int

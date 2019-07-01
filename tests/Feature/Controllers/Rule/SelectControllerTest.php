@@ -63,6 +63,7 @@ class SelectControllerTest extends TestCase
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         $this->session(['first' => new Carbon('2010-01-01')]);
         $accountRepos->shouldReceive('getAccountsById')->andReturn(new Collection([$account]));
@@ -81,7 +82,7 @@ class SelectControllerTest extends TestCase
 
         Queue::assertPushed(
             ExecuteRuleOnExistingTransactions::class, function (Job $job) {
-            return $job->getRule()->id === 1;
+            return 1=== $job->getRule()->id;
         }
         );
     }
@@ -93,6 +94,7 @@ class SelectControllerTest extends TestCase
     {
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $accountRepos->shouldReceive('getAccountsByType')->andReturn(new Collection);
@@ -119,11 +121,9 @@ class SelectControllerTest extends TestCase
 
         // mock stuff
         $matcher      = $this->mock(TransactionMatcher::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $this->mockDefaultSession();
 
         $matcher->shouldReceive('setStrict')->once()->withArgs([false])->andReturnSelf();
         $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
@@ -144,11 +144,12 @@ class SelectControllerTest extends TestCase
     {
         $matcher      = $this->mock(TransactionMatcher::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setRule')->andReturnSelf()->once();
-        $matcher->shouldReceive('findTransactionsByRule')->andReturn(new Collection);
+        $matcher->shouldReceive('findTransactionsByRule')->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('rules.test-triggers-rule', [1]));
@@ -163,11 +164,9 @@ class SelectControllerTest extends TestCase
      */
     public function testTestTriggersError(): void
     {
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $this->mockDefaultSession();
 
         $this->be($this->user());
         $uri      = route('rules.test-triggers');

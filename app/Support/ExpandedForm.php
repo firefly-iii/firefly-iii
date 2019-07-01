@@ -102,10 +102,7 @@ class ExpandedForm
     {
         // make repositories
         /** @var AccountRepositoryInterface $repository */
-        $repository = app(AccountRepositoryInterface::class);
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
-
+        $repository      = app(AccountRepositoryInterface::class);
         $accountList     = $repository->getActiveAccountsByType(
             [AccountType::ASSET, AccountType::DEFAULT, AccountType::MORTGAGE, AccountType::DEBT, AccountType::CREDITCARD, AccountType::LOAN,]
         );
@@ -113,12 +110,15 @@ class ExpandedForm
         $defaultCurrency = app('amount')->getDefaultCurrency();
         $grouped         = [];
         // group accounts:
+
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
-            $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $repository->getMetaValue($account, 'account_role');
+            $balance = app('steam')->balance($account, new Carbon);
+
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+
+            $role = $repository->getMetaValue($account, 'account_role');
+
             if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -126,14 +126,10 @@ class ExpandedForm
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
-
-            if (null === $currency) {
-                $currency = $defaultCurrency;
-            }
-
             $key                         = (string)trans('firefly.opt_group_' . $role);
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
         }
+
 
         return $this->select($name, $grouped, $value, $options);
     }
@@ -152,8 +148,6 @@ class ExpandedForm
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         $accountList     = $repository->getActiveAccountsByType(
             [
@@ -176,10 +170,9 @@ class ExpandedForm
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
-            $currency   = $currencyRepos->findNull($currencyId);
-            $role       = (string)$repository->getMetaValue($account, 'account_role');
+            $balance  = app('steam')->balance($account, new Carbon);
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$repository->getMetaValue($account, 'account_role');
             if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -217,8 +210,6 @@ class ExpandedForm
         // make repositories
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
-        /** @var CurrencyRepositoryInterface $currencyRepos */
-        $currencyRepos = app(CurrencyRepositoryInterface::class);
 
         $accountList     = $repository->getActiveAccountsByType(
             [
@@ -241,10 +232,9 @@ class ExpandedForm
         // group accounts:
         /** @var Account $account */
         foreach ($accountList as $account) {
-            $balance    = app('steam')->balance($account, new Carbon);
-            $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
-            $currency   = $currencyRepos->findNull($currencyId);
-            $role       = (string)$repository->getMetaValue($account, 'account_role');
+            $balance  = app('steam')->balance($account, new Carbon);
+            $currency = $repository->getAccountCurrency($account) ?? $defaultCurrency;
+            $role     = (string)$repository->getMetaValue($account, 'account_role');
             if ('' === $role && !in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -255,10 +245,6 @@ class ExpandedForm
 
             if (in_array($account->accountType->type, $liabilityTypes, true)) {
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
-            }
-
-            if (null === $currency) {
-                $currency = $defaultCurrency;
             }
 
             $key                         = (string)trans('firefly.opt_group_' . $role);

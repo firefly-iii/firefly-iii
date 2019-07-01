@@ -26,6 +26,7 @@ namespace Tests\Unit\Factory;
 
 use Amount;
 use Carbon\Carbon;
+use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Factory\AccountFactory;
 use FireflyIII\Factory\BudgetFactory;
 use FireflyIII\Factory\CategoryFactory;
@@ -831,8 +832,13 @@ class RecurrenceFactoryTest extends TestCase
         /** @var RecurrenceFactory $factory */
         $factory = app(RecurrenceFactory::class);
         $factory->setUser($this->user());
-
-        $result = $factory->create($data);
+        $result = null;
+        try {
+            $result = $factory->create($data);
+        } catch (FireflyException $e) {
+            $this->assertEquals('Cannot make a recurring transaction of type "bad type"', $e->getMessage());
+            $this->assertTrue(true);
+        }
         $this->assertNull($result);
     }
 

@@ -47,6 +47,7 @@ class ExpenseController extends Controller
 
     /**
      * Constructor for ExpenseController
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -252,11 +253,11 @@ class ExpenseController extends Controller
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('expense-budget');
+        $cache->addProperty('top-expense');
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($expense->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
@@ -268,11 +269,11 @@ class ExpenseController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($start, $end)->setTypes([TransactionType::WITHDRAWAL])->setAccounts($accounts);
-        $collector->setAccounts($all);
-        $set = $collector->getExtractedJournals();
+        $collector->setAccounts($all)->withAccountInformation();
+        $sorted = $collector->getExtractedJournals();
 
-        usort($set, function ($a, $b) {
-            return $a['amount'] <=> $b['amount'];
+        usort($sorted, function ($a, $b) {
+            return $a['amount'] <=> $b['amount']; // @codeCoverageIgnore
         });
 
         try {
@@ -304,11 +305,11 @@ class ExpenseController extends Controller
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
-        $cache->addProperty('expense-budget');
+        $cache->addProperty('top-income');
         $cache->addProperty($accounts->pluck('id')->toArray());
         $cache->addProperty($expense->pluck('id')->toArray());
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            //return $cache->get(); // @codeCoverageIgnore
         }
         $combined = $this->combineAccounts($expense);
         $all      = new Collection;
@@ -321,11 +322,15 @@ class ExpenseController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $total = $accounts->merge($all);
-        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($total);
-        $journals = $collector->getExtractedJournals();
+        $collector->setRange($start, $end)->setTypes([TransactionType::DEPOSIT])->setAccounts($total)->withAccountInformation();
+        $sorted = $collector->getExtractedJournals();
 
-        usort($journals, function ($a, $b) {
-            return $a['amount'] <=> $b['amount'];
+        foreach (array_keys($sorted) as $key) {
+            $sorted[$key]['amount'] = bcmul($sorted[$key]['amount'], '-1');
+        }
+
+        usort($sorted, function ($a, $b) {
+            return $a['amount'] <=> $b['amount']; // @codeCoverageIgnore
         });
 
         try {

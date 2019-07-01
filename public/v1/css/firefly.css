@@ -19,6 +19,10 @@
  */
 
 
+.no-margin-pagination {padding-bottom:0;padding-top:0;}
+.no-margin-pagination ul.pagination {margin:0 !important;}
+
+
 input.ti-new-tag-input {
     font-size: 14px !important;
     line-height: 1.42857143;

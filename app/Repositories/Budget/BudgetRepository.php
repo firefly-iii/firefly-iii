@@ -647,9 +647,13 @@ class BudgetRepository implements BudgetRepositoryInterface
      */
     public function searchBudget(string $query): Collection
     {
-        $query = sprintf('%%%s%%', $query);
 
-        return $this->user->budgets()->where('name', 'LIKE', $query)->get();
+        $search = $this->user->budgets();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
+        }
+
+        return $search->get();
     }
 
     /**

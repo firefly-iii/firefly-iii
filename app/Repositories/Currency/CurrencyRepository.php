@@ -258,7 +258,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns user default or system default.
      *
-     * @param int|null    $currencyId
+     * @param int|null $currencyId
      * @param string|null $currencyCode
      *
      * @return TransactionCurrency|null
@@ -288,7 +288,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
     /**
      * Find by object, ID or code. Returns NULL if nothing found.
      *
-     * @param int|null    $currencyId
+     * @param int|null $currencyId
      * @param string|null $currencyCode
      *
      * @return TransactionCurrency|null
@@ -369,7 +369,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
      *
      * @param TransactionCurrency $fromCurrency
      * @param TransactionCurrency $toCurrency
-     * @param Carbon              $date
+     * @param Carbon $date
      *
      * @return CurrencyExchangeRate|null
      */
@@ -438,7 +438,7 @@ class CurrencyRepository implements CurrencyRepositoryInterface
 
     /**
      * @param TransactionCurrency $currency
-     * @param array               $data
+     * @param array $data
      *
      * @return TransactionCurrency
      */
@@ -448,5 +448,19 @@ class CurrencyRepository implements CurrencyRepositoryInterface
         $service = app(CurrencyUpdateService::class);
 
         return $service->update($currency, $data);
+    }
+
+    /**
+     * @param string $search
+     * @return Collection
+     */
+    public function searchCurrency(string $search): Collection
+    {
+        $query = TransactionCurrency::where('enabled', 1);
+        if ('' !== $search) {
+            $query->where('name', 'LIKE', sprintf('%%%s%%', $search));
+        }
+
+        return $query->get();
     }
 }

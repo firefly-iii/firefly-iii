@@ -33,6 +33,7 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -57,12 +58,11 @@ class EditControllerTest extends TestCase
         // mock stuff
         $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
         $groupRepos->shouldReceive('get')->andReturn(new Collection);
 
@@ -90,11 +90,11 @@ class EditControllerTest extends TestCase
         // mock stuff
         $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
         $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+        $this->mockDefaultSession();
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository->shouldReceive('getPrimaryTrigger')->andReturn(new Rule);
         $groupRepos->shouldReceive('get')->andReturn(new Collection);
 
@@ -112,11 +112,12 @@ class EditControllerTest extends TestCase
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $rule = Rule::find(1);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
+
         $repository->shouldReceive('update');
 
         $data = [

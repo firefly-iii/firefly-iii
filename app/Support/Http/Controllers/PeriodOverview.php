@@ -30,7 +30,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
@@ -81,10 +80,7 @@ trait PeriodOverview
     protected function getAccountPeriodOverview(Account $account, Carbon $start, Carbon $end): array
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
-
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
-        }
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for cache
         $cache = new CacheProperties;
@@ -159,10 +155,7 @@ trait PeriodOverview
     protected function getCategoryPeriodOverview(Category $category, Carbon $start, Carbon $end): array
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
-
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
-        }
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for entries with their amounts.
         $cache = new CacheProperties();
@@ -173,7 +166,7 @@ trait PeriodOverview
         $cache->addProperty($category->id);
 
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -240,9 +233,7 @@ trait PeriodOverview
     {
         $range = app('preferences')->get('viewRange', '1M')->data;
 
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
-        }
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         $cache = new CacheProperties;
         $cache->addProperty($start);
@@ -250,7 +241,7 @@ trait PeriodOverview
         $cache->addProperty('no-budget-period-entries');
 
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         /** @var array $dates */
@@ -284,6 +275,8 @@ trait PeriodOverview
     }
 
     /**
+     * TODO fix date.
+     *
      * Show period overview for no category view.
      *
      * @param Carbon $theDate
@@ -309,7 +302,7 @@ trait PeriodOverview
         $cache->addProperty('no-category-period-entries');
 
         if ($cache->has()) {
-            //return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
 
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
@@ -379,11 +372,7 @@ trait PeriodOverview
         /** @var Carbon $end */
         $start = clone $date;
         $end   = $repository->firstUseDate($tag) ?? new Carbon;
-
-
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
-        }
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
         // properties for entries with their amounts.
         $cache = new CacheProperties;
@@ -431,63 +420,60 @@ trait PeriodOverview
      * @param string $transactionType
      * @param Carbon $endDate
      *
-     * @return Collection
+     * @return array
      */
-    protected function getTransactionPeriodOverview(string $transactionType, Carbon $endDate): Collection
+    protected function getTransactionPeriodOverview(string $transactionType, Carbon $start, Carbon $end): array
     {
-        die('not yet complete');
-        /** @var JournalRepositoryInterface $repository */
-        $repository = app(JournalRepositoryInterface::class);
-        $range      = app('preferences')->get('viewRange', '1M')->data;
-        $endJournal = $repository->firstNull();
-        $end        = null === $endJournal ? new Carbon : $endJournal->date;
-        $start      = clone $endDate;
-        $types      = config('firefly.transactionTypesByType.' . $transactionType);
+        $range = app('preferences')->get('viewRange', '1M')->data;
+        $types = config(sprintf('firefly.transactionTypesByType.%s', $transactionType));
+        [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
-        if ($end < $start) {
-            [$start, $end] = [$end, $start]; // @codeCoverageIgnore
+        // properties for cache
+        $cache = new CacheProperties;
+        $cache->addProperty($start);
+        $cache->addProperty($end);
+        $cache->addProperty('transactions-period-entries');
+        $cache->addProperty($transactionType);
+        if ($cache->has()) {
+            // return $cache->get(); // @codeCoverageIgnore
         }
-
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
+        $entries = [];
+
+        // collect all journals in this period (regardless of type)
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setTypes($types)->setRange($start, $end);
+        $genericSet = $collector->getExtractedJournals();
 
         foreach ($dates as $currentDate) {
-            /** @var GroupCollectorInterface $collector */
-            $collector = app(GroupCollectorInterface::class);
-            $collector->setTypes($types)->setRange($currentDate['start'], $currentDate['end']);
-            $journals = $collector->getExtractedJournals();
-            $amounts  = $this->getJournalsSum($journals);
-
             $spent       = [];
             $earned      = [];
             $transferred = [];
+            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
 
             // set to correct array
             if ('expenses' === $transactionType || 'withdrawal' === $transactionType) {
-                $spent = $amounts;
+                $spent = $this->filterJournalsByDate($genericSet, $currentDate['start'], $currentDate['end']);
             }
             if ('revenue' === $transactionType || 'deposit' === $transactionType) {
-                $earned = $amounts;
+                $earned = $this->filterJournalsByDate($genericSet, $currentDate['start'], $currentDate['end']);
             }
             if ('transfer' === $transactionType || 'transfers' === $transactionType) {
-                $transferred = $amounts;
+                $transferred = $this->filterJournalsByDate($genericSet, $currentDate['start'], $currentDate['end']);
             }
 
 
-            $title = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-            $entries->push(
+            $entries[] =
                 [
-                    'transactions' => $amounts['count'],
-                    'title'        => $title,
-                    'spent'        => $spent,
-                    'earned'       => $earned,
-                    'transferred'  => $transferred,
-                    'route'        => route(
-                        'transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]
-                    ),
-                ]
-            );
+                    'title'              => $title,
+                    'route'              =>
+                        route('transactions.index', [$transactionType, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                    'total_transactions' => count($spent) + count($earned) + count($transferred),
+                    'spent'              => $this->groupByCurrency($spent),
+                    'earned'             => $this->groupByCurrency($earned),
+                    'transferred'        => $this->groupByCurrency($transferred),
+                ];
         }
 
         return $entries;

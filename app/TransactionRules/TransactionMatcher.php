@@ -265,10 +265,10 @@ class TransactionMatcher
         //   - all transactions have been fetched from the database
         //   - the maximum number of transactions to return has been found
         //   - the maximum number of transactions to search in have been searched
-        $pageSize  = min($this->searchLimit, min($this->triggeredLimit, 50));
-        $processed = 0;
-        $page      = 1;
-        $result    = [];
+        $pageSize    = min($this->searchLimit, min($this->triggeredLimit, 50));
+        $processed   = 0;
+        $page        = 1;
+        $totalResult = [];
 
         Log::debug(sprintf('Search limit is %d, triggered limit is %d, so page size is %d', $this->searchLimit, $this->triggeredLimit, $pageSize));
 
@@ -322,8 +322,8 @@ class TransactionMatcher
             Log::debug(sprintf('Found %d journals that match.', count($filtered)));
 
             // merge:
-            $result = $result + $filtered;
-            Log::debug(sprintf('Total count is now %d', count($result)));
+            $totalResult = $totalResult + $filtered;
+            Log::debug(sprintf('Total count is now %d', count($totalResult)));
 
             // Update counters
             ++$page;
@@ -333,7 +333,7 @@ class TransactionMatcher
 
             // Check for conditions to finish the loop
             $reachedEndOfList = count($journals) < 1;
-            $foundEnough      = count($result) >= $this->triggeredLimit;
+            $foundEnough      = count($totalResult) >= $this->triggeredLimit;
             $searchedEnough   = ($processed >= $this->searchLimit);
 
             Log::debug(sprintf('reachedEndOfList: %s', var_export($reachedEndOfList, true)));
@@ -342,6 +342,6 @@ class TransactionMatcher
         } while (!$reachedEndOfList && !$foundEnough && !$searchedEnough);
         Log::debug('End of do-loop');
 
-        return $result;
+        return $totalResult;
     }
 }

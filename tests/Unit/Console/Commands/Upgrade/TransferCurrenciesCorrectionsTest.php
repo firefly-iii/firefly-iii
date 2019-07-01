@@ -491,24 +491,34 @@ class TransferCurrenciesCorrectionsTest extends TestCase
     }
 
     /**
-     * Basic test. Source transaction has bad currency.
+     * Basic test. Source transaction has bad currency, and this must be fixed.
+     *
+     * TODO something in this test is too random, and it fails. Not sure why.
      *
      * @covers \FireflyIII\Console\Commands\Upgrade\TransferCurrenciesCorrections
      */
     public function testHandleTransferBadDestCurrency(): void
     {
-
+        Log::warning(sprintf('Now in test %s.', __METHOD__));
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $transfer      = $this->getRandomTransfer();
         $euro          = $this->getEuro();
-
+        $dollar        = $this->getDollar();
         // get destination transaction and remove currency:
+        $transfer->transaction_currency_id = $euro->id;
+        $transfer->save();
+
+        Log::debug(sprintf('Gave transfer #%d currency EUR', $transfer->id));
+
+
         /** @var Transaction $destination */
         $destination                          = $transfer->transactions()->where('amount', '>', 0)->first();
-        $destination->transaction_currency_id = 2;
+        $destination->transaction_currency_id = $dollar->id;
         $destination->save();
+
+        Log::debug(sprintf('Gave transaction #%d currency USD', $destination->id));
 
         // mock calls:
         $journalRepos->shouldReceive('getAllJournals')
@@ -518,12 +528,10 @@ class TransferCurrenciesCorrectionsTest extends TestCase
         // account repos
         $accountRepos->shouldReceive('getMetaValue')
                      ->atLeast()->once()
-                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn('1');
+                     ->withArgs([Mockery::any(), 'currency_id'])->andReturn((string)$euro->id);
 
         // currency repos
-        $currencyRepos->shouldReceive('findNull')
-                      ->atLeast()->once()
-                      ->withArgs([1])->andReturn($euro);
+        $currencyRepos->shouldReceive('findNull')->atLeast()->once()->withArgs([$euro->id])->andReturn($euro);
 
         // configuration
         $false       = new Configuration;
@@ -536,7 +544,7 @@ class TransferCurrenciesCorrectionsTest extends TestCase
              ->assertExitCode(0);
 
         // assume problem is fixed:
-        $this->assertCount(1, Transaction::where('id', $destination->id)->where('transaction_currency_id', 1)->get());
+        $this->assertCount(1, Transaction::where('id', $destination->id)->where('transaction_currency_id', $euro->id)->get());
     }
 
 }

@@ -133,6 +133,8 @@ class BudgetReportControllerTest extends TestCase
         $limit3->budget_id  = $budget->id;
         $limit3->start_date = new Carbon('2012-01-01');
         $limit3->end_date   = new Carbon('2012-01-31');
+        $limit3->amount = '100';
+        $limit3->save();
 
 
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);

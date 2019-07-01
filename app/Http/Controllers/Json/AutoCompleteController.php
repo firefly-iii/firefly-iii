@@ -30,8 +30,10 @@ use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
+use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\PiggyBank\PiggyBankRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
+use FireflyIII\Repositories\TransactionType\TransactionTypeRepositoryInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
@@ -54,7 +56,7 @@ class AutoCompleteController extends Controller
     public function accounts(Request $request): JsonResponse
     {
         $accountTypes = explode(',', $request->get('types') ?? '');
-        $search       = $request->get('query');
+        $search       = $request->get('search');
         /** @var AccountRepositoryInterface $repository */
         $repository = app(AccountRepositoryInterface::class);
 
@@ -92,15 +94,45 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * Searches in the titles of all transaction journals.
+     * The result is limited to the top 15 unique results.
+     *
+     * @param Request $request
      * @return JsonResponse
-     * @codeCoverageIgnore
      */
-    public function budgets(): JsonResponse
+    public function allJournals(Request $request): JsonResponse
     {
+        $search = (string)$request->get('search');
+        /** @var JournalRepositoryInterface $repository */
+        $repository = app(JournalRepositoryInterface::class);
+        $result     = $repository->searchJournalDescriptions($search);
+
+        // limit and unique
+        $filtered = $result->unique('description');
+        $limited  = $filtered->slice(0, 15);
+        $array    = $limited->toArray();
+        foreach ($array as $index => $item) {
+            // give another key for consistency
+            $array[$index]['name'] = $item['description'];
+        }
+
+
+        return response()->json($array);
+
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function budgets(Request $request): JsonResponse
+    {
+        $search = (string)$request->get('search');
         /** @var BudgetRepositoryInterface $repository */
         $repository = app(BudgetRepositoryInterface::class);
+        $result     = $repository->searchBudget($search);
 
-        return response()->json($repository->getActiveBudgets()->toArray());
+        return response()->json($result->toArray());
     }
 
     /**
@@ -111,12 +143,50 @@ class AutoCompleteController extends Controller
      */
     public function categories(Request $request): JsonResponse
     {
-        $query = (string)$request->get('query');
+        $query = (string)$request->get('search');
         /** @var CategoryRepositoryInterface $repository */
         $repository = app(CategoryRepositoryInterface::class);
         $result     = $repository->searchCategory($query);
 
         return response()->json($result->toArray());
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
+    public function currencyNames(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var CurrencyRepositoryInterface $repository */
+        $repository = app(CurrencyRepositoryInterface::class);
+        $result     = $repository->searchCurrency($query)->toArray();
+        foreach ($result as $index => $item) {
+            $result[$index]['name'] = sprintf('%s (%s)', $item['name'], $item['code']);
+        }
+
+        return response()->json($result);
+    }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @codeCoverageIgnore
+     */
+    public function transactionTypes(Request $request): JsonResponse
+    {
+        $query = (string)$request->get('search');
+        /** @var TransactionTypeRepositoryInterface $repository */
+        $repository = app(TransactionTypeRepositoryInterface::class);
+        $array      = $repository->searchTypes($query)->toArray();
+
+        foreach ($array as $index => $item) {
+            // different key for consistency.
+            $array[$index]['name'] = $item['type'];
+        }
+
+        return response()->json($array);
     }
 
     /**
@@ -164,13 +234,18 @@ class AutoCompleteController extends Controller
      */
     public function tags(Request $request): JsonResponse
     {
-        $query = (string)$request->get('query');
+        $search = (string)$request->get('search');
         /** @var TagRepositoryInterface $repository */
         $repository = app(TagRepositoryInterface::class);
-        $result     = $repository->searchTags($query);
+        $result     = $repository->searchTags($search);
+        $array      = $result->toArray();
+        foreach ($array as $index => $item) {
+            // rename field for consistency.
+            $array[$index]['name'] = $item['tag'];
+        }
 
 
-        return response()->json($result->toArray());
+        return response()->json($array);
     }
 
 }

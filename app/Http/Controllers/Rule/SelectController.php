@@ -76,7 +76,7 @@ class SelectController extends Controller
      * Execute the given rule on a set of existing transactions.
      *
      * @param SelectTransactionsRequest $request
-     * @param Rule                      $rule
+     * @param Rule $rule
      *
      * @return RedirectResponse
      */
@@ -181,11 +181,12 @@ class SelectController extends Controller
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+            $view = view('list.journals-array-tiny', ['journals' => $matchingTransactions])->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggers(): %s', $exception->getMessage()));
             Log::error($exception->getTraceAsString());
+            $view = sprintf('Could not render list.journals-tiny: %s', $exception->getMessage());
         }
 
         // @codeCoverageIgnoreEnd
@@ -236,17 +237,17 @@ class SelectController extends Controller
 
         // Warn the user if only a subset of transactions is returned
         $warning = '';
-        if ($matchingTransactions->count() === $limit) {
+        if (count($matchingTransactions) === $limit) {
             $warning = (string)trans('firefly.warning_transaction_subset', ['max_num_transactions' => $limit]); // @codeCoverageIgnore
         }
-        if (0 === $matchingTransactions->count()) {
+        if (0 === count($matchingTransactions)) {
             $warning = (string)trans('firefly.warning_no_matching_transactions', ['num_transactions' => $range]); // @codeCoverageIgnore
         }
 
         // Return json response
         $view = 'ERROR, see logs.';
         try {
-            $view = view('list.journals-tiny', ['transactions' => $matchingTransactions])->render();
+            $view = view('list.journals-array-tiny', ['journals' => $matchingTransactions])->render();
             // @codeCoverageIgnoreStart
         } catch (Throwable $exception) {
             Log::error(sprintf('Could not render view in testTriggersByRule(): %s', $exception->getMessage()));

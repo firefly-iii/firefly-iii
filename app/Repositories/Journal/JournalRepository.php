@@ -54,6 +54,8 @@ use stdClass;
  */
 class JournalRepository implements JournalRepositoryInterface
 {
+
+
     /** @var User */
     private $user;
 
@@ -67,7 +69,25 @@ class JournalRepository implements JournalRepositoryInterface
         }
     }
 
+    /**
+     * Search in journal descriptions.
+     *
+     * @param string $search
+     * @return Collection
+     */
+    public function searchJournalDescriptions(string $search): Collection
+    {
+        $query = $this->user->transactionJournals()
+                            ->orderBy('date', 'DESC');
+        if ('' !== $query) {
+            $query->where('description', 'LIKE', sprintf('%%%s%%', $search));
+        }
+
+        return $query->get();
+    }
+
     /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param TransactionJournal $journal
      * @param TransactionType $type

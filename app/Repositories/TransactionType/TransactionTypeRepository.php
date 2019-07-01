@@ -24,6 +24,7 @@ declare(strict_types=1);
 namespace FireflyIII\Repositories\TransactionType;
 
 use FireflyIII\Models\TransactionType;
+use Illuminate\Support\Collection;
 use Log;
 
 /**
@@ -46,7 +47,7 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
 
     /**
      * @param TransactionType|null $type
-     * @param string|null          $typeString
+     * @param string|null $typeString
      *
      * @return TransactionType
      */
@@ -66,5 +67,18 @@ class TransactionTypeRepository implements TransactionTypeRepositoryInterface
         Log::debug(sprintf('Tried to search for "%s", came up with "%s". Will return it.', $typeString, $search->type));
 
         return $search;
+    }
+
+    /**
+     * @param string $query
+     * @return Collection
+     */
+    public function searchTypes(string $query): Collection
+    {
+        if ('' === $query) {
+            return TransactionType::get();
+        }
+
+        return TransactionType::where('type', 'LIKE', sprintf('%%%s%%', $query))->get();
     }
 }

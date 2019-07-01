@@ -47,6 +47,7 @@ class EditController extends Controller
 
     /**
      * EditController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -70,7 +71,7 @@ class EditController extends Controller
     /**
      * Edit a recurring transaction.
      *
-     * @param Request    $request
+     * @param Request $request
      * @param Recurrence $recurrence
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -92,7 +93,7 @@ class EditController extends Controller
         $repetition     = $recurrence->recurrenceRepetitions()->first();
         $currentRepType = $repetition->repetition_type;
         if ('' !== $repetition->repetition_moment) {
-            $currentRepType .= ',' . $repetition->repetition_moment;
+            $currentRepType .= ',' . $repetition->repetition_moment; // @codeCoverageIgnore
         }
 
         // put previous url in session if not redirect from store (not "return_to_edit").
@@ -123,9 +124,12 @@ class EditController extends Controller
 
         $hasOldInput = null !== $request->old('_token');
         $preFilled   = [
-            'transaction_type' => strtolower($recurrence->transactionType->type),
-            'active'           => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
-            'apply_rules'      => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
+            'transaction_type'          => strtolower($recurrence->transactionType->type),
+            'active'                    => $hasOldInput ? (bool)$request->old('active') : $recurrence->active,
+            'apply_rules'               => $hasOldInput ? (bool)$request->old('apply_rules') : $recurrence->apply_rules,
+            'deposit_source_id'         => $array['transactions'][0]['source_id'],
+            'withdrawal_destination_id' => $array['transactions'][0]['destination_id'],
+
         ];
 
         return view(
@@ -138,7 +142,7 @@ class EditController extends Controller
      * Update the recurring transaction.
      *
      * @param RecurrenceFormRequest $request
-     * @param Recurrence            $recurrence
+     * @param Recurrence $recurrence
      *
      * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      * @throws \FireflyIII\Exceptions\FireflyException

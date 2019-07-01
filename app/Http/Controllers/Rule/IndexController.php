@@ -45,6 +45,7 @@ class IndexController extends Controller
 
     /**
      * RuleController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

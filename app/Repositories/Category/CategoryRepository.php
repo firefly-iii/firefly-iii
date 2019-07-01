@@ -112,22 +112,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param array $journals
-     * @return string
-     */
-    private function sumJournals(array $journals): string
-    {
-        $sum = '0';
-        /** @var array $journal */
-        foreach ($journals as $journal) {
-            $amount = (string)$journal['amount'];
-            $sum    = bcadd($sum, $amount);
-        }
-
-        return $sum;
-    }
-
-    /**
      * A very cryptic method name that means:
      *
      * Get me the amount earned in this period, grouped per currency, where no category was set.
@@ -156,7 +140,7 @@ class CategoryRepository implements CategoryRepositoryInterface
             $currencyId = (int)$journal['currency_id'];
             if (!isset($return[$currencyId])) {
                 $return[$currencyId] = [
-                    'earned'                   => '0',
+                    'earned'                  => '0',
                     'currency_id'             => $currencyId,
                     'currency_symbol'         => $journal['currency_symbol'],
                     'currency_code'           => $journal['currency_code'],
@@ -264,8 +248,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $result;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * Find a category or return NULL
      *
@@ -277,6 +259,8 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return $this->user->categories()->find($categoryId);
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * Find a category.
@@ -297,8 +281,6 @@ class CategoryRepository implements CategoryRepositoryInterface
         return null;
     }
 
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
     /**
      * @param array $data
      *
@@ -312,6 +294,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $factory->findOrCreate(null, $data['name']);
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Category $category
@@ -342,47 +326,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     }
 
     /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
-    private function getFirstJournalDate(Category $category): ?Carbon
-    {
-        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
-        $result = $query->first(['transaction_journals.*']);
-
-        if (null !== $result) {
-            return $result->date;
-        }
-
-        return null;
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
-     * @param Category $category
-     *
-     * @return Carbon|null
-     */
-    private function getFirstTransactionDate(Category $category): ?Carbon
-    {
-        // check transactions:
-        $query = $category->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'ASC');
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
-    }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
-
-    /**
      * Get all categories with ID's.
      *
      * @param array $categoryIds
@@ -393,8 +336,6 @@ class CategoryRepository implements CategoryRepositoryInterface
     {
         return $this->user->categories()->whereIn('id', $categoryIds)->get();
     }
-
-    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Category $category
@@ -426,55 +367,7 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $lastJournalDate;
     }
 
-    /**
-     * @param Category $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
-     */
-    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
-    {
-        $query = $category->transactionJournals()->orderBy('date', 'DESC');
-
-        if ($accounts->count() > 0) {
-            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
-            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
-        }
-
-        $result = $query->first(['transaction_journals.*']);
-
-        if (null !== $result) {
-            return $result->date;
-        }
-
-        return null;
-    }
-
-    /**
-     * @param Category $category
-     * @param Collection $accounts
-     *
-     * @return Carbon|null
-     * @throws \Exception
-     */
-    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
-    {
-        // check transactions:
-        $query = $category->transactions()
-                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
-                          ->orderBy('transaction_journals.date', 'DESC');
-        if ($accounts->count() > 0) {
-            // filter journals:
-            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
-        }
-
-        $lastTransaction = $query->first(['transaction_journals.*']);
-        if (null !== $lastTransaction) {
-            return new Carbon($lastTransaction->date);
-        }
-
-        return null;
-    }
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $categories
@@ -518,6 +411,8 @@ class CategoryRepository implements CategoryRepositoryInterface
         return $data;
     }
 
+    /** @noinspection MoreThanThreeArgumentsInspection */
+
     /**
      * @param Collection $accounts
      * @param Carbon $start
@@ -554,6 +449,8 @@ class CategoryRepository implements CategoryRepositoryInterface
 
         return $result;
     }
+
+    /** @noinspection MoreThanThreeArgumentsInspection */
 
     /**
      * @param Collection $categories
@@ -644,9 +541,12 @@ class CategoryRepository implements CategoryRepositoryInterface
      */
     public function searchCategory(string $query): Collection
     {
-        $query = sprintf('%%%s%%', $query);
+        $search = $this->user->categories();
+        if ('' !== $query) {
+            $search->where('name', 'LIKE', sprintf('%%%s%%', $query));
+        }
 
-        return $this->user->categories()->where('name', 'LIKE', $query)->get();
+        return $search->get();
     }
 
     /**
@@ -830,5 +730,108 @@ class CategoryRepository implements CategoryRepositoryInterface
         $service = app(CategoryUpdateService::class);
 
         return $service->update($category, $data);
+    }
+
+    /**
+     * @param array $journals
+     * @return string
+     */
+    private function sumJournals(array $journals): string
+    {
+        $sum = '0';
+        /** @var array $journal */
+        foreach ($journals as $journal) {
+            $amount = (string)$journal['amount'];
+            $sum    = bcadd($sum, $amount);
+        }
+
+        return $sum;
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return Carbon|null
+     */
+    private function getFirstJournalDate(Category $category): ?Carbon
+    {
+        $query  = $category->transactionJournals()->orderBy('date', 'ASC');
+        $result = $query->first(['transaction_journals.*']);
+
+        if (null !== $result) {
+            return $result->date;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category $category
+     *
+     * @return Carbon|null
+     */
+    private function getFirstTransactionDate(Category $category): ?Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'ASC');
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category $category
+     * @param Collection $accounts
+     *
+     * @return Carbon|null
+     */
+    private function getLastJournalDate(Category $category, Collection $accounts): ?Carbon
+    {
+        $query = $category->transactionJournals()->orderBy('date', 'DESC');
+
+        if ($accounts->count() > 0) {
+            $query->leftJoin('transactions as t', 't.transaction_journal_id', '=', 'transaction_journals.id');
+            $query->whereIn('t.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $result = $query->first(['transaction_journals.*']);
+
+        if (null !== $result) {
+            return $result->date;
+        }
+
+        return null;
+    }
+
+    /**
+     * @param Category $category
+     * @param Collection $accounts
+     *
+     * @return Carbon|null
+     * @throws \Exception
+     */
+    private function getLastTransactionDate(Category $category, Collection $accounts): ?Carbon
+    {
+        // check transactions:
+        $query = $category->transactions()
+                          ->leftJoin('transaction_journals', 'transaction_journals.id', '=', 'transactions.transaction_journal_id')
+                          ->orderBy('transaction_journals.date', 'DESC');
+        if ($accounts->count() > 0) {
+            // filter journals:
+            $query->whereIn('transactions.account_id', $accounts->pluck('id')->toArray());
+        }
+
+        $lastTransaction = $query->first(['transaction_journals.*']);
+        if (null !== $lastTransaction) {
+            return new Carbon($lastTransaction->date);
+        }
+
+        return null;
     }
 }

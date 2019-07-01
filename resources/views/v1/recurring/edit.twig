@@ -91,13 +91,19 @@
                         {{ ExpandedForm.longAccountList('source_id', array.transactions[0].source_id, {label: trans('form.asset_source_account')}) }}
 
                         {# source account name for deposits: #}
-                        {{ ExpandedForm.text('source_name', array.transactions[0].source_name, {label: trans('form.revenue_account')}) }}
+                        {#{{ ExpandedForm.text('source_name', array.transactions[0].source_name, {label: trans('form.revenue_account')}) }}#}
+
+                        {# NEW for deposits, a drop down with revenue accounts, loan debt cash and mortgage #}
+                        {{ ExpandedForm.activeDepositDestinations('deposit_source_id', preFilled.deposit_source_id, {label: trans('form.deposit_source_id')}) }}
 
                         {# destination if deposit or transfer: #}
                         {{ ExpandedForm.longAccountList('destination_id', array.transactions[0].destination_id, {label: trans('form.asset_destination_account')} ) }}
 
                         {# destination account name for withdrawals #}
-                        {{ ExpandedForm.text('destination_name', array.transactions[0].destination_name, {label: trans('form.expense_account')}) }}
+                        {# {{ ExpandedForm.text('destination_name', array.transactions[0].destination_name, {label: trans('form.expense_account')}) }}#}
+
+                        {# NEW for withdrawals, also a drop down with expense accounts, loans, debts, mortgages or (cash). #}
+                        {{ ExpandedForm.activeWithdrawalDestinations('withdrawal_destination_id', preFilled.withdrawal_destination_id, {label: trans('form.withdrawal_destination_id')}) }}
                     </div>
                 </div>
             </div>

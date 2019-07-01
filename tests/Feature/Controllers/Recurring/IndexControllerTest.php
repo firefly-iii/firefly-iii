@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Recurring;
 
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -32,6 +33,7 @@ use FireflyIII\Transformers\RecurrenceTransformer;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -61,6 +63,13 @@ class IndexControllerTest extends TestCase
         $categoryFactory = $this->mock(CategoryFactory::class);
         $transformer     = $this->mock(RecurrenceTransformer::class);
 
+        // mock calls
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        $this->mockDefaultSession();
+
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
             [
@@ -83,7 +92,6 @@ class IndexControllerTest extends TestCase
 
         // mock cron job config:
         \FireflyConfig::shouldReceive('get')->withArgs(['last_rt_job', 0])->once()->andReturn($config);
-        \FireflyConfig::shouldReceive('get')->withArgs(['is_demo_site', false])->once()->andReturn($falseConfig);
 
         $repository->shouldReceive('get')->andReturn($collection)->once();
 
@@ -94,6 +102,9 @@ class IndexControllerTest extends TestCase
         $response->assertSee('<ol class="breadcrumb">');
     }
 
+    /**
+     * @covers \FireflyIII\Http\Controllers\Recurring\IndexController
+     */
     public function testShow(): void
     {
         $repository      = $this->mock(RecurringRepositoryInterface::class);
@@ -102,6 +113,8 @@ class IndexControllerTest extends TestCase
         $categoryFactory = $this->mock(CategoryFactory::class);
         $transformer     = $this->mock(RecurrenceTransformer::class);
 
+        $this->mockDefaultSession();
+
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
             [
@@ -109,7 +122,13 @@ class IndexControllerTest extends TestCase
                 'first_date'             => '2018-01-01',
                 'repeat_until'           => null,
                 'latest_date'            => null,
-                'recurrence_repetitions' => [],
+                'recurrence_repetitions' => [
+                    [
+                        'occurrences' => [
+                            '2019-01-01'
+                        ]
+                    ]
+                ],
             ]
         );
 

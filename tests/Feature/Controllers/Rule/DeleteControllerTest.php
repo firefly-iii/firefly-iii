@@ -30,6 +30,7 @@ use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -54,13 +55,14 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
+        $this->mockDefaultSession();
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
 
         $this->be($this->user());
         $response = $this->get(route('rules.delete', [1]));
@@ -75,9 +77,10 @@ class DeleteControllerTest extends TestCase
     {
         // mock stuff
         $repository   = $this->mock(RuleRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('destroy');
+
+        $this->mockDefaultSession();
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
         $this->session(['rules.delete.uri' => 'http://localhost']);
         $this->be($this->user());

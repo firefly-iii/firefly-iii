@@ -189,12 +189,12 @@ function updateFormFields() {
         // show source account ID:
         $('#source_id_holder').show();
 
+        // show destination name:
+        // $('#destination_name_holder').show(); // old one
+        $('#withdrawal_destination_id_holder').show();
+
         // hide destination ID:
         $('#destination_id_holder').hide();
-
-        // show destination name:
-        //$('#destination_name_holder').show(); // old one
-        $('#withdrawal_destination_id_holder').show();
 
         // show budget
         $('#budget_id_holder').show();
@@ -211,7 +211,6 @@ function updateFormFields() {
 
         // $('#destination_name_holder').hide(); // old one
         $('#withdrawal_destination_id_holder').hide();
-
 
         $('#destination_id_holder').show();
         $('#budget_id_holder').hide();

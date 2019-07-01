@@ -42,6 +42,14 @@ interface JournalRepositoryInterface
 {
 
     /**
+     * Search in journal descriptions.
+     *
+     * @param string $search
+     * @return Collection
+     */
+    public function searchJournalDescriptions(string $search): Collection;
+
+    /**
      * Get all transaction journals with a specific type, regardless of user.
      *
      * @param array $types
