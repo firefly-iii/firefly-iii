@@ -53,6 +53,9 @@
             <directory suffix="Test.php">./tests/Feature/Controllers/Import</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Json</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Popup</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Recurring</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Report</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Rule</directory>
         </testsuite>
 
         <!--
