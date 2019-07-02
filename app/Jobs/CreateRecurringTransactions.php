@@ -55,7 +55,6 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\RecurrenceMeta;
 use FireflyIII\Models\RecurrenceRepetition;
 use FireflyIII\Models\RecurrenceTransaction;
-use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -63,7 +62,6 @@ use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\TransactionRules\Engine\RuleEngine;
-use FireflyIII\TransactionRules\Processor;
 use FireflyIII\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -108,6 +106,8 @@ class CreateRecurringTransactions implements ShouldQueue
         $this->journalRepository = app(JournalRepositoryInterface::class);
         $this->groupRepository   = app(TransactionGroupRepositoryInterface::class);
         $this->force             = false;
+
+        Log::debug(sprintf('Created new CreateRecurringTransactions("%s")', $this->date->format('Y-m-d')));
 
     }
 

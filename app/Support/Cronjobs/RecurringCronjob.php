@@ -118,9 +118,11 @@ class RecurringCronjob extends AbstractCronjob
      */
     private function fireRecurring(): void
     {
+        Log::info(sprintf('Will now fire recurring cron job task for date "%s".', $this->date->format('Y-m-d')));
         $job = new CreateRecurringTransactions($this->date);
         $job->setForce($this->force);
         $job->handle();
-        app('fireflyconfig')->set('last_rt_job', $this->date->format('U'));
+        app('fireflyconfig')->set('last_rt_job', (int)$this->date->format('U'));
+        Log::info('Done with recurring cron job task.');
     }
 }

@@ -24,10 +24,12 @@ declare(strict_types=1);
 
 namespace FireflyIII\Console\Commands\Tools;
 
+use Carbon\Carbon;
 use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Support\Cronjobs\RecurringCronjob;
 use Illuminate\Console\Command;
+use InvalidArgumentException;
 
 /**
  * Class Cron
@@ -58,9 +60,23 @@ class Cron extends Command
      */
     public function handle(): int
     {
+        $date = null;
+        try {
+            $date = new Carbon($this->option('date'));
+        } catch (InvalidArgumentException $e) {
+            $this->error(sprintf('"%s" is not a valid date', $this->option('date')));
+            $e->getMessage();
+        }
+
 
         $recurring = new RecurringCronjob;
         $recurring->setForce($this->option('force'));
+
+        // set date in cron job:
+        if (null !== $date) {
+            $recurring->setDate($date);
+        }
+
         try {
             $result = $recurring->fire();
         } catch (FireflyException $e) {
