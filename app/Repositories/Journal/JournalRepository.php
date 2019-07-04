@@ -778,7 +778,16 @@ class JournalRepository implements JournalRepositoryInterface
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
 
-        return $service->updateBudget($journal, $budgetId);
+        $service->setTransactionJournal($journal);
+        $service->setData(
+            [
+                'budget_id' => $budgetId,
+            ]
+        );
+        $service->update();
+        $journal->refresh();
+
+        return $journal;
     }
 
     /**
@@ -793,8 +802,16 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
+        $service->setTransactionJournal($journal);
+        $service->setData(
+            [
+                'category_name' => $category,
+            ]
+        );
+        $service->update();
+        $journal->refresh();
 
-        return $service->updateCategory($journal, $category);
+        return $journal;
     }
 
     /**
@@ -809,10 +826,16 @@ class JournalRepository implements JournalRepositoryInterface
     {
         /** @var JournalUpdateService $service */
         $service = app(JournalUpdateService::class);
-        $service->connectTags($journal, $tags);
+        $service->setTransactionJournal($journal);
+        $service->setData(
+            [
+                'tags' => $tags,
+            ]
+        );
+        $service->update();
+        $journal->refresh();
 
         return $journal;
-
     }
 
     /**

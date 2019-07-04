@@ -54,6 +54,13 @@ interface GroupCollectorInterface
     public function getSum(): string;
 
     /**
+     * Add tag info.
+     *
+     * @return GroupCollectorInterface
+     */
+    public function withTagInformation(): GroupCollectorInterface;
+
+    /**
      * Return the groups.
      *
      * @return Collection

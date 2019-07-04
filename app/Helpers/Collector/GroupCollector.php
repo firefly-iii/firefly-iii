@@ -409,7 +409,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setTag(Tag $tag): GroupCollectorInterface
     {
-        $this->joinTagTables();
+        $this->withTagInformation();
         $this->query->where('tag_transaction_journal.tag_id', $tag->id);
 
         return $this;
@@ -537,7 +537,7 @@ class GroupCollector implements GroupCollectorInterface
      */
     public function setTags(Collection $tags): GroupCollectorInterface
     {
-        $this->joinTagTables();
+        $this->withTagInformation();
         $this->query->whereIn('tag_transaction_journal.tag_id', $tags->pluck('id')->toArray());
 
         return $this;
@@ -619,9 +619,11 @@ class GroupCollector implements GroupCollectorInterface
         $return    = [];
         /** @var array $group */
         foreach ($selection as $group) {
+            $count = count($group['transactions']);
             foreach ($group['transactions'] as $journalId => $journal) {
-                $journal['group_title'] = $group['title'];
-                $return[$journalId]     = $journal;
+                $journal['group_title']       = $group['title'];
+                $journal['journals_in_group'] = $count;
+                $return[$journalId]           = $journal;
             }
         }
 
@@ -777,6 +779,24 @@ class GroupCollector implements GroupCollectorInterface
     }
 
     /**
+     * @return GroupCollectorInterface
+     */
+    public function withTagInformation(): GroupCollectorInterface
+    {
+        $this->fields[] = 'tags.id as tag_id';
+        $this->fields[] = 'tags.tag as tag_name';
+        $this->fields[] = 'tags.date as tag_date';
+        $this->fields[] = 'tags.description as tag_description';
+        $this->fields[] = 'tags.latitude as tag_latitude';
+        $this->fields[] = 'tags.longitude as tag_longitude';
+        $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
+
+        $this->joinTagTables();
+
+        return $this;
+    }
+
+    /**
      * @param Collection $collection
      *
      * @return Collection
@@ -789,16 +809,18 @@ class GroupCollector implements GroupCollectorInterface
             $groupId = $augmentedGroup->transaction_group_id;
             if (!isset($groups[$groupId])) {
                 // make new array
+                $parsedGroup                            = $this->parseAugmentedGroup($augmentedGroup);
                 $groupArray                             = [
-                    'id'           => $augmentedGroup->transaction_group_id,
-                    'user_id'      => $augmentedGroup->user_id,
-                    'title'        => $augmentedGroup->transaction_group_title,
-                    'count'        => 1,
-                    'sums'         => [],
-                    'transactions' => [],
+                    'id'               => $augmentedGroup->transaction_group_id,
+                    'user_id'          => $augmentedGroup->user_id,
+                    'title'            => $augmentedGroup->transaction_group_title,
+                    'transaction_type' => $parsedGroup['transaction_type_type'],
+                    'count'            => 1,
+                    'sums'             => [],
+                    'transactions'     => [],
                 ];
                 $journalId                              = (int)$augmentedGroup->transaction_journal_id;
-                $groupArray['transactions'][$journalId] = $this->parseAugmentedGroup($augmentedGroup);
+                $groupArray['transactions'][$journalId] = $parsedGroup;
                 $groups[$groupId]                       = $groupArray;
                 continue;
             }
@@ -948,13 +970,6 @@ class GroupCollector implements GroupCollectorInterface
             $this->hasJoinedTagTables = true;
             $this->query->leftJoin('tag_transaction_journal', 'tag_transaction_journal.transaction_journal_id', '=', 'transaction_journals.id');
             $this->query->leftJoin('tags', 'tag_transaction_journal.tag_id', '=', 'tags.id');
-            $this->fields[] = 'tags.id as tag_id';
-            $this->fields[] = 'tags.tag as tag_name';
-            $this->fields[] = 'tags.date as tag_date';
-            $this->fields[] = 'tags.description as tag_description';
-            $this->fields[] = 'tags.latitude as tag_latitude';
-            $this->fields[] = 'tags.longitude as tag_longitude';
-            $this->fields[] = 'tags.zoomLevel as tag_zoom_level';
         }
     }
 

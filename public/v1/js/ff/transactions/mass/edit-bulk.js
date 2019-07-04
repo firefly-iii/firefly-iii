@@ -24,4 +24,22 @@ $(document).ready(function () {
     "use strict";
     initTagsAC();
     initCategoryAC();
+
+    // on change, remove the checkbox.
+    $('input[name="category"]').change(function () {
+        $('input[name="ignore_category"]').attr('checked', false);
+    });
+
+    $('select[name="budget_id"]').change(function () {
+
+        $('input[name="ignore_budget"]').attr('checked', false);
+    });
+
+    $('input[name="tags"]').on('itemAdded', function(event) {
+        $('input[name="ignore_tags"]').attr('checked', false);
+
+    });
+
+
+
 });

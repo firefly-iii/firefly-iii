@@ -29,8 +29,8 @@ function initTagsAC() {
                                      prefetch: {
                                          url: 'json/tags?uid=' + uid,
                                          filter: function (list) {
-                                             return $.map(list, function (tagTag) {
-                                                 return {name: tagTag};
+                                             return $.map(list, function (item) {
+                                                 return {name: item.name};
                                              });
                                          }
                                      },
@@ -38,8 +38,8 @@ function initTagsAC() {
                                          url: 'json/tags?search=%QUERY&uid=' + uid,
                                          wildcard: '%QUERY',
                                          filter: function (list) {
-                                             return $.map(list, function (name) {
-                                                 return {name: name};
+                                             return $.map(list, function (item) {
+                                                 return {name: item.name};
                                              });
                                          }
                                      }
@@ -145,8 +145,8 @@ function initCategoryAC() {
                                         prefetch: {
                                             url: 'json/categories?uid=' + uid,
                                             filter: function (list) {
-                                                return $.map(list, function (name) {
-                                                    return {name: name};
+                                                return $.map(list, function (object) {
+                                                    return {name: object.name};
                                                 });
                                             }
                                         },
@@ -154,8 +154,8 @@ function initCategoryAC() {
                                             url: 'json/categories?search=%QUERY&uid=' + uid,
                                             wildcard: '%QUERY',
                                             filter: function (list) {
-                                                return $.map(list, function (name) {
-                                                    return {name: name};
+                                                return $.map(list, function (object) {
+                                                    return {name: object.name};
                                                 });
                                             }
                                         }

@@ -244,7 +244,6 @@ class AutoCompleteController extends Controller
             $array[$index]['name'] = $item['tag'];
         }
 
-
         return response()->json($array);
     }
 

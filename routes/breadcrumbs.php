@@ -43,6 +43,7 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\User;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 
 if (!function_exists('limitStringLength')) {
@@ -302,7 +303,8 @@ try {
                 $breadcrumbs->push(
                     trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment])
                 );
-            } else {
+            }
+            else {
                 throw new FireflyException('Cannot make breadcrumb for attachment connected to object of type ' . get_class($object));
             }
         }
@@ -1120,19 +1122,17 @@ try {
     // BULK EDIT
     Breadcrumbs::register(
         'transactions.bulk.edit',
-        function (BreadcrumbsGenerator $breadcrumbs, Collection $journals): void {
-            if ($journals->count() > 0) {
-                $journalIds = $journals->pluck('id')->toArray();
-                $what       = strtolower($journals->first()->transactionType->type);
-                $breadcrumbs->parent('transactions.index', $what);
-                $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $journalIds));
+        static function (BreadcrumbsGenerator $breadcrumbs, array $journals): void {
+            if (count($journals) > 0) {
+                $ids   = Arr::pluck($journals, 'transaction_journal_id');
+                $first = reset($journals);
+                $breadcrumbs->parent('transactions.index', strtolower($first['transaction_type_type']));
+                $breadcrumbs->push(trans('firefly.mass_bulk_journals'), route('transactions.bulk.edit', $ids));
 
                 return;
             }
 
             $breadcrumbs->parent('index');
-
-            return;
         }
     );
 
