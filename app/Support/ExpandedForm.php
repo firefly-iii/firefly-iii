@@ -75,7 +75,7 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = $repository->getMetaValue($account, 'accountRole');
+            $role       = $repository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -321,7 +321,7 @@ class ExpandedForm
         // group accounts:
         /** @var Account $account */
         foreach ($assetAccounts as $account) {
-            $role = $repository->getMetaValue($account, 'accountRole');
+            $role = $repository->getMetaValue($account, 'account_role');
             if (null === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -364,7 +364,7 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            $role       = (string)$repository->getMetaValue($account, 'account_role');
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }
@@ -618,7 +618,7 @@ class ExpandedForm
             $balance    = app('steam')->balance($account, new Carbon);
             $currencyId = (int)$repository->getMetaValue($account, 'currency_id');
             $currency   = $currencyRepos->findNull($currencyId);
-            $role       = (string)$repository->getMetaValue($account, 'accountRole');
+            $role       = (string)$repository->getMetaValue($account, 'account_role'); // TODO bad form for currency
             if ('' === $role) {
                 $role = 'no_account_type'; // @codeCoverageIgnore
             }

@@ -28,7 +28,35 @@ $(document).ready(function () {
  * Set the auto-complete JSON things.
  */
 function setAutocompletes() {
-    initRevenueACField('source_account_revenue');
-    initExpenseACField('destination_account_expense');
+    //initRevenueACField('source_account_revenue');
+    //initExpenseACField('destination_account_expense');
+
+    makeRevenueAC();
+}
+
+function makeRevenueAC() {
+    var sourceNames = new Bloodhound({
+        datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+        queryTokenizer: Bloodhound.tokenizers.whitespace,
+        prefetch: {
+            url: 'json/revenue-accounts?uid=' + uid,
+            filter: function (list) {
+                return $.map(list, function (object) {
+                    return {name: object.name};
+                });
+            }
+        },
+        remote: {
+            url: 'json/revenue-accounts?search=%QUERY&uid=' + uid,
+            wildcard: '%QUERY',
+            filter: function (list) {
+                return $.map(list, function (object) {
+                    return {name: object.name};
+                });
+            }
+        }
+    });
+    sourceNames.initialize();
+    $('.input-revenue').typeahead({hint: true, highlight: true,}, {source: sourceNames, displayKey: 'name', autoSelect: false});
 }
 

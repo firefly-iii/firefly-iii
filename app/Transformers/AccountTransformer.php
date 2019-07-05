@@ -137,7 +137,7 @@ class AccountTransformer extends AbstractTransformer
      */
     private function getAccountRole(Account $account, string $accountType): ?string
     {
-        $accountRole = $this->repository->getMetaValue($account, 'accountRole');
+        $accountRole = $this->repository->getMetaValue($account, 'account_role');
         if ('asset' !== $accountType || '' === (string)$accountRole) {
             $accountRole = null;
         }
@@ -157,8 +157,8 @@ class AccountTransformer extends AbstractTransformer
         $monthlyPaymentDate = null;
         $creditCardType     = null;
         if ('ccAsset' === $accountRole && 'asset' === $accountType) {
-            $creditCardType     = $this->repository->getMetaValue($account, 'ccType');
-            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'ccMonthlyPaymentDate');
+            $creditCardType     = $this->repository->getMetaValue($account, 'cc_type');
+            $monthlyPaymentDate = $this->repository->getMetaValue($account, 'cc_monthly_payment_date');
         }
 
         return [$creditCardType, $monthlyPaymentDate];

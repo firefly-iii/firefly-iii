@@ -78,7 +78,6 @@ class IndexController extends Controller
         $types        = config('firefly.transactionTypesByType.' . $objectType);
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $pageSize =3;
         if (null === $start) {
             $start = session('start');
             $end   = session('end');

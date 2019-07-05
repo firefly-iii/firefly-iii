@@ -1084,11 +1084,11 @@ try {
 
     Breadcrumbs::register(
         'transactions.convert.index',
-        function (BreadcrumbsGenerator $breadcrumbs, TransactionType $destinationType, TransactionJournal $journal) {
-            $breadcrumbs->parent('transactions.show', $journal);
+        function (BreadcrumbsGenerator $breadcrumbs, TransactionGroup $group, string $groupTitle) {
+            $breadcrumbs->parent('transactions.show', $group);
             $breadcrumbs->push(
-                trans('firefly.convert_to_' . $destinationType->type, ['description' => limitStringLength($journal->description)]),
-                route('transactions.convert.index', [strtolower($destinationType->type), $journal->id])
+                trans('firefly.breadcrumb_convert_group', ['description' => limitStringLength($groupTitle)]),
+                route('transactions.convert.index', [$group->id, 'something'])
             );
         }
     );

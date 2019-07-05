@@ -268,7 +268,7 @@ class AccountRepository implements AccountRepositoryInterface
         /** @var Collection $result */
         $query = $this->user->accounts()->with(
             ['accountmeta' => function (HasMany $query) {
-                $query->where('name', 'accountRole');
+                $query->where('name', 'account_role');
             }]
         );
         if (count($types) > 0) {

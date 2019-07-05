@@ -103,7 +103,7 @@ class AccountFormRequest extends Request
             'account_number'                     => 'between:1,255|uniqueAccountNumberForUser|nullable',
             'account_role'                       => 'in:' . $accountRoles,
             'active'                             => 'boolean',
-            'ccType'                             => 'in:' . $ccPaymentTypes,
+            'cc_type'                            => 'in:' . $ccPaymentTypes,
             'cc_monthly_payment_date'            => 'date',
             'amount_currency_id_opening_balance' => 'exists:transaction_currencies,id',
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',

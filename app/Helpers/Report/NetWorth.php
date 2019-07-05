@@ -111,7 +111,7 @@ class NetWorth implements NetWorthInterface
 
             // if the account is a credit card, subtract the virtual balance from the balance,
             // to better reflect that this is not money that is actually "yours".
-            $role           = (string)$this->accountRepository->getMetaValue($account, 'accountRole');
+            $role           = (string)$this->accountRepository->getMetaValue($account, 'account_role');
             $virtualBalance = (string)$account->virtual_balance;
             if ('ccAsset' === $role && '' !== $virtualBalance && (float)$virtualBalance > 0) {
                 $balance = bcsub($balance, $virtualBalance);

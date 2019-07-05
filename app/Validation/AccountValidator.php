@@ -127,9 +127,6 @@ class AccountValidator
             case TransactionType::RECONCILIATION:
                 $result = $this->validateReconciliationDestination($destinationId);
                 break;
-            //case TransactionType::OPENING_BALANCE:
-            //case TransactionType::RECONCILIATION:
-            //    die(sprintf('Cannot handle type "%s"', $this->transactionType));
         }
 
         return $result;
@@ -479,8 +476,8 @@ class AccountValidator
             return false;
         }
         $this->destination = $search;
-
-        return true;
+        // must not be the same as the source account
+        return !(null !== $this->source && $this->source->id === $this->destination->id);
     }
 
     /**
