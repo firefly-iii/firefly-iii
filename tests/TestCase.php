@@ -444,6 +444,14 @@ abstract class TestCase extends BaseTestCase
     }
 
     /**
+     * @return TransactionGroup
+     */
+    protected function getRandomDepositGroup(): TransactionGroup
+    {
+        return $this->getRandomGroup(TransactionType::DEPOSIT);
+    }
+
+    /**
      * @param string $class
      *
      * @param Closure|null $closure

@@ -44,6 +44,8 @@ use View;
 
 /**
  * Class ConvertController.
+ *
+ * TODO when converting to a split transfer, all sources and destinations must be the same.
  */
 class ConvertController extends Controller
 {
@@ -93,7 +95,7 @@ class ConvertController extends Controller
         $sourceType = $first->transactionType;
         // return to account.
         if (!in_array($sourceType->type, [TransactionType::WITHDRAWAL, TransactionType::TRANSFER, TransactionType::DEPOSIT], true)) {
-            return $this->redirectToAccount($first);
+            return $this->redirectToAccount($first); // @codeCoverageIgnore
         }
 
         $groupTitle   = $group->title ?? $first->description;
@@ -153,6 +155,11 @@ class ConvertController extends Controller
                 return redirect()->route('transactions.convert.index', [strtolower($destinationType->type), $group->id])->withInput();
             }
         }
+
+        // correct transfers:
+        $group->refresh();
+        $this->correctTransfer($group);
+
         session()->flash('success', (string)trans('firefly.converted_to_' . $destinationType->type));
         event(new UpdatedTransactionGroup($group));
 
@@ -205,7 +212,7 @@ class ConvertController extends Controller
         foreach ($accountList as $account) {
             $balance                     = app('steam')->balance($account, new Carbon);
             $currency                    = $repository->getAccountCurrency($account) ?? $defaultCurrency;
-            $role                        = 'l_' . $account->accountType->type; // @codeCoverageIgnore
+            $role                        = 'l_' . $account->accountType->type;
             $key                         = (string)trans('firefly.opt_group_' . $role);
             $grouped[$key][$account->id] = $account->name . ' (' . app('amount')->formatAnything($currency, $balance, false) . ')';
         }
@@ -239,11 +246,13 @@ class ConvertController extends Controller
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
             if (AccountType::CASH === $account->accountType->type) {
+                // @codeCoverageIgnoreStart
                 $role = 'cash_account';
                 $name = sprintf('(%s)', trans('firefly.cash'));
+                // @codeCoverageIgnoreEnd
             }
             if (AccountType::REVENUE === $account->accountType->type) {
-                $role = 'revenue_account';
+                $role = 'revenue_account'; // @codeCoverageIgnore
             }
 
             $key                         = (string)trans('firefly.opt_group_' . $role);
@@ -279,11 +288,13 @@ class ConvertController extends Controller
                 $role = 'l_' . $account->accountType->type; // @codeCoverageIgnore
             }
             if (AccountType::CASH === $account->accountType->type) {
+                // @codeCoverageIgnoreStart
                 $role = 'cash_account';
                 $name = sprintf('(%s)', trans('firefly.cash'));
+                // @codeCoverageIgnoreEnd
             }
             if (AccountType::EXPENSE === $account->accountType->type) {
-                $role = 'expense_account';
+                $role = 'expense_account'; // @codeCoverageIgnore
             }
 
             $key                         = (string)trans('firefly.opt_group_' . $role);
@@ -302,8 +313,6 @@ class ConvertController extends Controller
      */
     private function convertJournal(TransactionJournal $journal, TransactionType $transactionType, array $data): TransactionJournal
     {
-        $sourceType  = $journal->transactionType->type;
-        // make a switch based on original + dest type.
         /** @var AccountValidator $validator */
         $validator = app(AccountValidator::class);
         $validator->setUser(auth()->user());
@@ -344,5 +353,12 @@ class ConvertController extends Controller
         $journal->refresh();
 
         return $journal;
+    }
+
+    /**
+     * @param TransactionGroup $group
+     */
+    private function correctTransfer(TransactionGroup $group): void
+    {
     }
 }
