@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [4.7.17.1 (API 0.9.2)] - 2019-07-15
+
+- XSS bug in budget title.
+
 ## [4.7.17 (API 0.9.2)] - 2019-03-17
 
 ### Added
