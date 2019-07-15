@@ -9,6 +9,9 @@ Lots of changes
 - updated api
 
 
+## [4.7.17.1 (API 0.9.2)] - 2019-07-15
+
+- XSS bug in budget title.
 
 ## [4.7.17 (API 0.9.2)] - 2019-03-17
 
