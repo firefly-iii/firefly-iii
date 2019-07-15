@@ -132,13 +132,13 @@ class Transaction extends Twig_Extension
         // journal has a budget:
         if (null !== $transaction->transaction_journal_budget_id) {
             $name = $transaction->transaction_journal_budget_name;
-            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), $name, $name);
+            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_journal_budget_id]), e($name), e($name));
         }
 
         // transaction has a budget
         if (null !== $transaction->transaction_budget_id && '' === $txt) {
             $name = $transaction->transaction_budget_name;
-            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), $name, $name);
+            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$transaction->transaction_budget_id]), e($name), e($name));
         }
 
         if ('' === $txt) {
@@ -150,7 +150,7 @@ class Transaction extends Twig_Extension
             if ($budgets->count() > 0) {
                 $str = [];
                 foreach ($budgets as $budget) {
-                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), $budget->name, $budget->name);
+                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('budgets.show', [$budget->id]), e($budget->name), e($budget->name));
                 }
                 $txt = implode(', ', $str);
             }
@@ -170,13 +170,13 @@ class Transaction extends Twig_Extension
         // journal has a category:
         if (null !== $transaction->transaction_journal_category_id) {
             $name = $transaction->transaction_journal_category_name;
-            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), $name, $name);
+            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_journal_category_id]), e($name), e($name));
         }
 
         // transaction has a category:
         if (null !== $transaction->transaction_category_id && '' === $txt) {
             $name = $transaction->transaction_category_name;
-            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), $name, $name);
+            $txt  = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$transaction->transaction_category_id]), e($name), e($name));
         }
 
         if ('' === $txt) {
@@ -188,7 +188,7 @@ class Transaction extends Twig_Extension
             if ($categories->count() > 0) {
                 $str = [];
                 foreach ($categories as $category) {
-                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), $category->name, $category->name);
+                    $str[] = sprintf('<a href="%s" title="%s">%s</a>', route('categories.show', [$category->id]), e($category->name), e($category->name));
                 }
 
                 $txt = implode(', ', $str);
@@ -266,7 +266,7 @@ class Transaction extends Twig_Extension
             return $txt;
         }
 
-        $txt = sprintf('<a title="%3$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]), $iban);
+        $txt = sprintf('<a title="%3$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]), e($iban));
 
         return $txt;
     }
@@ -419,7 +419,7 @@ class Transaction extends Twig_Extension
             return $txt;
         }
 
-        $txt = sprintf('<a title="%3$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]), $iban);
+        $txt = sprintf('<a title="%3$s" href="%2$s">%1$s</a>', e($name), route('accounts.show', [$transactionId]), e($iban));
 
         return $txt;
     }
