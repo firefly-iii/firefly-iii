@@ -49299,7 +49299,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -49350,27 +49350,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     name: "CustomAttachments",
-    data: function data() {
-        return {
-            files: ''
-        };
-    },
-
     props: {
         title: String,
         name: String,
         error: Array
     },
     methods: {
-        handleFilesUpload: function handleFilesUpload() {
-            this.files = this.$refs.files.files;
-        },
-
         hasError: function hasError() {
             return this.error.length > 0;
         }
@@ -49398,7 +49386,6 @@ var render = function() {
         { staticClass: "col-sm-12" },
         [
           _c("input", {
-            ref: "files",
             staticClass: "form-control",
             attrs: {
               multiple: "multiple",
@@ -49407,11 +49394,6 @@ var render = function() {
               title: _vm.title,
               name: _vm.name,
               type: "file"
-            },
-            on: {
-              change: function($event) {
-                _vm.handleFilesUpload()
-              }
             }
           }),
           _vm._v(" "),
@@ -54906,7 +54888,7 @@ exports = module.exports = __webpack_require__(0)(false);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -55298,20 +55280,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var button = $(e.currentTarget);
             button.prop("disabled", true);
 
-            axions.post(uri, data).then(function (response) {
-                // send user onwards.
-                if (_this.createAnother) {
-                    console.log('Will create another.');
-                    // do message:
-                    _this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been stored.';
-                    _this.error_message = '';
-                    if (_this.resetFormAfter) {
-                        _this.addTransaction();
-                    }
-                    button.prop("disabled", false);
-                } else {
-                    console.log('Will redirect to transaction.');
-                    window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+            axios.post(uri, data).then(function (response) {
+
+                // this method will ultimately send the user on (or not).
+                if (0 === _this.collectAttachmentData(response)) {
+                    _this.redirectUser(response.data.data.id, button);
                 }
             }).catch(function (error) {
                 // give user errors things back.
@@ -55327,11 +55300,152 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 e.preventDefault();
             }
         },
+        redirectUser: function redirectUser(groupId, button) {
+            console.log('In redirectUser()');
+            // if count is 0, send user onwards.
+            if (this.createAnother) {
+                console.log('Will create another.');
+                // do message:
+                this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
+                this.error_message = '';
+                if (this.resetFormAfter) {
+                    this.addTransaction();
+                }
+                if (button) {
+                    button.prop("disabled", false);
+                }
+            } else {
+                console.log('Will redirect to transaction.');
+                window.location.href = 'transactions/show/' + groupId + '?message=created';
+            }
+        },
+        collectAttachmentData: function collectAttachmentData(response) {
+            var _this2 = this;
+
+            console.log('Now incollectAttachmentData()');
+            var groupId = response.data.data.id;
+            //console.log(response.data.data.attributes.transactions);
+            //
+            // array of all files to be uploaded:
+            var toBeUploaded = [];
+
+            // array with all file data.
+            var fileData = [];
+
+            // all attachments
+            var attachments = $('input[name="attachments[]"]');
+
+            // loop over all attachments, and add references to this array:
+            for (var _key2 in attachments) {
+                if (attachments.hasOwnProperty(_key2) && /^0$|^[1-9]\d*$/.test(_key2) && _key2 <= 4294967294) {
+                    for (var fileKey in attachments[_key2].files) {
+                        if (attachments[_key2].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
+                            // include journal thing.
+                            toBeUploaded.push({
+                                journal: response.data.data.attributes.transactions[_key2].transaction_journal_id,
+                                file: attachments[_key2].files[fileKey]
+                            });
+                        }
+                    }
+                }
+            }
+            var count = toBeUploaded.length;
+            console.log('Found ' + toBeUploaded.length + ' attachments.');
+
+            // loop all uploads.
+
+            var _loop = function _loop(_key3) {
+                if (toBeUploaded.hasOwnProperty(_key3) && /^0$|^[1-9]\d*$/.test(_key3) && _key3 <= 4294967294) {
+                    // create file reader thing that will read all of these uploads
+                    (function (f, i, theParent) {
+                        var fileReader = new FileReader();
+                        fileReader.onloadend = function (evt) {
+
+                            if (evt.target.readyState === FileReader.DONE) {
+                                // DONE == 2
+                                fileData.push({
+                                    name: toBeUploaded[_key3].file.name,
+                                    journal: toBeUploaded[_key3].journal,
+                                    content: new Blob([evt.target.result])
+                                });
+                                if (fileData.length === count) {
+                                    theParent.uploadFiles(fileData, groupId);
+                                }
+                            }
+
+                            // // turn into binary strings.
+                            // let chars = new Uint8Array(evt.target.result);
+                            // let CHUNK_SIZE = 0x8000;
+                            // let index = 0;
+                            // let length = chars.length;
+                            // let result = '';
+                            // let slice;
+                            // while (index < length) {
+                            //     slice = chars.subarray(index, Math.min(index + CHUNK_SIZE, length));
+                            //     result += String.fromCharCode.apply(null, slice);
+                            //     index += CHUNK_SIZE;
+                            // }
+                            // console.log('Now reading file #' + key);
+                        };
+                        fileReader.readAsArrayBuffer(f.file);
+                    })(toBeUploaded[_key3], _key3, _this2);
+                }
+            };
+
+            for (var _key3 in toBeUploaded) {
+                _loop(_key3);
+            }
+            return count;
+        },
+        uploadFiles: function uploadFiles(fileData, groupId) {
+            var _this3 = this;
+
+            var count = fileData.length;
+            var uploads = 0;
+
+            var _loop2 = function _loop2(_key4) {
+                if (fileData.hasOwnProperty(_key4) && /^0$|^[1-9]\d*$/.test(_key4) && _key4 <= 4294967294) {
+                    console.log('Creating attachment #' + _key4);
+                    // axios thing, + then.
+                    var uri = './api/v1/attachments';
+                    var data = {
+                        filename: fileData[_key4].name,
+                        model: 'TransactionJournal',
+                        model_id: fileData[_key4].journal
+                    };
+                    axios.post(uri, data).then(function (response) {
+                        console.log('Created attachment #' + _key4);
+                        console.log('Uploading attachment #' + _key4);
+                        var uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
+                        axios.post(uploadUri, fileData[_key4].content).then(function (response) {
+                            console.log('Uploaded attachment #' + _key4);
+                            uploads++;
+                            if (uploads === count) {
+                                // finally we can redirect the user onwards.
+                                console.log('FINAL UPLOAD');
+                                _this3.redirectUser(groupId);
+                            }
+                            console.log('Upload complete!');
+                            return true;
+                        }).catch(function (error) {
+                            console.error('Could not upload');
+                            console.error(error);
+                            return false;
+                        });
+                    });
+                }
+            };
+
+            for (var _key4 in fileData) {
+                _loop2(_key4);
+            }
+        },
+
 
         setDefaultErrors: function setDefaultErrors() {
-            for (var _key2 in this.transactions) {
-                if (this.transactions.hasOwnProperty(_key2) && /^0$|^[1-9]\d*$/.test(_key2) && _key2 <= 4294967294) {
-                    this.transactions[_key2].errors = {
+            for (var _key5 in this.transactions) {
+                if (this.transactions.hasOwnProperty(_key5) && /^0$|^[1-9]\d*$/.test(_key5) && _key5 <= 4294967294) {
+                    this.transactions[_key5].errors = {
                         source_account: [],
                         destination_account: [],
                         description: [],
@@ -55369,15 +55483,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var transactionIndex = void 0;
             var fieldName = void 0;
 
-            for (var _key3 in errors.errors) {
-                if (errors.errors.hasOwnProperty(_key3)) {
-                    if (_key3 === 'group_title') {
-                        this.group_title_errors = errors.errors[_key3];
+            for (var _key6 in errors.errors) {
+                if (errors.errors.hasOwnProperty(_key6)) {
+                    if (_key6 === 'group_title') {
+                        this.group_title_errors = errors.errors[_key6];
                     }
-                    if (_key3 !== 'group_title') {
+                    if (_key6 !== 'group_title') {
                         // lol dumbest way to explode "transactions.0.something" ever.
-                        transactionIndex = parseInt(_key3.split('.')[1]);
-                        fieldName = _key3.split('.')[2];
+                        transactionIndex = parseInt(_key6.split('.')[1]);
+                        fieldName = _key6.split('.')[2];
                         // set error in this object thing.
                         switch (fieldName) {
                             case 'amount':
@@ -55385,19 +55499,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                             case 'budget_id':
                             case 'description':
                             case 'tags':
-                                this.transactions[transactionIndex].errors[fieldName] = errors.errors[_key3];
+                                this.transactions[transactionIndex].errors[fieldName] = errors.errors[_key6];
                                 break;
                             case 'source_name':
                             case 'source_id':
-                                this.transactions[transactionIndex].errors.source_account = this.transactions[transactionIndex].errors.source_account.concat(errors.errors[_key3]);
+                                this.transactions[transactionIndex].errors.source_account = this.transactions[transactionIndex].errors.source_account.concat(errors.errors[_key6]);
                                 break;
                             case 'destination_name':
                             case 'destination_id':
-                                this.transactions[transactionIndex].errors.destination_account = this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[_key3]);
+                                this.transactions[transactionIndex].errors.destination_account = this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[_key6]);
                                 break;
                             case 'foreign_amount':
                             case 'foreign_currency_id':
-                                this.transactions[transactionIndex].errors.foreign_amount = this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[_key3]);
+                                this.transactions[transactionIndex].errors.foreign_amount = this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[_key6]);
                                 break;
                         }
                     }
@@ -55488,16 +55602,40 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         setTransactionType: function setTransactionType(type) {
             this.transactionType = type;
         },
+
+        // convert to binary stuff
+        arrayBufferToBinary: function arrayBufferToBinary(buffer) {
+            return String.fromCharCode.apply(null, Array.prototype.slice.apply(new Uint8Array(buffer)));
+        },
+
+        binaryToString: function binaryToString(binary) {
+            var error = void 0;
+
+            try {
+                return decodeURIComponent(escape(binary));
+            } catch (_error) {
+                error = _error;
+                if (error instanceof URIError) {
+                    return binary;
+                } else {
+                    throw error;
+                }
+            }
+        },
+
+        // end of convert to binary stuff
+
+
         deleteTransaction: function deleteTransaction(index, event) {
             event.preventDefault();
-            for (var _key4 in this.transactions) {
-                if (this.transactions.hasOwnProperty(_key4) && /^0$|^[1-9]\d*$/.test(_key4) && _key4 <= 4294967294) {}
+            for (var _key7 in this.transactions) {
+                if (this.transactions.hasOwnProperty(_key7) && /^0$|^[1-9]\d*$/.test(_key7) && _key7 <= 4294967294) {}
             }
 
             this.transactions.splice(index, 1);
 
-            for (var _key5 in this.transactions) {
-                if (this.transactions.hasOwnProperty(_key5) && /^0$|^[1-9]\d*$/.test(_key5) && _key5 <= 4294967294) {}
+            for (var _key8 in this.transactions) {
+                if (this.transactions.hasOwnProperty(_key8) && /^0$|^[1-9]\d*$/.test(_key8) && _key8 <= 4294967294) {}
             }
         },
         limitSourceType: function limitSourceType(type) {
@@ -55613,7 +55751,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             cash_account_id: 0,
             createAnother: false,
             resetFormAfter: false,
-            resetButtonDisabled: true
+            resetButtonDisabled: true,
+            attachmentCount: 0
         };
     }
 });

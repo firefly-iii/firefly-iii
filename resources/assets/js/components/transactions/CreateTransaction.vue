@@ -379,20 +379,11 @@
                 let button = $(e.currentTarget);
                 button.prop("disabled", true);
 
-                axions.post(uri, data).then(response => {
-                    // send user onwards.
-                    if (this.createAnother) {
-                        console.log('Will create another.');
-                        // do message:
-                        this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been stored.';
-                        this.error_message = '';
-                        if (this.resetFormAfter) {
-                            this.addTransaction();
-                        }
-                        button.prop("disabled", false);
-                    } else {
-                        console.log('Will redirect to transaction.');
-                        window.location.href = 'transactions/show/' + response.data.data.id + '?message=created';
+                axios.post(uri, data).then(response => {
+
+                    // this method will ultimately send the user on (or not).
+                    if (0 === this.collectAttachmentData(response)) {
+                        this.redirectUser(response.data.data.id, button);
                     }
                 }).catch(error => {
                     // give user errors things back.
@@ -408,6 +399,144 @@
                     e.preventDefault();
                 }
             },
+            redirectUser(groupId, button) {
+                console.log('In redirectUser()');
+                // if count is 0, send user onwards.
+                if (this.createAnother) {
+                    console.log('Will create another.');
+                    // do message:
+                    this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been stored.';
+                    this.error_message = '';
+                    if (this.resetFormAfter) {
+                        this.addTransaction();
+                    }
+                    if (button) {
+                        button.prop("disabled", false);
+                    }
+                } else {
+                    console.log('Will redirect to transaction.');
+                    window.location.href = 'transactions/show/' + groupId + '?message=created';
+                }
+            },
+
+            collectAttachmentData(response) {
+                console.log('Now incollectAttachmentData()');
+                let groupId = response.data.data.id;
+                //console.log(response.data.data.attributes.transactions);
+                //
+                // array of all files to be uploaded:
+                let toBeUploaded = [];
+
+                // array with all file data.
+                let fileData = [];
+
+                // all attachments
+                let attachments = $('input[name="attachments[]"]');
+
+                // loop over all attachments, and add references to this array:
+                for (const key in attachments) {
+                    if (attachments.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        for (const fileKey in attachments[key].files) {
+                            if (attachments[key].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
+                                // include journal thing.
+                                toBeUploaded.push(
+                                    {
+                                        journal: response.data.data.attributes.transactions[key].transaction_journal_id,
+                                        file: attachments[key].files[fileKey]
+                                    }
+                                );
+                            }
+                        }
+                    }
+                }
+                let count = toBeUploaded.length;
+                console.log('Found ' + toBeUploaded.length + ' attachments.');
+
+                // loop all uploads.
+                for (const key in toBeUploaded) {
+                    if (toBeUploaded.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        // create file reader thing that will read all of these uploads
+                        (function (f, i, theParent) {
+                            var fileReader = new FileReader();
+                            fileReader.onloadend = function (evt) {
+
+
+                                if (evt.target.readyState === FileReader.DONE) { // DONE == 2
+                                    fileData.push(
+                                        {
+                                            name: toBeUploaded[key].file.name,
+                                            journal: toBeUploaded[key].journal,
+                                            content: new Blob([evt.target.result])
+                                        }
+                                    );
+                                    if (fileData.length === count) {
+                                        theParent.uploadFiles(fileData, groupId);
+                                    }
+                                }
+
+                                // // turn into binary strings.
+                                // let chars = new Uint8Array(evt.target.result);
+                                // let CHUNK_SIZE = 0x8000;
+                                // let index = 0;
+                                // let length = chars.length;
+                                // let result = '';
+                                // let slice;
+                                // while (index < length) {
+                                //     slice = chars.subarray(index, Math.min(index + CHUNK_SIZE, length));
+                                //     result += String.fromCharCode.apply(null, slice);
+                                //     index += CHUNK_SIZE;
+                                // }
+                                // console.log('Now reading file #' + key);
+
+                            }
+                            fileReader.readAsArrayBuffer(f.file);
+                        })(toBeUploaded[key], key, this);
+                    }
+                }
+                return count;
+            },
+
+            uploadFiles(fileData, groupId) {
+                let count = fileData.length;
+                let uploads = 0;
+                for (const key in fileData) {
+                    if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        console.log('Creating attachment #' + key);
+                        // axios thing, + then.
+                        const uri = './api/v1/attachments';
+                        const data = {
+                            filename: fileData[key].name,
+                            model: 'TransactionJournal',
+                            model_id: fileData[key].journal,
+                        };
+                        axios.post(uri, data)
+                            .then(response => {
+                                console.log('Created attachment #' + key);
+                                console.log('Uploading attachment #' + key);
+                                const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
+                                axios.post(uploadUri, fileData[key].content)
+                                    .then(response => {
+                                        console.log('Uploaded attachment #' + key);
+                                        uploads++;
+                                        if (uploads === count) {
+                                            // finally we can redirect the user onwards.
+                                            console.log('FINAL UPLOAD');
+                                            this.redirectUser(groupId);
+                                        }
+                                        console.log('Upload complete!');
+                                        return true;
+                                    }).catch(error => {
+                                    console.error('Could not upload');
+                                    console.error(error);
+                                    return false;
+                                });
+                            });
+                    }
+                }
+
+            },
+
+
             setDefaultErrors: function () {
                 for (const key in this.transactions) {
                     if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
@@ -571,6 +700,29 @@
             setTransactionType: function (type) {
                 this.transactionType = type;
             },
+
+            // convert to binary stuff
+            arrayBufferToBinary(buffer) {
+                return String.fromCharCode.apply(null, Array.prototype.slice.apply(new Uint8Array(buffer)));
+            },
+            binaryToString: function (binary) {
+                let error;
+
+                try {
+                    return decodeURIComponent(escape(binary));
+                } catch (_error) {
+                    error = _error;
+                    if (error instanceof URIError) {
+                        return binary;
+                    } else {
+                        throw error;
+                    }
+                }
+            },
+
+            // end of convert to binary stuff
+
+
             deleteTransaction: function (index, event) {
                 event.preventDefault();
                 for (const key in this.transactions) {
@@ -701,6 +853,7 @@
                 createAnother: false,
                 resetFormAfter: false,
                 resetButtonDisabled: true,
+                attachmentCount: 0,
             };
         },
     }
