@@ -1,4 +1,4 @@
-# 4.7.17.1 (API 0.9.2)
+# 4.7.17.2 (API 0.9.2)
 - XSS bug in budget title.
 
 # 4.7.17 (API 0.9.2)
