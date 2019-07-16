@@ -31,7 +31,7 @@
                         </div>
                     </form>
                     <p>
-                        {{ trans('firefly.search_for_query', {query: query})|raw}}
+                        {{ trans('firefly.search_for_query', {query: query|escape})|raw}}
                     </p>
                     {% if modifiers|length > 0 %}
                         <p>{{ trans('firefly.modifiers_applies_are') }}</p>

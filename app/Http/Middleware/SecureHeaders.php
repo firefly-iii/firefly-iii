@@ -36,7 +36,7 @@ class SecureHeaders
      * Handle an incoming request. May not be a limited user (ie. Sandstorm env. or demo user).
      *
      * @param \Illuminate\Http\Request $request
-     * @param \Closure                 $next
+     * @param \Closure $next
      *
      * @return mixed
      */
@@ -85,7 +85,11 @@ class SecureHeaders
         if (false === $disableFrameHeader || null === $disableFrameHeader) {
             $response->header('X-Frame-Options', 'deny');
         }
-        $response->header('Content-Security-Policy', implode('; ', $csp));
+
+        // content security policy may be set elsewhere.
+        if (!$response->headers->has('Content-Security-Policy')) {
+            $response->header('Content-Security-Policy', implode('; ', $csp));
+        }
         $response->header('X-XSS-Protection', '1; mode=block');
         $response->header('X-Content-Type-Options', 'nosniff');
         $response->header('Referrer-Policy', 'no-referrer');
