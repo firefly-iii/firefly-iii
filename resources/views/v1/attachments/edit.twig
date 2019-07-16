@@ -18,8 +18,8 @@
                         <h3 class="box-title">{{ 'mandatoryFields'|_ }}</h3>
                     </div>
                     <div class="box-body">
-                        {{ ExpandedForm.staticText('filename',attachment.filename) }}
-                        {{ ExpandedForm.staticText('mime',attachment.mime) }}
+                        {{ ExpandedForm.staticText('filename',attachment.filename|escape) }}
+                        {{ ExpandedForm.staticText('mime',attachment.mime|escape) }}
                         {{ ExpandedForm.staticText('size',attachment.size|filesize) }}
                     </div>
                 </div>
