@@ -30,7 +30,7 @@ use FireflyIII\Rules\IsBoolean;
 use FireflyIII\Rules\IsDateOrTime;
 use FireflyIII\Validation\TransactionValidation;
 use Illuminate\Validation\Validator;
-
+use Log;
 
 /**
  * Class TransactionUpdateRequest
@@ -275,6 +275,7 @@ class TransactionUpdateRequest extends Request
      */
     private function getTransactionData(): array
     {
+        Log::debug('Now in getTransactionData()');
         $return = [];
         /**
          * @var int $index
@@ -298,8 +299,10 @@ class TransactionUpdateRequest extends Request
             }
 
             foreach ($this->dateFields as $fieldName) {
+                Log::debug(sprintf('Now at date field %s', $fieldName));
                 if (array_key_exists($fieldName, $transaction)) {
                     $current[$fieldName] = $this->dateFromValue((string)$transaction[$fieldName]);
+                    Log::debug(sprintf('New value: "%s"', (string)$transaction[$fieldName]));
                 }
             }
 

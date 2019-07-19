@@ -184,7 +184,7 @@
                         <div class="checkbox">
                             <label>
                                 <input v-model="returnAfter" name="return_after" type="checkbox">
-                                After updating, return here to create another one.
+                                After updating, return here to continue editing.
                             </label>
                         </div>
                     </div>
@@ -212,55 +212,51 @@
             console.log('Ready Group ID: ' + this.groupId);
         },
         methods: {
-            positiveAmount: function (amount) {
+            positiveAmount(amount) {
                 if (amount < 0) {
                     return amount * -1;
                 }
                 return amount;
             },
-
-            selectedSourceAccount: function (index, model) {
+            selectedSourceAccount(index, model) {
                 if (typeof model === 'string') {
                     // cant change types, only name.
+                    // also clear ID
+                    this.transactions[index].source_account.id = null;
                     this.transactions[index].source_account.name = model;
-                } else {
-                    this.transactions[index].source_account = {
-                        id: model.id,
-                        name: model.name,
-                        type: model.type,
-                        currency_id: model.currency_id,
-                        currency_name: model.currency_name,
-                        currency_code: model.currency_code,
-                        currency_decimal_places: model.currency_decimal_places,
-                        allowed_types: this.transactions[index].source_account.allowed_types
-                    };
-
-                    // force types on destination selector.
-                    //this.transactions[index].destination_account.allowed_types = window.allowedOpposingTypes.source[model.type];
+                    return;
                 }
+                this.transactions[index].source_account = {
+                    id: model.id,
+                    name: model.name,
+                    type: model.type,
+                    currency_id: model.currency_id,
+                    currency_name: model.currency_name,
+                    currency_code: model.currency_code,
+                    currency_decimal_places: model.currency_decimal_places,
+                    allowed_types: this.transactions[index].source_account.allowed_types
+                };
             },
-            selectedDestinationAccount: function (index, model) {
+            selectedDestinationAccount(index, model) {
                 if (typeof model === 'string') {
                     // cant change types, only name.
+                    // also clear ID
+                    this.transactions[index].destination_account.id = null;
                     this.transactions[index].destination_account.name = model;
-                } else {
-                    this.transactions[index].destination_account = {
-                        id: model.id,
-                        name: model.name,
-                        type: model.type,
-                        currency_id: model.currency_id,
-                        currency_name: model.currency_name,
-                        currency_code: model.currency_code,
-                        currency_decimal_places: model.currency_decimal_places,
-                        allowed_types: this.transactions[index].destination_account.allowed_types
-                    };
-
-                    // force types on destination selector.
-                    //this.transactions[index].source_account.allowed_types = window.allowedOpposingTypes.destination[model.type];
+                    return;
                 }
+                this.transactions[index].destination_account = {
+                    id: model.id,
+                    name: model.name,
+                    type: model.type,
+                    currency_id: model.currency_id,
+                    currency_name: model.currency_name,
+                    currency_code: model.currency_code,
+                    currency_decimal_places: model.currency_decimal_places,
+                    allowed_types: this.transactions[index].destination_account.allowed_types
+                };
             },
-            clearSource: function (index) {
-                console.log('clearSource(' + index + ')');
+            clearSource(index) {
                 // reset source account:
                 this.transactions[index].source_account = {
                     id: 0,
@@ -272,23 +268,21 @@
                     currency_decimal_places: 2,
                     allowed_types: this.transactions[index].source_account.allowed_types
                 };
-                // reset destination allowed account types.
-                // this.transactions[index].destination_account.allowed_types = [];
-
                 // if there is a destination model, reset the types of the source
                 // by pretending we selected it again.
                 if (this.transactions[index].destination_account) {
                     this.selectedDestinationAccount(index, this.transactions[index].destination_account);
                 }
             },
-            setTransactionType: function (type) {
+            setTransactionType(type) {
                 this.transactionType = type;
             },
-            deleteTransaction: function (index, event) {
+            deleteTransaction(index, event) {
                 event.preventDefault();
                 for (const key in this.transactions) {
                     if (
                         this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        // TODO empty iff?
                     }
                 }
 
@@ -297,10 +291,11 @@
                 for (const key in this.transactions) {
                     if (
                         this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        // TODO empty iff?
                     }
                 }
             },
-            clearDestination: function (index) {
+            clearDestination(index) {
                 console.log('clearDestination(' + index + ')');
                 // reset destination account:
                 console.log('Destination allowed types first:');
@@ -327,7 +322,7 @@
                 console.log('Destination allowed types after:');
                 console.log(this.transactions[index].destination_account.allowed_types);
             },
-            getGroup: function () {
+            getGroup() {
 
                 const page = window.location.href.split('/');
                 const groupId = page[page.length - 1];
@@ -339,104 +334,101 @@
                 // fill in transactions array.
                 axios.get(uri)
                     .then(response => {
-                        console.log(response.data.data);
-                        this.group_title = response.data.data.attributes.group_title;
-                        let transactions = response.data.data.attributes.transactions.reverse();
-                        for (let key in transactions) {
-                            if (transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-                                let transaction = transactions[key];
-                                console.log(transactions[key]);
-                                this.transactions.push({
-                                    description: transaction.description,
-                                    date: transaction.date.substr(0, 10),
-                                    amount: this.positiveAmount(transaction.amount),
-                                    category: transaction.category_name,
-                                    errors: {
-                                        source_account: [],
-                                        destination_account: [],
-                                        description: [],
-                                        amount: [],
-                                        date: [],
-                                        budget_id: [],
-                                        foreign_amount: [],
-                                        category: [],
-                                        piggy_bank: [],
-                                        tags: [],
-                                        // custom fields:
-                                        custom_errors: {
-                                            interest_date: [],
-                                            book_date: [],
-                                            process_date: [],
-                                            due_date: [],
-                                            payment_date: [],
-                                            invoice_date: [],
-                                            internal_reference: [],
-                                            notes: [],
-                                            attachments: [],
-                                        },
-                                    },
-                                    budget: transaction.budget_id,
-                                    tags: transaction.tags,
-                                    custom_fields: {
-                                        interest_date: transaction.interest_date,
-                                        book_date: transaction.book_date,
-                                        process_date: transaction.process_date,
-                                        due_date: transaction.due_date,
-                                        payment_date: transaction.payment_date,
-                                        invoice_date: transaction.invoice_date,
-                                        internal_reference: transaction.internal_reference,
-                                        notes: transaction.notes
-                                    },
-                                    foreign_amount: {
-                                        amount: this.positiveAmount(transaction.foreign_amount),
-                                        currency_id: transaction.foreign_currency_id
-                                    },
-                                    source_account: {
-                                        id: transaction.source_id,
-                                        name: transaction.source_name,
-                                        type: transaction.source_type,
-                                        // i dont know these
-                                        currency_id: transaction.currency_id,
-                                        currency_name: transaction.currency_name,
-                                        currency_code: transaction.currency_code,
-                                        currency_decimal_places: transaction.currency_decimal_places,
-                                        allowed_types: [transaction.source_type]
-                                    },
-                                    destination_account: {
-                                        id: transaction.destination_id,
-                                        name: transaction.destination_name,
-                                        type: transaction.destination_type,
-                                        currency_id: transaction.currency_id,
-                                        currency_name: transaction.currency_name,
-                                        currency_code: transaction.currency_code,
-                                        currency_decimal_places: transaction.currency_decimal_places,
-                                        allowed_types: [transaction.destination_type]
-                                    }
-                                });
-                            }
-
-                        }
+                        this.processIncomingGroup(response.data.data);
                     })
                     .catch(error => {
                         console.error('Some error.');
                     });
             },
+            processIncomingGroup(data) {
+                console.log(data);
+                this.group_title = data.attributes.group_title;
+                let transactions = data.attributes.transactions.reverse();
+                for (let key in transactions) {
+                    if (transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        let transaction = transactions[key];
+                        this.processIncomingGroupRow(transaction);
+                    }
+
+                }
+            },
+            processIncomingGroupRow(transaction) {
+                console.log(transaction);
+                this.transactions.push({
+                    description: transaction.description,
+                    date: transaction.date.substr(0, 10),
+                    amount: this.positiveAmount(transaction.amount),
+                    category: transaction.category_name,
+                    errors: {
+                        source_account: [],
+                        destination_account: [],
+                        description: [],
+                        amount: [],
+                        date: [],
+                        budget_id: [],
+                        foreign_amount: [],
+                        category: [],
+                        piggy_bank: [],
+                        tags: [],
+                        // custom fields:
+                        custom_errors: {
+                            interest_date: [],
+                            book_date: [],
+                            process_date: [],
+                            due_date: [],
+                            payment_date: [],
+                            invoice_date: [],
+                            internal_reference: [],
+                            notes: [],
+                            attachments: [],
+                        },
+                    },
+                    budget: transaction.budget_id,
+                    tags: transaction.tags,
+                    custom_fields: {
+                        interest_date: transaction.interest_date,
+                        book_date: transaction.book_date,
+                        process_date: transaction.process_date,
+                        due_date: transaction.due_date,
+                        payment_date: transaction.payment_date,
+                        invoice_date: transaction.invoice_date,
+                        internal_reference: transaction.internal_reference,
+                        notes: transaction.notes
+                    },
+                    foreign_amount: {
+                        amount: this.positiveAmount(transaction.foreign_amount),
+                        currency_id: transaction.foreign_currency_id
+                    },
+                    source_account: {
+                        id: transaction.source_id,
+                        name: transaction.source_name,
+                        type: transaction.source_type,
+                        // i dont know these
+                        currency_id: transaction.currency_id,
+                        currency_name: transaction.currency_name,
+                        currency_code: transaction.currency_code,
+                        currency_decimal_places: transaction.currency_decimal_places,
+                        allowed_types: [transaction.source_type]
+                    },
+                    destination_account: {
+                        id: transaction.destination_id,
+                        name: transaction.destination_name,
+                        type: transaction.destination_type,
+                        currency_id: transaction.currency_id,
+                        currency_name: transaction.currency_name,
+                        currency_code: transaction.currency_code,
+                        currency_decimal_places: transaction.currency_decimal_places,
+                        allowed_types: [transaction.destination_type]
+                    }
+                });
+            },
             convertData: function () {
                 let data = {
                     'transactions': [],
                 };
-                let tagList = [];
                 let transactionType;
                 let firstSource;
                 let firstDestination;
-                let foreignAmount = null;
-                let foreignCurrency = null;
-                let currentArray;
-                let sourceId;
-                let sourceName;
-                let destId;
-                let destName;
-                let date;
 
                 if (this.transactions.length > 1) {
                     data.group_title = this.group_title;
@@ -460,123 +452,130 @@
                     transactionType = 'deposit';
                 }
 
-
                 for (let key in this.transactions) {
                     if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
-
-                        sourceId = this.transactions[key].source_account.id;
-                        sourceName = this.transactions[key].source_account.name;
-                        destId = this.transactions[key].destination_account.id;
-                        destName = this.transactions[key].destination_account.name;
-
-                        date = this.transactions[key].date;
-                        if (key > 0) {
-                            date = this.transactions[0].date;
-                        }
-
-                        // if type is 'withdrawal' and destination is empty, cash withdrawal.
-                        if (transactionType === 'withdrawal' && '' === destName) {
-                            destId = window.cashAccountId;
-                        }
-
-                        // if type is 'deposit' and source is empty, cash deposit.
-                        if (transactionType === 'deposit' && '' === sourceName) {
-                            sourceId = window.cashAccountId;
-                        }
-
-                        // if key is over 0 and type is withdrawal or transfer, take source from key 0.
-                        if (key > 0 && (transactionType.toLowerCase() === 'withdrawal' || transactionType.toLowerCase() === 'transfer')) {
-                            sourceId = this.transactions[0].source_account.id;
-                            sourceName = this.transactions[0].source_account.name;
-                        }
-
-                        // if key is over 0 and type is deposit or transfer, take destination from key 0.
-                        if (key > 0 && (transactionType.toLowerCase() === 'deposit' || transactionType.toLowerCase() === 'transfer')) {
-                            destId = this.transactions[0].destination_account.id;
-                            destName = this.transactions[0].destination_account.name;
-                        }
-
-                        tagList = [];
-                        foreignAmount = null;
-                        foreignCurrency = null;
-                        // loop tags
-                        for (let tagKey in this.transactions[key].tags) {
-                            if (this.transactions[key].tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && key <= 4294967294) {
-                                tagList.push(this.transactions[key].tags[tagKey].text);
-                            }
-                        }
-
-                        // set foreign currency info:
-                        if (this.transactions[key].foreign_amount.amount !== '' && parseFloat(this.transactions[key].foreign_amount.amount) !== .00) {
-                            foreignAmount = this.transactions[key].foreign_amount.amount;
-                            foreignCurrency = this.transactions[key].foreign_amount.currency_id;
-                        }
-                        if (foreignCurrency === this.transactions[key].currency_id) {
-                            foreignAmount = null;
-                            foreignCurrency = null;
-                        }
-
-                        // correct some id's
-                        if (0 === destId) {
-                            destId = null;
-                        }
-                        if (0 === sourceId) {
-                            sourceId = null;
-                        }
-
-                        currentArray =
-                            {
-                                type: transactionType,
-                                date: date,
-
-                                amount: this.transactions[key].amount,
-                                currency_id: this.transactions[key].currency_id,
-
-                                description: this.transactions[key].description,
-
-                                source_id: sourceId,
-                                source_name: sourceName,
-
-                                destination_id: destId,
-                                destination_name: destName,
-
-
-                                category_name: this.transactions[key].category,
-                                //budget_id: this.transactions[key].budget,
-                                //piggy_bank_id: this.transactions[key].piggy_bank,
-
-
-                                interest_date: this.transactions[key].custom_fields.interest_date,
-                                book_date: this.transactions[key].custom_fields.book_date,
-                                process_date: this.transactions[key].custom_fields.process_date,
-                                due_date: this.transactions[key].custom_fields.due_date,
-                                payment_date: this.transactions[key].custom_fields.payment_date,
-                                invoice_date: this.transactions[key].custom_fields.invoice_date,
-                                internal_reference: this.transactions[key].custom_fields.internal_reference,
-                                notes: this.transactions[key].custom_fields.notes
-                            };
-
-                        if (tagList.length > 0) {
-                            currentArray.tags = tagList;
-                        }
-                        if (null !== foreignAmount) {
-                            currentArray.foreign_amount = foreignAmount;
-                            currentArray.foreign_currency_id = foreignCurrency;
-                        }
-                        // set budget id and piggy ID.
-                        if (parseInt(this.transactions[key].budget) > 0) {
-                            currentArray.budget_id = parseInt(this.transactions[key].budget);
-                        }
-                        if (parseInt(this.transactions[key].piggy_bank) > 0) {
-                            currentArray.piggy_bank_id = parseInt(this.transactions[key].piggy_bank);
-                        }
-
-                        data.transactions.push(currentArray);
+                        data.transactions.push(this.convertDataRow(this.transactions[key], key, transactionType));
                     }
                 }
                 //console.log(data);
 
                 return data;
+            },
+            convertDataRow(row, index, transactionType) {
+                let tagList = [];
+                let foreignAmount = null;
+                let foreignCurrency = null;
+                let currentArray;
+                let sourceId;
+                let sourceName;
+                let destId;
+                let destName;
+                let date;
+                sourceId = row.source_account.id;
+                sourceName = row.source_account.name;
+                destId = row.destination_account.id;
+                destName = row.destination_account.name;
+
+                date = row.date;
+                if (index > 0) {
+                    date = this.transactions[0].date;
+                }
+
+                // if type is 'withdrawal' and destination is empty, cash withdrawal.
+                if (transactionType === 'withdrawal' && '' === destName) {
+                    destId = window.cashAccountId;
+                }
+
+                // if type is 'deposit' and source is empty, cash deposit.
+                if (transactionType === 'deposit' && '' === sourceName) {
+                    sourceId = window.cashAccountId;
+                }
+
+                // if index is over 0 and type is withdrawal or transfer, take source from index 0.
+                if (index > 0 && (transactionType.toLowerCase() === 'withdrawal' || transactionType.toLowerCase() === 'transfer')) {
+                    sourceId = this.transactions[0].source_account.id;
+                    sourceName = this.transactions[0].source_account.name;
+                }
+
+                // if index is over 0 and type is deposit or transfer, take destination from index 0.
+                if (index > 0 && (transactionType.toLowerCase() === 'deposit' || transactionType.toLowerCase() === 'transfer')) {
+                    destId = this.transactions[0].destination_account.id;
+                    destName = this.transactions[0].destination_account.name;
+                }
+
+                tagList = [];
+                foreignAmount = null;
+                foreignCurrency = null;
+                // loop tags
+                for (let tagKey in row.tags) {
+                    if (row.tags.hasOwnProperty(tagKey) && /^0$|^[1-9]\d*$/.test(tagKey) && tagKey <= 4294967294) {
+                        tagList.push(row.tags[tagKey].text);
+                    }
+                }
+
+                // set foreign currency info:
+                if (row.foreign_amount.amount !== '' && parseFloat(row.foreign_amount.amount) !== .00) {
+                    foreignAmount = row.foreign_amount.amount;
+                    foreignCurrency = row.foreign_amount.currency_id;
+                }
+                if (foreignCurrency === row.currency_id) {
+                    foreignAmount = null;
+                    foreignCurrency = null;
+                }
+
+                // correct some id's
+                if (0 === destId) {
+                    destId = null;
+                }
+                if (0 === sourceId) {
+                    sourceId = null;
+                }
+
+                currentArray =
+                    {
+                        type: transactionType,
+                        date: date,
+
+                        amount: row.amount,
+                        currency_id: row.currency_id,
+
+                        description: row.description,
+
+                        source_id: sourceId,
+                        source_name: sourceName,
+
+                        destination_id: destId,
+                        destination_name: destName,
+
+
+                        category_name: row.category,
+
+                        interest_date: row.custom_fields.interest_date,
+                        book_date: row.custom_fields.book_date,
+                        process_date: row.custom_fields.process_date,
+                        due_date: row.custom_fields.due_date,
+                        payment_date: row.custom_fields.payment_date,
+                        invoice_date: row.custom_fields.invoice_date,
+                        internal_reference: row.custom_fields.internal_reference,
+                        notes: row.custom_fields.notes
+                    };
+
+                if (tagList.length > 0) {
+                    currentArray.tags = tagList;
+                }
+                if (null !== foreignAmount) {
+                    currentArray.foreign_amount = foreignAmount;
+                    currentArray.foreign_currency_id = foreignCurrency;
+                }
+                // set budget id and piggy ID.
+                if (parseInt(row.budget) > 0) {
+                    currentArray.budget_id = parseInt(row.budget);
+                }
+                if (parseInt(row.piggy_bank) > 0) {
+                    currentArray.piggy_bank_id = parseInt(row.piggy_bank);
+                }
+
+                return currentArray;
             },
             submit: function (e) {
                 console.log('I am submit');
@@ -590,19 +589,20 @@
 
                 axios.put(uri, data)
                     .then(response => {
-                        if (this.returnAfter) {
-                            // do message:
-                            this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been updated.';
-                            this.error_message = '';
-                            button.prop("disabled", false);
-                            // TODO better
-                            if (this.resetFormAfter) {
-                                this.getGroup();
-                            }
 
-                        } else {
-                            window.location.href = 'transactions/show/' + response.data.data.id + '?message=updated';
+                        if (0 === this.collectAttachmentData(response)) {
+                            this.redirectUser(response.data.data.id, button);
                         }
+
+                        // if (this.returnAfter) {
+                        //     this.setDefaultErrors();
+                        //     // do message:
+                        //     this.success_message = '<a href="transactions/show/' + response.data.data.id + '">The transaction</a> has been updated.';
+                        //     this.error_message = '';
+                        //     button.prop("disabled", false);
+                        // } else {
+                        //     window.location.href = 'transactions/show/' + response.data.data.id + '?message=updated';
+                        // }
                     }).catch(error => {
                     // give user errors things back.
                     // something something render errors.
@@ -614,6 +614,122 @@
                     e.preventDefault();
                 }
             },
+
+            redirectUser(groupId, button) {
+                console.log('In redirectUser()');
+                // if count is 0, send user onwards.
+
+                if (this.returnAfter) {
+                    this.setDefaultErrors();
+                    // do message:
+                    this.success_message = '<a href="transactions/show/' + groupId + '">The transaction</a> has been updated.';
+                    this.error_message = '';
+                    button.prop("disabled", false);
+                } else {
+                    window.location.href = 'transactions/show/' + groupId + '?message=updated';
+                }
+            },
+
+            collectAttachmentData(response) {
+                console.log('Now incollectAttachmentData()');
+                let groupId = response.data.data.id;
+
+                // array of all files to be uploaded:
+                let toBeUploaded = [];
+
+                // array with all file data.
+                let fileData = [];
+
+                // all attachments
+                let attachments = $('input[name="attachments[]"]');
+
+                // loop over all attachments, and add references to this array:
+                for (const key in attachments) {
+                    if (attachments.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        for (const fileKey in attachments[key].files) {
+                            if (attachments[key].files.hasOwnProperty(fileKey) && /^0$|^[1-9]\d*$/.test(fileKey) && fileKey <= 4294967294) {
+                                // include journal thing.
+                                toBeUploaded.push(
+                                    {
+                                        journal: response.data.data.attributes.transactions[key].transaction_journal_id,
+                                        file: attachments[key].files[fileKey]
+                                    }
+                                );
+                            }
+                        }
+                    }
+                }
+                let count = toBeUploaded.length;
+                console.log('Found ' + toBeUploaded.length + ' attachments.');
+
+                // loop all uploads.
+                for (const key in toBeUploaded) {
+                    if (toBeUploaded.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        // create file reader thing that will read all of these uploads
+                        (function (f, i, theParent) {
+                            let fileReader = new FileReader();
+                            fileReader.onloadend = function (evt) {
+                                if (evt.target.readyState === FileReader.DONE) { // DONE == 2
+                                    fileData.push(
+                                        {
+                                            name: toBeUploaded[key].file.name,
+                                            journal: toBeUploaded[key].journal,
+                                            content: new Blob([evt.target.result])
+                                        }
+                                    );
+                                    if (fileData.length === count) {
+                                        theParent.uploadFiles(fileData, groupId);
+                                    }
+                                }
+                            };
+                            fileReader.readAsArrayBuffer(f.file);
+                        })(toBeUploaded[key], key, this);
+                    }
+                }
+                return count;
+            },
+
+            uploadFiles(fileData, groupId) {
+                let count = fileData.length;
+                let uploads = 0;
+                for (const key in fileData) {
+                    if (fileData.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        console.log('Creating attachment #' + key);
+                        // axios thing, + then.
+                        const uri = './api/v1/attachments';
+                        const data = {
+                            filename: fileData[key].name,
+                            model: 'TransactionJournal',
+                            model_id: fileData[key].journal,
+                        };
+                        axios.post(uri, data)
+                            .then(response => {
+                                console.log('Created attachment #' + key);
+                                console.log('Uploading attachment #' + key);
+                                const uploadUri = './api/v1/attachments/' + response.data.data.id + '/upload';
+                                axios.post(uploadUri, fileData[key].content)
+                                    .then(response => {
+                                        console.log('Uploaded attachment #' + key);
+                                        uploads++;
+                                        if (uploads === count) {
+                                            // finally we can redirect the user onwards.
+                                            console.log('FINAL UPLOAD');
+                                            this.redirectUser(groupId);
+                                        }
+                                        console.log('Upload complete!');
+                                        return true;
+                                    }).catch(error => {
+                                    console.error('Could not upload');
+                                    console.error(error);
+                                    return false;
+                                });
+                            });
+                    }
+                }
+
+            },
+
+
             addTransaction: function (e) {
                 this.transactions.push({
                     description: "",
@@ -686,7 +802,86 @@
                 if (e) {
                     e.preventDefault();
                 }
-            }
+            },
+            parseErrors: function (errors) {
+                this.setDefaultErrors();
+                this.error_message = "";
+                if (errors.message.length > 0) {
+                    this.error_message = "There was something wrong with your submission. Please check out the errors below.";
+                } else {
+                    this.error_message = '';
+                }
+                let transactionIndex;
+                let fieldName;
+
+                for (const key in errors.errors) {
+                    if (errors.errors.hasOwnProperty(key)) {
+                        if (key === 'group_title') {
+                            this.group_title_errors = errors.errors[key];
+                        }
+                        if (key !== 'group_title') {
+                            // lol dumbest way to explode "transactions.0.something" ever.
+                            transactionIndex = parseInt(key.split('.')[1]);
+                            fieldName = key.split('.')[2];
+                            // set error in this object thing.
+                            switch (fieldName) {
+                                case 'amount':
+                                case 'date':
+                                case 'budget_id':
+                                case 'description':
+                                case 'tags':
+                                    this.transactions[transactionIndex].errors[fieldName] = errors.errors[key];
+                                    break;
+                                case 'source_name':
+                                case 'source_id':
+                                    this.transactions[transactionIndex].errors.source_account =
+                                        this.transactions[transactionIndex].errors.source_account.concat(errors.errors[key]);
+                                    break;
+                                case 'destination_name':
+                                case 'destination_id':
+                                    this.transactions[transactionIndex].errors.destination_account =
+                                        this.transactions[transactionIndex].errors.destination_account.concat(errors.errors[key]);
+                                    break;
+                                case 'foreign_amount':
+                                case 'foreign_currency_id':
+                                    this.transactions[transactionIndex].errors.foreign_amount =
+                                        this.transactions[transactionIndex].errors.foreign_amount.concat(errors.errors[key]);
+                                    break;
+                            }
+                        }
+                    }
+                }
+            },
+            setDefaultErrors: function () {
+                for (const key in this.transactions) {
+                    if (this.transactions.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
+                        this.transactions[key].errors = {
+                            source_account: [],
+                            destination_account: [],
+                            description: [],
+                            amount: [],
+                            date: [],
+                            budget_id: [],
+                            foreign_amount: [],
+                            category: [],
+                            piggy_bank: [],
+                            tags: [],
+                            // custom fields:
+                            custom_errors: {
+                                interest_date: [],
+                                book_date: [],
+                                process_date: [],
+                                due_date: [],
+                                payment_date: [],
+                                invoice_date: [],
+                                internal_reference: [],
+                                notes: [],
+                                attachments: [],
+                            },
+                        };
+                    }
+                }
+            },
         },
 
 

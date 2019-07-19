@@ -36,6 +36,7 @@ class CreateController extends Controller
 {
     /**
      * CreateController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -91,12 +92,4 @@ class CreateController extends Controller
                     'optionalFields', 'preFilled', 'allowedOpposingTypes', 'accountToTypes')
         );
     }
-
-    public function store(Request $request)
-    {
-        echo '<pre>';
-        print_r($request->all());
-        exit;
-    }
-
 }

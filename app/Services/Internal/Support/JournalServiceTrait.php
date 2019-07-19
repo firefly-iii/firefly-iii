@@ -265,6 +265,7 @@ trait JournalServiceTrait
             return;
         }
         foreach ($tags as $string) {
+            $string = (string)$string;
             if ('' !== $string) {
                 $tag = $this->tagFactory->findOrCreate($string);
                 if (null !== $tag) {

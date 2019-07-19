@@ -260,12 +260,12 @@
                 let destName;
                 let date;
 
-                sourceId = this.transactions[index].source_account.id;
-                sourceName = this.transactions[index].source_account.name;
-                destId = this.transactions[index].destination_account.id;
-                destName = this.transactions[index].destination_account.name;
+                sourceId = row.source_account.id;
+                sourceName = row.source_account.name;
+                destId = row.destination_account.id;
+                destName = row.destination_account.name;
 
-                date = this.transactions[index].date;
+                date = row.date;
                 if (index > 0) {
                     date = this.transactions[0].date;
                 }
@@ -280,13 +280,13 @@
                     sourceId = window.cashAccountId;
                 }
 
-                // if index is over 0 and type is withdrawal or transfer, take source from key 0.
+                // if index is over 0 and type is withdrawal or transfer, take source from index 0.
                 if (index > 0 && (transactionType.toLowerCase() === 'withdrawal' || transactionType.toLowerCase() === 'transfer')) {
                     sourceId = this.transactions[0].source_account.id;
                     sourceName = this.transactions[0].source_account.name;
                 }
 
-                // if index is over 0 and type is deposit or transfer, take destination from key 0.
+                // if index is over 0 and type is deposit or transfer, take destination from index 0.
                 if (index > 0 && (transactionType.toLowerCase() === 'deposit' || transactionType.toLowerCase() === 'transfer')) {
                     destId = this.transactions[0].destination_account.id;
                     destName = this.transactions[0].destination_account.name;
@@ -338,9 +338,6 @@
 
 
                         category_name: row.category,
-                        //budget_id: row.budget,
-                        //piggy_bank_id: row.piggy_bank,
-
 
                         interest_date: row.custom_fields.interest_date,
                         book_date: row.custom_fields.book_date,
@@ -422,8 +419,7 @@
             collectAttachmentData(response) {
                 console.log('Now incollectAttachmentData()');
                 let groupId = response.data.data.id;
-                //console.log(response.data.data.attributes.transactions);
-                //
+
                 // array of all files to be uploaded:
                 let toBeUploaded = [];
 
@@ -457,10 +453,8 @@
                     if (toBeUploaded.hasOwnProperty(key) && /^0$|^[1-9]\d*$/.test(key) && key <= 4294967294) {
                         // create file reader thing that will read all of these uploads
                         (function (f, i, theParent) {
-                            var fileReader = new FileReader();
+                            let fileReader = new FileReader();
                             fileReader.onloadend = function (evt) {
-
-
                                 if (evt.target.readyState === FileReader.DONE) { // DONE == 2
                                     fileData.push(
                                         {
@@ -473,22 +467,7 @@
                                         theParent.uploadFiles(fileData, groupId);
                                     }
                                 }
-
-                                // // turn into binary strings.
-                                // let chars = new Uint8Array(evt.target.result);
-                                // let CHUNK_SIZE = 0x8000;
-                                // let index = 0;
-                                // let length = chars.length;
-                                // let result = '';
-                                // let slice;
-                                // while (index < length) {
-                                //     slice = chars.subarray(index, Math.min(index + CHUNK_SIZE, length));
-                                //     result += String.fromCharCode.apply(null, slice);
-                                //     index += CHUNK_SIZE;
-                                // }
-                                // console.log('Now reading file #' + key);
-
-                            }
+                            };
                             fileReader.readAsArrayBuffer(f.file);
                         })(toBeUploaded[key], key, this);
                     }
@@ -700,28 +679,6 @@
             setTransactionType: function (type) {
                 this.transactionType = type;
             },
-
-            // convert to binary stuff
-            arrayBufferToBinary(buffer) {
-                return String.fromCharCode.apply(null, Array.prototype.slice.apply(new Uint8Array(buffer)));
-            },
-            binaryToString: function (binary) {
-                let error;
-
-                try {
-                    return decodeURIComponent(escape(binary));
-                } catch (_error) {
-                    error = _error;
-                    if (error instanceof URIError) {
-                        return binary;
-                    } else {
-                        throw error;
-                    }
-                }
-            },
-
-            // end of convert to binary stuff
-
 
             deleteTransaction: function (index, event) {
                 event.preventDefault();

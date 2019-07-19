@@ -598,7 +598,7 @@ class JournalUpdateService
         foreach ($this->metaDate as $field) {
             if ($this->hasFields([$field])) {
                 try {
-                    $value = '' === $this->data[$field] ? null : new Carbon($this->data[$field]);
+                    $value = '' === (string)$this->data[$field] ? null : new Carbon($this->data[$field]);
                 } catch (Exception $e) {
                     Log::debug(sprintf('%s is not a valid date value: %s', $this->data[$field], $e->getMessage()));
 
