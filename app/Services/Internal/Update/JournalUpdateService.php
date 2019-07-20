@@ -131,7 +131,6 @@ class JournalUpdateService
     public function update(): void
     {
         Log::debug(sprintf('Now in JournalUpdateService for journal #%d.', $this->transactionJournal->id));
-
         // can we update account data using the new type?
         if ($this->hasValidAccounts()) {
             Log::info('-- account info is valid, now update.');
@@ -142,7 +141,6 @@ class JournalUpdateService
             $this->updateType();
             $this->transactionJournal->refresh();
         }
-
         // find and update bill, if possible.
         $this->updateBill();
 
@@ -276,6 +274,7 @@ class JournalUpdateService
         if (null === $this->sourceTransaction) {
             $this->sourceTransaction = $this->transactionJournal->transactions()->with(['account'])->where('amount', '<', 0)->first();
         }
+        Log::debug(sprintf('getSourceTransaction: %s', $this->sourceTransaction->amount));
 
         return $this->sourceTransaction;
     }
@@ -447,9 +446,14 @@ class JournalUpdateService
         $sourceTransaction->account()->associate($source);
         $sourceTransaction->save();
 
-        $destinationTransaction = $this->getDestinationTransaction();
-        $destinationTransaction->account()->associate($destination);
-        $destinationTransaction->save();
+        $destTransaction = $this->getDestinationTransaction();
+        $destTransaction->account()->associate($destination);
+        $destTransaction->save();
+
+        // refresh transactions.
+        $this->sourceTransaction->refresh();
+        $this->destinationTransaction->refresh();
+
 
         Log::debug(sprintf('Will set source to #%d ("%s")', $source->id, $source->name));
         Log::debug(sprintf('Will set dest to #%d ("%s")', $destination->id, $destination->name));
@@ -468,14 +472,20 @@ class JournalUpdateService
 
             return;
         }
-        Log::debug(sprintf('Updated amount to %s', $amount));
         $sourceTransaction         = $this->getSourceTransaction();
-        $sourceTransaction->amount = app('steam')->negative($value);
+        $sourceTransaction->amount = app('steam')->negative($amount);
         $sourceTransaction->save();
 
-        $destinationTransaction         = $this->getDestinationTransaction();
-        $destinationTransaction->amount = app('steam')->positive($value);
-        $destinationTransaction->save();
+
+        $destTransaction         = $this->getDestinationTransaction();
+        $destTransaction->amount = app('steam')->positive($amount);
+        $destTransaction->save();
+
+
+        // refresh transactions.
+        $this->sourceTransaction->refresh();
+        $this->destinationTransaction->refresh();
+        Log::debug(sprintf('Updated amount to "%s"', $amount));
     }
 
     /**
@@ -518,6 +528,10 @@ class JournalUpdateService
             $dest                          = $this->getDestinationTransaction();
             $dest->transaction_currency_id = $currency->id;
             $dest->save();
+
+            // refresh transactions.
+            $this->sourceTransaction->refresh();
+            $this->destinationTransaction->refresh();
             Log::debug(sprintf('Updated currency to #%d (%s)', $currency->id, $currency->code));
         }
     }
@@ -572,6 +586,10 @@ class JournalUpdateService
 
             Log::debug(sprintf('Update foreign info to %s (#%d) %s', $foreignCurrency->code, $foreignCurrency->id, $foreignAmount));
 
+            // refresh transactions.
+            $this->sourceTransaction->refresh();
+            $this->destinationTransaction->refresh();
+
             return;
         }
         if ('0' === $amount) {
@@ -585,6 +603,10 @@ class JournalUpdateService
             Log::debug(sprintf('Foreign amount is "%s" so remove foreign amount info.', $amount));
         }
         Log::info('Not enough info to update foreign currency info.');
+
+        // refresh transactions.
+        $this->sourceTransaction->refresh();
+        $this->destinationTransaction->refresh();
     }
 
     /**

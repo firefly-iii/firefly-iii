@@ -58,7 +58,6 @@ use FireflyIII\Support\Binder\CurrencyCode;
 use FireflyIII\Support\Binder\Date;
 use FireflyIII\Support\Binder\ImportProvider;
 use FireflyIII\Support\Binder\JournalList;
-use FireflyIII\Support\Binder\SimpleJournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
 use FireflyIII\Support\Binder\UnfinishedJournal;
@@ -398,7 +397,6 @@ return [
         'journalList'       => JournalList::class,
         'categoryList'      => CategoryList::class,
         'tagList'           => TagList::class,
-        'simpleJournalList' => SimpleJournalList::class,
 
         // others
         'fromCurrencyCode'  => CurrencyCode::class,

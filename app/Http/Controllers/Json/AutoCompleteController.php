@@ -125,6 +125,37 @@ class AutoCompleteController extends Controller
     }
 
     /**
+     * An auto-complete specifically for expense accounts, used when mass updating mostly.
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function expenseAccounts(Request $request): JsonResponse
+    {
+        $search = $request->get('search');
+        /** @var AccountRepositoryInterface $repository */
+        $repository = app(AccountRepositoryInterface::class);
+
+        // filter the account types:
+        $allowedAccountTypes = [AccountType::EXPENSE];
+        Log::debug('Now in accounts(). Filtering results.', $allowedAccountTypes);
+
+        $return = [];
+        $result = $repository->searchAccount((string)$search, $allowedAccountTypes);
+
+        /** @var Account $account */
+        foreach ($result as $account) {
+            $return[] = [
+                'id'   => $account->id,
+                'name' => $account->name,
+                'type' => $account->accountType->type,
+            ];
+        }
+
+        return response()->json($return);
+    }
+
+    /**
      * Searches in the titles of all transaction journals.
      * The result is limited to the top 15 unique results.
      *

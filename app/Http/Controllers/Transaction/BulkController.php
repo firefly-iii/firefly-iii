@@ -63,6 +63,8 @@ class BulkController extends Controller
     /**
      * Edit a set of journals in bulk.
      *
+     * TODO user wont be able to tell if journal is part of split.
+     *
      * @param Collection $journals
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
@@ -70,6 +72,8 @@ class BulkController extends Controller
     public function edit(array $journals)
     {
         $subTitle = (string)trans('firefly.mass_bulk_journals');
+
+        // make amounts positive.
 
         // get list of budgets:
         /** @var BudgetRepositoryInterface $repository */

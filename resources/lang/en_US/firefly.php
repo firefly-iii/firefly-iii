@@ -851,7 +851,7 @@ return [
     'cannot_edit_other_fields'                => 'You cannot mass-edit other fields than the ones here, because there is no room to show them. Please follow the link and edit them by one-by-one, if you need to edit these fields.',
     'no_budget'                               => '(no budget)',
     'no_budget_squared'                       => '(no budget)',
-    'perm-delete-many'                        => 'Deleting many items in one go can be very disruptive. Please be cautious.',
+    'perm-delete-many'                        => 'Deleting many items in one go can be very disruptive. Please be cautious. You can delete part of a split transaction from this page, so take care.',
     'mass_deleted_transactions_success'       => 'Deleted :amount transaction(s).',
     'mass_edited_transactions_success'        => 'Updated :amount transaction(s)',
     'opt_group_'                              => '(no account type)',

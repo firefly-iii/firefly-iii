@@ -159,6 +159,7 @@ abstract class TestCase extends BaseTestCase
         }
 
         return [
+            'transaction_group_id'     => $withdrawal->transaction_group_id,
             'transaction_journal_id'   => $withdrawal->id,
             'transaction_type_type'    => 'Withdrawal',
             'currency_id'              => $euro->id,
@@ -166,6 +167,7 @@ abstract class TestCase extends BaseTestCase
             'date'                     => $date,
             'description'              => sprintf('I am descr #%d', $this->randomInt()),
             'source_account_id'        => 1,
+            'foreign_amount'           => null,
             'destination_account_id'   => $expense->id,
             'destination_account_name' => $expense->name,
             'currency_name'            => $euro->name,
