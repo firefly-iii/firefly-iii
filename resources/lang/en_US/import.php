@@ -310,4 +310,7 @@ return [
     'column_note'                     => 'Note(s)',
     'column_internal-reference'       => 'Internal reference',
 
+    // error message
+    'duplicate_row'                   => 'Row #:row (":description") could not be imported. It already exists.',
+
 ];

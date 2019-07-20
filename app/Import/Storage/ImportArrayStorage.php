@@ -31,6 +31,7 @@ use FireflyIII\Events\RequestedReportOnJournals;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\ImportJob;
+use FireflyIII\Models\Preference;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionType;
@@ -68,6 +69,9 @@ class ImportArrayStorage
     /** @var TransactionGroupRepositoryInterface */
     private $groupRepos;
 
+    /** @var string */
+    private $language = 'en_US';
+
     /**
      * Set job, count transfers in the array and create the repository.
      *
@@ -86,6 +90,11 @@ class ImportArrayStorage
 
         $this->groupRepos = app(TransactionGroupRepositoryInterface::class);
         $this->groupRepos->setUser($importJob->user);
+
+        // get language of user.
+        /** @var Preference $pref */
+        $pref           = app('preferences')->get('language', config('firefly.default_language', 'en_US'));
+        $this->language = $pref->data;
 
         Log::debug('Constructed ImportArrayStorage()');
     }
@@ -276,7 +285,7 @@ class ImportArrayStorage
             $hash       = $this->getHash($transaction);
             $existingId = $this->hashExists($hash);
             if (null !== $existingId) {
-                $message = sprintf('Row #%d ("%s") could not be imported. It already exists.', $index, $transaction['description']);
+                $message = (string)trans('import.duplicate_row', ['row' => $index, 'description' => $transaction['description']]);
                 $this->logDuplicateObject($transaction, $existingId);
                 $this->repository->addErrorMessage($this->importJob, $message);
 
@@ -285,7 +294,7 @@ class ImportArrayStorage
 
             // do transfer detection:
             if ($this->checkForTransfers && $this->transferExists($transaction)) {
-                $message = sprintf('Row #%d ("%s") could not be imported. Such a transfer already exists.', $index, $transaction['description']);
+                $message = (string)trans('import.duplicate_row', ['row' => $index, 'description' => $transaction['description']]);
                 $this->logDuplicateTransfer($transaction);
                 $this->repository->addErrorMessage($this->importJob, $message);
 
