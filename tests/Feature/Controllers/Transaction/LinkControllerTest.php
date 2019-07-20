@@ -28,8 +28,10 @@ use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -49,22 +51,38 @@ class LinkControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
-     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
      */
     public function testDelete(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->mock(LinkTypeRepositoryInterface::class);
+        $link      = $this->getRandomLink();
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
-        return;
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $linkRepos    = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mockDefaultSession();
+
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
+        $this->be($this->user());
+        $response = $this->get(route('transactions.link.delete', [$link->id]));
+        $response->assertStatus(200);
+    }
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
+     */
+    public function testModal(): void
+    {
+        $journal   = $this->getRandomWithdrawal();
+        $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
+
+        $this->mockDefaultSession();
+
+        $linkRepos->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.link.delete', [1]));
+        $response = $this->get(route('transactions.link.modal', [$journal->id]));
         $response->assertStatus(200);
     }
 
@@ -72,22 +90,18 @@ class LinkControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
      */
     public function testDestroy(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+    {
+        $link         = $this->getRandomLink();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
 
+        Preferences::shouldReceive('mark')->once();
+        $this->mockDefaultSession();
 
-        $repository->shouldReceive('destroyLink');
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
-
+        $repository->shouldReceive('destroyLink')->atLeast()->once();
         $this->be($this->user());
-
         $this->session(['journal_links.delete.uri' => 'http://localhost/']);
 
-        $response = $this->post(route('transactions.link.destroy', [1]));
+        $response = $this->post(route('transactions.link.destroy', [$link->id]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
 
@@ -98,29 +112,28 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStore(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
+    {
+        $withdrawal   = $this->getRandomWithdrawal();
+        $deposit      = $this->getRandomDeposit();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mockDefaultSession();
 
         $data = [
-            'link_other' => 8,
-            'link_type'  => '1_inward',
+            'opposing'  => $deposit->id,
+            'link_type' => '1_inward',
         ];
 
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('findNull')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('findLink')->andReturn(false);
-        $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
+        //$journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
+        $journalRepos->shouldReceive('findNull')->andReturn($deposit)->atLeast()->once();
+        $repository->shouldReceive('findLink')->andReturn(false)->atLeast()->once();
+        $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink)->atLeast()->once();
 
         $this->be($this->user());
-        $response = $this->post(route('transactions.link.store', [1]), $data);
+        $response = $this->post(route('transactions.link.store', [$withdrawal->id]), $data);
 
         $response->assertStatus(302);
         $response->assertSessionHas('success');
-        $response->assertRedirect(route('transactions.show', [1]));
+        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
     }
 
     /**
@@ -128,28 +141,25 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreAlreadyLinked(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
+    {
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mockDefaultSession();
+        $link         = $this->getRandomLink();
 
         $data = [
-            'link_other' => 8,
-            'link_type'  => '1_inward',
+            'opposing'  => $link->source_id,
+            'link_type' => '1_inward',
         ];
 
-        $journalRepos->shouldReceive('firstNull')->andReturn(new TransactionJournal);
-        $journalRepos->shouldReceive('findNull')->andReturn(new TransactionJournal);
-        $repository->shouldReceive('findLink')->andReturn(true);
+        $journalRepos->shouldReceive('findNull')->andReturn(new TransactionJournal)->atLeast()->once();
+        $repository->shouldReceive('findLink')->andReturn(true)->atLeast()->once();
 
         $this->be($this->user());
-        $response = $this->post(route('transactions.link.store', [1]), $data);
+        $response = $this->post(route('transactions.link.store', [$link->destination_id]), $data);
 
         $response->assertStatus(302);
         $response->assertSessionHas('error');
-        $response->assertRedirect(route('transactions.show', [1]));
+        $response->assertRedirect(route('transactions.show', [$link->destination_id]));
     }
 
     /**
@@ -157,26 +167,23 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreInvalid(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
+    {
+        $this->mock(LinkTypeRepositoryInterface::class);
+        $journalRepos = $this->mockDefaultSession();
+        $withdrawal   = $this->getRandomWithdrawal();
 
-        return;
         $data = [
-            'link_other' => 0,
-            'link_type'  => '1_inward',
+            'opposing'  => 0,
+            'link_type' => '1_inward',
         ];
 
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-
-        $journalRepos->shouldReceive('firstNull')->andReturn(null);
-        $journalRepos->shouldReceive('findNull')->andReturn(null);
+        $journalRepos->shouldReceive('findNull')->andReturn(null)->atLeast()->once();
 
         $this->be($this->user());
-        $response = $this->post(route('transactions.link.store', [1]), $data);
+        $response = $this->post(route('transactions.link.store', [$withdrawal->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('error');
-        $response->assertRedirect(route('transactions.show', [1]));
+        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
     }
 
     /**
@@ -184,39 +191,33 @@ class LinkControllerTest extends TestCase
      * @covers       \FireflyIII\Http\Requests\JournalLinkRequest
      */
     public function testStoreSame(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
+    {
+        $withdrawal   = $this->getRandomWithdrawal();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $journalRepos = $this->mockDefaultSession();
 
         $data    = [
-            'link_other' => 8,
+            'link_other' => $withdrawal->id,
             'link_type'  => '1_inward',
         ];
-        $journal = $this->user()->transactionJournals()->first();
-
-        $journalRepos->shouldReceive('firstNull')->andReturn($journal);
-        $journalRepos->shouldReceive('findNull')->andReturn($journal);
-        $repository->shouldReceive('findLink')->andReturn(false);
-        $repository->shouldReceive('storeLink')->andReturn(new TransactionJournalLink);
+        $journalRepos->shouldReceive('findNull')->andReturn($withdrawal)->atLeast()->once();
+        $repository->shouldReceive('findLink')->andReturn(false)->atLeast()->once();
 
         $this->be($this->user());
-        $response = $this->post(route('transactions.link.store', [$journal->id]), $data);
+        $response = $this->post(route('transactions.link.store', [$withdrawal->id]), $data);
 
         $response->assertStatus(302);
         $response->assertSessionHas('error');
-        $response->assertRedirect(route('transactions.show', [1]));
+        $response->assertRedirect(route('transactions.show', [$withdrawal->id]));
     }
 
     /**
      * @covers \FireflyIII\Http\Controllers\Transaction\LinkController
      */
     public function testSwitchLink(): void
-    {        $this->markTestIncomplete('Needs to be rewritten for v4.8.0');
-
-        return;
+    {
+        $link         = $this->getRandomLink();
+        $withdrawal   = $this->getRandomWithdrawal();
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
@@ -224,7 +225,7 @@ class LinkControllerTest extends TestCase
         $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
         $repository->shouldReceive('switchLink')->andReturn(false);
         $this->be($this->user());
-        $response = $this->get(route('transactions.link.switch', [1]));
+        $response = $this->get(route('transactions.link.switch', [$link->id]));
 
 
         $response->assertStatus(302);

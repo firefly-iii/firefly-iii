@@ -214,10 +214,6 @@ return [
         'application/vnd.oasis.opendocument.image',
     ],
     'list_length'                  => 10,
-    'export_formats'               => [
-        'csv' => CsvExporter::class,
-    ],
-    'default_export_format'        => 'csv',
     'default_import_format'        => 'csv',
     'bill_periods'                 => ['weekly', 'monthly', 'quarterly', 'half-year', 'yearly'],
     'accountRoles'                 => ['defaultAsset', 'sharedAsset', 'savingAsset', 'ccAsset', 'cashWalletAsset'],
@@ -381,7 +377,6 @@ return [
         'recurrence'        => Recurrence::class,
         'rule'              => Rule::class,
         'ruleGroup'         => RuleGroup::class,
-        'exportJob'         => ExportJob::class,
         'importJob'         => ImportJob::class,
         'transaction'       => Transaction::class,
         'transactionGroup'  => TransactionGroup::class,

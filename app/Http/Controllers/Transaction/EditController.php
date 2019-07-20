@@ -33,7 +33,8 @@ class EditController extends Controller
 {
 
     /**
-     * SingleController constructor.
+     * EditController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -48,7 +49,7 @@ class EditController extends Controller
 
         // some useful repositories:
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
 
                 app('view')->share('title', (string)trans('firefly.transactions'));
                 app('view')->share('mainTitleIcon', 'fa-repeat');

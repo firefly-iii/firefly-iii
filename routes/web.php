@@ -540,6 +540,7 @@ Route::group(
     Route::get('piggy-banks', ['uses' => 'Json\AutoCompleteController@piggyBanks', 'as' => 'autocomplete.piggy-banks']);
     Route::get('tags', ['uses' => 'Json\AutoCompleteController@tags', 'as' => 'autocomplete.tags']);
     Route::get('transaction-journals/all', ['uses' => 'Json\AutoCompleteController@allJournals', 'as' => 'autocomplete.all-journals']);
+    Route::get('transaction-journals/with-id', ['uses' => 'Json\AutoCompleteController@allJournalsWithID', 'as' => 'autocomplete.all-journals-with-id']);
     Route::get('currency-names', ['uses' => 'Json\AutoCompleteController@currencyNames', 'as' => 'autocomplete.currency-names']);
 
 
@@ -884,8 +885,8 @@ Route::group(
     // clone group:
     Route::get('clone/{transactionGroup}', ['uses' => 'Transaction\CloneController@clone', 'as' => 'clone']);
 
-    Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
-    Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
+    //Route::get('debug/{tj}', ['uses' => 'Transaction\SingleController@debugShow', 'as' => 'debug']);
 
     Route::post('reorder', ['uses' => 'TransactionController@reorder', 'as' => 'reorder']);
     Route::post('reconcile', ['uses' => 'TransactionController@reconcile', 'as' => 'reconcile']);
@@ -942,16 +943,16 @@ Route::group(
 /**
  * Transaction Split Controller
  */
-Route::group(
-    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/split',
-     'as'         => 'transactions.split.'], function () {
-    // TODO improve these routes
-    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
-    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
-    // TODO end of todo.
-
-}
-);
+//Route::group(
+//    ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/split',
+//     'as'         => 'transactions.split.'], function () {
+//    // TODO improve these routes
+//    Route::get('edit/{tj}', ['uses' => 'SplitController@edit', 'as' => 'edit']);
+//    Route::post('update/{tj}', ['uses' => 'SplitController@update', 'as' => 'update']);
+//    // TODO end of todo.
+//
+//}
+//);
 
 /**
  * Transaction Convert Controller
@@ -970,6 +971,9 @@ Route::group(
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers\Transaction', 'prefix' => 'transactions/link', 'as' => 'transactions.link.'],
     function () {
+
+        Route::get('modal/{tj}', ['uses' => 'LinkController@modal', 'as' => 'modal']);
+
         // TODO improve this route:
         Route::post('store/{tj}', ['uses' => 'LinkController@store', 'as' => 'store']);
         Route::get('delete/{journalLink}', ['uses' => 'LinkController@delete', 'as' => 'delete']);

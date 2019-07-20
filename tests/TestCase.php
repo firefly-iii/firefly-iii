@@ -40,6 +40,7 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
+use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Transformers\TransactionTransformer;
@@ -57,6 +58,14 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
+
+    /**
+     * @return TransactionJournalLink
+     */
+    public function getRandomLink(): TransactionJournalLink
+    {
+        return TransactionJournalLink::inRandomOrder()->first();
+    }
 
     /**
      * @return Budget

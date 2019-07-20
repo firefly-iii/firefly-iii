@@ -119,6 +119,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 $amount               = $this->getFormattedAmount($entry->destination);
                 $foreignAmount        = $this->getFormattedForeignAmount($entry->destination);
                 $return[$journalId][] = [
+                    'id'             => $entry->id,
                     'link'           => $entry->outward,
                     'group'          => $entry->destination->transaction_group_id,
                     'description'    => $entry->destination->description,
@@ -130,6 +131,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
                 $amount               = $this->getFormattedAmount($entry->source);
                 $foreignAmount        = $this->getFormattedForeignAmount($entry->source);
                 $return[$journalId][] = [
+                    'id'             => $entry->id,
                     'link'           => $entry->inward,
                     'group'          => $entry->source->transaction_group_id,
                     'description'    => $entry->source->description,
@@ -145,7 +147,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     /**
      * Return object with all found meta field things as Carbon objects.
      *
-     * @param int   $journalId
+     * @param int $journalId
      * @param array $fields
      *
      * @return NullArrayObject
@@ -171,7 +173,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
     /**
      * Return object with all found meta field things.
      *
-     * @param int   $journalId
+     * @param int $journalId
      * @param array $fields
      *
      * @return NullArrayObject
@@ -247,9 +249,9 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
             $return[$journalId] = $return[$journalId] ?? [];
 
             $return[$journalId][] = [
-                'piggy' => $row->piggyBank->name,
+                'piggy'    => $row->piggyBank->name,
                 'piggy_id' => $row->piggy_bank_id,
-                'amount' => app('amount')->formatAnything($currency, $row->amount),
+                'amount'   => app('amount')->formatAnything($currency, $row->amount),
             ];
         }
 
@@ -300,7 +302,7 @@ class TransactionGroupRepository implements TransactionGroupRepositoryInterface
 
     /**
      * @param TransactionGroup $transactionGroup
-     * @param array            $data
+     * @param array $data
      *
      * @return TransactionGroup
      *
