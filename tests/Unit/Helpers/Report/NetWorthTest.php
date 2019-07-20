@@ -75,7 +75,7 @@ class NetWorthTest extends TestCase
         // mock other calls:
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->times(2)->andReturn('1');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->times(2)->andReturn('defaultAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->times(2)->andReturn('defaultAsset');
         $currencyRepos->shouldReceive('setUser')->once();
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->times(1);
 
@@ -112,7 +112,7 @@ class NetWorthTest extends TestCase
         // mock other calls:
         $accountRepos->shouldReceive('setUser')->once();
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->times(2)->andReturn('1');
-        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'accountRole'])->times(2)->andReturn('defaultAsset', 'ccAsset');
+        $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'account_role'])->times(2)->andReturn('defaultAsset', 'ccAsset');
         $currencyRepos->shouldReceive('setUser')->once();
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->times(1);
 

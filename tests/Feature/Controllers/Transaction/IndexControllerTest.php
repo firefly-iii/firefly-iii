@@ -99,15 +99,11 @@ class IndexControllerTest extends TestCase
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $collector    = $this->mock(GroupCollectorInterface::class);
 
-        // generic set for the info blocks:
-        $groupArray = [$this->getRandomWithdrawalAsArray()];
-
         // role?
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true);
 
         // make paginator.
         $paginator = new LengthAwarePaginator([$group], 1, 40, 1);
-        //Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('10');
 
         $collector->shouldReceive('setTypes')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('setRange')->atLeast()->once()->andReturnSelf();
@@ -117,13 +113,10 @@ class IndexControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('getPaginatedGroups')->atLeast()->once()->andReturn($paginator);
-        //$collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn($groupArray);
-
 
         $pref       = new Preference;
         $pref->data = 50;
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
-        //Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $this->be($this->user());
         $response = $this->get(route('transactions.index.all', ['withdrawal']));
