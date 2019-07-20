@@ -1,6 +1,6 @@
 <?php
 /**
- * CreateControllerTest.php
+ * EditControllerTest.php
  * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
@@ -22,18 +22,14 @@
 namespace Tests\Feature\Controllers\Transaction;
 
 
-use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
-use Preferences;
 use Tests\TestCase;
-use Mockery;
 
 /**
- * Class CreateControllerTest
+ * Class EditControllerTest
  */
-class CreateControllerTest extends TestCase
+class EditControllerTest extends TestCase
 {
     /**
      *
@@ -44,26 +40,18 @@ class CreateControllerTest extends TestCase
         Log::info(sprintf('Now in %s.', get_class($this)));
     }
 
-    /**
-     * @covers \FireflyIII\Http\Controllers\Transaction\CreateController
-     */
-    public function testCreate(): void
+    public function testEdit(): void
     {
-        $this->mockDefaultSession();
+        $group        = $this->getRandomWithdrawalGroup();
+        $account      = $this->getRandomAsset();
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $cash         = $this->getRandomAsset();
-        $empty        = new Preference;
-        $empty->data  = [];
+        $this->mockDefaultSession();
 
-        $userRepos->shouldReceive('hasRole')->atLeast()->once()->withArgs([Mockery::any(),'owner'])->andReturn(true);
-        $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($cash);
-
-        Preferences::shouldReceive('get')->withArgs(['transaction_journal_optional_fields', []])->atLeast()->once()->andReturn($empty);
+        $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($account);
 
 
         $this->be($this->user());
-        $response = $this->get(route('transactions.create'));
+        $response = $this->get(route('transactions.edit', [$group->id]));
         $response->assertStatus(200);
     }
 }

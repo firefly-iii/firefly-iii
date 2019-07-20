@@ -71,6 +71,7 @@ class IndexController extends Controller
      * @param Carbon|null $end
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Exception
      */
     public function index(Request $request, string $objectType, Carbon $start = null, Carbon $end = null)
     {
@@ -83,7 +84,7 @@ class IndexController extends Controller
             $end   = session('end');
         }
         if (null === $end) {
-            $end = session('end');
+            $end = session('end'); // @codeCoverageIgnore
         }
 
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
@@ -141,8 +142,12 @@ class IndexController extends Controller
         $collector = app(GroupCollectorInterface::class);
 
         $collector->setRange($start, $end)
-                  ->setTypes($types)->setLimit($pageSize)->setPage($page)->withAccountInformation()
-                  ->withBudgetInformation()->withCategoryInformation();
+                  ->setTypes($types)
+                  ->setLimit($pageSize)
+                  ->setPage($page)
+                  ->withAccountInformation()
+                  ->withBudgetInformation()
+                  ->withCategoryInformation();
         $groups = $collector->getPaginatedGroups();
         $groups->setPath($path);
 
