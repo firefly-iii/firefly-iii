@@ -125,12 +125,13 @@ class BoxController extends Controller
         $cache->addProperty($end);
         $cache->addProperty('box-balance');
         if ($cache->has()) {
-            return response()->json($cache->get()); // @codeCoverageIgnore
+             return response()->json($cache->get()); // @codeCoverageIgnore
         }
         // prep some arrays:
         $incomes  = [];
         $expenses = [];
         $sums     = [];
+        $currency = app('amount')->getDefaultCurrency();
 
         // collect income of user:
         /** @var GroupCollectorInterface $collector */
@@ -178,10 +179,11 @@ class BoxController extends Controller
         }
 
         $response = [
-            'incomes'  => $incomes,
-            'expenses' => $expenses,
-            'sums'     => $sums,
-            'size'     => count($sums),
+            'incomes'   => $incomes,
+            'expenses'  => $expenses,
+            'sums'      => $sums,
+            'size'      => count($sums),
+            'preferred' => $currency->id,
         ];
 
 
