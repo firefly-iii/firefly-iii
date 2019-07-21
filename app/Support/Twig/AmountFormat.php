@@ -84,12 +84,6 @@ class AmountFormat extends Twig_Extension
         return new Twig_SimpleFunction(
             'formatAmountByAccount',
             static function (AccountModel $account, string $amount, bool $coloured = null): string {
-
-                if ('testing' === config('app.env')) {
-                    Log::warning('Twig AmountFormat::formatAmountByAccount should NOT be called in the TEST environment!');
-                    Log::warning('Make sure AccountRepos and Amount::getDefaultCurrency are mocked.');
-                }
-
                 $coloured = $coloured ?? true;
                 /** @var AccountRepositoryInterface $accountRepos */
                 $accountRepos = app(AccountRepositoryInterface::class);

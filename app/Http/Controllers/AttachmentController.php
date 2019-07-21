@@ -41,6 +41,7 @@ class AttachmentController extends Controller
 
     /**
      * AttachmentController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

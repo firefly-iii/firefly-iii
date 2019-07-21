@@ -543,9 +543,9 @@ class BillRepository implements BillRepositoryInterface
      * Link a set of journals to a bill.
      *
      * @param Bill       $bill
-     * @param Collection $transactions
+     * @param array $transactions
      */
-    public function linkCollectionToBill(Bill $bill, Collection $transactions): void
+    public function linkCollectionToBill(Bill $bill, array $transactions): void
     {
         /** @var Transaction $transaction */
         foreach ($transactions as $transaction) {

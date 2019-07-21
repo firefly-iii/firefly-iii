@@ -43,6 +43,7 @@ class HomeController extends Controller
 {
     /**
      * HomeController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

@@ -74,6 +74,7 @@ class BulkControllerTest extends TestCase
         $collector->shouldReceive('withCategoryInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withBudgetInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('withTagInformation')->atLeast()->once()->andReturnSelf();
+        $collector->shouldReceive('withAccountInformation')->atLeast()->once()->andReturnSelf();
         $collector->shouldReceive('setJournalIds')->atLeast()->once()->withArgs([[$withdrawal->id]])->andReturnSelf();
         $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([$withdrawalArray]);
 

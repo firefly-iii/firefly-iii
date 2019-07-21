@@ -56,6 +56,11 @@
             <directory suffix="Test.php">./tests/Feature/Controllers/Recurring</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Report</directory>
             <directory suffix="Test.php">./tests/Feature/Controllers/Rule</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/RuleGroup</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/System</directory>
+            <directory suffix="Test.php">./tests/Feature/Controllers/Transaction</directory>
+            <file>./tests/Feature/Controllers/AttachmentControllerTest.php</file>
+
         </testsuite>
 
         <!--

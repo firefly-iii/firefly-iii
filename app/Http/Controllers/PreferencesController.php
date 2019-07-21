@@ -33,6 +33,7 @@ class PreferencesController extends Controller
 {
     /**
      * PreferencesController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

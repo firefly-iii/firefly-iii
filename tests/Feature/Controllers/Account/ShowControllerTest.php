@@ -61,7 +61,7 @@ class ShowControllerTest extends TestCase
      */
     public function testShow(string $range): void
     {
-        Log::info(sprintf('testShow(%s)', $range));
+        //Log::info(sprintf('testShow(%s)', $range));
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 

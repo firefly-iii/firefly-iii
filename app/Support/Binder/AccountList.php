@@ -44,9 +44,9 @@ class AccountList implements BinderInterface
      */
     public static function routeBinder(string $value, Route $route): Collection
     {
-        Log::debug(sprintf('Now in AccountList::routeBinder("%s")', $value));
+        //Log::debug(sprintf('Now in AccountList::routeBinder("%s")', $value));
         if (auth()->check()) {
-            Log::debug('User is logged in.');
+            //Log::debug('User is logged in.');
             $collection = new Collection;
             if ('allAssetAccounts' === $value) {
                 /** @var Collection $collection */
@@ -55,7 +55,7 @@ class AccountList implements BinderInterface
                                     ->where('account_types.type', AccountType::ASSET)
                                     ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
-                Log::debug(sprintf('Collection length is %d', $collection->count()));
+                //Log::debug(sprintf('Collection length is %d', $collection->count()));
             }
             if ('allAssetAccounts' !== $value) {
                 $incoming = array_map('\intval', explode(',', $value));
@@ -66,7 +66,7 @@ class AccountList implements BinderInterface
                                     ->whereIn('accounts.id', $list)
                                     ->orderBy('accounts.name', 'ASC')
                                     ->get(['accounts.*']);
-                Log::debug(sprintf('Collection length is %d', $collection->count()));
+                //Log::debug(sprintf('Collection length is %d', $collection->count()));
             }
 
             if ($collection->count() > 0) {

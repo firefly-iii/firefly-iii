@@ -46,7 +46,8 @@ class DebugController extends Controller
     use GetConfigurationData;
 
     /**
-     * HomeController constructor.
+     * DebugController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {

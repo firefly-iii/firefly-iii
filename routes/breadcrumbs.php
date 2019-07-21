@@ -43,7 +43,6 @@ use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
 use FireflyIII\User;
 use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
 
 if (!function_exists('limitStringLength')) {
     /**
@@ -288,7 +287,7 @@ try {
         function (BreadcrumbsGenerator $breadcrumbs, Attachment $attachment) {
             $object = $attachment->attachable;
             if ($object instanceof TransactionJournal) {
-                $breadcrumbs->parent('transactions.show', $object);
+                $breadcrumbs->parent('transactions.show', $object->transactionGroup);
                 $breadcrumbs->push(limitStringLength($attachment->filename), route('attachments.edit', [$attachment]));
             }
         }
@@ -298,13 +297,10 @@ try {
         function (BreadcrumbsGenerator $breadcrumbs, Attachment $attachment) {
             $object = $attachment->attachable;
             if ($object instanceof TransactionJournal) {
-                $breadcrumbs->parent('transactions.show', $object);
+                $breadcrumbs->parent('transactions.show', $object->transactionGroup);
                 $breadcrumbs->push(
                     trans('firefly.delete_attachment', ['name' => limitStringLength($attachment->filename)]), route('attachments.edit', [$attachment])
                 );
-            }
-            else {
-                throw new FireflyException('Cannot make breadcrumb for attachment connected to object of type ' . get_class($object));
             }
         }
     );

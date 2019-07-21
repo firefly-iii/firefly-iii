@@ -24,13 +24,9 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Account;
 
 
-use Amount;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -205,7 +201,8 @@ class EditControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock stuff
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $account    = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
 
         $repository->shouldReceive('update')->once();
@@ -222,7 +219,7 @@ class EditControllerTest extends TestCase
             'what'   => 'asset',
         ];
 
-        $response = $this->post(route('accounts.update', [1]), $data);
+        $response = $this->post(route('accounts.update', [$account->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
@@ -235,7 +232,8 @@ class EditControllerTest extends TestCase
     public function testUpdateAgain(): void
     {
         // mock stuff
-        $repository   = $this->mock(AccountRepositoryInterface::class);
+        $account    = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
         $repository->shouldReceive('update')->once();
 
@@ -253,7 +251,7 @@ class EditControllerTest extends TestCase
         // mock default session stuff
         $this->mockDefaultSession();
 
-        $response = $this->post(route('accounts.update', [1]), $data);
+        $response = $this->post(route('accounts.update', [$account->id]), $data);
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }

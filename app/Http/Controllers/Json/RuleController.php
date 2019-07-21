@@ -1,7 +1,7 @@
 <?php
 /**
- * JsonController.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * RuleController.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -18,19 +18,20 @@
  * You should have received a copy of the GNU General Public License
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
-declare(strict_types=1);
 
-namespace FireflyIII\Http\Controllers;
+namespace FireflyIII\Http\Controllers\Json;
 
+
+use FireflyIII\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Log;
 use Throwable;
 
 /**
- * Class JsonController.
+ * Class RuleController
  */
-class JsonController extends Controller
+class RuleController extends Controller
 {
     /**
      * Render HTML form for rule action.
@@ -91,4 +92,5 @@ class JsonController extends Controller
 
         return response()->json(['html' => $view]);
     }
+
 }

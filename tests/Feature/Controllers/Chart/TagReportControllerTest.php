@@ -187,6 +187,8 @@ class TagReportControllerTest extends TestCase
     }
 
     /**
+     * TODO something in this test sometimes gives a 404 but not sure yet what it is.
+     *
      * @covers \FireflyIII\Http\Controllers\Chart\TagReportController
      */
     public function testMainChart(): void
@@ -198,7 +200,7 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
 
         $withdrawal  = $this->getRandomWithdrawalAsArray();
-        $tag         = $this->user()->tags()->inRandomOrder()->first();
+        $tag         = $this->user()->tags()->where('tag','Expensive')->first();
         $date        = new Carbon;
         $false       = new Preference;
         $false->data = false;

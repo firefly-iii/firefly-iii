@@ -59,13 +59,14 @@ class ProfileController extends Controller
 
     /**
      * ProfileController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
         parent::__construct();
 
         $this->middleware(
-            function ($request, $next) {
+            static function ($request, $next) {
                 app('view')->share('title', (string)trans('firefly.profile'));
                 app('view')->share('mainTitleIcon', 'fa-user');
 
@@ -166,20 +167,20 @@ class ProfileController extends Controller
         /** @var Collection $set */
         $set  = app('preferences')->findByName('email_change_confirm_token');
         $user = null;
-        Log::debug(sprintf('Found %d preferences', $set->count()));
+        //Log::debug(sprintf('Found %d preferences', $set->count()));
         /** @var Preference $preference */
         foreach ($set as $preference) {
             if ($preference->data === $token) {
-                Log::debug('Found user');
+                //Log::debug('Found user');
                 $user = $preference->user;
             }
         }
         // update user to clear blocked and blocked_code.
         if (null === $user) {
-            Log::debug('Found no user');
+            //Log::debug('Found no user');
             throw new FireflyException('Invalid token.');
         }
-        Log::debug('Will unblock user.');
+        //Log::debug('Will unblock user.');
         $repository->unblockUser($user);
 
         // return to login.

@@ -55,7 +55,7 @@ class UserControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $this->be($this->user());
-        $response = $this->get(route('admin.users.delete', [1]));
+        $response = $this->get(route('admin.users.delete', [$this->user()->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -74,7 +74,7 @@ class UserControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $this->be($this->user());
-        $response = $this->post(route('admin.users.destroy', ['2']));
+        $response = $this->post(route('admin.users.destroy', [$this->user()->id]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
     }
@@ -91,7 +91,7 @@ class UserControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $this->be($this->user());
-        $response = $this->get(route('admin.users.edit', [1]));
+        $response = $this->get(route('admin.users.edit', [$this->user()->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -141,7 +141,7 @@ class UserControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $this->be($this->user());
-        $response = $this->get(route('admin.users.show', [1]));
+        $response = $this->get(route('admin.users.show', [$this->user()->id]));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');

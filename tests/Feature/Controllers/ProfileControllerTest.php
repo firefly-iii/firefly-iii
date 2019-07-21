@@ -22,6 +22,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Amount;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
@@ -57,6 +58,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testChangeEmail(): void
     {
+        $this->mockDefaultSession();
         $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
@@ -72,10 +74,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testChangePassword(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
@@ -90,13 +92,13 @@ class ProfileControllerTest extends TestCase
      */
     public function testCode(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         Google2FA::shouldReceive('generateSecretKey')->andReturn('secret');
         Google2FA::shouldReceive('getQRCodeInline')->andReturn('long-data-url');
 
@@ -111,8 +113,8 @@ class ProfileControllerTest extends TestCase
      */
     public function testConfirmEmailChangeNoToken(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
-
+        $this->mockDefaultSession();
+        $this->mock(UserRepositoryInterface::class);
 
         Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection());
         // email_change_confirm_token
@@ -125,6 +127,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testConfirmEmailWithToken(): void
     {
+        $this->mockDefaultSession();
         $repository = $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('unblockUser');
@@ -144,14 +147,12 @@ class ProfileControllerTest extends TestCase
      */
     public function testDeleteAccount(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
-
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('profile.delete-account'));
@@ -164,13 +165,15 @@ class ProfileControllerTest extends TestCase
      */
     public function testDeleteCode(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        Preferences::shouldReceive('delete')->withArgs(['twoFactorAuthEnabled'])->atLeast()->once();
+        Preferences::shouldReceive('delete')->withArgs(['twoFactorAuthSecret'])->atLeast()->once();
+
 
         $this->be($this->user());
         $response = $this->get(route('profile.delete-code'));
@@ -185,36 +188,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testEnable2FANoSecret(): void
     {
+        $this->mockDefaultSession();
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
-
-        // ask about language:
-        $langPreference       = new Preference;
-        $langPreference->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference)->times(2);
-
-        // ask about twoFactorAuthEnabled
-        $truePref       = new Preference;
-        $truePref->data = true;
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->times(1);
-
-        // ask about range
-        $rangePref       = new Preference;
-        $rangePref->data = '1M';
-        Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($rangePref)->once();
-
-        // ask about list length:
-        $listPref       = new Preference;
-        $listPref->data = '50';
-        Preferences::shouldReceive('get')->withArgs(['list-length', '10'])->andReturn($listPref)->once();
-
-
-        // ask about currency
-        $currencyPref       = new Preference;
-        $currencyPref->data = 'EUR';
-        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'currencyPreference', 'EUR'])->andReturn($currencyPref);
-        Preferences::shouldReceive('lastActivity')->once();
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturnNull();
 
         $this->be($this->user());
         $response = $this->post(route('profile.enable2FA'));
@@ -227,43 +203,45 @@ class ProfileControllerTest extends TestCase
      */
     public function testEnable2FASecret(): void
     {
-        $repository = $this->mock(UserRepositoryInterface::class);
+        //$this->mockDefaultSession(); // DISABLED ON PURPOSE
+        $this->mockDefaultConfiguration();
+        $repository   = $this->mock(UserRepositoryInterface::class);
+        $euro         = $this->getEuro();
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
-        // ask about language:
-        $langPreference       = new Preference;
-        $langPreference->data = 'en_US';
-        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($langPreference)->times(2);
-
-        // ask about twoFactorAuthEnabled
-        $truePref       = new Preference;
-        $truePref->data = true;
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($truePref)->times(1);
-
-        // ask about range
-        $rangePref       = new Preference;
-        $rangePref->data = '1M';
-        Preferences::shouldReceive('get')->withArgs(['viewRange', '1M'])->andReturn($rangePref)->once();
-
-        // ask about list length:
-        $listPref       = new Preference;
-        $listPref->data = '50';
-        Preferences::shouldReceive('get')->withArgs(['list-length', '10'])->andReturn($listPref)->once();
-
-        $secretPref       = new Preference;
-        $secretPref->data = 'X';
-        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->twice()->andReturn(null, $secretPref);
-
-        // set pref
         Preferences::shouldReceive('set')->once()->withArgs(['twoFactorAuthEnabled', 1]);
+        //Preferences::shouldReceive('lastActivity')->once();
 
+        $pref       = new Preference;
+        $pref->data = false;
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->atLeast()->once()->andReturn($pref);
 
-        // ask about currency
-        $currencyPref       = new Preference;
-        $currencyPref->data = 'EUR';
-        Preferences::shouldReceive('getForUser')->once()->withArgs([Mockery::any(), 'currencyPreference', 'EUR'])->andReturn($currencyPref);
-        Preferences::shouldReceive('lastActivity')->once();
+        $pref       = new Preference;
+        $pref->data = 'super-secret';
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->atLeast()->once()->andReturn($pref);
 
+        $view       = new Preference;
+        $view->data = '1M';
+        Preferences::shouldReceive('get')->withArgs(['viewRange', Mockery::any()])->andReturn($view)->atLeast()->once();
+
+        $lang       = new Preference;
+        $lang->data = 'en_US';
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($lang)->atLeast()->once();
+
+//        $pref       = new Preference;
+//        $pref->data = 'EUR';
+//        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'currencyPreference', 'EUR'])->atLeast()->once()->andReturn($pref);
+
+        $list       = new Preference;
+        $list->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['list-length', 10])->andReturn($list)->atLeast()->once();
+
+        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+
+        $this->session(['rule-groups.delete.uri' => 'http://localhost']);
 
         $this->be($this->user());
         $response = $this->post(route('profile.enable2FA'));
@@ -276,16 +254,43 @@ class ProfileControllerTest extends TestCase
      */
     public function testIndex(): void
     {
-        // delete access token.
-        Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->delete();
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $userRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($this->user());
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $pref       = new Preference;
+        $pref->data = 'token';
+        Preferences::shouldReceive('get')->withArgs(['access_token', null])->atLeast()->once()->andReturn($pref);
+
+        Preferences::shouldReceive('getForUser')->withArgs(['xxx'])->andReturn($pref);
+
+        $this->be($this->user());
+        $response = $this->get(route('profile.index'));
+        $response->assertStatus(200);
+        $response->assertSee('<ol class="breadcrumb">');
+    }
+
+    /**
+     * @covers \FireflyIII\Http\Controllers\ProfileController
+     */
+    public function testIndexEmptyToken(): void
+    {
+        $this->mockDefaultSession();
+        // mock stuff
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $pref       = new Preference;
+        $pref->data = 'token';
+
+        Preferences::shouldReceive('get')->withArgs(['access_token', null])->atLeast()->once()->andReturnNull();
+        Preferences::shouldReceive('set')->withArgs(['access_token', Mockery::any()])->atLeast()->once()->andReturn($pref);
+
+        Preferences::shouldReceive('getForUser')->withArgs(['xxx'])->andReturn($pref);
 
         $this->be($this->user());
         $response = $this->get(route('profile.index'));
@@ -298,6 +303,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangeEmail(): void
     {
+        $this->mockDefaultSession();
         $data       = [
             'email' => 'new@example.com',
         ];
@@ -306,6 +312,13 @@ class ProfileControllerTest extends TestCase
         $repository->shouldReceive('findByEmail')->once()->andReturn(null);
         $repository->shouldReceive('changeEmail')->once()->andReturn(true);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
+
+        $pref       = new Preference;
+        $pref->data = 'invalid';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'email_change_confirm_token', 'invalid'])->andReturn($pref);
+        $pref       = new Preference;
+        $pref->data = 'invalid';
+        Preferences::shouldReceive('getForUser')->withArgs([Mockery::any(), 'email_change_undo_token', 'invalid'])->andReturn($pref);
 
         $this->be($this->user());
         $response = $this->post(route('profile.change-email.post'), $data);
@@ -319,7 +332,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangeEmailExisting(): void
     {
-
+        $this->mockDefaultSession();
         $data       = [
             'email' => 'existing@example.com',
         ];
@@ -339,6 +352,7 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangeEmailSame(): void
     {
+        $this->mockDefaultSession();
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $data = [
@@ -356,9 +370,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangePassword(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
@@ -379,9 +393,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangePasswordNotCorrect(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
@@ -402,9 +416,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostChangePasswordSameNew(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('changePassword');
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
@@ -425,7 +439,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostCode(): void
     {
-        $userRepos = $this->mock(UserRepositoryInterface::class);
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
+
 
         $secret = '0123456789abcde';
         $key    = '123456';
@@ -454,9 +470,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostDeleteAccount(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('destroy')->once();
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
@@ -474,10 +491,10 @@ class ProfileControllerTest extends TestCase
      */
     public function testPostDeleteAccountWrong(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
         // mock stuff
-        $repository   = $this->mock(UserRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+        $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
         $data = [
             'password' => 'james2',
@@ -494,26 +511,18 @@ class ProfileControllerTest extends TestCase
      */
     public function testRegenerate(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
         $repository = $this->mock(UserRepositoryInterface::class);
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->once()->andReturn(false);
-        $token        = '';
-        $currentToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
-        if (null !== $currentToken) {
-            $token = $currentToken->data;
-        }
+
+        Preferences::shouldReceive('set')->withArgs(['access_token', Mockery::any()])->atLeast()->once();
+
         $this->be($this->user());
         $response = $this->post(route('profile.regenerate'));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
         $response->assertRedirect(route('profile.index'));
-
-        $newToken = Preference::where('user_id', $this->user()->id)->where('name', 'access_token')->first();
-        $this->assertNotEquals($newToken->data, $token);
-
-        // reset token for later test:
-        $newToken->data = 'token';
-        $newToken->save();
-
     }
 
     /**
@@ -521,6 +530,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testUndoEmailChange(): void
     {
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
+        $this->mock(UserRepositoryInterface::class);
         $hash                  = hash('sha256', 'previous@example.com');
         $tokenPreference       = new Preference;
         $tokenPreference->data = 'token';
@@ -551,7 +563,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testUndoEmailChangeBadHash(): void
     {
-        $repository            = $this->mock(UserRepositoryInterface::class);
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
+        $this->mock(UserRepositoryInterface::class);
         $hash                  = hash('sha256', 'previous@example.comX');
         $tokenPreference       = new Preference;
         $tokenPreference->data = 'token';
@@ -575,7 +589,9 @@ class ProfileControllerTest extends TestCase
      */
     public function testUndoEmailChangeBadToken(): void
     {
-        $repository = $this->mock(UserRepositoryInterface::class);
+        Log::info(sprintf('Now in test %s.', __METHOD__));
+        $this->mockDefaultSession();
+        $this->mock(UserRepositoryInterface::class);
         Preferences::shouldReceive('findByName')->once()->andReturn(new Collection);
 
         $response = $this->get(route('profile.undo-email-change', ['token', 'some-hash']));

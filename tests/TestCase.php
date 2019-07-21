@@ -32,11 +32,16 @@ use FireflyConfig;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
+use FireflyIII\Models\Attachment;
+use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\Rule;
+use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -58,6 +63,53 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * @return PiggyBank
+     */
+    public function getRandomPiggyBank(): PiggyBank
+    {
+        return $this->user()->piggyBanks()->inRandomOrder()->first(['piggy_banks.*']);
+    }
+
+    /**
+     * @return PiggyBank
+     */
+    public function getRandomTag(): Tag
+    {
+        return $this->user()->tags()->inRandomOrder()->first(['tags.*']);
+    }
+
+    /**
+     * @return Rule
+     */
+    public function getRandomRule(): Rule
+    {
+        return $this->user()->rules()->inRandomOrder()->first();
+    }
+
+    /**
+     * @return Bill
+     */
+    public function getRandomBill(): Bill
+    {
+        return $this->user()->bills()->where('active', 1)->inRandomOrder()->first();
+    }
+
+    /**
+     * @return Bill
+     */
+    public function getRandomInactiveBill(): Bill
+    {
+        return $this->user()->bills()->where('active', 0)->inRandomOrder()->first();
+    }
+
+    /**
+     * @return Attachment
+     */
+    public function getRandomAttachment(): Attachment
+    {
+        return $this->user()->attachments()->inRandomOrder()->first();
+    }
 
     /**
      * @return TransactionJournalLink
@@ -72,7 +124,7 @@ abstract class TestCase extends BaseTestCase
      */
     public function getRandomBudget(): Budget
     {
-        return $this->user()->budgets()->inRandomOrder()->first();
+        return $this->user()->budgets()->where('active', 1)->inRandomOrder()->first();
     }
 
     /**
@@ -102,7 +154,7 @@ abstract class TestCase extends BaseTestCase
         $this->mockDefaultConfiguration();
         $this->mockDefaultPreferences();
         $euro = $this->getEuro();
-        Amount::shouldReceive('getDefaultCurrency')->atLeast()->once()->andReturn($euro);
+        Amount::shouldReceive('getDefaultCurrency')->andReturn($euro);
         $journalRepos = $this->mock(JournalRepositoryInterface::class);
 
         $journal       = new TransactionJournal;
@@ -236,11 +288,11 @@ abstract class TestCase extends BaseTestCase
         $list        = new Preference;
         $list->data  = 50;
 
-        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['twoFactorAuthEnabled', false])->andReturn($false);
-        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['twoFactorAuthSecret'])->andReturnNull();
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthEnabled', false])->andReturn($false);
+        Preferences::shouldReceive('get')->withArgs(['twoFactorAuthSecret'])->andReturnNull();
         Preferences::shouldReceive('get')->withArgs(['viewRange', Mockery::any()])->andReturn($view);
-        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['language', 'en_US'])->andReturn($lang);
-        Preferences::shouldReceive('get')->atLeast()->once()->withArgs(['list-length', 10])->andReturn($list);
+        Preferences::shouldReceive('get')->withArgs(['language', 'en_US'])->andReturn($lang);
+        Preferences::shouldReceive('get')->withArgs(['list-length', 10])->andReturn($list);
     }
 
     /**
@@ -539,7 +591,6 @@ abstract class TestCase extends BaseTestCase
             if (null !== $group) {
                 $count = $group->transactionJournals()->count();
             }
-            Log::debug(sprintf('Count is %d', $count));
         } while (1 !== $count);
 
         return $journal->transactionGroup;

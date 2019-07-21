@@ -113,6 +113,7 @@ class BudgetReportControllerTest extends TestCase
     }
 
     /**
+     * TODO something in this method makes it return a 404.
      * @covers       \FireflyIII\Http\Controllers\Chart\BudgetReportController
      */
     public function testMainChart(): void

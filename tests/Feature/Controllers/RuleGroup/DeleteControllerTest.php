@@ -1,7 +1,7 @@
 <?php
 /**
  * DeleteControllerTest.php
- * Copyright (c) 2018 thegrumpydictator@gmail.com
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -19,19 +19,18 @@
  * along with Firefly III. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(strict_types=1);
+namespace Tests\Feature\Controllers\RuleGroup;
 
-namespace Tests\Feature\Controllers\Budget;
 
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
+use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
+use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Preferences;
 use Tests\TestCase;
 
 /**
- *
  * Class DeleteControllerTest
  */
 class DeleteControllerTest extends TestCase
@@ -47,48 +46,39 @@ class DeleteControllerTest extends TestCase
 
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Budget\DeleteController
+     * @covers \FireflyIII\Http\Controllers\RuleGroup\DeleteController
      */
     public function testDelete(): void
     {
         $this->mockDefaultSession();
-        $budget = $this->getRandomBudget();
-        Log::debug('Now in testDelete()');
-        // mock stuff
-        $this->mock(BudgetRepositoryInterface::class);
-
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-
+        $repository = $this->mock(RuleGroupRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $repository->shouldReceive('get')->andReturn(new Collection);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
-        $response = $this->get(route('budgets.delete', [$budget->id]));
+        $response = $this->get(route('rule-groups.delete', [1]));
         $response->assertStatus(200);
-        // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\Budget\DeleteController
+     * @covers \FireflyIII\Http\Controllers\RuleGroup\DeleteController
      */
     public function testDestroy(): void
     {
         $this->mockDefaultSession();
-        $budget = $this->getRandomBudget();
-        Log::debug('Now in testDestroy()');
-        // mock stuff
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
-        $this->mock(UserRepositoryInterface::class);
-
+        $repository = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository->shouldReceive('destroy');
+        $repository->shouldReceive('find')->atLeast()->once()->andReturnNull();
 
         Preferences::shouldReceive('mark')->atLeast()->once();
 
-        $repository->shouldReceive('destroy')->andReturn(true);
-
-        $this->session(['budgets.delete.uri' => 'http://localhost']);
+        $this->session(['rule-groups.delete.uri' => 'http://localhost']);
         $this->be($this->user());
-        $response = $this->post(route('budgets.destroy', [$budget->id]));
+        $response = $this->post(route('rule-groups.destroy', [1]));
         $response->assertStatus(302);
         $response->assertSessionHas('success');
+        $response->assertRedirect(route('index'));
     }
 }

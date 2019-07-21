@@ -51,10 +51,10 @@ class SearchControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController
-     * @covers \FireflyIII\Http\Controllers\SearchController
      */
     public function testIndex(): void
     {
+        $this->mockDefaultSession();
         $search    = $this->mock(SearchInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
@@ -71,12 +71,11 @@ class SearchControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\SearchController
-     * @covers \FireflyIII\Http\Controllers\SearchController
      */
     public function testSearch(): void
     {
+        $this->mockDefaultSession();
         $search    = $this->mock(SearchInterface::class);
-        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('setLimit')->withArgs([50])->once();

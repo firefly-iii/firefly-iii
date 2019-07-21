@@ -55,6 +55,7 @@ class BillController extends Controller
 
     /**
      * BillController constructor.
+     * @codeCoverageIgnore
      */
     public function __construct()
     {
@@ -253,7 +254,7 @@ class BillController extends Controller
                 $matcher->setTriggeredLimit(100000); // large upper limit
                 $matcher->setRule($rule);
                 $matchingTransactions = $matcher->findTransactionsByRule();
-                $total                += $matchingTransactions->count();
+                $total                += count($matchingTransactions);
                 $this->billRepository->linkCollectionToBill($bill, $matchingTransactions);
             }
 
@@ -314,15 +315,18 @@ class BillController extends Controller
         // transform any attachments as well.
         $collection  = $this->billRepository->getAttachments($bill);
         $attachments = new Collection;
+
+        // @codeCoverageIgnoreStart
         if ($collection->count() > 0) {
             /** @var AttachmentTransformer $transformer */
             $transformer = app(AttachmentTransformer::class);
             $attachments = $collection->each(
-                function (Attachment $attachment) use ($transformer) {
+                static function (Attachment $attachment) use ($transformer) {
                     return $transformer->transform($attachment);
                 }
             );
         }
+        // @codeCoverageIgnoreEnd
 
 
         return view('bills.show', compact('attachments', 'groups', 'rules', 'yearAverage', 'overallAverage', 'year', 'object', 'bill', 'subTitle'));

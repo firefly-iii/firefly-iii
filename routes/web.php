@@ -554,8 +554,8 @@ Route::group(
     Route::get('box/net-worth', ['uses' => 'Json\BoxController@netWorth', 'as' => 'box.net-worth']);
 
     // rules
-    Route::get('trigger', ['uses' => 'JsonController@trigger', 'as' => 'trigger']);
-    Route::get('action', ['uses' => 'JsonController@action', 'as' => 'action']);
+    Route::get('trigger', ['uses' => 'Json\RuleController@trigger', 'as' => 'trigger']);
+    Route::get('action', ['uses' => 'Json\RuleController@action', 'as' => 'action']);
 
     // front page
     Route::get('frontpage/piggy-banks', ['uses' => 'Json\FrontpageController@piggyBanks', 'as' => 'fp.piggy-banks']);
@@ -810,17 +810,17 @@ Route::group(
  */
 Route::group(
     ['middleware' => 'user-full-auth', 'namespace' => 'FireflyIII\Http\Controllers', 'prefix' => 'rule-groups', 'as' => 'rule-groups.'], function () {
-    Route::get('create', ['uses' => 'RuleGroupController@create', 'as' => 'create']);
-    Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroupController@edit', 'as' => 'edit']);
-    Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroupController@delete', 'as' => 'delete']);
-    Route::get('up/{ruleGroup}', ['uses' => 'RuleGroupController@up', 'as' => 'up']);
-    Route::get('down/{ruleGroup}', ['uses' => 'RuleGroupController@down', 'as' => 'down']);
-    Route::get('select/{ruleGroup}', ['uses' => 'RuleGroupController@selectTransactions', 'as' => 'select-transactions']);
+    Route::get('create', ['uses' => 'RuleGroup\CreateController@create', 'as' => 'create']);
+    Route::get('edit/{ruleGroup}', ['uses' => 'RuleGroup\EditController@edit', 'as' => 'edit']);
+    Route::get('delete/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@delete', 'as' => 'delete']);
+    Route::get('up/{ruleGroup}', ['uses' => 'RuleGroup\EditController@up', 'as' => 'up']);
+    Route::get('down/{ruleGroup}', ['uses' => 'RuleGroup\EditController@down', 'as' => 'down']);
+    Route::get('select/{ruleGroup}', ['uses' => 'RuleGroup\ExecutionController@selectTransactions', 'as' => 'select-transactions']);
 
-    Route::post('store', ['uses' => 'RuleGroupController@store', 'as' => 'store']);
-    Route::post('update/{ruleGroup}', ['uses' => 'RuleGroupController@update', 'as' => 'update']);
-    Route::post('destroy/{ruleGroup}', ['uses' => 'RuleGroupController@destroy', 'as' => 'destroy']);
-    Route::post('execute/{ruleGroup}', ['uses' => 'RuleGroupController@execute', 'as' => 'execute']);
+    Route::post('store', ['uses' => 'RuleGroup\CreateController@store', 'as' => 'store']);
+    Route::post('update/{ruleGroup}', ['uses' => 'RuleGroup\EditController@update', 'as' => 'update']);
+    Route::post('destroy/{ruleGroup}', ['uses' => 'RuleGroup\DeleteController@destroy', 'as' => 'destroy']);
+    Route::post('execute/{ruleGroup}', ['uses' => 'RuleGroup\ExecutionController@execute', 'as' => 'execute']);
 }
 );
 

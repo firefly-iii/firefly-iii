@@ -1,7 +1,7 @@
 <?php
 /**
- * JsonControllerTest.php
- * Copyright (c) 2017 thegrumpydictator@gmail.com
+ * RuleControllerTest.php
+ * Copyright (c) 2019 thegrumpydictator@gmail.com
  *
  * This file is part of Firefly III.
  *
@@ -28,13 +28,13 @@ use Log;
 use Tests\TestCase;
 
 /**
- * Class JsonControllerTest
+ * Class RuleControllerTest
  *
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class JsonControllerTest extends TestCase
+class RuleControllerTest extends TestCase
 {
     /**
      *
@@ -46,7 +46,7 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController
+     * @covers \FireflyIII\Http\Controllers\Json\RuleController
      */
     public function testAction(): void
     {
@@ -60,7 +60,7 @@ class JsonControllerTest extends TestCase
     }
 
     /**
-     * @covers \FireflyIII\Http\Controllers\JsonController
+     * @covers \FireflyIII\Http\Controllers\Json\RuleController
      */
     public function testTrigger(): void
     {
