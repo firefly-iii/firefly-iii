@@ -104,7 +104,6 @@ class AccountFormRequest extends Request
             'account_role'                       => 'in:' . $accountRoles,
             'active'                             => 'boolean',
             'cc_type'                            => 'in:' . $ccPaymentTypes,
-            'cc_monthly_payment_date'            => 'date',
             'amount_currency_id_opening_balance' => 'exists:transaction_currencies,id',
             'amount_currency_id_virtual_balance' => 'exists:transaction_currencies,id',
             'what'                               => 'in:' . $types,
