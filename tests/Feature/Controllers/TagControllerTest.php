@@ -22,13 +22,12 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
+use Amount;
 use Carbon\Carbon;
-
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
@@ -130,7 +129,6 @@ class TagControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TagController
-     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testIndex(): void
     {
@@ -154,7 +152,6 @@ class TagControllerTest extends TestCase
 
     /**
      * @covers \FireflyIII\Http\Controllers\TagController
-     * @covers \FireflyIII\Http\Controllers\TagController
      */
     public function testShow(): void
     {
@@ -171,28 +168,36 @@ class TagControllerTest extends TestCase
         Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
 
         // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(GroupCollectorInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $group      = $this->getRandomWithdrawalGroup();
+        $paginator  = new LengthAwarePaginator([$group], 1, 40, 1);
+        $repository = $this->mock(TagRepositoryInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        //Preferences::shouldReceive('mark')->atLeast()->once();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
 
-        $repository->shouldReceive('expenseInPeriod')->andReturn(new Collection)->atLeast()->times(1);
-        $repository->shouldReceive('incomeInPeriod')->andReturn(new Collection)->atLeast()->times(1);
-        $repository->shouldReceive('transferredInPeriod')->andReturn(new Collection)->atLeast()->times(1);
+        //$repository->shouldReceive('expenseInPeriod')->andReturn(new Collection)->atLeast()->times(1);
+        //$repository->shouldReceive('incomeInPeriod')->andReturn(new Collection)->atLeast()->times(1);
+        //$repository->shouldReceive('transferredInPeriod')->andReturn(new Collection)->atLeast()->times(1);
 
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setPage')->andReturnSelf()->once();
-        $collector->shouldReceive('setTag')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTag')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn($paginator)->atLeast()->once();
+
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([]);
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1]));
@@ -207,33 +212,38 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
 
-        // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
-        
-        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
-
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setPage')->andReturnSelf()->once();
-        $collector->shouldReceive('setTag')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
-
         $amounts = [
             TransactionType::WITHDRAWAL => '0',
             TransactionType::TRANSFER   => '0',
             TransactionType::DEPOSIT    => '0',
         ];
+
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        // mock stuff
+        $group      = $this->getRandomWithdrawalGroup();
+        $paginator  = new LengthAwarePaginator([$group], 1, 40, 1);
+        $repository = $this->mock(TagRepositoryInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
+
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTag')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn($paginator)->atLeast()->once();
+
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1, 'all']));
@@ -248,42 +258,49 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
 
-        // mock stuff
-        $repository   = $this->mock(TagRepositoryInterface::class);
-        $collector    = $this->mock(TransactionCollectorInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
-        $date         = new Carbon;
-        $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-
-        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        
-        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
-
-        $repository->shouldReceive('expenseInPeriod')->andReturn(new Collection)->atLeast()->times(1);
-        $repository->shouldReceive('incomeInPeriod')->andReturn(new Collection)->atLeast()->times(1);
-        $repository->shouldReceive('transferredInPeriod')->andReturn(new Collection)->atLeast()->times(1);
-
-
-        $collector->shouldReceive('removeFilter')->andReturnSelf()->once();
-        $collector->shouldReceive('setAllAssetAccounts')->andReturnSelf()->once();
-        $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setPage')->andReturnSelf()->once();
-        $collector->shouldReceive('setTag')->andReturnSelf()->once();
-        $collector->shouldReceive('withOpposingAccount')->andReturnSelf()->once();
-        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->once();
-        $collector->shouldReceive('getPaginatedTransactions')->andReturn(new LengthAwarePaginator([], 0, 10))->once();
-
         $amounts = [
             TransactionType::WITHDRAWAL => '0',
             TransactionType::TRANSFER   => '0',
             TransactionType::DEPOSIT    => '0',
         ];
+
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
+        // mock stuff
+        $helper = $this->mock(FiscalHelperInterface::class);
+
+        $helper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn(new Carbon);
+        $helper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn(new Carbon);
+
+        $group      = $this->getRandomWithdrawalGroup();
+        $paginator  = new LengthAwarePaginator([$group], 1, 40, 1);
+        $repository = $this->mock(TagRepositoryInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
+
+        //Preferences::shouldReceive('mark')->atLeast()->once();
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+
+        $repository->shouldReceive('firstUseDate')->andReturn(new Carbon)->once();
         $repository->shouldReceive('sumsOfTag')->andReturn($amounts)->once();
+
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setLimit')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setPage')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('setTag')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('withAccountInformation')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getPaginatedGroups')->andReturn($paginator)->atLeast()->once();
+
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
+
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->once();
+        $collector->shouldReceive('getExtractedJournals')->atLeast()->once()->andReturn([]);
+
 
         $this->be($this->user());
         $response = $this->get(route('tags.show', [1, '2016-01-01']));
@@ -299,10 +316,8 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $repository   = $this->mock(TagRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        Preferences::shouldReceive('mark')->atLeast()->once();
 
-        
         $repository->shouldReceive('findNull')->andReturn(null);
         $repository->shouldReceive('store')->andReturn(new Tag);
 
@@ -327,9 +342,9 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $repository   = $this->mock(TagRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        
+        Preferences::shouldReceive('mark')->atLeast()->once();
+
 
         $this->session(['tags.edit.uri' => 'http://localhost']);
         $data = [

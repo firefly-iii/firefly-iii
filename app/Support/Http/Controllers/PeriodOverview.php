@@ -30,7 +30,6 @@ use FireflyIII\Models\Category;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Support\CacheProperties;
 use Illuminate\Support\Collection;
 use Log;
@@ -361,57 +360,68 @@ trait PeriodOverview
      *
      * @param Carbon $date
      *
-     * @return Collection
+     * @return array
      */
-    protected function getTagPeriodOverview(Tag $tag, Carbon $date): Collection // period overview for tags.
+    protected function getTagPeriodOverview(Tag $tag, Carbon $start, Carbon $end): array // period overview for tags.
     {
-        die('not yet complete');
-        /** @var TagRepositoryInterface $repository */
-        $repository = app(TagRepositoryInterface::class);
-        $range      = app('preferences')->get('viewRange', '1M')->data;
-        /** @var Carbon $end */
-        $start = clone $date;
-        $end   = $repository->firstUseDate($tag) ?? new Carbon;
+
+        $range = app('preferences')->get('viewRange', '1M')->data;
         [$start, $end] = $end < $start ? [$end, $start] : [$start, $end];
 
-        // properties for entries with their amounts.
+        // properties for cache
         $cache = new CacheProperties;
         $cache->addProperty($start);
         $cache->addProperty($end);
         $cache->addProperty('tag-period-entries');
         $cache->addProperty($tag->id);
-
         if ($cache->has()) {
-            return $cache->get(); // @codeCoverageIgnore
+            // return $cache->get(); // @codeCoverageIgnore
         }
-
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);
-        $entries = new Collection;
-        // while end larger or equal to start
+        $entries = [];
+
+        // collect all expenses in this period:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setTag($tag);
+        $collector->setRange($start, $end);
+        $collector->setTypes([TransactionType::DEPOSIT]);
+        $earnedSet = $collector->getExtractedJournals();
+
+        // collect all income in this period:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setTag($tag);
+        $collector->setRange($start, $end);
+        $collector->setTypes([TransactionType::WITHDRAWAL]);
+        $spentSet = $collector->getExtractedJournals();
+
+        // collect all transfers in this period:
+        /** @var GroupCollectorInterface $collector */
+        $collector = app(GroupCollectorInterface::class);
+        $collector->setTag($tag);
+        $collector->setRange($start, $end);
+        $collector->setTypes([TransactionType::TRANSFER]);
+        $transferSet = $collector->getExtractedJournals();
+
         foreach ($dates as $currentDate) {
-
-            $spentSet       = $repository->expenseInPeriod($tag, $currentDate['start'], $currentDate['end']);
-            $spent          = $this->groupByCurrency($spentSet);
-            $earnedSet      = $repository->incomeInPeriod($tag, $currentDate['start'], $currentDate['end']);
-            $earned         = $this->groupByCurrency($earnedSet);
-            $transferredSet = $repository->transferredInPeriod($tag, $currentDate['start'], $currentDate['end']);
-            $transferred    = $this->groupByCurrency($transferredSet);
-            $title          = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
-
-            $entries->push(
+            $spent       = $this->filterJournalsByDate($spentSet, $currentDate['start'], $currentDate['end']);
+            $earned      = $this->filterJournalsByDate($earnedSet, $currentDate['start'], $currentDate['end']);
+            $transferred = $this->filterJournalsByDate($transferSet, $currentDate['start'], $currentDate['end']);
+            $title       = app('navigation')->periodShow($currentDate['end'], $currentDate['period']);
+            $entries[]   =
                 [
-                    'transactions' => count($spentSet) + count($earnedSet) + count($transferredSet),
-                    'title'        => $title,
-                    'spent'        => $spent,
-                    'earned'       => $earned,
-                    'transferred'  => $transferred,
-                    'route'        => route('tags.show', [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
-                ]
-            );
-
+                    'transactions'       => 0,
+                    'title'              => $title,
+                    'route'              => route('tags.show',
+                                                  [$tag->id, $currentDate['start']->format('Y-m-d'), $currentDate['end']->format('Y-m-d')]),
+                    'total_transactions' => count($spent) + count($earned) + count($transferred),
+                    'spent'              => $this->groupByCurrency($spent),
+                    'earned'             => $this->groupByCurrency($earned),
+                    'transferred'        => $this->groupByCurrency($transferred),
+                ];
         }
-        $cache->store($entries);
 
         return $entries;
     }
@@ -435,7 +445,7 @@ trait PeriodOverview
         $cache->addProperty('transactions-period-entries');
         $cache->addProperty($transactionType);
         if ($cache->has()) {
-            // return $cache->get(); // @codeCoverageIgnore
+            return $cache->get(); // @codeCoverageIgnore
         }
         /** @var array $dates */
         $dates   = app('navigation')->blockPeriods($start, $end, $range);

@@ -192,7 +192,11 @@ class TagController extends Controller
             'firefly.journals_in_period_for_tag', ['tag' => $tag->tag, 'start' => $start->formatLocalized($this->monthAndDayFormat),
                                                    'end' => $end->formatLocalized($this->monthAndDayFormat),]
         );
-        $periods      = $this->getTagPeriodOverview($tag, $start);
+
+        $startPeriod = $this->repository->firstUseDate($tag);
+        $startPeriod  = $startPeriod ?? new Carbon;
+        $endPeriod    = clone $end;
+        $periods      = $this->getTagPeriodOverview($tag, $startPeriod, $endPeriod);
         $path         = route('tags.show', [$tag->id, $start->format('Y-m-d'), $end->format('Y-m-d')]);
 
         /** @var GroupCollectorInterface $collector */
@@ -224,7 +228,7 @@ class TagController extends Controller
         $subTitleIcon = 'fa-tag';
         $page         = (int)$request->get('page');
         $pageSize     = (int)app('preferences')->get('listPageSize', 50)->data;
-        $periods      = new Collection;
+        $periods      = [];
         $subTitle     = (string)trans('firefly.all_journals_for_tag', ['tag' => $tag->tag]);
         $start        = $this->repository->firstUseDate($tag) ?? new Carbon;
         $end          = new Carbon;
