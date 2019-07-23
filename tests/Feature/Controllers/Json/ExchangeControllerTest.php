@@ -61,7 +61,7 @@ class ExchangeControllerTest extends TestCase
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $rate = factory(CurrencyExchangeRate::class)->make();
+        $rate = $this->getRandomCer();
         $repository->shouldReceive('getExchangeRate')->andReturn($rate);
 
         $this->be($this->user());
@@ -74,8 +74,10 @@ class ExchangeControllerTest extends TestCase
      */
     public function testGetRateAmount(): void
     {
+        $this->mockDefaultSession();
+
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $rate         = factory(CurrencyExchangeRate::class)->make();
+        $rate = $this->getRandomCer();
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
@@ -92,12 +94,14 @@ class ExchangeControllerTest extends TestCase
      */
     public function testGetRateNull(): void
     {
+        $this->mockDefaultSession();
+
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
-        $rate = factory(CurrencyExchangeRate::class)->make();
+        $rate = $this->getRandomCer();
         $repository->shouldReceive('getExchangeRate')->andReturnNull();
         $interface = $this->mock(ExchangeRateInterface::class);
         $interface->shouldReceive('setUser')->once();

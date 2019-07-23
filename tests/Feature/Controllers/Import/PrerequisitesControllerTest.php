@@ -54,6 +54,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -88,6 +89,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndexBadState(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
@@ -115,6 +117,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testIndexComplete(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -147,6 +150,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPost(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -179,6 +183,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostBadState(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -210,6 +215,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostNoJob(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
@@ -235,6 +241,7 @@ class PrerequisitesControllerTest extends TestCase
      */
     public function testPostWithMessages(): void
     {
+        $this->mockDefaultSession();
         $userRepos  = $this->mock(UserRepositoryInterface::class);
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);

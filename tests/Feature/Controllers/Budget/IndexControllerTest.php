@@ -257,6 +257,12 @@ class IndexControllerTest extends TestCase
      */
     public function testReorder(): void
     {
+        $this->mockDefaultSession();
+
+        $pref       = new Preference;
+        $pref->data = 50;
+        Preferences::shouldReceive('get')->withArgs(['listPageSize', 50])->atLeast()->once()->andReturn($pref);
+
         $repository = $this->mock(BudgetRepositoryInterface::class);
         $data       = [
             'budgetIds' => [1, 2],

@@ -38,6 +38,7 @@ use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
 use FireflyIII\Models\Configuration;
+use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\PiggyBank;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Rule;
@@ -63,6 +64,14 @@ use RuntimeException;
  */
 abstract class TestCase extends BaseTestCase
 {
+    /**
+     * @return CurrencyExchangeRate
+     */
+    public function getRandomCer(): CurrencyExchangeRate
+    {
+        return $this->user()->currencyExchangeRates()->inRandomOrder()->first();
+    }
+
     /**
      * @return PiggyBank
      */

@@ -56,6 +56,7 @@ class ExpenseControllerTest extends TestCase
      */
     public function testBudget(): void
     {
+
         $repository   = $this->mock(AccountRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $collector    = $this->mock(GroupCollectorInterface::class);

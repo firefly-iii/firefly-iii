@@ -207,8 +207,6 @@ class ProfileControllerTest extends TestCase
         $this->mockDefaultConfiguration();
         $repository   = $this->mock(UserRepositoryInterface::class);
         $euro         = $this->getEuro();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 

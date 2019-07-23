@@ -123,11 +123,10 @@ class AttachmentControllerTest extends TestCase
 
         // mock stuff
         $attachment   = $this->getRandomAttachment();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(AttachmentRepositoryInterface::class);
 
         $repository->shouldReceive('exists')->once()->andReturn(false);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
 
         $this->be($this->user());
         $response = $this->get(route('attachments.download', [$attachment->id]));

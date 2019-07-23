@@ -222,7 +222,7 @@ class LinkControllerTest extends TestCase
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository->shouldReceive('switchLink')->andReturn(false);
         $this->be($this->user());
         $response = $this->get(route('transactions.link.switch', [$link->id]));

@@ -186,22 +186,20 @@ class SelectControllerTest extends TestCase
                 'stop_processing' => 1,
             ],
         ];
-        $set  = factory(Transaction::class, 10)->make();
 
         // mock stuff
         $matcher      = $this->mock(TransactionMatcher::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
 
         $matcher->shouldReceive('setStrict')->once()->withArgs([false]);
 
         $matcher->shouldReceive('setTriggeredLimit')->withArgs([10])->andReturnSelf()->once();
         $matcher->shouldReceive('setSearchLimit')->withArgs([200])->andReturnSelf()->once();
         $matcher->shouldReceive('setTriggers')->andReturnSelf()->once();
-        $matcher->shouldReceive('findTransactionsByTriggers')->andReturn($set);
+        $matcher->shouldReceive('findTransactionsByTriggers')->andReturn(new Collection);
 
         $this->be($this->user());
         $uri      = route('rules.test-triggers') . '?' . http_build_query($data);

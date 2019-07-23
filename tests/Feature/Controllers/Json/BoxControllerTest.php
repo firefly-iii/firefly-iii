@@ -185,6 +185,7 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorth(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
                 'currency' => TransactionCurrency::find(1),
@@ -217,6 +218,7 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthFuture(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
                 'currency' => TransactionCurrency::find(1),
@@ -252,6 +254,7 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthNoCurrency(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
                 'currency' => TransactionCurrency::find(1),
@@ -282,6 +285,7 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthNoInclude(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
                 'currency' => TransactionCurrency::find(1),
@@ -313,6 +317,7 @@ class BoxControllerTest extends TestCase
      */
     public function testNetWorthVirtual(): void
     {
+        $this->mockDefaultSession();
         $result = [
             [
                 'currency' => TransactionCurrency::find(1),

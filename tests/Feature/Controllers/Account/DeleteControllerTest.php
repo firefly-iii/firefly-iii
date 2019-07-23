@@ -24,17 +24,14 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Account;
 
 
-use Amount;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
-use Tests\TestCase;
 use Preferences;
+use Tests\TestCase;
 
 
 /**
@@ -62,9 +59,9 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $asset        = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
 
         $repository->shouldReceive('getAccountsByType')->withArgs([[AccountType::ASSET]])->andReturn(new Collection);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
@@ -86,8 +83,8 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         // mock stuff
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $asset        = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
         $repository->shouldReceive('findNull')->withArgs([0])->once()->andReturn(null);
         $repository->shouldReceive('destroy')->andReturn(true);
 

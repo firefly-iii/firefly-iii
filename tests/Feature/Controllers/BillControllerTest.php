@@ -164,7 +164,6 @@ class BillControllerTest extends TestCase
         // mock stuff
         $this->mock(AttachmentHelperInterface::class);
         $bill         = $this->getRandomBill();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $transformer  = $this->mock(BillTransformer::class);
@@ -180,7 +179,7 @@ class BillControllerTest extends TestCase
         );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $collection = new Collection([$bill]);
         $repository->shouldReceive('getPaginator')->andReturn(new LengthAwarePaginator($collection, 1, 50))->once();
         $repository->shouldReceive('setUser');
@@ -204,11 +203,10 @@ class BillControllerTest extends TestCase
 
         // mock stuff
         $rule         = $this->getRandomRule();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(BillRepositoryInterface::class);
         $this->mock(AttachmentHelperInterface::class);
 
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $repository->shouldReceive('getRulesForBill')->andReturn(new Collection([$rule]));
 
         //calls for transaction matcher:

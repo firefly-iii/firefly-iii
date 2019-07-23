@@ -56,7 +56,7 @@ class IndexControllerTest extends TestCase
     {
         Log::debug('Test index()');
         // mock stuff
-        $category      = factory(Category::class)->make();
+        $category      = $this->getRandomCategory();
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
 

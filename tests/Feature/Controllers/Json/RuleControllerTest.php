@@ -50,9 +50,8 @@ class RuleControllerTest extends TestCase
      */
     public function testAction(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('json.action'));
@@ -64,9 +63,8 @@ class RuleControllerTest extends TestCase
      */
     public function testTrigger(): void
     {
+        $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
 
         $this->be($this->user());
         $response = $this->get(route('json.trigger'));

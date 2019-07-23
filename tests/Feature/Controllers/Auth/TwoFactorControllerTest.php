@@ -47,7 +47,10 @@ class TwoFactorControllerTest extends TestCase
      */
     public function testIndex(): void
     {
+        $this->mockDefaultConfiguration();
         $this->be($this->user());
+
+
 
         $truePref               = new Preference;
         $truePref->data         = true;

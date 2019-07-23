@@ -54,6 +54,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
+        $this->mockDefaultSession();
         $return       = [];
         $helper       = $this->mock(BudgetReportHelperInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
@@ -72,6 +73,7 @@ class BudgetControllerTest extends TestCase
      */
     public function testPeriod(): void
     {
+        $this->mockDefaultSession();
         $first        = [1 => ['entries' => ['1', '1']]];
         $second       = ['entries' => ['1', '1']];
         $repository   = $this->mock(BudgetRepositoryInterface::class);

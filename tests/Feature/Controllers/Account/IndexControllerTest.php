@@ -24,10 +24,8 @@ namespace Tests\Feature\Controllers\Account;
 
 use Amount;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -66,10 +64,10 @@ class IndexControllerTest extends TestCase
     {
         // mock stuff
         $this->mock(CurrencyRepositoryInterface::class);
-        $account       = $this->getRandomAsset();
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $euro          = $this->getEuro();
+        $account    = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $euro       = $this->getEuro();
         // mock hasRole for user repository:
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 

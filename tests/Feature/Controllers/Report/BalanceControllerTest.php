@@ -53,6 +53,7 @@ class BalanceControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
+        $this->mockDefaultSession();
         $balance      = $this->mock(BalanceReportHelperInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;

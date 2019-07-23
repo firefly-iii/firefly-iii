@@ -62,11 +62,10 @@ class PreferencesControllerTest extends TestCase
         $this->mockIntroPreference('shown_demo_preferences_index');
         // mock stuff
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $accountRepos->shouldReceive('getAccountsByType')->withArgs([[AccountType::DEFAULT, AccountType::ASSET]])->andReturn(new Collection)->once();
 
         // mock get preferences:
@@ -105,9 +104,8 @@ class PreferencesControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $journalRepos->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal);
+
         $userRepos->shouldReceive('hasRole')->andReturn(false);
 
         $data = [

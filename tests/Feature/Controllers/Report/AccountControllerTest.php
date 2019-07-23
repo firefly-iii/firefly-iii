@@ -51,6 +51,7 @@ class AccountControllerTest extends TestCase
      */
     public function testGeneral(): void
     {
+        $this->mockDefaultSession();
         $return = [
             'accounts'   => [],
             'start'      => '0',

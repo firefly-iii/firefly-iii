@@ -24,13 +24,10 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Account;
 
 
-use Amount;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -97,8 +94,8 @@ class CreateControllerTest extends TestCase
     {
         // mock stuff
 
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $asset        = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
 
         $repository->shouldReceive('store')->once()->andReturn($asset);
 
@@ -133,8 +130,8 @@ class CreateControllerTest extends TestCase
     public function testStoreAnother(): void
     {
         // mock stuff
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $asset        = $this->getRandomAsset();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $asset      = $this->getRandomAsset();
 
         $repository->shouldReceive('store')->once()->andReturn($asset);
 
@@ -147,7 +144,6 @@ class CreateControllerTest extends TestCase
 
         // mock default session stuff
         $this->mockDefaultSession();
-
 
 
         Preferences::shouldReceive('mark')->atLeast()->once()->withNoArgs();
@@ -175,9 +171,9 @@ class CreateControllerTest extends TestCase
     public function testStoreLiability(): void
     {
         // mock stuff
-        $repository   = $this->mock(AccountRepositoryInterface::class);
-        $liability    = $this->getRandomLoan();
-        $loan         = AccountType::where('type', AccountType::LOAN)->first();
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $liability  = $this->getRandomLoan();
+        $loan       = AccountType::where('type', AccountType::LOAN)->first();
         $repository->shouldReceive('store')->once()->andReturn($liability);
 
         // mock default session stuff

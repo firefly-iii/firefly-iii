@@ -70,7 +70,6 @@ class NoCategoryControllerTest extends TestCase
         $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         $this->mockDefaultSession();

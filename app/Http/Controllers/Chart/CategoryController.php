@@ -115,7 +115,7 @@ class CategoryController extends Controller
         switch ($step) {
             case '1D':
                 while ($current <= $end) {
-                    Log::debug(sprintf('Current day is %s', $current->format('Y-m-d')));
+                    //Log::debug(sprintf('Current day is %s', $current->format('Y-m-d')));
                     $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $current);
                     $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $current);
                     $sum                             = bcadd($spent, $earned);
@@ -134,7 +134,7 @@ class CategoryController extends Controller
             // @codeCoverageIgnoreEnd
                 while ($current <= $end) {
                     $currentEnd = app('navigation')->endOfPeriod($current, $step);
-                    Log::debug(sprintf('abc Range is %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
+                    //Log::debug(sprintf('abc Range is %s to %s', $current->format('Y-m-d'), $currentEnd->format('Y-m-d')));
 
                     $spent                           = $repository->spentInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);
                     $earned                          = $repository->earnedInPeriod(new Collection([$category]), $accounts, $current, $currentEnd);

@@ -54,6 +54,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testExpenses(): void
     {
+        $this->mockDefaultSession();
         $first        = [1 => ['entries' => ['1', '1']]];
         $second       = ['entries' => ['1', '1']];
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -75,6 +76,7 @@ class CategoryControllerTest extends TestCase
      */
     public function testIncome(): void
     {
+        $this->mockDefaultSession();
         $first        = [1 => ['entries' => ['1', '1']]];
         $second       = ['entries' => ['1', '1']];
         $repository   = $this->mock(CategoryRepositoryInterface::class);
@@ -96,8 +98,9 @@ class CategoryControllerTest extends TestCase
      */
     public function testOperations(): void
     {
+        $this->mockDefaultSession();
         $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $category     = factory(Category::class)->make();
+        $category     = $this->getRandomCategory();
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);

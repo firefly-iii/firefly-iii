@@ -28,13 +28,13 @@ use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
+use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Preferences;
 use Tests\TestCase;
-use FireflyIII\Models\TransactionType;
 
 /**
  * Class TagReportControllerTest
@@ -233,6 +233,7 @@ class TagReportControllerTest extends TestCase
      */
     public function testTagExpense(): void
     {
+        $this->mockDefaultSession();
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
@@ -265,6 +266,7 @@ class TagReportControllerTest extends TestCase
      */
     public function testTagIncome(): void
     {
+        $this->mockDefaultSession();
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);

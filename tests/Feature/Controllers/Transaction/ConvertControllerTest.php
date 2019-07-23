@@ -179,7 +179,6 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexDepositTransfer(): void
     {
         $this->mockDefaultSession();
-        $repository = $this->mock(JournalRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleGroupRepositoryInterface::class);
@@ -194,7 +193,6 @@ class ConvertControllerTest extends TestCase
         $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
 
 
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
 
 
         $data = ['source_account_id' => 1];
@@ -210,7 +208,6 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexBadSource(): void
     {
         $this->mockDefaultSession();
-        $repository = $this->mock(JournalRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleGroupRepositoryInterface::class);
@@ -224,7 +221,6 @@ class ConvertControllerTest extends TestCase
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['Transfer']);
         $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(false);
         $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
 
 
         $data = ['source_account_id' => 1];
@@ -241,7 +237,6 @@ class ConvertControllerTest extends TestCase
     public function testPostIndexBadDestination(): void
     {
         $this->mockDefaultSession();
-        $repository = $this->mock(JournalRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(RuleGroupRepositoryInterface::class);
@@ -255,7 +250,6 @@ class ConvertControllerTest extends TestCase
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['Transfer']);
         $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
         $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(false);
-        $repository->shouldReceive('firstNull')->once()->andReturn(new TransactionJournal)->atLeast()->once();
 
 
         $data = ['source_account_id' => 1];

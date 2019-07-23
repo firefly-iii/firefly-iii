@@ -33,6 +33,10 @@ use Preferences;
 
 /**
  * Class LinkControllerTest
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class LinkControllerTest extends TestCase
 {
@@ -51,7 +55,7 @@ class LinkControllerTest extends TestCase
     public function testCreate(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $this->mock(LinkTypeRepositoryInterface::class);
 
         // mock default session stuff
         $this->mockDefaultSession();
@@ -97,7 +101,7 @@ class LinkControllerTest extends TestCase
     public function testDeleteNonEditable(): void
     {
         $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $this->mock(LinkTypeRepositoryInterface::class);
         $linkType   = LinkType::where('editable', 0)->first();
 
         // mock default session stuff
@@ -145,7 +149,7 @@ class LinkControllerTest extends TestCase
     public function testEditEditable(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $this->mock(LinkTypeRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
@@ -168,7 +172,7 @@ class LinkControllerTest extends TestCase
     public function testEditNonEditable(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $this->mock(LinkTypeRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();
@@ -190,7 +194,7 @@ class LinkControllerTest extends TestCase
     public function testIndex(): void
     {
         $userRepos = $this->mock(UserRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $this->mock(LinkTypeRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
@@ -324,7 +328,7 @@ class LinkControllerTest extends TestCase
     public function testUpdateNonEditable(): void
     {
         $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $repository = $this->mock(LinkTypeRepositoryInterface::class);
+        $this->mock(LinkTypeRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->andReturn(false)->atLeast()->once();

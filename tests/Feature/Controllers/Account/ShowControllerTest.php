@@ -25,6 +25,7 @@ namespace Tests\Feature\Controllers\Account;
 
 use Amount;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -40,6 +41,9 @@ use Tests\TestCase;
 /**
  *
  * Class ShowControllerTest
+ *
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ShowControllerTest extends TestCase
 {
@@ -58,24 +62,22 @@ class ShowControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testShow(string $range): void
     {
-        //Log::info(sprintf('testShow(%s)', $range));
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
 
         // mock stuff:
-        //$tasker        = $this->mock(AccountTaskerInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
-        //$accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $collector     = $this->mock(GroupCollectorInterface::class);
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $journal       = $this->getRandomWithdrawalAsArray();
-        $group         = $this->getRandomWithdrawalGroup();
-        $asset         = $this->getRandomAsset();
-        $euro          = $this->getEuro();
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $journal    = $this->getRandomWithdrawalAsArray();
+        $group      = $this->getRandomWithdrawalGroup();
+        $asset      = $this->getRandomAsset();
+        $euro       = $this->getEuro();
 
         $this->mockDefaultSession();
 
@@ -115,16 +117,17 @@ class ShowControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testShowAll(string $range): void
     {
         $date = new Carbon;
         $this->session(['start' => $date, 'end' => clone $date]);
         // mock stuff:
-        $tasker        = $this->mock(AccountTaskerInterface::class);
+        $this->mock(AccountTaskerInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $repository    = $this->mock(AccountRepositoryInterface::class);
         $journal       = $this->getRandomWithdrawalAsArray();

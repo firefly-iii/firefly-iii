@@ -39,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class ConfigurationControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ *
  */
 class ReconcileControllerTest extends TestCase
 {

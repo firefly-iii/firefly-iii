@@ -52,6 +52,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testExpenses(): void
     {
+        $this->mockDefaultSession();
         $return       = [
             1 => [
                 'id'      => 1,
@@ -78,6 +79,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testIncome(): void
     {
+        $this->mockDefaultSession();
         $tasker       = $this->mock(AccountTaskerInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
@@ -95,6 +97,7 @@ class OperationsControllerTest extends TestCase
      */
     public function testOperations(): void
     {
+        $this->mockDefaultSession();
         $return = [
             1 => [
                 'id'      => 1,
