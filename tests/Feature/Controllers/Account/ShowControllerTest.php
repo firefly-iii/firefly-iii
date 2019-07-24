@@ -125,15 +125,15 @@ class ShowControllerTest extends TestCase
         $this->session(['start' => $date, 'end' => clone $date]);
         // mock stuff:
         $this->mock(AccountTaskerInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $collector     = $this->mock(GroupCollectorInterface::class);
-        $repository    = $this->mock(AccountRepositoryInterface::class);
-        $journal       = $this->getRandomWithdrawalAsArray();
-        $group         = $this->getRandomWithdrawalGroup();
-        $euro          = $this->getEuro();
-        $asset         = $this->getRandomAsset();
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
+        $journal    = $this->getRandomWithdrawalAsArray();
+        $group      = $this->getRandomWithdrawalGroup();
+        $euro       = $this->getEuro();
+        $asset      = $this->getRandomAsset();
 
         $this->mockDefaultSession();
 

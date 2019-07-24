@@ -27,6 +27,7 @@ use FireflyIII\Helpers\Collection\Balance;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\BalanceReportHelperInterface;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -57,6 +58,8 @@ class BalanceControllerTest extends TestCase
         $balance      = $this->mock(BalanceReportHelperInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $balance->shouldReceive('getBalanceReport')->andReturn(new Balance);

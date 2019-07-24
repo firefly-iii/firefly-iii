@@ -25,9 +25,7 @@ namespace Tests\Feature\Controllers\Json;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-
 use FireflyIII\Helpers\Report\NetWorthInterface;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
@@ -58,6 +56,7 @@ class BoxControllerTest extends TestCase
      */
     public function testAvailable(): void
     {
+        $this->mockDefaultSession();
         $return        = [
             0 => [
                 'spent' => '-1200', // more than budgeted.
@@ -66,7 +65,7 @@ class BoxControllerTest extends TestCase
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $this->mockDefaultSession();
+
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
@@ -85,6 +84,7 @@ class BoxControllerTest extends TestCase
      */
     public function testAvailableDays(): void
     {
+        $this->mockDefaultSession();
         $return        = [
             0 => [
                 'spent' => '-800', // more than budgeted.
@@ -93,7 +93,6 @@ class BoxControllerTest extends TestCase
         $repository    = $this->mock(BudgetRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $this->mockDefaultSession();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
@@ -112,12 +111,12 @@ class BoxControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testBalance(): void
-    {
+    {        $this->mockDefaultSession();
+
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
-        $this->mockDefaultSession();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('-100');
 
@@ -169,9 +168,12 @@ class BoxControllerTest extends TestCase
      */
     public function testBills(): void
     {
+        $this->mockDefaultSession();
         $billRepos     = $this->mock(BillRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
 
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $billRepos->shouldReceive('getBillsPaidInRange')->andReturn('0');
         $billRepos->shouldReceive('getBillsUnpaidInRange')->andReturn('0');
 
@@ -195,7 +197,7 @@ class BoxControllerTest extends TestCase
 
 
         $netWorthHelper = $this->mock(NetWorthInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
 
@@ -228,7 +230,7 @@ class BoxControllerTest extends TestCase
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
@@ -264,7 +266,7 @@ class BoxControllerTest extends TestCase
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
@@ -297,7 +299,7 @@ class BoxControllerTest extends TestCase
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $accountRepos->shouldReceive('getActiveAccountsByType')->andReturn(new Collection([$this->user()->accounts()->first()]));
@@ -329,7 +331,7 @@ class BoxControllerTest extends TestCase
         $account->virtual_balance = '1000';
         $accountRepos             = $this->mock(AccountRepositoryInterface::class);
         $currencyRepos            = $this->mock(CurrencyRepositoryInterface::class);
-
+        Amount::shouldReceive('formatAnything')->andReturn('-100');
         $netWorthHelper = $this->mock(NetWorthInterface::class);
         $netWorthHelper->shouldReceive('setUser')->once();
         $netWorthHelper->shouldReceive('getNetWorthByCurrency')->once()->andReturn($result);

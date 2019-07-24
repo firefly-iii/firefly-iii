@@ -51,7 +51,6 @@ class TwoFactorControllerTest extends TestCase
         $this->be($this->user());
 
 
-
         $truePref               = new Preference;
         $truePref->data         = true;
         $secretPreference       = new Preference;

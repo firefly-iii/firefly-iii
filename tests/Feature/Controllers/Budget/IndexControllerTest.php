@@ -23,25 +23,27 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Budget;
 
+use Amount;
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Preferences;
-use Amount;
 use Tests\TestCase;
 
 /**
  *
  * Class IndexControllerTest
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class IndexControllerTest extends TestCase
 {
@@ -63,7 +65,7 @@ class IndexControllerTest extends TestCase
     public function testIndex(string $range): void
     {
         // mock stuff
-        $budget                  = $this->getRandomBudget();
+        $budget = $this->getRandomBudget();
         $budgetLimit             = $this->getRandomBudgetLimit();
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
@@ -100,7 +102,7 @@ class IndexControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response = $this->get(route('budgets.index'));
+        $response                = $this->get(route('budgets.index'));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');
@@ -111,6 +113,7 @@ class IndexControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testIndexOutOfRange(string $range): void
     {
@@ -170,6 +173,7 @@ class IndexControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testIndexWithDate(string $range): void
     {
@@ -225,6 +229,7 @@ class IndexControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testIndexWithInvalidDate(string $range): void
     {
@@ -233,8 +238,8 @@ class IndexControllerTest extends TestCase
         // set budget limit to current month:
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos            = $this->mock(AccountRepositoryInterface::class);
+        $repository              = $this->mock(BudgetRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;

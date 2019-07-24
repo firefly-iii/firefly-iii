@@ -25,27 +25,27 @@ namespace Tests\Feature\Controllers\Category;
 
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-
-
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Navigation;
 use Preferences;
 use Tests\TestCase;
 
+
 /**
  *
  * Class NoCategoryControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class NoCategoryControllerTest extends TestCase
 {
@@ -68,8 +68,8 @@ class NoCategoryControllerTest extends TestCase
     public function testNoCategory(string $range): void
     {
         $collector     = $this->mock(GroupCollectorInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CategoryRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
 
         $this->mockDefaultSession();
@@ -104,13 +104,13 @@ class NoCategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
-     *
+     * @throws Exception
      */
     public function testNoCategoryAll(string $range): void
     {
         $collector     = $this->mock(GroupCollectorInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CategoryRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
 
@@ -146,12 +146,13 @@ class NoCategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testNoCategoryDate(string $range): void
     {
         $collector     = $this->mock(GroupCollectorInterface::class);
-        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CategoryRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $date          = new Carbon;

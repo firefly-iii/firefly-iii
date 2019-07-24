@@ -29,10 +29,8 @@ use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -44,7 +42,9 @@ use Tests\TestCase;
 /**
  *
  * Class ShowControllerTest
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ShowControllerTest extends TestCase
 {
@@ -71,7 +71,9 @@ class ShowControllerTest extends TestCase
         $collector    = $this->mock(GroupCollectorInterface::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = null;
         $this->mockDefaultSession();
+
         try {
             $date = new Carbon;
         } catch (Exception $e) {
@@ -118,6 +120,7 @@ class ShowControllerTest extends TestCase
         $this->mock(BudgetRepositoryInterface::class);
         $collector = $this->mock(GroupCollectorInterface::class);
         $userRepos = $this->mock(UserRepositoryInterface::class);
+        $date      = null;
         $this->mockDefaultSession();
         try {
             $date = new Carbon;

@@ -200,7 +200,7 @@ class TagReportControllerTest extends TestCase
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
 
         $withdrawal  = $this->getRandomWithdrawalAsArray();
-        $tag         = $this->user()->tags()->where('tag','Expensive')->first();
+        $tag         = $this->user()->tags()->where('tag', 'Expensive')->first();
         $date        = new Carbon;
         $false       = new Preference;
         $false->data = false;
@@ -237,7 +237,7 @@ class TagReportControllerTest extends TestCase
         $generator    = $this->mock(GeneratorInterface::class);
         $pieChart     = $this->mock(MetaPieChartInterface::class);
         $tagRepos     = $this->mock(TagRepositoryInterface::class);
-        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
         $tag          = $this->user()->tags()->first();
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));

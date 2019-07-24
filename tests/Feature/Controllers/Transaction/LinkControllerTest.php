@@ -54,11 +54,12 @@ class LinkControllerTest extends TestCase
      */
     public function testDelete(): void
     {
+        $this->mockDefaultSession();
         $this->mock(LinkTypeRepositoryInterface::class);
         $link      = $this->getRandomLink();
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
-        $this->mockDefaultSession();
+
 
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -74,10 +75,11 @@ class LinkControllerTest extends TestCase
      */
     public function testModal(): void
     {
+        $this->mockDefaultSession();
         $journal   = $this->getRandomWithdrawal();
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
 
-        $this->mockDefaultSession();
+
 
         $linkRepos->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
 
@@ -91,11 +93,12 @@ class LinkControllerTest extends TestCase
      */
     public function testDestroy(): void
     {
+        $this->mockDefaultSession();
         $link         = $this->getRandomLink();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
 
         Preferences::shouldReceive('mark')->once();
-        $this->mockDefaultSession();
+
 
         $repository->shouldReceive('destroyLink')->atLeast()->once();
         $this->be($this->user());
@@ -113,6 +116,7 @@ class LinkControllerTest extends TestCase
      */
     public function testStore(): void
     {
+        $this->mockDefaultSession();
         $withdrawal   = $this->getRandomWithdrawal();
         $deposit      = $this->getRandomDeposit();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
@@ -142,6 +146,7 @@ class LinkControllerTest extends TestCase
      */
     public function testStoreAlreadyLinked(): void
     {
+        $this->mockDefaultSession();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mockDefaultSession();
         $link         = $this->getRandomLink();
@@ -168,6 +173,7 @@ class LinkControllerTest extends TestCase
      */
     public function testStoreInvalid(): void
     {
+        $this->mockDefaultSession();
         $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mockDefaultSession();
         $withdrawal   = $this->getRandomWithdrawal();
@@ -192,6 +198,7 @@ class LinkControllerTest extends TestCase
      */
     public function testStoreSame(): void
     {
+        $this->mockDefaultSession();
         $withdrawal   = $this->getRandomWithdrawal();
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mockDefaultSession();
@@ -216,11 +223,10 @@ class LinkControllerTest extends TestCase
      */
     public function testSwitchLink(): void
     {
+        $this->mockDefaultSession();
         $link         = $this->getRandomLink();
-        $withdrawal   = $this->getRandomWithdrawal();
-        $journalRepos = $this->mock(JournalRepositoryInterface::class);
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('switchLink')->andReturn(false);

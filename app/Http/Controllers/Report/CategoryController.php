@@ -161,10 +161,10 @@ class CategoryController extends Controller
             $sum[$categoryId] = (float)$row['spent'];
         }
         array_multisort($sum, SORT_ASC, $report);
+        // @codeCoverageIgnoreStart
         try {
             $result = view('reports.partials.categories', compact('report'))->render();
             $cache->store($result);
-            // @codeCoverageIgnoreStart
         } catch (Throwable $e) {
             Log::error(sprintf('Could not render category::expenses: %s', $e->getMessage()));
             $result = sprintf('An error prevented Firefly III from rendering: %s. Apologies.', $e->getMessage());

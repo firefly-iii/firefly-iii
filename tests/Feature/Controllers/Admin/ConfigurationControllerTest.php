@@ -50,7 +50,7 @@ class ConfigurationControllerTest extends TestCase
     public function testIndex(): void
     {
         $this->mockDefaultSession();
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         // for session
 

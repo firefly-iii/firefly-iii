@@ -236,6 +236,7 @@ trait ChartGeneration
             $chartData[1]['entries'][$label] = round($earned, 12);
             $chartData[2]['entries'][$label] = round($sum, 12);
 
+            // @codeCoverageIgnoreStart
             switch ($step) {
                 default:
                 case '1D':
@@ -251,6 +252,7 @@ trait ChartGeneration
                     $start->addYear();
                     break;
             }
+            // @codeCoverageIgnoreEnd
         }
 
         $data = $generator->multiSet($chartData);

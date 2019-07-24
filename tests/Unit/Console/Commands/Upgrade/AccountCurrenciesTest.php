@@ -132,6 +132,8 @@ class AccountCurrenciesTest extends TestCase
     /**
      * Perfect run with opening balance.
      *
+     * TODO this method crashes some times but not sure why.
+     *
      * @covers \FireflyIII\Console\Commands\Upgrade\AccountCurrencies
      */
     public function testHandleOpeningBalance(): void

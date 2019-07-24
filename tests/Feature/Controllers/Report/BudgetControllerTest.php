@@ -22,12 +22,14 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Report;
 
+use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Helpers\Report\BudgetReportHelperInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
+use Preferences;
 use Tests\TestCase;
 
 /**
@@ -59,6 +61,9 @@ class BudgetControllerTest extends TestCase
         $helper       = $this->mock(BudgetReportHelperInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $helper->shouldReceive('getBudgetReport')->andReturn($return);
@@ -79,6 +84,9 @@ class BudgetControllerTest extends TestCase
         $repository   = $this->mock(BudgetRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
+
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
+        Amount::shouldReceive('formatAnything')->atLeast()->once()->andReturn('x');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('getBudgets')->andReturn(new Collection);

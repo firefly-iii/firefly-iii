@@ -23,22 +23,8 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Json;
 
 
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\Bill;
-use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
-use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Bill\BillRepositoryInterface;
-use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
-use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
@@ -68,8 +54,6 @@ class AutoCompleteControllerTest extends TestCase
         $account      = $this->getRandomAsset();
         $euro         = $this->getEuro();
 
-
-
         $accountRepos->shouldReceive('searchAccount')->atLeast()->once()->andReturn(new Collection([$account]));
         $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);
         $this->mockDefaultSession();
@@ -79,6 +63,108 @@ class AutoCompleteControllerTest extends TestCase
         $response  = $this->get(route('json.autocomplete.accounts') . '?' . $httpQuery);
         $response->assertStatus(200);
         $response->assertSee($account->name);
+    }
+
+
+    /**
+     * Request a list of revenue accounts
+     *
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testRevenueAccounts(): void
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $account      = $this->getRandomAsset();
+
+        $accountRepos->shouldReceive('searchAccount')->atLeast()->once()->andReturn(new Collection([$account]));
+        $this->mockDefaultSession();
+
+        $this->be($this->user());
+        $response = $this->get(route('json.autocomplete.revenue-accounts'));
+        $response->assertStatus(200);
+        $response->assertSee($account->name);
+    }
+
+    /**
+     * Request a list of expense accounts
+     *
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testExpenseAccounts(): void
+    {
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $account      = $this->getRandomAsset();
+
+        $accountRepos->shouldReceive('searchAccount')->atLeast()->once()->andReturn(new Collection([$account]));
+        $this->mockDefaultSession();
+
+        $this->be($this->user());
+        $response = $this->get(route('json.autocomplete.expense-accounts'));
+        $response->assertStatus(200);
+        $response->assertSee($account->name);
+    }
+
+
+    /**
+     * Request a list of expense accounts
+     *
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testAllJournals(): void
+    {
+        $journalRepos = $this->mockDefaultSession();
+        $journal      = $this->getRandomWithdrawalAsArray();
+
+        $journalRepos->shouldReceive('searchJournalDescriptions')->atLeast()->once()->andReturn(new Collection([$journal]));
+
+
+        $this->be($this->user());
+        $response = $this->get(route('json.autocomplete.all-journals'));
+        $response->assertStatus(200);
+        $response->assertSee($journal['description']);
+    }
+
+    /**
+     * Request a list of expense accounts
+     *
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testAllJournalsWithId(): void
+    {
+        $journalRepos = $this->mockDefaultSession();
+        $journal      = $this->getRandomWithdrawalAsArray();
+
+        $journalRepos->shouldReceive('searchJournalDescriptions')->atLeast()->once()->andReturn(new Collection([$journal]));
+
+
+        $this->be($this->user());
+        $response = $this->get(route('json.autocomplete.all-journals-with-id'));
+        $response->assertStatus(200);
+        $response->assertSee($journal['description']);
+        $response->assertSee($journal['id']);
+    }
+
+
+    /**
+     * Request a list of expense accounts
+     *
+     * @covers \FireflyIII\Http\Controllers\Json\AutoCompleteController
+     */
+    public function testAllJournalsWithIdNumeric(): void
+    {
+        $journalRepos  = $this->mockDefaultSession();
+        $journal       = $this->getRandomWithdrawalAsArray();
+        $journalObject = $this->getRandomWithdrawal();
+
+        $journalRepos->shouldReceive('searchJournalDescriptions')->atLeast()->once()->andReturn(new Collection([$journal]));
+        $journalRepos->shouldReceive('findNull')->atLeast()->once()->andReturn($journalObject);
+
+
+        $this->be($this->user());
+        $response = $this->get(route('json.autocomplete.all-journals-with-id') . '?search=' . $journal['id']);
+        $response->assertStatus(200);
+        $response->assertSee($journal['description']);
+        $response->assertSee($journal['id']);
     }
 
 

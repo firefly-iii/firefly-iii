@@ -27,11 +27,8 @@ use FireflyIII\Helpers\Attachments\AttachmentHelperInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Bill\BillRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
-use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
 use FireflyIII\Transformers\BillTransformer;
@@ -175,7 +172,9 @@ class BillControllerTest extends TestCase
 
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            ['id' => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01']
+            ['id' => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
+            'currency' => $this->getEuro(),
+            ]
         );
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();

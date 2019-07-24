@@ -60,8 +60,8 @@ class UpdateControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock update calls.
-        $config            = new Configuration;
-        $config->data      = -1;
+        $config       = new Configuration;
+        $config->data = -1;
         FireflyConfig::shouldReceive('get')->withArgs(['permission_update_check', -1])->once()->andReturn($config);
 
         // call service

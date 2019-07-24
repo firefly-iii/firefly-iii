@@ -25,16 +25,10 @@ namespace Tests\Feature\Controllers\Category;
 
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-
-
-use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
@@ -44,9 +38,13 @@ use Navigation;
 use Preferences;
 use Tests\TestCase;
 
+
 /**
  *
  * Class ShowControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class ShowControllerTest extends TestCase
 {
@@ -65,6 +63,7 @@ class ShowControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testShow(string $range): void
     {
@@ -91,14 +90,14 @@ class ShowControllerTest extends TestCase
 
         $collector->shouldReceive('setPage')->andReturnSelf()->once();
         $collector->shouldReceive('setLimit')->andReturnSelf()->once();
-        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast(2);
+        $collector->shouldReceive('setRange')->andReturnSelf()->atLeast()->times(2);
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withAccountInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(2);
+        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast()->times(2);
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([$withdrawal], 0, 10))->once();
 
-        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast(1);
+        $collector->shouldReceive('setTypes')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getExtractedJournals')->andReturn([])->atLeast()->once();
 
         Navigation::shouldReceive('updateStartDate')->andReturn(new Carbon);
@@ -120,6 +119,7 @@ class ShowControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testShowAll(string $range): void
     {
@@ -142,7 +142,7 @@ class ShowControllerTest extends TestCase
         $collector->shouldReceive('withBudgetInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withCategoryInformation')->andReturnSelf()->once();
         $collector->shouldReceive('withAccountInformation')->andReturnSelf()->once();
-        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast(2);
+        $collector->shouldReceive('setCategory')->andReturnSelf()->atLeast()->once();
         $collector->shouldReceive('getPaginatedGroups')->andReturn(new LengthAwarePaginator([$withdrawal], 0, 10))->once();
 
         $repository->shouldReceive('firstUseDate')->andReturn(new Carbon);

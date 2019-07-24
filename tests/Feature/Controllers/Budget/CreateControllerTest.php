@@ -24,7 +24,6 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Budget;
 
 
-use FireflyIII\Models\Budget;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;

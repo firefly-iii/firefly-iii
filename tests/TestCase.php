@@ -222,6 +222,7 @@ abstract class TestCase extends BaseTestCase
         return [
             'transaction_group_id'     => $withdrawal->transaction_group_id,
             'transaction_journal_id'   => $withdrawal->id,
+            'id'                       => $withdrawal->id,
             'transaction_type_type'    => 'Withdrawal',
             'currency_id'              => $euro->id,
             'foreign_currency_id'      => null,
@@ -239,6 +240,47 @@ abstract class TestCase extends BaseTestCase
             'amount'                  => '-30',
             'budget_id'               => $budget->id,
             'budget_name'             => $budget->name,
+            'category_id'             => $category->id,
+            'category_name'           => $category->name,
+            'tags'                    => ['a', 'b', 'c'],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function getRandomDepositAsArray(): array
+    {
+        $deposit  = $this->getRandomDeposit();
+        $euro     = $this->getEuro();
+        $category = $this->getRandomCategory();
+        $revenue  = $this->getRandomRevenue();
+        $asset    = $this->getRandomAsset();
+        try {
+            $date = new Carbon;
+        } catch (Exception $e) {
+            $e->getMessage();
+        }
+
+        return [
+            'transaction_group_id'     => $deposit->transaction_group_id,
+            'transaction_journal_id'   => $deposit->id,
+            'transaction_type_type'    => 'Deposit',
+            'currency_id'              => $euro->id,
+            'foreign_currency_id'      => null,
+            'date'                     => $date,
+            'description'              => sprintf('I am descr #%d', $this->randomInt()),
+            'source_account_id'        => $revenue->id,
+            'source_account_name'      => $revenue->name,
+            'foreign_amount'           => null,
+            'destination_account_id'   => $asset->id,
+            'destination_account_name' => $asset->name,
+            'currency_name'            => $euro->name,
+            'currency_code'            => $euro->code,
+            'currency_symbol'          => $euro->symbol,
+
+            'currency_decimal_places' => $euro->decimal_places,
+            'amount'                  => '-30',
             'category_id'             => $category->id,
             'category_name'           => $category->name,
         ];

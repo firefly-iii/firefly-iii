@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Exceptions\FireflyException;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
@@ -38,6 +39,9 @@ use Tests\TestCase;
 
 /**
  * Class CategoryControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class CategoryControllerTest extends TestCase
 {
@@ -55,6 +59,7 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws FireflyException
      */
     public function testAll(string $range): void
     {
@@ -221,6 +226,7 @@ class CategoryControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testSpecificPeriod(string $range): void
     {

@@ -66,9 +66,7 @@ class ExpenseControllerTest extends TestCase
         $transactions = [$this->getRandomWithdrawalAsArray()];
 
         $this->mockDefaultSession();
-        Preferences::shouldReceive('lastActivity')->atLeast()->once();
-
-
+        Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $repository->shouldReceive('findByName')->once()->withArgs([$expense->name, [AccountType::REVENUE]])->andReturn($revenue);

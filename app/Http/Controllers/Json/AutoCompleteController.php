@@ -221,6 +221,7 @@ class AutoCompleteController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function budgets(Request $request): JsonResponse
     {
@@ -251,6 +252,7 @@ class AutoCompleteController extends Controller
     /**
      * @param Request $request
      * @return JsonResponse
+     * @codeCoverageIgnore
      */
     public function currencyNames(Request $request): JsonResponse
     {

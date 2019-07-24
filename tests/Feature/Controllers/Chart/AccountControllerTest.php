@@ -23,6 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers\Chart;
 
 use Carbon\Carbon;
+use Exception;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 
@@ -46,6 +47,9 @@ use Tests\TestCase;
 
 /**
  * Class AccountControllerTest
+ * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
+ * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 class AccountControllerTest extends TestCase
 {
@@ -110,14 +114,15 @@ class AccountControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testExpenseBudget(string $range): void
     {
         $generator     = $this->mock(GeneratorInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $withdrawal    = $this->getRandomWithdrawalAsArray();
         $budget        = $this->user()->budgets()->find($withdrawal['budget_id']);
@@ -157,8 +162,8 @@ class AccountControllerTest extends TestCase
         $collector     = $this->mock(GroupCollectorInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(FiscalHelperInterface::class);
         $withdrawal    = $this->getRandomWithdrawalAsArray();
         $budget        = $this->user()->budgets()->find($withdrawal['budget_id']);
 
@@ -188,14 +193,15 @@ class AccountControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testExpenseCategory(string $range): void
     {
         $generator     = $this->mock(GeneratorInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(AccountRepositoryInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
         $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
         $withdrawal    = $this->getRandomWithdrawalAsArray();
         $category      = $this->user()->categories()->find($withdrawal['category_id']);
@@ -238,7 +244,7 @@ class AccountControllerTest extends TestCase
         $collector     = $this->mock(GroupCollectorInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
+        $this->mock(CurrencyRepositoryInterface::class);
         $withdrawal    = $this->getRandomWithdrawalAsArray();
         $category      = $this->user()->categories()->find($withdrawal['category_id']);
 
@@ -267,6 +273,7 @@ class AccountControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testFrontpage(string $range): void
     {
@@ -304,6 +311,7 @@ class AccountControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testIncomeCategory(string $range): void
     {
@@ -382,6 +390,7 @@ class AccountControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testPeriod(string $range): void
     {
@@ -444,6 +453,7 @@ class AccountControllerTest extends TestCase
      * @dataProvider dateRangeProvider
      *
      * @param string $range
+     * @throws Exception
      */
     public function testRevenueAccounts(string $range): void
     {

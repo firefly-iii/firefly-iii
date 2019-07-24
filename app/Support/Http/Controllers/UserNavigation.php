@@ -155,8 +155,7 @@ trait UserNavigation
             $url = app('url')->previous();
             session()->put($identifier, $url);
             //Log::debug(sprintf('Will put previous URI in cache under key %s: %s', $identifier, $url));
-
-            return;
+            //return;
         }
         //Log::debug(sprintf('The users session contains errors somehow so we will not remember the URI!: %s', var_export($errors, true)));
     }

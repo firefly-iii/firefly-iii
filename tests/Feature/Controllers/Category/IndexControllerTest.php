@@ -23,7 +23,6 @@ namespace Tests\Feature\Controllers\Category;
 
 
 use Carbon\Carbon;
-use FireflyIII\Models\Category;
 use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
