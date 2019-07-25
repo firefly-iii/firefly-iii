@@ -52,7 +52,7 @@ class PiggyBankControllerTest extends TestCase
         $generator  = $this->mock(GeneratorInterface::class);
         $repository = $this->mock(PiggyBankRepositoryInterface::class);
         /** @var PiggyBankEvent $event */
-        $event      = PiggyBankEvent::inRandomOrder()->first();
+        $event = PiggyBankEvent::inRandomOrder()->first();
         $piggy = $event->piggy_bank_id;
 
         $this->mockDefaultSession();

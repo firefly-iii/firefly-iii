@@ -44,8 +44,14 @@ class ImportProvider implements BinderInterface
     {
         $repository = app(UserRepositoryInterface::class);
         // get and filter all import routines:
+
+        if (!auth()->check()) {
+            return [];
+        }
+
         /** @var User $user */
         $user = auth()->user();
+
         /** @var array $config */
         $providerNames = array_keys(config('import.enabled'));
         $providers     = [];
@@ -55,13 +61,20 @@ class ImportProvider implements BinderInterface
             // only consider enabled providers
             $enabled        = (bool)config(sprintf('import.enabled.%s', $providerName));
             $allowedForUser = (bool)config(sprintf('import.allowed_for_user.%s', $providerName));
+            $allowedForDemo = (bool)config(sprintf('import.allowed_for_demo.%s', $providerName));
             if (false === $enabled) {
                 continue;
             }
-
-            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
-                continue; // @codeCoverageIgnore
+            if (false === $allowedForUser && !$isDemoUser) {
+                continue;
             }
+            if (false === $allowedForDemo && $isDemoUser) {
+                continue;
+            }
+
+//            if (false === $isDemoUser && false === $allowedForUser && false === $isDebug) {
+//                continue;
+//            }
 
             $providers[$providerName] = [
                 'has_prereq'       => (bool)config('import.has_prereq.' . $providerName),

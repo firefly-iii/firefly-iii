@@ -172,13 +172,13 @@ class MassControllerTest extends TestCase
         $this->session(['transactions.mass-edit.uri' => 'http://localhost']);
 
         $data = [
-            'journals'                                  => [$deposit->id],
-            'description'                               => [$deposit->id => 'Updated salary thing'],
-            'amount'                                    => [$deposit->id => 1600],
-            'date'                                      => [$deposit->id => '2014-07-24'],
-            'source_name'                               => [$deposit->id => 'Job'],
-            'destination_id'                            => [$deposit->id => 1],
-            'category'                                  => [$deposit->id => 'Salary'],
+            'journals'       => [$deposit->id],
+            'description'    => [$deposit->id => 'Updated salary thing'],
+            'amount'         => [$deposit->id => 1600],
+            'date'           => [$deposit->id => '2014-07-24'],
+            'source_name'    => [$deposit->id => 'Job'],
+            'destination_id' => [$deposit->id => 1],
+            'category'       => [$deposit->id => 'Salary'],
         ];
 
         $this->be($this->user());

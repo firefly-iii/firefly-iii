@@ -111,7 +111,8 @@ class BoxControllerTest extends TestCase
      * @covers \FireflyIII\Http\Controllers\Json\BoxController
      */
     public function testBalance(): void
-    {        $this->mockDefaultSession();
+    {
+        $this->mockDefaultSession();
 
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
@@ -138,11 +139,11 @@ class BoxControllerTest extends TestCase
      */
     public function testBalanceTransactions(): void
     {
-        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $withdrawal    = $this->getRandomWithdrawalAsArray();
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $collector     = $this->mock(GroupCollectorInterface::class);
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
-        $euro =$this->getEuro();
+        $euro          = $this->getEuro();
 
         $this->mockDefaultSession();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');

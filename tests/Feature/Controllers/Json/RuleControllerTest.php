@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use Log;
 use Tests\TestCase;
 

@@ -23,9 +23,7 @@ declare(strict_types=1);
 namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\Attachment;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Attachment\AttachmentRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -63,7 +61,7 @@ class AttachmentControllerTest extends TestCase
 
         // mock stuff
         $this->mock(AttachmentRepositoryInterface::class);
-        $userRepos        = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
 
@@ -122,8 +120,8 @@ class AttachmentControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $attachment   = $this->getRandomAttachment();
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $attachment = $this->getRandomAttachment();
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
 
         $repository->shouldReceive('exists')->once()->andReturn(false);
 
@@ -207,7 +205,7 @@ class AttachmentControllerTest extends TestCase
         $attachment = $this->getRandomAttachment();
         $this->mockDefaultSession();
 
-        $repository   = $this->mock(AttachmentRepositoryInterface::class);
+        $repository = $this->mock(AttachmentRepositoryInterface::class);
 
         $repository->shouldReceive('exists')->once()->andReturn(true);
         $repository->shouldReceive('getContent')->once()->andReturn('This is attachment number one.');

@@ -58,7 +58,7 @@ class ExpenseReportControllerTest extends TestCase
         $fiscalHelper      = $this->mock(FiscalHelperInterface::class);
         $expense           = $this->getRandomExpense();
         $date              = new Carbon;
-        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $withdrawal        = $this->getRandomWithdrawalAsArray();
 
         $accountRepository->shouldReceive('findByName')->once()->andReturn($expense);
 

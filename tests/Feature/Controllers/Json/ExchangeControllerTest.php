@@ -24,7 +24,6 @@ namespace Tests\Feature\Controllers\Json;
 
 use Carbon\Carbon;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Services\Currency\ExchangeRateInterface;
 use Log;
@@ -58,7 +57,7 @@ class ExchangeControllerTest extends TestCase
 
         $this->mockDefaultSession();
 
-        $date         = new Carbon;
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $rate = $this->getRandomCer();
@@ -77,7 +76,7 @@ class ExchangeControllerTest extends TestCase
         $this->mockDefaultSession();
 
         $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $rate = $this->getRandomCer();
+        $rate         = $this->getRandomCer();
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);

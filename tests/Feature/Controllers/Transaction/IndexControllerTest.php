@@ -53,9 +53,9 @@ class IndexControllerTest extends TestCase
     public function testIndex(): void
     {
         $this->mockDefaultSession();
-        $group        = $this->getRandomWithdrawalGroup();
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $collector    = $this->mock(GroupCollectorInterface::class);
+        $group     = $this->getRandomWithdrawalGroup();
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
 
         // generic set for the info blocks:
         $groupArray = [$this->getRandomWithdrawalAsArray()];
@@ -95,9 +95,9 @@ class IndexControllerTest extends TestCase
     public function testIndexAll(): void
     {
         $this->mockDefaultSession();
-        $group        = $this->getRandomWithdrawalGroup();
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $collector    = $this->mock(GroupCollectorInterface::class);
+        $group     = $this->getRandomWithdrawalGroup();
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
 
         // role?
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true);

@@ -67,7 +67,6 @@ class EditControllerTest extends TestCase
     }
 
 
-
     /**
      * @covers \FireflyIII\Http\Controllers\Category\EditController
      * @covers \FireflyIII\Http\Requests\CategoryFormRequest
@@ -75,8 +74,8 @@ class EditControllerTest extends TestCase
     public function testUpdate(): void
     {
         Log::debug('Test update()');
-        $category     = Category::first();
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $category   = Category::first();
+        $repository = $this->mock(CategoryRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
         $this->mockDefaultSession();

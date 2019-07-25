@@ -67,10 +67,10 @@ class NoCategoryControllerTest extends TestCase
      */
     public function testNoCategory(string $range): void
     {
-        $collector     = $this->mock(GroupCollectorInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $this->mockDefaultSession();
         // list size
@@ -108,11 +108,11 @@ class NoCategoryControllerTest extends TestCase
      */
     public function testNoCategoryAll(string $range): void
     {
-        $collector     = $this->mock(GroupCollectorInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
 
         $this->mockDefaultSession();
         // list size
@@ -150,12 +150,12 @@ class NoCategoryControllerTest extends TestCase
      */
     public function testNoCategoryDate(string $range): void
     {
-        $collector     = $this->mock(GroupCollectorInterface::class);
+        $collector = $this->mock(GroupCollectorInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $date          = new Carbon;
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
 

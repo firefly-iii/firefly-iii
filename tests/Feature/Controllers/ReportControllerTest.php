@@ -295,7 +295,7 @@ class ReportControllerTest extends TestCase
         $this->mockDefaultSession();
         $this->mock(BudgetRepositoryInterface::class);
         $this->mock(ReportHelperInterface::class);
-        $repository       = $this->mock(AccountRepositoryInterface::class);
+        $repository = $this->mock(AccountRepositoryInterface::class);
 
         $account       = new Account();
         $account->name = 'Something';
@@ -338,7 +338,7 @@ class ReportControllerTest extends TestCase
     {
         Log::debug(sprintf('Now in test %s', __METHOD__));
         $this->mockDefaultSession();
-        $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $this->mock(BudgetRepositoryInterface::class);
         $this->mock(ReportHelperInterface::class);
         $category = $this->getRandomCategory();
@@ -383,8 +383,8 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
-        $asset            = $this->getRandomAsset();
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $asset        = $this->getRandomAsset();
         // find the user's asset account
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($asset)->atLeast()->once();
 
@@ -414,7 +414,7 @@ class ReportControllerTest extends TestCase
     {
         Log::debug(sprintf('Now in test %s', __METHOD__));
         $this->mockDefaultSession();
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $this->mock(BudgetRepositoryInterface::class);
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
@@ -446,7 +446,7 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -472,7 +472,7 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
         $data = [
@@ -530,7 +530,7 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -558,8 +558,8 @@ class ReportControllerTest extends TestCase
         $this->mock(BudgetRepositoryInterface::class);
         $this->mock(ReportHelperInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
-        $categoryRepos    = $this->mock(CategoryRepositoryInterface::class);
+        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
 
         $categoryRepos->shouldReceive('findNull')->andReturn($this->user()->categories()->find(1))->twice();
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
@@ -588,7 +588,7 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -615,7 +615,7 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -642,7 +642,7 @@ class ReportControllerTest extends TestCase
         $this->mock(ReportHelperInterface::class);
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
 
         $accountRepos->shouldReceive('findNull')->andReturn($this->user()->accounts()->find(1))->twice();
 
@@ -672,8 +672,8 @@ class ReportControllerTest extends TestCase
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
         Log::debug(sprintf('Now in test %s', __METHOD__));
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
-        $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
 
         /** @var Tag $tag */
         $tag  = $this->user()->tags()->find(1);
@@ -710,8 +710,8 @@ class ReportControllerTest extends TestCase
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(TagRepositoryInterface::class);
         Log::debug(sprintf('Now in test %s', __METHOD__));
-        $accountRepos     = $this->mock(AccountRepositoryInterface::class);
-        $tagRepos         = $this->mock(TagRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
 
 
         $tag2 = $this->user()->tags()->find(3);

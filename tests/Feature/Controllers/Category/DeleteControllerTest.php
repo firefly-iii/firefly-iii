@@ -53,7 +53,7 @@ class DeleteControllerTest extends TestCase
         // mock stuff
         $this->mock(CategoryRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);

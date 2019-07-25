@@ -25,7 +25,6 @@ namespace Tests\Feature\Controllers\Transaction;
 
 use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Models\TransactionJournalLink;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\LinkType\LinkTypeRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
@@ -60,8 +59,6 @@ class LinkControllerTest extends TestCase
         $userRepos = $this->mock(UserRepositoryInterface::class);
 
 
-
-
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
@@ -80,7 +77,6 @@ class LinkControllerTest extends TestCase
         $linkRepos = $this->mock(LinkTypeRepositoryInterface::class);
 
 
-
         $linkRepos->shouldReceive('get')->atLeast()->once()->andReturn(new Collection);
 
         $this->be($this->user());
@@ -94,8 +90,8 @@ class LinkControllerTest extends TestCase
     public function testDestroy(): void
     {
         $this->mockDefaultSession();
-        $link         = $this->getRandomLink();
-        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $link       = $this->getRandomLink();
+        $repository = $this->mock(LinkTypeRepositoryInterface::class);
 
         Preferences::shouldReceive('mark')->once();
 
@@ -203,7 +199,7 @@ class LinkControllerTest extends TestCase
         $repository   = $this->mock(LinkTypeRepositoryInterface::class);
         $journalRepos = $this->mockDefaultSession();
 
-        $data    = [
+        $data = [
             'link_other' => $withdrawal->id,
             'link_type'  => '1_inward',
         ];
@@ -224,8 +220,8 @@ class LinkControllerTest extends TestCase
     public function testSwitchLink(): void
     {
         $this->mockDefaultSession();
-        $link         = $this->getRandomLink();
-        $repository   = $this->mock(LinkTypeRepositoryInterface::class);
+        $link       = $this->getRandomLink();
+        $repository = $this->mock(LinkTypeRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
 
 

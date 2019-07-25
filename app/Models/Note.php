@@ -86,6 +86,7 @@ class Note extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setTextAttribute($value): void
     {

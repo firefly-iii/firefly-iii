@@ -194,9 +194,9 @@ class TagReportControllerTest extends TestCase
     public function testMainChart(): void
     {
         $this->mock(AccountRepositoryInterface::class);
-        $generator   = $this->mock(GeneratorInterface::class);
-        $collector   = $this->mock(GroupCollectorInterface::class);
-        $tagRepos    = $this->mock(TagRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $tagRepos     = $this->mock(TagRepositoryInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
 
         $withdrawal  = $this->getRandomWithdrawalAsArray();
@@ -234,11 +234,11 @@ class TagReportControllerTest extends TestCase
     public function testTagExpense(): void
     {
         $this->mockDefaultSession();
-        $generator    = $this->mock(GeneratorInterface::class);
-        $pieChart     = $this->mock(MetaPieChartInterface::class);
-        $tagRepos     = $this->mock(TagRepositoryInterface::class);
+        $generator = $this->mock(GeneratorInterface::class);
+        $pieChart  = $this->mock(MetaPieChartInterface::class);
+        $tagRepos  = $this->mock(TagRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
-        $tag          = $this->user()->tags()->first();
+        $tag = $this->user()->tags()->first();
         $tagRepos->shouldReceive('setUser');
         $tagRepos->shouldReceive('get')->andReturn(new Collection([$tag]));
 

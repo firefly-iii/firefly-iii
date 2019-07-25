@@ -52,7 +52,7 @@ class CreateControllerTest extends TestCase
         Log::debug('TestCreate()');
         // mock stuff
         $this->mock(CategoryRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->mockDefaultSession();
@@ -71,7 +71,7 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         Log::debug('Test store()');
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
+        $repository = $this->mock(CategoryRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
         $this->mockDefaultSession();
         $repository->shouldReceive('findNull')->andReturn(new Category);

@@ -26,12 +26,9 @@ use Carbon\Carbon;
 use Exception;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
@@ -118,14 +115,14 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudget(string $range): void
     {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(GroupCollectorInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
+        $generator   = $this->mock(GeneratorInterface::class);
+        $collector   = $this->mock(GroupCollectorInterface::class);
+        $budgetRepos = $this->mock(BudgetRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $withdrawal    = $this->getRandomWithdrawalAsArray();
-        $budget        = $this->user()->budgets()->find($withdrawal['budget_id']);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+        $budget       = $this->user()->budgets()->find($withdrawal['budget_id']);
 
         // mock default session
         $this->mockDefaultSession();
@@ -158,14 +155,14 @@ class AccountControllerTest extends TestCase
      */
     public function testExpenseBudgetAll(string $range): void
     {
-        $generator     = $this->mock(GeneratorInterface::class);
-        $collector     = $this->mock(GroupCollectorInterface::class);
-        $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
-        $accountRepos  = $this->mock(AccountRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $budgetRepos  = $this->mock(BudgetRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(FiscalHelperInterface::class);
-        $withdrawal    = $this->getRandomWithdrawalAsArray();
-        $budget        = $this->user()->budgets()->find($withdrawal['budget_id']);
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $budget     = $this->user()->budgets()->find($withdrawal['budget_id']);
 
         // mock default session
         $this->mockDefaultSession();
@@ -202,9 +199,9 @@ class AccountControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
-        $fiscalHelper  = $this->mock(FiscalHelperInterface::class);
-        $withdrawal    = $this->getRandomWithdrawalAsArray();
-        $category      = $this->user()->categories()->find($withdrawal['category_id']);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
+        $category     = $this->user()->categories()->find($withdrawal['category_id']);
 
         // mock default session
         $this->mockDefaultSession();
@@ -245,8 +242,8 @@ class AccountControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
-        $withdrawal    = $this->getRandomWithdrawalAsArray();
-        $category      = $this->user()->categories()->find($withdrawal['category_id']);
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $category   = $this->user()->categories()->find($withdrawal['category_id']);
 
         // mock default session
         $this->mockDefaultSession();
@@ -404,7 +401,7 @@ class AccountControllerTest extends TestCase
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
 
-        $date          = new Carbon;
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $accountRepos->shouldReceive('oldestJournalDate')->andReturn(new Carbon);
@@ -433,7 +430,7 @@ class AccountControllerTest extends TestCase
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');
 
 
-        $date          = new Carbon;
+        $date = new Carbon;
         $fiscalHelper->shouldReceive('endOfFiscalYear')->atLeast()->once()->andReturn($date);
         $fiscalHelper->shouldReceive('startOfFiscalYear')->atLeast()->once()->andReturn($date);
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();

@@ -160,10 +160,10 @@ class BillControllerTest extends TestCase
 
         // mock stuff
         $this->mock(AttachmentHelperInterface::class);
-        $bill         = $this->getRandomBill();
-        $repository   = $this->mock(BillRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $transformer  = $this->mock(BillTransformer::class);
+        $bill        = $this->getRandomBill();
+        $repository  = $this->mock(BillRepositoryInterface::class);
+        $userRepos   = $this->mock(UserRepositoryInterface::class);
+        $transformer = $this->mock(BillTransformer::class);
 
         $pref       = new Preference;
         $pref->data = 50;
@@ -172,8 +172,8 @@ class BillControllerTest extends TestCase
 
         $transformer->shouldReceive('setParameters')->atLeast()->once();
         $transformer->shouldReceive('transform')->atLeast()->once()->andReturn(
-            ['id' => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
-            'currency' => $this->getEuro(),
+            ['id'       => 5, 'active' => true, 'name' => 'x', 'next_expected_match' => '2018-01-01',
+             'currency' => $this->getEuro(),
             ]
         );
 
@@ -201,8 +201,8 @@ class BillControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $rule         = $this->getRandomRule();
-        $repository   = $this->mock(BillRepositoryInterface::class);
+        $rule       = $this->getRandomRule();
+        $repository = $this->mock(BillRepositoryInterface::class);
         $this->mock(AttachmentHelperInterface::class);
 
 
@@ -414,8 +414,8 @@ class BillControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
-        $repository     = $this->mock(BillRepositoryInterface::class);
+        $attachHelper = $this->mock(AttachmentHelperInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
 
         $repository->shouldReceive('store')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');
@@ -450,8 +450,8 @@ class BillControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $attachHelper   = $this->mock(AttachmentHelperInterface::class);
-        $repository     = $this->mock(BillRepositoryInterface::class);
+        $attachHelper = $this->mock(AttachmentHelperInterface::class);
+        $repository   = $this->mock(BillRepositoryInterface::class);
 
         $repository->shouldReceive('update')->andReturn(new Bill);
         $attachHelper->shouldReceive('saveAttachmentsForModel');

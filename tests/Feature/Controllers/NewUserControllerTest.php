@@ -22,7 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;

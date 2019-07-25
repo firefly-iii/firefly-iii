@@ -29,9 +29,9 @@ use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\MessageBag;
 use Log;
 use Mockery;
+use Preferences;
 use Tests\TestCase;
 
-use Preferences;
 /**
  * Class AccountControllerTest
  *
@@ -56,8 +56,8 @@ class PrerequisitesControllerTest extends TestCase
     public function testIndex(): void
     {
         $this->mockDefaultSession();
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $prereq     = $this->mock(FakePrerequisites::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $prereq    = $this->mock(FakePrerequisites::class);
         $this->mock(ImportJobRepositoryInterface::class);
 
         $job               = new ImportJob;
@@ -69,10 +69,9 @@ class PrerequisitesControllerTest extends TestCase
         $job->file_type    = '';
         $job->save();
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
-
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
 
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -97,7 +96,7 @@ class PrerequisitesControllerTest extends TestCase
     public function testIndexBadState(): void
     {
         $this->mockDefaultSession();
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $this->mock(ImportJobRepositoryInterface::class);
 
 
@@ -110,10 +109,10 @@ class PrerequisitesControllerTest extends TestCase
         $job->file_type    = '';
         $job->save();
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'fake_api_key',null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'fake_api_key', null])->andReturnNull();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
@@ -134,9 +133,9 @@ class PrerequisitesControllerTest extends TestCase
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
@@ -171,9 +170,9 @@ class PrerequisitesControllerTest extends TestCase
         $prereq     = $this->mock(FakePrerequisites::class);
         $repository = $this->mock(ImportJobRepositoryInterface::class);
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
         //Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'fake_api_key',null])->andReturnNull();
 
 
@@ -206,13 +205,13 @@ class PrerequisitesControllerTest extends TestCase
     public function testPostBadState(): void
     {
         $this->mockDefaultSession();
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $prereq     = $this->mock(FakePrerequisites::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $prereq    = $this->mock(FakePrerequisites::class);
         $this->mock(ImportJobRepositoryInterface::class);
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
 
         $job               = new ImportJob;
         $job->user_id      = $this->user()->id;
@@ -242,13 +241,13 @@ class PrerequisitesControllerTest extends TestCase
     public function testPostNoJob(): void
     {
         $this->mockDefaultSession();
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $prereq     = $this->mock(FakePrerequisites::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $prereq    = $this->mock(FakePrerequisites::class);
         $this->mock(ImportJobRepositoryInterface::class);
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
@@ -272,13 +271,13 @@ class PrerequisitesControllerTest extends TestCase
     public function testPostWithMessages(): void
     {
         $this->mockDefaultSession();
-        $userRepos  = $this->mock(UserRepositoryInterface::class);
-        $prereq     = $this->mock(FakePrerequisites::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+        $prereq    = $this->mock(FakePrerequisites::class);
         $this->mock(ImportJobRepositoryInterface::class);
 
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'bunq_api_key',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'spectre_app_id',null])->andReturnNull();
-        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'ynab_client_id',null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'bunq_api_key', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'spectre_app_id', null])->andReturnNull();
+        Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(), 'ynab_client_id', null])->andReturnNull();
         //Preferences::shouldReceive('getForUser')->atLeast()->once()->withArgs([Mockery::any(),'fake_api_key',null])->andReturnNull();
 
         $job               = new ImportJob;

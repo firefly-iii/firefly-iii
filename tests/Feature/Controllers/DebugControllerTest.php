@@ -22,8 +22,6 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers;
 
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
 use Mockery;
@@ -55,7 +53,7 @@ class DebugControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 
         $this->be($this->user());
@@ -71,7 +69,7 @@ class DebugControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
@@ -115,7 +113,7 @@ class DebugControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->atLeast()->once()->andReturn(false);
 

@@ -38,7 +38,6 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property int    $id
  * @property User   user
  * @property int $user_id
- * @property-read \FireflyIII\User $user
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference newModelQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference newQuery()
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Preference query()

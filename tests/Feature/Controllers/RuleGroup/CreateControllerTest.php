@@ -52,7 +52,7 @@ class CreateControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $this->mock(RuleGroupRepositoryInterface::class);
-        $userRepos      = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
@@ -69,7 +69,7 @@ class CreateControllerTest extends TestCase
     public function testStore(): void
     {
         $this->mockDefaultSession();
-        $repository     = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository = $this->mock(RuleGroupRepositoryInterface::class);
 
         Preferences::shouldReceive('mark')->atLeast()->once();
 

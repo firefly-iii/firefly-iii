@@ -25,13 +25,10 @@ namespace Tests\Feature\Controllers\Popup;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Report\PopupReportInterface;
-use FireflyIII\Models\Account;
 use FireflyIII\Models\Budget;
-use FireflyIII\Models\Category;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
 use FireflyIII\Repositories\Category\CategoryRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Tests\TestCase;
 
@@ -192,8 +189,8 @@ class ReportControllerTest extends TestCase
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $popupReport   = $this->mock(PopupReportInterface::class);
-        $account      = $this->getRandomAsset();
-        $budget       = $this->getRandomBudget();
+        $account       = $this->getRandomAsset();
+        $budget        = $this->getRandomBudget();
 
         $this->mockDefaultSession();
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
@@ -227,7 +224,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $budgetRepos   = $this->mock(BudgetRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
-        $budget       = $this->getRandomBudget();
+        $budget        = $this->getRandomBudget();
 
         $this->mockDefaultSession();
         $budgetRepos->shouldReceive('findNull')->andReturn($budget)->once()->withArgs([1]);
@@ -259,7 +256,7 @@ class ReportControllerTest extends TestCase
         $this->mock(AccountRepositoryInterface::class);
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
-        $category = $this->getRandomCategory();
+        $category      = $this->getRandomCategory();
 
         $this->mockDefaultSession();
         $categoryRepos->shouldReceive('findNull')->andReturn($category)->once()->withArgs([1]);
@@ -292,7 +289,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->getRandomAsset();
+        $account       = $this->getRandomAsset();
 
         $this->mockDefaultSession();
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();
@@ -325,7 +322,7 @@ class ReportControllerTest extends TestCase
         $categoryRepos = $this->mock(CategoryRepositoryInterface::class);
         $popupHelper   = $this->mock(PopupReportInterface::class);
         $accountRepos  = $this->mock(AccountRepositoryInterface::class);
-        $account      = $this->getRandomAsset();
+        $account       = $this->getRandomAsset();
 
         $this->mockDefaultSession();
         $accountRepos->shouldReceive('findNull')->withArgs([1])->andReturn($account)->once();

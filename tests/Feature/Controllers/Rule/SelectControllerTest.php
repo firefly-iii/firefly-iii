@@ -26,10 +26,7 @@ namespace tests\Feature\Controllers\Rule;
 use Carbon\Carbon;
 use FireflyIII\Jobs\ExecuteRuleOnExistingTransactions;
 use FireflyIII\Jobs\Job;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\TransactionRules\TransactionMatcher;
@@ -82,7 +79,7 @@ class SelectControllerTest extends TestCase
 
         Queue::assertPushed(
             ExecuteRuleOnExistingTransactions::class, function (Job $job) {
-            return 1=== $job->getRule()->id;
+            return 1 === $job->getRule()->id;
         }
         );
     }
@@ -191,7 +188,6 @@ class SelectControllerTest extends TestCase
         $matcher      = $this->mock(TransactionMatcher::class);
         $userRepos    = $this->mock(UserRepositoryInterface::class);
         $accountRepos = $this->mock(AccountRepositoryInterface::class);
-
 
 
         $matcher->shouldReceive('setStrict')->once()->withArgs([false]);

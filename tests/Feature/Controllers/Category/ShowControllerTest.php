@@ -123,10 +123,10 @@ class ShowControllerTest extends TestCase
      */
     public function testShowAll(string $range): void
     {
-        $withdrawal    = $this->getRandomWithdrawalAsArray();
-        $repository   = $this->mock(CategoryRepositoryInterface::class);
-        $collector    = $this->mock(GroupCollectorInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $repository = $this->mock(CategoryRepositoryInterface::class);
+        $collector  = $this->mock(GroupCollectorInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $this->mockDefaultSession();
         $pref       = new Preference;

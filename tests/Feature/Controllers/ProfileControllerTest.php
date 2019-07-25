@@ -24,8 +24,6 @@ namespace Tests\Feature\Controllers;
 
 use Amount;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use FireflyIII\User;
 use Google2FA;
@@ -33,6 +31,7 @@ use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Preferences;
+use stdClass;
 use Tests\TestCase;
 
 /**
@@ -133,7 +132,7 @@ class ProfileControllerTest extends TestCase
         $repository->shouldReceive('unblockUser');
         $preference       = new Preference;
         $preference->data = 'existing-token';
-        /** @var \stdClass $preference */
+        /** @var stdClass $preference */
         $preference->user = $this->user();
         Preferences::shouldReceive('findByName')->withArgs(['email_change_confirm_token'])->andReturn(new Collection([$preference]));
         // email_change_confirm_token
@@ -205,8 +204,8 @@ class ProfileControllerTest extends TestCase
     {
         //$this->mockDefaultSession(); // DISABLED ON PURPOSE
         $this->mockDefaultConfiguration();
-        $repository   = $this->mock(UserRepositoryInterface::class);
-        $euro         = $this->getEuro();
+        $repository = $this->mock(UserRepositoryInterface::class);
+        $euro       = $this->getEuro();
 
         $repository->shouldReceive('hasRole')->withArgs([Mockery::any(), 'demo'])->times(1)->andReturn(false);
 
@@ -534,12 +533,12 @@ class ProfileControllerTest extends TestCase
         $hash                  = hash('sha256', 'previous@example.com');
         $tokenPreference       = new Preference;
         $tokenPreference->data = 'token';
-        /** @var \stdClass $tokenPreference */
+        /** @var stdClass $tokenPreference */
         $tokenPreference->user = $this->user();
 
         $hashPreference       = new Preference;
         $hashPreference->data = 'previous@example.com';
-        /** @var \stdClass $hashPreference */
+        /** @var stdClass $hashPreference */
         $hashPreference->user = $this->user();
 
         Preferences::shouldReceive('findByName')->once()->andReturn(new Collection([$tokenPreference]));
@@ -567,12 +566,12 @@ class ProfileControllerTest extends TestCase
         $hash                  = hash('sha256', 'previous@example.comX');
         $tokenPreference       = new Preference;
         $tokenPreference->data = 'token';
-        /** @var \stdClass $tokenPreference */
+        /** @var stdClass $tokenPreference */
         $tokenPreference->user = $this->user();
 
         $hashPreference       = new Preference;
         $hashPreference->data = 'previous@example.com';
-        /** @var \stdClass $hashPreference */
+        /** @var stdClass $hashPreference */
         $hashPreference->user = $this->user();
 
         Preferences::shouldReceive('findByName')->once()->andReturn(new Collection([$tokenPreference]));

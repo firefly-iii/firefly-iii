@@ -147,6 +147,7 @@ class Rule extends Model
 
     /**
      * @param $value
+     * @codeCoverageIgnore
      */
     public function setDescriptionAttribute($value): void
     {

@@ -24,9 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Preference;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -104,7 +102,7 @@ class PreferencesControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->andReturn(false);
 

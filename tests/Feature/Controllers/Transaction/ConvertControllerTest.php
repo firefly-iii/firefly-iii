@@ -24,10 +24,8 @@ namespace Tests\Feature\Controllers\Transaction;
 
 use Amount;
 use FireflyIII\Models\AccountType;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\TransactionGroup\TransactionGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -191,8 +189,6 @@ class ConvertControllerTest extends TestCase
         $validator->shouldReceive('setTransactionType')->atLeast()->once()->withArgs(['Transfer']);
         $validator->shouldReceive('validateSource')->atLeast()->once()->andReturn(true);
         $validator->shouldReceive('validateDestination')->atLeast()->once()->andReturn(true);
-
-
 
 
         $data = ['source_account_id' => 1];

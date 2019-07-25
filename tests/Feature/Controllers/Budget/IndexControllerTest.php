@@ -65,7 +65,7 @@ class IndexControllerTest extends TestCase
     public function testIndex(string $range): void
     {
         // mock stuff
-        $budget = $this->getRandomBudget();
+        $budget                  = $this->getRandomBudget();
         $budgetLimit             = $this->getRandomBudgetLimit();
         $budgetLimit->start_date = Carbon::now()->startOfMonth();
         $budgetLimit->end_date   = Carbon::now()->endOfMonth();
@@ -102,7 +102,7 @@ class IndexControllerTest extends TestCase
 
         $this->be($this->user());
         $this->changeDateRange($this->user(), $range);
-        $response                = $this->get(route('budgets.index'));
+        $response = $this->get(route('budgets.index'));
         $response->assertStatus(200);
         // has bread crumb
         $response->assertSee('<ol class="breadcrumb">');

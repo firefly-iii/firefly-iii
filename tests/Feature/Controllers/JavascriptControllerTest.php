@@ -62,8 +62,8 @@ class JavascriptControllerTest extends TestCase
         $currencyRepos = $this->mock(CurrencyRepositoryInterface::class);
         $account       = $this->getRandomAsset();
         $euro          = $this->getEuro();
-        $pref       = new Preference;
-        $pref->data = 'EUR';
+        $pref          = new Preference;
+        $pref->data    = 'EUR';
 
         Preferences::shouldReceive('get')->withArgs(['currencyPreference', 'EUR'])->atLeast()->once()->andReturn($pref);
 

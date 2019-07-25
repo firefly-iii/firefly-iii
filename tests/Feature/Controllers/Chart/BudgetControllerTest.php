@@ -27,9 +27,7 @@ use Exception;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Budget\BudgetRepositoryInterface;
@@ -309,8 +307,8 @@ class BudgetControllerTest extends TestCase
     public function testFrontpageNoLimits(string $range): void
     {
 
-        $repository  = $this->mock(BudgetRepositoryInterface::class);
-        $generator   = $this->mock(GeneratorInterface::class);
+        $repository = $this->mock(BudgetRepositoryInterface::class);
+        $generator  = $this->mock(GeneratorInterface::class);
         $collector  = $this->mock(GroupCollectorInterface::class);
         $budget     = $this->getRandomBudget();
 
@@ -341,11 +339,11 @@ class BudgetControllerTest extends TestCase
      */
     public function testPeriod(): void
     {
-        $repository             = $this->mock(BudgetRepositoryInterface::class);
-        $generator              = $this->mock(GeneratorInterface::class);
-        $budgetLimit = $this->getRandomBudgetLimit();
-        $fiscalHelper           = $this->mock(FiscalHelperInterface::class);
-        $date                   = new Carbon;
+        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $generator    = $this->mock(GeneratorInterface::class);
+        $budgetLimit  = $this->getRandomBudgetLimit();
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $date         = new Carbon;
 
         // mock default session
         $this->mockDefaultSession();

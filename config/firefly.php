@@ -23,7 +23,6 @@
 
 declare(strict_types=1);
 
-use FireflyIII\Export\Exporter\CsvExporter;
 use FireflyIII\Models\Account;
 use FireflyIII\Models\AccountType;
 use FireflyIII\Models\Attachment;
@@ -32,7 +31,6 @@ use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\BudgetLimit;
 use FireflyIII\Models\Category;
-use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\ImportJob;
 use FireflyIII\Models\LinkType;
 use FireflyIII\Models\PiggyBank;
@@ -41,7 +39,6 @@ use FireflyIII\Models\Recurrence;
 use FireflyIII\Models\Rule;
 use FireflyIII\Models\RuleGroup;
 use FireflyIII\Models\Tag;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Models\TransactionGroup;
 use FireflyIII\Models\TransactionJournal;
@@ -60,7 +57,6 @@ use FireflyIII\Support\Binder\ImportProvider;
 use FireflyIII\Support\Binder\JournalList;
 use FireflyIII\Support\Binder\TagList;
 use FireflyIII\Support\Binder\TagOrId;
-use FireflyIII\Support\Binder\UnfinishedJournal;
 use FireflyIII\TransactionRules\Actions\AddTag;
 use FireflyIII\TransactionRules\Actions\AppendDescription;
 use FireflyIII\TransactionRules\Actions\AppendNotes;
@@ -377,7 +373,6 @@ return [
         'rule'              => Rule::class,
         'ruleGroup'         => RuleGroup::class,
         'importJob'         => ImportJob::class,
-        'transaction'       => Transaction::class,
         'transactionGroup'  => TransactionGroup::class,
         'user'              => User::class,
 
@@ -401,7 +396,6 @@ return [
         // others
         'fromCurrencyCode'  => CurrencyCode::class,
         'toCurrencyCode'    => CurrencyCode::class,
-        'unfinishedJournal' => UnfinishedJournal::class,
         'cliToken'          => CLIToken::class,
         'tagOrId'           => TagOrId::class,
         'configName'        => ConfigurationName::class,

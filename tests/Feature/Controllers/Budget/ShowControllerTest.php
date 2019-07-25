@@ -222,7 +222,7 @@ class ShowControllerTest extends TestCase
     {
         $accountRepository = $this->mock(AccountRepositoryInterface::class);
         $budgetRepository  = $this->mock(BudgetRepositoryInterface::class);
-        $collector    = $this->mock(GroupCollectorInterface::class);
+        $collector         = $this->mock(GroupCollectorInterface::class);
         $userRepos         = $this->mock(UserRepositoryInterface::class);
 
 

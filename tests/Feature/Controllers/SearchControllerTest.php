@@ -75,7 +75,7 @@ class SearchControllerTest extends TestCase
     public function testSearch(): void
     {
         $this->mockDefaultSession();
-        $search    = $this->mock(SearchInterface::class);
+        $search = $this->mock(SearchInterface::class);
 
         $search->shouldReceive('parseQuery')->once();
         $search->shouldReceive('setLimit')->withArgs([50])->once();

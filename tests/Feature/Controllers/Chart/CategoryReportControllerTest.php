@@ -26,17 +26,12 @@ use Carbon\Carbon;
 use FireflyIII\Generator\Chart\Basic\GeneratorInterface;
 use FireflyIII\Helpers\Chart\MetaPieChartInterface;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-
-
-
-
-
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Models\Transaction;
 use FireflyIII\Models\TransactionType;
 use Log;
 use Preferences;
 use Tests\TestCase;
+
 
 /**
  * Class CategoryReportControllerTest
@@ -173,7 +168,7 @@ class CategoryReportControllerTest extends TestCase
         $collector    = $this->mock(GroupCollectorInterface::class);
         $fiscalHelper = $this->mock(FiscalHelperInterface::class);
         $date         = new Carbon;
-        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
 
         $this->mockDefaultSession();
         Preferences::shouldReceive('lastActivity')->atLeast()->once()->andReturn('md512345');

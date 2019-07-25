@@ -425,7 +425,7 @@ class PiggyBankControllerTest extends TestCase
         $userRepos     = $this->mock(UserRepositoryInterface::class);
         $piggyRepos    = $this->mock(PiggyBankRepositoryInterface::class);
         $repetition    = PiggyBankRepetition::first();
-        $piggyBank = $this->getRandomPiggyBank();
+        $piggyBank     = $this->getRandomPiggyBank();
 
         $accountRepos->shouldReceive('getMetaValue')->withArgs([Mockery::any(), 'currency_id'])->andReturn('1')->atLeast()->once();
         $currencyRepos->shouldReceive('findNull')->withArgs([1])->andReturn(TransactionCurrency::find(1))->atLeast()->once();
@@ -449,8 +449,8 @@ class PiggyBankControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $repository    = $this->mock(PiggyBankRepositoryInterface::class);
-        $piggyBank = $this->getRandomPiggyBank();
+        $repository = $this->mock(PiggyBankRepositoryInterface::class);
+        $piggyBank  = $this->getRandomPiggyBank();
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
 
@@ -471,12 +471,12 @@ class PiggyBankControllerTest extends TestCase
         $this->mockDefaultSession();
         $this->mockIntroPreference('shown_demo_piggy-banks_show');
         // mock stuff
-        $first         = $this->user()->transactionJournals()->inRandomOrder()->first();
-        $repository    = $this->mock(PiggyBankRepositoryInterface::class);
-        $journalRepos  = $this->mock(JournalRepositoryInterface::class);
-        $userRepos     = $this->mock(UserRepositoryInterface::class);
-        $transformer   = $this->mock(PiggyBankTransformer::class);
-        $piggyBank = $this->getRandomPiggyBank();
+        $first        = $this->user()->transactionJournals()->inRandomOrder()->first();
+        $repository   = $this->mock(PiggyBankRepositoryInterface::class);
+        $journalRepos = $this->mock(JournalRepositoryInterface::class);
+        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $transformer  = $this->mock(PiggyBankTransformer::class);
+        $piggyBank    = $this->getRandomPiggyBank();
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
 
@@ -506,7 +506,7 @@ class PiggyBankControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $repository    = $this->mock(PiggyBankRepositoryInterface::class);
+        $repository = $this->mock(PiggyBankRepositoryInterface::class);
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
 
@@ -535,8 +535,8 @@ class PiggyBankControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         // mock stuff
-        $repository    = $this->mock(PiggyBankRepositoryInterface::class);
-        $piggyBank = $this->getRandomPiggyBank();
+        $repository = $this->mock(PiggyBankRepositoryInterface::class);
+        $piggyBank  = $this->getRandomPiggyBank();
         $this->mock(CurrencyRepositoryInterface::class);
         $this->mock(AccountRepositoryInterface::class);
 

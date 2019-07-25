@@ -25,8 +25,6 @@ namespace tests\Feature\Controllers\Rule;
 
 
 use FireflyIII\Models\Rule;
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\RuleGroup\RuleGroupRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
@@ -56,9 +54,9 @@ class EditControllerTest extends TestCase
     public function testEdit(): void
     {
         // mock stuff
-        $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $groupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
@@ -88,9 +86,9 @@ class EditControllerTest extends TestCase
         $this->session(['_old_input' => $old]);
 
         // mock stuff
-        $groupRepos   = $this->mock(RuleGroupRepositoryInterface::class);
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $groupRepos = $this->mock(RuleGroupRepositoryInterface::class);
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
         $this->mockDefaultSession();
 
@@ -111,8 +109,8 @@ class EditControllerTest extends TestCase
     public function testUpdate(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(RuleRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
         $this->mockDefaultSession();

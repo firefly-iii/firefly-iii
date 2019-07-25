@@ -24,9 +24,7 @@ namespace Tests\Feature\Controllers\RuleGroup;
 
 use Carbon\Carbon;
 use FireflyIII\Jobs\ExecuteRuleGroupOnExistingTransactions;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;

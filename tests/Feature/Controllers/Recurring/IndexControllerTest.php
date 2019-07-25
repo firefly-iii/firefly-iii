@@ -23,6 +23,7 @@ declare(strict_types=1);
 
 namespace Tests\Feature\Controllers\Recurring;
 
+use FireflyConfig;
 use FireflyIII\Factory\CategoryFactory;
 use FireflyIII\Models\Configuration;
 use FireflyIII\Models\Preference;
@@ -91,7 +92,7 @@ class IndexControllerTest extends TestCase
         $collection = $this->user()->recurrences()->take(2)->get();
 
         // mock cron job config:
-        \FireflyConfig::shouldReceive('get')->withArgs(['last_rt_job', 0])->once()->andReturn($config);
+        FireflyConfig::shouldReceive('get')->withArgs(['last_rt_job', 0])->once()->andReturn($config);
 
         $repository->shouldReceive('get')->andReturn($collection)->once();
 
@@ -125,9 +126,9 @@ class IndexControllerTest extends TestCase
                 'recurrence_repetitions' => [
                     [
                         'occurrences' => [
-                            '2019-01-01'
-                        ]
-                    ]
+                            '2019-01-01',
+                        ],
+                    ],
                 ],
             ]
         );

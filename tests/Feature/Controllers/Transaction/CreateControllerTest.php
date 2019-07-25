@@ -26,9 +26,9 @@ use FireflyIII\Models\Preference;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
+use Mockery;
 use Preferences;
 use Tests\TestCase;
-use Mockery;
 
 /**
  * Class CreateControllerTest
@@ -56,7 +56,7 @@ class CreateControllerTest extends TestCase
         $empty        = new Preference;
         $empty->data  = [];
 
-        $userRepos->shouldReceive('hasRole')->atLeast()->once()->withArgs([Mockery::any(),'owner'])->andReturn(true);
+        $userRepos->shouldReceive('hasRole')->atLeast()->once()->withArgs([Mockery::any(), 'owner'])->andReturn(true);
         $accountRepos->shouldReceive('getCashAccount')->atLeast()->once()->andReturn($cash);
 
         Preferences::shouldReceive('get')->withArgs(['transaction_journal_optional_fields', []])->atLeast()->once()->andReturn($empty);

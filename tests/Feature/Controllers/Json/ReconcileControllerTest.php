@@ -27,14 +27,10 @@ namespace Tests\Feature\Controllers\Json;
 use Amount;
 use Carbon\Carbon;
 use FireflyIII\Helpers\Collector\GroupCollectorInterface;
-
 use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
-use FireflyIII\Models\Transaction;
-use FireflyIII\Models\TransactionCurrency;
 use FireflyIII\Repositories\Account\AccountRepositoryInterface;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
 use FireflyIII\Repositories\Recurring\RecurringRepositoryInterface;
-use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Preferences;
@@ -110,13 +106,13 @@ class ReconcileControllerTest extends TestCase
         $this->mock(RecurringRepositoryInterface::class);
         $this->mockDefaultSession();
 
-        $repository     = $this->mock(CurrencyRepositoryInterface::class);
-        $accountRepos   = $this->mock(AccountRepositoryInterface::class);
-        $fiscalHelper   = $this->mock(FiscalHelperInterface::class);
-        $collector      = $this->mock(GroupCollectorInterface::class);
-        $date           = new Carbon;
-        $euro =$this->getEuro();
-        $withdrawal = $this->getRandomWithdrawalAsArray();
+        $repository   = $this->mock(CurrencyRepositoryInterface::class);
+        $accountRepos = $this->mock(AccountRepositoryInterface::class);
+        $fiscalHelper = $this->mock(FiscalHelperInterface::class);
+        $collector    = $this->mock(GroupCollectorInterface::class);
+        $date         = new Carbon;
+        $euro         = $this->getEuro();
+        $withdrawal   = $this->getRandomWithdrawalAsArray();
 
 
         $accountRepos->shouldReceive('getAccountCurrency')->atLeast()->once()->andReturn($euro);

@@ -29,11 +29,9 @@ use FireflyIII\Helpers\Fiscal\FiscalHelperInterface;
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\Tag;
 use FireflyIII\Models\TransactionType;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Tag\TagRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 use Log;
 use Mockery;
 use Preferences;
@@ -65,8 +63,8 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $this->mock(TagRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
@@ -82,9 +80,9 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $this->mock(TagRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
-        
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
@@ -99,7 +97,7 @@ class TagControllerTest extends TestCase
     public function testDestroy(): void
     {
         $this->mockDefaultSession();
-        $repository   = $this->mock(TagRepositoryInterface::class);
+        $repository = $this->mock(TagRepositoryInterface::class);
 
         $repository->shouldReceive('destroy');
         Preferences::shouldReceive('mark')->atLeast()->once();
@@ -117,8 +115,8 @@ class TagControllerTest extends TestCase
     {
         $this->mockDefaultSession();
         $this->mock(TagRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        
+        $userRepos = $this->mock(UserRepositoryInterface::class);
+
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
         $this->be($this->user());
@@ -133,11 +131,11 @@ class TagControllerTest extends TestCase
     public function testIndex(): void
     {
         $this->mockDefaultSession();
-        $repository   = $this->mock(TagRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(TagRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
 
-        
+
         $repository->shouldReceive('count')->andReturn(0);
         $repository->shouldReceive('tagCloud')->andReturn([]);
         $repository->shouldReceive('oldestTag')->andReturn(null)->once();
@@ -315,7 +313,7 @@ class TagControllerTest extends TestCase
     public function testStore(): void
     {
         $this->mockDefaultSession();
-        $repository   = $this->mock(TagRepositoryInterface::class);
+        $repository = $this->mock(TagRepositoryInterface::class);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
         $repository->shouldReceive('findNull')->andReturn(null);
@@ -341,8 +339,8 @@ class TagControllerTest extends TestCase
     public function testUpdate(): void
     {
         $this->mockDefaultSession();
-        $repository   = $this->mock(TagRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(TagRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
         Preferences::shouldReceive('mark')->atLeast()->once();
 
 

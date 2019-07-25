@@ -102,10 +102,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
  * @property Carbon              updated_at
  * @property string              foreign_currency_code
  * @SuppressWarnings (PHPMD.TooManyPublicMethods)
- * @property \Illuminate\Support\Carbon|null $created_at
- * @property \Illuminate\Support\Carbon|null $updated_at
  * @property \Illuminate\Support\Carbon|null $deleted_at
- * @property bool $reconciled
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Budget[] $budgets
  * @property-read \Illuminate\Database\Eloquent\Collection|\FireflyIII\Models\Category[] $categories
  * @method static \Illuminate\Database\Eloquent\Builder|\FireflyIII\Models\Transaction after(\Carbon\Carbon $date)
@@ -183,30 +180,6 @@ class Transaction extends Model
         }
 
         return false;
-    }
-
-    /**
-     * Route binder. Converts the key in the URL to the specified object (or throw 404).
-     *
-     * @param string $value
-     *
-     * @return Transaction
-     * @throws NotFoundHttpException
-     */
-    public static function routeBinder(string $value): Transaction
-    {
-        if (auth()->check()) {
-            $transactionId = (int)$value;
-            /** @var User $user */
-            $user = auth()->user();
-            /** @var Transaction $transaction */
-            $transaction = $user->transactions()->where('transactions.id', $transactionId)->first(['transactions.*']);
-            if (null !== $transaction) {
-                return $transaction;
-            }
-        }
-
-        throw new NotFoundHttpException;
     }
 
 

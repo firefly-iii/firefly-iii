@@ -24,8 +24,6 @@ declare(strict_types=1);
 namespace tests\Feature\Controllers\Rule;
 
 
-use FireflyIII\Models\TransactionJournal;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\Rule\RuleRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Log;
@@ -55,13 +53,12 @@ class DeleteControllerTest extends TestCase
     public function testDelete(): void
     {
         // mock stuff
-        $ruleRepos    = $this->mock(RuleRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $ruleRepos = $this->mock(RuleRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $this->mockDefaultSession();
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->atLeast()->once()->andReturn(true);
-
 
 
         $this->be($this->user());
@@ -76,7 +73,7 @@ class DeleteControllerTest extends TestCase
     public function testDestroy(): void
     {
         // mock stuff
-        $repository   = $this->mock(RuleRepositoryInterface::class);
+        $repository = $this->mock(RuleRepositoryInterface::class);
         $repository->shouldReceive('destroy');
 
         $this->mockDefaultSession();

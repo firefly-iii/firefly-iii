@@ -54,7 +54,7 @@ class EditControllerTest extends TestCase
         Log::debug('Now in testEdit()');
         // mock stuff
         $this->mock(BudgetRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $userRepos = $this->mock(UserRepositoryInterface::class);
 
         $userRepos->shouldReceive('hasRole')->withArgs([Mockery::any(), 'owner'])->andReturn(true)->atLeast()->once();
         $this->mockDefaultSession();
@@ -74,7 +74,7 @@ class EditControllerTest extends TestCase
         Log::debug('Now in testUpdate()');
         // mock stuff
         $budget     = $this->getRandomBudget();
-        $repository   = $this->mock(BudgetRepositoryInterface::class);
+        $repository = $this->mock(BudgetRepositoryInterface::class);
         $this->mock(UserRepositoryInterface::class);
 
         $repository->shouldReceive('findNull')->andReturn($budget);

@@ -24,9 +24,7 @@ namespace Tests\Feature\Controllers;
 
 use FireflyIII\Models\Preference;
 use FireflyIII\Models\TransactionCurrency;
-use FireflyIII\Models\TransactionJournal;
 use FireflyIII\Repositories\Currency\CurrencyRepositoryInterface;
-use FireflyIII\Repositories\Journal\JournalRepositoryInterface;
 use FireflyIII\Repositories\User\UserRepositoryInterface;
 use Illuminate\Support\Collection;
 use Log;
@@ -169,9 +167,9 @@ class CurrencyControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $euro         = $this->getEuro();
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $euro       = $this->getEuro();
 
 
         $repository->shouldReceive('currencyInUse')->andReturn(false);
@@ -192,9 +190,9 @@ class CurrencyControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
-        $euro         = $this->getEuro();
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
+        $euro       = $this->getEuro();
 
         $repository->shouldReceive('currencyInUse')->andReturn(false);
         $repository->shouldReceive('destroy')->andReturn(true)->once();
@@ -350,8 +348,8 @@ class CurrencyControllerTest extends TestCase
         $this->mockIntroPreference('shown_demo_currencies_index');
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
         $currencies = TransactionCurrency::get();
 
@@ -385,8 +383,8 @@ class CurrencyControllerTest extends TestCase
         $this->mockIntroPreference('shown_demo_currencies_index');
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('getCurrencyByPreference')->andReturn(new TransactionCurrency);
@@ -418,8 +416,8 @@ class CurrencyControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('store')->andReturn(new TransactionCurrency);
@@ -447,8 +445,8 @@ class CurrencyControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('store')->andReturnNull();
@@ -476,8 +474,8 @@ class CurrencyControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('store')->andReturn(new TransactionCurrency);
@@ -505,8 +503,8 @@ class CurrencyControllerTest extends TestCase
         $this->mockDefaultSession();
 
         // mock stuff
-        $repository   = $this->mock(CurrencyRepositoryInterface::class);
-        $userRepos    = $this->mock(UserRepositoryInterface::class);
+        $repository = $this->mock(CurrencyRepositoryInterface::class);
+        $userRepos  = $this->mock(UserRepositoryInterface::class);
 
 
         $repository->shouldReceive('update')->andReturn(new TransactionCurrency);
