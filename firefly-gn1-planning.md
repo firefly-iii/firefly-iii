@@ -27,9 +27,47 @@ Planejamento de revisão do Firefly
 
 *   O que a termo `journal`?
 *   Quais locais o item `category` tem vínculo no model?
-*   Quais as dependências para serem criadas?
-*   Como funciona o mecanismo de view/template?
-*   Como utilizar o `artsan` para atualizar o banco de dados?
+
+#### Quais as dependências para serem criadas?
+
+*   `/app/Repositories`: interface e repositório;
+*   `/app/Providers`: Classe para atribuir instância para `$user`; 
+*   `/app/Api/V1/Controllers/`: Controller, injetando o repositório;
+*   `/app/Models/`: Modelo;
+*   `/app/Import/Mapper/`: Mapeamento entre modelo e banco;
+*   `/bootstrap/cache/services.php`: Registro no bootstrap (necessário?);
+*   `/app/Http/Request/ReportFormRequest.php`: lista de categorias (para relatório?);
+
+#### Como funciona o mecanismo de view/template?
+
+/resources/views/V1
+
+#### Como utilizar o `artsan` para atualizar o banco de dados?
+
+Exemplos a seguir:
+
+```bash
+php artisan make:migration create_users_table --create=users
+
+php artisan make:migration add_votes_to_users_table --table=users
+```
+
+Mais na documentação em: https://laravel.com/docs/5.8/blade
+
+#### O que é o tipo Carbon?
+
+Uma extensão para Datetime, prove métodos para manipulação de datas
+
+#### Como funciona o IoC?
+
+Por meio da função `app(<<interface>>)`: 
+
+```php
+/** @var CategoryRepositoryInterface $repository */
+$repository = app(CategoryRepositoryInterface::class);
+```
+
+A função está declarada no `helper.php` que chama o `Container->getInstance()->make()` para contruir uma nova instância. 
 
 ## Segunda etapa
 
