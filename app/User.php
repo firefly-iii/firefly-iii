@@ -31,6 +31,7 @@ use FireflyIII\Models\AvailableBudget;
 use FireflyIII\Models\Bill;
 use FireflyIII\Models\Budget;
 use FireflyIII\Models\Category;
+use FireflyIII\Models\CostCenter;
 use FireflyIII\Models\CurrencyExchangeRate;
 use FireflyIII\Models\ExportJob;
 use FireflyIII\Models\ImportJob;
@@ -183,6 +184,17 @@ class User extends Authenticatable
     public function categories(): HasMany
     {
         return $this->hasMany(Category::class);
+    }
+
+    /**
+     * @codeCoverageIgnore
+     * Link to cost centers
+     *
+     * @return HasMany
+     */
+    public function costCenters(): HasMany
+    {
+        return $this->hasMany(CostCenter::class);
     }
 
     /**
